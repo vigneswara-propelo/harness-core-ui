@@ -12,6 +12,27 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '2.0'
+export type ACRStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: string[]
+  buildArgs?: {
+    [key: string]: string
+  }
+  connectorRef: string
+  context?: string
+  dockerfile?: string
+  labels?: {
+    [key: string]: string
+  }
+  optimize?: boolean
+  remoteCacheImage?: string
+  repository: string
+  resources?: ContainerResource
+  runAsUser?: number
+  subscriptionId?: string
+  tags: string[]
+  target?: string
+}
+
 export interface AMIFilter {
   name?: string
   value?: string
@@ -21,6 +42,8 @@ export type AMIRegistrySpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   filters?: AMIFilter[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   region?: string
   tags?: AMITag[]
   version?: string
@@ -320,6 +343,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -405,6 +429,12 @@ export interface AccessControlCheckError {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -417,10 +447,26 @@ export interface AccessControlCheckError {
 export type AcrSpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   registry?: string
   repository?: string
   subscriptionId?: string
   tag?: string
+}
+
+export type ActionStepInfo = StepSpecType & {
+  env?: ParameterFieldMapStringString
+  uses: string
+  with?: ParameterFieldMapStringString
+}
+
+export type ActionStepInfoV1 = StepSpecType & {
+  envs?: ParameterFieldMapStringString
+  outputs?: string[]
+  resources?: ContainerResource
+  uses: string
+  with?: ParameterFieldMapStringString
 }
 
 export type AddRuleYaml = PatchInstruction & {
@@ -477,6 +523,8 @@ export type AmazonS3RegistrySpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   filePathRegex?: string
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   region?: string
 }
 
@@ -570,13 +618,21 @@ export type ArtifactoryRegistrySpec = ArtifactTypeSpec & {
   artifactPath?: string
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   repository?: string
   repositoryFormat?: string
   repositoryUrl?: string
 }
 
 export interface Attestation {
-  privateKey: string
+  privateKey?: string
+  spec?: AttestationSpec
+  type?: 'cosign'
+}
+
+export interface AttestationSpec {
+  [key: string]: any
 }
 
 export type AuditFilterProperties = FilterProperties & {
@@ -654,6 +710,8 @@ export type AzureArtifactsRegistrySpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   feed?: string
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   packageName?: string
   packageType?: string
   project?: string
@@ -699,11 +757,50 @@ export type AzureRepoSpec = WebhookTriggerSpecV2 & {
   type?: 'PullRequest' | 'Push' | 'IssueComment'
 }
 
+export type BackgroundStepInfo = StepSpecType & {
+  command?: string
+  connectorRef?: string
+  entrypoint?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  portBindings?: {
+    [key: string]: string
+  }
+  privileged?: boolean
+  reports?: UnitTestReport
+  resources?: ContainerResource
+  runAsUser?: number
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+}
+
+export type BackgroundStepInfoV1 = StepSpecType & {
+  args?: string[]
+  entrypoint?: string
+  entrypointList?: ParameterFieldListString
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  network?: string
+  ports?: string[]
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  run: string
+  shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
+  user?: number
+}
+
 export type BambooRegistrySpec = ArtifactTypeSpec & {
   artifactPaths?: string[]
   build?: string
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   planKey?: string
 }
 
@@ -775,6 +872,20 @@ export type BitbucketSpec = WebhookTriggerSpecV2 & {
   type?: 'PullRequest' | 'Push' | 'PRComment'
 }
 
+export type BitriseStepInfo = StepSpecType & {
+  env?: ParameterFieldMapStringString
+  uses: string
+  with?: ParameterFieldMapStringString
+}
+
+export type BitriseStepInfoV1 = StepSpecType & {
+  envs?: ParameterFieldMapStringString
+  outputs?: string[]
+  resources?: ContainerResource
+  uses: string
+  with?: ParameterFieldMapStringString
+}
+
 export type BranchBuildSpec = BuildSpec & {
   branch: string
 }
@@ -805,6 +916,10 @@ export interface CIProperties {
   codebase?: CodeBase
 }
 
+export interface CIVolume {
+  type?: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
 export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
   lastUpdatedAt: number
@@ -821,6 +936,14 @@ export interface CcmConnectorFilter {
   awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
+  featuresDisabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   featuresEnabled?: (
     | 'BILLING'
     | 'OPTIMIZATION'
@@ -857,6 +980,11 @@ export interface ClauseYamlSpec {
   attribute?: string
   op: string
   values: string[]
+}
+
+export type CleanupStepInfo = StepSpecType & {
+  infrastructure: Infrastructure
+  podName: string
 }
 
 export interface CloneConfig {
@@ -970,6 +1098,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Spot'
     | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
   )[]
 }
 
@@ -987,6 +1116,7 @@ export interface ContainerInfraYamlSpec {
   connectorRef: string
   containerSecurityContext?: SecurityContext
   harnessImageConnectorRef?: string
+  hostNames?: string[]
   initTimeout?: string
   labels?: {
     [key: string]: string
@@ -1001,7 +1131,7 @@ export interface ContainerInfraYamlSpec {
   runAsUser?: number
   serviceAccountName?: string
   tolerations?: Toleration[]
-  volumes?: ContainerVolume[]
+  volumes?: CIVolume[]
 }
 
 export type ContainerK8sInfra = ContainerStepInfra & {
@@ -1034,8 +1164,9 @@ export interface ContainerStepInfra {
   type?: 'KubernetesDirect'
 }
 
-export interface ContainerVolume {
-  type?: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+export type CosignAttestation = AttestationSpec & {
+  password?: string
+  privateKey?: string
 }
 
 export interface CriteriaSpec {
@@ -1058,6 +1189,7 @@ export interface CriteriaSpecWrapperDTO {
 
 export type CronTriggerSpec = ScheduledTriggerSpec & {
   expression?: string
+  type?: string
 }
 
 export type CustomApprovalStepInfo = StepSpecType & {
@@ -1076,6 +1208,8 @@ export type CustomArtifactSpec = ArtifactTypeSpec & {
   artifactsArrayPath?: string
   eventConditions?: TriggerEventDataCondition[]
   inputs?: NGVariable[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   metadata?: {
     [key: string]: string
   }
@@ -1135,17 +1269,75 @@ export interface DistributionYamlSpec {
   variations?: VariationYamlSpec[]
 }
 
+export interface DockerInfraSpec {
+  platform: ParameterFieldPlatform
+}
+
+export type DockerInfraYaml = Infrastructure & {
+  spec: DockerInfraSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+}
+
 export type DockerRegistrySpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   imagePath?: string
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   tag?: string
+}
+
+export type DockerStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  buildArgs?: {
+    [key: string]: string
+  }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
+  connectorRef: string
+  context?: string
+  dockerfile?: string
+  labels?: {
+    [key: string]: string
+  }
+  optimize?: boolean
+  remoteCacheRepo?: string
+  repo: string
+  resources?: ContainerResource
+  runAsUser?: number
+  tags: string[]
+  target?: string
+}
+
+export type ECRStepInfo = StepSpecType & {
+  account: string
+  baseImageConnectorRefs?: string[]
+  buildArgs?: {
+    [key: string]: string
+  }
+  connectorRef: string
+  context?: string
+  dockerfile?: string
+  imageName: string
+  labels?: {
+    [key: string]: string
+  }
+  optimize?: boolean
+  region: string
+  remoteCacheImage?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  tags: string[]
+  target?: string
 }
 
 export type EcrSpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   imagePath?: string
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   region?: string
   tag?: string
 }
@@ -1170,7 +1362,7 @@ export interface EmbeddedUser {
   uuid?: string
 }
 
-export type EmptyDirYaml = ContainerVolume & {
+export type EmptyDirYaml = CIVolume & {
   mountPath: string
   spec: EmptyDirYamlSpec
   type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
@@ -1484,6 +1676,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1569,6 +1762,12 @@ export interface Error {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1856,6 +2055,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1941,6 +2141,12 @@ export interface ErrorMetadata {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   errorMessage?: string
 }
 
@@ -2453,6 +2659,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -2538,6 +2745,12 @@ export interface Failure {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2628,9 +2841,33 @@ export interface FlowControlConfig {
   barriers?: BarrierInfoConfig[]
 }
 
+export type GCRStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  buildArgs?: {
+    [key: string]: string
+  }
+  connectorRef: string
+  context?: string
+  dockerfile?: string
+  host: string
+  imageName: string
+  labels?: {
+    [key: string]: string
+  }
+  optimize?: boolean
+  projectID: string
+  remoteCacheImage?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  tags: string[]
+  target?: string
+}
+
 export type GarSpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   pkg?: string
   project?: string
   region?: string
@@ -2642,6 +2879,8 @@ export type GcrSpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   imagePath?: string
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   registryHostname?: string
   tag?: string
 }
@@ -2650,6 +2889,19 @@ export type GcsBuildStoreTypeSpec = BuildStoreTypeSpec & {
   bucketName?: string
   connectorRef?: string
   folderPath?: string
+}
+
+export type GitCloneStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  build: Build
+  cloneDirectory?: string
+  connectorRef: string
+  depth?: number
+  projectName?: string
+  repoName?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  sslVerify?: boolean
 }
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
@@ -2683,6 +2935,8 @@ export type GithubPRSpec = GithubEventSpec & {
 export type GithubPackagesSpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   org?: string
   packageName?: string
   packageType?: string
@@ -2755,6 +3009,8 @@ export type GoolgeCloudStorageRegistrySpec = ArtifactTypeSpec & {
   bucket?: string
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   project?: string
 }
 
@@ -2850,6 +3106,7 @@ export type HarnessApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   approvalMessage: string
   approverInputs?: ApproverInputInfoDTO[]
   approvers: ApproversDTO
+  autoRejectEnabled?: boolean
   includePipelineExecutionHistory?: boolean
   validatedApprovalUserGroups?: ApprovalUserGroupDTO[]
 }
@@ -2859,6 +3116,7 @@ export type HarnessApprovalStepInfo = StepSpecType & {
   approverInputs?: ApproverInputInfo[]
   approvers: Approvers
   includePipelineExecutionHistory: boolean
+  isAutoRejectEnabled?: boolean
 }
 
 export type HarnessFileStoreSource = ShellScriptBaseSource & {
@@ -2883,7 +3141,7 @@ export type HelmManifestSpec = ManifestTypeSpec & {
   store?: BuildStore
 }
 
-export type HostPathYaml = ContainerVolume & {
+export type HostPathYaml = CIVolume & {
   mountPath: string
   spec: HostPathYamlSpec
   type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
@@ -2892,6 +3150,15 @@ export type HostPathYaml = ContainerVolume & {
 export interface HostPathYamlSpec {
   path: string
   type?: string
+}
+
+export interface HostedVmInfraSpec {
+  platform: ParameterFieldPlatform
+}
+
+export type HostedVmInfraYaml = Infrastructure & {
+  spec: HostedVmInfraSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
 export type HttpBuildStoreTypeSpec = BuildStoreTypeSpec & {
@@ -2909,6 +3176,7 @@ export type HttpStepInfo = StepSpecType & {
   certificateKey?: string
   delegateSelectors?: string[]
   headers?: HttpHeaderConfig[]
+  inputVariables?: NGVariable[]
   method: string
   outputVariables?: NGVariable[]
   requestBody?: string
@@ -2931,6 +3199,10 @@ export interface ImportDataSpec {
 export interface ImportDataSpecWrapper {
   spec: ImportDataSpec
   type: 'Json' | 'KeyValues'
+}
+
+export interface Infrastructure {
+  type?: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
 export interface InputSetError {
@@ -3089,12 +3361,18 @@ export interface IssuedBy {
   triggerIssuer?: TriggerIssuer
 }
 
+export type JUnitTestReport = UnitTestReportSpec & {
+  paths?: string[]
+}
+
 export type JenkinsRegistrySpec = ArtifactTypeSpec & {
   artifactPath?: string
   build?: string
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
   jobName?: string
+  metaDataConditions?: TriggerEventDataCondition[]
 }
 
 export type JexlCriteriaSpec = CriteriaSpec & {
@@ -3153,6 +3431,45 @@ export type JsonImportDataSpec = ImportDataSpec & {
 
 export interface JsonNode {
   [key: string]: any
+}
+
+export type K8sDirectInfraYaml = Infrastructure & {
+  spec: K8sDirectInfraYamlSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+}
+
+export interface K8sDirectInfraYamlSpec {
+  annotations?: {
+    [key: string]: string
+  }
+  automountServiceAccountToken?: boolean
+  connectorRef: string
+  containerSecurityContext?: SecurityContext
+  harnessImageConnectorRef?: string
+  hostNames?: string[]
+  initTimeout?: string
+  labels?: {
+    [key: string]: string
+  }
+  namespace: string
+  nodeSelector?: {
+    [key: string]: string
+  }
+  os?: 'Linux' | 'MacOS' | 'Windows'
+  priorityClassName?: string
+  runAsUser?: number
+  serviceAccountName?: string
+  tolerations?: Toleration[]
+  volumes?: CIVolume[]
+}
+
+export type K8sHostedInfraYaml = Infrastructure & {
+  spec: K8sHostedInfraYamlSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+}
+
+export interface K8sHostedInfraYamlSpec {
+  identifier: string
 }
 
 export type KeyValuesCriteriaSpec = CriteriaSpec & {
@@ -3321,6 +3638,7 @@ export interface NGTriggerEventHistoryResponse {
     | 'INVALID_PAYLOAD'
     | 'NO_MATCHING_TRIGGER_FOR_REPO'
     | 'NO_MATCHING_TRIGGER_FOR_EVENT_ACTION'
+    | 'NO_MATCHING_TRIGGER_FOR_METADATA_CONDITIONS'
     | 'NO_MATCHING_TRIGGER_FOR_PAYLOAD_CONDITIONS'
     | 'NO_MATCHING_TRIGGER_FOR_JEXL_CONDITIONS'
     | 'NO_MATCHING_TRIGGER_FOR_HEADER_CONDITIONS'
@@ -3402,6 +3720,8 @@ export type Nexus2RegistrySpec = ArtifactTypeSpec & {
   eventConditions?: TriggerEventDataCondition[]
   extension?: string
   groupId?: string
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   packageName?: string
   repositoryFormat?: string
   repositoryName?: string
@@ -3418,6 +3738,8 @@ export type NexusRegistrySpec = ArtifactTypeSpec & {
   group?: string
   groupId?: string
   imagePath?: string
+  jexlCondition?: string
+  metaDataConditions?: TriggerEventDataCondition[]
   packageName?: string
   repository?: string
   repositoryFormat?: string
@@ -3700,6 +4022,18 @@ export interface ParameterField {
   value?: { [key: string]: any }
 }
 
+export interface ParameterFieldListString {
+  defaultValue?: string[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: string[]
+}
+
 export interface ParameterFieldMapStringJsonNode {
   defaultValue?: {
     [key: string]: JsonNode
@@ -3716,6 +4050,22 @@ export interface ParameterFieldMapStringJsonNode {
   }
 }
 
+export interface ParameterFieldMapStringString {
+  defaultValue?: {
+    [key: string]: string
+  }
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: {
+    [key: string]: string
+  }
+}
+
 export interface ParameterFieldMatrixConfigInterface {
   defaultValue?: MatrixConfigInterface
   executionInput?: boolean
@@ -3728,6 +4078,18 @@ export interface ParameterFieldMatrixConfigInterface {
   value?: MatrixConfigInterface
 }
 
+export interface ParameterFieldPlatform {
+  defaultValue?: Platform
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: Platform
+}
+
 export interface ParameterFieldString {
   defaultValue?: string
   executionInput?: boolean
@@ -3738,6 +4100,18 @@ export interface ParameterFieldString {
   responseField?: string
   typeString?: boolean
   value?: string
+}
+
+export interface ParameterFieldTILanguage {
+  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
 }
 
 export interface PatchInstruction {
@@ -3764,7 +4138,7 @@ export interface PermissionCheck {
   resourceType?: string
 }
 
-export type PersistentVolumeClaimYaml = ContainerVolume & {
+export type PersistentVolumeClaimYaml = CIVolume & {
   mountPath: string
   spec: PersistentVolumeClaimYamlSpec
   type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
@@ -3854,6 +4228,10 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
 export interface PipelineExecutionInfo {
   count?: PipelineCountInfo
   date?: number
+}
+
+export interface PipelineExecutionNotes {
+  notes?: string
 }
 
 export interface PipelineExecutionSummary {
@@ -4099,6 +4477,37 @@ export interface PlanExecution {
 export interface PlanExecutionResponseDto {
   gitDetails?: EntityGitDetails
   planExecution?: PlanExecution
+}
+
+export interface Platform {
+  arch?: 'Amd64' | 'Arm64'
+  os?: 'Linux' | 'MacOS' | 'Windows'
+}
+
+export type PluginStepInfo = StepSpecType & {
+  connectorRef?: string
+  entrypoint?: string[]
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  privileged?: boolean
+  reports?: UnitTestReport
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  uses?: string
+}
+
+export type PluginStepInfoV1 = StepSpecType & {
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  user?: number
+  uses?: string
+  with?: ParameterFieldMapStringJsonNode
 }
 
 export interface PmsAbstractStepNode {
@@ -4959,6 +5368,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -5044,6 +5454,12 @@ export interface ResponseMessage {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5207,6 +5623,13 @@ export interface ResponsePipelineExecutionDetail {
 export interface ResponsePipelineExecutionInterrupt {
   correlationId?: string
   data?: PipelineExecutionInterrupt
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePipelineExecutionNotes {
+  correlationId?: string
+  data?: PipelineExecutionNotes
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5423,6 +5846,31 @@ export interface RestResponseString {
   responseMessages?: ResponseMessage[]
 }
 
+export type RestoreCacheGCSStepInfo = StepSpecType & {
+  archiveFormat?: 'Tar' | 'Gzip'
+  baseImageConnectorRefs?: ParameterFieldListString
+  bucket: string
+  connectorRef: string
+  failIfKeyNotFound?: boolean
+  key: string
+  resources?: ContainerResource
+  runAsUser?: number
+}
+
+export type RestoreCacheS3StepInfo = StepSpecType & {
+  archiveFormat?: 'Tar' | 'Gzip'
+  baseImageConnectorRefs?: ParameterFieldListString
+  bucket: string
+  connectorRef: string
+  endpoint?: string
+  failIfKeyNotFound?: boolean
+  key: string
+  pathStyle?: boolean
+  region?: string
+  resources?: ContainerResource
+  runAsUser?: number
+}
+
 export type RetryFailureActionConfig = FailureStrategyActionConfig & {
   spec: RetryFailureSpecConfig
   type: 'Retry'
@@ -5442,6 +5890,7 @@ export interface RetryHistoryResponseDto {
   errorMessage?: string
   executionInfos?: ExecutionInfo[]
   latestExecutionId?: string
+  retryStagesMetadata?: RetryStagesMetadataDTO
 }
 
 export interface RetryInfo {
@@ -5499,12 +5948,64 @@ export interface RetryStageInfo {
     | 'WAITING'
 }
 
+export interface RetryStagesMetadataDTO {
+  retryStagesIdentifier?: string[]
+  skipStagesIdentifier?: string[]
+}
+
 export interface RunStageRequestDTO {
   expressionValues?: {
     [key: string]: string
   }
   runtimeInputYaml?: string
   stageIdentifiers?: string[]
+}
+
+export type RunStepInfo = StepSpecType & {
+  command: string
+  connectorRef?: string
+  envVariables?: {
+    [key: string]: string
+  }
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  reports?: UnitTestReport
+  resources?: ContainerResource
+  runAsUser?: number
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+}
+
+export type RunTestsStepInfo = StepSpecType & {
+  args: string
+  buildEnvironment?: 'Core' | 'Framework'
+  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest'
+  connectorRef?: string
+  enableTestSplitting?: boolean
+  envVariables?: {
+    [key: string]: string
+  }
+  frameworkVersion?: '5.0' | '6.0'
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  namespaces?: string
+  outputVariables?: OutputNGVariable[]
+  packages?: string
+  postCommand?: string
+  preCommand?: string
+  privileged?: boolean
+  pythonVersion?: '3' | '2'
+  reports?: UnitTestReport
+  resources?: ContainerResource
+  runAsUser?: number
+  runOnlySelectedTests?: boolean
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+  testAnnotations?: string
+  testGlobs?: string
+  testRoot?: string
+  testSplitStrategy?: 'ClassTiming' | 'TestCount'
 }
 
 export type S3BuildStoreTypeSpec = BuildStoreTypeSpec & {
@@ -5518,6 +6019,33 @@ export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
   sampleMap?: {
     [key: string]: string
   }
+}
+
+export type SaveCacheGCSStepInfo = StepSpecType & {
+  archiveFormat?: 'Tar' | 'Gzip'
+  baseImageConnectorRefs?: ParameterFieldListString
+  bucket: string
+  connectorRef: string
+  key: string
+  override?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  sourcePaths: string[]
+}
+
+export type SaveCacheS3StepInfo = StepSpecType & {
+  archiveFormat?: 'Tar' | 'Gzip'
+  baseImageConnectorRefs?: ParameterFieldListString
+  bucket: string
+  connectorRef: string
+  endpoint?: string
+  key: string
+  override?: boolean
+  pathStyle?: boolean
+  region?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  sourcePaths: string[]
 }
 
 export interface SbomOrchestrationSpec {
@@ -5555,6 +6083,20 @@ export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
 
+export type ScriptStepInfo = StepSpecType & {
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  outputs?: string[]
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  run: string
+  shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
+  user?: number
+}
+
 export type SecretNGVariable = NGVariable & {
   default?: string
   name?: string
@@ -5571,6 +6113,16 @@ export interface SecurityContext {
   runAsGroup?: number
   runAsNonRoot?: boolean
   runAsUser?: number
+}
+
+export type SecurityStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
 }
 
 export interface Serve {
@@ -5727,6 +6279,12 @@ export interface SourceIdentifierConfig {
   projectIdentifier?: string
 }
 
+export interface Splitting {
+  concurrency?: number
+  enabled?: boolean
+  strategy?: 'class_timing' | 'test_count'
+}
+
 export interface StackTraceElement {
   classLoaderName?: string
   className?: string
@@ -5864,6 +6422,7 @@ export interface StepData {
     | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
+    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6089,6 +6648,25 @@ export interface TemplatesResolvedPipelineResponseDTO {
   yamlPipeline?: string
 }
 
+export type TestStepInfo = StepSpecType & {
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  language?: ParameterFieldTILanguage
+  outputs?: string[]
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
+  splitting?: Splitting
+  user?: number
+  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest'
+  with?: {
+    [key: string]: JsonNode
+  }
+}
+
 export interface Throwable {
   cause?: Throwable
   localizedMessage?: string
@@ -6192,6 +6770,15 @@ export interface UnitProgress {
   [key: string]: any
 }
 
+export interface UnitTestReport {
+  spec?: UnitTestReportSpec
+  type?: 'JUnit'
+}
+
+export interface UnitTestReportSpec {
+  [key: string]: any
+}
+
 export type UpdateRuleYaml = PatchInstruction & {
   identifier: string
   spec: UpdateRuleYamlSpec
@@ -6203,6 +6790,42 @@ export interface UpdateRuleYamlSpec {
   ruleID: string
   serve?: Serve
   variations?: VariationYamlSpec[]
+}
+
+export type UploadToArtifactoryStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  connectorRef: string
+  resources?: ContainerResource
+  runAsUser?: number
+  sourcePath: string
+  target: string
+}
+
+export type UploadToGCSStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  bucket: string
+  connectorRef: string
+  resources?: ContainerResource
+  runAsUser?: number
+  sourcePath: string
+  target?: string
+}
+
+export type UploadToS3StepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  bucket: string
+  connectorRef: string
+  endpoint?: string
+  region: string
+  resources?: ContainerResource
+  runAsUser?: number
+  sourcePath: string
+  stripPrefix?: string
+  target?: string
+}
+
+export type UseFromStageInfraYaml = Infrastructure & {
+  useFromStage: string
 }
 
 export interface UserOpaEvaluationContext {
@@ -6252,6 +6875,28 @@ export interface VariableResponseMapValue {
 export interface VariationYamlSpec {
   variation: string
   weight: number
+}
+
+export interface VmInfraSpec {
+  type?: 'Pool'
+}
+
+export type VmInfraYaml = Infrastructure & {
+  spec: VmInfraSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+}
+
+export type VmPoolYaml = VmInfraSpec & {
+  spec: VmPoolYamlSpec
+  type: 'Pool'
+}
+
+export interface VmPoolYamlSpec {
+  harnessImageConnectorRef?: string
+  identifier?: string
+  initTimeout?: string
+  os?: 'Linux' | 'MacOS' | 'Windows'
+  poolName?: string
 }
 
 export interface WaitStepExecutionDetailsDto {
@@ -6431,7 +7076,7 @@ export type MergeInputSetRequestRequestBody = MergeInputSetRequest
 
 export type RunStageRequestDTORequestBody = RunStageRequestDTO
 
-export type CreateTriggerBodyRequestBody = string
+export type UpdateTriggerBodyRequestBody = string
 
 export interface GetInitialStageYamlSnippetQueryParams {
   approvalType: 'HarnessApproval' | 'JiraApproval' | 'CustomApproval' | 'ServiceNowApproval'
@@ -7456,7 +8101,7 @@ export type CreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -7470,7 +8115,7 @@ export const CreateInputSetForPipeline = (props: CreateInputSetForPipelineProps)
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >
     verb="POST"
@@ -7485,7 +8130,7 @@ export type UseCreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -7499,7 +8144,7 @@ export const useCreateInputSetForPipeline = (props: UseCreateInputSetForPipeline
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', `/inputSets`, { base: getConfig('pipeline/api'), ...props })
 
@@ -7511,7 +8156,7 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -7520,7 +8165,7 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets`, props, signal)
 
@@ -8079,7 +8724,7 @@ export type CreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8093,7 +8738,7 @@ export const CreateOverlayInputSetForPipeline = (props: CreateOverlayInputSetFor
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >
     verb="POST"
@@ -8108,7 +8753,7 @@ export type UseCreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8122,7 +8767,7 @@ export const useCreateOverlayInputSetForPipeline = (props: UseCreateOverlayInput
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', `/inputSets/overlay`, { base: getConfig('pipeline/api'), ...props })
 
@@ -8134,7 +8779,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -8143,7 +8788,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets/overlay`, props, signal)
 
@@ -8629,7 +9274,7 @@ export type UpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -8644,7 +9289,7 @@ export const UpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: Upda
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >
     verb="PUT"
@@ -8659,7 +9304,7 @@ export type UseUpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -8674,7 +9319,7 @@ export const useUpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: U
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', (paramsInPath: UpdateInputSetForPipelinePathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -8693,7 +9338,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -8702,7 +9347,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}`, props, signal)
 
@@ -8735,7 +9380,7 @@ export type SanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -8750,7 +9395,7 @@ export const SanitiseInputSet = ({ inputSetIdentifier, ...props }: SanitiseInput
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     SanitiseInputSetPathParams
   >
     verb="POST"
@@ -8765,7 +9410,7 @@ export type UseSanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -8780,7 +9425,7 @@ export const useSanitiseInputSet = ({ inputSetIdentifier, ...props }: UseSanitis
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', (paramsInPath: SanitiseInputSetPathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}/sanitise`, {
     base: getConfig('pipeline/api'),
@@ -8799,7 +9444,7 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     SanitiseInputSetPathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -8808,7 +9453,7 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}/sanitise`, props, signal)
 
@@ -10041,8 +10686,9 @@ export interface PostExecutionRollbackQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  identifier: string
+  pipelineIdentifier: string
   stageNodeExecutionIds: string
+  notesForPipelineExecution?: string
 }
 
 export interface PostExecutionRollbackPathParams {
@@ -10216,6 +10862,7 @@ export interface RePostPipelineExecuteWithInputSetYamlV2QueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   useFQNIfError?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface RePostPipelineExecuteWithInputSetYamlV2PathParams {
@@ -10330,6 +10977,7 @@ export interface RePostPipelineExecuteWithInputSetYamlQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   useFQNIfError?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface RePostPipelineExecuteWithInputSetYamlPathParams {
@@ -10444,6 +11092,7 @@ export interface RePostPipelineExecuteWithInputSetListQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   useFQNIfError?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface RePostPipelineExecuteWithInputSetListPathParams {
@@ -10564,6 +11213,7 @@ export interface RerunStagesWithRuntimeInputYamlQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   useFQNIfError?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface RerunStagesWithRuntimeInputYamlPathParams {
@@ -10677,6 +11327,7 @@ export interface RetryPipelineQueryParams {
   planExecutionId: string
   retryStages: string[]
   runAllStages?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface RetryPipelinePathParams {
@@ -10949,6 +11600,7 @@ export interface PostPipelineExecuteWithInputSetYamlQueryParams {
   repoName?: string
   useFQNIfError?: boolean
   notifyOnlyUser?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface PostPipelineExecuteWithInputSetYamlPathParams {
@@ -11058,6 +11710,7 @@ export interface PostPipelineExecuteWithInputSetListQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   useFQNIfError?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface PostPipelineExecuteWithInputSetListPathParams {
@@ -11168,6 +11821,7 @@ export interface RunStagesWithRuntimeInputYamlQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   useFQNIfError?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface RunStagesWithRuntimeInputYamlPathParams {
@@ -11271,6 +11925,7 @@ export interface PostPipelineExecuteWithInputSetYamlv2QueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   useFQNIfError?: boolean
+  notesForPipelineExecution?: string
 }
 
 export interface PostPipelineExecuteWithInputSetYamlv2PathParams {
@@ -11747,7 +12402,7 @@ export interface CreatePipelineQueryParams {
 }
 
 export type CreatePipelineProps = Omit<
-  MutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, CreateTriggerBodyRequestBody, void>,
+  MutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -11755,7 +12410,7 @@ export type CreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const CreatePipeline = (props: CreatePipelineProps) => (
-  <Mutate<ResponseString, Failure | Error, CreatePipelineQueryParams, CreateTriggerBodyRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, CreatePipelineQueryParams, UpdateTriggerBodyRequestBody, void>
     verb="POST"
     path={`/pipelines`}
     base={getConfig('pipeline/api')}
@@ -11764,7 +12419,7 @@ export const CreatePipeline = (props: CreatePipelineProps) => (
 )
 
 export type UseCreatePipelineProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, CreateTriggerBodyRequestBody, void>,
+  UseMutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -11772,7 +12427,7 @@ export type UseCreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const useCreatePipeline = (props: UseCreatePipelineProps) =>
-  useMutate<ResponseString, Failure | Error, CreatePipelineQueryParams, CreateTriggerBodyRequestBody, void>(
+  useMutate<ResponseString, Failure | Error, CreatePipelineQueryParams, UpdateTriggerBodyRequestBody, void>(
     'POST',
     `/pipelines`,
     { base: getConfig('pipeline/api'), ...props }
@@ -11786,12 +12441,12 @@ export const createPipelinePromise = (
     ResponseString,
     Failure | Error,
     CreatePipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, CreatePipelineQueryParams, CreateTriggerBodyRequestBody, void>(
+  mutateUsingFetch<ResponseString, Failure | Error, CreatePipelineQueryParams, UpdateTriggerBodyRequestBody, void>(
     'POST',
     getConfig('pipeline/api'),
     `/pipelines`,
@@ -12773,6 +13428,177 @@ export const getExecutionDataDetailsPromise = (
     GetExecutionDataDetailsPathParams
   >(getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/metadata/details`, props, signal)
 
+export interface GetNotesForExecutionQueryParams {
+  accountIdentifier: string
+}
+
+export interface GetNotesForExecutionPathParams {
+  planExecutionId: string
+}
+
+export type GetNotesForExecutionProps = Omit<
+  GetProps<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    GetNotesForExecutionQueryParams,
+    GetNotesForExecutionPathParams
+  >,
+  'path'
+> &
+  GetNotesForExecutionPathParams
+
+/**
+ * Get Notes of an execution from planExecutionMetadata
+ */
+export const GetNotesForExecution = ({ planExecutionId, ...props }: GetNotesForExecutionProps) => (
+  <Get<ResponsePipelineExecutionNotes, Failure | Error, GetNotesForExecutionQueryParams, GetNotesForExecutionPathParams>
+    path={`/pipelines/execution/${planExecutionId}/notes`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetNotesForExecutionProps = Omit<
+  UseGetProps<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    GetNotesForExecutionQueryParams,
+    GetNotesForExecutionPathParams
+  >,
+  'path'
+> &
+  GetNotesForExecutionPathParams
+
+/**
+ * Get Notes of an execution from planExecutionMetadata
+ */
+export const useGetNotesForExecution = ({ planExecutionId, ...props }: UseGetNotesForExecutionProps) =>
+  useGet<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    GetNotesForExecutionQueryParams,
+    GetNotesForExecutionPathParams
+  >((paramsInPath: GetNotesForExecutionPathParams) => `/pipelines/execution/${paramsInPath.planExecutionId}/notes`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { planExecutionId },
+    ...props
+  })
+
+/**
+ * Get Notes of an execution from planExecutionMetadata
+ */
+export const getNotesForExecutionPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    GetNotesForExecutionQueryParams,
+    GetNotesForExecutionPathParams
+  > & { planExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    GetNotesForExecutionQueryParams,
+    GetNotesForExecutionPathParams
+  >(getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/notes`, props, signal)
+
+export interface UpdateNotesForExecutionQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  notesForPipelineExecution: string
+}
+
+export interface UpdateNotesForExecutionPathParams {
+  planExecutionId: string
+}
+
+export type UpdateNotesForExecutionProps = Omit<
+  MutateProps<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    UpdateNotesForExecutionQueryParams,
+    void,
+    UpdateNotesForExecutionPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateNotesForExecutionPathParams
+
+/**
+ * Updates Notes of a pipelineExecution
+ */
+export const UpdateNotesForExecution = ({ planExecutionId, ...props }: UpdateNotesForExecutionProps) => (
+  <Mutate<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    UpdateNotesForExecutionQueryParams,
+    void,
+    UpdateNotesForExecutionPathParams
+  >
+    verb="PUT"
+    path={`/pipelines/execution/${planExecutionId}/notes`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateNotesForExecutionProps = Omit<
+  UseMutateProps<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    UpdateNotesForExecutionQueryParams,
+    void,
+    UpdateNotesForExecutionPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateNotesForExecutionPathParams
+
+/**
+ * Updates Notes of a pipelineExecution
+ */
+export const useUpdateNotesForExecution = ({ planExecutionId, ...props }: UseUpdateNotesForExecutionProps) =>
+  useMutate<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    UpdateNotesForExecutionQueryParams,
+    void,
+    UpdateNotesForExecutionPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateNotesForExecutionPathParams) => `/pipelines/execution/${paramsInPath.planExecutionId}/notes`,
+    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
+  )
+
+/**
+ * Updates Notes of a pipelineExecution
+ */
+export const updateNotesForExecutionPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    UpdateNotesForExecutionQueryParams,
+    void,
+    UpdateNotesForExecutionPathParams
+  > & { planExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePipelineExecutionNotes,
+    Failure | Error,
+    UpdateNotesForExecutionQueryParams,
+    void,
+    UpdateNotesForExecutionPathParams
+  >('PUT', getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/notes`, props, signal)
+
 export interface GetExpandedPipelineJSONQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -13547,6 +14373,7 @@ export interface GetPipelineSummaryQueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getMetadataOnly?: boolean
+  loadFromFallbackBranch?: boolean
 }
 
 export interface GetPipelineSummaryPathParams {
@@ -13648,7 +14475,7 @@ export type CreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13662,7 +14489,7 @@ export const CreatePipelineV2 = (props: CreatePipelineV2Props) => (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >
     verb="POST"
@@ -13677,7 +14504,7 @@ export type UseCreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13691,7 +14518,7 @@ export const useCreatePipelineV2 = (props: UseCreatePipelineV2Props) =>
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', `/pipelines/v2`, { base: getConfig('pipeline/api'), ...props })
 
@@ -13703,7 +14530,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -13712,7 +14539,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/v2`, props, signal)
 
@@ -13870,7 +14697,7 @@ export type PutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -13885,7 +14712,7 @@ export const PutPipelineV2 = ({ pipelineIdentifier, ...props }: PutPipelineV2Pro
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelineV2PathParams
   >
     verb="PUT"
@@ -13900,7 +14727,7 @@ export type UsePutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -13915,7 +14742,7 @@ export const usePutPipelineV2 = ({ pipelineIdentifier, ...props }: UsePutPipelin
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', (paramsInPath: PutPipelineV2PathParams) => `/pipelines/v2/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -13934,7 +14761,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelineV2PathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -13943,7 +14770,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/v2/${pipelineIdentifier}`, props, signal)
 
@@ -14008,7 +14835,7 @@ export interface ValidatePipelineByYAMLQueryParams {
 }
 
 export type ValidatePipelineByYAMLProps = Omit<
-  MutateProps<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, CreateTriggerBodyRequestBody, void>,
+  MutateProps<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -14016,7 +14843,7 @@ export type ValidatePipelineByYAMLProps = Omit<
  * Validate a Pipeline YAML
  */
 export const ValidatePipelineByYAML = (props: ValidatePipelineByYAMLProps) => (
-  <Mutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, CreateTriggerBodyRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, UpdateTriggerBodyRequestBody, void>
     verb="POST"
     path={`/pipelines/validate-yaml-with-schema`}
     base={getConfig('pipeline/api')}
@@ -14029,7 +14856,7 @@ export type UseValidatePipelineByYAMLProps = Omit<
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -14039,7 +14866,7 @@ export type UseValidatePipelineByYAMLProps = Omit<
  * Validate a Pipeline YAML
  */
 export const useValidatePipelineByYAML = (props: UseValidatePipelineByYAMLProps) =>
-  useMutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, CreateTriggerBodyRequestBody, void>(
+  useMutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, UpdateTriggerBodyRequestBody, void>(
     'POST',
     `/pipelines/validate-yaml-with-schema`,
     { base: getConfig('pipeline/api'), ...props }
@@ -14053,7 +14880,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -14062,7 +14889,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/validate-yaml-with-schema`, props, signal)
 
@@ -14382,7 +15209,7 @@ export type PutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -14393,7 +15220,7 @@ export type PutPipelineProps = Omit<
  * Update a Pipeline
  */
 export const PutPipeline = ({ pipelineIdentifier, ...props }: PutPipelineProps) => (
-  <Mutate<ResponseString, Failure | Error, PutPipelineQueryParams, CreateTriggerBodyRequestBody, PutPipelinePathParams>
+  <Mutate<ResponseString, Failure | Error, PutPipelineQueryParams, UpdateTriggerBodyRequestBody, PutPipelinePathParams>
     verb="PUT"
     path={`/pipelines/${pipelineIdentifier}`}
     base={getConfig('pipeline/api')}
@@ -14406,7 +15233,7 @@ export type UsePutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -14421,7 +15248,7 @@ export const usePutPipeline = ({ pipelineIdentifier, ...props }: UsePutPipelineP
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelinePathParams
   >('PUT', (paramsInPath: PutPipelinePathParams) => `/pipelines/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -14440,7 +15267,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelinePathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -14449,7 +15276,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     PutPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/${pipelineIdentifier}`, props, signal)
 
@@ -14946,7 +15773,7 @@ export interface CreateTriggerQueryParams {
 }
 
 export type CreateTriggerProps = Omit<
-  MutateProps<ResponseNGTriggerResponse, Failure | Error, CreateTriggerQueryParams, CreateTriggerBodyRequestBody, void>,
+  MutateProps<ResponseNGTriggerResponse, Failure | Error, CreateTriggerQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -14954,7 +15781,7 @@ export type CreateTriggerProps = Omit<
  * Create Trigger
  */
 export const CreateTrigger = (props: CreateTriggerProps) => (
-  <Mutate<ResponseNGTriggerResponse, Failure | Error, CreateTriggerQueryParams, CreateTriggerBodyRequestBody, void>
+  <Mutate<ResponseNGTriggerResponse, Failure | Error, CreateTriggerQueryParams, UpdateTriggerBodyRequestBody, void>
     verb="POST"
     path={`/triggers`}
     base={getConfig('pipeline/api')}
@@ -14967,7 +15794,7 @@ export type UseCreateTriggerProps = Omit<
     ResponseNGTriggerResponse,
     Failure | Error,
     CreateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -14977,7 +15804,7 @@ export type UseCreateTriggerProps = Omit<
  * Create Trigger
  */
 export const useCreateTrigger = (props: UseCreateTriggerProps) =>
-  useMutate<ResponseNGTriggerResponse, Failure | Error, CreateTriggerQueryParams, CreateTriggerBodyRequestBody, void>(
+  useMutate<ResponseNGTriggerResponse, Failure | Error, CreateTriggerQueryParams, UpdateTriggerBodyRequestBody, void>(
     'POST',
     `/triggers`,
     { base: getConfig('pipeline/api'), ...props }
@@ -14991,7 +15818,7 @@ export const createTriggerPromise = (
     ResponseNGTriggerResponse,
     Failure | Error,
     CreateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -15000,7 +15827,7 @@ export const createTriggerPromise = (
     ResponseNGTriggerResponse,
     Failure | Error,
     CreateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/triggers`, props, signal)
 
@@ -15492,7 +16319,7 @@ export type UpdateTriggerProps = Omit<
     ResponseNGTriggerResponse,
     Failure | Error,
     UpdateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateTriggerPathParams
   >,
   'path' | 'verb'
@@ -15507,7 +16334,7 @@ export const UpdateTrigger = ({ triggerIdentifier, ...props }: UpdateTriggerProp
     ResponseNGTriggerResponse,
     Failure | Error,
     UpdateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateTriggerPathParams
   >
     verb="PUT"
@@ -15522,7 +16349,7 @@ export type UseUpdateTriggerProps = Omit<
     ResponseNGTriggerResponse,
     Failure | Error,
     UpdateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateTriggerPathParams
   >,
   'path' | 'verb'
@@ -15537,7 +16364,7 @@ export const useUpdateTrigger = ({ triggerIdentifier, ...props }: UseUpdateTrigg
     ResponseNGTriggerResponse,
     Failure | Error,
     UpdateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateTriggerPathParams
   >('PUT', (paramsInPath: UpdateTriggerPathParams) => `/triggers/${paramsInPath.triggerIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -15556,7 +16383,7 @@ export const updateTriggerPromise = (
     ResponseNGTriggerResponse,
     Failure | Error,
     UpdateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateTriggerPathParams
   > & { triggerIdentifier: string },
   signal?: RequestInit['signal']
@@ -15565,7 +16392,7 @@ export const updateTriggerPromise = (
     ResponseNGTriggerResponse,
     Failure | Error,
     UpdateTriggerQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     UpdateTriggerPathParams
   >('PUT', getConfig('pipeline/api'), `/triggers/${triggerIdentifier}`, props, signal)
 
@@ -16116,7 +16943,7 @@ export interface CustomWebhookEndpointQueryParams {
 }
 
 export type CustomWebhookEndpointProps = Omit<
-  MutateProps<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>,
+  MutateProps<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -16124,7 +16951,7 @@ export type CustomWebhookEndpointProps = Omit<
  * accept custom webhook event
  */
 export const CustomWebhookEndpoint = (props: CustomWebhookEndpointProps) => (
-  <Mutate<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>
     verb="POST"
     path={`/webhook/custom`}
     base={getConfig('pipeline/api')}
@@ -16133,7 +16960,7 @@ export const CustomWebhookEndpoint = (props: CustomWebhookEndpointProps) => (
 )
 
 export type UseCustomWebhookEndpointProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>,
+  UseMutateProps<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -16141,7 +16968,7 @@ export type UseCustomWebhookEndpointProps = Omit<
  * accept custom webhook event
  */
 export const useCustomWebhookEndpoint = (props: UseCustomWebhookEndpointProps) =>
-  useMutate<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>(
+  useMutate<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>(
     'POST',
     `/webhook/custom`,
     { base: getConfig('pipeline/api'), ...props }
@@ -16155,7 +16982,7 @@ export const customWebhookEndpointPromise = (
     ResponseString,
     Failure | Error,
     CustomWebhookEndpointQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -16164,7 +16991,7 @@ export const customWebhookEndpointPromise = (
     ResponseString,
     Failure | Error,
     CustomWebhookEndpointQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/webhook/custom`, props, signal)
 
@@ -16181,7 +17008,7 @@ export type CustomWebhookEndpointV2Props = Omit<
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -16195,7 +17022,7 @@ export const CustomWebhookEndpointV2 = (props: CustomWebhookEndpointV2Props) => 
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >
     verb="POST"
@@ -16210,7 +17037,7 @@ export type UseCustomWebhookEndpointV2Props = Omit<
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -16224,7 +17051,7 @@ export const useCustomWebhookEndpointV2 = (props: UseCustomWebhookEndpointV2Prop
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', `/webhook/custom/v2`, { base: getConfig('pipeline/api'), ...props })
 
@@ -16236,7 +17063,7 @@ export const customWebhookEndpointV2Promise = (
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -16245,9 +17072,103 @@ export const customWebhookEndpointV2Promise = (
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/webhook/custom/v2`, props, signal)
+
+export interface CustomWebhookEndpointV3QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier?: string
+  triggerIdentifier?: string
+}
+
+export interface CustomWebhookEndpointV3PathParams {
+  webhookToken: string
+}
+
+export type CustomWebhookEndpointV3Props = Omit<
+  MutateProps<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV3QueryParams,
+    UpdateTriggerBodyRequestBody,
+    CustomWebhookEndpointV3PathParams
+  >,
+  'path' | 'verb'
+> &
+  CustomWebhookEndpointV3PathParams
+
+/**
+ * accept custom webhook event V3
+ */
+export const CustomWebhookEndpointV3 = ({ webhookToken, ...props }: CustomWebhookEndpointV3Props) => (
+  <Mutate<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV3QueryParams,
+    UpdateTriggerBodyRequestBody,
+    CustomWebhookEndpointV3PathParams
+  >
+    verb="POST"
+    path={`/webhook/custom/${webhookToken}/v3`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseCustomWebhookEndpointV3Props = Omit<
+  UseMutateProps<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV3QueryParams,
+    UpdateTriggerBodyRequestBody,
+    CustomWebhookEndpointV3PathParams
+  >,
+  'path' | 'verb'
+> &
+  CustomWebhookEndpointV3PathParams
+
+/**
+ * accept custom webhook event V3
+ */
+export const useCustomWebhookEndpointV3 = ({ webhookToken, ...props }: UseCustomWebhookEndpointV3Props) =>
+  useMutate<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV3QueryParams,
+    UpdateTriggerBodyRequestBody,
+    CustomWebhookEndpointV3PathParams
+  >('POST', (paramsInPath: CustomWebhookEndpointV3PathParams) => `/webhook/custom/${paramsInPath.webhookToken}/v3`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { webhookToken },
+    ...props
+  })
+
+/**
+ * accept custom webhook event V3
+ */
+export const customWebhookEndpointV3Promise = (
+  {
+    webhookToken,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV3QueryParams,
+    UpdateTriggerBodyRequestBody,
+    CustomWebhookEndpointV3PathParams
+  > & { webhookToken: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV3QueryParams,
+    UpdateTriggerBodyRequestBody,
+    CustomWebhookEndpointV3PathParams
+  >('POST', getConfig('pipeline/api'), `/webhook/custom/${webhookToken}/v3`, props, signal)
 
 export type GetGitTriggerEventDetailsProps = Omit<
   GetProps<ResponseMapStringMapStringListString, Failure | Error, void, void>,
@@ -16558,7 +17479,7 @@ export interface WebhookEndpointQueryParams {
 }
 
 export type WebhookEndpointProps = Omit<
-  MutateProps<ResponseString, Failure | Error, WebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>,
+  MutateProps<ResponseString, Failure | Error, WebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -16566,7 +17487,7 @@ export type WebhookEndpointProps = Omit<
  * accept webhook event
  */
 export const WebhookEndpoint = (props: WebhookEndpointProps) => (
-  <Mutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>
     verb="POST"
     path={`/webhook/trigger`}
     base={getConfig('pipeline/api')}
@@ -16575,7 +17496,7 @@ export const WebhookEndpoint = (props: WebhookEndpointProps) => (
 )
 
 export type UseWebhookEndpointProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, WebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>,
+  UseMutateProps<ResponseString, Failure | Error, WebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -16583,7 +17504,7 @@ export type UseWebhookEndpointProps = Omit<
  * accept webhook event
  */
 export const useWebhookEndpoint = (props: UseWebhookEndpointProps) =>
-  useMutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>(
+  useMutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>(
     'POST',
     `/webhook/trigger`,
     { base: getConfig('pipeline/api'), ...props }
@@ -16597,12 +17518,12 @@ export const webhookEndpointPromise = (
     ResponseString,
     Failure | Error,
     WebhookEndpointQueryParams,
-    CreateTriggerBodyRequestBody,
+    UpdateTriggerBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, WebhookEndpointQueryParams, CreateTriggerBodyRequestBody, void>(
+  mutateUsingFetch<ResponseString, Failure | Error, WebhookEndpointQueryParams, UpdateTriggerBodyRequestBody, void>(
     'POST',
     getConfig('pipeline/api'),
     `/webhook/trigger`,
@@ -16993,7 +17914,7 @@ export interface GetSchemaYamlQueryParams {
     | 'GITOPS_SYNC'
     | 'BambooBuild'
     | 'CdSscaOrchestration'
-    | 'TasRouteMapping'
+    | 'RouteMapping'
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
@@ -17002,6 +17923,9 @@ export interface GetSchemaYamlQueryParams {
     | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
+    | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
+    | 'Semgrep'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -17303,7 +18227,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'GITOPS_SYNC'
     | 'BambooBuild'
     | 'CdSscaOrchestration'
-    | 'TasRouteMapping'
+    | 'RouteMapping'
     | 'AWSSecurityHub'
     | 'CustomIngest'
     | 'BackstageEnvironmentVariable'
@@ -17312,6 +18236,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Gitleaks'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
+    | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
+    | 'Semgrep'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

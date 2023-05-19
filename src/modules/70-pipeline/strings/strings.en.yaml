@@ -1363,9 +1363,11 @@ singleStageExecution: 'SELECTIVE STAGE EXECUTION:'
 multiStageExecution: 'MULTIPLE STAGES EXECUTION'
 allStages: All Stages
 retryHistory: Retry History
-retryHistoryDescription: List of retries for my Pipeline
+retryHistoryTotalCount: 'Total {{moduleText}}: {{totalCount}}'
 recentExecutionText: Most Recent Execution
-viewLatestExecution: You are viewing an older execution of this pipeline.
+recentBuildText: Most Recent Build
+buildHeaderText: Build History
+viewLatestExecution: You're viewing an older {{type}}
 featureRestriction:
   integratedApprovalsJira: Integrated Approvals with Jira
   serviceLimitExceeded: You have reached the Service License limit.
@@ -1830,3 +1832,5 @@ pipelineExecutionEventData:
   pipelineIdentifier: Pipeline Identifier
   stageIdentifier: Stage Identifier
   stageType: Stage Type
+retried: retried
+stageExecutedBefore: This stage has been re-executed.

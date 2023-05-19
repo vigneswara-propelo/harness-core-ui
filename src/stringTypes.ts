@@ -3886,6 +3886,7 @@ export interface StringsMap {
   'pipeline.barriers.tooltips.timeout': string
   'pipeline.barriers.validation.barrierNamerequired': string
   'pipeline.bucketNameHelperText': string
+  'pipeline.buildHeaderText': string
   'pipeline.buildInfra.addCapabilities': string
   'pipeline.buildInfra.allowPrivilegeEscalation': string
   'pipeline.buildInfra.automountServiceAccountToken': string
@@ -4743,6 +4744,7 @@ export interface StringsMap {
   'pipeline.queueStep.scope': string
   'pipeline.queueStep.scopePlaceholder': string
   'pipeline.queueStep.scopeRequired': string
+  'pipeline.recentBuildText': string
   'pipeline.recentExecutionText': string
   'pipeline.recentExecutions': string
   'pipeline.reconcileDialog.subtitle': string
@@ -4772,8 +4774,9 @@ export interface StringsMap {
   'pipeline.resourceConstraints.title': string
   'pipeline.resourceConstraints.traditionalInfraEntity': string
   'pipeline.resourceConstraints.yourPipeline': string
+  'pipeline.retried': string
   'pipeline.retryHistory': string
-  'pipeline.retryHistoryDescription': string
+  'pipeline.retryHistoryTotalCount': string
   'pipeline.retryPipeline': string
   'pipeline.rightBar.editCodebaseConfiguration': string
   'pipeline.rightBar.mergeCommit': string
@@ -4901,6 +4904,7 @@ export interface StringsMap {
   'pipeline.stageDataDeleteWarningText': string
   'pipeline.stageDataDeleteWarningTitle': string
   'pipeline.stageDependencyError': string
+  'pipeline.stageExecutedBefore': string
   'pipeline.stageExecutionSettings': string
   'pipeline.stageExecutionsHelperText': string
   'pipeline.stageVariables': string
