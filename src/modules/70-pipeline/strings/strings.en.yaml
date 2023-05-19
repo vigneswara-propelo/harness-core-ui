@@ -367,7 +367,6 @@ manifestType:
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
   azureRepoConnectorLabel: 'Azure Repo'
-  bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
   customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
