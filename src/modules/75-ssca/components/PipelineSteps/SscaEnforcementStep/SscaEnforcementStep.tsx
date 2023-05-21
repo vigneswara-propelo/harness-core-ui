@@ -42,7 +42,7 @@ export interface SscaEnforcementStepSpec {
     store: {
       type: 'Harness'
       spec: {
-        file: string[]
+        file: string
       }
     }
   }
@@ -106,7 +106,7 @@ export class SscaEnforcementStep extends PipelineStep<SscaEnforcementStepData> {
         store: {
           type: 'Harness',
           spec: {
-            file: ['']
+            file: ''
           }
         }
       }

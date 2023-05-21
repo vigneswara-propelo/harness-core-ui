@@ -37,7 +37,7 @@ const runtimeValues = {
       store: {
         type: 'Harness',
         spec: {
-          file: ['testFilePath']
+          file: 'testFilePath'
         }
       }
     }
@@ -66,7 +66,7 @@ const fixedValues = {
       store: {
         type: 'Harness',
         spec: {
-          file: ['testFilePath']
+          file: 'testFilePath'
         }
       }
     }
