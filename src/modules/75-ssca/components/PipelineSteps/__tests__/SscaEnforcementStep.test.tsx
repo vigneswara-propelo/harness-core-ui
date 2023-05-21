@@ -28,7 +28,10 @@ const runtimeValues = {
       }
     },
     verifyAttestation: {
-      publicKey: RUNTIME_INPUT_VALUE
+      type: 'cosign',
+      spec: {
+        publicKey: RUNTIME_INPUT_VALUE
+      }
     },
     policy: {
       store: {
@@ -54,7 +57,10 @@ const fixedValues = {
       }
     },
     verifyAttestation: {
-      publicKey: 'testKey'
+      type: 'cosign',
+      spec: {
+        publicKey: 'testKey'
+      }
     },
     policy: {
       store: {
@@ -92,7 +98,7 @@ describe('Ssca Enforcement Step', () => {
     )
 
     await act(() => ref.current?.submitForm()!)
-    expect(onUpdate).toHaveBeenCalledWith(runtimeValues)
+    expect(onUpdate).toHaveBeenLastCalledWith(runtimeValues)
   })
 
   test('input set view', async () => {

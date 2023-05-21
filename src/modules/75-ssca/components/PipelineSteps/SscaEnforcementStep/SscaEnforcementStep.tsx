@@ -33,7 +33,10 @@ export interface SscaEnforcementStepSpec {
     }
   }
   verifyAttestation: {
-    publicKey: string
+    type: 'cosign' //TODO: update once BE changes are available in type definition
+    spec: {
+      publicKey: string
+    }
   }
   policy: {
     store: {
@@ -94,7 +97,10 @@ export class SscaEnforcementStep extends PipelineStep<SscaEnforcementStepData> {
         }
       },
       verifyAttestation: {
-        publicKey: ''
+        type: 'cosign',
+        spec: {
+          publicKey: ''
+        }
       },
       policy: {
         store: {
