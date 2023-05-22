@@ -1337,7 +1337,7 @@ executionStrategy:
       description: A blank slate for custom processes. You can use any combination of steps. Only recommended for advanced users.
       learnMoreLink: https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-concepts/
     basic:
-      description: In a Basic deployment, all nodes within a single environment are replaced at the same time with new nodes containing the new service/artifact version.Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
+      description: In a Basic deployment, all nodes(pods, instances, etc) within a single environment are replaced at the same time with new nodes containing the new service/artifact version. Basic deployments are useful for experiments, learning Harness, and any non-mission critical workflows.
     common:
       steps:
         step1:
