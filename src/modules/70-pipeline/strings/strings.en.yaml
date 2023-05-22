@@ -1708,6 +1708,7 @@ viewFreeze: View freeze details
 executionTriggeredBy: This execution was triggered by
 triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
+rollbackExecution: This execution was a rollback to a previous version
 triggeredByThirdParty: Triggered by a third party system
 triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
 configureArtifactSource: Configure Artifact Source

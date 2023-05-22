@@ -4790,6 +4790,7 @@ export interface StringsMap {
   'pipeline.retryPipeline': string
   'pipeline.rightBar.editCodebaseConfiguration': string
   'pipeline.rightBar.mergeCommit': string
+  'pipeline.rollbackExecution': string
   'pipeline.runAPipeline': string
   'pipeline.runAllParallelstages': string
   'pipeline.runDisabledOnFreeze': string
