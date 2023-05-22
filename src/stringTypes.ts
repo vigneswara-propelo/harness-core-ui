@@ -2213,18 +2213,25 @@ export interface StringsMap {
   'authSettings.ipAddress.deleteIpAddressDialogContent': string
   'authSettings.ipAddress.deleteIpAddressDialogTitle': string
   'authSettings.ipAddress.deleteSuccessful': string
+  'authSettings.ipAddress.determiningCurrentIp': string
   'authSettings.ipAddress.duplicateIdError': string
+  'authSettings.ipAddress.enableIpAddressDialogContent': string
+  'authSettings.ipAddress.enableIpAddressDialogTitle': string
+  'authSettings.ipAddress.enableIpAddressDialogWarningFail': string
+  'authSettings.ipAddress.enableIpAddressDialogWarningSuccess': string
   'authSettings.ipAddress.errorWhileCreating': string
   'authSettings.ipAddress.errorWhileDeleting': string
   'authSettings.ipAddress.errorWhileUpdating': string
   'authSettings.ipAddress.errorWhileValidating': string
   'authSettings.ipAddress.inRange': string
+  'authSettings.ipAddress.includesYourIpAddress': string
   'authSettings.ipAddress.invalid': string
   'authSettings.ipAddress.ipAddressCIDR': string
   'authSettings.ipAddress.ipAllowlistCreated': string
   'authSettings.ipAddress.ipAllowlistUpdated': string
   'authSettings.ipAddress.ipInvalid': string
   'authSettings.ipAddress.ipRequired': string
+  'authSettings.ipAddress.noCurrentIpEnableIpAddressDialogWarning': string
   'authSettings.ipAddress.noIPsAllowlisted': string
   'authSettings.ipAddress.notAPartOfAllowlist': string
   'authSettings.ipAddress.notInRange': string
@@ -2232,8 +2239,10 @@ export interface StringsMap {
   'authSettings.ipAddress.testIP': string
   'authSettings.ipAddress.testIPIfInRange': string
   'authSettings.ipAddress.testIPIfPartOfAllowlist': string
+  'authSettings.ipAddress.unableToDetermineIp': string
   'authSettings.ipAddress.useMyCurrentIP': string
   'authSettings.ipAddress.validateUniqueIdentifierError': string
+  'authSettings.ipAddress.yourIpAddressIs': string
   'authSettings.ipAllowlist': string
   'authSettings.keepAtLeastOneProviderEnabled': string
   'authSettings.ldap.addGroupQueryDescription': string
@@ -2378,6 +2387,7 @@ export interface StringsMap {
   'authSettings.useHarnessUsernameAndPassword': string
   'authSettings.usePublicOAuth': string
   'authSettings.whitelistedDomainsDisabled': string
+  'authSettings.yesIamSure': string
   'authSettings.yourAccountWillBeLockedOut': string
   'connectors.ECR.fullName': string
   'connectors.ECR.name': string
@@ -3600,7 +3610,6 @@ export interface StringsMap {
   'projectsOrgs.welcome': string
   'projectsOrgs.welcomeSecondLine': string
   'projectsOrgs.whyCreateProject': string
-  'projectsOrgs.yesIamSure': string
   'projectsOrgs.youHaveNoProjects': string
   'assessments.basedOnResultsHarnessRecommendations': string
   'assessments.benchmark': string
