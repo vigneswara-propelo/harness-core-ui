@@ -145,6 +145,7 @@ export enum PAGE_NAME {
   CODEFileEdit = 'CODEFileEdit',
   CODECommits = 'CODECommits',
   CODEBranches = 'CODEBranches',
+  CODETags = 'CODETags',
   ExecutionList = 'ExecutionList',
   CFConfigurePath = 'CFConfigurePath',
   SSCAHomePage = 'SSCAHomePage',
