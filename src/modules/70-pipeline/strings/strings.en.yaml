@@ -1503,6 +1503,7 @@ serviceDataDeleteWarningText: Changing deployment type will delete existing serv
 envTypeChangeServiceDataDeleteWarningText: Changing environment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
+  templateErrorsTitle: 'Template cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
   fixStep: Fix Step
   fixStage: Fix Stage

@@ -4099,6 +4099,7 @@ export interface StringsMap {
   'pipeline.errorFramework.header8': string
   'pipeline.errorFramework.header9': string
   'pipeline.errorFramework.pipelineErrorsTitle': string
+  'pipeline.errorFramework.templateErrorsTitle': string
   'pipeline.estimatedTimeRemaining': string
   'pipeline.execution.actions.abortPipeline': string
   'pipeline.execution.actions.abortStage': string
