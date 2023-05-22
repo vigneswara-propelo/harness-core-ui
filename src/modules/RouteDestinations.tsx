@@ -94,7 +94,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CDRoutes.props.children}
       {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
-      {IDP_ENABLED ? IDPRoutes.props.children : null}
+      {IDP_ENABLED ? IDPRoutes().props.children : null}
       <Route path="/account/:accountId/:module(sto)">
         <STORoutes />
       </Route>
