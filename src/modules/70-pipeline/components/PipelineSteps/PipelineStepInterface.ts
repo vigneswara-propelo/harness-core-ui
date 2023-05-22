@@ -208,7 +208,8 @@ export enum StepType {
   Brakeman = 'Brakeman',
   Fossa = 'Fossa',
   Semgrep = 'Semgrep',
-  KubernetesAws = 'KubernetesAws'
+  KubernetesAws = 'KubernetesAws',
+  AwsSam = 'AWS_SAM'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

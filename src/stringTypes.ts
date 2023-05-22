@@ -4566,6 +4566,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition': string
   'pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition': string
   'pipeline.manifestTypeLabels.AwsSAM': string
+  'pipeline.manifestTypeLabels.AwsSamDirectory': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
   'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string

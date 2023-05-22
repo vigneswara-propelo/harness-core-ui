@@ -485,6 +485,7 @@ manifestTypeLabels:
   HelmRepoOverride: Helm Repo Override
   AwsLambdaFunctionDefinition: AWS Lambda Function Definition
   AwsLambdaFunctionAliasDefinition: AWS Lambda Function Alias Definition
+  AwsSamDirectory: AWS SAM Directory
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
