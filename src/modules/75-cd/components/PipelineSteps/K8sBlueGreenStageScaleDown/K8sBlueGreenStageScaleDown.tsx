@@ -153,7 +153,7 @@ const K8sBGStageScaleDownDataInputStep: React.FC<K8sBGStageScaleDownStepProps> =
 
 const K8sBGStageScaleDownWidgetWithRef = React.forwardRef(K8sBGStageScaleDownWidget)
 
-export class K8sBlueGreenStageScaleDownStep extends PipelineStep<K8sBGStageScaleDownData> {
+export class K8sBlueGreenStageScaleDown extends PipelineStep<K8sBGStageScaleDownData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -220,16 +220,16 @@ export class K8sBlueGreenStageScaleDownStep extends PipelineStep<K8sBGStageScale
     return validateGitOpsExecutionStepForm({ data, template, getString, viewType })
   }
 
-  protected type = StepType.K8sBlueGreenStageScaleDownStep
+  protected type = StepType.K8sBlueGreenStageScaleDown
   protected stepName = 'K8s BlueGreenStageScaleDown'
   protected stepIcon: IconName = 'bg-scale-down-step'
-  protected referenceId = 'K8sBlueGreenStageScaleDownStep'
+  protected referenceId = 'K8sBlueGreenStageScaleDown'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.BlueGreenStageScaleDown'
 
   protected defaultValues: K8sBGStageScaleDownData = {
     identifier: '',
     name: '',
-    type: StepType.K8sBlueGreenStageScaleDownStep,
+    type: StepType.K8sBlueGreenStageScaleDown,
     timeout: '10m',
     spec: {}
   }

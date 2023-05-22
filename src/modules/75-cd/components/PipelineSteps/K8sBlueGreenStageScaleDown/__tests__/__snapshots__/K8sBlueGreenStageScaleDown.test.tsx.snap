@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[` K8sBlueGreenStageScaleDownStep Step variable view  validate default inputVariables section 1`] = `
+exports[` K8sBlueGreenStageScaleDown Step variable view  validate default inputVariables section 1`] = `
 <div>
   <div
     class="variablesListTable variablePaddingL3"
@@ -8,13 +8,13 @@ exports[` K8sBlueGreenStageScaleDownStep Step variable view  validate default in
 </div>
 `;
 
-exports[`K8sBlueGreenStageScaleDownStep - runtime view and validation test Input set view validation for timeout: Value must be greater than or equal to "10s" 1`] = `
+exports[`K8sBlueGreenStageScaleDown - runtime view and validation test Input set view validation for timeout: Value must be greater than or equal to "10s" 1`] = `
 Object {
   "timeout": "Value must be greater than or equal to \\"10s\\"",
 }
 `;
 
-exports[`Test K8sBlueGreenStageScaleDownStep should render edit view as new step - with initial snapshot 1`] = `
+exports[`Test K8sBlueGreenStageScaleDown should render edit view as new step - with initial snapshot 1`] = `
 <div>
   <div
     class="OverlaySpinner--overlaySpinner"

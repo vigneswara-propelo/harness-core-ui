@@ -7,20 +7,20 @@
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { K8sBGStageScaleDownData } from '../K8sBlueGreenStageScaleDownStep'
+import type { K8sBGStageScaleDownData } from '../K8sBlueGreenStageScaleDown'
 
 export const initialValues: K8sBGStageScaleDownData = {
-  type: StepType.K8sBlueGreenStageScaleDownStep,
-  name: 'K8sBlueGreenStageScaleDownStep',
-  identifier: 'K8sBlueGreenStageScaleDownStep',
+  type: StepType.K8sBlueGreenStageScaleDown,
+  name: 'K8sBlueGreenStageScaleDown',
+  identifier: 'K8sBlueGreenStageScaleDown',
   timeout: '10m',
   spec: {}
 }
 
 export const runtimeValues = {
-  type: StepType.K8sBlueGreenStageScaleDownStep,
-  name: 'K8sBlueGreenStageScaleDownStep',
-  identifier: 'K8sBlueGreenStageScaleDownStep',
+  type: StepType.K8sBlueGreenStageScaleDown,
+  name: 'K8sBlueGreenStageScaleDown',
+  identifier: 'K8sBlueGreenStageScaleDown',
   timeout: RUNTIME_INPUT_VALUE,
   spec: {}
 }
@@ -29,8 +29,8 @@ export const variableCustomStepProps = {
   metadataMap: {
     'mF96Tc2eR7GLfy1tP-pzRQ': {
       yamlProperties: {
-        fqn: 'pipeline.stages.qaStage.spec.execution.steps.K8sBlueGreenStageScaleDownStep.description',
-        localName: 'execution.steps.K8sBlueGreenStageScaleDownStep.description',
+        fqn: 'pipeline.stages.qaStage.spec.execution.steps.K8sBlueGreenStageScaleDown.description',
+        localName: 'execution.steps.K8sBlueGreenStageScaleDown.description',
         variableName: 'description',
         aliasFQN: '',
         visible: true
@@ -38,8 +38,8 @@ export const variableCustomStepProps = {
     },
     'step-name': {
       yamlProperties: {
-        fqn: 'pipeline.stages.qaStage.spec.execution.steps.K8sBlueGreenStageScaleDownStep.name',
-        localName: 'execution.steps.K8sBlueGreenStageScaleDownStep.name',
+        fqn: 'pipeline.stages.qaStage.spec.execution.steps.K8sBlueGreenStageScaleDown.name',
+        localName: 'execution.steps.K8sBlueGreenStageScaleDown.name',
         variableName: 'name',
         aliasFQN: '',
         visible: true
@@ -47,8 +47,8 @@ export const variableCustomStepProps = {
     },
     lVkXFFEUTLi4PzQzS7OhKw: {
       yamlProperties: {
-        fqn: 'pipeline.stages.qaStage.spec.execution.steps.K8sBlueGreenStageScaleDownStep.timeout',
-        localName: 'execution.steps.K8sBlueGreenStageScaleDownStep.timeout',
+        fqn: 'pipeline.stages.qaStage.spec.execution.steps.K8sBlueGreenStageScaleDown.timeout',
+        localName: 'execution.steps.K8sBlueGreenStageScaleDown.timeout',
         variableName: 'timeout',
         aliasFQN: '',
         visible: true
@@ -56,9 +56,9 @@ export const variableCustomStepProps = {
     }
   },
   variablesData: {
-    type: StepType.K8sBlueGreenStageScaleDownStep,
-    name: 'K8sBlueGreenStageScaleDownStep',
-    identifier: 'K8sBlueGreenStageScaleDownStep',
+    type: StepType.K8sBlueGreenStageScaleDown,
+    name: 'K8sBlueGreenStageScaleDown',
+    identifier: 'K8sBlueGreenStageScaleDown',
     description: 'mF96Tc2eR7GLfy1tP-pzRQ',
     timeout: 'lVkXFFEUTLi4PzQzS7OhKw',
     spec: {}

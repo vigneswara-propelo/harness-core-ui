@@ -12,18 +12,14 @@ import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { queryByNameAttribute } from '@common/utils/testUtils'
-import { K8sBlueGreenStageScaleDownStep } from '../K8sBlueGreenStageScaleDownStep'
+import { K8sBlueGreenStageScaleDown } from '../K8sBlueGreenStageScaleDown'
 import { initialValues, runtimeValues, variableCustomStepProps } from './mocks'
 
-factory.registerStep(new K8sBlueGreenStageScaleDownStep())
-describe('Test K8sBlueGreenStageScaleDownStep', () => {
+factory.registerStep(new K8sBlueGreenStageScaleDown())
+describe('Test K8sBlueGreenStageScaleDown', () => {
   test('should render edit view as new step - with initial snapshot', () => {
     const { container } = render(
-      <TestStepWidget
-        initialValues={{}}
-        type={StepType.K8sBlueGreenStageScaleDownStep}
-        stepViewType={StepViewType.Edit}
-      />
+      <TestStepWidget initialValues={{}} type={StepType.K8sBlueGreenStageScaleDown} stepViewType={StepViewType.Edit} />
     )
     expect(container).toMatchSnapshot()
   })
@@ -35,7 +31,7 @@ describe('Test K8sBlueGreenStageScaleDownStep', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={initialValues}
-        type={StepType.K8sBlueGreenStageScaleDownStep}
+        type={StepType.K8sBlueGreenStageScaleDown}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         onChange={onChange}
@@ -51,7 +47,7 @@ describe('Test K8sBlueGreenStageScaleDownStep', () => {
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step1',
       name: 'Step1',
-      type: 'K8sBlueGreenStageScaleDownStep',
+      type: 'K8sBlueGreenStageScaleDown',
       timeout: '1m',
       spec: {}
     })
@@ -60,7 +56,7 @@ describe('Test K8sBlueGreenStageScaleDownStep', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.K8sBlueGreenStageScaleDownStep}
+        type={StepType.K8sBlueGreenStageScaleDown}
         stepViewType={StepViewType.Template}
       />
     )
@@ -80,7 +76,7 @@ describe('Test K8sBlueGreenStageScaleDownStep', () => {
           timeout: '',
           spec: {}
         }}
-        type={StepType.K8sBlueGreenStageScaleDownStep}
+        type={StepType.K8sBlueGreenStageScaleDown}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         onChange={onChange}
@@ -94,7 +90,7 @@ describe('Test K8sBlueGreenStageScaleDownStep', () => {
     })
   })
 })
-describe('K8sBlueGreenStageScaleDownStep - runtime view and validation test', () => {
+describe('K8sBlueGreenStageScaleDown - runtime view and validation test', () => {
   test('should submit runtime values', async () => {
     const onUpdate = jest.fn()
     const onChange = jest.fn()
@@ -102,7 +98,7 @@ describe('K8sBlueGreenStageScaleDownStep - runtime view and validation test', ()
     render(
       <TestStepWidget
         initialValues={runtimeValues}
-        type={StepType.K8sBlueGreenStageScaleDownStep}
+        type={StepType.K8sBlueGreenStageScaleDown}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         onChange={onChange}
@@ -112,11 +108,11 @@ describe('K8sBlueGreenStageScaleDownStep - runtime view and validation test', ()
 
     await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalledWith({
-      identifier: 'K8sBlueGreenStageScaleDownStep',
-      name: 'K8sBlueGreenStageScaleDownStep',
+      identifier: 'K8sBlueGreenStageScaleDown',
+      name: 'K8sBlueGreenStageScaleDown',
       spec: {},
       timeout: RUNTIME_INPUT_VALUE,
-      type: 'K8sBlueGreenStageScaleDownStep'
+      type: 'K8sBlueGreenStageScaleDown'
     })
   })
 
@@ -124,7 +120,7 @@ describe('K8sBlueGreenStageScaleDownStep - runtime view and validation test', ()
     const { container } = render(
       <TestStepWidget
         initialValues={runtimeValues}
-        type={StepType.K8sBlueGreenStageScaleDownStep}
+        type={StepType.K8sBlueGreenStageScaleDown}
         stepViewType={StepViewType.DeploymentForm}
         template={runtimeValues}
       />
@@ -134,12 +130,12 @@ describe('K8sBlueGreenStageScaleDownStep - runtime view and validation test', ()
   })
 
   test('Input set view validation for timeout', () => {
-    const response = new K8sBlueGreenStageScaleDownStep().validateInputSet({
+    const response = new K8sBlueGreenStageScaleDown().validateInputSet({
       data: {
-        name: 'K8sBlueGreenStageScaleDownStep',
-        identifier: 'K8sBlueGreenStageScaleDownStep',
+        name: 'K8sBlueGreenStageScaleDown',
+        identifier: 'K8sBlueGreenStageScaleDown',
         timeout: '1s',
-        type: 'K8sBlueGreenStageScaleDownStep',
+        type: 'K8sBlueGreenStageScaleDown',
         spec: {}
       } as any,
       template: {
@@ -153,19 +149,19 @@ describe('K8sBlueGreenStageScaleDownStep - runtime view and validation test', ()
   })
 })
 
-describe(' K8sBlueGreenStageScaleDownStep Step variable view ', () => {
+describe(' K8sBlueGreenStageScaleDown Step variable view ', () => {
   test('validate default inputVariables section', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={{
-          type: StepType.K8sBlueGreenStageScaleDownStep,
-          name: 'K8sBlueGreenStageScaleDownStep',
-          identifier: 'K8sBlueGreenStageScaleDownStep',
+          type: StepType.K8sBlueGreenStageScaleDown,
+          name: 'K8sBlueGreenStageScaleDown',
+          identifier: 'K8sBlueGreenStageScaleDown',
           description: 'sample description',
           timeout: '10m',
           spec: { skipDryRun: RUNTIME_INPUT_VALUE }
         }}
-        type={StepType.K8sBlueGreenStageScaleDownStep}
+        type={StepType.K8sBlueGreenStageScaleDown}
         stepViewType={StepViewType.InputVariable}
         customStepProps={variableCustomStepProps}
       />
