@@ -9,15 +9,17 @@ import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import type { Column, Renderer, CellProps } from 'react-table'
-import { Text, Layout, TableV2 } from '@harness/uicore'
+import { Text, Layout, TableV2, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
+import { Drawer } from '@blueprintjs/core'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import type { NGTriggerEventHistoryResponse, PageNGTriggerEventHistoryResponse } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import css from './TriggerActivityHistoryPage.module.scss'
 
 interface TriggerActivityListProps {
@@ -78,8 +80,26 @@ const RenderColumnExecutionId: CellType = ({ row }) => {
   )
 }
 
+const RenderColumnPayload: CellType = ({ row, column }) => {
+  return (
+    <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }}>
+      <Icon
+        name="main-notes"
+        size={20}
+        className={css.notesIcon}
+        onClick={() => {
+          ;(column as any)?.setShowPayload(true)
+          ;(column as any)?.setSelectedPayloadRow(row.original?.payload)
+        }}
+      />
+    </Layout.Horizontal>
+  )
+}
+
 const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListResponse }) => {
   const { getString } = useStrings()
+  const [showPayload, setShowPayload] = React.useState<boolean>(true)
+  const [selectedPayloadRow, setSelectedPayloadRow] = React.useState<string | undefined>()
   const data: NGTriggerEventHistoryResponse[] = useMemo(
     () => triggersListResponse?.content || [],
     [triggersListResponse?.content]
@@ -112,8 +132,10 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
       },
       {
         Header: getString('common.payload'),
-        width: '10%'
-        // Cell: RenderColumnPayload {<TODO/>}
+        width: '10%',
+        Cell: RenderColumnPayload,
+        setShowPayload,
+        setSelectedPayloadRow
       }
     ],
     []
@@ -127,13 +149,49 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
   })
 
   return (
-    <TableV2<NGTriggerEventHistoryResponse>
-      className={css.table}
-      columns={columns}
-      data={data}
-      name="TriggerListView"
-      pagination={paginationProps}
-    />
+    <>
+      <TableV2<NGTriggerEventHistoryResponse>
+        className={css.table}
+        columns={columns}
+        data={data}
+        name="TriggerListView"
+        pagination={paginationProps}
+      />
+      {showPayload && selectedPayloadRow && (
+        <Drawer
+          className={css.drawer}
+          autoFocus={true}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          enforceFocus={true}
+          hasBackdrop={true}
+          usePortal={true}
+          isOpen={true}
+          size={790}
+          title={<Text font={{ variation: FontVariation.H4 }}>{getString('common.payload')}</Text>}
+          onClose={() => setShowPayload(false)}
+        >
+          <MonacoEditor
+            language="yaml"
+            value={JSON.stringify(JSON.parse(selectedPayloadRow), null, 2)}
+            data-testid="monaco-editor"
+            alwaysShowDarkTheme={true}
+            options={
+              {
+                readOnly: true,
+                wordBasedSuggestions: false,
+                minimap: {
+                  enabled: false
+                },
+                fontFamily: "'Roboto Mono', monospace",
+                fontSize: 13,
+                scrollBeyondLastLine: false
+              } as any
+            }
+          />
+        </Drawer>
+      )}
+    </>
   )
 }
 

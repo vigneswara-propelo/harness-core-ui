@@ -145,6 +145,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
       }
     }
   })
+  const { CDS_TRIGGER_ACTIVITY_PAGE } = useFeatureFlags()
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       <Popover
@@ -182,20 +183,24 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
             }}
           />
           <Menu.Divider />
-          <Menu.Item
-            icon="history"
-            text={column.getString('activityHistoryLabel')}
-            className={disableActivityHistory ? css.disabledOption : ''}
-            textClassName={disableActivityHistory ? css.disabledOption : ''}
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation()
-              if (data?.identifier && data.type) {
-                column.goToActivityHistory({ triggerIdentifier: data.identifier })
-              }
-              setMenuOpen(false)
-            }}
-          />
-          <Menu.Divider />
+          {CDS_TRIGGER_ACTIVITY_PAGE && (
+            <>
+              <Menu.Item
+                icon="history"
+                text={column.getString('activityHistoryLabel')}
+                className={disableActivityHistory ? css.disabledOption : ''}
+                textClassName={disableActivityHistory ? css.disabledOption : ''}
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation()
+                  if (data?.identifier && data.type) {
+                    column.goToActivityHistory({ triggerIdentifier: data.identifier })
+                  }
+                  setMenuOpen(false)
+                }}
+              />
+              <Menu.Divider />
+            </>
+          )}
           <Menu.Item
             icon="trash"
             className={column.isTriggerRbacDisabled ? css.disabledOption : ''}
