@@ -8,7 +8,7 @@
 import React from 'react'
 import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import type { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO, CDModuleLicenseDTO } from 'services/cd-ng'
 import { useGetCreditsByAccount } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
