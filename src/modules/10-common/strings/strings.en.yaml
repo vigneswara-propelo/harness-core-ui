@@ -539,6 +539,7 @@ subscriptions:
     developers: '{{ developers }} Developers'
   cet:
     agents: '{{ agents }} Agents'
+    whatIsActiveAgent: What is an Active Agent?
   chaos:
     experiments: '{{ experiments }} Experiment Runs per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'

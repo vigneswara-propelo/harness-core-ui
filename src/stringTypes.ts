@@ -1117,6 +1117,7 @@ export interface StringsMap {
   'common.subscriptions.cd.serviceInstances': string
   'common.subscriptions.cd.services': string
   'common.subscriptions.cet.agents': string
+  'common.subscriptions.cet.whatIsActiveAgent': string
   'common.subscriptions.chaos.experiments': string
   'common.subscriptions.chaos.infrastructures': string
   'common.subscriptions.ci.developers': string
