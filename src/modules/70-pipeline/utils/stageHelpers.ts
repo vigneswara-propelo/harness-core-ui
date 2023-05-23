@@ -777,7 +777,6 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
 
 export const getAllowedRepoOptions = (
   deploymentType: string,
-  azureFlag?: boolean,
   isTemplateContext?: boolean,
   selectedArtifact?: ArtifactType | null
 ): SelectOption[] => {
@@ -791,7 +790,7 @@ export const getAllowedRepoOptions = (
     isSSHWinRMDeploymentType(deploymentType) ||
     isTASDeploymentType(deploymentType) ||
     isCustomDeploymentType(deploymentType) ||
-    (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
+    isAzureWebAppDeploymentType(deploymentType)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes
 }
