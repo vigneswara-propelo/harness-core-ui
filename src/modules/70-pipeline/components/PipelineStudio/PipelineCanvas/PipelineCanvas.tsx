@@ -200,6 +200,7 @@ export function PipelineCanvas({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipelines-studio.pipelineUpdatedError'),
     titleText: getString('pipelines-studio.pipelineUpdated'),
+    className: css.beErrorModal,
     confirmButtonText: getString('update'),
     intent: Intent.WARNING,
     onCloseDialog: isConfirmed => {
