@@ -23,6 +23,7 @@ triggerConfigurationLabel: 'Trigger Configuration'
 pipelineInputLabel: 'Pipeline Input'
 branchNameCantBeExpression: Branch Name cannot be an expression for non-Webhook triggers
 inputSetIsRequired: With Git Experience enabled it is required to Select Input Set(s) which is stored as part of the pipeline definition in the same repository.
+inputSetV1Required: It is required to Select Input Set(s)
 updateTrigger: 'Update Trigger'
 createTrigger: 'Create Trigger'
 deleteTrigger: 'Delete Trigger'

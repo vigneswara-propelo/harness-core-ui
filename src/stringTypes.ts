@@ -5434,6 +5434,7 @@ export interface StringsMap {
   'triggers.deleteTrigger': string
   'triggers.error.webhookRegistrationFailed': string
   'triggers.inputSetIsRequired': string
+  'triggers.inputSetV1Required': string
   'triggers.lastActivationAt': string
   'triggers.lastActivationDetails': string
   'triggers.lastActivationLabel': string

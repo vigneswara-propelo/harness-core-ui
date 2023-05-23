@@ -515,6 +515,7 @@ function WebhookPipelineInputPanelForm({
   const {
     state: { storeMetadata }
   } = usePipelineContext()
+
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
       {loading && !isPipelineBranchNameInFocus() ? (

@@ -22,6 +22,7 @@ import {
   useConfirmationDialog,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
+import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -81,6 +82,8 @@ import type {
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import {
   clearNullUndefined,
   displayPipelineIntegrityResponse,
@@ -131,6 +134,8 @@ export default function ManifestTriggerWizard(
   } = useQueryParams<TriggerGitQueryParams>()
   const history = useHistory()
   const { getString } = useStrings()
+  const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -289,6 +294,25 @@ export default function ManifestTriggerWizard(
 
     return { trigger: res }
   }
+
+  useEffect(() => {
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      getPipelineInputs({
+        org: orgIdentifier,
+        project: projectIdentifier,
+        pipeline: pipelineIdentifier,
+        queryParams: {
+          repo_name: repoIdentifier,
+          branch_name: branch,
+          connector_ref: pipelineConnectorRef
+        }
+      })
+        .then(response => {
+          setPipelineInputs(response.content)
+        })
+        .catch((err: Error) => setErrorToasterMessage(err.message))
+    }
+  }, [CI_YAML_VERSIONING])
 
   const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
     fileName: `${triggerResponse?.data?.identifier ?? 'Trigger'}.yaml`,
@@ -1093,6 +1117,18 @@ export default function ManifestTriggerWizard(
         }
       }
     }
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      // inputSetRefs is required if Input Set is required to run pipeline
+      if (!isEmpty(pipelineInputs.inputs) || !isEmpty(pipelineInputs.options?.clone)) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetV1Required')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
+      }
+    }
 
     const { values, setErrors, setSubmitting } = formikProps
     let latestPipelineFromYamlView
@@ -1118,6 +1154,10 @@ export default function ManifestTriggerWizard(
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
+
+    const V1TriggerError = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+      ? omitBy({ inputSetRefs: _inputSetRefsError }, value => !value)
+      : undefined
     // https://github.com/formium/formik/issues/1392
     const errors: any = await {
       ...runPipelineFormErrors
@@ -1127,6 +1167,10 @@ export default function ManifestTriggerWizard(
       setErrors(gitXErrors)
       setFormErrors(gitXErrors)
       return gitXErrors
+    } else if (V1TriggerError && Object.keys(V1TriggerError).length) {
+      setErrors(V1TriggerError)
+      setFormErrors(V1TriggerError)
+      return V1TriggerError
     } else if (!isEmpty(runPipelineFormErrors)) {
       setErrors(runPipelineFormErrors)
       return runPipelineFormErrors
