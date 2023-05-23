@@ -357,6 +357,7 @@ export const TargetsPage: React.FC = () => {
             pageIndex={pageNumber}
             gotoPage={setPageNumber}
             showPagination
+            hidePageNumbers={targetsData?.pageCount > 1000}
           />
         )
       }

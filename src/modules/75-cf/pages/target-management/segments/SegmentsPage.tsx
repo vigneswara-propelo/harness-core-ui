@@ -301,6 +301,7 @@ export const SegmentsPage: React.FC = () => {
             pageIndex={pageNumber}
             gotoPage={setPageNumber}
             showPagination
+            hidePageNumbers={segmentsData?.pageCount > 1000}
           />
         )
       }
