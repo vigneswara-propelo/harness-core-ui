@@ -134,7 +134,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
   // merge should be called on re-run / input set selection / selectiveStageExecution with atleast one stage with runtime inputs
   const shouldMergeTemplateWithInputSetYAML =
-    rerunInputSetYaml ||
+    (rerunInputSetYaml && !executionView) ||
     (Array.isArray(inputSetSelected) && inputSetSelected.length > 0) ||
     (!isUndefined(currentYAML) && isRuntimeInputsPresent)
 
@@ -243,7 +243,11 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     if (rerunInputSetYaml) {
       //  Merge call takes care of merging rerunYAML with the latest updated pipeline
 
-      setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any)))
+      if (executionView) {
+        setInputSet(memoizedParse<Pipeline>(rerunInputSetYaml as any))
+      } else {
+        setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any)))
+      }
     } else if (hasRuntimeInputs) {
       if (shouldMergeTemplateWithInputSetYAML && inputSetData?.data?.pipelineYaml) {
         // This is to take care of selectiveStage executions to retain values on switching stages
