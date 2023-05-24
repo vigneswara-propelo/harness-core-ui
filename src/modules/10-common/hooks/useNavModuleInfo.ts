@@ -82,7 +82,6 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'ci-main',
     label: 'common.purpose.ci.continuous',
     getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
-    featureFlagName: FeatureFlag.CING_ENABLED,
     color: '--ci-border',
     backgroundColor: '--ci-background',
     backgroundColorLight: '--ci-background-light'

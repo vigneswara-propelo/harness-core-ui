@@ -49,7 +49,7 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   const [ribbonImg, setRibbonImg] = useState<string>(ribbon_ci)
   useTelemetry({ pageName: PageNames.Purpose })
 
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE } = useLicenseStore()
 
   const CDNG_OPTIONS: ModuleProps = {
@@ -69,7 +69,7 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   }
 
   const CING_OPTIONS: ModuleProps = {
-    enabled: !!CING_ENABLED,
+    enabled: true,
     titleIcon: 'ci-with-text',
     bodyIcon: 'ci-sketch',
     module: 'ci',

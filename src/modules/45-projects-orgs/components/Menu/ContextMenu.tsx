@@ -38,7 +38,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { project, editProject, collaborators, setMenuOpen, openDialog } = props
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
 
   const permissionRequest: Optional<PermissionRequest, 'permission'> = {
@@ -177,7 +177,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
           onClick={handleCD}
         />
       ) : null}
-      {CING_ENABLED && project.modules?.includes(ModuleName.CI) ? (
+      {project.modules?.includes(ModuleName.CI) ? (
         <Menu.Item
           text={
             <Layout.Horizontal spacing="xsmall">
