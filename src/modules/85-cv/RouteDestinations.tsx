@@ -49,6 +49,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
 import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -264,6 +265,9 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DOWNTIME, {
   }
 })
 
+// eslint-disable-next-line import/no-unresolved
+const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
+
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,
   subtitle: 'Service',
@@ -290,7 +294,7 @@ const RedirectToCVCodeErrorsControl = (): React.ReactElement => {
   }
 }
 
-export default (
+const NonMFERoute = (
   <>
     <Route
       path={[routes.toCV({ ...accountPathProps }), routes.toCVProject({ ...accountPathProps, ...projectPathProps })]}
@@ -398,14 +402,6 @@ export default (
       ]}
     >
       <CVCreateDowntime />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVSLOsListingPage />
     </RouteWithLayout>
 
     <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
@@ -572,3 +568,32 @@ export default (
     }
   </>
 )
+
+export const SRMRoutes: React.FC = () => {
+  const { SRM_MICRO_FRONTEND } = useFeatureFlags()
+  const enableMicroFrontend = SRM_MICRO_FRONTEND
+  const mfePaths = enableMicroFrontend
+    ? [routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]
+    : []
+
+  return (
+    <>
+      {NonMFERoute.props.children}
+      {enableMicroFrontend ? (
+        <RouteWithLayout exact path={[...mfePaths]} sidebarProps={CVSideNavProps}>
+          <ChildAppMounter ChildApp={SrmMicroFrontendPath} />
+        </RouteWithLayout>
+      ) : (
+        <RouteWithLayout
+          exact
+          sidebarProps={CVSideNavProps}
+          path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+        >
+          <CVSLOsListingPage />
+        </RouteWithLayout>
+      )}
+    </>
+  )
+}
+
+export default SRMRoutes
