@@ -13,7 +13,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { StepGroupElementConfig } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import { StepGroupStep, StepGroupWidgetRef } from '../StepGroupStep'
+import { StepGroupStep } from '../StepGroupStep'
+import { StepGroupStepEditRef } from '../StepGroupStepEdit'
 
 describe('<StepGroupStep />', () => {
   const stepGroupStep = new StepGroupStep()
@@ -57,7 +58,7 @@ describe('<StepGroupStep />', () => {
     const ref = createRef<StepFormikRef<StepGroupElementConfig>>()
     const { baseElement } = render(
       <TestWrapper>
-        <StepGroupWidgetRef
+        <StepGroupStepEditRef
           ref={ref}
           onUpdate={onUpdate}
           initialValues={{
@@ -72,7 +73,7 @@ describe('<StepGroupStep />', () => {
 
     await waitFor(() => expect(baseElement.querySelector('[name="name"]')).toHaveValue(''))
     await act(async () => ref.current?.submitForm())
-    expect(await screen.findByText(/common.validation.nameIsRequired/)).toBeInTheDocument()
+    expect(await screen.findByText('pipelineSteps.stepNameRequired')).toBeInTheDocument()
 
     userEvent.type(baseElement.querySelector('[name="name"]') as HTMLInputElement, 'stepgroup')
 

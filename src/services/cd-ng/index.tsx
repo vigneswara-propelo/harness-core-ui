@@ -2413,6 +2413,10 @@ export type CIModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfCommitters?: number
 }
 
+export interface CIVolume {
+  type?: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
 export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {
   totalServices?: number
 }
@@ -2425,6 +2429,11 @@ export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
   lastUpdatedAt: number
   ttlLeft: number
+}
+
+export interface Capabilities {
+  add?: string[]
+  drop?: string[]
 }
 
 export interface Capacity {
@@ -3029,6 +3038,32 @@ export interface ConnectorValidationResult {
   testedAt?: number
 }
 
+export interface ContainerInfraYamlSpec {
+  annotations?: {
+    [key: string]: string
+  }
+  automountServiceAccountToken?: boolean
+  connectorRef: string
+  containerSecurityContext?: SecurityContext
+  harnessImageConnectorRef?: string
+  hostNames?: string[]
+  initTimeout?: string
+  labels?: {
+    [key: string]: string
+  }
+  namespace: string
+  nodeSelector?: {
+    [key: string]: string
+  }
+  os?: 'Linux' | 'MacOS' | 'Windows'
+  priorityClassName?: string
+  resources: ContainerResource
+  runAsUser?: number
+  serviceAccountName?: string
+  tolerations?: Toleration[]
+  volumes?: CIVolume[]
+}
+
 export interface ContainerResource {
   limits: Limits
 }
@@ -3527,6 +3562,10 @@ export interface DelegateGroupListing {
 
 export interface DelegateGroupTags {
   tags?: string[]
+}
+
+export type DelegateInfra = StepGroupInfra & {
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface DelegateInner {
@@ -4040,6 +4079,7 @@ export type EcsBlueGreenRollbackStepInfo = StepSpecType & {
 export type EcsBlueGreenSwapTargetGroupsStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   doNotDownsizeOldService?: boolean
+  downsizeOldServiceDelayInSecs?: number
 }
 
 export type EcsCanaryDeleteStepInfo = StepSpecType & {
@@ -4252,6 +4292,17 @@ export interface EmbeddedUserDetails {
 export interface EmbeddedUserDetailsDTO {
   email?: string
   name?: string
+}
+
+export type EmptyDirYaml = CIVolume & {
+  mountPath: string
+  spec: EmptyDirYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface EmptyDirYamlSpec {
+  medium?: string
+  size?: string
 }
 
 export interface EntityDetail {
@@ -9301,6 +9352,17 @@ export type HostNamesFilter = HostFilterSpec & {
   value?: string[]
 }
 
+export type HostPathYaml = CIVolume & {
+  mountPath: string
+  spec: HostPathYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface HostPathYamlSpec {
+  path: string
+  type?: string
+}
+
 export interface HostValidationDTO {
   error?: ErrorDetail
   host?: string
@@ -10212,6 +10274,11 @@ export type K8sDeploymentReleaseDetails = DeploymentDetails & {
   k8sCloudClusterConfig?: KubernetesCloudClusterConfig
   namespaces?: string[]
   releaseName?: string
+}
+
+export type K8sDirectInfra = StepGroupInfra & {
+  spec: ContainerInfraYamlSpec
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export type K8sDryRunManifestStepInfo = StepSpecType & {
@@ -12095,6 +12162,17 @@ export interface PermissionCheck {
   resourceType?: string
 }
 
+export type PersistentVolumeClaimYaml = CIVolume & {
+  mountPath: string
+  spec: PersistentVolumeClaimYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface PersistentVolumeClaimYamlSpec {
+  claimName: string
+  readOnly?: boolean
+}
+
 export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   hosts?: HostDTO[]
@@ -12328,6 +12406,34 @@ export type PrometheusConnectorDTO = ConnectorConfigDTO & {
   passwordRef?: string
   url: string
   username?: string
+}
+
+export type RancherConnectorBearerTokenAuthenticationDTO = RancherConnectorConfigAuthenticationSpecDTO & {
+  passwordRef: string
+}
+
+export interface RancherConnectorConfigAuthCredentialsDTO {
+  spec?: RancherConnectorConfigAuthenticationSpecDTO
+  type: 'BearerToken'
+}
+
+export interface RancherConnectorConfigAuthDTO {
+  auth: RancherConnectorConfigAuthCredentialsDTO
+  rancherUrl: string
+}
+
+export interface RancherConnectorConfigAuthenticationSpecDTO {
+  [key: string]: any
+}
+
+export interface RancherConnectorConfigDTO {
+  spec?: RancherConnectorConfigAuthDTO
+  type: 'ManualConfig'
+}
+
+export type RancherConnectorDTO = ConnectorConfigDTO & {
+  credential?: RancherConnectorConfigDTO
+  delegateSelectors?: string[]
 }
 
 export interface RateLimitProtection {
@@ -12719,6 +12825,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
+    | 'NETWORK_MAP'
 }
 
 export interface ResourceGroup {
@@ -16670,6 +16777,17 @@ export interface SecretValidationResultDTO {
   success?: boolean
 }
 
+export interface SecurityContext {
+  allowPrivilegeEscalation?: boolean
+  capabilities?: Capabilities
+  privileged?: boolean
+  procMount?: string
+  readOnlyRootFilesystem?: boolean
+  runAsGroup?: number
+  runAsNonRoot?: boolean
+  runAsUser?: number
+}
+
 export type SecurityStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
@@ -17089,6 +17207,7 @@ export interface ServiceOverridesResponseDTOV2 {
   environmentRef?: string
   identifier?: string
   infraIdentifier?: string
+  newlyCreated?: boolean
   orgIdentifier?: string
   projectIdentifier?: string
   serviceRef?: string
@@ -17383,9 +17502,11 @@ export type SignalFXConnectorDTO = ConnectorConfigDTO & {
 
 export interface SignupDTO {
   billingFrequency?: 'MONTHLY' | 'YEARLY'
+  companyName?: string
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   email?: string
   intent?: string
+  name?: string
   password?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
   utmInfo?: UtmInfo
@@ -17718,6 +17839,7 @@ export interface StepData {
     | 'RouteMapping'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
+    | 'K8sBlueGreenStageScaleDown'
 }
 
 export interface StepElementConfig {
@@ -17738,6 +17860,8 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
+  sharedPaths?: ParameterFieldListString
+  stepGroupInfra?: StepGroupInfra
   steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
   template?: TemplateLinkConfig
@@ -17746,6 +17870,10 @@ export interface StepGroupElementConfig {
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {
   type: 'StepGroupRollback'
+}
+
+export interface StepGroupInfra {
+  type?: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface StepSpecType {
@@ -18719,6 +18847,14 @@ export interface TokenDTO {
   valid?: boolean
   validFrom?: number
   validTo?: number
+}
+
+export interface Toleration {
+  effect?: string
+  key?: string
+  operator?: string
+  tolerationSeconds?: number
+  value?: string
 }
 
 export interface TotalDeploymentInfo {
@@ -33856,6 +33992,7 @@ export interface GetConnectorListV2QueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  version?: string
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -56983,6 +57120,83 @@ export const migrateServiceOverrideScopedPromise = (
     void
   >('POST', getConfig('ng/api'), `/serviceOverrides/migrateScope`, props, signal)
 
+export interface UpsertServiceOverrideV2QueryParams {
+  accountIdentifier: string
+}
+
+export type UpsertServiceOverrideV2Props = Omit<
+  MutateProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Upsert an ServiceOverride Entity
+ */
+export const UpsertServiceOverrideV2 = (props: UpsertServiceOverrideV2Props) => (
+  <Mutate<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/upsert`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpsertServiceOverrideV2Props = Omit<
+  UseMutateProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Upsert an ServiceOverride Entity
+ */
+export const useUpsertServiceOverrideV2 = (props: UseUpsertServiceOverrideV2Props) =>
+  useMutate<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >('POST', `/serviceOverrides/upsert`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Upsert an ServiceOverride Entity
+ */
+export const upsertServiceOverrideV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/upsert`, props, signal)
+
 export interface DeleteServiceOverrideV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -60425,6 +60639,55 @@ export const completeSignupInvitePromise = (
     void,
     CompleteSignupInvitePathParams
   >('PUT', getConfig('ng/api'), `/signup/complete/${token}`, props, signal)
+
+export interface MarketplaceSignupQueryParams {
+  inviteId?: string
+  marketPlaceToken?: string
+}
+
+export type MarketplaceSignupProps = Omit<
+  MutateProps<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+export const MarketplaceSignup = (props: MarketplaceSignupProps) => (
+  <Mutate<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>
+    verb="POST"
+    path={`/signup/marketplace`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseMarketplaceSignupProps = Omit<
+  UseMutateProps<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+export const useMarketplaceSignup = (props: UseMarketplaceSignupProps) =>
+  useMutate<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>(
+    'POST',
+    `/signup/marketplace`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+export const marketplaceSignupPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseUserInfo,
+    Failure | Error,
+    MarketplaceSignupQueryParams,
+    SignupDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/signup/marketplace`,
+    props,
+    signal
+  )
 
 export type SignupOAuthProps = Omit<
   MutateProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,

@@ -62,6 +62,7 @@ export interface StringsMap {
   'common.allowFirstGenAccess': string
   'common.and': string
   'common.andCaps': string
+  'common.annotations': string
   'common.annually': string
   'common.any': string
   'common.apiKeys': string
@@ -528,6 +529,7 @@ export interface StringsMap {
   'common.history': string
   'common.home': string
   'common.hostLabel': string
+  'common.hostNames': string
   'common.hourly': string
   'common.iacm': string
   'common.iacmText': string
@@ -4085,6 +4087,7 @@ export interface StringsMap {
   'pipeline.editGitMetadataTitle': string
   'pipeline.editingGitMetadata': string
   'pipeline.emptyExecutionListMsg': string
+  'pipeline.enableContainerBasedExecution': string
   'pipeline.enableVerificationHelpText': string
   'pipeline.enableVerificationOptions': string
   'pipeline.enableVerificationTitle': string
@@ -8227,7 +8230,6 @@ export interface StringsMap {
   'ci.GHAPluginUsesPlaceholder': string
   'ci.GHAPluginWithKeyPlaceholder': string
   'ci.advancedLabel': string
-  'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
   'ci.baseConnectorImage': string
   'ci.bitrisePluginUsesPlaceholder': string
@@ -8238,7 +8240,6 @@ export interface StringsMap {
   'ci.buildInfra.awsVM.isRequiredWhen': string
   'ci.buildInfra.awsVM.os': string
   'ci.buildInfra.cloud': string
-  'ci.buildInfra.hostNames': string
   'ci.buildInfra.info.cloud': string
   'ci.buildInfra.info.local1': string
   'ci.buildInfra.info.local2': string
