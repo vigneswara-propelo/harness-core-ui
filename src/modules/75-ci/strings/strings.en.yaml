@@ -211,7 +211,7 @@ getStartedWithCI:
   importExistingYAMLHelptext: Use the Harness config file in your repository
   chooseStarterConfig: Choose a Starter Configuration
   configurationOption: Configuration Option
-  validYAMLFile: YAML Path should end with ".yaml" extension
+  validYAMLFile: YAML Path should end with either ".yaml" or ".yml" extension
   storeInGit: Store in Git
   enterBranch: Enter branch name
   createBranchIfNotExists: Create branch if not exists
