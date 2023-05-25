@@ -801,6 +801,7 @@ export interface StringsMap {
   'common.purpose.cd.continuous': string
   'common.purpose.cd.delivery': string
   'common.purpose.cd.description': string
+  'common.purpose.cd.fullText': string
   'common.purpose.cd.introductionConcepts': string
   'common.purpose.cd.introductionText': string
   'common.purpose.cd.newGen.description': string
@@ -1671,6 +1672,7 @@ export interface StringsMap {
   'defaultSettings.azureIncludeRefunds': string
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.defaultGitConnector': string
+  'defaultSettings.emailToNonHarnessUsers': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableMatrixFieldNames': string
