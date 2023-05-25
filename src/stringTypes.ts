@@ -5225,6 +5225,13 @@ export interface StringsMap {
   'pipeline.verification.anomalousLogClusters': string
   'pipeline.verification.anomalousMetrics': string
   'pipeline.verification.anomalousMetricsFilterLabel': string
+  'pipeline.verification.baselineMessages.expired': string
+  'pipeline.verification.baselineMessages.failed': string
+  'pipeline.verification.baselineMessages.passed': string
+  'pipeline.verification.baselineMessages.passedWithNoBaseline': string
+  'pipeline.verification.baselineMessages.pinConfirmationButtonText': string
+  'pipeline.verification.baselineMessages.pinModalMessage': string
+  'pipeline.verification.baselineMessages.pinModalTitle': string
   'pipeline.verification.baselineTest': string
   'pipeline.verification.collapseAll': string
   'pipeline.verification.controlData': string
@@ -5269,6 +5276,7 @@ export interface StringsMap {
   'pipeline.verification.metricViewPlaceholder': string
   'pipeline.verification.metricsInViolation': string
   'pipeline.verification.nodeCountDisplay': string
+  'pipeline.verification.pinBaseline': string
   'pipeline.verification.predicted': string
   'pipeline.verification.refreshViewForNewData': string
   'pipeline.verification.tableHeaders.group': string
@@ -5279,6 +5287,7 @@ export interface StringsMap {
   'pipeline.verification.testHostName': string
   'pipeline.verification.testsRan': string
   'pipeline.verification.toGetLatest': string
+  'pipeline.verification.unpinBaseline': string
   'pipeline.verification.waitForAnalysis': string
   'pipeline.verificationResult': string
   'pipeline.viewExecution': string
@@ -9272,6 +9281,7 @@ export interface StringsMap {
   'cv.periodLengthDays': string
   'cv.periodLengthIsRequired': string
   'cv.pinABaseline': string
+  'cv.pinned': string
   'cv.pleaseFillTheRequiredFieldsToSeeTheSLIData': string
   'cv.pleaseSelectSLOToGetTheData': string
   'cv.postDeployment': string
@@ -9536,6 +9546,7 @@ export interface StringsMap {
   'cv.verificationErrored': string
   'cv.verificationStatus': string
   'cv.verifications': string
+  'cv.verifyStep.baselineInputInfo': string
   'cv.wednesday': string
   'cv.week': string
   'cv.weeks': string

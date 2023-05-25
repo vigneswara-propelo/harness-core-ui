@@ -57,7 +57,10 @@ export const VerificationSensitivityOptions: SelectOption[] = [
   { label: 'Low', value: 'LOW' }
 ]
 
-export const baseLineOptions: SelectOption[] = [{ label: 'Last Successful job run', value: 'LAST' }]
+export const baseLineOptions: SelectOption[] = [
+  { label: 'Last Successful job run', value: 'LAST' },
+  { label: 'Pinned baseline', value: 'PINNED' }
+]
 
 export const cvDefaultValues: ContinousVerificationData = {
   name: '',

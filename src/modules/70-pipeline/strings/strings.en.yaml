@@ -1081,8 +1081,18 @@ moveStage:
   description: 'Propagation is set up between this stage and another stage. Moving the parent/child stage out of sequence resets any propagated settings to their defaults. Do you want to continue?'
 verification:
   currentTest: Current test
-  testsRan: Tests ran
+  testsRan: Tests ran on
+  baselineMessages:
+    passedWithNoBaseline: Verification passed with no data, as no baseline data found for comparison.
+    failed: Verification failed by comparing with the baseline data.
+    expired: 'Baseline data expired on {{date}} and the verification was carried out without baseline data.'
+    passed: Verification passed by comparing with the baseline data.
+    pinModalTitle: Pin Baseline Verification
+    pinModalMessage: An existing verification has been pinned as the baseline. If you choose to set a new verification as baseline, the current pinned verification will be unpinned. Are you sure you want to proceed?
+    pinConfirmationButtonText: Yes, Pin baseline verification
   baselineTest: Baseline test
+  pinBaseline: Pin baseline
+  unpinBaseline: Unpin baseline
   metricsInViolation: Metrics in violation
   logClustersInViolation: Log Clusters in violation
   errorClustersInViolation: Error Clusters in violation
