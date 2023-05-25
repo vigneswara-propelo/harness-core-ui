@@ -2209,6 +2209,7 @@ export interface StringsMap {
   'authSettings.ipAddress.addIpAddresses': string
   'authSettings.ipAddress.allowedAsAPartOf': string
   'authSettings.ipAddress.applicableFor': string
+  'authSettings.ipAddress.changesMayTake5Minutes': string
   'authSettings.ipAddress.check': string
   'authSettings.ipAddress.checkAnotherIP': string
   'authSettings.ipAddress.checkIPForAllowlist': string
@@ -2229,6 +2230,7 @@ export interface StringsMap {
   'authSettings.ipAddress.inRange': string
   'authSettings.ipAddress.includesYourIpAddress': string
   'authSettings.ipAddress.invalid': string
+  'authSettings.ipAddress.invalidApplicableFor': string
   'authSettings.ipAddress.ipAddressCIDR': string
   'authSettings.ipAddress.ipAllowlistCreated': string
   'authSettings.ipAddress.ipAllowlistUpdated': string
