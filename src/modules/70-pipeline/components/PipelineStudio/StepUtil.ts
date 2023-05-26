@@ -453,6 +453,7 @@ export const validateStage = ({
         set(errors, 'spec.service.serviceRef', stepErrorsResponse?.service?.serviceRef)
       }
       const serviceInputs = stageConfig?.service?.serviceInputs
+
       if (serviceInputs && !isValueRuntimeInput(templateStageConfig?.service?.serviceInputs as unknown as string)) {
         const serviceStep = factory.getStep(getStepTypeByDeploymentType(serviceInputs?.serviceDefinition?.type))
         const serviceStepErrorResponse = serviceStep?.validateInputSet({
@@ -945,6 +946,7 @@ export const validatePipeline = ({
             },
             getString
           })
+
           if (!isEmpty(chainedPipelineOutputErrorsResponse.outputs)) {
             set(
               errors,
