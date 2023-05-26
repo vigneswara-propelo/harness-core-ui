@@ -6,14 +6,28 @@
  */
 
 import React from 'react'
-import type { IconName } from '@harness/uicore'
+import { isEmpty, set } from 'lodash-es'
+import type { FormikErrors } from 'formik'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
-import type { StepGroupElementConfig } from 'services/cd-ng'
-import type { StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { K8sDirectInfra, StepGroupElementConfig } from 'services/cd-ng'
+import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import { InputSetData, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepGroupStepEditRef } from './StepGroupStepEdit'
+import { StepGroupStepInputSetMode } from './StepGroupStepInputSetMode'
 import { getModifiedFormikValues, K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues } from './StepGroupUtil'
+import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+
+interface StepGroupStepVariableProps {
+  initialValues: StepGroupElementConfig
+  stageIdentifier: string
+  onUpdate?(data: StepGroupElementConfig): void
+  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+  variablesData: StepGroupElementConfig
+}
 
 export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
   protected type = StepType.StepGroup
@@ -32,12 +46,79 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
     this._hasDelegateSelectionVisible = true
   }
 
-  validateInputSet(): Record<string, any> {
-    return {}
+  validateInputSet({
+    data,
+    template,
+    getString,
+    viewType
+  }: ValidateInputSetProps<StepGroupElementConfig>): FormikErrors<StepGroupElementConfig> {
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    const errors: FormikErrors<StepGroupElementConfig> = {}
+    const stepGroupInfraTemplate = template?.stepGroupInfra as K8sDirectInfra
+    const stepGroupInfraData = data?.stepGroupInfra as K8sDirectInfra
+    if (
+      isRequired &&
+      getMultiTypeFromValue((stepGroupInfraTemplate as K8sDirectInfra)?.spec.connectorRef) ===
+        MultiTypeInputType.RUNTIME &&
+      isEmpty(stepGroupInfraData?.spec?.connectorRef)
+    ) {
+      set(
+        errors,
+        'stepGroupInfra.spec.connectorRef',
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('connectors.title.k8sCluster') })
+      )
+    }
+
+    if (
+      isRequired &&
+      getMultiTypeFromValue(stepGroupInfraTemplate?.spec?.namespace) === MultiTypeInputType.RUNTIME &&
+      isEmpty(stepGroupInfraData?.spec?.namespace)
+    ) {
+      set(
+        errors,
+        'stepGroupInfra.spec.namespace',
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('common.namespace') })
+      )
+    }
+
+    if (isEmpty(errors.stepGroupInfra)) {
+      delete errors.stepGroupInfra
+    }
+
+    return errors
   }
 
   renderStep(props: StepProps<StepGroupElementConfig>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, formikRef, isNewStep, readonly, allowableTypes } = props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      formikRef,
+      isNewStep,
+      readonly,
+      allowableTypes,
+      inputSetData,
+      customStepProps
+    } = props
+
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <StepGroupStepInputSetMode
+          allowableTypes={allowableTypes}
+          inputSetData={inputSetData as InputSetData<K8sDirectInfraStepGroupElementConfig>}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      const { variablesData, metadataMap } = customStepProps as StepGroupStepVariableProps
+      return (
+        <VariablesListTable
+          className={pipelineVariableCss.variablePaddingL3}
+          data={variablesData}
+          originalData={initialValues}
+          metadataMap={metadataMap}
+        />
+      )
+    }
 
     return (
       <StepGroupStepEditRef

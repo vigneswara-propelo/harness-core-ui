@@ -10,7 +10,7 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty, has, set, isBoolean, get, pick, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
-import type { DeploymentStageConfig, Infrastructure, ServiceYamlV2 } from 'services/cd-ng'
+import type { DeploymentStageConfig, Infrastructure, ServiceYamlV2, StepGroupElementConfig } from 'services/cd-ng'
 
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -156,10 +156,10 @@ export function getPromisesForChildPipeline(
 }
 
 export interface ValidateStepProps {
-  step: StepElementConfig | TemplateStepNode
+  step: StepElementConfig | TemplateStepNode | StepGroupElementConfig
   getString: UseStringsReturn['getString']
   viewType: StepViewType
-  template?: StepElementConfig | TemplateStepNode
+  template?: StepElementConfig | TemplateStepNode | StepGroupElementConfig
   originalStep?: ExecutionWrapperConfig
 }
 
@@ -169,10 +169,14 @@ export const validateStep = ({
   originalStep,
   getString,
   viewType
-}: ValidateStepProps): FormikErrors<StepElementConfig> => {
+}: ValidateStepProps): FormikErrors<StepElementConfig | StepGroupElementConfig> => {
   const errors = {}
   const isTemplateStep = !!(originalStep?.step as unknown as TemplateStepNode)?.template
-  const stepType = isTemplateStep ? StepType.Template : (originalStep?.step as StepElementConfig)?.type
+  const stepType = isTemplateStep
+    ? StepType.Template
+    : !isEmpty(originalStep?.stepGroup)
+    ? StepType.StepGroup
+    : (originalStep?.step as StepElementConfig)?.type
   const pipelineStep = factory.getStep(stepType)
   const delegateSelectorPath = 'spec.delegateSelectors'
   const failureStrategySchema = getFailureStrategiesValidationSchema(getString)
@@ -207,8 +211,12 @@ export const validateStep = ({
   }
 
   if (!isEmpty(errorResponse)) {
-    const suffix = isTemplateStep ? '.template.templateInputs' : ''
-    set(errors, `step${suffix}`, errorResponse)
+    if (stepType === StepType.StepGroup) {
+      return Object.assign(errors, errorResponse)
+    } else {
+      const suffix = isTemplateStep ? '.template.templateInputs' : ''
+      set(errors, `step${suffix}`, errorResponse)
+    }
   }
   return errors
 }
@@ -260,26 +268,6 @@ export const validateSteps = ({
           }
         }
         if (stepParallel?.stepGroup) {
-          if (stepParallel?.stepGroup?.steps) {
-            const errorResponse = validateSteps({
-              steps: stepParallel?.stepGroup?.steps,
-              template: template?.[index]?.parallel?.[indexP]?.stepGroup?.steps,
-              originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.steps,
-              getString,
-              viewType
-            })
-            try {
-              failureStrategy.validateSync(stepParallel?.stepGroup)
-            } catch (error) {
-              if (error instanceof Yup.ValidationError) {
-                const failureStrategyFormErrors = yupToFormErrors(error)
-                Object.assign(errorResponse, failureStrategyFormErrors)
-              }
-            }
-            if (!isEmpty(errorResponse)) {
-              set(errors, `steps[${index}].parallel[${indexP}].stepGroup`, errorResponse)
-            }
-          }
           if (stepParallel?.stepGroup?.template?.templateInputs?.steps) {
             const errorResponse = validateSteps({
               steps: stepParallel?.stepGroup?.template?.templateInputs?.steps,
@@ -300,31 +288,40 @@ export const validateSteps = ({
             if (!isEmpty(errorResponse)) {
               set(errors, `steps[${index}].parallel[${indexP}].stepGroup.template.templateInputs`, errorResponse)
             }
+          } else {
+            const errorResponse = validateStep({
+              step: stepParallel.stepGroup,
+              template: template?.[index]?.parallel?.[indexP]?.stepGroup,
+              originalStep: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps),
+              getString,
+              viewType
+            })
+            if (stepParallel?.stepGroup?.steps) {
+              const stepsErrorResponse = validateSteps({
+                steps: stepParallel?.stepGroup?.steps,
+                template: template?.[index]?.parallel?.[indexP]?.stepGroup?.steps,
+                originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.steps,
+                getString,
+                viewType
+              })
+              try {
+                failureStrategy.validateSync(stepParallel?.stepGroup)
+              } catch (error) {
+                if (error instanceof Yup.ValidationError) {
+                  const failureStrategyFormErrors = yupToFormErrors(error)
+                  Object.assign(stepsErrorResponse, failureStrategyFormErrors)
+                }
+              }
+              Object.assign(errorResponse, stepsErrorResponse)
+            }
+            if (!isEmpty(errorResponse)) {
+              set(errors, `steps[${index}].parallel[${indexP}].stepGroup`, errorResponse)
+            }
           }
         }
       })
     } else if (stepObj.stepGroup) {
       const originalStepGroup = getStepFromStage(stepObj.stepGroup.identifier, originalSteps)
-      if (stepObj.stepGroup.steps) {
-        const errorResponse = validateSteps({
-          steps: stepObj.stepGroup.steps,
-          template: template?.[index]?.stepGroup?.steps,
-          originalSteps: originalStepGroup?.stepGroup?.steps,
-          getString,
-          viewType
-        })
-        try {
-          failureStrategy.validateSync(stepObj?.stepGroup)
-        } catch (error) {
-          if (error instanceof Yup.ValidationError) {
-            const failureStrategyFormErrors = yupToFormErrors(error)
-            Object.assign(errorResponse, failureStrategyFormErrors)
-          }
-        }
-        if (!isEmpty(errorResponse)) {
-          set(errors, `steps[${index}].stepGroup`, errorResponse)
-        }
-      }
       if (stepObj.stepGroup?.template?.templateInputs?.steps) {
         const errorResponse = validateSteps({
           steps: stepObj.stepGroup?.template?.templateInputs?.steps,
@@ -343,6 +340,35 @@ export const validateSteps = ({
         }
         if (!isEmpty(errorResponse)) {
           set(errors, `steps[${index}].stepGroup.template.templateInputs`, errorResponse)
+        }
+      } else {
+        const errorResponse = validateStep({
+          step: stepObj.stepGroup,
+          template: template?.[index]?.stepGroup,
+          originalStep: getStepFromStage(stepObj.stepGroup.identifier, originalSteps),
+          getString,
+          viewType
+        })
+        if (stepObj.stepGroup.steps) {
+          const stepsErrorResponse = validateSteps({
+            steps: stepObj.stepGroup.steps,
+            template: template?.[index]?.stepGroup?.steps,
+            originalSteps: originalStepGroup?.stepGroup?.steps,
+            getString,
+            viewType
+          })
+          try {
+            failureStrategy.validateSync(stepObj?.stepGroup)
+          } catch (error) {
+            if (error instanceof Yup.ValidationError) {
+              const failureStrategyFormErrors = yupToFormErrors(error)
+              Object.assign(errorResponse, failureStrategyFormErrors)
+            }
+          }
+          Object.assign(errorResponse, stepsErrorResponse)
+        }
+        if (!isEmpty(errorResponse)) {
+          set(errors, `steps[${index}].stepGroup`, errorResponse)
         }
       }
     }

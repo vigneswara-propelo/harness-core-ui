@@ -21,11 +21,14 @@ import type { MapUIType } from '@common/components/Map/Map'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ConnectorRef } from '../StepsTypes'
 
+interface K8sDirectInfraSpec extends Omit<ContainerInfraYamlSpec, 'resources' | 'volumes'> {
+  volumes?: string | CIVolume[]
+}
 export interface K8sDirectInfraStepGroupElementConfig extends StepGroupElementConfig {
   sharedPaths?: any
   stepGroupInfra?: {
     type: K8sDirectInfra['type']
-    spec: Omit<ContainerInfraYamlSpec, 'resources'>
+    spec: K8sDirectInfraSpec
   }
 }
 

@@ -133,7 +133,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           tooltipId: 'allowPrivilegeEscalation'
         })}
 
-        <Container className={css.bottomMargin7}>
+        <Container className={stepCss.formGroup}>
           <MultiTypeList
             name="addCapabilities"
             multiTextInputProps={{
@@ -155,7 +155,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           />
         </Container>
 
-        <Container className={css.bottomMargin7}>
+        <Container className={stepCss.formGroup}>
           <MultiTypeList
             name="dropCapabilities"
             multiTextInputProps={{
@@ -189,7 +189,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           tooltipId: 'readOnlyRootFilesystem'
         })}
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <FormInput.MultiTextInput
             name="runAsUser"
             label={getString(runAsUserStringKey)}
@@ -223,7 +223,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
     const showContainerSecurityContext = get(formikRef?.values, 'os') !== OsTypes.Windows
     return (
       <>
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <MultiTypeList
             name="sharedPaths"
             multiTextInputProps={{
@@ -232,7 +232,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             }}
             multiTypeFieldSelectorProps={{
               label: (
-                <Text tooltipProps={{ dataTooltipId: 'stageSpecificationsSharedPaths' }}>
+                <Text tooltipProps={{ dataTooltipId: 'sharedPaths' }}>
                   {getString('pipelineSteps.build.stageSpecifications.sharedPaths')}
                 </Text>
               ),
@@ -242,7 +242,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             configureOptionsProps={{ hideExecutionTimeField: true }}
           />
         </Container>
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <Volumes
             name="volumes"
             formik={formikRef as FormikProps<unknown>}
@@ -252,7 +252,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           />
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <FormInput.MultiTextInput
             name="serviceAccountName"
             label={getString('pipeline.infraSpecifications.serviceAccountName')}
@@ -277,7 +277,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           )}
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <FormMultiTypeCheckboxField
             name="automountServiceAccountToken"
             label={getString('pipeline.buildInfra.automountServiceAccountToken')}
@@ -290,17 +290,17 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           />
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'pipelineSteps.labelsLabel' })}
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'common.annotations' })}
         </Container>
 
         {showContainerSecurityContext && renderContainerSecurityContext()}
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <FormInput.MultiTextInput
             name="priorityClassName"
             label={getString(priorityClassNameStringKey)}
@@ -324,7 +324,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           )}
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           {renderMultiTypeMap({
             fieldName: 'nodeSelector',
             stringKey: 'pipeline.buildInfra.nodeSelector'
@@ -332,7 +332,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
         </Container>
 
         <Container
-          className={cx(stepCss.formGroup)}
+          className={stepCss.formGroup}
           {...(typeof tolerationsValue === 'string' &&
             getMultiTypeFromValue(tolerationsValue) === MultiTypeInputType.RUNTIME && { width: 300 })}
         >
@@ -366,7 +366,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           />
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <MultiTypeList
             name="hostNames"
             multiTextInputProps={{
@@ -384,7 +384,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           />
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <FormMultiTypeDurationField
             name="initTimeout"
             multiTypeDurationProps={{ expressions, allowableTypes }}
@@ -393,7 +393,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           />
         </Container>
 
-        <Container className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <FormMultiTypeConnectorField
             name="harnessImageConnectorRef"
             label={`${getString(harnessImageConnectorRefKey)} ${getString('common.optionalLabel')}`}
