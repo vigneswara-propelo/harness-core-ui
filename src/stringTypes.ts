@@ -1034,6 +1034,13 @@ export interface StringsMap {
   'common.serviceOverrides.globalInfra': string
   'common.serviceOverrides.infrastructureServiceSpecific': string
   'common.serviceOverrides.labelText': string
+  'common.serviceOverrides.newOverride': string
+  'common.serviceOverrides.noOverrides.environmentServiceSpecific': string
+  'common.serviceOverrides.noOverrides.globalEnvironment': string
+  'common.serviceOverrides.noOverrides.globalInfrastructure': string
+  'common.serviceOverrides.noOverrides.infrastructureServiceSpecific': string
+  'common.serviceOverrides.overrideInfo': string
+  'common.serviceOverrides.overrideType': string
   'common.servicePrefix': string
   'common.serviceReliabilityManagement': string
   'common.serviceType': string
@@ -1314,6 +1321,7 @@ export interface StringsMap {
   'common.validation.yamlFilePath': string
   'common.validationInProgress': string
   'common.valuePlaceholder': string
+  'common.variableType': string
   'common.variables': string
   'common.versionLabel': string
   'common.videoNotSupportedError': string
@@ -6102,7 +6110,6 @@ export interface StringsMap {
   'cd.openTask.openTaskStatusMsgFailed': string
   'cd.openTask.seeOpenTask': string
   'cd.openTask.title': string
-  'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
   'cd.pathCannotBeEmpty': string

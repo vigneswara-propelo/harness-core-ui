@@ -53,7 +53,8 @@ import type {
   AccountLevelGitOpsPathProps,
   TemplateType,
   AccountRoutePlacement,
-  ExecutionQueryParams
+  ExecutionQueryParams,
+  ServiceOverridesQueryParams
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -981,12 +982,17 @@ const routes = {
   ),
   toServiceOverrides: withAccountId(
     ({
+      accountId,
       orgIdentifier,
       projectIdentifier,
       module,
-      accountRoutePlacement
-    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
-      return getEnvServiceRoute({
+      accountRoutePlacement,
+      ...rest
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }> &
+      ServiceOverridesQueryParams) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+
+      const routePath = getEnvServiceRoute({
         scope: {
           orgIdentifier,
           projectIdentifier,
@@ -995,6 +1001,8 @@ const routes = {
         path: 'serviceOverrides',
         accountRoutePlacement
       })
+
+      return queryString.length > 0 ? `${routePath}?${queryString}` : routePath
     }
   ),
   toPipelineDetail: withAccountId(

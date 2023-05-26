@@ -1512,4 +1512,13 @@ serviceOverrides:
   environmentServiceSpecific: Service Specific
   globalInfra: Infrastructure Specific
   infrastructureServiceSpecific: Service & Infrastructure Specific
+  newOverride: New Override
+  overrideType: Override Type
+  overrideInfo: Override Info
+  noOverrides:
+    globalEnvironment: You have no global Environment Overrides
+    environmentServiceSpecific: You have no Environment Service specific Overrides
+    globalInfrastructure: You have no global Infrastructure Overrides
+    infrastructureServiceSpecific: You have no Infrastructure Service specific Overrides
 cloudSpends: Cloud Spends
+variableType: Variable Type
