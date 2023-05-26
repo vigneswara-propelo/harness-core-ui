@@ -123,7 +123,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   useEffect(() => {
     if (getSecretError) {
       modalErrorHandler?.showDanger(getSecretError.message)
-      refetch?.()
     }
   }, [getSecretError])
 
