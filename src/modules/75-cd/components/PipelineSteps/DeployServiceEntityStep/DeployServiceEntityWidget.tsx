@@ -198,7 +198,6 @@ export default function DeployServiceEntityWidget({
     loadingServicesList,
     updatingData,
     prependServiceToServiceList,
-    updateServiceInputsData,
     nonExistingServiceIdentifiers
   } = useGetServicesData({
     gitOpsEnabled,
@@ -382,7 +381,6 @@ export default function DeployServiceEntityWidget({
           )?.serviceInputs
         }
       })
-      updateServiceInputsData(updatedService.identifier, mergedServiceInputsResponse)
       setIsFetchingMergeServiceInputs(false)
     }
   }
