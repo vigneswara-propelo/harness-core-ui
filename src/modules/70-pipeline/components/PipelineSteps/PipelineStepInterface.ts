@@ -206,6 +206,8 @@ export enum StepType {
   Sniper = 'Sniper',
   Metasploit = 'Metasploit',
   Brakeman = 'Brakeman',
+  AwsSamDeploy = 'AwsSamDeploy',
+  AwsSamBuild = 'AwsSamBuild',
   Fossa = 'Fossa',
   Semgrep = 'Semgrep',
   KubernetesAws = 'KubernetesAws',

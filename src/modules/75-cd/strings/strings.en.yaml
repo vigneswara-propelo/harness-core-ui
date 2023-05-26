@@ -172,6 +172,11 @@ steps:
     envTypes:
       gen1: '1st gen'
       gen2: '2nd gen'
+  awsSamDeployStep:
+    containerConfigurationText: Container Configuration
+    awsSamDeployCommandOptions: AWS SAM Deploy Command Options
+  awsSamBuildStep:
+    samBuildDockerRegistryConnectorRef: SAM Build Docker Registry Connector
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -1017,3 +1022,4 @@ customSequence:
   newlyAddedLabel: NEWLY ADDED
   switchSuccessMsg: Successfully switched to {{sequence}} sequence
   switchFailedMsg: Failed to switch
+samVersionLabel: SAM Version

@@ -131,6 +131,8 @@ import { RouteMappingStep } from './RouteMappingStep/RouteMappingStep'
 import { K8sAwsInfrastructureSpec } from './K8sAwsInfrastructureSpec/K8sAwsInfrastructureSpec'
 import { DeployCloudFunctionStepGenOne } from './GoogleCloudFunction/GenOne/DeployCloudFunctionStepGenOne'
 import { DeployCloudFunctionRollbackStepGenOne } from './GoogleCloudFunction/GenOne/DeployCloudFunctionRollbackStepGenOne'
+import { AwsSamDeployStep } from './AwsSam/AwsSamDeployStep/AwsSamDeployStep'
+import { AwsSamBuildStep } from './AwsSam/AwsSamBuildStep/AwsSamBuildStep'
 import { K8sBlueGreenStageScaleDown } from './K8sBlueGreenStageScaleDown/K8sBlueGreenStageScaleDown'
 import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
 
@@ -259,4 +261,6 @@ factory.registerStep(new AwsLambdaDeployStep())
 factory.registerStep(new AwsLambdaRollbackStep())
 factory.registerStep(new TerraformCloudRun())
 factory.registerStep(new TerraformCloudRollback())
+factory.registerStep(new AwsSamDeployStep())
+factory.registerStep(new AwsSamBuildStep())
 factory.registerStep(new AwsSamServiceSpec())
