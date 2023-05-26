@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, getByText as getElementByText, waitFor } from '@testing-library/react'
+import { render, fireEvent, getByText as getElementByText, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -82,9 +82,7 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
   userEvent.click(regexRadio)
   const regexTextArea = queryByNameAttribute('regExValues', cogModal) as HTMLInputElement
-  act(() => {
-    fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
-  })
+  fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
   const cogSubmit = getElementByText(cogModal, 'submit')
   userEvent.click(cogSubmit)
@@ -166,23 +164,25 @@ describe('GoogleCloudFunctionInfraSpecEditable tests', () => {
     await doConfigureOptionsTesting(regionCOGModal)
 
     // project
-    const projectInput = queryByNameAttribute('region', container) as HTMLInputElement
+    const projectInput = queryByNameAttribute('project', container) as HTMLInputElement
     expect(projectInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogProject = document.getElementById('configureOptions_project')
     userEvent.click(cogProject!)
     await waitFor(() => expect(modals.length).toBe(1))
     const projectCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(projectCOGModal)
+
     // Allow simultaneous deployments on the same infrastructure checkbox
     const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
     expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
+
     // submit form and verify
     ref.current?.submitForm()
     await waitFor(() =>
       expect(updateStage).toHaveBeenCalledWith({
         connectorRef: '<+input>.regex(<+input>.includes(/test/))',
         region: '<+input>.regex(<+input>.includes(/test/))',
-        project: RUNTIME_INPUT_VALUE,
+        project: '<+input>.regex(<+input>.includes(/test/))',
         allowSimultaneousDeployments: true
       })
     )
