@@ -37,7 +37,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
@@ -107,19 +106,10 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { AZURE_WEBAPP_NG_JENKINS_ARTIFACTS, CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } = useFeatureFlags()
+  const { CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
-    if (
-      [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(
-        deploymentType as ServiceDeploymentType
-      ) &&
-      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
-    }
     if (
       BAMBOO_ARTIFACT_NG &&
       isAllowedBambooArtifactDeploymentTypes(deploymentType) &&

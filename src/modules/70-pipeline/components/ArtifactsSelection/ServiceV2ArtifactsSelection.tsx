@@ -53,7 +53,6 @@ import type {
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 // eslint-disable-next-line no-restricted-imports
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
@@ -164,19 +163,10 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { AZURE_WEBAPP_NG_JENKINS_ARTIFACTS, CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } = useFeatureFlags()
+  const { CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
-    if (
-      [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(
-        deploymentType as ServiceDeploymentType
-      ) &&
-      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
-    }
     if (
       BAMBOO_ARTIFACT_NG &&
       isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
