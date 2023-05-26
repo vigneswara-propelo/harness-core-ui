@@ -14,6 +14,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useGetCommunity } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, SubscriptionQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -58,7 +59,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
       .concat(capitalize(module.licenseType))
       .concat(')')
   }
-
+  const isCommunity = useGetCommunity()
   return (
     <Card className={css.subscribedModules}>
       <Container padding={'large'}>
@@ -80,15 +81,17 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
         border={{ top: true, color: Color.GREY_250 }}
         padding={{ top: 'large', bottom: 'large', left: 'large' }}
       >
-        <Link
-          to={routes.toSubscriptions({
-            accountId,
-            moduleCard: module.moduleType as SubscriptionQueryParams['moduleCard']
-          })}
-          className={css.manageBtn}
-        >
-          {getString('common.manage')}
-        </Link>
+        {!isCommunity ? (
+          <Link
+            to={routes.toSubscriptions({
+              accountId,
+              moduleCard: module.moduleType as SubscriptionQueryParams['moduleCard']
+            })}
+            className={css.manageBtn}
+          >
+            {getString('common.manage')}
+          </Link>
+        ) : null}
       </Container>
     </Card>
   )
