@@ -31,7 +31,6 @@ import { isEmpty, merge } from 'lodash-es'
 import {
   Failure,
   ConnectorInfoDTO,
-  getConnectorListPromise,
   ConnectorConfigDTO,
   GetConnectorListQueryParams,
   ConnectorResponse,
@@ -454,8 +453,8 @@ export function getReferenceFieldProps({
   openConnectorModal,
   setPagedConnectorData,
   connectorFilterProperties,
-  isMultiSelect,
   version,
+  isMultiSelect,
   selectedConnectors,
   isRecordDisabled,
   renderRecordDisabledWarning
@@ -483,50 +482,30 @@ export function getReferenceFieldProps({
               getDefaultFromOtherRepo: gitScope.getDefaultFromOtherRepo ?? true
             }
           : {}
-      const request =
-        Array.isArray(type) || !isEmpty(connectorFilterProperties)
-          ? getConnectorListV2Promise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  searchTerm: search || '',
-                  ...additionalParams,
-                  ...gitFilterParams,
-                  pageIndex: page || 0,
-                  pageSize: 10
-                },
-                body: merge(
-                  {
-                    ...(!category && { types: type }),
-                    category,
-                    filterType: 'Connector',
-                    projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-                    orgIdentifier:
-                      scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
-                  },
-                  connectorFilterProperties
-                ) as ConnectorFilterProperties
-              },
-              signal
-            )
-          : getConnectorListPromise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  // If we also pass "type" along with "category", "category" will be ignored
-                  ...(!category && { type }),
-                  ...gitFilterParams,
-                  category,
-                  searchTerm: search,
-                  pageIndex: page,
-                  pageSize: 10,
-                  projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
-                  ...(version && { version })
-                }
-              },
-              signal
-            )
+      const request = getConnectorListV2Promise(
+        {
+          queryParams: {
+            accountIdentifier,
+            searchTerm: search || '',
+            ...additionalParams,
+            ...gitFilterParams,
+            pageIndex: page || 0,
+            pageSize: 10,
+            version
+          },
+          body: merge(
+            {
+              ...(!category && { types: Array.isArray(type) ? type : [type] }),
+              category,
+              filterType: 'Connector',
+              projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
+              orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+            },
+            connectorFilterProperties
+          ) as ConnectorFilterProperties
+        },
+        signal
+      )
 
       return request
         .then(responseData => {
@@ -853,6 +832,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId =
     props.tooltipProps?.dataTooltipId || (tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : '')
+
   const getReferenceFieldPropsValues = getReferenceFieldProps({
     defaultScope,
     gitScope,
@@ -875,6 +855,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     isRecordDisabled,
     renderRecordDisabledWarning
   })
+
   return (
     <FormGroup
       {...rest}
