@@ -1401,6 +1401,7 @@ export interface StringsMap {
   'rbac.customResourceGroupsTooltip': string
   'rbac.customRoles': string
   'rbac.customRolesTooltip': string
+  'rbac.deleteAnyway': string
   'rbac.generateToken': string
   'rbac.group': string
   'rbac.in': string
@@ -1636,6 +1637,7 @@ export interface StringsMap {
   'rbac.userGroupRequired': string
   'rbac.userRequired': string
   'rbac.usersPage.deleteConfirmation': string
+  'rbac.usersPage.deleteExternallyManagedUserConfirmation': string
   'rbac.usersPage.deleteLastAdminError': string
   'rbac.usersPage.deleteLastAdminOrgConfirmation': string
   'rbac.usersPage.deleteLastAdminProjectConfirmation': string
