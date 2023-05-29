@@ -106,7 +106,7 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } = useFeatureFlags()
+  const { BAMBOO_ARTIFACT_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -539,10 +539,10 @@ export default function ArtifactsSelection({
   // This function decides which step to show first when artifact wizard is opened
   const getArtifactWizardInitialStepNumber = (): number => {
     // In edit mode, show 2nd or 3rd step depending on how many steps are there in total
-    if (isArtifactEditMode && showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+    if (isArtifactEditMode && showConnectorStep(selectedArtifact as ArtifactType)) {
       return 3
     }
-    if (isArtifactEditMode && !showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+    if (isArtifactEditMode && !showConnectorStep(selectedArtifact as ArtifactType)) {
       return 2
     }
     // For create mode, if we need to show 2nd step directly

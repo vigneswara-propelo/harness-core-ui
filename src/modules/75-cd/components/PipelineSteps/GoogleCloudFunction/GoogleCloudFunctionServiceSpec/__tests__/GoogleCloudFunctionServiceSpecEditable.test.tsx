@@ -32,11 +32,12 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { setupMode } from '../../../PipelineStepsUtil'
 import {
   updateStageArgGcfFunctionDefinition,
-  updateStageArgFunctionDefinitionUpdate,
-  updateStageArgGcfFunctionDefinitionManifestDelete,
-  updateStageArgGcfFunctionAliasDefinitionManifestDelete,
   updateStageArgForPropagatedStageWithGcfFunctionDefinitionManifest,
-  updateStageArgGcfFunctionAliasDefinition
+  updateStageArgGcfFunctionAliasDefinition,
+  updateStageArgGoogleCloudFunctionDefinitionUpdate,
+  updateStageArgGoogleCloudFunctionGenOneDefinitionUpdate,
+  updateStageArgGoogleCloudFunctionDefinitionManifestDelete,
+  updateStageArgGoogleCloudFunctionGenOneDefinitionManifestDelete
 } from './helper'
 import GoogleCloudFunctionServiceSpecEditable from '../GoogleCloudFunctionServiceSpecEditable'
 import {
@@ -51,7 +52,7 @@ const fetchConnector = jest.fn().mockReturnValue(connectorData)
 const fetchConnectorList = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectorList })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorData, refetch: fetchConnector, loading: false }
@@ -110,23 +111,13 @@ const testGcfManifestLastStep = async (portal: HTMLElement): Promise<void> => {
   userEvent.click(submitButton)
 }
 
-const testUpdateGcfFunctionDefinitionManifest = async (CDS_SERVICE_CONFIG_LAST_STEP: boolean): Promise<void> => {
+const testUpdateGcfFunctionDefinitionManifest = async (): Promise<void> => {
   const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
   const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
-  if (CDS_SERVICE_CONFIG_LAST_STEP) {
-    // Check if second step IS NOT displayed
-    const Git = queryByValueAttribute('Git')
-    await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
-  } else {
-    // Check if Git tile is checked and click Continue
-    const Git = queryByValueAttribute('Git')
-    await waitFor(() => expect(Git).not.toBeNull())
-    expect(Git).toBeChecked()
-    const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
-    await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
-  }
+  // Check if second step IS NOT displayed
+  const Git = queryByValueAttribute('Git')
+  await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
 
   // Change fields in the last step and submit manifest
   await testGcfManifestLastStep(portal)
@@ -212,7 +203,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     })
   })
 
-  test('update GCF manifest when CDS_SERVICE_CONFIG_LAST_STEP is OFF', async () => {
+  test('update GoogleCloudFunctionDefinition manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextGcfManifests.updateStage = updateStage
 
@@ -234,7 +225,6 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(
       within(functionDefinitionHeaderContainer).getByText('pipeline.manifestTypeLabels.GoogleCloudFunctionDefinition')
     ).toBeInTheDocument()
-
     // continue with updating manifest
     expect(screen.getByText('manifest1')).toBeInTheDocument()
     const editButtons = container.querySelectorAll('[data-icon="Edit"]')
@@ -243,24 +233,20 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(functionDefinitionManifestEditButton)
 
-    await testUpdateGcfFunctionDefinitionManifest(false)
+    await testUpdateGcfFunctionDefinitionManifest()
 
     await waitFor(() => {
-      expect(updateStage).toHaveBeenCalledWith(updateStageArgFunctionDefinitionUpdate)
+      expect(updateStage).toHaveBeenCalledWith(updateStageArgGoogleCloudFunctionDefinitionUpdate)
     })
   })
 
-  test('update GCF manifest when CDS_SERVICE_CONFIG_LAST_STEP is ON', async () => {
+  test('update GoogleCloudFunctionGenOneDefinition manifest', async () => {
     const updateStage = jest.fn()
-    pipelineContextGcfManifests.updateStage = updateStage
+    pipelineContextGcfGen1Manifest.updateStage = updateStage
 
     const { container } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
-      >
-        <PipelineContext.Provider value={pipelineContextGcfManifests}>
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
+        <PipelineContext.Provider value={pipelineContextGcfGen1Manifest}>
           <GoogleCloudFunctionServiceSpecEditable
             initialValues={{
               isReadonlyServiceMode: false
@@ -274,24 +260,26 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     // Click Edit button for Function Definition manifest
     const functionDefinitionHeaderContainer = screen.getByTestId('function-definition-card')
     expect(
-      within(functionDefinitionHeaderContainer).getByText('pipeline.manifestTypeLabels.GoogleCloudFunctionDefinition')
+      within(functionDefinitionHeaderContainer).getByText(
+        'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinitionGenOne'
+      )
     ).toBeInTheDocument()
     // continue with updating manifest
-    expect(screen.getByText('testidentifier')).toBeInTheDocument()
+    expect(screen.getByText('GcfManifestGenOne')).toBeInTheDocument()
     const editButtons = container.querySelectorAll('[data-icon="Edit"]')
     expect(editButtons).toHaveLength(1)
     const functionDefinitionManifestEditButton = editButtons[0]
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(functionDefinitionManifestEditButton)
 
-    await testUpdateGcfFunctionDefinitionManifest(true)
+    await testUpdateGcfFunctionDefinitionManifest()
 
     await waitFor(() => {
-      expect(updateStage).toHaveBeenCalledWith(updateStageArgFunctionDefinitionUpdate)
+      expect(updateStage).toHaveBeenCalledWith(updateStageArgGoogleCloudFunctionGenOneDefinitionUpdate)
     })
   })
 
-  test('delete gen2 manifest', async () => {
+  test('delete GoogleCloudFunctionDefinition manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextGcfManifests.updateStage = updateStage
 
@@ -321,11 +309,11 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     userEvent.click(functionDefinitionManifestDeleteButton)
 
     await waitFor(() => {
-      expect(updateStage).toHaveBeenCalledWith(updateStageArgGcfFunctionDefinitionManifestDelete)
+      expect(updateStage).toHaveBeenCalledWith(updateStageArgGoogleCloudFunctionDefinitionManifestDelete)
     })
   })
 
-  test('delete Gen 1 Service manifest', async () => {
+  test('delete GoogleCloudFunctionGenOneDefinition manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextGcfGen1Manifest.updateStage = updateStage
 
@@ -341,8 +329,14 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    // Check if required manifest sections are present then Click Delete button of GCF Function Definition manifest
-    expect(screen.getByText('GcfManifestGenOne')).toBeInTheDocument()
+    // Check if required manifest sections are present then Click Delete button of GCF Function GenOne Definition manifest
+    const functionDefinitionHeaderContainer = screen.getByTestId('function-definition-card')
+    expect(
+      within(functionDefinitionHeaderContainer).getByText(
+        'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinitionGenOne'
+      )
+    ).toBeInTheDocument()
+    expect(screen.getByText('testidentifier')).toBeInTheDocument()
     const deleteButtons = container.querySelectorAll('[data-icon="main-trash"]')
     expect(deleteButtons).toHaveLength(1)
     const functionDefinitionManifestDeleteButton = deleteButtons[0]
@@ -350,7 +344,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     userEvent.click(functionDefinitionManifestDeleteButton)
 
     await waitFor(() => {
-      expect(updateStage).toHaveBeenCalledWith(updateStageArgGcfFunctionAliasDefinitionManifestDelete)
+      expect(updateStage).toHaveBeenCalledWith(updateStageArgGoogleCloudFunctionGenOneDefinitionManifestDelete)
     })
   })
 
@@ -360,11 +354,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     pipelineContextGcfManifests.updateStage = updateStage
 
     const { container } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfManifests}>
           <GoogleCloudFunctionServiceSpecEditable
             initialValues={{
@@ -390,7 +380,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(functionDefinitionManifestEditButton)
 
-    await testUpdateGcfFunctionDefinitionManifest(true)
+    await testUpdateGcfFunctionDefinitionManifest()
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgForPropagatedStageWithGcfFunctionDefinitionManifest)

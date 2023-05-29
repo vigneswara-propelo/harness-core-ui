@@ -85,7 +85,7 @@ export const updateStageArgGcfFunctionAliasDefinition = {
   }
 }
 
-export const updateStageArgFunctionDefinitionUpdate = {
+export const updateStageArgGoogleCloudFunctionDefinitionUpdate = {
   name: 'Stage 1',
   identifier: 'Stage_1',
   description: '',
@@ -123,7 +123,45 @@ export const updateStageArgFunctionDefinitionUpdate = {
   }
 }
 
-export const updateStageArgGcfFunctionDefinitionManifestDelete = {
+export const updateStageArgGoogleCloudFunctionGenOneDefinitionUpdate = {
+  name: 'Stage 1',
+  identifier: 'Stage_1',
+  description: '',
+  type: 'Deployment',
+  spec: {
+    serviceConfig: {
+      serviceRef: 'Service_1',
+      serviceDefinition: {
+        type: ServiceDeploymentType.GoogleCloudFunctions,
+        spec: {
+          environmentType: GoogleCloudFunctionsEnvType.GenOne,
+          artifacts: { sidecars: [], primary: null },
+          manifests: [
+            {
+              manifest: {
+                identifier: 'testidentifier',
+                type: ManifestDataType.GoogleCloudFunctionGenOneDefinition,
+                spec: {
+                  store: {
+                    spec: {
+                      branch: 'testBranch',
+                      connectorRef: 'account.Git_CTR',
+                      gitFetchType: 'Branch',
+                      paths: ['test-path']
+                    },
+                    type: 'Git'
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+export const updateStageArgGoogleCloudFunctionDefinitionManifestDelete = {
   name: 'Stage 1',
   identifier: 'Stage_1',
   description: '',
@@ -143,7 +181,7 @@ export const updateStageArgGcfFunctionDefinitionManifestDelete = {
   }
 }
 
-export const updateStageArgGcfFunctionAliasDefinitionManifestDelete = {
+export const updateStageArgGoogleCloudFunctionGenOneDefinitionManifestDelete = {
   name: 'Stage 1',
   identifier: 'Stage_1',
   description: '',
