@@ -95,7 +95,7 @@ const AwsSamBuildStepEdit = (
       ),
       samBuildDockerRegistryConnectorRef: Yup.string().required(
         getString('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.awsSamBuildStep.samBuildDockerRegistryConnectorRef')
+          name: getString('cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry')
         })
       )
     })
@@ -204,7 +204,7 @@ const AwsSamBuildStepEdit = (
               {renderConnectorField(
                 formik,
                 'spec.samBuildDockerRegistryConnectorRef',
-                getString('cd.steps.awsSamBuildStep.samBuildDockerRegistryConnectorRef')
+                getString('cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry')
               )}
 
               <Container className={stepCss.formGroup}>

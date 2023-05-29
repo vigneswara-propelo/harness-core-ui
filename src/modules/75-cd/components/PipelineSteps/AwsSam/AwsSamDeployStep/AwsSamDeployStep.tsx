@@ -21,7 +21,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
-import { GenericExecutionStepInputSet } from '../../Common/GenericExecutionStep/GenericExecutionStepInputSet'
+import { AwsSamDeployStepInputSetMode } from './AwsSamDeployStepInputSet'
 import { AwsSamDeployStepEditRef, AwsSamDeployStepFormikValues } from './AwsSamDeployStepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -87,11 +87,10 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     } = props
 
     if (this.isTemplatizedView(stepViewType)) {
-      // @Todo: Implement Runtime view component and use it here
       return (
-        <GenericExecutionStepInputSet
+        <AwsSamDeployStepInputSetMode
+          initialValues={initialValues}
           allowableTypes={allowableTypes}
-          stepViewType={stepViewType}
           inputSetData={inputSetData as InputSetData<AwsSamDeployStepInitialValues>}
         />
       )

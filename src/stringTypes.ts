@@ -6356,7 +6356,8 @@ export interface StringsMap {
   'cd.steps.awsInfraStep.placeholders.loadBalancer': string
   'cd.steps.awsInfraStep.placeholders.vpcs': string
   'cd.steps.awsInfraStep.regionError': string
-  'cd.steps.awsSamBuildStep.samBuildDockerRegistryConnectorRef': string
+  'cd.steps.awsSamBuildStep.awsSamBuildCommandOptions': string
+  'cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry': string
   'cd.steps.awsSamDeployStep.awsSamDeployCommandOptions': string
   'cd.steps.awsSamDeployStep.containerConfigurationText': string
   'cd.steps.azureInfraStep.azure': string

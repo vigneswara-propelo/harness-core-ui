@@ -76,7 +76,9 @@ export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptio
           }}
           multiTypeFieldSelectorProps={{
             label: getString('optionalField', {
-              name: getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions')
+              name: isAwsSamBuildStep
+                ? getString('cd.steps.awsSamBuildStep.awsSamBuildCommandOptions')
+                : getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions')
             }),
             allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
           }}
