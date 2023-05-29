@@ -51,6 +51,7 @@ import type { SSCACustomMicroFrontendProps } from '@ssca/interfaces/SSCACustomMi
 import type { IDPCustomMicroFrontendProps } from '@idp/interfaces/IDPCustomMicroFrontendProps.types'
 import type { GovernanceCustomMicroFrontendProps } from '@governance/GovernanceCustomMicroFrontendProps.types'
 import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
+import type { SRMCustomMicroFrontendProps } from '@cv/interface/SRMCustomMicroFrontendProps.types'
 
 export interface Scope {
   accountId?: string
@@ -131,5 +132,6 @@ export {
   SSCACustomMicroFrontendProps,
   IDPCustomMicroFrontendProps,
   GovernanceCustomMicroFrontendProps,
-  ETCustomMicroFrontendProps
+  ETCustomMicroFrontendProps,
+  SRMCustomMicroFrontendProps
 }
