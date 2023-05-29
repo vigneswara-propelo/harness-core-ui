@@ -698,7 +698,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       } else if (status === ResponseStatus.SUCCESS) {
         showSuccess(
           getString(isCreatingNewTrigger ? 'triggers.toast.successfulCreate' : 'triggers.toast.successfulUpdate', {
-            name: data?.name
+            name: data?.name,
+            enabled: data?.enabled ? getString('triggers.enabled') : getString('triggers.disabled')
           })
         )
 

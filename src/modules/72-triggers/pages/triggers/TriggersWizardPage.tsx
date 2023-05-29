@@ -1422,7 +1422,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         } else if (status === ResponseStatus.SUCCESS) {
           showSuccess(
             getString('triggers.toast.successfulCreate', {
-              name: data?.name
+              name: data?.name,
+              enabled: data?.enabled ? getString('triggers.enabled') : getString('triggers.disabled')
             })
           )
           history.push(

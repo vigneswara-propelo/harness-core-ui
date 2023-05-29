@@ -5463,6 +5463,8 @@ export interface StringsMap {
   'triggers.createTrigger': string
   'triggers.cronLabel': string
   'triggers.deleteTrigger': string
+  'triggers.disabled': string
+  'triggers.enabled': string
   'triggers.error.webhookRegistrationFailed': string
   'triggers.inputSetIsRequired': string
   'triggers.inputSetV1Required': string
