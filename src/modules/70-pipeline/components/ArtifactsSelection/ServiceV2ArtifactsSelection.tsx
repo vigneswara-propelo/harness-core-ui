@@ -105,7 +105,7 @@ const checkDuplicateStep = (
           ? (artifactData as ArtifactSource).identifier
           : (artifactData as SidecarArtifactWrapper)?.sidecar?.identifier
 
-      return artifactIdentifier === values.name && index !== artifactIndex
+      return artifactIdentifier === values.identifier && index !== artifactIndex
     })
 
     if (isDuplicate) {
@@ -498,7 +498,6 @@ export default function ServiceV2ArtifactsSelection({
       // update the node
       const artifactSourceConfigValues = formikRef.current?.getValues() as ArtifactSource | SidecarArtifact
       const updatedArtifactSourceConfigValues = produce(artifactSourceConfigValues, draft => {
-        set(draft, 'identifier', artifactSourceConfigValues.name)
         set(
           draft,
           'template',
