@@ -266,7 +266,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     runTooltip = getString('pipeline.cannotRunUnsavedPipeline')
   }
 
-  function handleReconcileClick(): void {
+  function handleReconcile(): void {
     reconcilePipeline()
     showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
     setShouldShowOutOfSyncError(true)
@@ -323,7 +323,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
             icon="refresh"
             text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
             disabled={isCommunity}
-            onClick={handleReconcileClick}
+            onClick={handleReconcile}
             permission={{
               resourceScope: {
                 accountIdentifier: accountId,
@@ -436,7 +436,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     {getString('unsavedChanges')}
                   </Button>
                 )}
-                {isAsyncValidationEnabled && !isNewPipeline && <ValidationBadge className={css.validationContainer} />}
+                {isAsyncValidationEnabled && !isNewPipeline && (
+                  <ValidationBadge className={css.validationContainer} onReconcile={handleReconcile} />
+                )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {renderDiscardUnsavedChangeButton()}
                 <RbacButton
