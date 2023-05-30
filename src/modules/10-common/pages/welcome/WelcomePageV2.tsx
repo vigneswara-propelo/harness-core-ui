@@ -47,7 +47,7 @@ import css from './WelcomePage.module.scss'
 export default function WelcomePageV2(props: { getStartedVariant?: string }): JSX.Element {
   const HarnessLogo = HarnessIcons['harness-logo-black']
   const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE, CVNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
-  const { FF_LICENSE_STATE, licenseInformation, updateLicenseStore } = useLicenseStore()
+  const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
   const { trackEvent } = useTelemetry()
@@ -85,13 +85,13 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
         cd: true,
         cv: CVNG_ENABLED,
         ci: true,
-        cf: FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
+        cf: true,
         ce: CENG_ENABLED,
         chaos: true
       }
       return Boolean(moduleStatusMap[moduleSelected])
     },
-    [CVNG_ENABLED, FF_LICENSE_STATE, CENG_ENABLED]
+    [CVNG_ENABLED, CENG_ENABLED]
   )
   const trackLearnMore = (moduleSelected: string): void =>
     trackEvent(PurposeActions.LearnMoreClicked, { category: Category.SIGNUP, module: moduleSelected })
