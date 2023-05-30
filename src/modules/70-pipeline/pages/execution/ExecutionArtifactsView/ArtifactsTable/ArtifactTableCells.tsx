@@ -19,6 +19,7 @@ import type {
   UseExpandedRowProps,
   UseTableCellProps
 } from 'react-table'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { killEvent } from '@common/utils/eventUtils'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
@@ -96,9 +97,11 @@ export const PipelineStepCell: CellType = ({ row }) => {
 export const ViolationsCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
+
+  const totalViolations = defaultTo(data?.allowListViolationCount, 0) + defaultTo(data?.denyListViolationCount, 0)
   return (
     <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
-      {data?.violations ?? getString('na')}
+      {data?.type === 'Sbom' ? totalViolations : getString('na')}
     </Text>
   )
 }

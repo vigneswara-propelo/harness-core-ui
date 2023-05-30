@@ -37,9 +37,10 @@ export interface Artifact {
   sbomName?: string
   sbomUrl?: string
   isSbomAttested?: string
-  violations?: number
   node?: ExecutionNode
   stage: string
+  allowListViolationCount: number | undefined
+  denyListViolationCount: number | undefined
 }
 
 export interface ArtifactsColumnActions {
@@ -80,7 +81,7 @@ export function ArtifactsTable({ artifacts }: ArtifactsTableProps): React.ReactE
       },
       {
         Header: getString('common.violations'),
-        accessor: 'violations',
+        accessor: 'allowListViolationCount',
         Cell: ViolationsCell
       },
       {
