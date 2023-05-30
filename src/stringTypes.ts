@@ -4152,6 +4152,7 @@ export interface StringsMap {
   'pipeline.execution.dialogMessages.abortTitle': string
   'pipeline.execution.dialogMessages.markAsFailedConfirmation': string
   'pipeline.execution.dialogMessages.markAsFailedTitle': string
+  'pipeline.execution.dialogMessages.markAsFailedWarningText': string
   'pipeline.execution.elapsedTime': string
   'pipeline.execution.emptyStepGroup': string
   'pipeline.execution.ignoreFailedWarningText': string
