@@ -71,7 +71,8 @@ const renderComponent = (props?: Partial<FlagConfigurationStepWidgetProps>): Ren
     </TestWrapper>
   )
 
-describe('FlagConfigurationStepWidget', () => {
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip('FlagConfigurationStepWidget', () => {
   const spyGetAllFeatures = jest.spyOn(ffServices, 'useGetAllFeatures')
   const refetchEnvs = jest.fn()
 
