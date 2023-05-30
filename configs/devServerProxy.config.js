@@ -172,6 +172,10 @@ module.exports = {
     pathRewrite: { '^/ccmui': '' },
     target: process.env.CCM_UI_URL || 'https://localhost:8183'
   },
+  '/srmui': {
+    pathRewrite: { '^/srmui': '' },
+    target: 'https://localhost:8189'
+  },
   '/cdbui': {
     pathRewrite: { '^/cdbui': '' },
     target: process.env.CDB_UI_URL || 'https://localhost:8187'

@@ -49,7 +49,9 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
 import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
+import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -65,6 +67,7 @@ import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 import CVCreateDowntime from './pages/slos/components/CVCreateDowntime/CVCreateDowntime'
+import type { SRMCustomMicroFrontendProps } from './interface/SRMCustomMicroFrontendProps.types'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -581,7 +584,15 @@ export const SRMRoutes: React.FC = () => {
       {NonMFERoute.props.children}
       {enableMicroFrontend ? (
         <RouteWithLayout exact path={[...mfePaths]} sidebarProps={CVSideNavProps}>
-          <ChildAppMounter ChildApp={SrmMicroFrontendPath} />
+          <ChildAppMounter<SRMCustomMicroFrontendProps>
+            ChildApp={SrmMicroFrontendPath}
+            customHooks={{ useQueryParams, useFeatureFlag, useFeatureFlags, useDeepCompareEffect }}
+            customFunctions={{
+              formatDatetoLocale,
+              getReadableDateTime
+            }}
+            customConstants={{ ALL_TIME_ZONES }}
+          />
         </RouteWithLayout>
       ) : (
         <RouteWithLayout
