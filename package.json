@@ -131,7 +131,7 @@
     "@graphql-codegen/typescript-operations": "^2.3.2",
     "@graphql-codegen/typescript-urql": "^3.5.3",
     "@harness/css-types-loader": "3.1.0",
-    "@harness/jarvis": "0.16.0",
+    "@harness/jarvis": "0.17.1",
     "@harnessio/oats-cli": "^2.1.0",
     "@harnessio/oats-plugin-react-query": "^2.1.0",
     "@storybook/addon-actions": "^6.4.19",

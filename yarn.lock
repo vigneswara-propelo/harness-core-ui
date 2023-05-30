@@ -1754,10 +1754,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/icons/1.146.0/dc1af7c71e2e7a0863dc50a6a6581452d7771085#dc1af7c71e2e7a0863dc50a6a6581452d7771085"
   integrity sha512-tYq/pK/C4gMdo2vBxbGFio+MFPhMd4zPc9fzwdKJG0qaYlumMbVZayT/nFQXtBSJ297n7+Ay9eNLcAfCePfw1g==
 
-"@harness/jarvis@0.16.0":
-  version "0.16.0"
-  resolved "https://npm.pkg.github.com/download/@harness/jarvis/0.16.0/c7e3798237e08bade2c62465c40cd354a61ad390c321ca583603617f1a453691#f3c86b042adae53f6f5e302163f709fca164f495"
-  integrity sha512-jlmpGfemYaAQlYjO2cwxKBQuVuOrSKmP0d388tC7ou1kdgPn5d/SxSC8p5fGOwnaZSqoG/lnhlJtmDb+h9z6yg==
+"@harness/jarvis@0.17.1":
+  version "0.17.1"
+  resolved "https://npm.pkg.github.com/download/@harness/jarvis/0.17.1/cc3e1b0b7f394f0c858cd15a38f3ed6a1b7c5188#cc3e1b0b7f394f0c858cd15a38f3ed6a1b7c5188"
+  integrity sha512-U6klRXbP1C+E5MwwSy9oND6+YDnjy3+DmIpvtXwvNFzVjuhzuD7TRI4r1pEq+0R8yw+J0I1q/TANLjpZBwKAcQ==
   dependencies:
     ajv "^6.12.5"
     better-ajv-errors "^0.6.7"
