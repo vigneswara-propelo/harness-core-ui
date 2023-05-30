@@ -224,7 +224,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                   />
                 </svg>
               </span>
-              Advanced
+              advancedTitle
             </span>
           </div>
           <div
