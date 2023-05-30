@@ -28,9 +28,61 @@ import css from './MultiTypeDateTimePicker.module.scss'
 
 export interface MultiTypeDateTimePickerProps
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps' | 'value'> {
-  dateInputProps?: DateInputProps
   name: string
   value?: string
+  dateInputProps?: DateInputProps
+}
+
+export interface FormMultiTypeDateTimePickerProps extends Omit<IFormGroupProps, 'label'> {
+  label: string
+  name: string
+  multiTypeDateTimePicker?: Omit<MultiTypeDateTimePickerProps, 'onChange' | 'name'>
+  placeholder?: string
+  defaultToCurrentTime?: boolean
+  onChange?: MultiTypeDateTimePickerProps['onChange']
+  defaultValueToReset?: string
+}
+
+function MultiTypeDateTimePickerFixedTypeComponent(props: {
+  name: string
+  dateInputProps?: DateInputProps
+  value?: string
+  placeholder?: string
+  disabled?: boolean
+  onChange?: MultiTypeDateTimePickerProps['onChange']
+}): React.ReactElement {
+  const { dateInputProps, value = '', name, placeholder, disabled, onChange } = props
+  const { dateProps, ...restDateInputProps } = dateInputProps || {}
+
+  return (
+    <div className={css.dateTimeWrapper}>
+      <DateInput
+        name={name}
+        value={value}
+        onChange={val => {
+          onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.FIXED)
+        }}
+        placeholder={placeholder}
+        contentEditable={false}
+        timePrecision="minute"
+        dateProps={{
+          timePickerProps: { useAmPm: true },
+          highlightCurrentDay: true,
+          maxDate: moment().add(5, 'year').toDate(),
+          ...dateProps
+        }}
+        popoverProps={{
+          disabled,
+          usePortal: true
+        }}
+        dateTimeFormat="LLLL"
+        autoComplete="off"
+        disabled={disabled}
+        readOnly
+        {...restDateInputProps}
+      />
+    </div>
+  )
 }
 
 export const MultiTypeDateTimePicker: React.FC<MultiTypeDateTimePickerProps> = ({
@@ -41,62 +93,17 @@ export const MultiTypeDateTimePicker: React.FC<MultiTypeDateTimePickerProps> = (
   disabled,
   ...rest
 }) => {
-  const { dateProps, ...restDateInputProps } = dateInputProps || {}
-  const fixedTypeComponent = React.useCallback(
-    props => {
-      const { onChange } = props
-      return (
-        <div className={css.dateTimeWrapper}>
-          <DateInput
-            name={name}
-            value={value}
-            onChange={val => {
-              onChange?.(val, MultiTypeInputValue.STRING)
-            }}
-            placeholder={placeholder}
-            contentEditable={false}
-            timePrecision="minute"
-            dateProps={{
-              timePickerProps: { useAmPm: true },
-              highlightCurrentDay: true,
-              maxDate: moment().add(5, 'year').toDate(),
-              ...dateProps
-            }}
-            popoverProps={{
-              disabled,
-              usePortal: true
-            }}
-            dateTimeFormat="LLLL"
-            autoComplete="off"
-            disabled={disabled}
-            readOnly
-            {...restDateInputProps}
-          />
-        </div>
-      )
-    },
-    [value, name, placeholder, disabled]
-  )
   return (
     <ExpressionAndRuntimeType
       value={value}
       name={name}
       disabled={disabled}
       resetExpressionOnFixedTypeChange
+      fixedTypeComponent={MultiTypeDateTimePickerFixedTypeComponent}
+      fixedTypeComponentProps={{ name, value, placeholder, disabled, dateInputProps }}
       {...rest}
-      fixedTypeComponent={fixedTypeComponent}
     />
   )
-}
-
-export interface FormMultiTypeDateTimePickerProps extends Omit<IFormGroupProps, 'label'> {
-  label: string
-  name: string
-  multiTypeDateTimePicker?: Omit<MultiTypeDateTimePickerProps, 'onChange'>
-  placeholder?: string
-  defaultToCurrentTime?: boolean
-  onChange?: MultiTypeDateTimePickerProps['onChange']
-  defaultValueToReset?: string
 }
 
 function FormMultiTypeDateTimePicker(props: FormMultiTypeDateTimePickerProps & FormikContextProps<any>): ReactElement {
@@ -145,9 +152,10 @@ function FormMultiTypeDateTimePicker(props: FormMultiTypeDateTimePickerProps & F
         dateInputProps={dateInputProps}
         defaultValueToReset={defaultValueToReset}
         onTypeChange={setMultiType}
-        placeholder={restProps.placeholder}
+        placeholder={placeholder}
         onChange={(val, valueType, type) => {
-          if (isMultiTypeRuntime(type) || isMultiTypeExpression(type)) formik?.setFieldValue(name, val)
+          if (isMultiTypeExpression(type) && val === defaultValueToReset) formik?.setFieldValue(name, undefined)
+          else if (isMultiTypeRuntime(type) || isMultiTypeExpression(type)) formik?.setFieldValue(name, val)
           else
             formik?.setFieldValue(
               name,

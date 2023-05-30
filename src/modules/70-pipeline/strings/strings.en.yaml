@@ -128,7 +128,11 @@ approvalStep:
   fetchUserGroupsFailed: Failed to fetch User Groups
   minimumCount: 'Number of approvers that are required at this step'
   disallowPipelineExecutor: 'Disallow the executor from approving the pipeline'
+  scheduleAutoApprovalOptional: Schedule Auto Approval (optional)
+  approverInputsOptional: Approver Inputs (optional)
   addApproverInputs: Add Approver Inputs
+  autoApproveDeadline: Enter the auto approve deadline
+  autoApproveLabel: Auto Approve
   execution:
     inputsTitle: Approval inputs
     statusMsg: '{{ count }} of {{ total }} approvals complete'
@@ -138,6 +142,8 @@ approvalStep:
     minimumCountOne: 'Minimum count cannot be less than one.'
     minimumCountDecimal: 'Minimum count cannot be decimal value.'
     minimumCountRequired: 'Minimum count is required.'
+    autoApproveScheduleTimeout: 'Auto approve schedule should not be beyond timeout'
+    autoApproveScheduleCurrentTime: 'Auto approve schedule should be greater than 15 minutes with respect to current time'
   status:
     APPROVE: Approved
     REJECT: Rejected

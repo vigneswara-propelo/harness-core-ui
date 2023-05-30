@@ -1254,6 +1254,7 @@ export interface StringsMap {
   'common.timeRangeLimitWarning.currentPlanOffer': string
   'common.timeRangeLimitWarning.upgradeOffer': string
   'common.timeframe': string
+  'common.timezone': string
   'common.tokens': string
   'common.totalLines': string
   'common.totalSelected': string
@@ -3741,8 +3742,11 @@ export interface StringsMap {
   'pipeline.approvalStep.addApproverInputs': string
   'pipeline.approvalStep.addUserGroups': string
   'pipeline.approvalStep.approverInputs': string
+  'pipeline.approvalStep.approverInputsOptional': string
   'pipeline.approvalStep.approvers': string
   'pipeline.approvalStep.approversWithColon': string
+  'pipeline.approvalStep.autoApproveDeadline': string
+  'pipeline.approvalStep.autoApproveLabel': string
   'pipeline.approvalStep.disallowPipelineExecutor': string
   'pipeline.approvalStep.disallowedApproverExecution': string
   'pipeline.approvalStep.ensureUserGroups': string
@@ -3755,9 +3759,12 @@ export interface StringsMap {
   'pipeline.approvalStep.message': string
   'pipeline.approvalStep.minimumCount': string
   'pipeline.approvalStep.notAuthorizedExecution': string
+  'pipeline.approvalStep.scheduleAutoApprovalOptional': string
   'pipeline.approvalStep.status.APPROVE': string
   'pipeline.approvalStep.status.REJECT': string
   'pipeline.approvalStep.validation.approvalMessage': string
+  'pipeline.approvalStep.validation.autoApproveScheduleCurrentTime': string
+  'pipeline.approvalStep.validation.autoApproveScheduleTimeout': string
   'pipeline.approvalStep.validation.minimumCountDecimal': string
   'pipeline.approvalStep.validation.minimumCountOne': string
   'pipeline.approvalStep.validation.minimumCountRequired': string
@@ -5366,7 +5373,6 @@ export interface StringsMap {
   'freezeWindows.globalFreeze.enabled': string
   'freezeWindows.globalFreeze.enabledWindow': string
   'freezeWindows.rbac.global': string
-  'freezeWindows.recurrenceConfig.Timezone': string
   'freezeWindows.recurrenceConfig.doesNotRepeat': string
   'freezeWindows.recurrenceConfig.endTime': string
   'freezeWindows.recurrenceConfig.nMonthsValidationLessThan': string

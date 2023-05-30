@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, compact, isArray, has, defaultTo } from 'lodash-es'
+import { isEmpty, compact, isArray, has, defaultTo, set } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -22,8 +22,11 @@ import {
   MultiTypeInputType,
   Container,
   AllowedTypes,
-  useToaster
+  useToaster,
+  Layout,
+  Text
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
@@ -52,6 +55,8 @@ import type {
   HarnessApprovalStepModeProps
 } from './types'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
+import ScheduleAutoApproval from './ScheduleAutoApproval'
+import { ApproveAction, scheduleAutoApprovalValidationSchema } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './HarnessApproval.module.scss'
 
@@ -253,10 +258,43 @@ function FormContent({
 
       <div className={stepCss.noLookDivider} />
 
-      <Accordion className={stepCss.accordion}>
+      <Accordion className={cx(stepCss.accordion, css.accordionStyle)}>
         <Accordion.Panel
-          id="optional-config"
-          summary={getString('common.optionalConfig')}
+          id="schedule-autoApproval"
+          summary={
+            <Layout.Horizontal
+              spacing="xsmall"
+              data-tooltip-id="scheduleAutoApproval"
+              margin={{ right: 'small' }}
+              flex={{ alignItems: 'flex-end' }}
+            >
+              <Text font={{ variation: FontVariation.H6 }}>
+                {getString('pipeline.approvalStep.scheduleAutoApprovalOptional')}
+              </Text>
+              <HarnessDocTooltip tooltipId="scheduleAutoApproval" useStandAlone={true} />
+            </Layout.Horizontal>
+          }
+          details={
+            <FormikForm>
+              <ScheduleAutoApproval allowableTypes={allowableTypes} formik={formik} readonly={readonly} />
+            </FormikForm>
+          }
+        />
+        <Accordion.Panel
+          id="approver-inputs"
+          summary={
+            <Layout.Horizontal
+              spacing="xsmall"
+              data-tooltip-id="approverInputs"
+              margin={{ right: 'small' }}
+              flex={{ alignItems: 'flex-end' }}
+            >
+              <Text font={{ variation: FontVariation.H6 }}>
+                {getString('pipeline.approvalStep.approverInputsOptional')}
+              </Text>
+              <HarnessDocTooltip tooltipId="approverInputs" useStandAlone={true} />
+            </Layout.Horizontal>
+          }
           details={
             <div className={stepCss.formGroup}>
               <FieldArray
@@ -265,10 +303,6 @@ function FormContent({
                 render={({ push, remove }) => {
                   return (
                     <div>
-                      <div className={stepCss.stepSubSectionHeading} data-tooltip-id="approverInputs">
-                        <>Approver Inputs</>
-                        <HarnessDocTooltip tooltipId="approverInputs" useStandAlone={true} />
-                      </div>
                       {isEmpty(formik.values.spec.approverInputs) ? null : (
                         <>
                           <div className={css.headerRow}>
@@ -341,6 +375,11 @@ function HarnessApprovalStepMode(
   const { getString } = useStrings()
 
   const handleOnSubmit = (values: HarnessApprovalData) => {
+    //remove autoApproval spec if unchecked
+    if (values.spec?.autoApproval?.action === ApproveAction.Reject) {
+      set(values, 'spec.autoApproval', undefined)
+    }
+
     onUpdate?.(
       produce(values, draft => {
         const userGroupValues = draft.spec.approvers?.userGroups
@@ -400,6 +439,14 @@ function HarnessApprovalStepMode(
                   return true
                 }
               })
+          }),
+          autoApproval: Yup.object().shape({
+            scheduledDeadline: Yup.object().when('action', {
+              is: val => val === ApproveAction.Approve,
+              then: Yup.object({
+                time: scheduleAutoApprovalValidationSchema(getString)
+              })
+            })
           })
         })
       })}

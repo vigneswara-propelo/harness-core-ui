@@ -6,12 +6,13 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
+import { render, act, fireEvent, queryByAttribute, waitFor, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 
+import { findPopoverContainer } from '@common/utils/testUtils'
 import { TestStepWidget, factory } from '../../__tests__/StepTestUtil'
 import { HarnessApproval } from '../HarnessApproval'
 import {
@@ -25,7 +26,8 @@ import {
   getYaml,
   getParams,
   userGroupsAggregate,
-  batchUserGroupListMock
+  batchUserGroupListMock,
+  getScheduleAutoapprovalRuntimeProps
 } from './HarnessApprovalTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -45,7 +47,43 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
+const scheduleAutoApproveActions = async (
+  container: HTMLElement,
+  getByText: RenderResult['getByText']
+): Promise<void> => {
+  act(() => {
+    userEvent.click(getByText('pipeline.approvalStep.scheduleAutoApprovalOptional'))
+  })
+
+  const autoApproveCheckBox = container.querySelector('input[name="AutoApprove"]')
+  const timeField = container.querySelector('input[name="spec.autoApproval.scheduledDeadline.time"]')
+  const messageTextArea = container.querySelector('textarea[name="spec.autoApproval.comments"]')
+
+  // check default behaviour
+  expect(autoApproveCheckBox).not.toBeChecked()
+  expect(timeField).toBeDisabled()
+  expect(messageTextArea).toBeDisabled()
+
+  // add auto approval
+  userEvent.click(autoApproveCheckBox as HTMLInputElement)
+  expect(autoApproveCheckBox).toBeChecked()
+  expect(timeField).not.toBeDisabled()
+  expect(messageTextArea).not.toBeDisabled()
+
+  await act(async () => {
+    fireEvent.change(messageTextArea as HTMLTextAreaElement, {
+      target: { value: 'Auto approved by Harness via Harness Apporval step' }
+    })
+  })
+}
+
 describe('Harness Approval tests', () => {
+  beforeAll(() => {
+    jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
+  })
+  afterAll(() => {
+    jest.spyOn(global.Date, 'now').mockReset()
+  })
   beforeEach(() => {
     factory.registerStep(new HarnessApproval())
   })
@@ -246,7 +284,7 @@ describe('Harness Approval tests', () => {
     )
 
     act(() => {
-      fireEvent.click(getByText('common.optionalConfig'))
+      fireEvent.click(getByText('pipeline.approvalStep.approverInputsOptional'))
     })
     expect(container.querySelector(`input[name="spec.approverInputs[0].name"]`)).toHaveValue('somekey')
     expect(container.querySelector(`input[name="spec.approverInputs[0].defaultValue"]`)).toHaveValue('somevalue')
@@ -284,6 +322,11 @@ describe('Harness Approval tests', () => {
           minimumCount: 1,
           userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6']
         },
+        autoApproval: {
+          action: 'REJECT',
+          comments: 'Auto approved by Harness via Harness Approval step',
+          scheduledDeadline: { time: '2020-10-25 05:12 PM', timeZone: 'UTC' }
+        },
         includePipelineExecutionHistory: true,
         isAutoRejectEnabled: false
       },
@@ -309,7 +352,7 @@ describe('Harness Approval tests', () => {
 
     // Open third accordion
     act(() => {
-      fireEvent.click(getByText('common.optionalConfig'))
+      fireEvent.click(getByText('pipeline.approvalStep.approverInputsOptional'))
     })
     expect(queryByDisplayValue('somekey')).toBeTruthy()
     expect(queryByDisplayValue('somevalue')).toBeTruthy()
@@ -424,5 +467,168 @@ describe('Harness Approval tests', () => {
     expect(getByText('common.userGroupsWarningMessage')).toBeInTheDocument()
     fireEvent.click(getByText('update'))
     expect(getByText('5')).toBeInTheDocument()
+  })
+
+  test('Schedule auto approval should work as expected', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = getHarnessApprovalEditModePropsWithValues()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.HarnessApproval}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+        onChange={props.onChange}
+      />
+    )
+
+    await scheduleAutoApproveActions(container, getByText)
+
+    //make timeout as runtime and check warning msg
+    userEvent.click(container.querySelector('[data-id="timeout-1"] [data-icon="fixed-input"]') as HTMLElement)
+    const timeoutField = findPopoverContainer()
+    expect(timeoutField).toBeTruthy()
+    userEvent.click(getByText('Runtime input'))
+
+    //check warning msg
+    expect(getByText('pipeline.approvalStep.validation.autoApproveScheduleTimeout'))
+
+    expect(props.onChange).toBeCalledWith({
+      identifier: 'hhaass',
+      name: 'harness approval step',
+      spec: {
+        approvalMessage: 'Approving pipeline <+pname>',
+        approverInputs: [{ defaultValue: 'somevalue', name: 'somekey' }],
+        approvers: {
+          disallowPipelineExecutor: true,
+          minimumCount: 1,
+          userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6']
+        },
+        autoApproval: {
+          action: 'APPROVE',
+          comments: 'Auto approved by Harness via Harness Approval step',
+          scheduledDeadline: { time: '2020-10-25 05:12 PM', timeZone: 'UTC' }
+        },
+        includePipelineExecutionHistory: true,
+        isAutoRejectEnabled: false
+      },
+      timeout: '<+input>',
+      type: 'HarnessApproval'
+    })
+  })
+
+  test('Test submitting schedule approval - with Runtime values', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = getHarnessApprovalEditModePropsWithValues()
+    const { container, getByText, getAllByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.HarnessApproval}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+      />
+    )
+
+    scheduleAutoApproveActions(container, getByText)
+
+    // make time and message fields as runtime
+    userEvent.click(
+      container.querySelector(
+        '[data-id="spec.autoApproval.scheduledDeadline.time-1"] [data-icon="fixed-input"]'
+      ) as HTMLElement
+    )
+    const timeFieldRuntime = findPopoverContainer()
+    expect(timeFieldRuntime).toBeTruthy()
+    userEvent.click(getAllByText('Runtime input')[0])
+
+    userEvent.click(
+      container.querySelector('[data-id="spec.autoApproval.comments-2"] [data-icon="fixed-input"]') as HTMLElement
+    )
+    const messageField = findPopoverContainer()
+    expect(messageField).toBeTruthy()
+    userEvent.click(getAllByText('Runtime input')[1])
+
+    await act(() => ref.current?.submitForm()!)
+    expect(props.onUpdate).toBeCalledWith({
+      identifier: 'hhaass',
+      name: 'harness approval step',
+      spec: {
+        approvalMessage: 'Approving pipeline <+pname>',
+        approverInputs: [{ defaultValue: 'somevalue', name: 'somekey' }],
+        approvers: {
+          disallowPipelineExecutor: true,
+          minimumCount: 1,
+          userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6']
+        },
+        autoApproval: {
+          action: 'APPROVE',
+          comments: '<+input>',
+          scheduledDeadline: { time: '<+input>', timeZone: 'UTC' }
+        },
+        includePipelineExecutionHistory: true,
+        isAutoRejectEnabled: false
+      },
+      timeout: '10m',
+      type: 'HarnessApproval'
+    })
+  })
+
+  test('Test submitting schedule approval - by unchecking autoApproveCheckbox', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = getHarnessApprovalEditModePropsWithValues()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.HarnessApproval}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+      />
+    )
+
+    scheduleAutoApproveActions(container, getByText)
+
+    //uncheck autoApprove
+    userEvent.click(container.querySelector('input[name="AutoApprove"]') as HTMLInputElement)
+
+    await act(() => ref.current?.submitForm()!)
+
+    //should not contain autoApprove fields
+    expect(props.onUpdate).toBeCalledWith({
+      identifier: 'hhaass',
+      name: 'harness approval step',
+      spec: {
+        approvalMessage: 'Approving pipeline <+pname>',
+        approverInputs: [{ defaultValue: 'somevalue', name: 'somekey' }],
+        approvers: {
+          disallowPipelineExecutor: true,
+          minimumCount: 1,
+          userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6']
+        },
+        includePipelineExecutionHistory: true,
+        isAutoRejectEnabled: false
+      },
+      timeout: '10m',
+      type: 'HarnessApproval'
+    })
+  })
+
+  test('Schedule auto approval - runtime mode', async () => {
+    const props = getScheduleAutoapprovalRuntimeProps()
+    const { getByText, queryByText } = render(
+      <TestStepWidget
+        template={props.inputSetData.template}
+        initialValues={props.initialValues}
+        type={StepType.HarnessApproval}
+        stepViewType={StepViewType.InputSet}
+        inputSetData={props.inputSetData}
+      />
+    )
+
+    fireEvent.click(getByText('Submit'))
+    await waitFor(() => queryByText('Errors'))
+    expect(getByText('common.validation.fieldIsRequired')).toBeInTheDocument()
   })
 })
