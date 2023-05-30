@@ -1963,6 +1963,7 @@ export interface StringsMap {
   'secrets.secret.configureRegion': string
   'secrets.secret.configureSecret': string
   'secrets.secret.inlineSecret': string
+  'secrets.secret.invalidReferencePath': string
   'secrets.secret.labelFile': string
   'secrets.secret.labelSecretFile': string
   'secrets.secret.labelSecretType': string
@@ -1975,12 +1976,14 @@ export interface StringsMap {
   'secrets.secret.noSecretsFound': string
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
+  'secrets.secret.referenceRequired': string
   'secrets.secret.referenceRqrd': string
   'secrets.secret.referenceSecret': string
   'secrets.secret.referenceSecretVersionRqrd': string
   'secrets.secret.region': string
   'secrets.secret.secretActivity': string
   'secrets.secret.secretCreated': string
+  'secrets.secret.secretNameReferenceAndVersionRequired': string
   'secrets.secret.secretNotFound': string
   'secrets.secret.successMessage': string
   'secrets.secret.titleCreateFile': string
@@ -1988,6 +1991,7 @@ export interface StringsMap {
   'secrets.secret.titleEditFile': string
   'secrets.secret.titleEditText': string
   'secrets.secret.updateSuccess': string
+  'secrets.secret.validReferencePath': string
   'secrets.secret.validationIdentifier': string
   'secrets.secret.validationKms': string
   'secrets.secret.validationNameChars': string

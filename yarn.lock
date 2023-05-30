@@ -1868,10 +1868,10 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
-"@harnessio/react-ng-manager-client@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.2.2.tgz#7a56a811077af7bb376971a5b507909046f28859"
-  integrity sha512-iUcLx6D8NEBMY4SeWQV7twi/mBdoPU1bYfRtM+dynpyTYei1MtRswCCLvSTN/yV95fNd71tWSt0kgLIoKZX+UQ==
+"@harnessio/react-ng-manager-client@^1.2.3":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.3.0.tgz#358bd9de9f46ac35fd0271128b273e5228a30f96"
+  integrity sha512-QGf9422iXtXSgXqu42W6D1iWluUhP1LlBR4iWOXjQkFT8dR3oDy35WRTevKxTtGYciAo5rBWC2skLYQbkbN5PQ==
   dependencies:
     "@tanstack/react-query" "4.20.4"
     "@types/qs" "^6.9.7"
