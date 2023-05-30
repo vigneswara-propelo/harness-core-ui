@@ -385,7 +385,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
@@ -1234,12 +1234,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         ]
         break
       case CIBuildInfrastructureType.Cloud:
-        buildInfraSelectOptions = [{ label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux }]
-        if (CIE_HOSTED_VMS_MAC)
-          buildInfraSelectOptions.push({
+        buildInfraSelectOptions = [
+          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+          {
             label: getString('pipeline.infraSpecifications.osTypes.macos'),
             value: OsTypes.MacOS
-          })
+          }
+        ]
         if (CIE_HOSTED_VMS_WINDOWS)
           buildInfraSelectOptions.push({
             label: getString('pipeline.infraSpecifications.osTypes.windows'),
