@@ -50,6 +50,8 @@ import { getBatchUserGroupListPromise } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -77,6 +79,7 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const formikUserGroups = formik.values.spec?.approvers?.userGroups
   const [scopeCountMap, setScopeCountMap] = useState<Map<Scope, string[]>>(new Map<Scope, string[]>())
+  const showAutoApporval = useFeatureFlag(FeatureFlag.CDS_AUTO_APPROVAL)
 
   const userGroupMap = React.useMemo(() => {
     const _userGroupMap = new Map<Scope, string[]>()
@@ -262,27 +265,29 @@ function FormContent({
       <div className={stepCss.noLookDivider} />
 
       <Accordion className={cx(stepCss.accordion, css.accordionStyle)}>
-        <Accordion.Panel
-          id="schedule-autoApproval"
-          summary={
-            <Layout.Horizontal
-              spacing="xsmall"
-              data-tooltip-id="scheduleAutoApproval"
-              margin={{ right: 'small' }}
-              flex={{ alignItems: 'flex-end' }}
-            >
-              <Text font={{ variation: FontVariation.H6 }}>
-                {getString('pipeline.approvalStep.scheduleAutoApprovalOptional')}
-              </Text>
-              <HarnessDocTooltip tooltipId="scheduleAutoApproval" useStandAlone={true} />
-            </Layout.Horizontal>
-          }
-          details={
-            <FormikForm>
-              <ScheduleAutoApproval allowableTypes={allowableTypes} formik={formik} readonly={readonly} />
-            </FormikForm>
-          }
-        />
+        {showAutoApporval ? (
+          <Accordion.Panel
+            id="schedule-autoApproval"
+            summary={
+              <Layout.Horizontal
+                spacing="xsmall"
+                data-tooltip-id="scheduleAutoApproval"
+                margin={{ right: 'small' }}
+                flex={{ alignItems: 'flex-end' }}
+              >
+                <Text font={{ variation: FontVariation.H6 }}>
+                  {getString('pipeline.approvalStep.scheduleAutoApprovalOptional')}
+                </Text>
+                <HarnessDocTooltip tooltipId="scheduleAutoApproval" useStandAlone={true} />
+              </Layout.Horizontal>
+            }
+            details={
+              <FormikForm>
+                <ScheduleAutoApproval allowableTypes={allowableTypes} formik={formik} readonly={readonly} />
+              </FormikForm>
+            }
+          />
+        ) : null}
         <Accordion.Panel
           id="approver-inputs"
           summary={
