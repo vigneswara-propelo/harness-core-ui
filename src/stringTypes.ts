@@ -7679,6 +7679,11 @@ export interface StringsMap {
   'ce.sideNav.perspective': string
   'ce.trialCta': string
   'ce.uploadCertiHeader': string
+  'cet.continuous': string
+  'cet.homepage.learnMore': string
+  'cet.homepage.slogan': string
+  'cet.nav.settings': string
+  'cet.title': string
   'cf.addPrerequisites.addPrerequisitesDesc': string
   'cf.addPrerequisites.addPrerequisitesHeading': string
   'cf.addPrerequisites.editPrerequisitesHeading': string
@@ -8458,11 +8463,6 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
-  'et.continuous': string
-  'et.homepage.learnMore': string
-  'et.homepage.slogan': string
-  'et.nav.settings': string
-  'et.title': string
   'idp.adminHome': string
   'idp.layout': string
   'ssca.allowDenyList': string

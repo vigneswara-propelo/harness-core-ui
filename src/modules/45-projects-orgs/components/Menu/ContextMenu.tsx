@@ -155,11 +155,11 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
     event.stopPropagation()
     setMenuOpen?.(false)
     history.push(
-      routes.toETMonitoredServices({
+      routes.toCETMonitoredServices({
         projectIdentifier: project.identifier,
         orgIdentifier: project.orgIdentifier || /* istanbul ignore next */ '',
         accountId,
-        module: 'et'
+        module: 'cet'
       })
     )
   }

@@ -42,7 +42,7 @@ import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
 import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import ETRoutes from '@et/RouteDestinations'
+import ETRoutes from '@cet/RouteDestinations'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 
 export const AccountSideNavProps: SidebarContext = {

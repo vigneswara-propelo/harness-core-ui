@@ -220,7 +220,7 @@ export type ModuleNameMatch =
   | ':module(ssca)'
   | ':module(idp)'
   | ':module(dashboards)'
-  | ':module(et)'
+  | ':module(cet)'
 
 export type Module = ModuleName | ModuleNameMatch
 

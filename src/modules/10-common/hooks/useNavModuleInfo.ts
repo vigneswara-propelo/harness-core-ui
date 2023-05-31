@@ -159,7 +159,7 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CET]: {
     icon: 'cet',
     label: 'common.purpose.cet.continuous',
-    getHomePageUrl: (accountId: string) => routes.toET({ accountId }),
+    getHomePageUrl: (accountId: string) => routes.toCET({ accountId }),
     featureFlagName: FeatureFlag.CET_ENABLED,
     color: '--cet-border'
   }
