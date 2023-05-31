@@ -52,6 +52,7 @@ export interface StringsMap {
   'common.addedEntityLabel': string
   'common.additionalAttributes': string
   'common.advanced': string
+  'common.advancedSettings': string
   'common.agent': string
   'common.agents': string
   'common.all': string
@@ -265,6 +266,8 @@ export interface StringsMap {
   'common.disable': string
   'common.disabled': string
   'common.discard': string
+  'common.displayName': string
+  'common.displayNamePlaceHolder': string
   'common.download': string
   'common.downloadCSV': string
   'common.downloadYaml': string
@@ -380,8 +383,6 @@ export interface StringsMap {
   'common.freezeWindows': string
   'common.frequency': string
   'common.friendlyMessage': string
-  'common.friendlyName': string
-  'common.friendlyNamePlaceholder': string
   'common.gcp': string
   'common.genericErrors.inviteExpired': string
   'common.genericErrors.licenseCallFailed': string
@@ -2082,7 +2083,6 @@ export interface StringsMap {
   'authSettings.accountOrOAuthLogin': string
   'authSettings.accountOrOAuthLoginEnabledSuccessfully': string
   'authSettings.addSAMLProvider': string
-  'authSettings.additionalFunctions': string
   'authSettings.allowLoginFromTheseDomains': string
   'authSettings.allowUsersWithEmails': string
   'authSettings.allowlist': string
@@ -2521,7 +2521,6 @@ export interface StringsMap {
   'connectors.cdng.continousVerificationType': string
   'connectors.cdng.createCVJob': string
   'connectors.cdng.defineVerificationJob': string
-  'connectors.cdng.displayName': string
   'connectors.cdng.error': string
   'connectors.cdng.failOnNoAnalysis': string
   'connectors.cdng.healthSources.healthSourceDef': string

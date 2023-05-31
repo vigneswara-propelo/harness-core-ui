@@ -700,7 +700,6 @@ account:
     description: to add and manage your subscriptions
 valuePlaceholder: Enter Value(s)
 namePlaceholder: Enter Name
-friendlyNamePlaceholder: Enter Friendly Name
 descriptionPlaceholder: Enter Description
 seconds: Seconds
 move: Move
@@ -1506,7 +1505,6 @@ enterPlaceholder: Enter {{name}}
 annotations: Annotations
 hostNames: Host Names
 expiresOn: Expires on
-friendlyName: Friendly Name
 serviceOverrides:
   labelText: Service Overrides
   globalEnvironment: Global Environment
@@ -1523,4 +1521,7 @@ serviceOverrides:
     infrastructureServiceSpecific: You have no Infrastructure Service specific Overrides
 cloudSpends: Cloud Spends
 variableType: Variable Type
+displayName: Display Name
+displayNamePlaceHolder: Enter Display Name
+advancedSettings: Advanced Settings
 timezone: Timezone
