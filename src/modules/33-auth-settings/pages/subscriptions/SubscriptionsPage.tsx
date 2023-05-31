@@ -66,7 +66,7 @@ const MODULE_SELECT_CARDS: ModuleSelectCard[] = [
   },
   {
     icon: 'srm-with-dark-text',
-    module: ModuleName.CV
+    module: ModuleName.SRM
   },
   {
     icon: 'sto-with-dark-text',
@@ -101,7 +101,7 @@ const SubscriptionsPage: React.FC = () => {
         case ModuleName.CD:
           accumulator.push(card)
           break
-        case ModuleName.CV:
+        case ModuleName.SRM:
           accumulator.push(card)
           break
         case ModuleName.CI:

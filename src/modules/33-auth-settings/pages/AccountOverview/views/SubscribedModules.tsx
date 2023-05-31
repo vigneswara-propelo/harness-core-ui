@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { capitalize } from 'lodash-es'
+import { capitalize, clone } from 'lodash-es'
 import { Container, Text, Card, Layout, Icon, PageError, PageSpinner, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
@@ -165,9 +165,11 @@ const SubscribedModules: React.FC = () => {
     [key: string]: ModuleLicenseDTO[]
   } = accountLicenses?.data?.allModuleLicenses || {}
 
+  const clonedModules = clone(modules)
+  delete clonedModules.CV
   const subscribedModules =
-    Object.values(modules).length > 0 ? (
-      Object.values(modules).map(moduleLicenses => {
+    Object.values(clonedModules).length > 0 ? (
+      Object.values(clonedModules).map(moduleLicenses => {
         if (moduleLicenses?.length > 0) {
           const latestModuleLicense = moduleLicenses[moduleLicenses.length - 1]
           if (isModuleEnabled(latestModuleLicense)) {
