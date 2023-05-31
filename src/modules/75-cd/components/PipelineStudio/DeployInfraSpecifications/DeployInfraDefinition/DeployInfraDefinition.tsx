@@ -123,10 +123,6 @@ export const deploymentTypeInfraTypeMap: Record<ServiceDefinition['type'], Infra
   AWS_SAM: InfraDeploymentType.AwsSam
 }
 
-export interface DeployInfraDefinitionProps {
-  selectedInfrastructure?: string
-}
-
 type InfraTypes =
   | K8SDirectInfrastructure
   | K8sGcpInfrastructure
@@ -142,7 +138,7 @@ type InfraTypes =
   | AsgInfrastructure
   | GoogleCloudFunctionInfrastructure
 
-export default function DeployInfraDefinition(props: React.PropsWithChildren<DeployInfraDefinitionProps>): JSX.Element {
+export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
     React.useState<Infrastructure>({})
 
@@ -960,11 +956,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
           )}
           <SelectInfrastructureType
             infraGroups={infraGroups}
-            isReadonly={
-              isReadonly ||
-              !isEmpty(props?.selectedInfrastructure) ||
-              (!selectedDeploymentType && selectedInfrastructureType)
-            }
+            isReadonly={isReadonly || (!selectedDeploymentType && selectedInfrastructureType)}
             selectedInfrastructureType={selectedInfrastructureType}
             onChange={deploymentType => {
               setSelectedInfrastructureType(deploymentType)
