@@ -18,8 +18,8 @@ import {
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetStagesExecutionList
 } from 'services/pipeline-ng'
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import { useMutateAsGet } from '@common/hooks'
+import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import css from './StageSelection.module.scss'
 
@@ -34,6 +34,8 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
   } = formikProps?.values ?? {}
   const allowStageExecutions = resolvedPipeline?.allowStageExecutions
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier } = useParams<PipelinePathProps>()
+  const { repoIdentifier, branch, connectorRef } = useQueryParams<GitQueryParams>()
+
   const [selectedStages, setStage] = useState<SelectOption[]>(
     /**
      * Pass the stagesToExecute as initial selectedStages do handle the edit case flow.
@@ -53,7 +55,10 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      pipelineIdentifier
+      pipelineIdentifier,
+      branch,
+      repoIdentifier,
+      parentEntityConnectorRef: connectorRef
     }
   })
 
