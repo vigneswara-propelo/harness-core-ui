@@ -134,7 +134,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const {
     data: reconcileErrorData,
     refetch: reconcilePipeline,
-    error: reconcileError
+    error: reconcileError,
+    isFetching: isFetchingReconcileData
   } = useValidateTemplateInputsQuery(
     {
       queryParams: {
@@ -147,7 +148,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     },
     {
       enabled: false,
-      staleTime: 5_000,
       onSuccess(data) {
         if (data?.data?.validYaml === false && data?.data.errorNodeSummary) {
           // This is handled by <PipelineOutOfSyncErrorStrip/>
@@ -474,7 +474,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
           )}
         </div>
       )}
-      {shouldShowOutOfSyncError ? (
+      {shouldShowOutOfSyncError && !isFetchingReconcileData ? (
         <PipelineOutOfSyncErrorStrip
           updateRootEntity={updateEntity}
           errorData={reconcileErrorData}
