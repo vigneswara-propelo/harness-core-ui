@@ -5541,6 +5541,7 @@ export interface StringsMap {
   'triggers.selectPipelineStages': string
   'triggers.showAllTriggers': string
   'triggers.toast.existingTriggerError': string
+  'triggers.toast.payloadInfoBar': string
   'triggers.toast.successfulCreate': string
   'triggers.toast.successfulUpdate': string
   'triggers.toast.toggleEnable': string

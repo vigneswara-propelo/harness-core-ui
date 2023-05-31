@@ -15,7 +15,8 @@ import {
   Text,
   NestedAccordionProvider,
   HarnessDocTooltip,
-  PageSpinner
+  PageSpinner,
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
@@ -518,6 +519,12 @@ function WebhookPipelineInputPanelForm({
 
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
+      <Layout.Horizontal className={css.infoBar}>
+        <Icon name="info-message" size={14} color={Color.GREEN_500} />
+
+        <Text color={Color.WHITE}>{getString('triggers.toast.payloadInfoBar')}</Text>
+      </Layout.Horizontal>
+
       {loading && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />

@@ -2152,6 +2152,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       >
         <TriggerOverviewPanel />
         <SchedulePanel isFixedUTCTime={isFixedUTCTimeSchedulePanel} />
+
         {isSimplifiedYAML ? (
           <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
         ) : (
