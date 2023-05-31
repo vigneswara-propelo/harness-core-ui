@@ -23,7 +23,7 @@ declare const styles: {
   readonly hoverName: string
   readonly icon: string
   readonly iconGroup: string
-  readonly inComplete: string
+  readonly incomplete: string
   readonly left: string
   readonly loopingStrategy: string
   readonly marginBottom: string
