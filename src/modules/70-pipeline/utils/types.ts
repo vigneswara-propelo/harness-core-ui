@@ -133,7 +133,6 @@ export interface AwsSamBuildStepInitialValues extends StepElementConfig {
     image?: string
     samVersion?: string
     buildCommandOptions?: string | string[]
-    stackName?: string
     privileged?: boolean
     imagePullPolicy?: string
     runAsUser?: string

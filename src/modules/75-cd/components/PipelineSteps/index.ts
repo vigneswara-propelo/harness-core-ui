@@ -135,6 +135,7 @@ import { AwsSamDeployStep } from './AwsSam/AwsSamDeployStep/AwsSamDeployStep'
 import { AwsSamBuildStep } from './AwsSam/AwsSamBuildStep/AwsSamBuildStep'
 import { K8sBlueGreenStageScaleDown } from './K8sBlueGreenStageScaleDown/K8sBlueGreenStageScaleDown'
 import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
+import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -264,3 +265,4 @@ factory.registerStep(new TerraformCloudRollback())
 factory.registerStep(new AwsSamDeployStep())
 factory.registerStep(new AwsSamBuildStep())
 factory.registerStep(new AwsSamServiceSpec())
+factory.registerStep(new AwsSamInfraSpec())

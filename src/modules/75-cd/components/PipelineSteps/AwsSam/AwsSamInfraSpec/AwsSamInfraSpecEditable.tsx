@@ -22,7 +22,7 @@ import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 
-import type { AwsLambdaInfrastructure } from 'services/cd-ng'
+import type { AwsSamInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -37,17 +37,17 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes } from '@pipeline/utils/constants'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
-import { getAwsLambdaInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
-import css from './AwsLambdaInfraSpec.module.scss'
+import { getAwsSamInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import css from './AwsSamInfraSpec.module.scss'
 
-export interface AwsLambdaInfraSpecEditableProps {
-  initialValues: AwsLambdaInfrastructure
-  onUpdate?: (data: AwsLambdaInfrastructure) => void
+export interface AwsSamInfraSpecEditableProps {
+  initialValues: AwsSamInfrastructure
+  onUpdate?: (data: AwsSamInfrastructure) => void
   readonly?: boolean
   allowableTypes: AllowedTypes
 }
 
-export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProps> = ({
+export const AwsSamInfraSpecEditable: React.FC<AwsSamInfraSpecEditableProps> = ({
   initialValues,
   onUpdate,
   readonly,
@@ -79,15 +79,15 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
     }))
   }, [awsRegionsData?.resource])
 
-  const validationSchema = getAwsLambdaInfraValidationSchema(getString)
+  const validationSchema = getAwsSamInfraValidationSchema(getString)
 
   return (
     <Layout.Vertical spacing="medium">
-      <Formik<AwsLambdaInfrastructure>
-        formName={'AwsLambdaInfraSpecEditable'}
+      <Formik<AwsSamInfrastructure>
+        formName={'AwsSamInfraSpecEditable'}
         initialValues={initialValues}
         validate={value => {
-          const data: Partial<AwsLambdaInfrastructure> = {
+          const data: Partial<AwsSamInfrastructure> = {
             connectorRef: undefined,
             region: value.region === '' ? undefined : value.region,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments

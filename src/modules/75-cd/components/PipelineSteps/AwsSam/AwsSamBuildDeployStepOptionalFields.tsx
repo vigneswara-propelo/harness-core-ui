@@ -6,17 +6,24 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import { defaultTo, get } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { AllowedTypes, Container, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
+import { useQueryParams } from '@common/hooks'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
+import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamDeployStepFormikValues } from './AwsSamDeployStep/AwsSamDeployStepEdit'
@@ -35,8 +42,55 @@ interface AwsSamDeployStepOptionalFieldsProps {
 
 export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptionalFieldsProps): React.ReactElement {
   const { readonly, allowableTypes, formik, isAwsSamBuildStep } = props
+
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+
+  const renderConnectorField = (fieldName: string, fieldLabel: string): React.ReactElement => {
+    return (
+      <Container className={stepCss.formGroup}>
+        <FormMultiTypeConnectorField
+          width={510}
+          name={fieldName}
+          label={fieldLabel}
+          placeholder={getString('select')}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{ expressions, allowableTypes }}
+          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          enableConfigureOptions={false}
+          selected={get(formik?.values, fieldName) as string}
+          setRefValue
+          disabled={readonly}
+          gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
+        />
+        {getMultiTypeFromValue(get(formik.values, fieldName)) === MultiTypeInputType.RUNTIME && (
+          <ConnectorConfigureOptions
+            style={{ marginTop: 6 }}
+            value={get(formik.values, fieldName) as string}
+            type="String"
+            variableName={fieldName}
+            showRequiredField={false}
+            showDefaultField={false}
+            onChange={value => formik.setFieldValue(fieldName, value)}
+            isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
+              label: fieldLabel,
+              disabled: readonly,
+              gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
+            }}
+          />
+        )}
+      </Container>
+    )
+  }
 
   return (
     <>
@@ -87,32 +141,42 @@ export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptio
         />
       </Container>
 
-      <Container className={stepCss.formGroup}>
-        <FormInput.MultiTextInput
-          name="spec.stackName"
-          label={getString('optionalField', { name: getString('cd.cloudFormation.stackName') })}
-          placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-          disabled={readonly}
-          multiTextInputProps={{
-            expressions,
-            disabled: readonly,
-            allowableTypes
-          }}
-        />
-        {getMultiTypeFromValue(formik.values.spec?.stackName) === MultiTypeInputType.RUNTIME && !readonly && (
-          <ConfigureOptions
-            value={formik.values.spec?.stackName as string}
-            type="String"
-            variableName="spec.stackName"
-            showRequiredField={false}
-            showDefaultField={false}
-            onChange={value => {
-              formik.setFieldValue('spec.stackName', value)
-            }}
-            isReadonly={readonly}
-          />
+      {isAwsSamBuildStep &&
+        renderConnectorField(
+          'spec.samBuildDockerRegistryConnectorRef',
+          getString('cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry')
         )}
-      </Container>
+
+      {!isAwsSamBuildStep && (
+        <Container className={stepCss.formGroup}>
+          <FormInput.MultiTextInput
+            name="spec.stackName"
+            label={getString('optionalField', { name: getString('cd.cloudFormation.stackName') })}
+            placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes
+            }}
+          />
+          {getMultiTypeFromValue((formik.values as AwsSamDeployStepFormikValues).spec?.stackName) ===
+            MultiTypeInputType.RUNTIME &&
+            !readonly && (
+              <ConfigureOptions
+                value={(formik.values as AwsSamDeployStepFormikValues).spec?.stackName as string}
+                type="String"
+                variableName="spec.stackName"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => {
+                  formik.setFieldValue('spec.stackName', value)
+                }}
+                isReadonly={readonly}
+              />
+            )}
+        </Container>
+      )}
 
       <Container className={cx(stepCss.formGroup, stepCss.md)}>
         <FormMultiTypeCheckboxField

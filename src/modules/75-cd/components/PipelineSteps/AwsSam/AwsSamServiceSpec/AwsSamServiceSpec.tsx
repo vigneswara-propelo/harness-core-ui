@@ -42,7 +42,7 @@ const ManifestConnectorRefRegex = /^.+manifest\.spec\.store\.spec\.connectorRef$
 const ManifestConnectorRefType = 'Git'
 
 export class AwsSamServiceSpec extends Step<ServiceSpec> {
-  protected type = StepType.AwsSam
+  protected type = StepType.AwsSamService
   protected defaultValues: ServiceSpec = {}
 
   protected stepIcon: IconName = 'service-aws-sam'

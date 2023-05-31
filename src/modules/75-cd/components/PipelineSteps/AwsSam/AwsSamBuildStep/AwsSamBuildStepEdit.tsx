@@ -54,7 +54,6 @@ export interface AwsSamBuildStepFormikValues extends StepElementConfig {
     image?: string
     samVersion?: string
     buildCommandOptions?: MultiTypeListType
-    stackName?: string
     privileged?: boolean
     imagePullPolicy?: string
     runAsUser?: string
@@ -129,7 +128,7 @@ const AwsSamBuildStepEdit = (
     formik: FormikProps<AwsSamBuildStepFormikValues>,
     fieldName: string,
     fieldLabel: string
-  ) => {
+  ): React.ReactElement => {
     return (
       <Container className={stepCss.formGroup}>
         <FormMultiTypeConnectorField
@@ -200,12 +199,6 @@ const AwsSamBuildStepEdit = (
               </Text>
 
               {renderConnectorField(formik, 'spec.connectorRef', getString('pipelineSteps.connectorLabel'))}
-
-              {renderConnectorField(
-                formik,
-                'spec.samBuildDockerRegistryConnectorRef',
-                getString('cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry')
-              )}
 
               <Container className={stepCss.formGroup}>
                 <FormInput.MultiTextInput

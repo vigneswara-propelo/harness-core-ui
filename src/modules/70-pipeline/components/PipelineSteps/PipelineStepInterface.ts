@@ -211,7 +211,8 @@ export enum StepType {
   Fossa = 'Fossa',
   Semgrep = 'Semgrep',
   KubernetesAws = 'KubernetesAws',
-  AwsSam = 'AWS_SAM',
+  AwsSamService = 'AwsSamService',
+  AwsSamInfra = 'AwsSamInfra',
   IACMTerraformPlugin = 'IACMTerraformPlugin'
 }
 

@@ -711,7 +711,8 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
   TAS: StepType.TasInfra,
   Asg: StepType.AsgInfraSpec,
   GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra,
-  AwsLambda: StepType.AwsLambdaInfra
+  AwsLambda: StepType.AwsLambdaInfra,
+  AWS_SAM: StepType.AwsSamInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -739,7 +740,7 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
     case ServiceDeploymentType.AwsLambda:
       return StepType.AwsLambdaService
     case ServiceDeploymentType.AwsSam:
-      return StepType.AwsSam
+      return StepType.AwsSamService
     default:
       return StepType.K8sServiceSpec
   }
