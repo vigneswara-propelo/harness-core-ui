@@ -523,7 +523,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   connectorRef: value.connectorRef,
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.AzureWebApp
               )
@@ -547,7 +548,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   connectorRef: value.connectorRef,
                   stage: value.stage,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.ServerlessAwsLambda
               )
@@ -571,7 +573,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 {
                   connectorRef: value.connectorRef,
                   stage: value.stage,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.ServerlessGoogleFunctions
               )
@@ -595,7 +598,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 {
                   connectorRef: value.connectorRef,
                   stage: value.stage,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.ServerlessAzureFunctions
               )
@@ -728,7 +732,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 {
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.Asg
               )
@@ -774,7 +779,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 {
                   connectorRef: value.connectorRef,
                   configuration: value.configuration,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.Elastigroup
               )
@@ -798,7 +804,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   connectorRef: value.connectorRef,
                   organization: value.organization,
                   space: value.space,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.TAS
               )
@@ -822,7 +829,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   connectorRef: value.connectorRef,
                   project: value.project,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.GoogleCloudFunctions
               )
@@ -845,7 +853,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 {
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.AwsLambda
               )

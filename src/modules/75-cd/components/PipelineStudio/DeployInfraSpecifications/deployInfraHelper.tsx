@@ -101,23 +101,27 @@ export const getInfrastructureDefaultValue = (
       const connectorRef = infrastructure?.spec?.connectorRef
       const region = infrastructure?.spec?.region
       const infraStage = infrastructure?.spec?.stage
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
         region,
         stage: infraStage,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.ServerlessAzureFunctions:
     case InfraDeploymentType.ServerlessGoogleFunctions: {
       const connectorRef = infrastructure?.spec?.connectorRef
       const infraStage = infrastructure?.spec?.stage
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
         stage: infraStage,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.KubernetesAzure: {
@@ -144,12 +148,14 @@ export const getInfrastructureDefaultValue = (
       const connectorRef = infrastructure?.spec?.connectorRef
       const subscriptionId = infrastructure?.spec?.subscriptionId
       const resourceGroup = infrastructure?.spec?.resourceGroup
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
         subscriptionId,
         resourceGroup,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.CustomDeployment: {
@@ -229,37 +235,41 @@ export const getInfrastructureDefaultValue = (
     }
     case InfraDeploymentType.Asg:
     case InfraDeploymentType.AwsLambda: {
-      const { connectorRef, region } = infrastructure?.spec || {}
+      const { connectorRef, region, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         region,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.Elastigroup: {
-      const { connectorRef, configuration } = infrastructure?.spec || {}
+      const { connectorRef, configuration, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         configuration,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.TAS: {
-      const { connectorRef, organization, space } = infrastructure?.spec || {}
+      const { connectorRef, organization, space, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         organization,
         space,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.GoogleCloudFunctions: {
-      const { connectorRef, project, region } = infrastructure?.spec || {}
+      const { connectorRef, project, region, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         project,
         region,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.AwsSam: {
