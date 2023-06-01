@@ -315,6 +315,7 @@ export interface StringsMap {
   'common.environmentPrefix': string
   'common.environmentUpdated': string
   'common.errorCount': string
+  'common.errorFavorite': string
   'common.errorHandler.communityForum': string
   'common.errorHandler.contactLabel': string
   'common.errorHandler.contactSupport': string
@@ -322,6 +323,7 @@ export interface StringsMap {
   'common.errorHandler.possibleReasons': string
   'common.errorHandler.tryTheseSuggestions': string
   'common.errorOccured': string
+  'common.errorUnFavorite': string
   'common.execute': string
   'common.executedBy': string
   'common.executionTab.stepsCount': string
@@ -793,6 +795,7 @@ export interface StringsMap {
   'common.powershell': string
   'common.preProduction': string
   'common.previewYAML': string
+  'common.previousActionInProgress': string
   'common.production': string
   'common.projectSetup': string
   'common.projectViewer': string

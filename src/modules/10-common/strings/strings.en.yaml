@@ -1525,3 +1525,6 @@ displayName: Display Name
 displayNamePlaceHolder: Enter Display Name
 advancedSettings: Advanced Settings
 timezone: Timezone
+errorFavorite: Oops! Something went wrong while marking this entity as a favorite.
+errorUnFavorite: Oops! Something went wrong while removing this entity from your favorites.
+previousActionInProgress: Please wait, your previous action is being processed.
