@@ -280,15 +280,15 @@ export const ExecutionCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
   const name =
+    get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
     get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.name') ||
     get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.id') ||
-    get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
     'Anonymous'
   const email =
-    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.email') ||
-    get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email')
+    get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email') ||
+    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.email')
   const profilePictureUrl =
-    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar') || get(data, 'executionTriggerInfo.triggeredBy.avatar')
+    get(data, 'executionTriggerInfo.triggeredBy.avatar') || get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar')
   const { hasparentpipeline = false, identifier: pipelineIdentifier } = get(
     data,
     'parentStageInfo',
