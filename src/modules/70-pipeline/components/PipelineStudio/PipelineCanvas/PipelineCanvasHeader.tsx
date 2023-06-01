@@ -428,7 +428,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
               <div className={css.savePublishContainer}>
                 {isUpdated && !isReadonly && (
                   <Button
-                    variation={ButtonVariation.TERTIARY}
+                    variation={ButtonVariation.LINK}
                     padding={'small'}
                     className={css.unsavedChanges}
                     onClick={openDiffModal}
