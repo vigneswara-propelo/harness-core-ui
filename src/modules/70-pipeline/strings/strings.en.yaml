@@ -1859,6 +1859,7 @@ pipelineExecutionEventData:
   stageIdentifier: Stage Identifier
   stageType: Stage Type
 retried: retried
+required: Required
 stageExecutedBefore: This stage has been re-executed.
 loadingErrorMsg: 'The pipeline yaml schema is invalid. Please review the pipeline yaml in the pipeline studio’s yaml editor view to resolve.'
 enableContainerBasedExecution: Enable container based execution

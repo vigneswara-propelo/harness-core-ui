@@ -22,6 +22,10 @@ declare const styles: {
   readonly headerRow: string
   readonly hoveredRow: string
   readonly icon: string
+  readonly inputSetValueRow: string
+  readonly nameTypeColumn: string
+  readonly requiredCheckboxLabel: string
+  readonly requiredIconWrapper: string
   readonly runtimeInputButton: string
   readonly secretContainer: string
   readonly selectedSearchText: string

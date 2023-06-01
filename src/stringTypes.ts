@@ -4813,6 +4813,7 @@ export interface StringsMap {
   'pipeline.repositoryPlaceholder': string
   'pipeline.repositoryUrlPlaceholder': string
   'pipeline.requireInput': string
+  'pipeline.required': string
   'pipeline.requiredToFetch': string
   'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string
@@ -9335,7 +9336,6 @@ export interface StringsMap {
   'cv.remainingErrorBudget': string
   'cv.request': string
   'cv.requestsRemaining': string
-  'cv.required': string
   'cv.resetErrorBudget': string
   'cv.response': string
   'cv.responseBody': string

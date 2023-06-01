@@ -1108,7 +1108,6 @@ considerMissingMetricDataAs: Consider missing metric data as
 sliMissingDataTypeIsRequired: SLI Missing data type is required
 metricIsRequired: Metric is required
 metricForGoodAndValidRequestsShouldBeDifferent: Metric for good/bad and valid requests should be different
-required: Required
 periodLength: Period Length
 periodLengthDays: Period Length (Days)
 widowEnds: Window Ends

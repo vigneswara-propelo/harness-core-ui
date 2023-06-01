@@ -142,7 +142,7 @@
     display: grid;
     grid-template-columns: 2fr 1fr 2fr 3fr;
     column-gap: var(--spacing-8);
-    margin-bottom: var(--spacing-medium);
+    margin-bottom: var(--spacing-xlarge);
     align-items: center;
 
     & :global(.bp3-form-group) {
@@ -160,6 +160,9 @@
       grid-template-columns: 1fr 90px;
       &[data-type='RUNTIME'] {
         grid-template-columns: 1fr 45px 90px;
+      }
+      :global(.TextInput--main) {
+        margin-bottom: 0 !important;
       }
     }
 
@@ -213,12 +216,18 @@
     grid-auto-flow: column;
     grid-template-columns: 1fr 1fr 2fr;
     align-items: center;
-    margin-top: var(--spacing-small);
+    margin-top: var(--spacing-xlarge);
     column-gap: var(--spacing-small);
 
     & > p {
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .inputSetValueRow {
+      :global(.bp3-form-group) {
+        margin: 0;
+      }
     }
   }
 }
@@ -291,4 +300,20 @@
 
 .hoveredRow {
   background-color: var(--primary-1);
+}
+
+.requiredCheckboxLabel {
+  color: var(--grey-600) !important;
+  font-size: var(--form-input-font-size) !important;
+  font-weight: 500 !important;
+}
+
+.nameTypeColumn {
+  max-width: 80%;
+}
+
+.requiredIconWrapper {
+  :global(.bp3-icon) {
+    align-self: flex-start;
+  }
 }

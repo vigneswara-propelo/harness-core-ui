@@ -200,7 +200,7 @@ describe('STUDIO MODE', () => {
     await waitFor(() => expect(queryByText('pipeline.inputSets.aboutInputSets')).toBeTruthy())
   })
 
-  test('should allow submit if form is incomplete as variable values are optional', async () => {
+  test('should not allow submit if form is incomplete as variable values are required', async () => {
     const { findByText, queryByText, getByRole } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
@@ -219,12 +219,11 @@ describe('STUDIO MODE', () => {
     act(() => {
       fireEvent.click(runPipelineButton)
     })
-
-    // Allowing empty value of variable so ErrorStrip is not present and submit button is not disabled
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeFalsy())
-    await waitFor(() => expect(queryByText('common.seeDetails')).toBeFalsy())
-    await waitFor(() => expect(queryByText('fieldRequired')).toBeFalsy())
-    expect(runPipelineButton).toBeEnabled()
+    // Required variable is present so ErrorStrip is visible and submit button is disabled in RPF
+    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
+    await waitFor(() => expect(queryByText('common.seeDetails')).toBeTruthy())
+    await waitFor(() => expect(queryByText('fieldRequired')).toBeTruthy())
+    expect(runPipelineButton).toBeDisabled()
   })
 
   test('should submit and call the run pipeine method if form is valid', async () => {
@@ -240,7 +239,7 @@ describe('STUDIO MODE', () => {
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
     await waitFor(() => queryByAttribute('name', container, 'variables[0].value'))
 
-    // Enter a value for the pipeline variable
+    // Enter a value for the required pipeline variable
     const variableInputElement = queryByAttribute('name', container, 'variables[0].value')
     act(() => {
       fireEvent.change(variableInputElement!, { target: { value: 'enteredvalue' } })
@@ -274,7 +273,7 @@ describe('STUDIO MODE', () => {
     fireEvent.click(provideValues)
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
 
-    // Enter a value for the pipeline variable
+    // Enter a value for the required pipeline variable
     const variableInputElement = queryByAttribute('name', container, 'variables[0].value')
     act(() => {
       fireEvent.change(variableInputElement!, { target: { value: 'enteredvalue' } })
