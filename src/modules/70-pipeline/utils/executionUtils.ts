@@ -1252,6 +1252,27 @@ export const processExecutionDataForGraph = (
   return items
 }
 
+const getGroupSeperatedRunningIdentifiers = (
+  nodeMap: { [key: string]: ExecutionNode },
+  runningStageStepIdentifiers: string[]
+): string[] => {
+  const groupIdentifiers: string[] = Object.values(nodeMap)
+    .filter(val => val.stepType === StepNodeType.STEP_GROUP && val.identifier)
+    .map(val => val.identifier ?? '')
+
+  if (groupIdentifiers.length === 0) return runningStageStepIdentifiers
+
+  const groupSeperatedRunningIdentifiers: string[] = []
+  runningStageStepIdentifiers.map((identifier: string) =>
+    groupIdentifiers.forEach(
+      (groupIdentifier: string) =>
+        identifier.includes(groupIdentifier) &&
+        groupSeperatedRunningIdentifiers.push(identifier.replace(`${groupIdentifier}_`, ''))
+    )
+  )
+  return groupSeperatedRunningIdentifiers
+}
+
 const updateBackgroundStepNodeStatuses = ({
   runningStageId,
   nodeMap,
@@ -1269,6 +1290,7 @@ const updateBackgroundStepNodeStatuses = ({
   const runningStageStepIdentifiers: string[] =
     nodeMapValues.find(node => node.setupId === runningStageId)?.stepParameters?.specConfig?.stepIdentifiers || []
   // Overwrite status for stepType Background in running stage
+  const runningStepIdentifiers = getGroupSeperatedRunningIdentifiers(nodeMap, runningStageStepIdentifiers)
   nodeMapValues.forEach(node => {
     const parentNodeId = getParentNodeId(adjacencyMap, node)
     const parentNode: ExecutionNode | undefined = nodeMap[parentNodeId]
@@ -1279,9 +1301,9 @@ const updateBackgroundStepNodeStatuses = ({
       node.identifier &&
       node.stepType === StepType.Background &&
       ((parentNode &&
-        parentNode.stepType === StepNodeType.STRATEGY &&
-        runningStageStepIdentifiers.includes(parentNode?.identifier ?? '')) ||
-        runningStageStepIdentifiers.includes(node.identifier))
+        (parentNode.stepType === StepNodeType.STRATEGY || parentNode.stepType === StepNodeType.FORK) &&
+        runningStepIdentifiers.includes(parentNode?.identifier ?? '')) ||
+        runningStepIdentifiers.includes(node.identifier))
     ) {
       // Overwrite status temporarily for a standalone Background step or a child Background step in a strategy node in running stage
       // this helps keep the stream open for logs instead of blob requests for logs wrt Background step
@@ -1291,7 +1313,7 @@ const updateBackgroundStepNodeStatuses = ({
       node?.identifier &&
       node?.stepType === StepNodeType.STRATEGY &&
       childNode?.stepType === StepType.Background &&
-      runningStageStepIdentifiers.includes(node.identifier)
+      runningStepIdentifiers.includes(node.identifier)
     ) {
       // Overwrite status and stepType temporarily for strategy on a Background step in running stage
       // this helps keep the stream open for logs instead of blob requests for logs wrt Background step
