@@ -287,7 +287,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 test
@@ -643,7 +643,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 UI for the Payment
@@ -999,7 +999,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Online users
@@ -1669,7 +1669,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Demo project
@@ -2025,7 +2025,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Drone
@@ -2381,7 +2381,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Swagger 2.0
@@ -3061,7 +3061,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 test
@@ -3417,7 +3417,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 UI for the Payment
@@ -3773,7 +3773,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Online users
@@ -4443,7 +4443,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Demo project
@@ -4799,7 +4799,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Drone
@@ -5155,7 +5155,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Swagger 2.0

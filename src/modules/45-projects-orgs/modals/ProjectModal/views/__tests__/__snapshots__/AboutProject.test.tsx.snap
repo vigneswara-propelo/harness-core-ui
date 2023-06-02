@@ -822,7 +822,7 @@ exports[`About Project test create project  2`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                      This is new description
