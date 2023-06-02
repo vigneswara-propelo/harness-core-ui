@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { connectorsListWithoutSort } from '../../support/35-connectors/constants'
+import { connectorsListNewestSort } from '../../support/35-connectors/constants'
 
 describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
   const gitSyncCall =
@@ -69,7 +69,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form with empty required fields validations', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
@@ -95,7 +95,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
@@ -139,7 +139,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.wait(2000)
@@ -176,7 +176,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraStatusesCall, { fixture: 'ng/api/jiraStatuses' })
       cy.wait(2000)

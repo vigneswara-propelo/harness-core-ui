@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { connectorsListWithoutSort } from '../../support/35-connectors/constants'
+import { connectorsListNewestSort } from '../../support/35-connectors/constants'
 
 describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
   const gitSyncCall =
@@ -80,7 +80,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details - Configure Fields', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
@@ -105,7 +105,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form required field check - Create From Template', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
@@ -129,7 +129,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling fields  - Create From Template', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
@@ -175,7 +175,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.wait(2000)
@@ -223,7 +223,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
@@ -250,7 +250,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit empty form Validations - Create From Template', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
@@ -276,7 +276,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details - Create From Template', () => {
-      cy.intercept('POST', connectorsListWithoutSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
