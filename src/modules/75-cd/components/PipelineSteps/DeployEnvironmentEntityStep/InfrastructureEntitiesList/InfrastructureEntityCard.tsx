@@ -67,7 +67,7 @@ export function InfrastructureEntityCard({
   }
 
   const onlyProvisionerInput = React.useMemo(() => {
-    const inputsKeys = Object.keys(infrastructureInputs.spec)
+    const inputsKeys = Object.keys(defaultTo(infrastructureInputs?.spec, {}))
     return inputsKeys.length === 1 && inputsKeys.includes('provisioner')
   }, [infrastructureInputs])
 
