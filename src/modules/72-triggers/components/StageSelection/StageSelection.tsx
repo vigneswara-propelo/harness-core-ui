@@ -149,7 +149,7 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
           const isAllStagesChecked = items.some(item => item.value === ALL_STAGE_VALUE)
           const isOnlyAllStagesUnChecked = allStagesChecked && !items.some(item => item.value === ALL_STAGE_VALUE)
 
-          if (isOnlyAllStagesUnChecked || allStagesChecked || (!allStagesSelected && isAllStagesChecked)) {
+          if (isOnlyAllStagesUnChecked || items?.length === 0 || (!allStagesSelected && isAllStagesChecked)) {
             setStage([])
             setAllStagesSelect(true)
             formikProps?.setFieldValue('stagesToExecute', [])
