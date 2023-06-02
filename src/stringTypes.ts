@@ -7848,6 +7848,13 @@ export interface StringsMap {
   'cf.featureFlagDetail.variationCount': string
   'cf.featureFlags.activity': string
   'cf.featureFlags.andClause': string
+  'cf.featureFlags.archiving.archiveFlag': string
+  'cf.featureFlags.archiving.archiveSuccess': string
+  'cf.featureFlags.archiving.cannotArchive': string
+  'cf.featureFlags.archiving.confirmFlag': string
+  'cf.featureFlags.archiving.mismatchNameError': string
+  'cf.featureFlags.archiving.removeFlag': string
+  'cf.featureFlags.archiving.warningDescription': string
   'cf.featureFlags.booleanBtnText': string
   'cf.featureFlags.bucketBy': string
   'cf.featureFlags.bucketOverflow': string
