@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent, waitFor, queryByText, getByText } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper, findDialogContainer, findPopoverContainer } from '@common/utils/testUtils'
 import { setFieldValue, InputTypes } from '@common/utils/JestFormHelper'
 import routes from '@common/RouteDefinitions'
@@ -15,6 +16,8 @@ import { authSettings, mockResponse, permissionRequest } from '@auth-settings/pa
 import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import { getSamlEndpoint } from '@auth-settings/constants/utils'
 import SAMLProviderV2 from '../SAMLProviderV2'
+
+const getSamlLoginTestData = jest.fn().mockImplementation(() => Promise.resolve(mockResponse))
 
 jest.mock('services/cd-ng', () => ({
   useUploadSamlMetaData: jest.fn().mockImplementation(() => {
@@ -27,7 +30,7 @@ jest.mock('services/cd-ng', () => ({
     return { mutate: () => Promise.resolve(mockResponse), refetch: () => Promise.resolve(mockResponse) }
   }),
   useGetSamlLoginTestV2: jest.fn().mockImplementation(() => {
-    return { mutate: () => Promise.resolve(mockResponse), refetch: () => Promise.resolve(mockResponse) }
+    return { mutate: () => Promise.resolve(mockResponse), refetch: getSamlLoginTestData }
   }),
   useDeleteSamlMetaData: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve(mockResponse) }
@@ -241,41 +244,64 @@ describe('SAML Provider', () => {
 
     const removedForm = findDialogContainer()
     expect(removedForm).toBeFalsy()
+  })
+
+  test('Click Test Button for pre-configured SAML Provider', async () => {
+    render(
+      <TestWrapper
+        path={routes.toAuthenticationSettings({ ...accountPathProps })}
+        pathParams={{ accountId: 'testAcc' }}
+        defaultFeatureFlagValues={{ PL_ENABLE_JIT_USER_PROVISION: true }}
+      >
+        <SAMLProviderV2
+          authSettings={samlSettings}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          canEdit
+          setUpdating={setUpdating}
+        />
+      </TestWrapper>
+    )
+
+    const testBtn = queryByText(document.body, 'test')
+    expect(testBtn).toBeTruthy()
+    await userEvent.click(testBtn!)
+    expect(getSamlLoginTestData).toHaveBeenCalled()
+  })
+  test('Enable SAML provider', async () => {
+    const { container } = render(
+      <TestWrapper
+        path={routes.toAuthenticationSettings({ ...accountPathProps })}
+        pathParams={{ accountId: 'testAcc' }}
+      >
+        <SAMLProviderV2
+          authSettings={disabledSamlSettings}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          canEdit
+          setUpdating={setUpdating}
+        />
+      </TestWrapper>
+    )
+
+    const radioButton = queryByText(container, 'authSettings.loginViaSAML')
+    expect(radioButton).toBeTruthy()
+    act(() => {
+      fireEvent.click(radioButton!)
+    })
+
+    await waitFor(() => queryByText(document.body, 'authSettings.enableSamlProvider'))
+    const form = findDialogContainer()
+    expect(form).toBeTruthy()
+
+    const confirmButton = queryByText(form!, 'confirm')
+    expect(confirmButton).toBeTruthy()
+    await act(async () => {
+      fireEvent.click(confirmButton!)
+    })
+
+    expect(queryByText(document.body, 'authSettings.samlLoginEnabled')).toBeTruthy()
   }),
-    test('Enable SAML provider', async () => {
-      const { container } = render(
-        <TestWrapper
-          path={routes.toAuthenticationSettings({ ...accountPathProps })}
-          pathParams={{ accountId: 'testAcc' }}
-        >
-          <SAMLProviderV2
-            authSettings={disabledSamlSettings}
-            refetchAuthSettings={refetchAuthSettings}
-            permissionRequest={permissionRequest}
-            canEdit
-            setUpdating={setUpdating}
-          />
-        </TestWrapper>
-      )
-
-      const radioButton = queryByText(container, 'authSettings.loginViaSAML')
-      expect(radioButton).toBeTruthy()
-      act(() => {
-        fireEvent.click(radioButton!)
-      })
-
-      await waitFor(() => queryByText(document.body, 'authSettings.enableSamlProvider'))
-      const form = findDialogContainer()
-      expect(form).toBeTruthy()
-
-      const confirmButton = queryByText(form!, 'confirm')
-      expect(confirmButton).toBeTruthy()
-      await act(async () => {
-        fireEvent.click(confirmButton!)
-      })
-
-      expect(queryByText(document.body, 'authSettings.samlLoginEnabled')).toBeTruthy()
-    }),
     test('toggle single saml provider ', async () => {
       const refetchSettings = jest.fn()
       const { container } = render(

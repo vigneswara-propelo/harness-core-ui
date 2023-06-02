@@ -557,6 +557,12 @@ export interface AccountLevelOverrideMigrationResponseDTO {
   totalServiceOverridesCount?: number
 }
 
+export interface AccountLevelOverrideV2SettingsUpdateResponseDTO {
+  accountId?: string
+  settingResponseDTO?: SettingResponseDTO[]
+  settingsUpdateSuccessFul?: boolean
+}
+
 export interface AccountLicenseDTO {
   accountId?: string
   allModuleLicenses?: {
@@ -4324,6 +4330,7 @@ export interface EmptyDirYamlSpec {
 }
 
 export interface EntityDetail {
+  entityGitMetadata?: EntityGitMetadata
   entityRef?: EntityReference
   name?: string
   type?:
@@ -4558,6 +4565,11 @@ export interface EntityGitDetails {
   repoName?: string
   repoUrl?: string
   rootFolder?: string
+}
+
+export interface EntityGitMetadata {
+  branch?: string
+  repo?: string
 }
 
 export interface EntityReference {
@@ -9309,7 +9321,6 @@ export interface HelmChartResponseDTO {
 export type HelmDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   ignoreReleaseHistFailStatus?: boolean
-  skipSteadyStateCheck?: ParameterFieldBoolean
 }
 
 export interface HelmManifestCommandFlag {
@@ -9338,7 +9349,6 @@ export type HelmRepoOverrideManifest = ManifestAttributes & {
 
 export type HelmRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipSteadyStateCheck?: ParameterFieldBoolean
 }
 
 export type HostAttributesFilter = HostFilterSpec & {
@@ -11429,6 +11439,13 @@ export interface OrgLevelOverrideMigrationResponseDTO {
   totalServiceOverridesCount?: number
 }
 
+export interface OrgLevelOverrideV2SettingsUpdateResponseDTO {
+  accountId?: string
+  orgIdentifier?: string
+  settingResponseDTO?: SettingResponseDTO[]
+  settingsUpdateSuccessFul?: boolean
+}
+
 export interface OrgProjectIdentifier {
   orgIdentifier?: string
   projectIdentifier?: string
@@ -12448,6 +12465,14 @@ export interface ProjectLevelOverrideMigrationResponseDTO {
   serviceOverridesInfos?: SingleServiceOverrideMigrationResponse[]
   totalEnvironmentsCount?: number
   totalServiceOverridesCount?: number
+}
+
+export interface ProjectLevelOverrideV2SettingsUpdateResponseDTO {
+  accountId?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  settingResponseDTO?: SettingResponseDTO[]
+  settingsUpdateSuccessFul?: boolean
 }
 
 export interface ProjectRequest {
@@ -15513,6 +15538,13 @@ export interface ResponseServiceOverrideResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseServiceOverrideSettingsUpdateResponseDTO {
+  correlationId?: string
+  data?: ServiceOverrideSettingsUpdateResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseServiceOverridesResponseDTOV2 {
   correlationId?: string
   data?: ServiceOverridesResponseDTOV2
@@ -16301,6 +16333,9 @@ export type SAMLSettings = NGAuthSettings & {
   friendlySamlName?: string
   groupMembershipAttr?: string
   identifier: string
+  jitEnabled?: boolean
+  jitValidationKey?: string
+  jitValidationValue?: string
   logoutUrl?: string
   origin: string
   samlProviderType?: string
@@ -16409,6 +16444,9 @@ export type SamlSettings = SSOSettings & {
   entityIdentifier?: string
   friendlySamlName?: string
   groupMembershipAttr?: string
+  jitEnabled?: boolean
+  jitValidationKey?: string
+  jitValidationValue?: string
   logoutUrl?: string
   origin: string
   samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
@@ -17243,10 +17281,10 @@ export interface ServiceOverrideRequestDTOV2 {
   serviceRef?: string
   spec: ServiceOverridesSpec
   type:
-    | 'INFRA_GLOBAL_OVERRIDE'
-    | 'INFRA_SERVICE_OVERRIDE'
     | 'ENV_GLOBAL_OVERRIDE'
     | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
 }
@@ -17258,6 +17296,14 @@ export interface ServiceOverrideResponseDTO {
   projectIdentifier?: string
   serviceRef?: string
   yaml?: string
+}
+
+export interface ServiceOverrideSettingsUpdateResponseDTO {
+  accountId?: string
+  accountLevelUpdateInfo?: AccountLevelOverrideV2SettingsUpdateResponseDTO
+  orgLevelUpdateInfo?: OrgLevelOverrideV2SettingsUpdateResponseDTO[]
+  projectLevelUpdateInfo?: ProjectLevelOverrideV2SettingsUpdateResponseDTO[]
+  successful?: boolean
 }
 
 export interface ServiceOverrides {
@@ -17284,10 +17330,10 @@ export interface ServiceOverridesResponseDTOV2 {
   serviceRef?: string
   spec?: ServiceOverridesSpec
   type?:
-    | 'INFRA_GLOBAL_OVERRIDE'
-    | 'INFRA_SERVICE_OVERRIDE'
     | 'ENV_GLOBAL_OVERRIDE'
     | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
 }
@@ -19079,7 +19125,7 @@ export interface User {
 
 export interface UserAccountLevelData {
   sourceOfProvisioning?: {
-    [key: string]: 'MANUAL' | 'LDAP' | 'SCIM'
+    [key: string]: 'MANUAL' | 'LDAP' | 'SCIM' | 'JIT'
   }
   userProvisionedTo?: ('CG' | 'NG')[]
 }
@@ -57039,10 +57085,10 @@ export interface GetServiceOverrideListV2QueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   type?:
-    | 'INFRA_GLOBAL_OVERRIDE'
-    | 'INFRA_SERVICE_OVERRIDE'
     | 'ENV_GLOBAL_OVERRIDE'
     | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
 }
@@ -57247,6 +57293,244 @@ export const migrateServiceOverrideScopedPromise = (
     void,
     void
   >('POST', getConfig('ng/api'), `/serviceOverrides/migrateScope`, props, signal)
+
+export interface RevertMigrationServiceOverrideQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type RevertMigrationServiceOverrideProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const RevertMigrationServiceOverride = (props: RevertMigrationServiceOverrideProps) => (
+  <Mutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/revertMigration`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRevertMigrationServiceOverrideProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const useRevertMigrationServiceOverride = (props: UseRevertMigrationServiceOverrideProps) =>
+  useMutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/revertMigration`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const revertMigrationServiceOverridePromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/revertMigration`, props, signal)
+
+export interface RevertMigrationServiceOverrideScopedQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type RevertMigrationServiceOverrideScopedProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const RevertMigrationServiceOverrideScoped = (props: RevertMigrationServiceOverrideScopedProps) => (
+  <Mutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/revertMigrationScope`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRevertMigrationServiceOverrideScopedProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const useRevertMigrationServiceOverrideScoped = (props: UseRevertMigrationServiceOverrideScopedProps) =>
+  useMutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/revertMigrationScope`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const revertMigrationServiceOverrideScopedPromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/revertMigrationScope`, props, signal)
+
+export interface SettingsUpdateServiceOverrideQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  migrateChildren?: boolean
+}
+
+export type SettingsUpdateServiceOverrideProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideSettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update Settings to ServiceOverride V2
+ */
+export const SettingsUpdateServiceOverride = (props: SettingsUpdateServiceOverrideProps) => (
+  <Mutate<
+    ResponseServiceOverrideSettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/settingsUpdate`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSettingsUpdateServiceOverrideProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideSettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update Settings to ServiceOverride V2
+ */
+export const useSettingsUpdateServiceOverride = (props: UseSettingsUpdateServiceOverrideProps) =>
+  useMutate<
+    ResponseServiceOverrideSettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/settingsUpdate`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Update Settings to ServiceOverride V2
+ */
+export const settingsUpdateServiceOverridePromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideSettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideSettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/settingsUpdate`, props, signal)
 
 export interface UpsertServiceOverrideV2QueryParams {
   accountIdentifier: string

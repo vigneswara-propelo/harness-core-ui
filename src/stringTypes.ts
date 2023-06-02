@@ -2273,6 +2273,9 @@ export interface StringsMap {
   'authSettings.ipAddress.validateUniqueIdentifierError': string
   'authSettings.ipAddress.yourIpAddressIs': string
   'authSettings.ipAllowlist': string
+  'authSettings.jitProvisioning': string
+  'authSettings.jitValidationKey': string
+  'authSettings.jitValidationValue': string
   'authSettings.keepAtLeastOneProviderEnabled': string
   'authSettings.ldap.addGroupQueryDescription': string
   'authSettings.ldap.addGroupQueryHeading': string

@@ -89,7 +89,7 @@ const EditUserProfile: React.FC<UserProfileData> = props => {
           {() => {
             return (
               <Form>
-                <Container width={300}>
+                <Container>
                   <ModalErrorHandler bind={setModalErrorHandler} />
                   <FormInput.Text name="name" label={getString('name')} />
                 </Container>

@@ -42,6 +42,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { PermissionRequest } from '@auth-settings/pages/Configuration/Authentication'
 import { useFeature } from '@common/hooks/useFeatures'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -85,6 +86,7 @@ const SAMLProviderV2: React.FC<Props> = ({
   ) as SAMLSettings[]
   const enabledSamlProviders = samlSettings.filter(saml => saml.authenticationEnabled)
 
+  const { PL_ENABLE_JIT_USER_PROVISION } = useFeatureFlags()
   const { enabled: featureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.SAML_SUPPORT
@@ -274,10 +276,10 @@ const SAMLProviderV2: React.FC<Props> = ({
                     }}
                     checked={samlSetting.authenticationEnabled}
                   />
-                  <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
+                  <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="25%">
                     {samlSetting.displayName}
                   </Text>
-                  <Layout.Horizontal width="30%" padding={{ right: 'large' }}>
+                  <Layout.Horizontal width="25%" padding={{ right: 'large' }}>
                     <Text
                       className={css.displayNamePlaceholder}
                       inline
@@ -291,7 +293,7 @@ const SAMLProviderV2: React.FC<Props> = ({
                       {samlSetting.friendlySamlName}
                     </Text>
                   </Layout.Horizontal>
-                  <Layout.Horizontal width="30%" flex={{ justifyContent: 'flex-start' }}>
+                  <Layout.Horizontal width="20%" flex={{ justifyContent: 'flex-start' }}>
                     <Text font={FontVariation.SMALL} inline margin={{ right: 'small' }}>
                       {`${getString('typeLabel')}: `}
                     </Text>
@@ -300,6 +302,16 @@ const SAMLProviderV2: React.FC<Props> = ({
                       {samlSetting.samlProviderType}
                     </Text>
                   </Layout.Horizontal>
+                  <Text color={Color.GREY_800} width="20%">
+                    {PL_ENABLE_JIT_USER_PROVISION && (
+                      <>
+                        {`${getString('authSettings.jitProvisioning')}: `}
+                        <Text font={{ weight: 'semi-bold' }} color={Color.GREY_800} inline>
+                          {samlSetting.jitEnabled ? getString('enabledLabel') : getString('common.disabled')}
+                        </Text>
+                      </>
+                    )}
+                  </Text>
                   <Container width="10%" flex={{ justifyContent: 'flex-end' }}>
                     <Button
                       text={getString('test')}

@@ -359,3 +359,6 @@ urlIdentityProvider: URL and Identity Provider
 newSamlProvider: New SAML Provider
 identityProviderLabel: Identity Provider
 yesIamSure: Yes, I am very sure
+jitProvisioning: JIT Provisioning
+jitValidationKey: JIT Validation Key
+jitValidationValue: JIT Validation Value
