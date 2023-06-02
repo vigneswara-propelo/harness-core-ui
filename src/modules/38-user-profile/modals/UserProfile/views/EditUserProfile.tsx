@@ -26,6 +26,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { UserInfo, useUpdateUserInfo } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
+import { regexUsernameDisallowedChars } from '@common/utils/StringUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 interface UserProfileData {
@@ -76,7 +77,10 @@ const EditUserProfile: React.FC<UserProfileData> = props => {
           }}
           formName="editUserForm"
           validationSchema={Yup.object().shape({
-            name: Yup.string().trim().required(getString('validation.nameRequired'))
+            name: Yup.string()
+              .trim()
+              .required(getString('validation.nameRequired'))
+              .matches(regexUsernameDisallowedChars, getString('common.validation.invalidUsername'))
           })}
           onSubmit={values => {
             handleSubmit(values)

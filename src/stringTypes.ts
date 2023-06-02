@@ -1303,6 +1303,7 @@ export interface StringsMap {
   'common.validation.groupAttributeIsRequired': string
   'common.validation.harnessFolderNamePatternIsNotValid': string
   'common.validation.identifierIsRequired': string
+  'common.validation.invalidUsername': string
   'common.validation.invalidYamlText': string
   'common.validation.keyIsRequired': string
   'common.validation.nameIsRequired': string
