@@ -48,7 +48,8 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
     stageIdentifier,
     isServerlessDeploymentTypeSelected = false,
     stepViewType,
-    template
+    template,
+    viewTypeMetadata
   } = props
 
   const { getString } = useStrings()
@@ -162,6 +163,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
       configureOptionsProps={{
         isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
       }}
+      tooltipProps={{ dataTooltipId: viewTypeMetadata?.isTrigger ? 'triggerArtifactTag' : '' }}
     />
   )
 }

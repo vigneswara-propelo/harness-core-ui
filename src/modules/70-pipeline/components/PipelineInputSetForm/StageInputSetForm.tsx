@@ -139,6 +139,7 @@ export interface StageInputSetFormProps {
   allowableTypes: AllowedTypes
   stageType: StageType
   childPipelineMetadata?: ChildPipelineMetadataType
+  viewTypeMetadata?: Record<string, boolean>
 }
 
 export function StageInputSetFormInternal({
@@ -152,7 +153,8 @@ export function StageInputSetFormInternal({
   executionIdentifier,
   allowableTypes,
   stageType,
-  childPipelineMetadata
+  childPipelineMetadata,
+  viewTypeMetadata
 }: StageInputSetFormProps): React.ReactElement {
   const deploymentStageInputSet = get(formik?.values, path, {})
   const { getString } = useStrings()
@@ -520,6 +522,7 @@ export function StageInputSetFormInternal({
                 }
                 readonly={readonly}
                 customStepProps={{ stageIdentifier }}
+                viewTypeMetadata={viewTypeMetadata}
               />
             )}
             {(!isNil(deploymentStage?.serviceConfig?.serviceDefinition?.type) || isPropagating) && (
@@ -586,6 +589,7 @@ export function StageInputSetFormInternal({
         readonly={readonly}
         stageIdentifier={stageIdentifier}
         childPipelineMetadata={childPipelineMetadata}
+        viewTypeMetadata={viewTypeMetadata}
       />
 
       <EnvironmentsInputSetForm

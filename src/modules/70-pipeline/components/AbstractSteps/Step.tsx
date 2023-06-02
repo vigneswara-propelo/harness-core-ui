@@ -59,6 +59,7 @@ export interface StepProps<T, U = unknown> {
   formikRef?: StepFormikFowardRef<T>
   customStepProps?: U
   allowableTypes: AllowedTypes
+  viewTypeMetadata?: Record<string, boolean>
 }
 
 export function setFormikRef<T = unknown, U = unknown>(ref: StepFormikFowardRef<T>, formik: FormikProps<U>): void {
