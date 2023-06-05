@@ -109,10 +109,10 @@ function StepGroupStepEdit(
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
 
   const { getString } = useStrings()
-  const { CDP_AWS_SAM } = useFeatureFlags()
+  const { CDS_CONTAINER_STEP_GROUP } = useFeatureFlags()
 
   const [isContainerBasedExecutionEnabled, setIsContainerBasedExecutionEnabled] = useState<boolean>(
-    defaultTo(CDP_AWS_SAM && !!initialValues.stepGroupInfra?.type, false)
+    defaultTo(CDS_CONTAINER_STEP_GROUP && !!initialValues.stepGroupInfra?.type, false)
   )
 
   React.useEffect(() => {
@@ -323,7 +323,7 @@ function StepGroupStepEdit(
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
               </div>
-              {CDP_AWS_SAM && (
+              {CDS_CONTAINER_STEP_GROUP && (
                 <>
                   <Switch
                     checked={isContainerBasedExecutionEnabled}
