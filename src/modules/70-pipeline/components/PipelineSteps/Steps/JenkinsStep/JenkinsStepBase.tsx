@@ -52,7 +52,7 @@ import { isValueFixed } from '@common/utils/utils'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface } from './types'
-import { getJenkinsJobParentChildName, resetForm, scriptInputType, variableSchema, getJobValue } from './helper'
+import { getJenkinsJobParentChildName, resetForm, scriptInputType, getJobValue } from './helper'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './JenkinsStep.module.scss'
@@ -573,6 +573,7 @@ function FormContent({
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
+                              defaultValueToReset: '',
                               disabled: readonly
                             }}
                             label=""
@@ -684,12 +685,7 @@ function JenkinsStepBase(
               )}`
             })
           )
-      }),
-      jobParameter: Yup.lazy(value =>
-        typeof value === 'object'
-          ? variableSchema(getString) // typeError is necessary here, otherwise we get a bad-looking yup error
-          : Yup.string()
-      )
+      })
     }),
     ...getNameAndIdentifierSchema(getString, stepViewType)
   })
