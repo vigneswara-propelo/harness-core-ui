@@ -4996,6 +4996,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
   'pipeline.stepDescription.AwsSamBuild': string
   'pipeline.stepDescription.AwsSamDeploy': string
+  'pipeline.stepDescription.AwsSamDownloadManifests': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
