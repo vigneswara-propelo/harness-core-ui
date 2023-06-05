@@ -34,6 +34,7 @@ import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
@@ -110,7 +111,7 @@ export const InfraProvisioningBase = (
     }
   }, [stepsData?.data?.stepCategories, selectedStage])
 
-  const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
+  const addTemplate = async (event: ExecutionGraphAddStepEvent): Promise<void> => {
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
@@ -120,9 +121,12 @@ export const InfraProvisioningBase = (
         gitDetails,
         storeMetadata
       })
-      const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
+      const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
+      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied) }
+
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId || ''))
-      executionRef.current?.stepGroupUpdated?.(newStepData.step)
+
+      executionRef.current?.stepGroupUpdated?.(newStepData[stepType])
       if (pipelineStage && !get(pipelineStage?.stage, 'spec.environment.provisioner')) {
         set(pipelineStage, 'stage.spec.environment.provisioner', {
           steps: [],
@@ -149,10 +153,10 @@ export const InfraProvisioningBase = (
           type: DrawerTypes.ProvisionerStepConfig,
           data: {
             stepConfig: {
-              node: newStepData.step,
+              node: newStepData[stepType],
               stepsMap: event.stepsMap,
               onUpdate: executionRef.current?.stepGroupUpdated,
-              isStepGroup: false,
+              isStepGroup: template?.templateEntityType === PipelineStepType.StepGroup,
               addOrEdit: 'edit',
               hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
             }
