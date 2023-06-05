@@ -52,7 +52,8 @@ import {
   helperTextData,
   getConnectorRefQueryData,
   shouldHideHeaderAndNavBtns,
-  isTemplateView
+  isTemplateView,
+  resetFieldValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getHelpeTextForTags,
@@ -732,6 +733,10 @@ function Artifactory({
                     radioGroup={{ inline: true }}
                     items={tagOptions}
                     className={css.radioGroup}
+                    onChange={() => {
+                      resetFieldValue(formik, 'tagRegex')
+                      resetFieldValue(formik, 'tag')
+                    }}
                   />
                 </div>
                 {formik.values?.tagType === 'value' ? (

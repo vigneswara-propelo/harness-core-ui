@@ -50,6 +50,7 @@ import {
   getConnectorIdValue,
   getFinalArtifactObj,
   helperTextData,
+  resetFieldValue,
   resetTag,
   shouldFetchFieldOptions,
   shouldHideHeaderAndNavBtns
@@ -793,6 +794,10 @@ export function ACRArtifact({
                     radioGroup={{ inline: true }}
                     items={tagOptions}
                     className={css.radioGroup}
+                    onChange={() => {
+                      resetFieldValue(formik, 'tagRegex')
+                      resetFieldValue(formik, 'tag')
+                    }}
                   />
                 </div>
                 {formik.values?.tagType === 'value' ? (

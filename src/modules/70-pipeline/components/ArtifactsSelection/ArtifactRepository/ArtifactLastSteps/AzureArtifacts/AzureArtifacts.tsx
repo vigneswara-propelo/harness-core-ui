@@ -45,7 +45,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   shouldHideHeaderAndNavBtns,
-  hasFixedDefiniteValue
+  hasFixedDefiniteValue,
+  resetFieldValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -523,6 +524,11 @@ function FormComponent(
             radioGroup={{ inline: true }}
             items={tagOptions}
             className={css.radioGroup}
+            onChange={() => {
+              // to clearValues when version is changed
+              resetFieldValue(formik, 'version')
+              resetFieldValue(formik, 'versionRegex')
+            }}
           />
         </div>
         {formik.values.versionType === 'value' ? (
