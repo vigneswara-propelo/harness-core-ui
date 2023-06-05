@@ -549,6 +549,7 @@ planEnforcement:
     upgradeRequired: 'You have exceeded your Monthly Active Users (MAU) subscription limit.'
 onboarding:
   typeNewFeatureName: Type the name of a new flag
+  typeNewEnvName: Type the name of a new environment
   multiStep:
     createEnv: Create an Environment and SDK key
     validate: Validate
