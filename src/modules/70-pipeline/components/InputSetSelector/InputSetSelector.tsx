@@ -6,7 +6,17 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, Popover, Text, TextInput, ButtonVariation, PageSpinner, Container, Button } from '@harness/uicore'
+import {
+  Layout,
+  Popover,
+  Text,
+  TextInput,
+  ButtonVariation,
+  PageSpinner,
+  Container,
+  Button,
+  Pagination
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
 import cx from 'classnames'
@@ -24,7 +34,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { usePipelineVariables } from '../PipelineVariablesContext/PipelineVariablesContext'
-import type { ChildPipelineStageProps, InputSetValue } from './utils'
+import { ChildPipelineStageProps, INPUT_SET_SELECTOR_PAGE_SIZE, InputSetValue } from './utils'
 import { MultipleInputSetList } from './MultipleInputSetList'
 import { RenderValue } from './RenderValue'
 import SelectedMultipleList from './SelectedMultipleList'
@@ -72,7 +82,8 @@ export function InputSetSelector({
   childPipelineProps,
   isSimplifiedYAML
 }: InputSetSelectorProps): React.ReactElement {
-  const [searchParam, setSearchParam] = React.useState('')
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const [pageIndex, setPageIndex] = useState(0)
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
   const [openInputSetsList, setOpenInputSetsList] = useState(false)
   const { getString } = useStrings()
@@ -118,6 +129,9 @@ export function InputSetSelector({
       projectIdentifier: childPipelineProps?.childProjectIdentifier ?? projectIdentifier,
       pipelineIdentifier,
       inputSetType: isOverlayInputSet ? 'INPUT_SET' : undefined,
+      pageSize: INPUT_SET_SELECTOR_PAGE_SIZE,
+      pageIndex,
+      searchTerm: searchTerm.trim(),
       ...getGitQueryParams()
     },
     debounce: 300,
@@ -152,7 +166,7 @@ export function InputSetSelector({
 
   React.useEffect(() => {
     refetch()
-  }, [repoIdentifier, branch, selectedRepo, selectedBranch, refetch])
+  }, [repoIdentifier, branch, selectedRepo, selectedBranch, refetch, pageIndex, searchTerm])
 
   React.useEffect(() => {
     if ((isEmpty(invalidInputSetReferences) || isNil(invalidInputSetReferences)) && openInputSetsList) {
@@ -211,7 +225,6 @@ export function InputSetSelector({
         })
         return filter
       })
-      .filter(set => defaultTo(set.identifier, '').toLowerCase().indexOf(searchParam.toLowerCase()) > -1)
       .map(inputSet => (
         <MultipleInputSetList
           key={inputSet.identifier}
@@ -270,9 +283,10 @@ export function InputSetSelector({
               placeholder={getString('search')}
               rightElement="chevron-down"
               className={css.search}
-              value={searchParam}
+              value={searchTerm}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setSearchParam(e.target.value.trim())
+                setSearchTerm(e.target.value)
+                setPageIndex(0)
               }}
             />
           </div>
@@ -296,6 +310,16 @@ export function InputSetSelector({
                       {multipleInputSetList}
                     </>
                   </ul>
+                  <Layout.Vertical padding={{ right: 'medium', left: 'medium' }}>
+                    <Pagination
+                      itemCount={inputSetResponse?.data?.totalItems || 0}
+                      pageSize={inputSetResponse?.data?.pageSize || INPUT_SET_SELECTOR_PAGE_SIZE}
+                      pageCount={inputSetResponse?.data?.totalPages || 0}
+                      pageIndex={inputSetResponse?.data?.pageIndex || 0}
+                      gotoPage={setPageIndex}
+                      hidePageNumbers
+                    />
+                  </Layout.Vertical>
                   <Button
                     margin="small"
                     text={

@@ -2075,6 +2075,9 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
                                   </div>
                                 </li>
                               </ul>
+                              <div
+                                class="Layout--vertical StyledProps--main StyledProps--padding-right-medium StyledProps--padding-left-medium"
+                              />
                               <button
                                 aria-label="pipeline.inputSets.applyInputSet"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"

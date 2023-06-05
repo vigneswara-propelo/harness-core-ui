@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor, within, createEvent } from '@testing-library/react'
+import { render, act, fireEvent, waitFor, within, createEvent, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { InputSetSummaryResponse, useGetInputSetsListForPipeline } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
@@ -17,7 +18,8 @@ import {
   mockInputSetsListError,
   mockInputSetsListWithGitDetails,
   multipleSelectedInputSets,
-  multipleSelectedInputSetsWithGitDetails
+  multipleSelectedInputSetsWithGitDetails,
+  paginatedInputSetsResponse
 } from './mocks'
 import type { InputSetValue } from '../utils'
 
@@ -393,5 +395,76 @@ describe('INPUT SET SELECTOR', () => {
       const dropEvent = Object.assign(createEvent.drop(container1), eventData)
       fireEvent(container2, dropEvent)
     })
+  })
+
+  test('should refetch input sets on search term change', async () => {
+    const refetch = jest.fn()
+    const mockUseGetInputSets = useGetInputSetsListForPipeline as jest.MockedFunction<
+      typeof useGetInputSetsListForPipeline
+    >
+
+    mockUseGetInputSets.mockImplementation(() => ({
+      refetch,
+      absolutePath: '',
+      cancel: jest.fn(),
+      data: paginatedInputSetsResponse,
+      loading: false,
+      response: null,
+      error: null
+    }))
+    render(
+      <TestWrapper>
+        <InputSetSelector {...commonProps} />
+      </TestWrapper>
+    )
+
+    // input sets are fetched on mount
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
+
+    fireEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
+
+    expect(await screen.findByText('inputSet23')).toBeInTheDocument()
+
+    refetch.mockClear()
+
+    const searchInput = screen.getByPlaceholderText('search')
+
+    userEvent.type(searchInput, 'inputSet')
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
+  })
+
+  test('should refetch input sets on page index change', async () => {
+    const refetch = jest.fn()
+    const mockUseGetInputSets = useGetInputSetsListForPipeline as jest.MockedFunction<
+      typeof useGetInputSetsListForPipeline
+    >
+
+    mockUseGetInputSets.mockImplementation(() => ({
+      refetch,
+      absolutePath: '',
+      cancel: jest.fn(),
+      data: paginatedInputSetsResponse,
+      loading: false,
+      response: null,
+      error: null
+    }))
+
+    render(
+      <TestWrapper>
+        <InputSetSelector {...commonProps} />
+      </TestWrapper>
+    )
+
+    // input sets are fetched on mount
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
+
+    fireEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
+
+    expect(await screen.findByText('inputSet23')).toBeInTheDocument()
+
+    refetch.mockClear()
+
+    userEvent.click(screen.getByLabelText('Next'))
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
   })
 })

@@ -45,3 +45,5 @@ export const onDragOver = (event: React.DragEvent<HTMLLIElement>): void => {
   event.currentTarget.classList.add(css.dragOver)
   event.dataTransfer.dropEffect = 'move'
 }
+
+export const INPUT_SET_SELECTOR_PAGE_SIZE = 100

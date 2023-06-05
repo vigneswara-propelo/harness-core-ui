@@ -563,6 +563,9 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                     </div>
                   </li>
                 </ul>
+                <div
+                  class="Layout--vertical StyledProps--main StyledProps--padding-right-medium StyledProps--padding-left-medium"
+                />
                 <button
                   aria-label="pipeline.inputSets.applyInputSets"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
@@ -1120,6 +1123,9 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                     </div>
                   </li>
                 </ul>
+                <div
+                  class="Layout--vertical StyledProps--main StyledProps--padding-right-medium StyledProps--padding-left-medium"
+                />
                 <button
                   aria-label="pipeline.inputSets.applyInputSets"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
@@ -1677,6 +1683,9 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                     </div>
                   </li>
                 </ul>
+                <div
+                  class="Layout--vertical StyledProps--main StyledProps--padding-right-medium StyledProps--padding-left-medium"
+                />
                 <button
                   aria-label="pipeline.inputSets.applyInputSets"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
