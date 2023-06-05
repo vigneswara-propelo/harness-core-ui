@@ -4501,7 +4501,6 @@ export interface StringsMap {
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
-  'pipeline.loadingErrorMsg': string
   'pipeline.logDateTimeSettings': string
   'pipeline.logLevelSettings': string
   'pipeline.logSettingsHeader': string
