@@ -57,9 +57,7 @@ const VariationItem: React.FC<{ variation: Variation; index: number }> = ({ vari
       spacing="xsmall"
       className={css.variationItem}
     >
-      <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="xsmall">
-        <VariationWithIcon variation={variation} index={index} color={Color.GREY_800} fontSize="small" />
-      </Layout.Horizontal>
+      <VariationWithIcon variation={variation} index={index} color={Color.GREY_800} fontSize="small" />
       <Text font={{ variation: FontVariation.TINY }} className={css.flagVariationValue}>{`${getString('valueLabel')}: ${
         variation.value
       }`}</Text>
