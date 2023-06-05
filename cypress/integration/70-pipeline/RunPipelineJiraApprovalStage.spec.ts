@@ -60,7 +60,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Create').click()
+      cy.contains('p', 'Jira Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Jira Connector is required').should('be.visible').should('have.class', 'FormError--error')
@@ -76,7 +76,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(4000)
-      cy.contains('p', 'Jira Create').click()
+      cy.contains('p', 'Jira Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
@@ -102,7 +102,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Create').click()
+      cy.contains('p', 'Jira Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
@@ -168,7 +168,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Update').click()
+      cy.contains('p', 'Jira Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Jira Connector is required').should('be.visible').should('have.class', 'FormError--error')
@@ -182,7 +182,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Update').click()
+      cy.contains('p', 'Jira Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })

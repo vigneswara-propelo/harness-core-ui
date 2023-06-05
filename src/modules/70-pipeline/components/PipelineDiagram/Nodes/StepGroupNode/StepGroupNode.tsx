@@ -31,7 +31,6 @@ import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getBaseFqnWithoutEntityIdentifier, getPositionOfAddIcon } from '../utils'
-import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
@@ -64,7 +63,6 @@ export function StepGroupNode(props: any): JSX.Element {
       ? getString('pipeline.execution.rollbackStages')
       : props.name || props.identifier
   const showTemplateIcon = !!props.data?.isTemplateNode || !!props?.data?.stepGroup?.template
-  const { updateDimensions } = useNodeDimensionContext()
   const isNestedStepGroup = Boolean(
     get(props, 'data.step.data.isNestedGroup') || (get(props, 'data.isNestedGroup') && props?.parentIdentifier)
   )
@@ -102,14 +100,6 @@ export function StepGroupNode(props: any): JSX.Element {
 
   React.useEffect(() => {
     props?.updateGraphLinks?.()
-    updateDimensions?.({
-      [(props?.id || props?.data?.id) as string]: {
-        height: 100,
-        width: 80,
-        type: props?.type,
-        isNodeCollapsed
-      }
-    })
   }, [isNodeCollapsed])
 
   React.useEffect(() => {
@@ -300,6 +290,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   <Icon
                     className={css.collapseIcon}
                     name="minus"
+                    margin={{ right: 'small' }}
                     onClick={e => {
                       e.stopPropagation()
                       setNodeCollapsed(true)
@@ -448,6 +439,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 { [defaultCss.visible]: showAdd },
                 { [defaultCss.marginBottom]: props?.isParallelNode }
               )}
+              wrapperClassname={defaultCss.floatingAddNodeWrapper}
               onMouseOver={() => allowAdd && setVisibilityOfAdd(true)}
               onMouseLeave={() => allowAdd && debounceHideVisibility()}
               onDragLeave={debounceHideVisibility}

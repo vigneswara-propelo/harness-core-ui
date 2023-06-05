@@ -66,7 +66,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Step Name is required').should('be.visible').should('have.class', 'FormError--error')
@@ -87,7 +87,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Create')
       cy.contains('span', 'Select').click({ force: true })
@@ -112,7 +112,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Create')
       cy.contains('span', 'Select').click({ force: true })
@@ -137,7 +137,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Create')
       cy.contains('span', 'Select').click({ force: true })
@@ -162,7 +162,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Approval').click()
+      cy.contains('p', 'ServiceNow Approval').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Step Name is required').should('be.visible').should('have.class', 'FormError--error')
@@ -181,7 +181,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Approval').click()
+      cy.contains('p', 'ServiceNow Approval').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Approval')
       cy.contains('span', 'Select').click({ force: true })
@@ -208,7 +208,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Step Name is required').should('be.visible').should('have.class', 'FormError--error')
@@ -230,7 +230,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Update')
       cy.contains('span', 'Select').click({ force: true })
@@ -257,7 +257,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Update')
       cy.contains('span', 'Select').click({ force: true })
@@ -284,7 +284,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Update')
       cy.contains('span', 'Select').click({ force: true })
