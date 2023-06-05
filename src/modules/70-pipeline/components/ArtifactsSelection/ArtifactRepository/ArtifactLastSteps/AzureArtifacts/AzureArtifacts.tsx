@@ -565,7 +565,8 @@ function FormComponent(
                       org: '',
                       packageType: packageTypeValue,
                       feed: feedValue,
-                      package: packageValue
+                      package: packageValue,
+                      project: projectValue
                     }
                   })
                 }
