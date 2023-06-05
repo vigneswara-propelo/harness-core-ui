@@ -113,6 +113,7 @@ export enum StepType {
   AzureWebAppsRollback = 'AzureWebAppRollback',
   AzureSlotDeployment = 'AzureSlotDeployment',
   JenkinsBuild = 'JenkinsBuild',
+  JenkinsBuildV2 = 'JenkinsBuildV2',
   BambooBuild = 'BambooBuild',
   AzureTrafficShift = 'AzureTrafficShift',
   AzureSwapSlot = 'AzureSwapSlot',

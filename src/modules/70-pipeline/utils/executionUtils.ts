@@ -868,6 +868,10 @@ export function getIconDataBasedOnType(nodeData?: ExecutionNode): {
     if (nodeData.stepType === StepType.ResourceConstraint) {
       return { icon: 'traffic-lights', iconSize: 40 }
     }
+    // ticket for reference -> https://harness.atlassian.net/browse/CDS-59308
+    if (nodeData.stepType === StepType.JenkinsBuildV2) {
+      return { icon: 'service-jenkins', iconSize: 40 }
+    }
     const icon = StepTypeIconsMap[nodeData?.stepType as StepNodeType] || factory.getStepIcon(nodeData?.stepType || '')
     return {
       icon,
