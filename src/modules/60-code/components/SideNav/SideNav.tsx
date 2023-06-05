@@ -106,7 +106,8 @@ export default function CODESideNav(): React.ReactElement {
               icon="code-tag"
               textProps={{
                 iconProps: {
-                  size: 16
+                  size: 18,
+                  className: css.tagIcon
                 }
               }}
               label={getString('tagsLabel')}
