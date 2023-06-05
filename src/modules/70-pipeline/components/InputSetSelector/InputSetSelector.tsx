@@ -20,7 +20,7 @@ import {
 import { Color } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
 import cx from 'classnames'
-import { Classes, Position } from '@blueprintjs/core'
+import { Classes, PopoverPosition } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import {
   EntityGitDetails,
@@ -33,11 +33,17 @@ import { useToaster } from '@common/exports'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
+import { isValueExpression } from '@common/utils/utils'
 import { usePipelineVariables } from '../PipelineVariablesContext/PipelineVariablesContext'
-import { ChildPipelineStageProps, INPUT_SET_SELECTOR_PAGE_SIZE, InputSetValue } from './utils'
+import {
+  ChildPipelineStageProps,
+  INPUT_SET_SELECTOR_PAGE_SIZE,
+  getInputSetExpressionValue,
+  InputSetValue
+} from './utils'
 import { MultipleInputSetList } from './MultipleInputSetList'
 import { RenderValue } from './RenderValue'
-import SelectedMultipleList from './SelectedMultipleList'
+import { SelectedInputSetList } from './SelectedInputSetList'
 import css from './InputSetSelector.module.scss'
 
 export interface InputSetSelectorProps {
@@ -146,20 +152,25 @@ export function InputSetSelector({
       childPipelineProps?.inputSetReferences?.length > 0 &&
       isEmpty(value)
     ) {
-      const savedInputSets = childPipelineProps.inputSetReferences?.map(inputSetRef => {
+      const savedInputSets = childPipelineProps.inputSetReferences?.reduce((accum, inputSetRef) => {
         const currentInputSet = inputSetResponse?.data?.content?.find(
           currInputSet => currInputSet.identifier === inputSetRef
         )
-        return {
-          ...currentInputSet,
-          label: defaultTo(currentInputSet?.name, ''),
-          value: defaultTo(currentInputSet?.identifier, ''),
-          type: currentInputSet?.inputSetType,
-          gitDetails: defaultTo(currentInputSet?.gitDetails, {}),
-          inputSetErrorDetails: currentInputSet?.inputSetErrorDetails,
-          overlaySetErrorDetails: currentInputSet?.overlaySetErrorDetails
-        }
-      })
+        if (!currentInputSet && isValueExpression(inputSetRef)) {
+          const inputSetExpressionValue = getInputSetExpressionValue(inputSetRef)
+          accum.push(inputSetExpressionValue)
+        } else if (currentInputSet)
+          accum.push({
+            ...currentInputSet,
+            label: defaultTo(currentInputSet?.name, ''),
+            value: defaultTo(currentInputSet?.identifier, ''),
+            type: currentInputSet?.inputSetType,
+            gitDetails: defaultTo(currentInputSet?.gitDetails, {}),
+            inputSetErrorDetails: currentInputSet?.inputSetErrorDetails,
+            overlaySetErrorDetails: currentInputSet?.overlaySetErrorDetails
+          })
+        return accum
+      }, [] as InputSetValue[])
       onChange?.(savedInputSets as InputSetValue[])
     }
   }, [inputSetResponse?.data?.content, childPipelineProps?.inputSetReferences])
@@ -177,35 +188,32 @@ export function InputSetSelector({
     }
   }, [invalidInputSetReferences])
 
-  const onCheckBoxHandler = React.useCallback(
-    (
-      checked: boolean,
-      label: string,
-      val: string,
-      type: InputSetSummaryResponse['inputSetType'],
-      inputSetGitDetails: EntityGitDetails | null,
-      inputSetErrorDetails?: InputSetErrorWrapper,
-      overlaySetErrorDetails?: { [key: string]: string }
-    ) => {
-      const selected = clone(selectedInputSets)
-      const removedItem = selected.filter(set => set.value === val)[0]
-      if (checked && !removedItem) {
-        selected.push({
-          label,
-          value: val,
-          type,
-          gitDetails: defaultTo(inputSetGitDetails, {}),
-          inputSetErrorDetails,
-          overlaySetErrorDetails
-        })
-      } else if (removedItem) {
-        selected.splice(selected.indexOf(removedItem), 1)
-      }
-      setSelectedInputSets(selected)
-      setSelectedInputSetsContext?.(selected)
-    },
-    [selectedInputSets]
-  )
+  const onCheckBoxHandler = (
+    checked: boolean,
+    label: string,
+    val: string,
+    type: InputSetSummaryResponse['inputSetType'],
+    inputSetGitDetails: EntityGitDetails | null,
+    inputSetErrorDetails?: InputSetErrorWrapper,
+    overlaySetErrorDetails?: { [key: string]: string }
+  ): void => {
+    const selected = clone(selectedInputSets)
+    const removedItem = selected.filter(set => set.value === val)[0]
+    if (checked && !removedItem) {
+      selected.push({
+        label,
+        value: val,
+        type,
+        gitDetails: defaultTo(inputSetGitDetails, {}),
+        inputSetErrorDetails,
+        overlaySetErrorDetails
+      })
+    } else if (removedItem) {
+      selected.splice(selected.indexOf(removedItem), 1)
+    }
+    setSelectedInputSets(selected)
+    setSelectedInputSetsContext?.(selected)
+  }
 
   if (error) {
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.inputsetlist')
@@ -215,21 +223,20 @@ export function InputSetSelector({
 
   const multipleInputSetList =
     inputSets &&
-    inputSets
-      .filter(set => {
-        let filter = true
-        selectedInputSets.forEach(selectedSet => {
-          if (selectedSet.value === set.identifier) {
-            filter = false
-          }
-        })
-        return filter
-      })
-      .map(inputSet => (
+    inputSets.map((inputSet, index) => {
+      let isInputSetSelected = false
+      for (const selectedSet of selectedInputSets) {
+        if (selectedSet.value === inputSet.identifier) {
+          isInputSetSelected = true
+        }
+        if (isInputSetSelected) break
+      }
+      return (
         <MultipleInputSetList
-          key={inputSet.identifier}
+          key={`${index}-${inputSet.identifier as string}`}
           inputSet={inputSet}
           onCheckBoxHandler={onCheckBoxHandler}
+          checked={isInputSetSelected}
           pipelineGitDetails={pipelineGitDetails}
           refetch={refetch}
           hideInputSetButton={hideInputSetButton}
@@ -243,12 +250,13 @@ export function InputSetSelector({
           onReconcile={onReconcile}
           reRunInputSetYaml={reRunInputSetYaml}
         />
-      ))
+      )
+    })
 
   return (
     <Popover
-      position={Position.BOTTOM}
-      usePortal={!!childPipelineProps?.usePortal}
+      position={PopoverPosition.TOP}
+      usePortal
       isOpen={openInputSetsList}
       minimal={true}
       className={css.isPopoverParent}
@@ -270,6 +278,7 @@ export function InputSetSelector({
         onChange={onChange}
         setSelectedInputSets={setSelectedInputSets}
         setOpenInputSetsList={setOpenInputSetsList}
+        openInputSetsList={openInputSetsList}
         selectedValueClass={selectedValueClass}
         showNewInputSet={showNewInputSet}
         onNewInputSetClick={onNewInputSetClick}
@@ -292,6 +301,9 @@ export function InputSetSelector({
           </div>
           <Container className={css.overlayIsHelperTextContainer} border={{ bottom: true }}>
             <Text className={css.overlayIsHelperText}>{getString('pipeline.inputSets.overlayISHelperText')}</Text>
+            <div className={cx(css.renderSelectedValue, css.renderPopoverSelectedValue, selectedValueClass)}>
+              <SelectedInputSetList value={selectedInputSets} setSelectedInputSets={setSelectedInputSets} />
+            </div>
           </Container>
           {!inputSets ? (
             <PageSpinner className={css.spinner} />
@@ -301,14 +313,7 @@ export function InputSetSelector({
               {inputSets && inputSets.length > 0 ? (
                 <>
                   <ul className={cx(Classes.MENU, css.list, { [css.multiple]: inputSets.length > 0 })}>
-                    <>
-                      <SelectedMultipleList
-                        selectedInputSets={selectedInputSets}
-                        onCheckBoxHandler={onCheckBoxHandler}
-                        setSelectedInputSets={setSelectedInputSets}
-                      />
-                      {multipleInputSetList}
-                    </>
+                    {multipleInputSetList}
                   </ul>
                   <Layout.Vertical padding={{ right: 'medium', left: 'medium' }}>
                     <Pagination

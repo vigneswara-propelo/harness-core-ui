@@ -761,7 +761,7 @@ packageTypePlaceholder: Select Package Type
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
   automaticallyExtractedFromText: Automatically extracted from event payload
-  selectedExisitingOrProvide: 'Select an existing Input Set or provide new set of values'
+  useExisitingInputSets: 'Use existing Input Sets'
   existing: Use Existing Input Sets
   provide: Provide Values
   whatAreInputsets: What are Input Sets?
@@ -923,6 +923,7 @@ inputSets:
   inputSetUpdated: Input Set "{{name}}" updated
   overlayISUpdated: Overlay Input Set "{{name}}" updated
   inputSetApplied: Input Set(s) applied successfully
+  lastApplied: 'Last Applied: '
 provisionerSteps: Provisioner Steps
 addStage:
   title: Select Stage Type

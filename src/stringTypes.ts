@@ -4428,6 +4428,7 @@ export interface StringsMap {
   'pipeline.inputSets.invalidOverlayIS': string
   'pipeline.inputSets.invalidOverlayISDesc1': string
   'pipeline.inputSets.invalidOverlayISDesc2': string
+  'pipeline.inputSets.lastApplied': string
   'pipeline.inputSets.noRuntimeInputsCurrently': string
   'pipeline.inputSets.noRuntimeInputsWhileExecution': string
   'pipeline.inputSets.overlayISHelperText': string
@@ -4757,7 +4758,7 @@ export interface StringsMap {
   'pipeline.pipelineInputPanel.existing': string
   'pipeline.pipelineInputPanel.noRuntimeInputs': string
   'pipeline.pipelineInputPanel.provide': string
-  'pipeline.pipelineInputPanel.selectedExisitingOrProvide': string
+  'pipeline.pipelineInputPanel.useExisitingInputSets': string
   'pipeline.pipelineInputPanel.whatAreInputsets': string
   'pipeline.pipelineRunFailed': string
   'pipeline.pipelineRunFailedForRepoBranch': string

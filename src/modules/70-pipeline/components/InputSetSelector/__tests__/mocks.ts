@@ -39,9 +39,6 @@ export const multipleSelectedInputSetsWithGitDetails: InputSetValue[] = [
     gitDetails: {
       repoIdentifier: 'gitSyncRepo',
       branch: 'feature'
-    },
-    entityValidityDetails: {
-      valid: false
     }
   }
 ]
@@ -132,9 +129,6 @@ export const mockInputSetsListWithGitDetails: UseGetMockDataWithMutateAndRefetch
             gitDetails: {
               repoIdentifier: 'gitSyncRepo',
               branch: 'feature'
-            },
-            entityValidityDetails: {
-              valid: false
             }
           },
           {

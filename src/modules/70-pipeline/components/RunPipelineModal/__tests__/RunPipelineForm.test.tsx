@@ -165,13 +165,13 @@ describe('STUDIO MODE', () => {
   })
 
   test('should toggle visual and yaml mode', async () => {
-    const { container, getByText, findByText } = render(
+    const { container, getByText, findByTestId } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
-    await findByText('pipeline.pipelineInputPanel.selectedExisitingOrProvide')
+    await findByTestId('selectExistingOrProvide')
 
     const yamlSwitch = getByText('YAML')
     await waitFor(() => expect(yamlSwitch).not.toHaveClass('disabledMode'))
@@ -184,7 +184,7 @@ describe('STUDIO MODE', () => {
     })
 
     fireEvent.click(getByText('VISUAL'))
-    await waitFor(() => findByText('pipeline.pipelineInputPanel.selectedExisitingOrProvide'))
+    await waitFor(() => findByTestId('selectExistingOrProvide'))
   })
 
   test('should display the help text on hover', async () => {
@@ -194,22 +194,22 @@ describe('STUDIO MODE', () => {
       </TestWrapper>
     )
 
-    const txt = await findByText('pipeline.pipelineInputPanel.whatAreInputsets')
+    const txt = await findByText('pipeline.pipelineInputPanel.useExisitingInputSets')
 
     fireEvent.mouseOver(txt)
     await waitFor(() => expect(queryByText('pipeline.inputSets.aboutInputSets')).toBeTruthy())
   })
 
   test('should not allow submit if form is incomplete as variable values are required', async () => {
-    const { findByText, queryByText, getByRole } = render(
+    const { findByTestId, queryByText, getByRole } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
-    const provideValues = await findByText('pipeline.pipelineInputPanel.provide')
     // Navigate to 'Provide Values'
-    fireEvent.click(provideValues)
+    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
+    fireEvent.click(selectExistingOrProvide)
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
 
     // Submit the incomplete form
@@ -227,15 +227,15 @@ describe('STUDIO MODE', () => {
   })
 
   test('should submit and call the run pipeine method if form is valid', async () => {
-    const { container, findByText, queryByText } = render(
+    const { container, findByTestId, queryByText, findByText } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
     // Navigate to 'Provide Values'
-    const provideValues = await findByText('pipeline.pipelineInputPanel.provide')
-    fireEvent.click(provideValues)
+    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
+    fireEvent.click(selectExistingOrProvide)
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
     await waitFor(() => queryByAttribute('name', container, 'variables[0].value'))
 
@@ -262,15 +262,15 @@ describe('STUDIO MODE', () => {
   })
 
   test('if SAVE_AS_INPUT_SET works', async () => {
-    const { container, getByText, findByText, queryByText } = render(
+    const { container, getByText, findByTestId, queryByText } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
     // Navigate to 'Provide Values'
-    const provideValues = await findByText('pipeline.pipelineInputPanel.provide')
-    fireEvent.click(provideValues)
+    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
+    fireEvent.click(selectExistingOrProvide)
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
 
     // Enter a value for the required pipeline variable
@@ -303,12 +303,12 @@ describe('STUDIO MODE', () => {
 
   test('should close the modal on cancel click', async () => {
     const onCloseMocked = jest.fn()
-    const { findByText } = render(
+    const { findByTestId, findByText } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} onClose={onCloseMocked} source="executions" />
       </TestWrapper>
     )
-    await findByText('pipeline.pipelineInputPanel.selectedExisitingOrProvide')
+    await findByTestId('selectExistingOrProvide')
     const cancel = await findByText('cancel')
 
     fireEvent.click(cancel)
@@ -317,13 +317,13 @@ describe('STUDIO MODE', () => {
   })
 
   test('should accept values from input sets and submit the form', async () => {
-    const { container, getByText, queryByText, queryAllByTestId } = render(
+    const { container, getByText, queryByText, queryByTestId, queryAllByTestId } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
-    await waitFor(() => expect(queryByText('pipeline.pipelineInputPanel.selectedExisitingOrProvide')).toBeTruthy())
+    await waitFor(() => expect(queryByTestId('selectExistingOrProvide')).toBeTruthy())
 
     // Click on the Add input sets button
     act(() => {
@@ -366,13 +366,13 @@ describe('STUDIO MODE', () => {
   })
 
   test('invalid input sets should not be applied', async () => {
-    const { container, getByText, queryByText, queryAllByTestId } = render(
+    const { container, getByText, queryByText, queryByTestId, queryAllByTestId } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
-    await waitFor(() => expect(queryByText('pipeline.pipelineInputPanel.selectedExisitingOrProvide')).toBeTruthy())
+    await waitFor(() => expect(queryByTestId('selectExistingOrProvide')).toBeTruthy())
 
     // Click on the Add input sets button
     act(() => {
@@ -421,24 +421,19 @@ describe('STUDIO MODE', () => {
     // 1. Apply input set so that all fields are filled
     // 2. Run button to be enabled
 
-    const { container, getByText, findByText, queryByText } = render(
+    const { container, getByText, findByTestId, queryByText } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
     // Navigate to 'Provide Values'
-    const provide = await findByText('pipeline.pipelineInputPanel.provide')
-    act(() => {
-      fireEvent.click(provide)
-    })
+    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
+    fireEvent.click(selectExistingOrProvide)
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
 
     // Navigate to 'Existing'
-    const existing = await findByText('pipeline.pipelineInputPanel.existing')
-    act(() => {
-      fireEvent.click(existing)
-    })
+    fireEvent.click(selectExistingOrProvide)
     await waitFor(() => expect(queryByText('pipeline.inputSets.selectPlaceholder')).toBeTruthy())
 
     // Click on the Add input sets button
@@ -539,15 +534,15 @@ describe('STUDIO MODE - template API error', () => {
 
 describe('RERUN MODE', () => {
   test('preflight api getting called if skipPreflight is unchecked', async () => {
-    const { container, getByText, findByText, queryByText } = render(
+    const { container, getByText, findByTestId, queryByText } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
     // Navigate to 'Provide Values'
-    const provideValues = await findByText('pipeline.pipelineInputPanel.provide')
-    fireEvent.click(provideValues)
+    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
+    fireEvent.click(selectExistingOrProvide)
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
 
     // Enter a value for the pipeline variable

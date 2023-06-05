@@ -174,7 +174,7 @@ function RunPipelineFormBasic({
     selectedStages: [getAllStageData(getString)],
     selectedStageItems: [getAllStageItem(getString)]
   })
-  const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
+  const { setPipeline: updatePipelineInVariablesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [currentPipeline, setCurrentPipeline] = useState<PipelineInfoConfig | undefined>()
@@ -462,7 +462,7 @@ function RunPipelineFormBasic({
 
   useDeepCompareEffect(() => {
     if (resolvedMergedPipeline) {
-      updatePipelineInVaribalesContext(resolvedMergedPipeline)
+      updatePipelineInVariablesContext(resolvedMergedPipeline)
     }
   }, [resolvedMergedPipeline])
 
