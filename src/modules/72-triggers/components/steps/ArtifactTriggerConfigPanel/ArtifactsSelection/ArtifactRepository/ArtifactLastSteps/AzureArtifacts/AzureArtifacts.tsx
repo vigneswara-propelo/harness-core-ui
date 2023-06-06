@@ -88,8 +88,7 @@ function FormComponent(
     lazy: true,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString(),
-      org: 'automation-cdc'
+      connectorRef: connectorRefValue?.toString()
     }
   })
 
@@ -215,8 +214,7 @@ function FormComponent(
                   refetchProjects({
                     queryParams: {
                       ...commonParams,
-                      connectorRef: connectorRefValue?.toString(),
-                      org: 'automation-cdc'
+                      connectorRef: connectorRefValue?.toString()
                     }
                   })
                 }
@@ -257,7 +255,6 @@ function FormComponent(
                   queryParams: {
                     ...commonParams,
                     connectorRef: connectorRefValue?.toString(),
-                    org: 'automation-cdc',
                     project: projectValue
                   }
                 })
@@ -300,7 +297,6 @@ function FormComponent(
                   queryParams: {
                     ...commonParams,
                     connectorRef: connectorRefValue?.toString(),
-                    org: 'automation-cdc',
                     project: projectValue,
                     packageType: packageTypeValue || 'maven',
                     feed: feedValue || ''
