@@ -465,7 +465,8 @@ export const buildGitlabPayload = (formData: FormData) => {
         ? getGitApiAccessSpec(formData)
         : formData.apiAuthType === GitAPIAuthTypes.TOKEN
         ? {
-            tokenRef: formData.apiAccessToken?.referenceString
+            tokenRef: formData.apiAccessToken?.referenceString,
+            apiUrl: formData.apiUrl
           }
         : {
             installationId: formData.installationId,
@@ -661,6 +662,60 @@ export const setupGithubFormData = async (connectorInfo: ConnectorInfoDTO, accou
 
     privateKey: connectorInfo?.spec?.apiAccess?.spec?.privateKeyRef,
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
+  }
+}
+
+export const setupGitlabFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+
+  const authData = connectorInfo?.spec?.authentication
+  const installationId = connectorInfo?.spec?.apiAccess?.spec?.installationId
+  const installationIdRef = connectorInfo?.spec?.apiAccess?.spec?.installationIdRef
+  const applicationId = connectorInfo?.spec?.apiAccess?.spec?.applicationId
+  const applicationIdRef = connectorInfo?.spec?.apiAccess?.spec?.applicationIdRef
+  const { username, usernameRef } = authData?.spec?.spec || {}
+  return {
+    sshKey: await setSecretField(authData?.spec?.sshKeyRef, scopeQueryParams),
+    authType: authData?.spec?.type,
+    username:
+      username || usernameRef
+        ? {
+            value: username || usernameRef,
+            type: usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+
+    password: await setSecretField(authData?.spec?.spec?.passwordRef, scopeQueryParams),
+    accessToken: await setSecretField(
+      authData?.spec?.spec?.tokenRef || connectorInfo?.spec?.apiAccess?.spec?.tokenRef,
+      scopeQueryParams
+    ),
+    apiAccessToken: await setSecretField(connectorInfo?.spec?.apiAccess?.spec?.tokenRef, scopeQueryParams),
+    kerberosKey: await setSecretField(authData?.spec?.spec?.kerberosKeyRef, scopeQueryParams),
+    enableAPIAccess: !!connectorInfo?.spec?.apiAccess,
+    apiAuthType: connectorInfo?.spec?.apiAccess?.type,
+    installationId:
+      installationId || installationIdRef
+        ? {
+            value: installationId || installationIdRef,
+            type: installationIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+    applicationId:
+      applicationId || applicationIdRef
+        ? {
+            value: applicationId || applicationIdRef,
+            type: applicationIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+
+    privateKey: connectorInfo?.spec?.apiAccess?.spec?.privateKeyRef,
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
+    apiUrl: connectorInfo?.spec?.apiAccess?.spec?.apiUrl || ''
   }
 }
 
