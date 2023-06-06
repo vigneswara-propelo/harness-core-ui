@@ -32,6 +32,7 @@ export const pipelineListAPI = `/pipeline/api/pipelines/list?routingId=${account
 export const pipelineSummaryAPI = `/pipeline/api/pipelines/summary/appdtest?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const pipelineDetailsAPI = `/pipeline/api/pipelines/appdtest?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const executionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&page=0&size=20&sort=startTs%2CDESC&module=cd`
+export const executionSummaryCIAPI = `pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&page=0&size=20&sort=startTs%2CDESC&module=ci`
 export const pipelineExecutionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&pipelineIdentifier=*&*`
 export const executionMetadata = `/pipeline/api/pipelines/execution/*/metadata?routingId=${accountId}&accountIdentifier=${accountId}`
 export const pipelineExecutionAPI = `/pipeline/api/pipelines/execution/v2/C9mgNjxSS7-B-qQek27iuA?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}`
@@ -118,6 +119,7 @@ export const saveTemplateCall = `/template/api/templates?accountIdentifier=${acc
 
 export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
 export const executionListRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
+export const executionListCIRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/ci/orgs/${orgIdentifier}/projects/${projectId}/deployments`
 export const pipelinesExecutionDelegateRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
 export const executionHistoryRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
 export const pipelineStudioRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
