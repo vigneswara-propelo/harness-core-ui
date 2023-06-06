@@ -215,20 +215,24 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
                   </Container>
                   {PL_ENABLE_JIT_USER_PROVISION && (
                     <Container>
-                      <Checkbox
-                        name="enableJitProvisioning"
+                      <FormInput.CheckBox
+                        tooltipProps={{ dataTooltipId: 'enableJITProvisioning' }}
+                        name="jitEnabled"
                         label={`${getString('enable')} ${getString('authSettings.jitProvisioning')}`}
                         font={{ variation: FontVariation.FORM_LABEL }}
                         color={Color.GREY_600}
-                        checked={formik.values.jitEnabled}
-                        onChange={e => formik.setFieldValue('jitEnabled', e.currentTarget.checked)}
                       />
                       {formik.values.jitEnabled && (
                         <Container width={300} margin={{ top: 'medium' }}>
-                          <FormInput.Text name="jitValidationKey" label={getString('authSettings.jitValidationKey')} />
+                          <FormInput.Text
+                            name="jitValidationKey"
+                            label={getString('authSettings.jitValidationKey')}
+                            tooltipProps={{ dataTooltipId: 'jitProvisioningKey' }}
+                          />
                           <FormInput.Text
                             name="jitValidationValue"
                             label={getString('authSettings.jitValidationValue')}
+                            tooltipProps={{ dataTooltipId: 'jitProvisioningValue' }}
                           />
                         </Container>
                       )}

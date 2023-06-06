@@ -325,23 +325,24 @@ const SAMLProviderForm: React.FC<Props> = ({ onSubmit, onCancel, samlProvider })
                       </Container>
                       {PL_ENABLE_JIT_USER_PROVISION && (
                         <Container margin={{ top: 'large' }}>
-                          <Checkbox
-                            name="enableJitProvisioning"
+                          <FormInput.CheckBox
+                            tooltipProps={{ dataTooltipId: 'enableJITProvisioning' }}
+                            name="jitEnabled"
                             label={`${getString('enable')} ${getString('authSettings.jitProvisioning')}`}
                             font={{ variation: FontVariation.FORM_LABEL }}
                             color={Color.GREY_600}
-                            checked={values.jitEnabled}
-                            onChange={e => setFieldValue('jitEnabled', e.currentTarget.checked)}
                           />
                           {values.jitEnabled && (
                             <Container width={300} margin={{ top: 'medium' }}>
                               <FormInput.Text
                                 name="jitValidationKey"
                                 label={getString('authSettings.jitValidationKey')}
+                                tooltipProps={{ dataTooltipId: 'jitProvisioningKey' }}
                               />
                               <FormInput.Text
                                 name="jitValidationValue"
                                 label={getString('authSettings.jitValidationValue')}
+                                tooltipProps={{ dataTooltipId: 'jitProvisioningValue' }}
                               />
                             </Container>
                           )}
