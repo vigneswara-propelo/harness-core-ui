@@ -108,7 +108,7 @@ export const AwsSamInfraSpecEditable: React.FC<AwsSamInfraSpecEditableProps> = (
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"
-                  label={getString('connector')}
+                  label={getString('optionalField', { name: getString('connector') })}
                   placeholder={getString('connectors.selectConnector')}
                   disabled={readonly}
                   accountIdentifier={accountId}

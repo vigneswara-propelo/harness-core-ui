@@ -109,14 +109,7 @@ describe('AwsSamDirectoryManifestSource tests', () => {
     userEvent.type(path1Input, 'test-path')
 
     // Add Path
-    const plusButton = screen.getByText('plusAdd').parentElement
-    userEvent.click(plusButton!)
-
-    // Path2
-    const path2Input = queryByNameAttribute(
-      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.paths[1]'
-    ) as HTMLInputElement
-    await waitFor(() => expect(path2Input).toBeInTheDocument())
-    userEvent.type(path2Input, 'test-path-2')
+    const plusButton = screen.queryByText('plusAdd')
+    expect(plusButton).not.toBeInTheDocument()
   })
 })

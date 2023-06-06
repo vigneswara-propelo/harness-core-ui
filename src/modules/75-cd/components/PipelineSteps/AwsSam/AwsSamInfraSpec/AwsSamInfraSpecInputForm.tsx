@@ -63,21 +63,21 @@ const AwsSamInfraSpecInputForm = ({
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
-            width={441}
+            name={connectorFieldName}
+            label={getString('optionalField', { name: getString('connector') })}
+            placeholder={getString('connectors.selectConnector')}
+            enableConfigureOptions={false}
+            disabled={readonly}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             tooltipProps={{
               dataTooltipId: 'awsInfraConnector'
             }}
-            name={connectorFieldName}
-            label={getString('connector')}
-            enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
-            disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={connectorTypes.Aws}
             setRefValue
+            width={441}
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
             templateProps={{
               isTemplatizedView: true,

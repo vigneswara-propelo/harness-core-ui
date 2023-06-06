@@ -370,11 +370,7 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
 }
 
 export const isOnlyOneManifestAllowedForDeploymentType = (deploymentType: ServiceDefinition['type']) => {
-  return (
-    isServerlessDeploymentType(deploymentType) ||
-    deploymentType === ServiceDeploymentType.AwsLambda ||
-    deploymentType === ServiceDeploymentType.AwsSam
-  )
+  return isServerlessDeploymentType(deploymentType) || deploymentType === ServiceDeploymentType.AwsLambda
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {

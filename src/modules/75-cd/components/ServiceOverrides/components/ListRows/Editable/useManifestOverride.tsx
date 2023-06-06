@@ -14,7 +14,7 @@ import { defaultTo, get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import {
   getBuildPayload,
   isGitTypeManifestStore,
@@ -334,6 +334,7 @@ export default function useManifestOverride({
             <K8sValuesManifest
               {...lastStepProps()}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+              selectedDeploymentType={serviceType as ServiceDefinition['type']}
             />
           )
           break
@@ -369,6 +370,7 @@ export default function useManifestOverride({
             <CommonManifestDetails
               {...lastStepProps()}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+              selectedDeploymentType={serviceType as ServiceDefinition['type']}
             />
           )
           break
@@ -384,7 +386,8 @@ export default function useManifestOverride({
     prevStepProps,
     selectedConnector,
     isManifestEditMode,
-    fetchingConnector
+    fetchingConnector,
+    serviceType
   ])
 
   const getLabels = (): { firstStepName: string; secondStepName: string } => {

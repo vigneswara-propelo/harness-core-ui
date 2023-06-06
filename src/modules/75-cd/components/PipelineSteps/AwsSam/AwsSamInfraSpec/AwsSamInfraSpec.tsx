@@ -114,13 +114,7 @@ export class AwsSamInfraSpec extends PipelineStep<AwsSamInfrastructureStep> {
   }: ValidateInputSetProps<AwsSamInfrastructure>): FormikErrors<AwsSamInfrastructure> {
     const errors: Partial<AwsSamInfrastructure> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    if (
-      isEmpty(data.connectorRef) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
-    ) {
-      errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
-    }
+
     if (isEmpty(data.region) && isRequired && getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME) {
       errors.region = getString?.('common.validation.fieldIsRequired', { name: getString('regionLabel') })
     }

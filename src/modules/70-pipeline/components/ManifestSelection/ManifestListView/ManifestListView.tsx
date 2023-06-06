@@ -503,6 +503,7 @@ function ManifestListView({
           <K8sValuesManifest
             {...lastStepProps()}
             {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+            selectedDeploymentType={deploymentType}
           />
         )
         break
@@ -519,6 +520,7 @@ function ManifestListView({
           <CommonManifestDetails
             {...lastStepProps()}
             {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+            selectedDeploymentType={deploymentType}
           />
         )
         break
@@ -526,7 +528,7 @@ function ManifestListView({
 
     arr.push(manifestDetailStep)
     return arr
-  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, isManifestEditMode])
+  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, isManifestEditMode, deploymentType])
 
   const connectorDetailStepProps = {
     type: ManifestToConnectorMap[manifestStore],

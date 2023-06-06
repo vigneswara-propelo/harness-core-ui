@@ -292,7 +292,6 @@ export function getAwsLambdaInfraValidationSchema(getString: UseStringsReturn['g
 
 export function getAwsSamInfraValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    connectorRef: getConnectorSchema(getString),
     region: Yup.string().required(getString('validation.regionRequired'))
   })
 }
