@@ -113,7 +113,8 @@ function WebhookPipelineInputPanelForm({
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
@@ -132,7 +133,8 @@ function WebhookPipelineInputPanelForm({
       branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   useEffect(() => {

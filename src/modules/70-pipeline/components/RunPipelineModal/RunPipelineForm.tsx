@@ -404,7 +404,8 @@ function RunPipelineFormBasic({
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    lazy: executionView
+    lazy: executionView,
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const executionStageList = useMemo((): SelectOption[] => {

@@ -59,7 +59,8 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
       branch,
       repoIdentifier,
       parentEntityConnectorRef: connectorRef
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: inputSetData, refetch: refetchInputSetData } = useMutateAsGet(
@@ -73,6 +74,7 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
 
         getDefaultFromOtherRepo: true
       },
+      requestOptions: { headers: { 'Load-From-Cache': 'true' } },
       lazy: true
     }
   )
