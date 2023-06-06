@@ -261,8 +261,13 @@
 }
 
 .gitRemoteDetailsWrapper {
-  display: flex;
-  padding: 0 var(--spacing-large) var(--spacing-medium);
+  width: fit-content;
+  margin-left: var(--spacing-large);
+  display: inline-flex;
+  align-items: center;
+  padding-left: 12px;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-2);
 }
 
 .templateErrorView {

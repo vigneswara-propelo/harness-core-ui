@@ -16,7 +16,8 @@ import {
   Failure,
   useGetTemplateFromPipeline,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
-  ResponseInputSetTemplateWithReplacedExpressionsResponse
+  ResponseInputSetTemplateWithReplacedExpressionsResponse,
+  GetTemplateFromPipelineQueryParams
 } from 'services/pipeline-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
@@ -65,7 +66,7 @@ export interface UseInputSetsReturn {
   hasRuntimeInputs: boolean
   modules?: string[]
   error: GetDataError<Failure | Error> | null
-  refetch(): Promise<void> | undefined
+  refetch(params?: Partial<GetTemplateFromPipelineQueryParams>): Promise<void> | undefined
   invalidInputSetReferences: string[]
   onReconcile: (identifier: string) => void
   shouldValidateForm?: boolean
@@ -106,6 +107,17 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
   const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
 
+  const defaultQueryParams: GetTemplateFromPipelineQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    branch,
+    repoIdentifier,
+    parentEntityConnectorRef: connectorRef,
+    parentEntityRepoName: repoIdentifier
+  }
+
   const {
     data: inputSetYamlResponse,
     loading: loadingTemplate,
@@ -115,16 +127,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     body: {
       stageIdentifiers: getStageIdentifierFromStageData(selectedStageData)
     },
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      branch,
-      repoIdentifier,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoIdentifier
-    },
+    queryParams: defaultQueryParams,
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: executionInputSetTemplateYaml || executionView || !selectedStageData.selectedStageItems.length
   })
@@ -281,7 +284,13 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     hasRuntimeInputs,
     hasInputSets: !!inputSetYamlResponse?.data?.hasInputSets,
     inputSetYamlResponse,
-    refetch,
+    refetch: (params: Partial<GetTemplateFromPipelineQueryParams>) =>
+      refetch({
+        queryParams: { ...defaultQueryParams, ...params },
+        body: {
+          stageIdentifiers: getStageIdentifierFromStageData(selectedStageData)
+        }
+      }),
     invalidInputSetReferences,
     onReconcile,
     shouldValidateForm,

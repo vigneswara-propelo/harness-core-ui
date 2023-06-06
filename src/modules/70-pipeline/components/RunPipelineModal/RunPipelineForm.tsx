@@ -38,7 +38,9 @@ import {
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
   useDebugPipelineExecuteWithInputSetYaml,
-  Failure
+  Failure,
+  Error,
+  GitErrorMetadataDTO
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -81,6 +83,8 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { IRemoteFetchError } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -96,7 +100,7 @@ import {
 } from '../PipelineVariablesContext/PipelineVariablesContext'
 import type { InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import { ApprovalStageInfo, ExpressionsInfo, RequiredStagesInfo } from './RunStageInfoComponents'
-import { PipelineInvalidRequestContent } from './PipelineInvalidRequestContent'
+import { PipelineInvalidRequestContent, PipelineInvalidRequestContentProps } from './PipelineInvalidRequestContent'
 import RunModalHeader from './RunModalHeader'
 import CheckBoxActions from './CheckBoxActions'
 import VisualView from './VisualView'
@@ -222,22 +226,25 @@ function RunPipelineFormBasic({
     }
   })
 
+  const pipelineDefaultQueryParam = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    repoIdentifier,
+    branch,
+    getTemplatesResolvedPipeline: true,
+    parentEntityConnectorRef: connectorRef,
+    parentEntityRepoName: repoIdentifier
+  }
+
   const {
     data: pipelineResponse,
     loading: loadingPipeline,
-    refetch: refetchPipeline
+    refetch: refetchPipeline,
+    error: pipelineError
   } = useGetPipeline({
     pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch,
-      getTemplatesResolvedPipeline: true,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoIdentifier
-    },
+    queryParams: pipelineDefaultQueryParam,
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
@@ -247,6 +254,7 @@ function RunPipelineFormBasic({
   )
 
   const getPipelineBranch = (): string | undefined => branch || pipelineResponse?.data?.gitDetails?.branch
+  const [selectedBranch, setSelectedBranch] = useState<string | undefined>(getPipelineBranch())
 
   useEffect(() => {
     setResolvedPipeline(
@@ -736,6 +744,21 @@ function RunPipelineFormBasic({
     return errors
   }
 
+  const onGitBranchChange = (selectedFilter: GitFilterScope, defaultSelected?: boolean): void => {
+    const pipelineBranch = selectedFilter?.branch
+    setSelectedBranch(pipelineBranch)
+    if (!defaultSelected) {
+      refetchPipeline({
+        queryParams: {
+          ...pipelineDefaultQueryParam,
+          branch: pipelineBranch
+        },
+        requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+      })
+      getTemplateFromPipeline({ branch: pipelineBranch })
+    }
+  }
+
   const shouldShowPageSpinner = (): boolean => {
     return loadingPipeline || loadingResolvedChildPipeline || loadingInputSets
   }
@@ -772,15 +795,60 @@ function RunPipelineFormBasic({
   }
 
   let runPipelineFormContent: React.ReactElement | null = null
-
+  const remoteFetchError = pipelineError?.data as Error
+  const getRemoteBranchFromError = (error: IRemoteFetchError): string | undefined =>
+    (error?.metadata as GitErrorMetadataDTO)?.branch
+  const isNoEntityFoundError =
+    remoteFetchError?.status === 'ERROR' && getRemoteBranchFromError(remoteFetchError as IRemoteFetchError)
   if (inputSetsError?.message) {
     runPipelineFormContent = (
-      <PipelineInvalidRequestContent
-        onClose={onClose}
-        getTemplateError={inputSetsError}
-        branch={branch}
-        repoName={repoIdentifier}
-      />
+      <>
+        {isNoEntityFoundError ? (
+          <>
+            <RunModalHeader
+              pipelineExecutionId={pipelineExecutionId}
+              selectedStageData={selectedStageData}
+              setSelectedStageData={selectedStagesHandler}
+              setSkipPreFlightCheck={setSkipPreFlightCheck}
+              handleModeSwitch={handleModeSwitch}
+              runClicked={runClicked}
+              selectedView={selectedView}
+              executionView={executionView}
+              connectorRef={connectorRef}
+              pipelineResponse={{
+                data: {
+                  gitDetails: {
+                    branch: getRemoteBranchFromError(pipelineError?.data as IRemoteFetchError),
+                    repoName: repoIdentifier
+                  }
+                }
+              }}
+              template={inputSetYamlResponse}
+              formRefDom={formRefDom}
+              formErrors={formErrors}
+              stageExecutionData={stageExecutionData}
+              executionStageList={executionStageList}
+              runModalHeaderTitle={formTitleText}
+              selectedBranch={selectedBranch}
+              onGitBranchChange={onGitBranchChange}
+              refetchPipeline={refetchPipeline}
+              refetchTemplate={getTemplateFromPipeline}
+              remoteFetchError={pipelineError}
+            />
+          </>
+        ) : null}
+        <PipelineInvalidRequestContent
+          onClose={onClose}
+          getTemplateError={
+            isNoEntityFoundError
+              ? (pipelineError as PipelineInvalidRequestContentProps['getTemplateError'])
+              : inputSetsError
+          }
+          code={'ENTITY_NOT_FOUND'}
+          branch={branch}
+          repoName={repoIdentifier}
+        />
+      </>
     )
   } else {
     runPipelineFormContent = (
@@ -815,6 +883,7 @@ function RunPipelineFormBasic({
                     runClicked={runClicked}
                     selectedView={selectedView}
                     executionView={executionView}
+                    connectorRef={connectorRef}
                     pipelineResponse={pipelineResponse}
                     template={inputSetYamlResponse}
                     formRefDom={formRefDom}
@@ -822,6 +891,8 @@ function RunPipelineFormBasic({
                     stageExecutionData={stageExecutionData}
                     executionStageList={executionStageList}
                     runModalHeaderTitle={formTitleText}
+                    selectedBranch={selectedBranch}
+                    onGitBranchChange={onGitBranchChange}
                     refetchPipeline={refetchPipeline}
                     refetchTemplate={getTemplateFromPipeline}
                   />
