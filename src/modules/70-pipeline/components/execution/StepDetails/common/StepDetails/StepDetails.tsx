@@ -73,10 +73,10 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
       tasks = []
       const stepDetailsKeys = Object.keys(step?.stepDetails)
       stepDetailsKeys.forEach(stepDetailsKey => {
-        const stepDelegateInfos = step.stepDetails?.[stepDetailsKey].stepDelegateInfos.filter(
+        const stepDelegateInfos = step.stepDetails?.[stepDetailsKey]?.stepDelegateInfos?.filter(
           (item: Task) => item !== undefined
         )
-        stepDelegateInfos.forEach((stepDelegateInfo: Task) => {
+        stepDelegateInfos?.forEach((stepDelegateInfo: Task) => {
           tasks.push(stepDelegateInfo)
         })
       })
