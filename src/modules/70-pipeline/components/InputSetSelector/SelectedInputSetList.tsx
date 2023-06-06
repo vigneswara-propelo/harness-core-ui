@@ -53,7 +53,7 @@ export function SelectedInputSetList({
     <>
       {value?.map((item, index) => (
         <li
-          key={index + item.label}
+          key={`${item.value as string}-${item.type ?? 'INPUT_SET'}`}
           data-testid={`${index}-${item.value as string}`}
           className={css.selectedInputSetLi}
           draggable={true}

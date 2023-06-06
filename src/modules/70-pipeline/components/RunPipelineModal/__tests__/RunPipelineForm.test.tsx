@@ -623,7 +623,7 @@ describe('RERUN MODE', () => {
         }
       })
     )
-    const { queryByText, queryAllByText } = render(
+    const { queryByText, queryAllByText, findByTestId } = render(
       <TestWrapper>
         <RunPipelineForm
           {...commonProps}
@@ -634,9 +634,9 @@ describe('RERUN MODE', () => {
       </TestWrapper>
     )
 
+    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
-
-    expect(queryByText('pipeline.pipelineInputPanel.selectedExisitingOrProvide')).toBeNull()
+    expect(selectExistingOrProvide).toBeDisabled()
 
     // Expect header and the submit button to show rerun pipeline
     expect(queryAllByText('pipeline.execution.actions.rerunPipeline')).toHaveLength(2)

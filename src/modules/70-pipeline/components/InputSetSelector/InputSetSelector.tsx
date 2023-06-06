@@ -283,7 +283,7 @@ export function InputSetSelector({
         showNewInputSet={showNewInputSet}
         onNewInputSetClick={onNewInputSetClick}
         invalidInputSetReferences={invalidInputSetReferences}
-        loadingMergeInputSets={loadingMergeInputSets}
+        loadingMergeInputSets={!isOverlayInputSet && loadingMergeInputSets}
       />
       {openInputSetsList ? (
         <Layout.Vertical spacing="small" className={css.popoverContainer}>
