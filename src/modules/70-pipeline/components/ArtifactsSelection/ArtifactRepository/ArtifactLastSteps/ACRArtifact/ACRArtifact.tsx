@@ -61,8 +61,10 @@ import type {
   ACRArtifactProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { AcrArtifactDigestField } from './AcrDigestField'
 import css from '../../ArtifactConnector.module.scss'
 
 export function ACRArtifact({
@@ -83,6 +85,7 @@ export function ACRArtifact({
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -448,7 +451,8 @@ export function ACRArtifact({
     merge(artifactObj.spec, {
       subscriptionId: formData?.subscriptionId,
       registry: formData?.registry,
-      repository: formData?.repository
+      repository: formData?.repository,
+      digest: formData?.digest
     })
     handleSubmit(artifactObj)
   }
@@ -461,7 +465,8 @@ export function ACRArtifact({
         connectorId: getConnectorIdValue(modifiedPrevStepData),
         subscriptionId: getValue(formData.subscriptionId),
         registry: getValue(formData.registry),
-        repository: getValue(formData.repository)
+        repository: getValue(formData.repository),
+        digest: getValue(formData.digest)
       })
     }
   }
@@ -526,7 +531,8 @@ export function ACRArtifact({
             connectorId: getConnectorIdValue(modifiedPrevStepData),
             subscriptionId: getValue(formData.subscriptionId),
             registry: getValue(formData.registry),
-            repository: getValue(formData.repository)
+            repository: getValue(formData.repository),
+            digest: getValue(formData.digest)
           })
         }}
         enableReinitialize={!isTemplateContext}
@@ -895,6 +901,16 @@ export function ACRArtifact({
                     )}
                   </div>
                 ) : null}
+                {CD_NG_DOCKER_ARTIFACT_DIGEST && (
+                  <AcrArtifactDigestField
+                    formik={formik}
+                    expressions={expressions}
+                    allowableTypes={allowableTypes}
+                    isReadonly={isReadonly}
+                    connectorRefValue={connectorRef}
+                    isVersionDetailsLoading={acrBuildDetailsLoading}
+                  />
+                )}
               </div>
 
               {!hideHeaderAndNavBtns && (
