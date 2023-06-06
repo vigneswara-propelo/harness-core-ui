@@ -1,19 +1,20 @@
-import { createTriggerAPIV2, getPipelineInputSets } from '../constansts'
+import { inputSetListAPIWithoutSort } from '../../../support/70-pipeline/constants'
+import { createTriggerAPIV2 } from '../constansts'
 
 export const fillPipelineInputTabDataAndSubmitForm = ({ inputSetRefs = [], timeout = '10m', triggerYAML }): void => {
+  if (inputSetRefs.length) {
+    cy.intercept('GET', inputSetListAPIWithoutSort, {
+      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline_InputSets.json'
+    }).as('inputSetListAPIWithoutSort')
+  }
+
   // Move to Pipeline Input Tab
   cy.contains('span', 'Continue').click()
 
-  if (inputSetRefs.length) {
-    cy.intercept('GET', getPipelineInputSets({ pipeline: 'testPipeline_Cypress' }), {
-      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline_InputSets.json'
-    }).as('getPipelineInputSets')
-    cy.wait('@getPipelineInputSets')
-  }
-
   // Pipeline Input Tab
   if (inputSetRefs.length) {
-    cy.contains('span', 'Select Input Set(s)').click()
+    cy.wait('@inputSetListAPIWithoutSort')
+    cy.contains('span', 'Select Input Set(s)').click({ force: true })
     inputSetRefs.forEach(inputSetRef => {
       cy.contains('p', `Id: ${inputSetRef}`).click({ force: true })
     })

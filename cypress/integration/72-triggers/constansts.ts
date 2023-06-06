@@ -44,5 +44,3 @@ export const getAzureArtifactsPackages = ({ connectorId, packageType, feed, proj
   `ng/api/artifacts/azureartifacts/packages?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&project=${project}&packageType=${packageType}&feed=${feed}`
 export const getNexusRepositories = ({ connectorId, repositoryFormat }): string =>
   `ng/api/artifacts/nexus/getRepositories?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&repositoryFormat=${repositoryFormat}`
-export const getPipelineInputSets = ({ pipeline }): string =>
-  `pipeline/api/inputSets?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipeline}`
