@@ -749,9 +749,9 @@ function ManifestListView({
                       {!isEmpty(manifestLocation) && (
                         <span>
                           <Text
-                            lineClamp={1}
                             width={200}
-                            alwaysShowTooltip
+                            tooltipProps={{ isDark: true }}
+                            lineClamp={1}
                             tooltip={
                               <LocationValue
                                 isTooltip
