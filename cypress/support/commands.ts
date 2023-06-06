@@ -170,10 +170,10 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
 })
 
 /**
- * Ensures the page has fully loaded by checking for existence of a className('optional')
+ * Ensures the page has fully loaded by checking for existence of a selector('optional')
  */
-Cypress.Commands.add('visitPageAssertion', (className = activeTabClassName) => {
-  cy.get(className, {
+Cypress.Commands.add('visitPageAssertion', (selector = activeTabClassName) => {
+  cy.get(selector, {
     timeout: 30000
   }).should('be.visible')
   cy.wait(1000)

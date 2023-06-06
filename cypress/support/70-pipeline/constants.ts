@@ -123,6 +123,7 @@ export const executionHistoryRoute = `${addHashInCypressURLBasedOnBrowserRouter(
 export const pipelineStudioRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
 export const newPipelineRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/-1/pipeline-studio/`
 export const inputSetsRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/input-sets`
+export const TriggersRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
 export const environmentRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environments`
 export const servicesRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
 export const pipelinesRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`

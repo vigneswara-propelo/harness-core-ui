@@ -274,6 +274,7 @@ function FormComponent(
             name="package"
             useValue
             multiTypeInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED],
               selectProps: {
                 noResults: (
                   <NoTagResults
