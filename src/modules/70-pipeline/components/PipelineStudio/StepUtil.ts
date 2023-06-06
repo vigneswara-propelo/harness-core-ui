@@ -1125,7 +1125,7 @@ export const validatePipeline = ({
             } else {
               const errorsResponse = validateStage({
                 stage: stageP.stage as StageElementConfig,
-                template: filteredTemplate?.stages?.[index].parallel?.[indexP]?.stage,
+                template: filteredTemplate?.stages?.[index]?.parallel?.[indexP]?.stage,
                 originalStage: originalStage?.stage,
                 resolvedStage: resolvedStage?.stage,
                 getString,
