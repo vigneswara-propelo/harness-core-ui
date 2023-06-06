@@ -53,15 +53,15 @@ function ExecutionMetadataTrigger(): React.ReactElement {
     {} as PipelineStageInfo
   )
   const triggerType = pipelineExecutionSummary?.executionTriggerInfo?.triggerType as ExecutorInfoDTO['triggerType']
-  const triggerIdentifier = pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier
+  const triggeredBy = pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy
+  const triggerIdentifier = triggeredBy?.triggerIdentifier ?? triggeredBy?.identifier
 
-  const triggersWizardPageLinkUrl = routes.toTriggersWizardPage({
+  const triggersWizardPageLinkUrl = routes.toTriggersDetailPage({
     accountId,
     orgIdentifier,
     projectIdentifier,
     pipelineIdentifier,
     triggerIdentifier,
-    triggerType,
     module,
     repoIdentifier,
     branch,
@@ -127,12 +127,8 @@ function ExecutionMetadataTrigger(): React.ReactElement {
           </Link>
         ) : (
           <UserLabel
-            name={
-              pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier ||
-              pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email ||
-              ''
-            }
-            email={pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email}
+            name={triggeredBy?.identifier || triggeredBy?.extraInfo?.email || ''}
+            email={triggeredBy?.extraInfo?.email}
             iconProps={{ size: 16 }}
           />
         )}
