@@ -108,8 +108,8 @@ ID: Id
 org: Org
 askUs: ask us
 variables: Variables
-copyVariableName: Copy variable name
-copyFqn: Copy fully qualified name
+usedWithinStage: Used within its stage
+usedWithinPipeline: Used anywhere within pipeline
 selectType: Select Type
 timeframe: Timeframe
 selectTimeFrame: Select Timeframe

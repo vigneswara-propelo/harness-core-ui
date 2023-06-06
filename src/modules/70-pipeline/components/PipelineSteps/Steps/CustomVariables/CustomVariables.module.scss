@@ -13,7 +13,7 @@
   .header-row {
     display: inline-flex;
     transform: translateY(-44px);
-    margin-left: 82%;
+    margin-left: 86%;
     width: 200px;
     height: 0;
     :global(.bp3-button) {
@@ -56,7 +56,7 @@
     padding-block: var(--spacing-small);
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: repeat(3, minmax(10px, 1fr));
+    grid-template-columns: 1fr 1fr 2fr;
     gap: var(--spacing-small);
     align-items: center;
     border-bottom: solid 1px var(--grey-200);
@@ -312,8 +312,12 @@
   max-width: 80%;
 }
 
-.requiredIconWrapper {
-  :global(.bp3-icon) {
-    align-self: flex-start;
+.variableDescription {
+  :global {
+    textarea {
+      min-height: 38px !important;
+      max-height: 108px !important;
+      resize: vertical;
+    }
   }
 }

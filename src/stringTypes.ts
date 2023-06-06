@@ -219,8 +219,6 @@ export interface StringsMap {
   'common.contentRequired': string
   'common.copied': string
   'common.copy': string
-  'common.copyFqn': string
-  'common.copyVariableName': string
   'common.countryOrRegion': string
   'common.coverage': string
   'common.createFlag': string
@@ -1281,6 +1279,8 @@ export interface StringsMap {
   'common.usage': string
   'common.useSSL': string
   'common.useTemplate': string
+  'common.usedWithinPipeline': string
+  'common.usedWithinStage': string
   'common.userGroup': string
   'common.userGroups': string
   'common.userGroupsWarningMessage': string

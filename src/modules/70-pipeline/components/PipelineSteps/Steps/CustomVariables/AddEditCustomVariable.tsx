@@ -180,6 +180,10 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
               isOptional={true}
               placeholder={getString('common.descriptionPlaceholder')}
               label={getString('description')}
+              className={css.variableDescription}
+              textArea={{
+                growVertically: true
+              }}
             />
             <div className="buttons-container">
               <Button

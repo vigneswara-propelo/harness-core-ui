@@ -25,7 +25,6 @@ declare const styles: {
   readonly inputSetValueRow: string
   readonly nameTypeColumn: string
   readonly requiredCheckboxLabel: string
-  readonly requiredIconWrapper: string
   readonly runtimeInputButton: string
   readonly secretContainer: string
   readonly selectedSearchText: string
@@ -36,6 +35,7 @@ declare const styles: {
   readonly valueColumn: string
   readonly valueRow: string
   readonly valueString: string
+  readonly variableDescription: string
   readonly variableListTable: string
   readonly variableNameCell: string
 }
