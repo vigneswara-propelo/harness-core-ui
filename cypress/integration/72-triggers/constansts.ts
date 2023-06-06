@@ -37,11 +37,11 @@ export const getArtifactsJenkinsJobPaths = ({ connectorId, job }): string =>
     job
   )}/paths?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}`
 export const getAzureArtifactsProjects = ({ connectorId }): string =>
-  `ng/api/artifacts/azureartifacts/projects?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&org=automation-cdc`
+  `ng/api/artifacts/azureartifacts/projects?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}`
 export const getAzureArtifactsFeeds = ({ connectorId, project }): string =>
-  `ng/api/artifacts/azureartifacts/feeds?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&org=automation-cdc&project=${project}`
+  `ng/api/artifacts/azureartifacts/feeds?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&project=${project}`
 export const getAzureArtifactsPackages = ({ connectorId, packageType, feed, project }): string =>
-  `ng/api/artifacts/azureartifacts/packages?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&org=automation-cdc&project=${project}&packageType=${packageType}&feed=${feed}`
+  `ng/api/artifacts/azureartifacts/packages?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&project=${project}&packageType=${packageType}&feed=${feed}`
 export const getNexusRepositories = ({ connectorId, repositoryFormat }): string =>
   `ng/api/artifacts/nexus/getRepositories?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&repositoryFormat=${repositoryFormat}`
 export const getPipelineInputSets = ({ pipeline }): string =>
