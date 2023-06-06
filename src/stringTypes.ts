@@ -570,6 +570,8 @@ export interface StringsMap {
   'common.latest': string
   'common.launchFirstGen': string
   'common.learnMore': string
+  'common.learnMoreAboutECR': string
+  'common.learnMoreAboutGCR': string
   'common.learnMoreDelegate': string
   'common.leaveThisPage': string
   'common.letsGetYouStarted': string

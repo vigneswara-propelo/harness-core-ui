@@ -1529,3 +1529,5 @@ timezone: Timezone
 errorFavorite: Oops! Something went wrong while marking this entity as a favorite.
 errorUnFavorite: Oops! Something went wrong while removing this entity from your favorites.
 previousActionInProgress: Please wait, your previous action is being processed.
+learnMoreAboutGCR: Learn more about GCR with Harness
+learnMoreAboutECR: Learn more about ECR with Harness
