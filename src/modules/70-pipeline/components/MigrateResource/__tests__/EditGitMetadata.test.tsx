@@ -101,12 +101,12 @@ describe('EditGitMetadata tests', () => {
     expect(filePathInput).toHaveValue('./mockFilePath')
     setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'filePath', value: '' })
 
-    const saveButton = getByText('common.saveAndClose')
+    const saveButton = getByText('save')
     act(() => {
       userEvent.click(saveButton)
     })
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
-    await waitFor(() => expect(getAllByText('pipeline.editGitMetadataSuccess')[0]).toBeDefined())
+    await waitFor(() => expect(getAllByText('pipeline.editGitDetailsSuccess')[0]).toBeDefined())
   })
 
   test('Initial rendering for EditGitMetadata for inputSet', async () => {
@@ -131,12 +131,12 @@ describe('EditGitMetadata tests', () => {
     await waitFor(() => expect(getGitConnector).toHaveBeenCalled())
     const connectorSelector = container.querySelector('button[data-testid="cr-field-connectorRef"]')
     expect(connectorSelector).not.toHaveAttribute('disabled')
-    const saveButton = getByText('common.saveAndClose')
+    const saveButton = getByText('save')
     act(() => {
       userEvent.click(saveButton)
     })
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
-    await waitFor(() => expect(getAllByText('pipeline.editGitMetadataSuccess')[0]).toBeDefined())
+    await waitFor(() => expect(getAllByText('pipeline.editGitDetailsSuccess')[0]).toBeDefined())
   })
 
   test('clicking on cancel button should call onCancelClick prop function', () => {
@@ -189,7 +189,7 @@ describe('EditGitMetadata tests', () => {
       </TestWrapper>
     )
 
-    const saveButton = getByText('common.saveAndClose')
+    const saveButton = getByText('save')
     act(() => {
       userEvent.click(saveButton)
     })
@@ -222,7 +222,7 @@ describe('EditGitMetadata tests', () => {
       </TestWrapper>
     )
 
-    const saveButton = getByText('common.saveAndClose')
+    const saveButton = getByText('save')
     act(() => {
       userEvent.click(saveButton)
     })

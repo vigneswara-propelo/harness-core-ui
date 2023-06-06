@@ -4115,10 +4115,10 @@ export interface StringsMap {
   'pipeline.duplicateImportTemplate': string
   'pipeline.duplicateStepIdentifiers': string
   'pipeline.duration': string
-  'pipeline.editGitMetadata': string
-  'pipeline.editGitMetadataSuccess': string
-  'pipeline.editGitMetadataTitle': string
-  'pipeline.editingGitMetadata': string
+  'pipeline.editGitDetails': string
+  'pipeline.editGitDetailsSuccess': string
+  'pipeline.editGitDetailsTitle': string
+  'pipeline.editingGitDetails': string
   'pipeline.emptyExecutionListMsg': string
   'pipeline.enableContainerBasedExecution': string
   'pipeline.enableVerificationHelpText': string

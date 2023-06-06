@@ -45,7 +45,7 @@ export default function useEditGitMetadata(props: UseEditGitMetadataProps): UseE
   }
 
   const getModalTitle = (): string => {
-    return modalTitle ?? getString('pipeline.editingGitMetadata')
+    return modalTitle ?? getString('pipeline.editingGitDetails')
   }
 
   const [showEditGitMetadataModal, hideEditGitMetadataeModal] = useModalHook(() => {

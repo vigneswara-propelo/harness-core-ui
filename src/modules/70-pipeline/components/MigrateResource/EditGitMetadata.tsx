@@ -117,7 +117,7 @@ export default function EditGitMetadata({
   const handleResponse = (response: ResponseMoveConfigResponse | ResponseInputSetMoveConfigResponseDTO): void => {
     if (response.status === 'SUCCESS') {
       setIsLoading(false)
-      showSuccess(getString('pipeline.editGitMetadataSuccess'))
+      showSuccess(getString('pipeline.editGitDetailsSuccess'))
       onSuccess?.()
     } else {
       handleError(response)
@@ -157,7 +157,7 @@ export default function EditGitMetadata({
                 />
 
                 <Container padding={{ top: 'xlarge' }}>
-                  <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('common.saveAndClose')} />
+                  <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('save')} />
                   &nbsp; &nbsp;
                   <Button
                     variation={ButtonVariation.TERTIARY}

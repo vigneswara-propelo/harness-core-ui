@@ -388,7 +388,7 @@ export const MenuCell: CellType = ({ row, column }) => {
       repo: data?.gitDetails?.repoName,
       filePath: data?.gitDetails?.filePath
     },
-    modalTitle: getString('pipeline.editGitMetadataTitle', { entity: getString('common.pipeline') }),
+    modalTitle: getString('pipeline.editGitDetailsTitle', { entity: getString('common.pipeline') }),
     onSuccess: () => column.refetchList?.()
   })
 
@@ -441,7 +441,7 @@ export const MenuCell: CellType = ({ row, column }) => {
           {data?.storeType === StoreType.REMOTE ? (
             <RbacMenuItem
               icon="edit"
-              text={getString('pipeline.editGitMetadata')}
+              text={getString('pipeline.editGitDetails')}
               disabled={!canEdit}
               onClick={() => {
                 showEditGitMetadataModal()

@@ -169,7 +169,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
       filePath: data?.gitDetails?.filePath
     },
     extraQueryParams: { pipelineIdentifier: data.pipelineIdentifier },
-    modalTitle: getString('pipeline.editGitMetadataTitle', { entity: getString('inputSets.inputSetLabel') }),
+    modalTitle: getString('pipeline.editGitDetailsTitle', { entity: getString('inputSets.inputSetLabel') }),
     onSuccess: () => (column as CustomColumn<InputSetLocal>).refetchInputSet?.()
   })
 
@@ -247,7 +247,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
           {data?.storeType === StoreType.REMOTE ? (
             <Menu.Item
               icon="edit"
-              text={getString('pipeline.editGitMetadata')}
+              text={getString('pipeline.editGitDetails')}
               onClick={() => {
                 showEditGitMetadataModal()
               }}
