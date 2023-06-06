@@ -3097,6 +3097,7 @@ export interface StringsMap {
   'connectors.name_labels.Nexus': string
   'connectors.name_labels.OCIHelm': string
   'connectors.name_labels.PDC': string
+  'connectors.name_labels.Rancher': string
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.Spot': string
@@ -3139,6 +3140,11 @@ export interface StringsMap {
   'connectors.prometheus.urlValidation': string
   'connectors.prometheusConnectorDetails': string
   'connectors.prometheusLabel': string
+  'connectors.rancher.delegateOutClusterInfo': string
+  'connectors.rancher.delegateSelector': string
+  'connectors.rancher.rancherUrlLabel': string
+  'connectors.rancher.validation': string
+  'connectors.rancherConnectorDetails': string
   'connectors.readMore': string
   'connectors.relinkToGitProvider': string
   'connectors.reportNameRequired': string
@@ -3198,6 +3204,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.url.gcr': string
   'connectors.testConnectionStep.url.k8s': string
   'connectors.testConnectionStep.url.nexus': string
+  'connectors.testConnectionStep.url.rancher': string
   'connectors.testConnectionStep.url.splunk': string
   'connectors.testConnectionStep.url.spot': string
   'connectors.testConnectionStep.url.tas': string
@@ -3266,6 +3273,7 @@ export interface StringsMap {
   'connectors.title.nexus': string
   'connectors.title.ociHelmConnector': string
   'connectors.title.pdcConnector': string
+  'connectors.title.rancherCluster': string
   'connectors.title.secretManager': string
   'connectors.title.serviceNow': string
   'connectors.title.splunk': string

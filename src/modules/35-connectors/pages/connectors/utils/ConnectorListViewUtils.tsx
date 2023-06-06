@@ -186,6 +186,11 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       )
     case Connectors.TERRAFORM_CLOUD:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.terraformCloudUrl))
+    case Connectors.Rancher:
+      return getConnectorDisplaySummaryLabel(
+        'UrlLabel',
+        linkAsTextRenderer(connector?.spec?.credential?.spec?.rancherUrl)
+      )
     default:
       return ''
   }

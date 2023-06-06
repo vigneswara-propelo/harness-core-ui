@@ -34,6 +34,7 @@ import type {
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
+import type { CategoryInterface, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { setSecretField } from '@secrets/utils/SecretField'
@@ -187,6 +188,10 @@ const buildAuthTypePayload = (formData: FormData) => {
         clientKeyPassphraseRef: formData.clientKeyPassphrase?.referenceString,
         caCertRef: formData.clientKeyCACertificate?.referenceString, // optional
         clientKeyAlgo: formData.clientKeyAlgo
+      }
+    case AuthTypes.BEARER_TOKEN_RANCHER:
+      return {
+        passwordRef: formData.passwordRef.referenceString
       }
     default:
       return {}
@@ -2682,6 +2687,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
+    case Connectors.Rancher:
+      return 'rancher' as IconName
     default:
       return 'cog'
   }
@@ -2769,6 +2776,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Terraform Cloud'
     case Connectors.SignalFX:
       return 'Splunk Observability [SignalFX]'
+    case Connectors.Rancher:
+      return 'Rancher cluster'
     default:
       return ''
   }
@@ -2878,6 +2887,7 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.tas')
     case Connectors.TERRAFORM_CLOUD:
       return getString('connectors.testConnectionStep.validationText.terraform')
+
     default:
       return ''
   }
@@ -2887,6 +2897,8 @@ export const getUrlValueByType = (type: ConnectorInfoDTO['type'], connector: Con
   switch (type) {
     case Connectors.KUBERNETES_CLUSTER:
       return connector.spec.credential.spec?.masterUrl
+    case Connectors.Rancher:
+      return connector.spec.credential.spec?.rancherUrl
     case Connectors.DOCKER:
       return connector.spec.dockerRegistryUrl
     case Connectors.JENKINS:
@@ -3036,4 +3048,69 @@ export const getCompleteConnectorUrl = ({
         : ''
     )
     .concat(repoName)
+}
+
+export const buildRancherPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData?.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData?.identifier,
+    tags: formData?.tags,
+    type: Connectors.Rancher,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      credential: {
+        type: formData?.delegateType,
+        spec: getRancherSpecForDelegateType(formData)
+      }
+    }
+  }
+  return { connector: savedData }
+}
+
+export const getRancherSpecForDelegateType = (formData: FormData) => {
+  if (formData?.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER) {
+    return {
+      rancherUrl: formData?.rancherUrl,
+      auth: {
+        type: formData?.authType,
+        spec: buildAuthTypePayload(formData)
+      }
+    }
+  }
+  return null
+}
+
+export const filterRancherConnector = (categories: CategoryInterface[]): CategoryInterface[] => {
+  return categories.map((category: CategoryInterface) => {
+    if (category.categoryLabel === 'Cloud Providers') {
+      return {
+        ...category,
+        items: category.items?.filter((item: ItemInterface) => {
+          return item.value !== Connectors.Rancher
+        })
+      }
+    }
+    return category
+  })
+}
+
+export const setupRancherFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+  const formData = {
+    delegateType: connectorInfo.spec.credential.type,
+    delegateName: connectorInfo.spec.credential?.spec?.delegateName || '',
+    rancherUrl: connectorInfo.spec.credential?.spec?.rancherUrl || '',
+    authType: connectorInfo.spec.credential?.spec?.auth?.type || '',
+    skipDefaultValidation: false,
+    passwordRef: await setSecretField(connectorInfo?.spec?.credential.spec?.auth.spec.passwordRef, scopeQueryParams)
+  }
+
+  return formData
 }
