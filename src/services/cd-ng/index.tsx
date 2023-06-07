@@ -6079,6 +6079,7 @@ export interface FailureStrategyActionConfig {
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
     | 'MarkAsFailure'
+    | 'RetryStepGroup'
 }
 
 export interface FailureStrategyConfig {
@@ -16202,6 +16203,11 @@ export interface RetryFailureSpecConfig {
   onRetryFailure: OnRetryFailureConfig
   retryCount: number
   retryIntervals: string[]
+}
+
+export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
+  spec: RetryFailureSpecConfig
+  type: 'RetryStepGroup'
 }
 
 export interface Role {

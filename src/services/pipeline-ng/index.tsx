@@ -1142,7 +1142,7 @@ export interface ContainerInfraYamlSpec {
   }
   os?: 'Linux' | 'MacOS' | 'Windows'
   priorityClassName?: string
-  resources: ContainerResource
+  resources?: ContainerResource
   runAsUser?: number
   serviceAccountName?: string
   tolerations?: Toleration[]
@@ -2810,6 +2810,7 @@ export interface FailureStrategyActionConfig {
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
     | 'MarkAsFailure'
+    | 'RetryStepGroup'
 }
 
 export interface FailureStrategyConfig {
@@ -5962,6 +5963,11 @@ export interface RetryLatestExecutionResponseDto {
   latestExecutionId?: string
 }
 
+export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
+  spec: RetryFailureSpecConfig
+  type: 'RetryStepGroup'
+}
+
 export interface RetryStageInfo {
   createdAt?: number
   identifier?: string
@@ -6428,6 +6434,7 @@ export interface StepData {
     | 'MULTIPLE_USER_GROUPS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
+    | 'MULTIPLE_CONNECTORS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -18167,6 +18174,7 @@ export interface GetSchemaYamlQueryParams {
     | 'Semgrep'
     | 'SscaEnforcement'
     | 'IdpConnector'
+    | 'CdSscaEnforcement'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18482,6 +18490,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Semgrep'
     | 'SscaEnforcement'
     | 'IdpConnector'
+    | 'CdSscaEnforcement'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
