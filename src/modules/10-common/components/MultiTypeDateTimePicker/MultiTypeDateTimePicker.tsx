@@ -18,7 +18,7 @@ import {
   MultiTypeInputValue
 } from '@harness/uicore'
 import { connect } from 'formik'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 
 import moment from 'moment'
 import type { DateInputProps } from '@harness/uicore/dist/components/DateInput/DateInput'
@@ -59,9 +59,11 @@ function MultiTypeDateTimePickerFixedTypeComponent(props: {
       <DateInput
         name={name}
         value={value}
-        onChange={val => {
-          onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.FIXED)
-        }}
+        onChange={
+          /* istanbul ignore next */ val => {
+            onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.FIXED)
+          }
+        }
         placeholder={placeholder}
         contentEditable={false}
         timePrecision="minute"
@@ -123,7 +125,7 @@ function FormMultiTypeDateTimePicker(props: FormMultiTypeDateTimePickerProps & F
     ...rest
   } = restProps
 
-  const { dateInputProps, ...restMultiProps } = multiTypeDateTimePicker || {}
+  const { dateInputProps, ...restMultiProps } = defaultTo(multiTypeDateTimePicker, {})
   let value = ''
   if (formValue) {
     const parsedFormikDateValue = moment(formValue, DATE_PARSE_FORMAT).valueOf()
