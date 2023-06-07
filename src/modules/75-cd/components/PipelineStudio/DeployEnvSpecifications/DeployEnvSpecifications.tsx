@@ -38,7 +38,10 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
 
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
-import { getAllFixedServices } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
+import {
+  DeployServiceEntityData,
+  getAllFixedServices
+} from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import type { DeployEnvironmentEntityConfig } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 
 import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
@@ -151,6 +154,15 @@ export default function DeployEnvSpecifications(
     [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes]
   )
 
+  const getStageSpec = (): DeployServiceEntityData => {
+    const propagatedStageId = stage?.stage?.spec?.service?.useFromStage?.stage
+    if (propagatedStageId) {
+      const { stage: propagatedStage } = getStageFromPipeline<DeploymentStageElementConfig>(propagatedStageId || '')
+      if (propagatedStage) return defaultTo(propagatedStage?.stage?.spec, {})
+    }
+    return defaultTo(stage?.stage?.spec, {})
+  }
+
   return (
     <div className={stageCss.deployStage} key="1">
       {!CDS_PIPELINE_STUDIO_UPGRADES && (
@@ -171,7 +183,7 @@ export default function DeployEnvSpecifications(
           factory={factory}
           stepViewType={StepViewType.Edit}
           customStepProps={{
-            serviceIdentifiers: getAllFixedServices(defaultTo(stage?.stage?.spec, {})),
+            serviceIdentifiers: getAllFixedServices(getStageSpec()),
             stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
             deploymentType: stage?.stage?.spec?.deploymentType,
             gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
