@@ -16,8 +16,12 @@ import {
   ButtonVariation,
   PageError,
   shouldShowError,
-  SortMethod
+  SortMethod,
+  Checkbox,
+  Icon,
+  CheckboxVariant
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
@@ -117,7 +121,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const queryParamOptions = useConnectorsQueryParamOptions()
-  const { page, size, searchTerm } = useQueryParams(queryParamOptions)
+  const { page, size, searchTerm, favorite } = useQueryParams(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<ConnectorsQueryParams>()
   const [appliedFilter, setAppliedFilter] = useState<FilterDTO | null>()
   const { showError } = useToaster()
@@ -134,7 +138,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, PL_FAVORITES, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
@@ -153,7 +157,8 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   // params are passed when calling fetchConnectors
   const { mutate: fetchConnectors } = useGetConnectorListV2({
     queryParams: {
-      sortOrders: [sortPreference]
+      sortOrders: [sortPreference],
+      ...(PL_FAVORITES ? { isFavorite: favorite } : undefined)
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
@@ -614,6 +619,17 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
                 data-test="createViaYamlButton"
                 variation={ButtonVariation.SECONDARY}
               />
+              {PL_FAVORITES && (
+                <Checkbox
+                  variant={CheckboxVariant.BOXED}
+                  checked={favorite}
+                  labelElement={<Icon name="star" color={Color.YELLOW_900} size={14} />}
+                  onChange={e => {
+                    updateQueryParams({ favorite: e.currentTarget.checked })
+                  }}
+                />
+              )}
+
               {isGitSyncEnabled && (
                 <GitSyncStoreProvider>
                   <GitFilters

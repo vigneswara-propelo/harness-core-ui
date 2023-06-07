@@ -21,7 +21,11 @@ deleteFavoriteMock.mockImplementation(() => {
 describe('test favorite star', () => {
   test('simple render', () => {
     const { container } = render(
-      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
+      <TestWrapper
+        path={routes.toConnectors({ accountId: testAccountId })}
+        pathParams={{ accountId: testAccountId }}
+        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
+      >
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" />
       </TestWrapper>
     )
@@ -30,7 +34,11 @@ describe('test favorite star', () => {
 
   test('click on empty star', async () => {
     const { container } = render(
-      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
+      <TestWrapper
+        path={routes.toConnectors({ accountId: testAccountId })}
+        pathParams={{ accountId: testAccountId }}
+        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
+      >
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" />
       </TestWrapper>
     )
@@ -48,7 +56,11 @@ describe('test favorite star', () => {
     })
 
     const { container } = render(
-      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
+      <TestWrapper
+        path={routes.toConnectors({ accountId: testAccountId })}
+        pathParams={{ accountId: testAccountId }}
+        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
+      >
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" />
       </TestWrapper>
     )
@@ -66,7 +78,11 @@ describe('test favorite star', () => {
     })
 
     const { container } = render(
-      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
+      <TestWrapper
+        path={routes.toConnectors({ accountId: testAccountId })}
+        pathParams={{ accountId: testAccountId }}
+        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
+      >
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" isFavorite />
       </TestWrapper>
     )
@@ -79,7 +95,11 @@ describe('test favorite star', () => {
 
   test('click on filled star', () => {
     const { container } = render(
-      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
+      <TestWrapper
+        path={routes.toConnectors({ accountId: testAccountId })}
+        pathParams={{ accountId: testAccountId }}
+        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
+      >
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" isFavorite />
       </TestWrapper>
     )
