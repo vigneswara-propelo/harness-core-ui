@@ -180,7 +180,6 @@ export enum PermissionIdentifier {
   DELETE_STO_TICKET = 'sto_ticket_delete',
 
   // Default Settings
-  VIEW_CORE_SETTING = 'core_setting_view',
   EDIT_CORE_SETTING = 'core_setting_edit',
 
   // CCM Permissions
