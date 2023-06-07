@@ -1,0 +1,11 @@
+---
+kind: "System"
+spec:
+  owner: "Unknown"
+  domain: "SRM"
+apiVersion: "backstage.io/v1alpha1"
+metadata:
+  name: "SRM_Sanity"
+  description: ""
+  tags: []
+

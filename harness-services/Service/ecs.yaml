@@ -1,0 +1,15 @@
+---
+kind: "Component"
+spec:
+  type: "Service"
+  lifecycle: "Unknown"
+  owner: "Unknown"
+  system: "pragyesh_project"
+apiVersion: "backstage.io/v1alpha1"
+metadata:
+  name: "ecs"
+  tags: []
+  annotations:
+    harness.io/cd-serviceId: "ecs"
+    harness.io/project-url: "https://app.harness.io/ng/account/wFHXHD0RRQWoO8tIZT5YVw/home/orgs/default/projects/pragyesh_project/details"
+

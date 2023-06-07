@@ -1,0 +1,11 @@
+---
+kind: "System"
+spec:
+  owner: "Unknown"
+  domain: "SALES"
+apiVersion: "backstage.io/v1alpha1"
+metadata:
+  name: "povtrackersales209522"
+  description: ""
+  tags: []
+

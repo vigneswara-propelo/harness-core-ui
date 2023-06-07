@@ -1,0 +1,15 @@
+---
+kind: "Component"
+spec:
+  type: "Service"
+  lifecycle: "Unknown"
+  owner: "Unknown"
+  system: "povtrackersales209522"
+apiVersion: "backstage.io/v1alpha1"
+metadata:
+  name: "django"
+  tags: []
+  annotations:
+    harness.io/cd-serviceId: "django"
+    harness.io/project-url: "https://app.harness.io/ng/account/wFHXHD0RRQWoO8tIZT5YVw/home/orgs/SALES/projects/povtrackersales209522/details"
+
