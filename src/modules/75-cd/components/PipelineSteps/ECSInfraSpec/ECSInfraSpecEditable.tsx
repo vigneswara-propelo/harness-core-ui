@@ -241,7 +241,7 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                       allowCreatingNewItems: true
                     },
                     onChange: selectedRegion => {
-                      if (formik.values.region !== (selectedRegion as SelectOption).value) {
+                      if (formik.values.region !== (selectedRegion as SelectOption)?.value) {
                         resetFieldValue(formik, 'cluster')
                       }
                     }
