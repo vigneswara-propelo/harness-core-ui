@@ -171,7 +171,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
     [updateStage]
   )
 
-  const { NG_CDS_NATIVE_EKS_SUPPORT, NG_SVC_ENV_REDESIGN: isSvcEnvEnabled } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN: isSvcEnvEnabled } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { accountId } = useParams<{
@@ -187,7 +187,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
   )
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled, NG_CDS_NATIVE_EKS_SUPPORT)
+    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled)
   )
 
   useEffect(() => {
@@ -261,12 +261,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(
-      newDeploymentType,
-      getString,
-      !!isSvcEnvEnabled,
-      NG_CDS_NATIVE_EKS_SUPPORT
-    )
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled)
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -280,7 +275,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled, NG_CDS_NATIVE_EKS_SUPPORT))
+    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)

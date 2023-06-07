@@ -300,8 +300,7 @@ export interface InfrastructureGroup {
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
   getString: UseStringsReturn['getString'],
-  isSvcEnvEntityEnabled: boolean,
-  NG_CDS_NATIVE_EKS_SUPPORT?: boolean
+  isSvcEnvEntityEnabled: boolean
 ): InfrastructureGroup[] => {
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
@@ -437,11 +436,7 @@ export const getInfraGroups = (
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.viaCloudProvider'),
       items: getInfraGroupItems(
-        [
-          InfraDeploymentType.KubernetesGcp,
-          InfraDeploymentType.KubernetesAzure,
-          ...(NG_CDS_NATIVE_EKS_SUPPORT ? [InfraDeploymentType.KubernetesAws] : [])
-        ],
+        [InfraDeploymentType.KubernetesGcp, InfraDeploymentType.KubernetesAzure, InfraDeploymentType.KubernetesAws],
         getString
       )
     }
