@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { ButtonVariation, Container, FormInput, RUNTIME_INPUT_VALUE, useToaster } from '@harness/uicore'
+import { ButtonVariation, Container, FormInput, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -31,11 +31,13 @@ import {
   resetFormikIfNeededForDefaultMonitoredService,
   resetFormikWhenNoChange
 } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
-import { useGetCdDeployStageMetadata } from 'services/cd-ng'
-import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { MonitoredServiceProps } from './MonitoredService.types'
-import { getNewSpecs, isAnExpression } from './MonitoredService.utils'
+import {
+  getEnvironmentIdentifierFromStage,
+  getNewSpecs,
+  getServiceIdentifierFromStage,
+  isAnExpression
+} from './MonitoredService.utils'
 import { MONITORED_SERVICE_EXPRESSION } from './MonitoredService.constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './MonitoredService.module.scss'
@@ -50,8 +52,6 @@ export default function MonitoredService({
     name: ''
   })
   const [healthSourcesList, setHealthSourcesList] = useState<RowData[]>([])
-  const [serviceIdentifier, setServiceIdentifier] = useState<string>('')
-  const [environmentIdentifier, setEnvIdentifier] = useState<string>('')
   const { getString } = useStrings()
   const {
     state: {
@@ -60,10 +60,17 @@ export default function MonitoredService({
     },
     getStageFromPipeline
   } = usePipelineContext()
-  const { showError } = useToaster()
   const selectedStage = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId as string)?.stage
 
-  const monitoredServiceQueryParams = useMemo(
+  const environmentIdentifier = useMemo(() => {
+    return getEnvironmentIdentifierFromStage(selectedStage)
+  }, [selectedStage])
+
+  const serviceIdentifier = useMemo(() => {
+    return getServiceIdentifierFromStage(selectedStage, pipeline)
+  }, [pipeline, selectedStage])
+
+  const createServiceQueryParams = useMemo(
     () => ({
       accountId,
       orgIdentifier,
@@ -74,55 +81,24 @@ export default function MonitoredService({
     [accountId, projectIdentifier, orgIdentifier, environmentIdentifier, serviceIdentifier]
   )
 
-  const { mutate: getDeploymentStageMeta, loading: stageMetaLoading } = useGetCdDeployStageMetadata({})
-
-  const {
-    data,
-    loading,
-    error,
-    refetch: fetchMonitoredService
-  } = useGetMonitoredServiceFromServiceAndEnvironment({
-    queryParams: monitoredServiceQueryParams,
-    lazy: true
-  })
-  const monitoredServiceData = data?.data?.monitoredService
-
   const {
     mutate: createDefaultMonitoredService,
     loading: createMonitoredServiceLoading,
     error: errorCreatingMonitoredService
   } = useCreateDefaultMonitoredService({
-    queryParams: monitoredServiceQueryParams
+    queryParams: createServiceQueryParams
   })
 
-  useEffect(() => {
-    async function getStageServiceAndEnv(): Promise<void> {
-      if (pipeline && selectedStage) {
-        try {
-          const stageMeta = await getDeploymentStageMeta({
-            pipelineYaml: yamlStringify({ pipeline }),
-            stageIdentifier: selectedStageId as string
-          })
-          const { serviceEnvRefList = [] } = stageMeta?.data || {}
-          if (serviceEnvRefList.length === 1) {
-            setServiceIdentifier(serviceEnvRefList[0]?.serviceRef as string)
-            setEnvIdentifier(serviceEnvRefList[0]?.environmentRef as string)
-          }
-        } catch (errorInfo) {
-          showError(getErrorMessage(errorInfo))
-        }
-      }
+  const { data, loading, error } = useGetMonitoredServiceFromServiceAndEnvironment({
+    queryParams: {
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      environmentIdentifier,
+      serviceIdentifier
     }
-    getStageServiceAndEnv()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pipeline, selectedStage, selectedStageId])
-
-  useEffect(() => {
-    if (serviceIdentifier && environmentIdentifier) {
-      fetchMonitoredService()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serviceIdentifier, environmentIdentifier])
+  })
+  const monitoredServiceData = data?.data?.monitoredService
 
   useEffect(() => {
     let newSpecs = { ...formValues.spec }
@@ -175,13 +151,7 @@ export default function MonitoredService({
     [formValues.spec, monitoredServiceData?.identifier]
   )
 
-  if (stageMetaLoading) {
-    return (
-      <Card>
-        <>{getString('loading')}</>
-      </Card>
-    )
-  } else if (loading) {
+  if (loading) {
     return (
       <Card>
         <>{getString('connectors.cdng.monitoredService.fetchingMonitoredService')}</>
