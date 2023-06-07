@@ -21,30 +21,30 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import {
   getInputSetViewValidateFieldsConfig,
   transformValuesFieldsConfig
-} from '../SscaOrchestrationStep/SscaOrchestrationStepFunctionConfigs'
-import { SscaOrchestrationStepEditWithRef } from '../SscaOrchestrationStep/SscaOrchestrationStepEdit'
-import type { SscaOrchestrationStepData } from '../SscaOrchestrationStep/SscaOrchestrationStep'
-import { commonDefaultOrchestrationSpecValues } from '../utils'
-import SscaOrchestrationStepInputSet from '../SscaOrchestrationStep/SscaOrchestrationStepInputSet'
+} from '../SscaEnforcementStep/SscaEnforcementStepFunctionConfigs'
+import { SscaEnforcementStepEditWithRef } from '../SscaEnforcementStep/SscaEnforcementStepEdit'
+import type { SscaEnforcementStepData } from '../SscaEnforcementStep/SscaEnforcementStep'
+import { commonDefaultEnforcementSpecValues } from '../utils'
+import SscaEnforcementStepInputSet from '../SscaEnforcementStep/SscaEnforcementStepInputSet'
 
-export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepData> {
+export class CdSscaEnforcementStep extends PipelineStep<SscaEnforcementStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this.invocationMap = new Map()
   }
 
-  protected type = StepType.CdSscaOrchestration
-  protected stepName = 'SSCA Orchestration'
-  protected stepIcon: IconName = 'ssca-orchestrate'
+  protected type = StepType.CdSscaEnforcement
+  protected stepName = 'Ssca Enforcement'
+  protected stepIcon: IconName = 'ssca-enforce'
   protected stepIconColor = Color.GREY_600
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SscaOrchestration'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SscaEnforcement'
   protected stepPaletteVisible = false
-  protected defaultValues: SscaOrchestrationStepData = {
-    type: StepType.SscaOrchestration,
+  protected defaultValues: SscaEnforcementStepData = {
+    type: StepType.CdSscaEnforcement,
     identifier: '',
     spec: {
-      ...commonDefaultOrchestrationSpecValues,
+      ...commonDefaultEnforcementSpecValues,
       infrastructure: {
         type: 'KubernetesDirect',
         spec: {
@@ -62,8 +62,8 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
   }
 
   /* istanbul ignore next */
-  processFormData<T>(data: T): SscaOrchestrationStepData {
-    return getFormValuesInCorrectFormat<T, SscaOrchestrationStepData>(data, transformValuesFieldsConfig(this?.type))
+  processFormData<T>(data: T): SscaEnforcementStepData {
+    return getFormValuesInCorrectFormat<T, SscaEnforcementStepData>(data, transformValuesFieldsConfig(this?.type))
   }
 
   validateInputSet({
@@ -71,7 +71,7 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SscaOrchestrationStepData>): FormikErrors<SscaOrchestrationStepData> {
+  }: ValidateInputSetProps<SscaEnforcementStepData>): FormikErrors<SscaEnforcementStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
       return validateInputSet(
@@ -83,10 +83,11 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
       )
     }
 
+    /* istanbul ignore next */
     return {}
   }
 
-  renderStep(props: StepProps<SscaOrchestrationStepData>): JSX.Element {
+  renderStep(props: StepProps<SscaEnforcementStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -102,7 +103,7 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <SscaOrchestrationStepInputSet
+        <SscaEnforcementStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
@@ -125,11 +126,11 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
     }
 
     return (
-      <SscaOrchestrationStepEditWithRef
+      <SscaEnforcementStepEditWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}
-        stepViewType={stepViewType || StepViewType.Edit}
+        stepViewType={defaultTo(stepViewType, StepViewType.Edit)}
         onUpdate={onUpdate}
         readonly={readonly}
         isNewStep={isNewStep}

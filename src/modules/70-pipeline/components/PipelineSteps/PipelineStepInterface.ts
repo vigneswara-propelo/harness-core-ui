@@ -197,6 +197,7 @@ export enum StepType {
   SscaOrchestration = 'SscaOrchestration',
   CdSscaOrchestration = 'CdSscaOrchestration',
   SscaEnforcement = 'SscaEnforcement',
+  CdSscaEnforcement = 'CdSscaEnforcement',
   CustomIngest = 'CustomIngest',
   AWSSecurityHub = 'AWSSecurityHub',
   AWSECR = 'AWSECR',
