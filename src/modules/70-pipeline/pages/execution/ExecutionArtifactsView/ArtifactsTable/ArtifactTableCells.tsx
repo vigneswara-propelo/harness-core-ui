@@ -72,6 +72,7 @@ export const ViolationsCell: CellType = ({ row, column }) => {
   const totalViolations = defaultTo(data?.allowListViolationCount, 0) + defaultTo(data?.denyListViolationCount, 0)
   return data?.type === 'Sbom' && totalViolations > 0 ? (
     <Button
+      className={css.violations}
       variation={ButtonVariation.LINK}
       text={totalViolations}
       size={ButtonSize.SMALL}
@@ -79,7 +80,7 @@ export const ViolationsCell: CellType = ({ row, column }) => {
     />
   ) : (
     <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
-      {data?.type === 'Sbom' ? 0 : getString('na')}
+      {data?.type === 'Sbom' && data.node?.stepType === 'SscaEnforcement' ? 0 : getString('na')}
     </Text>
   )
 }

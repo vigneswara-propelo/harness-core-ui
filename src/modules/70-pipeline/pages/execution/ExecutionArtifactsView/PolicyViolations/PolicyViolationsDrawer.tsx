@@ -47,10 +47,10 @@ export function PolicyViolationsDrawer({
   return (
     <Drawer
       onClose={() => showEnforcementViolations()}
-      usePortal={true}
-      autoFocus={true}
-      canEscapeKeyClose={true}
-      canOutsideClickClose={true}
+      usePortal
+      autoFocus
+      canEscapeKeyClose
+      canOutsideClickClose
       enforceFocus={false}
       hasBackdrop={true}
       size="calc(100vw - 272px)"

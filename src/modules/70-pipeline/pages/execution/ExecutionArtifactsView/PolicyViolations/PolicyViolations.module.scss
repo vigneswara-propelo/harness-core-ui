@@ -11,7 +11,7 @@
 
 .table {
   padding: var(--spacing-large);
-
+  overflow-y: auto;
   [role='cell'],
   [role='columnheader'] {
     width: auto !important;
