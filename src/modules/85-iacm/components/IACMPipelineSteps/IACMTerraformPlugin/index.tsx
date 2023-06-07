@@ -33,7 +33,7 @@ export class IACMTerraformPluginStep extends PipelineStep<IACMTerraformPluginSte
   }
 
   protected type = StepType.IACMTerraformPlugin
-  protected stepIcon: IconName = 'iacm'
+  protected stepIcon: IconName = 'iacm-terraform-step'
   protected stepName = 'IACM Terraform Plugin'
   protected stepDescription: keyof StringsMap = 'iacm.pipelineSteps.description'
   protected stepIconSize = 32
