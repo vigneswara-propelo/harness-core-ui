@@ -158,7 +158,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
             ) : (
               <NameTypeColumn name={`${variableNamePrefix}${variable.name}`} type={variable.type as string} />
             )}
-            <Text color={Color.GREY_500} lineClamp={3} font={{ variation: FontVariation.BODY }}>
+            <Text color={Color.GREY_500} font={{ variation: FontVariation.BODY }}>
               {isEmpty(description) ? '-' : description}
             </Text>
             <div className={css.inputSetValueRow}>
