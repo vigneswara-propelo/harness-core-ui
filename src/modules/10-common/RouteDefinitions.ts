@@ -2180,6 +2180,7 @@ const routes = {
   toLayoutConfig: withAccountId(() => '/idp-admin/layout'),
   toIDPAccessControl: withAccountId(() => '/idp-admin/access-control'),
   toConnectorsPage: withAccountId(() => '/idp-admin/connectors'),
+  toIDPOAuthConfig: withAccountId(() => '/idp-admin/oauth'),
 
   // Error Tracking
   toCET: withAccountId(() => '/cet'),

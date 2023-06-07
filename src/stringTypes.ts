@@ -8491,6 +8491,7 @@ export interface StringsMap {
   'ci.welcome': string
   'idp.adminHome': string
   'idp.layout': string
+  'idp.oAuthConfig': string
   'ssca.allowDenyList': string
   'ssca.enforcementStep.attestedImage': string
   'ssca.enforcementStep.policyConfiguration': string
