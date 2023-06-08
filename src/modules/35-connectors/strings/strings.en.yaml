@@ -153,7 +153,7 @@ name_labels:
   Terraform: 'Terraform Cloud Connector Name'
   Rancher: 'Rancher Connector Name'
 testConnectionStep:
-  errorDetails: Click to view error details
+  errorDetails: '{{$.common.viewErrorDetails}}'
   noDelegate: Unable to get Delegate information
   executingOn: 'Executed on : '
   verificationSuccessful: Verification successful

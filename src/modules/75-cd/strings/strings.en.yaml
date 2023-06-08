@@ -807,7 +807,7 @@ getStartedWithCD:
     missing: Missing
     progressing: Progressing
     suspended: Suspended
-    unknown: Unknown
+    unknown: '{{ $.common.unknown }}'
   checkAgentStatus: Checking if the agent has been installed. This process may take upto 2-5 minutes to complete
   agentInstalled: GitOps agent installed
   repoServerInstalled: Repo server installed

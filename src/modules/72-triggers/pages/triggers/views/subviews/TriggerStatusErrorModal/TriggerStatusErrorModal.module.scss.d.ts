@@ -7,16 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly actionButton: string
-  readonly activityChart: string
-  readonly activityStatement: string
-  readonly disabledOption: string
-  readonly table: string
-  readonly tags: string
-  readonly textCentered: string
-  readonly tooltip: string
-  readonly tooltipWrapper: string
-  readonly triggerNameStyle: string
-  readonly webhookUrl: string
+  readonly errorMsg: string
+  readonly modal: string
 }
 export default styles

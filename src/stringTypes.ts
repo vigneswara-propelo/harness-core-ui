@@ -1271,6 +1271,7 @@ export interface StringsMap {
   'common.true': string
   'common.tryAgain': string
   'common.types': string
+  'common.unknown': string
   'common.unlimited': string
   'common.unsavedChanges': string
   'common.unsavedChangesLong': string
@@ -1337,6 +1338,7 @@ export interface StringsMap {
   'common.viewAll': string
   'common.viewAndExecutePermissions': string
   'common.viewContent': string
+  'common.viewErrorDetails': string
   'common.viewLatest': string
   'common.viewReferences': string
   'common.viewText': string

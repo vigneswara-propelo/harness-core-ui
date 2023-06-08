@@ -50,15 +50,11 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useQueryParams } from '@common/hooks'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import {
-  getTriggerIcon,
-  GitSourceProviders,
-  getEnabledStatusTriggerValues,
-  errorStatusList
-} from '../utils/TriggersListUtils'
+import { getTriggerIcon, GitSourceProviders, getEnabledStatusTriggerValues } from '../utils/TriggersListUtils'
 import { TriggerTypes, clearNullUndefined, ResponseStatus } from '../utils/TriggersWizardPageUtils'
-
+import TriggerStatusCell from './subviews/TriggerStatusCell'
 import css from './TriggersListSection.module.scss'
+
 export interface GoToEditWizardInterface {
   triggerIdentifier: string
   // only used for url not showing undefined
@@ -262,53 +258,9 @@ const RenderColumnTrigger: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
   )
 }
 
-const RenderColumnStatus: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
-  row,
-  column
-}: {
-  row: RenderColumnRow
-  column: { getString: UseStringsReturn['getString'] }
-}) => {
-  const data = row.original
-  const { validationStatus, pollingSubscriptionStatus, webhookAutoRegistrationStatus } = data?.triggerStatus || {}
-  let statusMessage: string | undefined = ''
-  let isWebhookAutoRegistrationStatus = false
-
-  if (errorStatusList.includes(validationStatus?.statusResult || '')) {
-    statusMessage = validationStatus?.detailedMessage
-  } else if (errorStatusList.includes(pollingSubscriptionStatus?.statusResult || '')) {
-    statusMessage = pollingSubscriptionStatus?.detailedMessage
-  } else if (errorStatusList.includes(webhookAutoRegistrationStatus?.registrationResult || '')) {
-    statusMessage = webhookAutoRegistrationStatus?.detailedMessage
-    isWebhookAutoRegistrationStatus = true
-  }
-
-  return (
-    <Layout.Horizontal spacing="small" data-testid={data.identifier}>
-      {statusMessage && (
-        <Text
-          inline
-          icon="warning-sign"
-          iconProps={{
-            size: 12,
-            color: Color.RED_500
-          }}
-          tooltip={
-            <Layout.Vertical font={{ size: 'small' }} spacing="small" padding="small">
-              <Text font={{ size: 'small' }} color={Color.WHITE}>
-                {statusMessage}
-              </Text>
-            </Layout.Vertical>
-          }
-          tooltipProps={{ isDark: true, position: 'bottom', popoverClassName: css.tooltip }}
-        >
-          {isWebhookAutoRegistrationStatus
-            ? column.getString('triggers.error.webhookRegistrationFailed')
-            : column.getString('failed').toLowerCase()}
-        </Text>
-      )}
-    </Layout.Horizontal>
-  )
+const RenderColumnStatus: Renderer<CellProps<NGTriggerDetailsResponse>> = ({ row }) => {
+  const { triggerStatus } = row.original
+  return triggerStatus ? <TriggerStatusCell triggerStatus={triggerStatus} /> : null
 }
 
 const RenderColumnActivity: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
