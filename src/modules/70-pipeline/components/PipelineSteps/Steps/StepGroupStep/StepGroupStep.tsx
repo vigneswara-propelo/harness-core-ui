@@ -11,23 +11,12 @@ import type { FormikErrors } from 'formik'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
 import type { K8sDirectInfra, StepGroupElementConfig } from 'services/cd-ng'
-import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { InputSetData, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepGroupStepEditRef } from './StepGroupStepEdit'
 import { StepGroupStepInputSetMode } from './StepGroupStepInputSetMode'
 import { getModifiedFormikValues, K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues } from './StepGroupUtil'
-import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
-
-interface StepGroupStepVariableProps {
-  initialValues: StepGroupElementConfig
-  stageIdentifier: string
-  onUpdate?(data: StepGroupElementConfig): void
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: StepGroupElementConfig
-}
 
 export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
   protected type = StepType.StepGroup
@@ -89,33 +78,14 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
   }
 
   renderStep(props: StepProps<StepGroupElementConfig>): JSX.Element {
-    const {
-      initialValues,
-      onUpdate,
-      stepViewType,
-      formikRef,
-      isNewStep,
-      readonly,
-      allowableTypes,
-      inputSetData,
-      customStepProps
-    } = props
+    const { initialValues, onUpdate, stepViewType, formikRef, isNewStep, readonly, allowableTypes, inputSetData } =
+      props
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <StepGroupStepInputSetMode
           allowableTypes={allowableTypes}
           inputSetData={inputSetData as InputSetData<K8sDirectInfraStepGroupElementConfig>}
-        />
-      )
-    } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as StepGroupStepVariableProps
-      return (
-        <VariablesListTable
-          className={pipelineVariableCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
-          metadataMap={metadataMap}
         />
       )
     }

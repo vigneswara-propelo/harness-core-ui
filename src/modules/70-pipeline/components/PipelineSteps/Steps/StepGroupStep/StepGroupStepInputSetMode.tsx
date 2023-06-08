@@ -418,7 +418,7 @@ function StepGroupStepInputSet(props: StepGroupStepInputSetProps): React.ReactEl
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
             name={`${prefix}stepGroupInfra.spec.harnessImageConnectorRef`}
-            label={getString('connectors.title.harnessImageConnectorRef')}
+            label={`${getString('connectors.title.harnessImageConnectorRef')} ${getString('common.optionalLabel')}`}
             placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
