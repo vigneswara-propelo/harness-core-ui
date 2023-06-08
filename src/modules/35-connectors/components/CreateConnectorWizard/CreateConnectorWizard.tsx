@@ -115,8 +115,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, CDS_TAS_NG, CDS_TERRAFORM_CLOUD, SRM_SPLUNK_SIGNALFX, CDS_RANCHER_SUPPORT_NG } =
-    useFeatureFlags()
+  const { CVNG_ENABLED, CDS_TAS_NG, SRM_SPLUNK_SIGNALFX, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -219,7 +218,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.TAS:
       return CDS_TAS_NG ? <TASConnector {...commonProps} /> : null
     case Connectors.TERRAFORM_CLOUD:
-      return CDS_TERRAFORM_CLOUD ? <TerraformCloudConnector {...commonProps} /> : null
+      return <TerraformCloudConnector {...commonProps} />
     case Connectors.Rancher:
       return CDS_RANCHER_SUPPORT_NG ? <CreateRancherConnector {...commonProps} /> : null
 

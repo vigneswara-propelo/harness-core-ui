@@ -31,7 +31,6 @@ export const useGetConnectorsListHook = (
 ): UseGetConnectorsListHookReturn => {
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isTasEnabled = useFeatureFlag(FeatureFlag.CDS_TAS_NG)
-  const isTerraformCloudEnabled = useFeatureFlag(FeatureFlag.CDS_TERRAFORM_CLOUD)
 
   const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
 
@@ -152,8 +151,6 @@ export const useGetConnectorsListHook = (
             return isErrorTrackingEnabled
           case Connectors.TAS:
             return isTasEnabled
-          case Connectors.TERRAFORM_CLOUD:
-            return isTerraformCloudEnabled
           case Connectors.SignalFX:
             return isSignalFXEnabled
           default:
