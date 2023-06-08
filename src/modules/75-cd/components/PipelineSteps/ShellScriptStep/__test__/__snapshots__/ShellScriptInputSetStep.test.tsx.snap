@@ -374,7 +374,7 @@ exports[`ShellScriptInputSetStep tests renders input sets 1`] = `
                   </span>
                 </div>
                 <div
-                  class="environmentVarHeader"
+                  class="runtimeVarHeader"
                 >
                   <div
                     class="bp3-form-group bp3-disabled"

@@ -192,7 +192,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                         isFixedInput(formik, `${formikEnvironmentVariablePath}.value`)
 
                       return (
-                        <div className={css.environmentVarHeader} key={environmentVariable.value}>
+                        <div className={css.runtimeVarHeader} key={environmentVariable.value}>
                           <FormInput.Text
                             name={`${formikEnvironmentVariablePath}.name`}
                             placeholder={getString('name')}
