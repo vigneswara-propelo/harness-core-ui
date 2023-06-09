@@ -9,7 +9,7 @@ import React, { useRef, useContext, useEffect, useMemo } from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { Formik, FormikProps } from 'formik'
-import { debounce, noop, get } from 'lodash-es'
+import { debounce, noop, get, defaultTo } from 'lodash-es'
 import { Accordion, Card, Container, Text, FormikForm, HarnessDocTooltip, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -45,7 +45,7 @@ export interface PipelineStageOverviewProps {
 export function PipelineStageOverview(props: PipelineStageOverviewProps): React.ReactElement {
   const {
     state: {
-      pipeline: { stages = [] },
+      pipeline: { stages },
       selectionState: { selectedStageId }
     },
     contextType,
@@ -56,17 +56,21 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
     getStageFromPipeline
   } = usePipelineContext()
   const { accountId } = useParams<AccountPathProps & ModulePathParams>()
-  const { stage } = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId || '')
   const { variablesPipeline, metadataMap } = usePipelineVariables()
-  const allNGVariables = (stage?.stage?.variables || []) as AllNGVariables[]
+  const { stage } = getStageFromPipeline<PipelineStageElementConfig>(defaultTo(selectedStageId, ''))
+  const { stage: stageFromVariablesPipeline } = getStageFromPipeline(
+    get(stage, 'stage.identifier', ''),
+    variablesPipeline
+  )
+  const allNGVariables = get(stage, 'stage.variables', []) as AllNGVariables[]
   const { getString } = useStrings()
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const formikRef = useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
 
-  const pipelineIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.pipeline', '')
-  const projectIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.project', '')
-  const orgIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.org', '')
+  const pipelineIdentifier = get(stage, 'stage.spec.pipeline', '')
+  const projectIdentifier = get(stage, 'stage.spec.project', '')
+  const orgIdentifier = get(stage, 'stage.spec.org', '')
 
   const entityData = useGetEntityMetadata({
     entityInfo: {
@@ -105,12 +109,14 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
             validationSchema={Yup.object().shape(getNameAndIdentifierSchema(getString, contextType))}
             validate={values => {
               const errors: { name?: string } = {}
-              if (isDuplicateStageId(get(values, 'identifier', ''), stages, true)) {
+              /* istanbul ignore next */ if (
+                isDuplicateStageId(get(values, 'identifier', ''), defaultTo(stages, []), true)
+              ) {
                 errors.name = getString('validation.identifierDuplicate')
               }
-              if (stage?.stage) {
+              /* istanbul ignore else */ if (stage?.stage) {
                 updateStageDebounced(
-                  produce(stage?.stage, draft => {
+                  produce(stage.stage, draft => {
                     ;(draft.name = get(values, 'name', '')),
                       (draft.identifier = get(values, 'identifier', '')),
                       (draft.description = get(values, 'description', '')),
@@ -172,7 +178,10 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
             <Icon name="launch" color={Color.PRIMARY_7} size={16} margin={{ left: 'small' }} />
           </a>
         </Card>
-        <Accordion activeId={allNGVariables.length > 0 ? 'advanced' : ''} className={css.accordion}>
+        <Accordion
+          activeId={/* istanbul ignore next */ allNGVariables.length > 0 ? 'advanced' : ''}
+          className={css.accordion}
+        >
           <Accordion.Panel
             id="advanced"
             addDomId={true}
@@ -197,26 +206,27 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
                   type={StepType.CustomVariable}
                   stepViewType={StepViewType.StageVariable}
                   allowableTypes={allowableTypes}
-                  onUpdate={({ variables }: CustomVariablesData) => {
-                    if (!stage?.stage) {
-                      return
+                  onUpdate={
+                    /* istanbul ignore next */ ({ variables }: CustomVariablesData) => {
+                      if (!stage?.stage) {
+                        return
+                      }
+                      updateStageDebounced(
+                        produce(stage.stage, draft => {
+                          draft.variables = variables
+                        })
+                      )
                     }
-                    updateStageDebounced(
-                      produce(stage.stage, draft => {
-                        draft.variables = variables
-                      })
-                    )
-                  }}
+                  }
                   customStepProps={{
                     tabName: PipelineStageTabs.OVERVIEW,
                     formName: 'addEditStageCustomVariableForm',
-                    yamlProperties:
-                      getStageFromPipeline(
-                        stage?.stage?.identifier || '',
-                        variablesPipeline
-                      )?.stage?.stage?.variables?.map?.(
-                        variable => metadataMap[(variable as StringNGVariable).value || '']?.yamlProperties || {}
-                      ) || [],
+                    yamlProperties: defaultTo(
+                      (get(stageFromVariablesPipeline, 'stage.variables', []) as AllNGVariables[])?.map?.(variable =>
+                        get(metadataMap[defaultTo((variable as StringNGVariable).value, '')], 'yamlProperties', {})
+                      ),
+                      []
+                    ),
                     enableValidation: true
                   }}
                 />

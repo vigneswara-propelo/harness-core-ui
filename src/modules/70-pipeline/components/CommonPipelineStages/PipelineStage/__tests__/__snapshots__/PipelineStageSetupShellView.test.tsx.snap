@@ -1,0 +1,616 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pipeline Stage shell view tests check details for Overview Tab: Pipeline Stage - Overview Tab 1`] = `
+<div>
+  <section
+    class="approvalStageSetupShellWrapper"
+  >
+    <div
+      class="bp3-tabs Tabs--main Tabs--horizontal"
+    >
+      <div
+        class="bp3-tab-list"
+        role="tablist"
+      >
+        <div
+          class="bp3-tab-indicator-wrapper"
+          style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+        >
+          <div
+            class="bp3-tab-indicator"
+          />
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_pipelineStageSetupShell_OVERVIEW"
+          aria-disabled="false"
+          aria-expanded="true"
+          aria-selected="true"
+          class="bp3-tab"
+          data-tab-id="OVERVIEW"
+          data-testid="OVERVIEW"
+          id="bp3-tab-title_pipelineStageSetupShell_OVERVIEW"
+          role="tab"
+          tabindex="0"
+        >
+          <span
+            class="tab"
+          >
+            <span
+              class="bp3-icon bp3-icon-tick StyledProps--main StyledProps--color StyledProps--color-green800"
+              icon="tick"
+              style="height: 20px;"
+            >
+              <svg
+                data-icon="tick"
+                height="20"
+                viewBox="0 0 20 20"
+                width="20"
+              >
+                <desc>
+                  tick
+                </desc>
+                <path
+                  d="M17 4c-.28 0-.53.11-.71.29L7 13.59 3.71 10.3A.965.965 0 003 10a1.003 1.003 0 00-.71 1.71l4 4c.18.18.43.29.71.29s.53-.11.71-.29l10-10A1.003 1.003 0 0017 4z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            overview
+          </span>
+        </div>
+        <span
+          class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+          icon="chevron-right"
+          style="align-self: center; height: 20px;"
+        >
+          <svg
+            data-icon="chevron-right"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+          >
+            <desc>
+              chevron-right
+            </desc>
+            <path
+              d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <div
+          aria-controls="bp3-tab-panel_pipelineStageSetupShell_INPUTS"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab fullHeight stepGroup"
+          data-tab-id="INPUTS"
+          data-testid="INPUTS"
+          id="bp3-tab-title_pipelineStageSetupShell_INPUTS"
+          role="tab"
+          tabindex="0"
+        >
+          <span
+            class="tab"
+          >
+            <span
+              class="bp3-icon StyledProps--main"
+              data-icon="template-inputs"
+              style="height: 20px;"
+            >
+              <svg
+                height="20"
+                viewBox="0 0 32 32"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M2.987 7.02a3 3 0 013-3h20.025a3 3 0 013 3v17.96a3 3 0 01-3 3H5.987a3 3 0 01-3-3v-5.638h2v5.639a1 1 0 001 1h20.025a1 1 0 001-1V7.02a1 1 0 00-1-1H5.987a1 1 0 00-1 1v5.673h-2V7.02z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M12.184 12.446a1 1 0 011.399-.21l4.02 2.968a1 1 0 01.006 1.604l-4.02 3.016a1 1 0 11-1.2-1.6l1.62-1.216H2.988v-2h10.984l-1.576-1.164a1 1 0 01-.21-1.398z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            inputs
+          </span>
+        </div>
+        <span
+          class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+          icon="chevron-right"
+          style="align-self: center; height: 20px;"
+        >
+          <svg
+            data-icon="chevron-right"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+          >
+            <desc>
+              chevron-right
+            </desc>
+            <path
+              d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <div
+          aria-controls="bp3-tab-panel_pipelineStageSetupShell_OUTPUTS"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab fullHeight stepGroup"
+          data-tab-id="OUTPUTS"
+          data-testid="OUTPUTS"
+          id="bp3-tab-title_pipelineStageSetupShell_OUTPUTS"
+          role="tab"
+          tabindex="0"
+        >
+          <span
+            class="tab"
+          >
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-black"
+              data-icon="pipeline-outputs"
+              style="height: 20px;"
+            >
+              <svg
+                fill="currentColor"
+                height="20"
+                viewBox="0 0 16 16"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M1.58 3.587a1.2 1.2 0 011.2-1.2h10.412a1.2 1.2 0 011.2 1.2v8.792a1.2 1.2 0 01-1.2 1.2H2.779a1.2 1.2 0 01-1.2-1.2V9.565h.8v2.814c0 .221.18.4.4.4h10.413a.4.4 0 00.4-.4V3.587a.4.4 0 00-.4-.4H2.779a.4.4 0 00-.4.4v2.831h-.8V3.587z"
+                  fill-rule="evenodd"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M4.55 9.83a.4.4 0 01-.56.084L1.801 8.301a.4.4 0 01.001-.644l2.19-1.606a.4.4 0 11.472.645L3.26 7.58h5.583v.8H3.256l1.209.891a.4.4 0 01.085.56z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            connectors.ceAws.crossAccountRoleExtention.step3.p2
+          </span>
+        </div>
+        <span
+          class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+          icon="chevron-right"
+          style="align-self: center; height: 20px;"
+        >
+          <svg
+            data-icon="chevron-right"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+          >
+            <desc>
+              chevron-right
+            </desc>
+            <path
+              d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <div
+          aria-controls="bp3-tab-panel_pipelineStageSetupShell_ADVANCED"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="ADVANCED"
+          data-testid="ADVANCED"
+          id="bp3-tab-title_pipelineStageSetupShell_ADVANCED"
+          role="tab"
+          tabindex="0"
+        >
+          <span
+            class="tab"
+          >
+            <span
+              class="bp3-icon StyledProps--main"
+              data-icon="advanced"
+              style="height: 20px;"
+            >
+              <svg
+                height="20"
+                viewBox="0 0 16 16"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M3.557 4.017a.5.5 0 00-.5.492v7.005a.5.5 0 00.5.507h8.98a.5.5 0 00.5-.5l.001-2.554a.5.5 0 111 0v2.554a1.5 1.5 0 01-1.5 1.5h-8.98a1.5 1.5 0 01-1.5-1.522V4.495a1.5 1.5 0 011.5-1.478h2.951a.5.5 0 010 1H3.557z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M11.002 3.694a1.3 1.3 0 100 2.6 1.3 1.3 0 000-2.6zm-2.3 1.3a2.3 2.3 0 114.6 0 2.3 2.3 0 01-4.6 0z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M10.502 2.949v-.953h1v.953h-1zm0 5.051V6.98h1V8h-1zm2.549-3.502h.953v1h-.953v-1zM8 4.498h1.02v1H8v-1zm4.805 1.596l.674.674-.708.707-.673-.674.707-.707zM9.233 2.522l.722.722-.708.707-.721-.722.707-.707zm2.865.674l.673-.674.708.708-.674.673-.707-.707zM8.526 6.768l.722-.722.707.708-.722.721-.707-.707z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            advancedTitle
+          </span>
+        </div>
+        <div
+          class="bp3-flex-expander"
+        />
+        <button
+          aria-label="common.saveAsTemplate"
+          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
+          disabled=""
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+            data-icon="upload-box"
+          >
+            <svg
+              fill="none"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5.333 8.334l2.668-2.667L8 13.334V5.667l2.67 2.667"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M3.333 6V3.333h9.334V6"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            common.saveAsTemplate
+          </span>
+        </button>
+      </div>
+      <div
+        aria-hidden="false"
+        aria-labelledby="bp3-tab-title_pipelineStageSetupShell_OVERVIEW"
+        class="bp3-tab-panel"
+        id="bp3-tab-panel_pipelineStageSetupShell_OVERVIEW"
+        role="tabpanel"
+      >
+        <div
+          class="pipelineStageOverviewWrapper"
+        >
+          <div
+            class="content"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--margin-bottom-small"
+              id="stageOverview"
+            >
+              stageOverview
+            </p>
+            <div
+              class="StyledProps--font StyledProps--main"
+              id="stageOverview"
+            >
+              <form
+                action="#"
+                class="FormikForm--main"
+              >
+                <div>
+                  <div
+                    class="bp3-card bp3-elevation-0 Card--card sectionCard"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main main"
+                    >
+                      <div
+                        class="InputWithIdentifier--txtNameContainer TextInput--main"
+                      >
+                        <div
+                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+                        >
+                          <div
+                            class="Text--withDocsTooltip"
+                            data-tooltip-id="universalInputNameWithId"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main"
+                            >
+                              Id
+                            </p>
+                          </div>
+                          <p
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            :
+                          </p>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="bp3-editable-text bp3-disabled InputWithIdentifier--idValue"
+                              >
+                                <span
+                                  class="bp3-editable-text-content"
+                                  style="height: 1px; line-height: 1px; min-width: 0;"
+                                >
+                                  parStage1
+                                </span>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="bp3-form-group"
+                          data-id="name-0"
+                        >
+                          <label
+                            class="bp3-label"
+                            for="name"
+                          >
+                            name
+                             
+                            <span
+                              class="bp3-text-muted"
+                            />
+                          </label>
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="bp3-input-group"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                name="name"
+                                type="text"
+                                value="parentStage1"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        <label
+                          class="Label--main bp3-label descriptionLabel"
+                        >
+                          optionalField
+                          <span
+                            class="bp3-icon StyledProps--main editOpen"
+                            data-icon="Edit"
+                            data-name="edit"
+                            data-testid="description-edit"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 16 16"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                clip-rule="evenodd"
+                                d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                                fill="currentColor"
+                                fill-rule="evenodd"
+                              />
+                              <path
+                                clip-rule="evenodd"
+                                d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                                fill="currentColor"
+                                fill-rule="evenodd"
+                                opacity="0.3"
+                              />
+                            </svg>
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        <label
+                          class="Label--main bp3-label descriptionLabel"
+                        >
+                          optionalField
+                          <span
+                            class="bp3-icon StyledProps--main editOpen"
+                            data-icon="Edit"
+                            data-name="edit"
+                            data-testid="tags-edit"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 16 16"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                clip-rule="evenodd"
+                                d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                                fill="currentColor"
+                                fill-rule="evenodd"
+                              />
+                              <path
+                                clip-rule="evenodd"
+                                d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                                fill="currentColor"
+                                fill-rule="evenodd"
+                                opacity="0.3"
+                              />
+                            </svg>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--margin-bottom-small StyledProps--margin-top-medium StyledProps--margin-left-small"
+            >
+              common.pipeline
+            </p>
+            <div
+              class="bp3-card bp3-elevation-0 Card--card sectionCard"
+            >
+              <a
+                class="childPipelineDetails"
+                rel="noreferrer"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                  data-icon="chained-pipeline"
+                >
+                  <svg
+                    height="20"
+                    viewBox="0 0 32 32"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M4.555 3.965a1.6 1.6 0 00-1.6 1.6v3.4a1.6 1.6 0 001.6 1.6h.169v3.68c0 .887.099 1.823.898 2.394.366.26.806.39 1.268.461.466.072 1.023.095 1.67.095h1.817v-1.616H8.56c-.625 0-1.083-.023-1.424-.075-.344-.053-.501-.127-.575-.18-.079-.056-.222-.191-.222-1.079v-3.68h6.616a1.6 1.6 0 001.6-1.6v-3.4a1.6 1.6 0 00-1.6-1.6h-8.4zm0 1.6h8.4v3.4h-8.4v-3.4zM28.883 24a1.6 1.6 0 00-1.544-1.6v-3.872c0-.887-.1-1.822-.898-2.393-.366-.261-.806-.39-1.269-.461-.465-.072-1.022-.095-1.67-.095h-1.817v1.616h1.818c.625 0 1.082.023 1.423.075.344.053.502.127.576.18.079.056.222.19.222 1.078V22.4h-6.841a1.6 1.6 0 00-1.6 1.6v3.4a1.6 1.6 0 001.6 1.6h8.4a1.6 1.6 0 001.6-1.6V24zm-10.125-7.462a2.574 2.574 0 11-5.148-.001 2.574 2.574 0 015.148 0zm1.615 0a4.19 4.19 0 11-8.378-.001 4.19 4.19 0 018.378 0zm-3.584-.606h1.227v1.212h-1.227v1.227h-1.212v-1.227h-1.143v-1.211h1.143V14.79h1.212v1.143zM27.283 24h-8.4v3.4h8.4V24z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-lead StyledProps--color StyledProps--color-primary7"
+                  style="--text-line-clamp: 1;"
+                >
+                  common.pipeline: childPip
+                </p>
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--margin-left-small"
+                  data-icon="launch"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 12 12"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M9.692 11.333H1.487a.82.82 0 01-.82-.82V2.306a.82.82 0 01.82-.82H5.18v.82H1.487v8.205h8.205V6.82h.82v3.692a.82.82 0 01-.82.82zM7.641.666v.82h2.293L6.41 5.012l.579.578 3.524-3.524v2.293h.82V.666H7.641z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </a>
+            </div>
+            <div
+              class="Accordion--accordion accordion"
+            >
+              <div
+                class="Accordion--panel"
+                data-open="false"
+                data-testid="advanced-panel"
+                id="advanced-panel"
+              >
+                <div
+                  class="Accordion--summary"
+                  data-testid="advanced-summary"
+                >
+                  <div
+                    class=""
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--font-variation-h5"
+                    >
+                      advancedTitle
+                    </p>
+                  </div>
+                  <div
+                    class="Accordion--chevron"
+                  />
+                </div>
+                <div
+                  class="bp3-collapse Accordion--collapse"
+                >
+                  <div
+                    aria-hidden="false"
+                    class="bp3-collapse-body"
+                    style="transform: translateY(-undefinedpx);"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main actionButtons StyledProps--margin-top-xxlarge"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main"
+              >
+                <button
+                  aria-label="next"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    next
+                  </span>
+                  <span
+                    class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                    icon="chevron-right"
+                  >
+                    <svg
+                      data-icon="chevron-right"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        chevron-right
+                      </desc>
+                      <path
+                        d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+`;

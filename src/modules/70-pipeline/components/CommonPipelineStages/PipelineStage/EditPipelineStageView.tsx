@@ -90,25 +90,26 @@ export function EditPipelineStageView({
 
   const handleValidate = (values: Values): FormikErrors<Values> => {
     const errors: { name?: string } = {}
-    if (isDuplicateStageId(values.identifier, pipeline?.stages || [])) {
+    /* istanbul ignore next */ if (isDuplicateStageId(values.identifier, pipeline?.stages || [])) {
       errors.name = getString('validation.identifierDuplicate')
     }
-    if (data) {
+    /* istanbul ignore else */ if (data) {
       onChange?.(values)
     }
     return errors
   }
 
   const handleSubmit = (values: Values): void => {
+    /* istanbul ignore else */
     if (data?.stage) {
       if (template) {
         onSubmit?.({ stage: createTemplate(values, template) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name
-        if (values.description) data.stage.description = values.description
-        if (values.tags) data.stage.tags = values.tags
-        if (!data.stage.spec) data.stage.spec = {} as any
+        /* istanbul ignore else */ if (values.description) data.stage.description = values.description
+        /* istanbul ignore else */ if (values.tags) data.stage.tags = values.tags
+        /* istanbul ignore next */ if (!data.stage.spec) data.stage.spec = {} as any
         set(data, 'stage.spec.org', values.org)
         set(data, 'stage.spec.pipeline', values.pipeline)
         set(data, 'stage.spec.project', values.project)

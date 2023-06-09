@@ -14,11 +14,15 @@ import type { PipelineStageOutputs } from 'services/pipeline-ng'
 export const MAX_LENGTH = 64
 
 export interface PipelineStageOutputSectionProps {
-  children: React.ReactElement
+  children?: React.ReactElement
 }
 
 export interface PipelineStageOutputData {
   outputs: PipelineStageOutputs[]
+}
+
+export interface VariableOutputPanelProps {
+  formikRef?: React.MutableRefObject<FormikProps<unknown> | null>
 }
 
 export interface OutputPanelInputSetProps {

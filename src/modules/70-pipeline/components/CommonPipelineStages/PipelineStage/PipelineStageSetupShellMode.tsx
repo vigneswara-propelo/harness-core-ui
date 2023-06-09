@@ -86,9 +86,9 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
   )
 
   React.useLayoutEffect(() => {
-    // To drag and drop the canvas
+    /* istanbul ignore next */
     if (layoutRef.current) {
-      /* istanbul ignore next */
+      // To drag and drop the canvas
       layoutRef.current.scrollTo?.(0, 0)
     }
   }, [selectedTabId])

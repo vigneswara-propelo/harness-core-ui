@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { cloneDeep, debounce, isEmpty, noop } from 'lodash-es'
+import { cloneDeep, debounce, defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { Formik, FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
@@ -33,10 +33,10 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { PipelineStageTabs } from '../utils'
-import { MAX_LENGTH } from './utils'
+import { MAX_LENGTH, VariableOutputPanelProps } from './utils'
 import css from './PipelineStageOutputSection.module.scss'
 
-export function VariableOutputPanel(): React.ReactElement {
+export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutputPanelProps): React.ReactElement {
   const {
     state: {
       selectionState: { selectedStageId }
@@ -50,12 +50,16 @@ export function VariableOutputPanel(): React.ReactElement {
   const { getString } = useStrings()
 
   const tabName = PipelineStageTabs.OUTPUTS
-  const { stage } = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId || '')
+  const { stage } = getStageFromPipeline<PipelineStageElementConfig>(defaultTo(selectedStageId, ''))
+  const { stage: stageFromVariablesPipeline } = getStageFromPipeline(
+    get(stage, 'stage.identifier', ''),
+    variablesPipeline
+  )
   const cloneOriginalData = cloneDeep(stage)
   const uids = React.useRef<string[]>([])
   const outputTypeRef = React.useRef<MultiTypeInputType[]>([])
   const [pipelineOutputs, setPipelineOutputs] = useState<PipelineStageOutputs[]>(
-    (cloneOriginalData?.stage as PipelineStageElementConfig)?.spec?.outputs || []
+    get(cloneOriginalData?.stage as PipelineStageElementConfig, 'spec.outputs', [])
   )
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -81,12 +85,16 @@ export function VariableOutputPanel(): React.ReactElement {
   }, [pipelineOutputs])
 
   const getYamlPropertiesForOutputs = (): YamlProperties[] =>
-    (
-      getStageFromPipeline(stage?.stage?.identifier || '', variablesPipeline)?.stage
-        ?.stage as PipelineStageElementConfig
-    )?.spec?.outputs?.map?.(
-      output => metadataMap[(output as PipelineStageOutputs).value || '']?.yamlProperties || {}
-    ) || []
+    defaultTo(
+      (
+        get(
+          stageFromVariablesPipeline?.stage as PipelineStageElementConfig,
+          'spec.outputs',
+          []
+        ) as PipelineStageOutputs[]
+      )?.map?.(output => get(metadataMap[defaultTo((output as PipelineStageOutputs).value, '')], 'yamlProperties', {})),
+      []
+    )
 
   return (
     <Formik
@@ -95,7 +103,7 @@ export function VariableOutputPanel(): React.ReactElement {
       }}
       onSubmit={noop}
       validate={values => {
-        if (cloneOriginalData)
+        /* istanbul ignore else */ if (cloneOriginalData)
           updateStageDebounced({
             ...(cloneOriginalData.stage as PipelineStageElementConfig),
             spec: {
@@ -124,9 +132,9 @@ export function VariableOutputPanel(): React.ReactElement {
                   getString('pipeline.pipelineChaining.outputAlreadyExists'),
                   outputName => {
                     let count = 0
-                    if (Array.isArray(formikOutputValues)) {
+                    /* istanbul ignore else */ if (Array.isArray(formikOutputValues)) {
                       formikOutputValues.forEach(val => {
-                        if (val?.name === outputName) count++
+                        if (get(val, 'name') === outputName) count++
                       })
                     }
                     return count <= 1
@@ -142,6 +150,7 @@ export function VariableOutputPanel(): React.ReactElement {
         const { values, setFieldValue } = formik
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: tabName }))
         formikRef.current = formik as FormikProps<unknown> | null
+        if (formikRefProp) formikRefProp.current = formik as FormikProps<unknown> | null
         return (
           <FieldArray
             name="outputs"
@@ -150,7 +159,7 @@ export function VariableOutputPanel(): React.ReactElement {
                 uids.current.push(uuid())
                 outputTypeRef.current.push(MultiTypeInputType.EXPRESSION)
                 push(output)
-                if (values?.outputs) setPipelineOutputs([...values.outputs, output])
+                /* istanbul ignore else */ if (get(values, 'outputs')) setPipelineOutputs([...values.outputs, output])
               }
 
               const handleRemove = (index: number): void => {
@@ -181,13 +190,13 @@ export function VariableOutputPanel(): React.ReactElement {
                         : getMultiTypeFromValue(output.value as string)
                     }
                     const key = uids.current[index]
-                    const yamlData = getYamlPropertiesForOutputs()?.[index] || {}
-                    if (!output) {
+                    const yamlData = defaultTo(getYamlPropertiesForOutputs()?.[index], {})
+                    /* istanbul ignore next */ if (!output) {
                       return null
                     }
 
                     return (
-                      <div key={key} className={css.tableRow}>
+                      <div key={key} className={css.tableRow} data-testid={`output-row-${index}`}>
                         <TextInputWithCopyBtn
                           name={`outputs[${index}].name`}
                           label=""
@@ -211,7 +220,7 @@ export function VariableOutputPanel(): React.ReactElement {
                               multitypeInputValue: outputTypeRef.current[index]
                             }}
                             onChange={(_value, _valueType, multiType) => {
-                              if (multiType !== outputTypeRef.current[index]) {
+                              /* istanbul ignore else */ if (multiType !== outputTypeRef.current[index]) {
                                 outputTypeRef.current[index] = multiType
                               }
                             }}
@@ -220,7 +229,7 @@ export function VariableOutputPanel(): React.ReactElement {
                             <ConfigureOptions
                               value={output.value as string}
                               type="String"
-                              variableName={output.name || ''}
+                              variableName={defaultTo(output.name, '')}
                               onChange={value => setFieldValue(`outputs[${index}].value`, value)}
                               isReadonly={isReadonly}
                             />

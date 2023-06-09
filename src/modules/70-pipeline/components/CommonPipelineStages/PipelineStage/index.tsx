@@ -12,7 +12,7 @@ import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/Sta
 import type { StageAttributes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { PipelineStage } from './PipelineStage'
 
-const getStageAttributes = (_getString: UseStringsReturn['getString']): StageAttributes => ({
+export const getStageAttributes = (_getString: UseStringsReturn['getString']): StageAttributes => ({
   name: 'Pipeline',
   type: StageType.PIPELINE,
   icon: 'chained-pipeline',
@@ -21,7 +21,10 @@ const getStageAttributes = (_getString: UseStringsReturn['getString']): StageAtt
   openExecutionStrategy: false
 })
 
-const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStringsReturn['getString']): JSX.Element => (
+export const getStageEditorImplementation = (
+  isEnabled: boolean,
+  _getString: UseStringsReturn['getString']
+): JSX.Element => (
   <PipelineStage
     icon={'chained-pipeline'}
     name={_getString('common.pipeline')}

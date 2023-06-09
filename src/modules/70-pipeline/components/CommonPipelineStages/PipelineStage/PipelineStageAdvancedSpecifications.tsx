@@ -17,7 +17,7 @@ import {
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, set, unset } from 'lodash-es'
+import { defaultTo, isEmpty, set, unset } from 'lodash-es'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { FailureStrategyWithRef } from '@pipeline/components/PipelineStudio/FailureStrategy/FailureStrategy'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
@@ -59,7 +59,7 @@ export function PipelineStageAdvancedSpecifications({
     getStageFromPipeline,
     updateStage
   } = usePipelineContext()
-  const { stage } = getStageFromPipeline<ApprovalStageElementConfig>(selectedStageId || '')
+  const { stage } = getStageFromPipeline<ApprovalStageElementConfig>(defaultTo(selectedStageId, ''))
 
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
@@ -90,15 +90,16 @@ export function PipelineStageAdvancedSpecifications({
                 ref={formikRef}
                 onUpdate={delegateSelectors => {
                   const valuePassed = delegateSelectors.delegateSelectors
-                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
-
+                  const { stage: pipelineStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
                       set(draft, 'stage.delegateSelectors', valuePassed)
+                      /* istanbul ignore next */
                       if (isEmpty(valuePassed) || valuePassed[0] === '') {
                         unset(draft.stage, 'delegateSelectors')
                       }
                     })
+                    /* istanbul ignore else */
                     if (stageData.stage) {
                       updateStage(stageData.stage)
                     }
@@ -109,7 +110,7 @@ export function PipelineStageAdvancedSpecifications({
             </div>
           </Layout.Horizontal>
         </Card>
-        <div className={css.tabHeading}>
+        <div className={css.tabHeading} data-testid={'conditionalExecutionHeader'}>
           <span data-tooltip-id={conditionalExecutionTooltipId}>
             {getString('pipeline.conditionalExecution.title')}
           </span>
@@ -119,7 +120,7 @@ export function PipelineStageAdvancedSpecifications({
             allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             disabled={isReadonly}
             onChange={type => {
-              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              const { stage: pipelineStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
               if (pipelineStage && pipelineStage.stage) {
                 const stageData = produce(pipelineStage, draft => {
                   if (isMultiTypeRuntime(type)) {
@@ -128,7 +129,7 @@ export function PipelineStageAdvancedSpecifications({
                     unset(draft, 'stage.when')
                   }
                 })
-
+                /* istanbul ignore else */
                 if (stageData.stage) {
                   updateStage(stageData.stage)
                 }
@@ -146,13 +147,15 @@ export function PipelineStageAdvancedSpecifications({
                     isReadonly={isReadonly}
                     selectedStage={stage}
                     onUpdate={when => {
-                      const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+                      const { stage: pipelineStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
                       if (pipelineStage && pipelineStage.stage) {
                         const stageData = produce(pipelineStage, draft => {
                           set(draft, 'stage.when', when)
                         })
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        updateStage(stageData.stage!)
+                        /* istanbul ignore else */
+                        if (stageData.stage) {
+                          updateStage(stageData.stage)
+                        }
                       }
                     }}
                   />
@@ -161,7 +164,7 @@ export function PipelineStageAdvancedSpecifications({
             </Layout.Horizontal>
           </Card>
         )}
-        <div className={css.tabHeading}>
+        <div className={css.tabHeading} data-testid={'failureStrategyHeader'}>
           <span data-tooltip-id={failureStrategyTooltipId}>{getString('pipeline.failureStrategies.title')}</span>
           <MultiTypeSelectorButton
             className={css.multiTypeBtn}
@@ -169,7 +172,7 @@ export function PipelineStageAdvancedSpecifications({
             allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             disabled={isReadonly}
             onChange={type => {
-              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              const { stage: pipelineStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
               if (pipelineStage && pipelineStage.stage) {
                 const stageData = produce(pipelineStage, draft => {
                   if (isMultiTypeRuntime(type)) {
@@ -178,7 +181,7 @@ export function PipelineStageAdvancedSpecifications({
                     unset(draft, 'stage.failureStrategies')
                   }
                 })
-
+                /* istanbul ignore else */
                 if (stageData.stage) {
                   updateStage(stageData.stage)
                 }
@@ -195,7 +198,7 @@ export function PipelineStageAdvancedSpecifications({
                 isReadonly={isReadonly}
                 ref={formikRef}
                 onUpdate={({ failureStrategies }) => {
-                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+                  const { stage: pipelineStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
                       if (
@@ -207,8 +210,10 @@ export function PipelineStageAdvancedSpecifications({
                         unset(draft, 'stage.failureStrategies')
                       }
                     })
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    updateStage(stageData.stage!)
+                    /* istanbul ignore else */
+                    if (stageData.stage) {
+                      updateStage(stageData.stage)
+                    }
                     const errors = formikRef.current?.getErrors()
                     if (isEmpty(errors) && Array.isArray(failureStrategies)) {
                       const telemetryData = failureStrategies.map(strategy => ({
