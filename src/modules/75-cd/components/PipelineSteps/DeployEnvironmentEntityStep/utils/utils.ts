@@ -16,17 +16,17 @@ import type {
   DeployEnvironmentEntityFormState
 } from '../types'
 import {
-  processEnvironmentGroupInitialValues,
-  processMultiEnvironmentInitialValues,
   processSingleEnvironmentGitOpsInitialValues,
   processSingleEnvironmentInitialValues
-} from './processInitialValuesUtils'
+} from './singleEnvironment/processSingleEnvironmentInitialValues'
 import {
-  processEnvironmentGroupFormValues,
-  processMultiEnvironmentFormValues,
   processSingleEnvironmentFormValues,
   processSingleEnvironmentGitOpsFormValues
-} from './processFormValuesUtils'
+} from './singleEnvironment/processSingleEnvironmentFormValues'
+import { processMultiEnvironmentInitialValues } from './multiEnvironment/processMultiEnvironmentInitialValues'
+import { processMultiEnvironmentFormValues } from './multiEnvironment/processMultiEnvironmentFormValues'
+import { processEnvironmentGroupInitialValues } from './environmentGroup/processEnvironmentGroupInitialValues'
+import { processEnvironmentGroupFormValues } from './environmentGroup/processEnvironmentGroupFormValues'
 
 export function processInitialValues(
   initialValues: DeployEnvironmentEntityConfig,

@@ -7,12 +7,15 @@
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../../types'
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../../../types'
 import {
   getEnvironmentsFormStateFromInitialValues,
   processMultiEnvironmentInitialValues
-} from '../processInitialValuesUtils'
-import { getEnvironmentsFormValuesFromFormState, processMultiEnvironmentFormValues } from '../processFormValuesUtils'
+} from '../processMultiEnvironmentInitialValues'
+import {
+  getEnvironmentsFormValuesFromFormState,
+  processMultiEnvironmentFormValues
+} from '../processMultiEnvironmentFormValues'
 
 describe('process multi environment initial values', () => {
   test('parallel defaults to true', () => {

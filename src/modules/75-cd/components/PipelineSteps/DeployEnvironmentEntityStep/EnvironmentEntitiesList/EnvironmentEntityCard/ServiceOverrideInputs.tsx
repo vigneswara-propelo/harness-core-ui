@@ -49,7 +49,7 @@ export default function ServiceOverrideInputs({
             !isEmpty(serviceOverrideInputs?.[environmentRef][serviceIdentifier]) && (
               <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
                 <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
-                  {getString('common.serviceOverrides.labelText')}
+                  {`${getString('common.serviceOverrides.labelText')}: ${serviceIdentifier}`}
                 </Text>
                 <StepWidget<ServiceSpec>
                   factory={factory}

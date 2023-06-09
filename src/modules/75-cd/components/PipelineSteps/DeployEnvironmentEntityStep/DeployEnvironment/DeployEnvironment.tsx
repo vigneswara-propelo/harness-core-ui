@@ -134,7 +134,11 @@ export default function DeployEnvironment({
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CD_NG_DYNAMIC_PROVISIONING_ENV_V2 } = useFeatureFlags()
+  const {
+    CDS_OrgAccountLevelServiceEnvEnvGroup,
+    CD_NG_DYNAMIC_PROVISIONING_ENV_V2,
+    CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled
+  } = useFeatureFlags()
 
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
@@ -297,14 +301,30 @@ export default function DeployEnvironment({
                 // if environment input is not found, add it, else use the existing one
                 const environmentInputs = get(values.environmentInputs, [c.value], environment?.environmentInputs)
 
+                const environmentServiceOverrideInputs: Record<string, any> = {}
+                const existingServiceOverrideInputs = values.serviceOverrideInputs?.[c.value as string]
+
+                serviceIdentifiers?.forEach(serviceIdentifier => {
+                  const serviceOverrideValueForService = get(
+                    existingServiceOverrideInputs,
+                    serviceIdentifier,
+                    environment?.serviceOverrideInputs[c.value as string]?.[serviceIdentifier]
+                  )
+
+                  if (!isNil(serviceOverrideValueForService)) {
+                    environmentServiceOverrideInputs[serviceIdentifier] = serviceOverrideValueForService
+                  }
+                })
+
                 p.environmentInputs[c.value as string] = environmentInputs
+                p.serviceOverrideInputs[c.value as string] = environmentServiceOverrideInputs
               } else {
                 p.environments.push(c)
               }
 
               return p
             },
-            { environments: [], environmentInputs: {}, parallel: values.parallel }
+            { environments: [], environmentInputs: {}, serviceOverrideInputs: {}, parallel: values.parallel }
           )
 
           setValues({
@@ -596,8 +616,7 @@ export default function DeployEnvironment({
             allowableTypes={allowableTypes}
             onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
             onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
-            // Temporary Condition - Will remove it with multi service service override change
-            serviceIdentifiers={serviceIdentifiers.length === 1 ? serviceIdentifiers : []}
+            serviceIdentifiers={serviceIdentifiers.length === 1 || isOverridesEnabled ? serviceIdentifiers : []}
             initialValues={initialValues}
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}

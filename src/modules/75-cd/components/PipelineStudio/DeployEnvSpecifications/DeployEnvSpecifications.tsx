@@ -55,7 +55,11 @@ export default function DeployEnvSpecifications(
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
+  const {
+    CDS_OrgAccountLevelServiceEnvEnvGroup,
+    CDS_PIPELINE_STUDIO_UPGRADES,
+    CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled
+  } = useFeatureFlags()
 
   useEffect(() => {
     if (errorMap.size > 0) {
@@ -187,7 +191,8 @@ export default function DeployEnvSpecifications(
             stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
             deploymentType: stage?.stage?.spec?.deploymentType,
             gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
-            customDeploymentRef: stage?.stage?.spec?.customDeploymentRef
+            customDeploymentRef: stage?.stage?.spec?.customDeploymentRef,
+            isOverridesEnabled
           }}
         />
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>

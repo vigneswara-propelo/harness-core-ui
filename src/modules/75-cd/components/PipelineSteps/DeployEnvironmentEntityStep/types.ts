@@ -77,6 +77,8 @@ export interface EnvironmentWithInputs {
   environments: SelectOption[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   environmentInputs: Record<string, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  serviceOverrideInputs: Record<string, any>
   parallel?: boolean
 }
 
