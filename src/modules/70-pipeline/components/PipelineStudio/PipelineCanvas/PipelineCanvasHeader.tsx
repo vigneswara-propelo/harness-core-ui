@@ -56,8 +56,6 @@ import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
@@ -107,7 +105,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setSelectedStageId,
     setSelectedSectionId
   } = usePipelineContext()
-  const isAsyncValidationEnabled = useFeatureFlag(FeatureFlag.PIE_ASYNC_VALIDATION)
   const { showError, showSuccess, clear } = useToaster()
   const {
     pipeline,
@@ -436,7 +433,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     {getString('unsavedChanges')}
                   </Button>
                 )}
-                {isAsyncValidationEnabled && !isNewPipeline && (
+                {!isNewPipeline && (
                   <ValidationBadge className={css.validationContainer} onReconcile={() => handleReconcile(false)} />
                 )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
