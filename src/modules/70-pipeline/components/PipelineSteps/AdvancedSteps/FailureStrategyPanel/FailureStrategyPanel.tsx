@@ -8,7 +8,7 @@ import React from 'react'
 import { Button, FormInput, Text } from '@harness/uicore'
 import { FieldArray, FormikErrors, useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { defaultTo, flatMap, get, isEmpty, uniq } from 'lodash-es'
+import { defaultTo, flatMap, get, isEmpty, uniq, difference } from 'lodash-es'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
@@ -22,7 +22,13 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { FailureTypeMultiSelect } from './FailureTypeMultiSelect'
 import { allowedStrategiesAsPerStep, errorTypesForStages } from './StrategySelection/StrategyConfig'
 import StrategySelection from './StrategySelection/StrategySelection'
-import { findTabWithErrors, hasItems, handleChangeInStrategies, getTabIntent } from './utils'
+import {
+  findTabWithErrors,
+  hasItems,
+  handleChangeInStrategies,
+  getTabIntent,
+  EXCLUDE_STEP_INSIDE_STEP_GROUP_FAILURE_STRATEGY_LIST
+} from './utils'
 import type { AllFailureStrategyConfig } from './utils'
 
 import css from './FailureStrategyPanel.module.scss'
@@ -38,10 +44,17 @@ export interface FailureStrategyPanelProps {
   mode: Modes
   isReadonly: boolean
   stageType?: StageType
+  isStepInsideStepGroup?: boolean
 }
 
 export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.ReactElement {
-  const { mode, path = 'failureStrategies', isReadonly, stageType = StageType.DEPLOY } = props
+  const {
+    mode,
+    path = 'failureStrategies',
+    isReadonly,
+    stageType = StageType.DEPLOY,
+    isStepInsideStepGroup = false
+  } = props
   const { getString } = useStrings()
   const formik = useFormikContext()
   const strategies = get(formik.values, path, []) as AllFailureStrategyConfig[]
@@ -54,7 +67,7 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
   const addedAllErrors = filterTypes.includes(ErrorType.AllErrors)
   const addedAllStratgies = filterTypes.length === errorTypesForStages[stageType].length
   const isAddBtnDisabled = addedAllErrors || addedAllStratgies || isReadonly || currentTabHasErrors
-  const { NG_EXECUTION_INPUT, PIPELINE_ROLLBACK } = useFeatureFlags()
+  const { NG_EXECUTION_INPUT, PIPELINE_ROLLBACK, PIE_RETRY_STEP_GROUP } = useFeatureFlags()
 
   async function handleTabChange(n: number): Promise<void> {
     await formik.submitForm()
@@ -112,6 +125,14 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
   }, [formik.isSubmitting, errors])
 
   let allowedStrategies = allowedStrategiesAsPerStep(stageType)[mode]
+
+  if (PIE_RETRY_STEP_GROUP) {
+    if (isStepInsideStepGroup) {
+      allowedStrategies = difference(allowedStrategies, EXCLUDE_STEP_INSIDE_STEP_GROUP_FAILURE_STRATEGY_LIST)
+    }
+  } else {
+    allowedStrategies = allowedStrategies.filter(st => st !== Strategy.RetryStepGroup)
+  }
 
   if (!NG_EXECUTION_INPUT) {
     allowedStrategies = allowedStrategies.filter(st => st !== Strategy.ProceedWithDefaultValues)

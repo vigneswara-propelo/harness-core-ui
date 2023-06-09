@@ -509,7 +509,8 @@ failureStrategies:
     onTimeoutLabel: Post timeout action
     onRetryFailureLabel: Post retry failure action
   strategiesLabel:
-    Retry: '{{ $.retry }}'
+    Retry: 'Retry Step'
+    RetryStepGroup: 'Retry Step Group'
     Abort: '{{ $.abort }}'
     Ignore: Ignore Failure
     StageRollback: Rollback Stage

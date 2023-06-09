@@ -4318,6 +4318,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.strategiesLabel.PipelineRollback': string
   'pipeline.failureStrategies.strategiesLabel.ProceedWithDefaultValues': string
   'pipeline.failureStrategies.strategiesLabel.Retry': string
+  'pipeline.failureStrategies.strategiesLabel.RetryStepGroup': string
   'pipeline.failureStrategies.strategiesLabel.StageRollback': string
   'pipeline.failureStrategies.strategiesLabel.StepGroupRollback': string
   'pipeline.failureStrategies.strategiesLabel.UserMarkedFailure': string

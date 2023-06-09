@@ -33,6 +33,7 @@ export interface BaseStepProps {
   parentStrategy?: StrategyType
   allowedStrategies: StrategyType[]
   disabled?: boolean
+  type?: StrategyType
 }
 
 export function ManualInterventionStep(props: BaseStepProps): React.ReactElement {
@@ -70,7 +71,7 @@ export function ManualInterventionStep(props: BaseStepProps): React.ReactElement
 }
 
 export function RetryStep(props: BaseStepProps): React.ReactElement {
-  const { formik, parentStrategy, allowedStrategies, name, disabled } = props
+  const { formik, parentStrategy, allowedStrategies, name, disabled, type } = props
   const { getString } = useStrings()
   const uids = React.useRef<string[]>([])
   const retryIntervalsFieldName = `${name}.retryIntervals`
@@ -191,8 +192,12 @@ export function RetryStep(props: BaseStepProps): React.ReactElement {
         name={`${name}.onRetryFailure.action`}
         formik={formik}
         disabled={disabled}
-        parentStrategy={Strategy.Retry}
-        allowedStrategies={difference(allowedStrategies, [Strategy.Retry, parentStrategy || Strategy.Retry])}
+        parentStrategy={type}
+        allowedStrategies={difference(allowedStrategies, [
+          Strategy.Retry,
+          Strategy.RetryStepGroup,
+          parentStrategy || Strategy.Retry
+        ])}
       />
     </div>
   )
@@ -239,13 +244,14 @@ export function StrategySelection(props: ConnectedStrategySelectionProps): React
           disabled={disabled}
         />
       ) : null}
-      {value === Strategy.Retry ? (
+      {value === Strategy.Retry || value === Strategy.RetryStepGroup ? (
         <RetryStep
           name={specPath}
           formik={formik}
           parentStrategy={parentStrategy}
           allowedStrategies={allowedStrategies}
           disabled={disabled}
+          type={value}
         />
       ) : null}
     </FormGroup>

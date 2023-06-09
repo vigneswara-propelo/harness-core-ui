@@ -30,7 +30,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.MarkAsFailure
+          Strategy.MarkAsFailure,
+          Strategy.RetryStepGroup
         ],
         [Modes.STAGE]: [
           Strategy.Ignore,
@@ -62,7 +63,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.MarkAsFailure
+          Strategy.MarkAsFailure,
+          Strategy.RetryStepGroup
         ],
         [Modes.STAGE]: [
           Strategy.ManualIntervention,
@@ -97,7 +99,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.MarkAsFailure
+          Strategy.MarkAsFailure,
+          Strategy.RetryStepGroup
         ],
         [Modes.STAGE]: [
           Strategy.Ignore,
@@ -130,7 +133,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.MarkAsFailure
+          Strategy.MarkAsFailure,
+          Strategy.RetryStepGroup
         ],
         [Modes.STAGE]: [
           Strategy.ManualIntervention,
@@ -161,7 +165,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Retry,
           Strategy.MarkAsSuccess,
           Strategy.Abort,
-          Strategy.MarkAsFailure
+          Strategy.MarkAsFailure,
+          Strategy.RetryStepGroup
         ],
         [Modes.STAGE]: [
           Strategy.ManualIntervention,

@@ -61,7 +61,7 @@ export const strategyIconMap: Record<StrategyType, IconName> = {
   ProceedWithDefaultValues: 'main-resume',
   StepGroupRollback: 'repeat',
   MarkAsFailure: 'mark-as-failure',
-  RetryStepGroup: 'refresh'
+  RetryStepGroup: 'retry-step-group'
 }
 
 export const waitActionsIconMap: Record<WaitActions, IconName> = {
@@ -81,7 +81,7 @@ export const stringsMap: Record<StrategyType, StringKeys> = {
   ProceedWithDefaultValues: 'pipeline.failureStrategies.strategiesLabel.ProceedWithDefaultValues',
   StepGroupRollback: 'pipeline.failureStrategies.strategiesLabel.StepGroupRollback',
   MarkAsFailure: 'pipeline.failureStrategies.strategiesLabel.MarkAsFailure',
-  RetryStepGroup: 'pipeline.failureStrategies.strategiesLabel.Retry'
+  RetryStepGroup: 'pipeline.failureStrategies.strategiesLabel.RetryStepGroup'
 }
 
 export const waitActionsStringMap: Record<WaitActions, StringKeys> = {
