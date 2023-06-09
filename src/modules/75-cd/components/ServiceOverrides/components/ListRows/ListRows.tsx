@@ -28,7 +28,8 @@ export default function ListRows(): React.ReactElement {
                 [css.topMargin]: hasTopMargin,
                 [css.topBorderRadius]: hasTopBorderRadius,
                 [css.bottomBorderRadius]: hasBottomBorderRadius,
-                [css.roundedCard]: hasTopBorderRadius && hasBottomBorderRadius
+                [css.roundedCard]: hasTopBorderRadius && hasBottomBorderRadius,
+                [css.newOrEditCard]: isEdit
               })}
             >
               {isNew ? (

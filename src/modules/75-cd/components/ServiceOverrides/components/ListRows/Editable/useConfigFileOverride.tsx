@@ -94,7 +94,10 @@ const DIALOG_PROPS: IDialogProps = {
   enforceFocus: false,
   style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
 }
-export default function useConfigFileOverride(props: ServiceConfigFileOverrideProps): { createNewFileOverride: any } {
+export default function useConfigFileOverride(props: ServiceConfigFileOverrideProps): {
+  createNewFileOverride(): void
+  editFileOverride(): void
+} {
   const { getString } = useStrings()
   const [fileIndex, setEditIndex] = useState(0)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -175,6 +178,19 @@ export default function useConfigFileOverride(props: ServiceConfigFileOverridePr
     showModal()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }
+
+  const editFileOverride = useCallback(
+    (): void => {
+      setEditIndex(0)
+      if (fileOverrides?.[0]?.configFile?.spec?.store?.type) {
+        setConfigStore(fileOverrides?.[0]?.configFile?.spec?.store?.type as ConfigFileType)
+      }
+      setIsEditMode(true)
+      showModal()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [fileOverrides]
+  )
 
   const handleSubmit = useCallback(
     (filesObj: ConfigFileWrapper): void => {
@@ -409,5 +425,8 @@ export default function useConfigFileOverride(props: ServiceConfigFileOverridePr
     )
   }, [expressions, allowableTypes, fileIndex, isEditMode, isReadonly, initialValues, selectedConnector])
 
-  return { createNewFileOverride }
+  return {
+    createNewFileOverride,
+    editFileOverride
+  }
 }

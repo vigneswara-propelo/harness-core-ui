@@ -24,6 +24,12 @@ jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
   }
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
+
 jest.mock('@pipeline/hooks/useGetPipelines', () => ({
   useGetPipelines: () => {
     return {

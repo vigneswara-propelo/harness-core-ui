@@ -15,8 +15,9 @@ export enum ServiceOverridesTab {
   INFRA_GLOBAL = 'INFRA_GLOBAL',
   INFRA_SERVICE_SPECIFIC = 'INFRA_SERVICE_SPECIFIC'
 }
-export interface HeaderConfig {
-  width: string | number
+interface RowConfig {
+  headerWidth?: string | number
+  rowWidth?: string | number
   value: StringKeys
   accessKey?: 'environmentRef' | 'infraIdentifier' | 'serviceRef' | 'overrideType'
   mapper?: Record<any, any>
@@ -47,132 +48,150 @@ export const noOverridesStringMap: Record<Required<ServiceOverridesResponseDTOV2
   CLUSTER_SERVICE_OVERRIDE: 'common.serviceOverrides.noOverrides.globalInfrastructure'
 }
 
-export const headerConfigMap: Record<Required<ServiceOverridesResponseDTOV2>['type'], HeaderConfig[]> = {
+export const rowConfigMap: Record<Required<ServiceOverridesResponseDTOV2>['type'], RowConfig[]> = {
   ENV_GLOBAL_OVERRIDE: [
     {
-      width: 150,
+      headerWidth: 160,
+      rowWidth: 156,
       value: 'environment',
       accessKey: 'environmentRef'
     },
     {
-      width: 150,
+      headerWidth: 150,
+      rowWidth: 150,
       value: 'common.serviceOverrides.overrideType',
       accessKey: 'overrideType',
       mapper: overridesLabelStringMap
     },
     {
-      width: '73%',
       value: 'common.serviceOverrides.overrideInfo'
     }
   ],
   ENV_SERVICE_OVERRIDE: [
     {
-      width: '12%',
+      headerWidth: 160,
+      rowWidth: 156,
       value: 'environment',
       accessKey: 'environmentRef'
     },
     {
-      width: '12%',
+      headerWidth: 160,
+      rowWidth: 160,
       value: 'service',
       accessKey: 'serviceRef'
     },
     {
-      width: '12%',
+      headerWidth: 150,
+      rowWidth: 150,
       value: 'common.serviceOverrides.overrideType',
       accessKey: 'overrideType',
       mapper: overridesLabelStringMap
     },
     {
-      width: '60%',
       value: 'common.serviceOverrides.overrideInfo'
     }
   ],
   INFRA_GLOBAL_OVERRIDE: [
     {
-      width: '12%',
+      headerWidth: 160,
+      rowWidth: 156,
       value: 'environment',
       accessKey: 'environmentRef'
     },
     {
-      width: '12%',
+      headerWidth: 160,
+      rowWidth: 160,
       value: 'infrastructureText',
       accessKey: 'infraIdentifier'
     },
     {
-      width: '12%',
+      headerWidth: 150,
+      rowWidth: 150,
       value: 'common.serviceOverrides.overrideType',
       accessKey: 'overrideType',
       mapper: overridesLabelStringMap
     },
     {
-      width: '62%',
       value: 'common.serviceOverrides.overrideInfo'
     }
   ],
   INFRA_SERVICE_OVERRIDE: [
     {
-      width: '12%',
+      headerWidth: 160,
+      rowWidth: 156,
       value: 'environment',
       accessKey: 'environmentRef'
     },
     {
-      width: '12%',
+      headerWidth: 160,
+      rowWidth: 160,
       value: 'infrastructureText',
       accessKey: 'infraIdentifier'
     },
     {
-      width: '12%',
+      headerWidth: 160,
+      rowWidth: 160,
       value: 'service',
       accessKey: 'serviceRef'
     },
     {
-      width: '12%',
+      headerWidth: 150,
+      rowWidth: 150,
       value: 'common.serviceOverrides.overrideType',
       accessKey: 'overrideType',
       mapper: overridesLabelStringMap
     },
     {
-      width: '50%',
+      rowWidth: '40%',
       value: 'common.serviceOverrides.overrideInfo'
     }
   ],
   CLUSTER_GLOBAL_OVERRIDE: [
     {
-      width: '12%',
+      headerWidth: '12%',
+      rowWidth: '12%',
       value: 'environment'
     },
     {
-      width: '12%',
+      headerWidth: '12%',
+      rowWidth: '12%',
       value: 'infrastructureText'
     },
     {
-      width: '12%',
+      headerWidth: '12%',
+      rowWidth: '12%',
       value: 'common.serviceOverrides.overrideType'
     },
     {
-      width: '62%',
+      headerWidth: '62%',
+      rowWidth: '62%',
       value: 'common.serviceOverrides.overrideInfo'
     }
   ],
   CLUSTER_SERVICE_OVERRIDE: [
     {
-      width: '12%',
+      headerWidth: '12%',
+      rowWidth: '12%',
       value: 'environment'
     },
     {
-      width: '12%',
+      headerWidth: '12%',
+      rowWidth: '12%',
       value: 'infrastructureText'
     },
     {
-      width: '12%',
+      headerWidth: '12%',
+      rowWidth: '12%',
       value: 'service'
     },
     {
-      width: '12%',
+      headerWidth: '12%',
+      rowWidth: '12%',
       value: 'common.serviceOverrides.overrideType'
     },
     {
-      width: '50%',
+      headerWidth: '50%',
+      rowWidth: '50%',
       value: 'common.serviceOverrides.overrideInfo'
     }
   ]

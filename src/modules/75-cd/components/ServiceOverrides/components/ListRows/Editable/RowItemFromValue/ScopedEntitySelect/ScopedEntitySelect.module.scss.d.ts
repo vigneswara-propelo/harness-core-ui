@@ -7,12 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly bottomBorderRadius: string
-  readonly editableRow: string
-  readonly listRowCard: string
-  readonly newOrEditCard: string
-  readonly roundedCard: string
-  readonly topBorderRadius: string
-  readonly topMargin: string
+  readonly container: string
+  readonly listContainer: string
+  readonly placeholder: string
+  readonly searchInput: string
+  readonly tabList: string
 }
 export default styles

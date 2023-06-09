@@ -128,7 +128,9 @@ export function ServiceOverrides(): React.ReactElement {
     },
     lazy: servicesLoading || !!get(services, 'data.empty', null)
   })
-  const serviceOverrides: ServiceOverrideResponseDTO[] = get(serviceOverridesData, 'data.content', [])
+  const serviceOverrides: ServiceOverrideResponseDTO[] = get(serviceOverridesData, 'data.content', []).filter(
+    (svcOverride: ServiceOverrideResponseDTO) => svcOverride.yaml
+  )
 
   const handleDeleteOverride = async (
     overrideType: string,

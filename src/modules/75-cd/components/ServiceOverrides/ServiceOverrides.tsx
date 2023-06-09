@@ -21,6 +21,7 @@ import type {
   ServiceOverridesQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 
 import { ServiceOverridesTab } from './ServiceOverridesUtils'
@@ -35,6 +36,8 @@ import css from './ServiceOverrides.module.scss'
 export default function ServiceOverrides(): React.ReactElement {
   const { module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
+  useDocumentTitle(getString('common.overrides'))
+
   const { sectionId } = useQueryParams<ServiceOverridesQueryParams>()
   const [selectedTabId, setSelectedTabId] = useState(defaultTo(sectionId, ServiceOverridesTab.ENVIRONMENT_GLOBAL))
 
@@ -53,19 +56,18 @@ export default function ServiceOverrides(): React.ReactElement {
       <main className={css.layout}>
         <Page.Header
           title={
-            <Heading level={3} font={{ variation: FontVariation.H4 }} data-tooltip-id={'serviceOverrides'}>
+            <Heading level={3} font={{ variation: FontVariation.H4 }} data-tooltip-id={'serviceOverridesV2'}>
               {getString('common.overrides')}
-              <HarnessDocTooltip tooltipId={'serviceOverrides'} useStandAlone />
+              <HarnessDocTooltip tooltipId={'serviceOverridesV2'} useStandAlone />
             </Heading>
           }
           breadcrumbs={<NGBreadcrumbs customPathParams={{ module }} />}
           className={css.header}
         />
-
         <Page.Body>
           <Container className={css.serviceOverrideTabs}>
             <Tabs
-              id="serviceOverrides"
+              id="serviceOverridesV2"
               onChange={handleTabChange}
               selectedTabId={selectedTabId}
               data-tabId={selectedTabId}

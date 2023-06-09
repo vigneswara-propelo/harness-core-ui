@@ -113,7 +113,7 @@ export default function useManifestOverride({
   serviceType
 }: ManifestVariableOverrideProps): {
   createNewManifestOverride(): void
-  editManifestOverride(manifestType: OverrideManifestTypes, store: OverrideManifestStoresTypes, index: number): void
+  editManifestOverride(manifestType: OverrideManifestTypes, store: OverrideManifestStoresTypes): void
 } {
   const [selectedManifest, setSelectedManifest] = useState<OverrideManifestTypes | null>(null)
   const [manifestStore, setManifestStore] = useState('')
@@ -136,14 +136,10 @@ export default function useManifestOverride({
     showModal()
   }
 
-  const editManifestOverride = (
-    manifestType: OverrideManifestTypes,
-    store: OverrideManifestStoresTypes,
-    index: number
-  ): void => {
+  const editManifestOverride = (manifestType: OverrideManifestTypes, store: OverrideManifestStoresTypes): void => {
     setSelectedManifest(manifestType)
     setManifestStore(store)
-    setEditIndex(index)
+    setEditIndex(0)
     showModal()
   }
 

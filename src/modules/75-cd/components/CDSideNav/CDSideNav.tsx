@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
-import { Layout } from '@harness/uicore'
+import { Layout, useToaster } from '@harness/uicore'
 import { compile } from 'path-to-regexp'
 
 import routes from '@common/RouteDefinitions'
@@ -34,6 +34,9 @@ import { isOnPrem, useGetCommunity } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import type { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import { SettingType } from '@common/constants/Utils'
+import { useGetSettingValue } from 'services/cd-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 export default function CDSideNav(): React.ReactElement {
   const params = useParams<
@@ -64,6 +67,8 @@ export default function CDSideNav(): React.ReactElement {
   const location = useLocation()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
+  const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
@@ -89,6 +94,23 @@ export default function CDSideNav(): React.ReactElement {
     size: 1
   })
 
+  const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_SERVICE_OVERRIDE_V2,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: false
+  })
+
+  React.useEffect(() => {
+    if (enableServiceOverrideSettingsError) {
+      showError(getRBACErrorMessage(enableServiceOverrideSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableServiceOverrideSettingsError])
+
   React.useEffect(() => {
     if (selectedProject?.identifier) {
       fetchPipelines()
@@ -112,6 +134,8 @@ export default function CDSideNav(): React.ReactElement {
   }, [fetchPipelinesData])
 
   const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
+  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
+
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
@@ -238,7 +262,7 @@ export default function CDSideNav(): React.ReactElement {
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label={getString('services')} to={routes.toServices({ ...params, module })} />
           <SidebarLink label={getString('environments')} to={routes.toEnvironment({ ...params, module })} />
-          {CDS_SERVICE_OVERRIDES_2_0 && (
+          {isServiceOverridesEnabled && (
             <SidebarLink label={getString('common.overrides')} to={routes.toServiceOverrides({ ...params, module })} />
           )}
           {!isCommunity && !hideGitopsOnPrem ? (

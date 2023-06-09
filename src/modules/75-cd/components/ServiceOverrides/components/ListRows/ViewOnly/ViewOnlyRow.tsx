@@ -13,7 +13,7 @@ import {
   OverrideTypes,
   ServiceOverrideRowProps,
   VariableOverrideDetails,
-  headerConfigMap
+  rowConfigMap
 } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
 
 import VariableOverrideInfo from './VariableOverrideInfo'
@@ -29,19 +29,19 @@ export default function ViewOnlyRow({
 }: Pick<Required<ServiceOverrideRowProps>, 'rowIndex' | 'overrideDetails'>): React.ReactElement | null {
   const { getString } = useStrings()
   const { serviceOverrideType } = useServiceOverridesContext()
-  const headerConfigs = headerConfigMap[serviceOverrideType]
+  const rowConfigs = rowConfigMap[serviceOverrideType]
 
   const { overrideType } = overrideDetails
 
   return (
     <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-      {headerConfigs.map(headerConfig => {
-        if (headerConfig.accessKey) {
+      {rowConfigs.map(rowConfig => {
+        if (rowConfig.accessKey) {
           return (
-            <Container width={headerConfig.width}>
-              {headerConfig.mapper
-                ? getString(headerConfig.mapper[overrideDetails[headerConfig.accessKey] as string])
-                : overrideDetails[headerConfig.accessKey]}
+            <Container width={rowConfig.rowWidth}>
+              {rowConfig.mapper
+                ? getString(rowConfig.mapper[overrideDetails[rowConfig.accessKey] as string])
+                : overrideDetails[rowConfig.accessKey]}
             </Container>
           )
         } else {

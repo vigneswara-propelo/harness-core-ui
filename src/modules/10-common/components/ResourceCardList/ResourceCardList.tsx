@@ -8,7 +8,16 @@
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Button, ButtonSize, Card, Layout, Text, useToggleOpen } from '@harness/uicore'
+import {
+  Button,
+  ButtonSize,
+  Card,
+  Layout,
+  Text,
+  getErrorInfoFromErrorObject,
+  useToaster,
+  useToggleOpen
+} from '@harness/uicore'
 import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
@@ -17,7 +26,8 @@ import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
 import { isOnPrem } from '@common/utils/utils'
-import { useGetSmtpConfig } from 'services/cd-ng'
+import { SettingType } from '@common/constants/Utils'
+import { useGetSettingValue, useGetSmtpConfig } from 'services/cd-ng'
 import css from './ResourceCardList.module.scss'
 
 export interface ResourceOption {
@@ -44,6 +54,28 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
 
+  const { showError } = useToaster()
+  const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_SERVICE_OVERRIDE_V2,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier
+    },
+    lazy: false
+  })
+
+  React.useEffect(() => {
+    if (enableServiceOverrideSettingsError) {
+      showError(getErrorInfoFromErrorObject(enableServiceOverrideSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableServiceOverrideSettingsError])
+
+  const isServiceOverridesEnabled =
+    CDS_OrgAccountLevelServiceEnvEnvGroup &&
+    CDS_SERVICE_OVERRIDES_2_0 &&
+    enableServiceOverrideSettings?.data?.value === 'true'
+
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
   const refetchSmtpData = (): void => {
@@ -54,6 +86,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     () => history?.location?.pathname.includes('resources') && !hideGitopsOnPrem,
     [history?.location?.pathname]
   )
+
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,
@@ -126,7 +159,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'infrastructure',
       route: routes.toServiceOverrides({ accountId, orgIdentifier }),
       colorClass: css.connectors,
-      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup || !CDS_SERVICE_OVERRIDES_2_0
+      hidden: !isServiceOverridesEnabled
     },
 
     {

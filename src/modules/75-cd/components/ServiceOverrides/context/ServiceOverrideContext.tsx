@@ -9,6 +9,7 @@ import {
   useUpdateServiceOverrideV2,
   useUpsertServiceOverrideV2
 } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
 
 import type { ProjectPathProps, RequiredField } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -60,6 +61,7 @@ export function ServiceOverridesProvider({
   children,
   serviceOverrideType
 }: React.PropsWithChildren<ServiceOverridesProviderProps>): React.ReactElement {
+  const { getString } = useStrings()
   const { showSuccess, showError, showWarning } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -101,7 +103,7 @@ export function ServiceOverridesProvider({
       setCanCreateNewOrEdit(false)
       setListRowItems(c => [{ isNew: true, isEdit: true, rowIndex: -1, groupKey: '' }, ...c])
     } else {
-      showWarning('New Override Placeholder already exists')
+      showWarning(getString('common.serviceOverrides.editablePlaceholderExists'))
     }
   }
 
@@ -213,12 +215,19 @@ export function ServiceOverridesProvider({
   }
 
   const onEdit = (rowIndex: number): void => {
-    setCanCreateNewOrEdit(false)
-    setListRowItems(c => c.map(dec => (dec.rowIndex === rowIndex ? { ...dec, isEdit: true } : dec)))
+    if (canCreateNew) {
+      setCanCreateNewOrEdit(false)
+      setListRowItems(c => c.map(dec => (dec.rowIndex === rowIndex ? { ...dec, isEdit: true } : dec)))
+    } else {
+      showWarning(getString('common.serviceOverrides.editablePlaceholderExists'))
+    }
   }
 
   const onUpdate = (rowIndex: number, values: RequiredField<ServiceOverrideRowFormState, 'environmentRef'>): void => {
-    const rowItemToUpdate = listRowItems[rowIndex] as RequiredField<ServiceOverrideRowProps, 'overrideDetails'>
+    const rowItemToUpdate = listRowItems[rowIndex % 1 === 0 ? rowIndex : rowIndex + 0.5] as RequiredField<
+      ServiceOverrideRowProps,
+      'overrideDetails'
+    >
     const overrideResponse = rowItemToUpdate.overrideResponse as ServiceOverridesResponseDTOV2
 
     updateServiceOverride({
@@ -249,9 +258,15 @@ export function ServiceOverridesProvider({
   }
 
   const onDuplicate = (rowIndex: number): void => {
-    setListRowItems(c =>
-      c.map(dec => (dec.rowIndex === rowIndex ? { ...dec, isEditable: true, rowIndex: rowIndex + 0.5 } : dec))
-    )
+    if (canCreateNew) {
+      setCanCreateNewOrEdit(false)
+      setListRowItems(c => {
+        c.splice(rowIndex + 1, 0, { ...c[rowIndex], isEdit: true, rowIndex: rowIndex + 0.5 })
+        return c
+      })
+    } else {
+      showWarning(getString('common.serviceOverrides.editablePlaceholderExists'))
+    }
   }
 
   const onDiscard = (): void => {

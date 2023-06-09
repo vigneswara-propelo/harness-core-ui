@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, StepWizard, StepProps, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
-import { useModalHook } from '@harness/use-modal'
+import { ShowModal, useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 
@@ -36,7 +36,7 @@ import { ApplicationConfigWizard } from '@pipeline/components/ApplicationConfig/
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ApplicationConfigWizardStepTwo from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizardStepTwo'
 import {
-  AllowedTypes as AllowedTypeas,
+  AllowedTypes as AllowedConnectorTypes,
   ApplicationConfigWizardInitData,
   ConnectorMap,
   ConnectorTypes,
@@ -55,7 +55,7 @@ export const DIALOG_PROPS: IDialogProps = {
   style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
 }
 
-export interface AppalicationConfigListViewProps {
+export interface useApplicationSettingOverrideProps {
   isReadonly: boolean
   allowableTypes: AllowedTypes
   applicationSettings?: ApplicationSettingsConfiguration
@@ -67,7 +67,10 @@ export default function useApplicationSettingOverride({
   isReadonly,
   allowableTypes,
   handleSubmitConfig
-}: AppalicationConfigListViewProps): { showConnectorModal: any } {
+}: useApplicationSettingOverrideProps): {
+  showApplicationSettingModal: ShowModal
+  editApplicationConfig(): void
+} {
   const { getString } = useStrings()
 
   const [connectorView, setConnectorView] = useState(false)
@@ -81,6 +84,14 @@ export default function useApplicationSettingOverride({
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+
+  const editApplicationConfig = (): void => {
+    if (applicationSettings?.store.type) {
+      setConnectorType(applicationSettings?.store.type)
+      setConnectorView(false)
+      showApplicationSettingModal()
+    }
+  }
 
   const handleSubmit = /* istanbul ignore next */ (item: ApplicationSettingsConfiguration): void => {
     handleSubmitConfig?.(item)
@@ -258,7 +269,7 @@ export default function useApplicationSettingOverride({
     }
   }, [])
 
-  const [showConnectorModal, hideConnectorModal] = useModalHook(() => {
+  const [showApplicationSettingModal, hideConnectorModal] = useModalHook(() => {
     const onClose = (): void => {
       setConnectorView(false)
       hideConnectorModal()
@@ -275,7 +286,7 @@ export default function useApplicationSettingOverride({
       >
         <div className={css.createConnectorWizard}>
           <ApplicationConfigWizard
-            connectorTypes={AllowedTypeas}
+            connectorTypes={AllowedConnectorTypes}
             newConnectorView={connectorView}
             expressions={expressions}
             labels={getLabels()}
@@ -293,5 +304,8 @@ export default function useApplicationSettingOverride({
     )
   }, [connectorView, connectorType, expressions.length, expressions, allowableTypes, isEditMode])
 
-  return { showConnectorModal }
+  return {
+    showApplicationSettingModal,
+    editApplicationConfig
+  }
 }

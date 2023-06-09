@@ -61,7 +61,10 @@ jest.mock('services/cd-ng', () => ({
   useGetInvites: jest.fn().mockImplementation(() => ({ data: invitesMockData, loading: false, refetch: jest.fn() })),
   useAddUsers: jest.fn().mockImplementation(() => ({ mutate: () => Promise.resolve(response) })),
   useDeleteInvite: jest.fn().mockImplementation(() => ({ mutate: () => Promise.resolve(response) })),
-  useUpdateInvite: jest.fn().mockImplementation(() => ({ mutate: () => Promise.resolve(response) }))
+  useUpdateInvite: jest.fn().mockImplementation(() => ({ mutate: () => Promise.resolve(response) })),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
 }))
 
 jest.mock('services/rbac', () => ({

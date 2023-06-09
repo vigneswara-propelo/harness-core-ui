@@ -3,13 +3,13 @@ import { Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
-import { headerConfigMap } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
+import { rowConfigMap } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
 import css from './ListHeaders.module.scss'
 
 export default function ListHeaders(): React.ReactElement {
   const { getString } = useStrings()
   const { serviceOverrideType } = useServiceOverridesContext()
-  const headerConfigs = headerConfigMap[serviceOverrideType]
+  const headerConfigs = rowConfigMap[serviceOverrideType]
 
   return (
     <Layout.Horizontal margin={{ top: 'large', bottom: 'medium', left: 'large' }}>
@@ -28,7 +28,11 @@ export default function ListHeaders(): React.ReactElement {
           )
         }
         return (
-          <Text key={headerConfig.value} width={headerConfig.width} font={{ variation: FontVariation.TABLE_HEADERS }}>
+          <Text
+            key={headerConfig.value}
+            width={headerConfig.headerWidth}
+            font={{ variation: FontVariation.TABLE_HEADERS }}
+          >
             {getString(headerConfig.value).toUpperCase()}
           </Text>
         )

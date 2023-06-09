@@ -18,7 +18,7 @@ import useConfigFileOverride from './useConfigFileOverride'
 import useApplicationSettingOverride from './useApplicationSettingOverride'
 import useConnectionStringOverride from './useConnectionStringOverride'
 
-export default function OverrideTypeInput(): React.ReactElement {
+export default function OverrideTypeInput({ readonly }: { readonly?: boolean }): React.ReactElement {
   const { getString } = useStrings()
   const { setFieldValue, submitForm } = useFormikContext()
   const { serviceOverrideType } = useServiceOverridesContext()
@@ -65,13 +65,13 @@ export default function OverrideTypeInput(): React.ReactElement {
     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
   })
 
-  const { showConnectorModal } = useApplicationSettingOverride({
+  const { showApplicationSettingModal } = useApplicationSettingOverride({
     isReadonly: false,
     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
     handleSubmitConfig: config => handleOverrideSubmit(config, 'applicationSettings')
   })
 
-  const { showConnectorModal2 } = useConnectionStringOverride({
+  const { showConnectionStringModal } = useConnectionStringOverride({
     isReadonly: false,
     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
     handleSubmitConfig: config => handleOverrideSubmit(config, 'connectionStrings')
@@ -109,11 +109,15 @@ export default function OverrideTypeInput(): React.ReactElement {
         } else if (item.value === OverrideTypes.CONFIG) {
           createNewFileOverride()
         } else if (item.value === OverrideTypes.APPLICATIONSETTING) {
-          showConnectorModal()
+          showApplicationSettingModal()
         } else if (item.value === OverrideTypes.CONNECTIONSTRING) {
-          showConnectorModal2()
+          showConnectionStringModal()
         }
       }}
+      selectProps={{
+        disabled: readonly
+      }}
+      disabled={readonly}
     />
   )
 }

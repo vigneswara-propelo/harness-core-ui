@@ -16,15 +16,7 @@ export function VariableOverrideEditable(): React.ReactElement {
 
   return (
     <Layout.Horizontal spacing={'medium'}>
-      <FormInput.Select
-        name="variables.0.name"
-        items={[
-          // to be replaced with actual values
-          { label: 'var1', value: 'var1' },
-          { label: 'var2', value: 'var2' },
-          { label: 'var3', value: 'var3' }
-        ]}
-      />
+      <FormInput.Text name="variables.0.name" />
       <FormInput.Select
         name="variables.0.type"
         items={[

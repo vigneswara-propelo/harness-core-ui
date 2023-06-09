@@ -36,7 +36,8 @@ import {
   NGEnvironmentConfig,
   NGEnvironmentInfoConfig,
   updateEnvironmentV2Promise,
-  useGetEnvironmentV2
+  useGetEnvironmentV2,
+  useGetSettingValue
 } from 'services/cd-ng'
 
 import type { EnvironmentPathProps, EnvironmentQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -53,6 +54,8 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import EntityUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { sanitize } from '@common/utils/JSONUtils'
+import { SettingType } from '@common/constants/Utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
@@ -72,9 +75,29 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
-  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const { getRBACErrorMessage } = useRBACError()
+  const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const environmentSummaryEnabled = projectIdentifier
+
+  const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_SERVICE_OVERRIDE_V2,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: false
+  })
+
+  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
+
+  React.useEffect(() => {
+    if (enableServiceOverrideSettingsError) {
+      showError(getRBACErrorMessage(enableServiceOverrideSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableServiceOverrideSettingsError])
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
@@ -177,8 +200,7 @@ export default function EnvironmentDetails(): React.ReactElement {
       description === newDescription &&
       isEqual(tags, newTags) &&
       type === newType &&
-      isEqual(variables, newVariables) &&
-      isEqual(overrides, newOverrides)
+      (isServiceOverridesEnabled ? true : isEqual(variables, newVariables) && isEqual(overrides, newOverrides))
     ) {
       setIsModified(false)
     } else {
@@ -211,8 +233,10 @@ export default function EnvironmentDetails(): React.ReactElement {
                 type,
                 orgIdentifier: orgIdentifier,
                 projectIdentifier: projectIdentifier,
-                variables,
-                overrides
+                ...(!isServiceOverridesEnabled && {
+                  variables,
+                  overrides
+                })
               } as NGEnvironmentInfoConfig
             }
             formName="editEnvironment"
@@ -261,13 +285,15 @@ export default function EnvironmentDetails(): React.ReactElement {
                             isEdit
                             context={PipelineContextType.Standalone}
                             scope={getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })}
+                            isServiceOverridesEnabled={isServiceOverridesEnabled}
                           />
                         )
                       },
                       {
                         id: EnvironmentDetailsTab.SERVICE_OVERRIDES,
                         title: getString('common.serviceOverrides.labelText'),
-                        panel: <ServiceOverrides />
+                        panel: <ServiceOverrides />,
+                        hidden: isServiceOverridesEnabled
                       },
                       {
                         id: EnvironmentDetailsTab.INFRASTRUCTURE,
@@ -334,8 +360,10 @@ export default function EnvironmentDetails(): React.ReactElement {
                                 orgIdentifier: defaultTo(orgIdentifier, ''),
                                 projectIdentifier: defaultTo(projectIdentifier, ''),
                                 type: defaultTo(type, 'Production'),
-                                variables,
-                                overrides
+                                ...(!isServiceOverridesEnabled && {
+                                  variables,
+                                  overrides
+                                })
                               })
                               setIsModified(false)
                             }

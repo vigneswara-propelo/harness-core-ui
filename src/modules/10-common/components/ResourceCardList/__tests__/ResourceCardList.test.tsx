@@ -13,6 +13,7 @@ import ResourceCardList from '../ResourceCardList'
 import { smtpConfig } from './mocks/mockData'
 
 jest.spyOn(cdngServices, 'useGetSmtpConfig').mockImplementation(() => ({ mutate: () => smtpConfig } as any))
+jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => ({ data: { data: { value: 'false' } } } as any))
 
 describe('Resource card list test', () => {
   test('render', () => {

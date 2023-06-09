@@ -54,7 +54,7 @@ DefaultSettingsFactory.registerCategory('CD', {
   icon: 'cd',
   label: 'common.purpose.cd.fullText',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto'],
-  settingsAndGroupDisplayOrder: [SettingType.EMAIL_TO_NON_HARNESS_USERS]
+  settingsAndGroupDisplayOrder: [SettingType.EMAIL_TO_NON_HARNESS_USERS, SettingType.ENABLE_SERVICE_OVERRIDE_V2]
 })
 
 DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
@@ -97,6 +97,12 @@ DefaultSettingsFactory.registerGroupHandler(SettingGroups.PERSPECTIVES_PREFERENC
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.EMAIL_TO_NON_HARNESS_USERS, {
   label: 'defaultSettings.emailToNonHarnessUsers',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CD'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_SERVICE_OVERRIDE_V2, {
+  label: 'defaultSettings.enableServiceOverrideV2',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   settingCategory: 'CD'
 })

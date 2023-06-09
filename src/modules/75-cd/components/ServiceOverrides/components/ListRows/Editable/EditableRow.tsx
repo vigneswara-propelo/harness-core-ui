@@ -25,14 +25,14 @@ import {
   ServiceOverrideRowFormState,
   ServiceOverrideRowProps,
   VariableOverrideDetails,
-  headerConfigMap
+  rowConfigMap
 } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
 import type {
   OverrideManifestStoresTypes,
   OverrideManifestTypes
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/ServiceManifestOverride/ServiceManifestOverrideUtils'
 
-import RowItemFromValue from './RowItemFromValue'
+import RowItemFromValue from './RowItemFromValue/RowItemFromValue'
 import { VariableOverrideEditable } from './VariableOverrideEditable'
 import RowActionButtons from './RowActionButtons'
 import ManifestOverrideInfo from '../ViewOnly/ManifestOverrideInfo'
@@ -40,6 +40,11 @@ import ConfigFileOverrideInfo from '../ViewOnly/ConfigFileOverrideInfo'
 import ApplicationSettingOverrideInfo from '../ViewOnly/ApplicationSettingOverrideInfo'
 import ConnectionStringOverrideInfo from '../ViewOnly/ConnectionStringOverrideInfo'
 import useServiceManifestOverride from './useManifestOverride'
+import useConfigFileOverride from './useConfigFileOverride'
+import useApplicationSettingOverride from './useApplicationSettingOverride'
+import useConnectionStringOverride from './useConnectionStringOverride'
+
+import css from '../ListRows.module.scss'
 
 export default function EditableRow({
   rowIndex,
@@ -94,7 +99,7 @@ function EditableRowInternal({
   const { values, setFieldValue, submitForm } = useFormikContext<ServiceOverrideRowFormState>()
 
   const { serviceOverrideType } = useServiceOverridesContext()
-  const headerConfigs = headerConfigMap[serviceOverrideType]
+  const rowConfigs = rowConfigMap[serviceOverrideType]
 
   const handleOverrideSubmit = useCallback(
     (
@@ -108,10 +113,10 @@ function EditableRowInternal({
       switch (type) {
         case 'applicationSettings':
         case 'connectionStrings':
-          setFieldValue(`spec.${type}`, overrideObj)
+          setFieldValue(type, overrideObj)
           break
         default:
-          setFieldValue(`spec.${type}.0`, overrideObj)
+          setFieldValue(`${type}.0`, overrideObj)
       }
       setTimeout(() => {
         submitForm()
@@ -129,20 +134,56 @@ function EditableRowInternal({
     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
   })
 
+  const { editFileOverride } = useConfigFileOverride({
+    fileOverrides: isEdit ? [(overrideDetails as ConfigFileOverrideDetails).configFileValue] : [],
+    isReadonly: false,
+    fromEnvConfigPage: true,
+    handleConfigFileOverrideSubmit: filesObj => handleOverrideSubmit(filesObj, 'configFiles'),
+    expressions: [],
+    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  })
+
+  const { editApplicationConfig } = useApplicationSettingOverride({
+    applicationSettings: isEdit
+      ? (overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue
+      : undefined,
+    isReadonly: false,
+    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    handleSubmitConfig: config => handleOverrideSubmit(config, 'applicationSettings')
+  })
+
+  const { editConnectionString } = useConnectionStringOverride({
+    connectionStrings: isEdit
+      ? (overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue
+      : undefined,
+    isReadonly: false,
+    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    handleSubmitConfig: config => handleOverrideSubmit(config, 'connectionStrings')
+  })
+
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'medium'} margin={{ bottom: 'medium' }}>
-      {headerConfigs.map(headerConfig => {
-        if (headerConfig.accessKey) {
+    <Layout.Horizontal
+      flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+      padding={{ top: 'small', bottom: 'small' }}
+      className={css.editableRow}
+    >
+      {rowConfigs.map(rowConfig => {
+        if (rowConfig.accessKey) {
           return (
-            <Container width={headerConfig.width}>
-              <RowItemFromValue value={headerConfig.value} />
+            <Container width={rowConfig.rowWidth}>
+              <RowItemFromValue value={rowConfig.value} isEdit={!!isEdit} />
             </Container>
           )
         } else {
           const overrideTypeValue = values.overrideType
 
           return (
-            <Layout.Horizontal flex={{ justifyContent: 'space-between' }} width={headerConfig.width} spacing={'medium'}>
+            <Layout.Horizontal
+              flex={{ justifyContent: 'space-between' }}
+              width={rowConfig.rowWidth}
+              spacing={'medium'}
+              style={{ flexGrow: 1 }}
+            >
               {overrideTypeValue === OverrideTypes.VARIABLE && <VariableOverrideEditable />}
               {overrideTypeValue === OverrideTypes.MANIFEST && isEdit && (
                 <ManifestOverrideInfo {...(overrideDetails as ManifestOverrideDetails).manifestValue} />
@@ -169,11 +210,16 @@ function EditableRowInternal({
                     if (overrideTypeValue === OverrideTypes.MANIFEST) {
                       editManifestOverride(
                         (overrideDetails as ManifestOverrideDetails).manifestValue.manifest
-                          .type as OverrideManifestTypes,
-                        (overrideDetails as ManifestOverrideDetails).manifestValue.manifest.spec.store
-                          .type as OverrideManifestStoresTypes,
-                        0
+                          ?.type as OverrideManifestTypes,
+                        (overrideDetails as ManifestOverrideDetails).manifestValue.manifest?.spec?.store
+                          ?.type as OverrideManifestStoresTypes
                       )
+                    } else if (overrideTypeValue === OverrideTypes.CONFIG) {
+                      editFileOverride()
+                    } else if (overrideTypeValue === OverrideTypes.APPLICATIONSETTING) {
+                      editApplicationConfig()
+                    } else if (overrideTypeValue === OverrideTypes.CONNECTIONSTRING) {
+                      editConnectionString()
                     }
                   }}
                 />

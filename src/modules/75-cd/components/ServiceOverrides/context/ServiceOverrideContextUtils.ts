@@ -1,6 +1,7 @@
 import { defaultTo, isEmpty, isNil, omit } from 'lodash-es'
 import type { ConfigFileWrapper, ManifestConfigWrapper, ServiceOverridesSpec } from 'services/cd-ng'
 import type { RequiredField } from '@common/interfaces/RouteInterfaces'
+import { sanitize } from '@common/utils/JSONUtils'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import {
   ConfigFileOverrideDetails,
@@ -27,7 +28,11 @@ export const formListRowItems = (dataItems: ServiceOverridesResponseDTOV2[]): Se
       isEdit: false,
       isNew: false,
       groupKey: formGroupKey(dataItem),
-      overrideResponse: dataItem
+      overrideResponse: sanitize(dataItem, {
+        removeEmptyArray: false,
+        removeEmptyObject: false,
+        removeEmptyString: false
+      }) as ServiceOverridesResponseDTOV2
     }
 
     if (Array.isArray(spec?.variables)) {
@@ -188,18 +193,42 @@ export const formUpdateOverrideResponseSpec = (
   values: RequiredField<ServiceOverrideRowFormState, 'environmentRef'>,
   rowItemToUpdate: RequiredField<ServiceOverrideRowProps, 'overrideDetails'>
 ): ServiceOverridesSpec => {
-  const { variableIndex, manifestIndex, configFileIndex } = rowItemToUpdate
+  const { variableIndex, manifestIndex, configFileIndex, rowIndex } = rowItemToUpdate
 
   if (values.overrideType === OverrideTypes.VARIABLE && overrideResponseSpec.variables && !isNil(variableIndex)) {
-    overrideResponseSpec.variables[variableIndex] = { ...values.variables?.[0] }
+    if (rowIndex % 1 === 0) {
+      overrideResponseSpec.variables[variableIndex] = {
+        ...values.variables?.[0]
+      }
+    } else {
+      overrideResponseSpec.variables.splice(variableIndex, 0, {
+        ...values.variables?.[0]
+      })
+    }
   }
 
   if (values.overrideType === OverrideTypes.MANIFEST && overrideResponseSpec.manifests && !isNil(manifestIndex)) {
-    overrideResponseSpec.manifests[manifestIndex] = { ...values.manifests?.[0] }
+    if (rowIndex % 1 === 0) {
+      overrideResponseSpec.manifests[manifestIndex] = {
+        ...values.manifests?.[0]
+      }
+    } else {
+      overrideResponseSpec.manifests.splice(manifestIndex, 0, {
+        ...values.manifests?.[0]
+      })
+    }
   }
 
   if (values.overrideType === OverrideTypes.CONFIG && overrideResponseSpec.configFiles && !isNil(configFileIndex)) {
-    overrideResponseSpec.configFiles[configFileIndex] = { ...values.configFiles?.[0] }
+    if (rowIndex % 1 === 0) {
+      overrideResponseSpec.configFiles[configFileIndex] = {
+        ...values.configFiles?.[0]
+      }
+    } else {
+      overrideResponseSpec.configFiles.splice(configFileIndex, 0, {
+        ...values.configFiles?.[0]
+      })
+    }
   }
 
   if (

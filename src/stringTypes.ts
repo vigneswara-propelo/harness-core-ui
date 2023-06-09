@@ -1034,6 +1034,7 @@ export interface StringsMap {
   'common.serviceName': string
   'common.serviceOverrideInputs': string
   'common.serviceOverridePrefix': string
+  'common.serviceOverrides.editablePlaceholderExists': string
   'common.serviceOverrides.environmentServiceSpecific': string
   'common.serviceOverrides.globalEnvironment': string
   'common.serviceOverrides.globalInfra': string
@@ -1698,6 +1699,7 @@ export interface StringsMap {
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableMatrixFieldNames': string
   'defaultSettings.enablePipelineExecutionAuditEvents': string
+  'defaultSettings.enableServiceOverrideV2': string
   'defaultSettings.enforceGitExperience': string
   'defaultSettings.fetchingDefaultConnector': string
   'defaultSettings.gcpIncludeDiscounts': string

@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, StepWizard, StepProps, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
-import { useModalHook } from '@harness/use-modal'
+import { ShowModal, useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 
@@ -36,7 +36,7 @@ import { ApplicationConfigWizard } from '@pipeline/components/ApplicationConfig/
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ApplicationConfigWizardStepTwo from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizardStepTwo'
 import {
-  AllowedTypes as AllowedTypeas,
+  AllowedTypes as AllowedConnectorTypes,
   ApplicationConfigWizardInitData,
   ConnectorMap,
   ConnectorTypes,
@@ -55,19 +55,22 @@ export const DIALOG_PROPS: IDialogProps = {
   style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
 }
 
-interface ApplicationConfigListViewProps {
+export interface useConnectionStringOverrideProps {
   isReadonly: boolean
   allowableTypes: AllowedTypes
   connectionStrings?: ConnectionStringsConfiguration
   handleSubmitConfig?: (config: ConnectionStringsConfiguration) => void
 }
 
-export default function useConnectionStringOverride({
+export default function useApplicationSettingOverride({
   connectionStrings,
   isReadonly,
   allowableTypes,
   handleSubmitConfig
-}: ApplicationConfigListViewProps): { showConnectorModal2: any } {
+}: useConnectionStringOverrideProps): {
+  showConnectionStringModal: ShowModal
+  editConnectionString(): void
+} {
   const { getString } = useStrings()
 
   const [connectorView, setConnectorView] = useState(false)
@@ -81,6 +84,14 @@ export default function useConnectionStringOverride({
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+
+  const editConnectionString = (): void => {
+    if (connectionStrings?.store.type) {
+      setConnectorType(connectionStrings.store.type)
+      setConnectorView(false)
+      showConnectionStringModal()
+    }
+  }
 
   const handleSubmit = /* istanbul ignore next */ (item: ConnectionStringsConfiguration): void => {
     handleSubmitConfig?.(item)
@@ -258,7 +269,7 @@ export default function useConnectionStringOverride({
     }
   }, [])
 
-  const [showConnectorModal2, hideConnectorModal] = useModalHook(() => {
+  const [showConnectionStringModal, hideConnectorModal] = useModalHook(() => {
     const onClose = (): void => {
       setConnectorView(false)
       hideConnectorModal()
@@ -275,7 +286,7 @@ export default function useConnectionStringOverride({
       >
         <div className={css.createConnectorWizard}>
           <ApplicationConfigWizard
-            connectorTypes={AllowedTypeas}
+            connectorTypes={AllowedConnectorTypes}
             newConnectorView={connectorView}
             expressions={expressions}
             labels={getLabels()}
@@ -293,5 +304,8 @@ export default function useConnectionStringOverride({
     )
   }, [connectorView, connectorType, expressions.length, expressions, allowableTypes, isEditMode])
 
-  return { showConnectorModal2 }
+  return {
+    showConnectionStringModal,
+    editConnectionString
+  }
 }

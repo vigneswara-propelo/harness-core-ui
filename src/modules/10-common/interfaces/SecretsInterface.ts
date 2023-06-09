@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { StringKeys } from 'framework/strings'
+
 export enum Scope {
   PROJECT = 'project',
   ORG = 'org',
@@ -15,4 +17,10 @@ export enum PrincipalScope {
   PROJECT = 'project',
   ORG = 'organization',
   ACCOUNT = 'account'
+}
+
+export const scopeStringKey: Record<Scope, StringKeys> = {
+  account: 'account',
+  org: 'orgLabel',
+  project: 'projectLabel'
 }

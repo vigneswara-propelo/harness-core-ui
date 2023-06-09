@@ -30,6 +30,12 @@ jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => {
   }
 })
 
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
+
 const mockHistoryPush = jest.fn()
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
