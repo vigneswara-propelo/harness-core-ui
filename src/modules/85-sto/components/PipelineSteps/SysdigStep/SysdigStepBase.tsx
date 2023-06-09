@@ -136,7 +136,7 @@ export const SysdigStepBase = (
               showFields={{ access_id: false, domain: true }}
               allowableTypes={allowableTypes}
               formik={formik}
-              authDomainPlaceHolder="https://secure.sysdig.com"
+              authDomainPlaceHolder="https://app.us4.sysdig.com"
             />
 
             <AdditionalFields

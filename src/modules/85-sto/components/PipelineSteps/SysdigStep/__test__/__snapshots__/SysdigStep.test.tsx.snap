@@ -6899,7 +6899,7 @@ exports[`Sysdig Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.auth.domain"
-                        placeholder="https://secure.sysdig.com"
+                        placeholder="https://app.us4.sysdig.com"
                         type="text"
                         value=""
                       />
