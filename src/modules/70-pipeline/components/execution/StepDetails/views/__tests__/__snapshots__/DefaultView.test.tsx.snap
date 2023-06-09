@@ -31,7 +31,12 @@ exports[`Default View Test error in step evaluation 1`] = `
           role="tab"
           tabindex="0"
         >
-          details
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepDetailsTab"
+          >
+            details
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_INPUT"
@@ -44,7 +49,12 @@ exports[`Default View Test error in step evaluation 1`] = `
           role="tab"
           tabindex="0"
         >
-          common.input
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepInputTab"
+          >
+            common.input
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_OUTPUT"
@@ -57,7 +67,12 @@ exports[`Default View Test error in step evaluation 1`] = `
           role="tab"
           tabindex="0"
         >
-          outputLabel
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepOutputTab"
+          >
+            outputLabel
+          </span>
         </div>
       </div>
       <div
@@ -273,7 +288,12 @@ exports[`Default View Test failure responses 1`] = `
           role="tab"
           tabindex="0"
         >
-          details
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepDetailsTab"
+          >
+            details
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_INPUT"
@@ -286,7 +306,12 @@ exports[`Default View Test failure responses 1`] = `
           role="tab"
           tabindex="0"
         >
-          common.input
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepInputTab"
+          >
+            common.input
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_OUTPUT"
@@ -299,7 +324,12 @@ exports[`Default View Test failure responses 1`] = `
           role="tab"
           tabindex="0"
         >
-          outputLabel
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepOutputTab"
+          >
+            outputLabel
+          </span>
         </div>
       </div>
       <div
@@ -510,7 +540,12 @@ exports[`Default View Test renders snapshot 1`] = `
           role="tab"
           tabindex="0"
         >
-          details
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepDetailsTab"
+          >
+            details
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_INPUT"
@@ -523,7 +558,12 @@ exports[`Default View Test renders snapshot 1`] = `
           role="tab"
           tabindex="0"
         >
-          common.input
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepInputTab"
+          >
+            common.input
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_OUTPUT"
@@ -536,7 +576,12 @@ exports[`Default View Test renders snapshot 1`] = `
           role="tab"
           tabindex="0"
         >
-          outputLabel
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="stepOutputTab"
+          >
+            outputLabel
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_MANUAL_INTERVENTION"
@@ -549,7 +594,12 @@ exports[`Default View Test renders snapshot 1`] = `
           role="tab"
           tabindex="0"
         >
-          pipeline.failureStrategies.strategiesLabel.ManualIntervention
+          <span
+            class="Tooltip--acenter"
+            data-tooltip-id="manualInterventionTab"
+          >
+            pipeline.failureStrategies.strategiesLabel.ManualIntervention
+          </span>
         </div>
         <div
           aria-controls="bp3-tab-panel_step-details_POLICY_ENFORCEMENT"

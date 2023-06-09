@@ -8,6 +8,7 @@
 import React from 'react'
 import { get, isEmpty, merge } from 'lodash-es'
 import { Tabs } from '@blueprintjs/core'
+import { HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { ExecutionNode } from 'services/pipeline-ng'
@@ -85,23 +86,23 @@ export function ServiceNowCreateUpdateView(props: ServiceNowCreateUpdateViewProp
       {shouldShowExecutionInputs ? (
         <Tabs.Tab
           id={ApprovalStepTab.STEP_EXECUTION_INPUTS}
-          title={getString('pipeline.runtimeInputs')}
+          title={<HarnessDocTooltip tooltipId={'executionInputsTab'} labelText={getString('pipeline.runtimeInputs')} />}
           panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
         />
       ) : null}
       <Tabs.Tab
         id={ApprovalStepTab.STEP_DETAILS}
-        title={getString('details')}
+        title={<HarnessDocTooltip tooltipId={'stepDetailsTab'} labelText={getString('details')} />}
         panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} labels={labels} />}
       />
       <Tabs.Tab
         id={ApprovalStepTab.INPUT}
-        title={getString('common.input')}
+        title={<HarnessDocTooltip tooltipId={'stepInputTab'} labelText={getString('common.input')} />}
         panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
       />
       <Tabs.Tab
         id={ApprovalStepTab.OUTPUT}
-        title={getString('outputLabel')}
+        title={<HarnessDocTooltip tooltipId={'stepOutputTab'} labelText={getString('outputLabel')} />}
         panel={
           <InputOutputTab
             baseFqn={step.baseFqn}
@@ -114,7 +115,12 @@ export function ServiceNowCreateUpdateView(props: ServiceNowCreateUpdateViewProp
         <Tabs.Tab
           id={ApprovalStepTab.MANUAL_INTERVENTION}
           key={ApprovalStepTab.MANUAL_INTERVENTION}
-          title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+          title={
+            <HarnessDocTooltip
+              tooltipId={'manualInterventionTab'}
+              labelText={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+            />
+          }
           panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
         />
       )}

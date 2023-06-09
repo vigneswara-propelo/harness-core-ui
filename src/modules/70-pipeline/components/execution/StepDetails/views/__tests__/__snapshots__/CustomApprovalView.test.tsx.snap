@@ -41,7 +41,12 @@ exports[`SUCCESS show tabs when data is present and authorized: jira approval ex
         role="tab"
         tabindex="0"
       >
-        common.pipelineDetails
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepDetailsTab"
+        >
+          common.pipelineDetails
+        </span>
       </div>
       <div
         aria-controls="bp3-tab-panel_step-details_INPUT"
@@ -54,7 +59,12 @@ exports[`SUCCESS show tabs when data is present and authorized: jira approval ex
         role="tab"
         tabindex="0"
       >
-        common.input
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepInputTab"
+        >
+          common.input
+        </span>
       </div>
       <div
         aria-controls="bp3-tab-panel_step-details_OUTPUT"
@@ -67,7 +77,12 @@ exports[`SUCCESS show tabs when data is present and authorized: jira approval ex
         role="tab"
         tabindex="0"
       >
-        outputLabel
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepOutputTab"
+        >
+          outputLabel
+        </span>
       </div>
       <div
         class="bp3-flex-expander"

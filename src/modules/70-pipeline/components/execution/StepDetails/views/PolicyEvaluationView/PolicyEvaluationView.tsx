@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { merge } from 'lodash-es'
-import { Tabs, Tab } from '@harness/uicore'
+import { Tabs, Tab, HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -57,17 +57,17 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
       >
         <Tab
           id={StepDetailTab.STEP_DETAILS}
-          title={getString('details')}
+          title={<HarnessDocTooltip tooltipId={'stepDetailsTab'} labelText={getString('details')} />}
           panel={<PolicyEvaluationTab step={step} executionMetadata={executionMetadata} />}
         />
         <Tab
           id={StepDetailTab.INPUT}
-          title={getString('common.input')}
+          title={<HarnessDocTooltip tooltipId={'stepInputTab'} labelText={getString('common.input')} />}
           panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
         />
         <Tab
           id={StepDetailTab.OUTPUT}
-          title={getString('outputLabel')}
+          title={<HarnessDocTooltip tooltipId={'stepOutputTab'} labelText={getString('outputLabel')} />}
           panel={
             <InputOutputTab
               baseFqn={step.baseFqn}
@@ -79,7 +79,12 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
         {isManualInterruption ? (
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}
-            title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+            title={
+              <HarnessDocTooltip
+                tooltipId={'manualInterventionTab'}
+                labelText={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+              />
+            }
             panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
           />
         ) : null}

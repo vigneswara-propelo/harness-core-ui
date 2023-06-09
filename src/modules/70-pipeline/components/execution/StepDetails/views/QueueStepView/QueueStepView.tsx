@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { merge } from 'lodash-es'
-import { Tab, Tabs } from '@harness/uicore'
+import { Tab, Tabs, HarnessDocTooltip } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
@@ -63,7 +63,9 @@ export function QueueStepView(props: QueueStepViewProps): React.ReactElement | n
         {shouldShowExecutionInputs ? (
           <Tab
             id={StepDetailTab.STEP_EXECUTION_INPUTS}
-            title={getString('pipeline.runtimeInputs')}
+            title={
+              <HarnessDocTooltip tooltipId={'executionInputsTab'} labelText={getString('pipeline.runtimeInputs')} />
+            }
             panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
           />
         ) : null}
@@ -74,17 +76,17 @@ export function QueueStepView(props: QueueStepViewProps): React.ReactElement | n
         />
         <Tab
           id={StepDetailTab.STEP_DETAILS}
-          title={getString('details')}
+          title={<HarnessDocTooltip tooltipId={'stepDetailsTab'} labelText={getString('details')} />}
           panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} />}
         />
         <Tab
           id={StepDetailTab.INPUT}
-          title={getString('common.input')}
+          title={<HarnessDocTooltip tooltipId={'stepInputTab'} labelText={getString('common.input')} />}
           panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
         />
         <Tab
           id={StepDetailTab.OUTPUT}
-          title={getString('outputLabel')}
+          title={<HarnessDocTooltip tooltipId={'stepOutputTab'} labelText={getString('outputLabel')} />}
           panel={
             <InputOutputTab
               baseFqn={step.baseFqn}

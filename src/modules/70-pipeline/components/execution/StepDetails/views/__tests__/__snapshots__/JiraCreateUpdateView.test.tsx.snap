@@ -28,7 +28,12 @@ exports[`Jiracreateupdate view test  output snapshot if  not array 1`] = `
         role="tab"
         tabindex="0"
       >
-        details
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepDetailsTab"
+        >
+          details
+        </span>
       </div>
       <div
         aria-controls="bp3-tab-panel_step-details_INPUT"
@@ -41,7 +46,12 @@ exports[`Jiracreateupdate view test  output snapshot if  not array 1`] = `
         role="tab"
         tabindex="0"
       >
-        common.input
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepInputTab"
+        >
+          common.input
+        </span>
       </div>
       <div
         aria-controls="bp3-tab-panel_step-details_OUTPUT"
@@ -54,7 +64,12 @@ exports[`Jiracreateupdate view test  output snapshot if  not array 1`] = `
         role="tab"
         tabindex="0"
       >
-        outputLabel
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepOutputTab"
+        >
+          outputLabel
+        </span>
       </div>
     </div>
     <div
@@ -254,7 +269,12 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
         role="tab"
         tabindex="0"
       >
-        details
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepDetailsTab"
+        >
+          details
+        </span>
       </div>
       <div
         aria-controls="bp3-tab-panel_step-details_INPUT"
@@ -267,7 +287,12 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
         role="tab"
         tabindex="0"
       >
-        common.input
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepInputTab"
+        >
+          common.input
+        </span>
       </div>
       <div
         aria-controls="bp3-tab-panel_step-details_OUTPUT"
@@ -280,7 +305,12 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
         role="tab"
         tabindex="0"
       >
-        outputLabel
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepOutputTab"
+        >
+          outputLabel
+        </span>
       </div>
     </div>
     <div

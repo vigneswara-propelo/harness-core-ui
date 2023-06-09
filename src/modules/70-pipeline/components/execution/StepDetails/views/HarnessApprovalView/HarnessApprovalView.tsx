@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { Spinner, Tabs } from '@blueprintjs/core'
-import { Button, Layout, PageError } from '@harness/uicore'
+import { Button, Layout, PageError, HarnessDocTooltip } from '@harness/uicore'
 import { get, merge } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
@@ -124,7 +124,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
       {shouldShowExecutionInputs ? (
         <Tabs.Tab
           id={ApprovalStepTab.STEP_EXECUTION_INPUTS}
-          title={getString('pipeline.runtimeInputs')}
+          title={<HarnessDocTooltip tooltipId={'executionInputsTab'} labelText={getString('pipeline.runtimeInputs')} />}
           panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
         />
       ) : null}
@@ -153,21 +153,21 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
       <Tabs.Tab
         id={ApprovalStepTab.PIPELINE_DETAILS}
         key={ApprovalStepTab.PIPELINE_DETAILS}
-        title={getString('common.pipelineDetails')}
+        title={<HarnessDocTooltip tooltipId={'stepDetailsTab'} labelText={getString('common.pipelineDetails')} />}
         panel={<PipelineDetailsTab />}
         disabled={isWaitingOnExecInputs}
       />
       <Tabs.Tab
         id={ApprovalStepTab.INPUT}
         key={ApprovalStepTab.INPUT}
-        title={getString('common.input')}
+        title={<HarnessDocTooltip tooltipId={'stepInputTab'} labelText={getString('common.input')} />}
         panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
         disabled={isWaitingOnExecInputs}
       />
       <Tabs.Tab
         id={ApprovalStepTab.OUTPUT}
         key={ApprovalStepTab.OUTPUT}
-        title={getString('outputLabel')}
+        title={<HarnessDocTooltip tooltipId={'stepOutputTab'} labelText={getString('outputLabel')} />}
         disabled={isWaitingOnExecInputs}
         panel={
           <InputOutputTab
@@ -181,7 +181,12 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
         <Tabs.Tab
           id={ApprovalStepTab.MANUAL_INTERVENTION}
           key={ApprovalStepTab.MANUAL_INTERVENTION}
-          title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+          title={
+            <HarnessDocTooltip
+              tooltipId={'manualInterventionTab'}
+              labelText={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+            />
+          }
           panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
         />
       )}
