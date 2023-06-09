@@ -508,7 +508,7 @@ describe('Right Drawer tests', () => {
           isParallelNodeClicked: false
         } as any)
 
-      const { getByText } = render(
+      const { getByText, getAllByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
             <RightDrawer />
@@ -519,7 +519,7 @@ describe('Right Drawer tests', () => {
       const stepLibraryHeader = getByText('stepPalette.title')
       expect(stepLibraryHeader).toBeInTheDocument()
 
-      const step = getByText('Run').closest('section')?.parentElement
+      const step = getAllByText('Run')[1].closest('section')?.parentElement
 
       fireEvent.click(step!)
 
@@ -536,7 +536,7 @@ describe('Right Drawer tests', () => {
           entity: {}
         } as any)
 
-      const { getByText } = render(
+      const { getByText, getAllByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
             <RightDrawer />
@@ -547,7 +547,7 @@ describe('Right Drawer tests', () => {
       const stepLibraryHeader = getByText('stepPalette.title')
       expect(stepLibraryHeader).toBeInTheDocument()
 
-      const step = getByText('Run').closest('section')?.parentElement
+      const step = getAllByText('Run')[1].closest('section')?.parentElement
 
       fireEvent.click(step!)
 
@@ -787,7 +787,7 @@ describe('Right Drawer tests', () => {
           isParallelNodeClicked: false
         } as any)
 
-      const { getByText } = render(
+      const { getByText, getAllByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
             <RightDrawer />
@@ -798,7 +798,7 @@ describe('Right Drawer tests', () => {
       const stepLibraryHeader = getByText('stepPalette.title')
       expect(stepLibraryHeader).toBeInTheDocument()
 
-      const step = getByText('Run').closest('section')?.parentElement
+      const step = getAllByText('Run')[1].closest('section')?.parentElement
 
       fireEvent.click(step!)
 

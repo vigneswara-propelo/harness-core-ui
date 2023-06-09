@@ -187,7 +187,7 @@ const pipelineContextMock: PipelineContextInterface = {
         case 'Run':
           return {
             icon: 'run-step',
-            name: 'Configure Run Step',
+            name: 'Run',
             type: 'Run'
           }
       }
@@ -202,7 +202,7 @@ const pipelineContextMock: PipelineContextInterface = {
     },
     getStepData: () => ({
       icon: 'run-step',
-      name: 'Configure Run Step',
+      name: 'Run',
       type: 'Run'
     }),
     getStepIcon: () => 'run-step'

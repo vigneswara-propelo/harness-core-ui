@@ -196,7 +196,7 @@ export const getPipelineContextMock = (): PipelineContextInterface => ({
         case 'Run':
           return {
             icon: 'run-step',
-            name: 'Configure Run Step',
+            name: 'Run',
             type: 'Run'
           }
       }
@@ -215,11 +215,11 @@ export const getPipelineContextMock = (): PipelineContextInterface => ({
     getStepIconColor: () => undefined,
     getStepData: () => ({
       icon: 'run-step',
-      name: 'Configure Run Step',
+      name: 'Run',
       type: 'Run'
     }),
     getStepIcon: () => 'run-step',
-    getStepName: () => 'Configure Run Step'
+    getStepName: () => 'Run'
   } as any,
   stagesMap: {},
   setSchemaErrorView: () => undefined,
