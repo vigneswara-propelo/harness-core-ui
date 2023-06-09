@@ -84,11 +84,13 @@ describe('AllEnvironmentsFlagsListing', () => {
 
     // PreProduction environments
     expect(envTypeContainers[0]).toHaveTextContent('cf.environments.nonProd')
+    expect(nonProdEnvironments).toHaveLength(4)
     expect(nonProdEnvironments[0]).toHaveTextContent('QA1ENABLEDLABEL')
     expect(nonProdEnvironments[1]).toHaveTextContent('QA2COMMON.DISABLED')
 
     // Production environments
     expect(envTypeContainers[1]).toHaveTextContent('cf.environments.prod')
+    expect(prodEnvironments).toHaveLength(6)
     expect(prodEnvironments[0]).toHaveTextContent('Env Prod1COMMON.DISABLED')
     expect(prodEnvironments[1]).toHaveTextContent('Env Prod3ENABLEDLABEL')
   })

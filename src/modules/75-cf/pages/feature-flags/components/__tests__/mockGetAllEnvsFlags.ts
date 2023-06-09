@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 export default {
   itemCount: 3,
   pageCount: 3,
@@ -15,6 +22,24 @@ export default {
     },
     QA2: {
       name: 'QA2'
+    },
+    Test_Environment_1: {
+      name: 'Test Environment 1'
+    },
+    Test_Environment_2: {
+      name: 'Test Environment 2'
+    },
+    Test_Environment_3: {
+      name: 'Test Environment 3'
+    },
+    Test_Environment_4: {
+      name: 'Test Environment 4'
+    },
+    Test_Environment_5: {
+      name: 'Test Environment 5'
+    },
+    Test_Environment_6: {
+      name: 'Test Environment 6'
     }
   },
   flags: [
@@ -33,6 +58,24 @@ export default {
         },
         QA2: {
           enabled: false
+        },
+        Test_Environment_1: {
+          enabled: true
+        },
+        Test_Environment_2: {
+          enabled: true
+        },
+        Test_Environment_3: {
+          enabled: true
+        },
+        Test_Environment_4: {
+          enabled: true
+        },
+        Test_Environment_5: {
+          enabled: true
+        },
+        Test_Environment_6: {
+          enabled: true
         }
       },
       identifier: 'Great_New_Feature',
@@ -54,6 +97,24 @@ export default {
         },
         QA2: {
           enabled: false
+        },
+        Test_Environment_1: {
+          enabled: false
+        },
+        Test_Environment_2: {
+          enabled: false
+        },
+        Test_Environment_3: {
+          enabled: false
+        },
+        Test_Environment_4: {
+          enabled: false
+        },
+        Test_Environment_5: {
+          enabled: false
+        },
+        Test_Environment_6: {
+          enabled: false
         }
       },
       identifier: 'Trial_Mode',
@@ -74,6 +135,24 @@ export default {
         },
         QA2: {
           enabled: false
+        },
+        Test_Environment_1: {
+          enabled: true
+        },
+        Test_Environment_2: {
+          enabled: false
+        },
+        Test_Environment_3: {
+          enabled: true
+        },
+        Test_Environment_4: {
+          enabled: false
+        },
+        Test_Environment_5: {
+          enabled: true
+        },
+        Test_Environment_6: {
+          enabled: true
         }
       },
       identifier: 'Dark_Mode',

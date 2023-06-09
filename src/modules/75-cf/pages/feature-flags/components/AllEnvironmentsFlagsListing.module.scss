@@ -7,9 +7,14 @@
 
 .environmentsContainer {
   display: flex;
+  position: relative;
   justify-content: flex-start;
   align-items: center;
   overflow-x: scroll;
+}
+
+.environmentsContainer::-webkit-scrollbar {
+  width: 0 !important;
 }
 
 .environmentTypeContainer {

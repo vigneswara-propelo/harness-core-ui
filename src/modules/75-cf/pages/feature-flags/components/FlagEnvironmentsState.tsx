@@ -24,7 +24,7 @@ const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByT
   const envTypes = Object.keys(environmentsByType)
 
   return (
-    <Layout.Horizontal className={css.environmentsContainer}>
+    <Layout.Horizontal className={cx(css.environmentsContainer, 'outerRow')}>
       {envTypes
         .filter(envType => !!environmentsByType[envType].length)
         .map(envType => (

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Cell, Column } from 'react-table'
 import { Container, Layout, TableV2, Text, Utils } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -55,6 +55,33 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
       )
     )
   }
+
+  const [initialRender, setInitialRender] = useState(false)
+  const rowsRef = useRef<HTMLDivElement>()
+  const allRows = useMemo<Element[]>(() => {
+    return rowsRef.current ? [...rowsRef.current.querySelectorAll('.outerRow')] : []
+  }, [initialRender])
+
+  const onScrollRow = useCallback(
+    (e): void => {
+      allRows.forEach(row => {
+        if (row !== e.target) {
+          row.scrollTo(e.target.scrollLeft, 0)
+        }
+      })
+    },
+    [allRows]
+  )
+
+  useEffect(() => {
+    setInitialRender(true)
+  }, [])
+
+  useEffect(() => {
+    allRows.forEach(row => {
+      row.addEventListener('scroll', onScrollRow)
+    })
+  }, [onScrollRow])
 
   const allEnvironmentsColumns: Column<FlagState>[] = useMemo(
     () => [
@@ -153,7 +180,11 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
     [nonProdEnvs, prodEnvs, queryParams, gitSync]
   )
 
-  return <TableV2<FlagState> columns={allEnvironmentsColumns} data={projectFlags?.flags || []} />
+  return (
+    <Container ref={rowsRef}>
+      <TableV2<FlagState> columns={allEnvironmentsColumns} data={projectFlags?.flags || []} />
+    </Container>
+  )
 }
 
 export default AllEnvironmentsFlagsListing
