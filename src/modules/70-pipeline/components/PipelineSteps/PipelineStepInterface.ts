@@ -216,7 +216,8 @@ export enum StepType {
   AwsSamService = 'AwsSamService',
   AwsSamInfra = 'AwsSamInfra',
   DownloadManifests = 'DownloadManifests',
-  IACMTerraformPlugin = 'IACMTerraformPlugin'
+  IACMTerraformPlugin = 'IACMTerraformPlugin',
+  DownloadServerlessManifests = 'DownloadServerlessManifests'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

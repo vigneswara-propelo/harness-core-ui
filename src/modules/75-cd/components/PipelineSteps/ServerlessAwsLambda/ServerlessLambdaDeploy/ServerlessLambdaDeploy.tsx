@@ -19,7 +19,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { ServerlessLambdaDeployStepEditRef } from './ServerlessLambdaDeployStepEdit'
 import { ServerlessLambdaDeployStepInputSet } from './ServerlessLambdaDeployStepInputSet'
-import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
+import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export interface ServerlessLambdaDeployStepValues extends StepElementConfig {

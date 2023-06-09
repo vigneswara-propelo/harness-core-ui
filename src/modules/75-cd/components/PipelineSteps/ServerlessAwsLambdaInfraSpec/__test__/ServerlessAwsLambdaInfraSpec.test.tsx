@@ -14,7 +14,7 @@ import { awsConnectorListResponse } from '@connectors/components/ConnectorRefere
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { ServerlessAwsLambdaSpec } from '../ServerlessAwsLambdaSpec'
+import { ServerlessAwsLambdaInfraSpec } from '../ServerlessAwsLambdaInfraSpec'
 import { getConnectorResponse } from '../../ServerlessInfraSpec/mocks/ConnectorResponse.mock'
 
 const ConnectorResponse = getConnectorResponse('ServerlessAwsLambda')
@@ -103,7 +103,7 @@ const connectorRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastruc
 
 describe('Test ServerlessAwsLambdaSpec snapshot', () => {
   beforeEach(() => {
-    factory.registerStep(new ServerlessAwsLambdaSpec())
+    factory.registerStep(new ServerlessAwsLambdaInfraSpec())
   })
 
   test('should render edit view with empty initial values', () => {
@@ -174,7 +174,7 @@ describe('Test ServerlessAwsLambdaSpec snapshot', () => {
 
 describe('Test ServerlessAwsLambdaSpec behavior', () => {
   beforeEach(() => {
-    factory.registerStep(new ServerlessAwsLambdaSpec())
+    factory.registerStep(new ServerlessAwsLambdaInfraSpec())
   })
 
   test('should call onUpdate if valid values entered - inputset', async () => {
@@ -335,7 +335,7 @@ describe('Test ServerlessAwsLambdaSpec behavior', () => {
 
 describe('Test ServerlessAwsLambdaSpec autocomplete', () => {
   test('Test connector autocomplete', async () => {
-    const step = new ServerlessAwsLambdaSpec() as any
+    const step = new ServerlessAwsLambdaInfraSpec() as any
     let list: CompletionItemInterface[]
 
     list = await step.getConnectorsListForYaml(connectorRefPath, getYaml(), getParams())

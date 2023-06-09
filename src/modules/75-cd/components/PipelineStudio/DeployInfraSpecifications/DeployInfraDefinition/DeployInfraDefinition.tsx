@@ -73,7 +73,7 @@ import {
   getServiceDefinitionType,
   isElastigroupDeploymentType
 } from '@pipeline/utils/stageHelpers'
-import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
+import type { ServerlessAwsLambdaInfraSpec } from '@cd/components/PipelineSteps/ServerlessAwsLambdaInfraSpec/ServerlessAwsLambdaInfraSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -529,11 +529,11 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
       }
       case InfraDeploymentType.ServerlessAwsLambda: {
         return (
-          <StepWidget<ServerlessAwsLambdaSpec>
+          <StepWidget<ServerlessAwsLambdaInfraSpec>
             factory={factory}
             key={stage.stage.identifier}
             readonly={isReadonly}
-            initialValues={initialInfrastructureDefinitionValues as ServerlessAwsLambdaSpec}
+            initialValues={initialInfrastructureDefinitionValues as ServerlessAwsLambdaInfraSpec}
             type={StepType.ServerlessAwsInfra}
             stepViewType={StepViewType.Edit}
             allowableTypes={allowableTypes}

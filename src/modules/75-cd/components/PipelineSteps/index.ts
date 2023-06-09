@@ -45,9 +45,9 @@ import { PDCInfrastructureSpec } from './PDCInfrastructureSpec/PDCInfrastructure
 import { SshWinRmAwsInfrastructureSpec } from './SshWinRmAwsInfrastructureSpec/SshWinRmAwsInfrastructureSpec'
 import { SshWinRmAzureInfrastructureSpec } from './SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { PolicyStep } from './PolicyStep/PolicyStep'
-import { ServerlessLambdaDeployStep } from './ServerlessLambdaDeploy/ServerlessLambdaDeploy'
+import { ServerlessLambdaDeployStep } from './ServerlessAwsLambda/ServerlessLambdaDeploy/ServerlessLambdaDeploy'
 import { ServerlessLambdaRollbackStep } from './ServerlessLambdaRollback/ServerlessLambdaRollback'
-import { ServerlessAwsLambdaSpec } from './ServerlessAWSLambda/ServerlessAwsLambdaSpec'
+import { ServerlessAwsLambdaInfraSpec } from './ServerlessAwsLambdaInfraSpec/ServerlessAwsLambdaInfraSpec'
 import { ServerlessAzureSpec } from './ServerlessAzure/ServerlessAzureSpec'
 import { ServerlessGCPSpec } from './ServerlessGCP/ServerlessGCPSpec'
 import { ServerlessAwsLambdaServiceSpec } from './ServerlessAwsLambdaServiceSpec/ServerlessAwsLambdaServiceSpec'
@@ -137,6 +137,7 @@ import { K8sBlueGreenStageScaleDown } from './K8sBlueGreenStageScaleDown/K8sBlue
 import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
 import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
 import { AwsSamDownloadManifestsStep } from './AwsSam/AwsSamDownloadManifests/AwsSamDownloadManifestsStep'
+import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifests/DownloadServerlessManifestsStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -160,7 +161,7 @@ factory.registerStep(new K8sAwsInfrastructureSpec())
 factory.registerStep(new PDCInfrastructureSpec())
 factory.registerStep(new SshWinRmAwsInfrastructureSpec())
 factory.registerStep(new SshWinRmAzureInfrastructureSpec())
-factory.registerStep(new ServerlessAwsLambdaSpec())
+factory.registerStep(new ServerlessAwsLambdaInfraSpec())
 factory.registerStep(new ServerlessAzureSpec())
 factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
@@ -268,3 +269,4 @@ factory.registerStep(new AwsSamBuildStep())
 factory.registerStep(new AwsSamServiceSpec())
 factory.registerStep(new AwsSamInfraSpec())
 factory.registerStep(new AwsSamDownloadManifestsStep())
+factory.registerStep(new DownloadServerlessManifestsStep())

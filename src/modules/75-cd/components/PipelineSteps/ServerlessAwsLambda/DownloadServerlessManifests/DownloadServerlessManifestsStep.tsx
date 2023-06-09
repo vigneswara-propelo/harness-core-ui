@@ -22,7 +22,7 @@ import { GenericExecutionStepInputSet } from '../../Common/GenericExecutionStep/
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-interface AwsSamDownloadManifestsVariableStepProps {
+interface DownloadServerlessManifestsVariableStepProps {
   initialValues: StepElementConfig
   stageIdentifier: string
   onUpdate?(data: StepElementConfig): void
@@ -30,16 +30,16 @@ interface AwsSamDownloadManifestsVariableStepProps {
   variablesData: StepElementConfig
 }
 
-export class AwsSamDownloadManifestsStep extends PipelineStep<StepElementConfig> {
-  protected type = StepType.DownloadManifests
-  protected stepName = 'Download Manifests'
+export class DownloadServerlessManifestsStep extends PipelineStep<StepElementConfig> {
+  protected type = StepType.DownloadServerlessManifests
+  protected stepName = 'Download Serverless Manifests'
   protected stepIcon: IconName = 'aws-sam-download-manifests'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DownloadManifests'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
-    type: StepType.DownloadManifests,
+    type: StepType.DownloadServerlessManifests,
     timeout: '10m',
     spec: {}
   }
@@ -73,7 +73,7 @@ export class AwsSamDownloadManifestsStep extends PipelineStep<StepElementConfig>
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as AwsSamDownloadManifestsVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as DownloadServerlessManifestsVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -86,7 +86,7 @@ export class AwsSamDownloadManifestsStep extends PipelineStep<StepElementConfig>
 
     return (
       <GenericExecutionStepEditRef
-        formikFormName={'awsSamDownloadManifestsStep'}
+        formikFormName={'downloadServerlessManifestsStep'}
         initialValues={initialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}

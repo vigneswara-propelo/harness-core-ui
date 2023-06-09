@@ -5009,7 +5009,6 @@ export interface StringsMap {
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
   'pipeline.stepDescription.AwsSamBuild': string
   'pipeline.stepDescription.AwsSamDeploy': string
-  'pipeline.stepDescription.AwsSamDownloadManifests': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
@@ -5026,6 +5025,7 @@ export interface StringsMap {
   'pipeline.stepDescription.DeployCloudFunctionRollbackGenOne': string
   'pipeline.stepDescription.DeployCloudFunctionTrafficShift': string
   'pipeline.stepDescription.DockerHub': string
+  'pipeline.stepDescription.DownloadManifests': string
   'pipeline.stepDescription.ECR': string
   'pipeline.stepDescription.ECSBlueGreenCreateService': string
   'pipeline.stepDescription.ECSBlueGreenRollback': string

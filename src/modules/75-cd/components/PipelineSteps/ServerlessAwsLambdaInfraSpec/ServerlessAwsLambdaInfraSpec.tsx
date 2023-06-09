@@ -38,7 +38,7 @@ interface ServerlessAwsLambdaInfrastructureSpecStep extends ServerlessAwsLambdaI
 }
 
 const ServerlessAwsConnectorRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
-export class ServerlessAwsLambdaSpec extends PipelineStep<ServerlessAwsLambdaInfrastructureSpecStep> {
+export class ServerlessAwsLambdaInfraSpec extends PipelineStep<ServerlessAwsLambdaInfrastructureSpecStep> {
   lastFetched: number
   protected type = StepType.ServerlessAwsInfra
   protected defaultValues: ServerlessAwsLambdaInfrastructure = {
