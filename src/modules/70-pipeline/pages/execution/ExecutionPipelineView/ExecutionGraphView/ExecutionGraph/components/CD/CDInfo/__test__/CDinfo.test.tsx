@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { getAllByTestId, getByTestId, getByText, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import CDInfo, { CDInfoProps } from '../CDInfo'
 
@@ -15,6 +15,30 @@ const getProps = (): CDInfoProps => ({
   barrier: {
     barrierInfoLoading: false,
     barrierData: null
+  }
+})
+
+const serviceEnvProps = (): CDInfoProps => ({
+  data: {
+    data: {
+      moduleInfo: {
+        cd: {
+          serviceInfo: {
+            displayName: 'ServiceA',
+            artifacts: {
+              sidecars: [],
+              primary: {
+                imagePath: 'test-image'
+              }
+            }
+          },
+          infraExecutionSummary: {
+            name: 'infra1',
+            infrastructureIdentifier: 'infrastructure-1'
+          }
+        }
+      }
+    }
   }
 })
 
@@ -28,5 +52,34 @@ describe('CDInfo', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('when service, environment are available on data', () => {
+    const props = serviceEnvProps()
+    const { container } = render(
+      <TestWrapper>
+        <CDInfo {...props} />
+      </TestWrapper>
+    )
+
+    expect(getByText(container, 'serviceOrServices')).toBeInTheDocument()
+
+    const textElement = getByTestId(container, 'hovercard-service')
+    expect(textElement.textContent).toBe('ServiceA')
+
+    expect(getByText(container, 'environmentOrEnvironments')).toBeInTheDocument()
+
+    const envElement = getByTestId(container, 'hovercard-environment')
+    expect(envElement.textContent).toBe('infra1')
+
+    expect(getByText(container, 'infrastructureText')).toBeInTheDocument()
+
+    const infraElement = getByTestId(container, 'hovercard-infraStructure')
+    expect(infraElement.textContent).toBe('infrastructure-1')
+
+    expect(getByText(container, 'artifactOrArtifacts')).toBeInTheDocument()
+
+    const artifacts = getAllByTestId(container, 'hovercard-artifacts')
+    expect(artifacts[0].textContent).toBe('test-image')
   })
 })

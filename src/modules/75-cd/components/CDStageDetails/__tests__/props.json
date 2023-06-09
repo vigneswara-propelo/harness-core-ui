@@ -24,7 +24,8 @@
         "infraExecutionSummary": {
           "identifier": "Production",
           "name": "Production",
-          "type": "Production"
+          "type": "Production",
+          "infrastructureIdentifier": "infra1"
         }
       }
     },

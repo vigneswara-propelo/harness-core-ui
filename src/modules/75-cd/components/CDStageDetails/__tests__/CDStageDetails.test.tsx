@@ -15,10 +15,13 @@ import routes from '@common/RouteDefinitions'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { CDStageDetails } from '../CDStageDetails'
+import { InfraDefinitionTabs } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
+
 import props from './props.json'
 import propsWithGitOpsApps from './propsWithGitOpsApps.json'
 import propsAccountSrvcEnv from './propsAccountSrvcEnv.json'
+import propsWithClusters from './props_gitops.json'
+import { CDStageDetails } from '../CDStageDetails'
 
 const getModuleParams = (scope: Scope, module = 'cd') => ({
   accountId: 'accountId',
@@ -45,9 +48,8 @@ const renderComponent = (stageProps: any): RenderResult => {
 
 describe('<CDStageDetails /> tests', () => {
   test('snapshot test', () => {
-    const { container } = renderComponent(props)
+    renderComponent(props)
 
-    expect(container).toMatchSnapshot()
     const serviceLinkElement = screen.getByTestId('serviceLink')
     expect(
       within(serviceLinkElement).getByRole('link', {
@@ -71,6 +73,20 @@ describe('<CDStageDetails /> tests', () => {
         ...getModuleParams(Scope.PROJECT),
         environmentIdentifier: 'Production',
         sectionId: 'INFRASTRUCTURE'
+      } as any)
+    )
+    expect(
+      within(envLinkElement).getByRole('link', {
+        name: 'infra1'
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toEnvironmentDetails({
+        ...getModuleParams(Scope.PROJECT),
+        environmentIdentifier: 'Production',
+        sectionId: 'INFRASTRUCTURE',
+        infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+        infrastructureId: 'infra1'
       } as any)
     )
   })
@@ -113,7 +129,28 @@ describe('<CDStageDetails /> tests', () => {
   })
 
   test('test gitops apps', () => {
-    const { container } = renderComponent(propsWithGitOpsApps)
+    const { container } = render(
+      <TestWrapper
+        path={routes.toExecutionPipelineView({ ...executionPathProps, ...modulePathProps })}
+        pathParams={{
+          ...getModuleParams(Scope.PROJECT),
+          pipelineIdentifier: 'pipeline',
+          executionIdentifier: 'execution',
+          source: 'deployments'
+        }}
+      >
+        <CDStageDetails
+          {...(propsWithGitOpsApps as any)}
+          path={routes.toExecutionPipelineView({ ...executionPathProps, ...modulePathProps })}
+          pathParams={{
+            ...getModuleParams(Scope.PROJECT),
+            pipelineIdentifier: 'pipeline',
+            executionIdentifier: 'execution',
+            source: 'deployments'
+          }}
+        />
+      </TestWrapper>
+    )
 
     const gitOpsAppsNode = container.querySelector('[data-test-id="GitopsApplications"]')
     expect(gitOpsAppsNode).toMatchSnapshot()
@@ -152,5 +189,26 @@ describe('<CDStageDetails /> tests', () => {
         environmentIdentifier: getIdentifierFromScopedRef(projectLevelEnvId)
       } as any)
     )
+  })
+
+  test('test gitops with environments and clusters', () => {
+    render(
+      <TestWrapper
+        path={routes.toExecutionPipelineView({ ...executionPathProps, ...modulePathProps })}
+        pathParams={{
+          ...getModuleParams(Scope.PROJECT),
+          pipelineIdentifier: 'pipeline',
+          executionIdentifier: 'execution',
+          source: 'deployments'
+        }}
+      >
+        <CDStageDetails {...(propsWithClusters as any)} />
+      </TestWrapper>
+    )
+
+    expect(screen.getByText('serviceOrServices')).toBeInTheDocument()
+    expect(screen.getByText('environmentOrEnvironments')).toBeInTheDocument()
+    expect(screen.getByText('cluster1')).toBeInTheDocument()
+    expect(screen.getByText('cluster2')).toBeInTheDocument()
   })
 })

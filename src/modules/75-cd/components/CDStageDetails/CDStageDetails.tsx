@@ -10,7 +10,8 @@ import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Popover, Text } from '@harness/uicore'
+import { Layout, Popover, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { String as StrTemplate } from 'framework/strings'
 import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
@@ -22,6 +23,9 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps, ModulePathParams, Module } from '@common/interfaces/RouteInterfaces'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
+import { EnvironmentDetailsTab } from '../EnvironmentsV2/utils'
+import { InfraDefinitionTabs } from '../EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
+
 import serviceCardCSS from '@cd/components/ServicePopoverCard/ServicePopoverCard.module.scss'
 import css from './CDStageDetails.module.scss'
 
@@ -112,6 +116,16 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const serviceScope = getScopeFromValue(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
   const infrastructureScope = getScopeFromValue(get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''))
 
+  const getGitopsClusters = (envId: string) => {
+    return Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.clusters'))
+      ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).clusters.filter(
+          cluster =>
+            cluster.envName === envId &&
+            defaultTo({ name: cluster.clusterName, identifier: cluster.clusterId }, { name: '', identifier: '' })
+        )
+      : []
+  }
+
   return (
     <div className={css.container}>
       <div className={cx(css.main, { [css.threeSections]: !!gitOpsApps.length })}>
@@ -137,7 +151,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
                       accountRoutePlacement: 'settings'
                     })}`}
                   >
-                    <Text className={css.stageItemDetails} lineClamp={1}>
+                    <Text className={css.stageItemDetails} lineClamp={1} color={Color.PRIMARY_6}>
                       {get(stage, 'moduleInfo.cd.serviceInfo.displayName', null)}
                     </Text>
                   </Link>
@@ -151,51 +165,107 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
           <StrTemplate className={css.title} tagName="div" stringID="environmentOrEnvironments" />
           <ul className={css.values} data-testid={'environmentLink'}>
             {gitOpsEnvironments.length ? (
-              <Text lineClamp={2} className={css.gitOpsEnvText}>
+              <>
                 {gitOpsEnvironments.map(env => {
                   const gitOpsEnvironmentScope = getScopeFromValue(defaultTo(env.identifier, ''))
+                  const gitClusters = getGitopsClusters(env?.name as string)
+
                   return (
-                    <Link
-                      key={env.identifier}
-                      to={`${routes.toEnvironmentDetails({
-                        accountId,
-                        ...(gitOpsEnvironmentScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-                        ...(gitOpsEnvironmentScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-                        environmentIdentifier: getIdentifierFromScopedRef(defaultTo(env.identifier, '')),
-                        module,
-                        accountRoutePlacement: 'settings'
-                      })}`}
-                    >
-                      <Text lineClamp={1} className={css.stageItemDetails} margin={{ right: 'xsmall' }}>
-                        {env.name}
-                      </Text>
-                    </Link>
+                    <Layout.Horizontal key={env.identifier}>
+                      <Link
+                        key={env.identifier}
+                        to={`${routes.toEnvironmentDetails({
+                          accountId,
+                          ...(gitOpsEnvironmentScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                          ...(gitOpsEnvironmentScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+                          environmentIdentifier: getIdentifierFromScopedRef(defaultTo(env.identifier, '')),
+                          module,
+                          accountRoutePlacement: 'settings'
+                        })}`}
+                      >
+                        <Text className={css.stageItemDetails} margin={{ right: 'xsmall' }} color={Color.PRIMARY_6}>
+                          {env.name}
+                        </Text>
+                      </Link>
+                      {gitClusters?.length ? (
+                        <>
+                          (
+                          <StrTemplate tagName="div" stringID="common.clusters" />:
+                          <Text color={Color.PRIMARY_6} style={{ paddingLeft: '5px' }}>
+                            {gitClusters[0]?.clusterName}
+                          </Text>
+                          {gitClusters?.length > 1 ? (
+                            <Popover
+                              interactionKind={PopoverInteractionKind.HOVER}
+                              content={
+                                <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
+                                  {gitClusters.map((cluster: any, index: number) => {
+                                    return (
+                                      <div key={index}>
+                                        <span>{cluster.clusterName}</span>
+                                      </div>
+                                    )
+                                  })}
+                                </Layout.Vertical>
+                              }
+                            >
+                              <Text>....{`+ ${gitClusters?.length - 1}`}</Text>
+                            </Popover>
+                          ) : null}
+                          )
+                        </>
+                      ) : null}
+                    </Layout.Horizontal>
                   )
                 })}
-              </Text>
+              </>
             ) : (
-              <Link
-                to={routes.toEnvironmentDetails({
-                  accountId,
-                  ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-                  ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-                  environmentIdentifier: getIdentifierFromScopedRef(
-                    get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', '')
-                  ),
-                  module,
-                  sectionId: 'INFRASTRUCTURE',
-                  accountRoutePlacement: 'settings'
-                })}
-              >
-                <li>
-                  <Text lineClamp={1} className={css.stageItemDetails}>
-                    {get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}
-                  </Text>
-                </li>
-              </Link>
+              <Layout.Horizontal>
+                <Link
+                  to={routes.toEnvironmentDetails({
+                    accountId,
+                    ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                    ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+                    environmentIdentifier: getIdentifierFromScopedRef(
+                      get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', '')
+                    ),
+                    module,
+                    sectionId: 'INFRASTRUCTURE',
+                    accountRoutePlacement: 'settings'
+                  })}
+                >
+                  <li>
+                    <Text lineClamp={1} className={css.stageItemDetails} color={Color.PRIMARY_6}>
+                      {get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}
+                    </Text>
+                  </li>
+                </Link>
+                (
+                <>
+                  <StrTemplate stringID="infrastructureText" />:
+                  <Link
+                    to={routes.toEnvironmentDetails({
+                      accountId,
+                      orgIdentifier,
+                      projectIdentifier,
+                      environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
+                      sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
+                      infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+                      infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', ''),
+                      module
+                    })}
+                  >
+                    <Text lineClamp={1} className={css.stageItemDetails} color={Color.PRIMARY_6}>
+                      {get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null)}
+                    </Text>
+                  </Link>
+                </>
+                )
+              </Layout.Horizontal>
             )}
           </ul>
         </div>
+
         <GitopsApplications
           gitOpsApps={gitOpsApps}
           orgIdentifier={orgIdentifier}

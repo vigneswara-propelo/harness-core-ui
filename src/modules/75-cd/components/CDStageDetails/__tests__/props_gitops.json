@@ -9,8 +9,32 @@
     "module": "cd",
     "moduleInfo": {
       "cd": {
+        "gitopsExecutionSummary": {
+          "environments": [
+            {
+              "name": "env1",
+              "identifier": "env1"
+            },
+            {
+              "name": "env2",
+              "identifier": "env2"
+            }
+          ],
+          "clusters": [
+            {
+              "clusterName": "cluster1",
+              "clusterId": "cluster1",
+              "envName": "env1"
+            },
+            {
+              "clusterName": "cluster2",
+              "clusterId": "cluster2",
+              "envName": "env2"
+            }
+          ]
+        },
         "serviceInfo": {
-          "identifier": "account.Order",
+          "identifier": "Order",
           "displayName": "Order",
           "deploymentType": "Kubernetes",
           "artifacts": {
@@ -22,10 +46,8 @@
           }
         },
         "infraExecutionSummary": {
-          "identifier": "account.Production",
+          "identifier": "Production",
           "name": "Production",
-          "infrastructureIdentifier": "serverlessawsprod",
-          "infrastructureName": "serverless-aws-prod",
           "type": "Production"
         }
       }
