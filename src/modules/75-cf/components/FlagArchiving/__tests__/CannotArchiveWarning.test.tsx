@@ -25,7 +25,7 @@ const renderComponent = (props: Partial<CannotArchiveWarningProps> = {}): Render
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <CannotArchiveWarning flagName="my_new_flag" prerequisites={prerequisitesMock} {...props} />
+      <CannotArchiveWarning flagIdentifier="my_new_flag" prerequisites={prerequisitesMock} {...props} />
     </TestWrapper>
   )
 }

@@ -16,11 +16,11 @@ import type { Prerequisite } from 'services/cf'
 import { ItemContainer } from '../ItemContainer/ItemContainer'
 
 export interface CannotArchiveWarningProps {
-  flagName: string
+  flagIdentifier: string
   prerequisites: Prerequisite[]
 }
 
-const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({ flagName, prerequisites }) => {
+const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({ flagIdentifier, prerequisites }) => {
   const { getString } = useStrings()
   const { withActiveEnvironment } = useActiveEnvironment()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
@@ -28,7 +28,7 @@ const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({ flagName, prerequ
   return (
     <Layout.Vertical spacing="small">
       <Text style={{ wordBreak: 'break-word' }} font={{ variation: FontVariation.BODY2 }}>
-        {getString('cf.featureFlags.archiving.cannotArchive', { flagName })}:
+        {getString('cf.featureFlags.archiving.cannotArchive', { flagIdentifier })}:
       </Text>
       {prerequisites.map(flag => (
         <ItemContainer data-testid="flag-prerequisite-row" key={flag.feature}>
