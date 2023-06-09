@@ -104,7 +104,8 @@ export default function DeployInfrastructure({
   lazyInfrastructure,
   environmentPermission
 }: DeployInfrastructureProps): JSX.Element {
-  const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
+  const { values, setFieldValue, setValues, setFieldTouched, validateForm } =
+    useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
@@ -297,8 +298,12 @@ export default function DeployInfrastructure({
     : getString('cd.pipelineSteps.environmentTab.selectInfrastructure')
 
   const updateFormikAndLocalState = (newFormValues: DeployEnvironmentEntityFormState): void => {
+    const fieldName = isMultiInfrastructure ? `infrastructures.${environmentIdentifier}` : 'infrastructure'
     // this sets the form values
     setValues(newFormValues)
+    setFieldTouched(fieldName, true)
+    validateForm(newFormValues)
+
     // this updates the local state
     setSelectedInfrastructures(getAllFixedInfrastructures(newFormValues, environmentIdentifier))
   }
