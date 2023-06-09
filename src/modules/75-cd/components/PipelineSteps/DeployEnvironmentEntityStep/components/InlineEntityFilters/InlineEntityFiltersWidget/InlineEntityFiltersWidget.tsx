@@ -15,9 +15,6 @@ import { Radio, RadioGroup } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-
 import { InlineEntityFiltersProps, InlineEntityFiltersRadioType } from '../InlineEntityFiltersUtils'
 import EntityFilterList from '../EntityFiltersList/EntityFilterList'
 
@@ -46,7 +43,6 @@ export default function InlineEntityFiltersWidget<T>({
   const [radioValue, setRadioValue] = useState(
     get(values, filterPrefix, [])?.length ? InlineEntityFiltersRadioType.FILTERS : InlineEntityFiltersRadioType.MANUAL
   )
-  const isInfraClusterTaggingEnabled = useFeatureFlag(FeatureFlag.CDS_FILTER_INFRA_CLUSTERS_ON_TAGS)
 
   const handleFilterRadio = (event: BaseSyntheticEvent): void => {
     const selectedRadioValue = event.target.value
@@ -76,11 +72,7 @@ export default function InlineEntityFiltersWidget<T>({
           </Layout.Horizontal>
         </Radio>
 
-        <Radio
-          value={InlineEntityFiltersRadioType.FILTERS}
-          style={{ display: 'flex' }}
-          disabled={!isInfraClusterTaggingEnabled}
-        >
+        <Radio value={InlineEntityFiltersRadioType.FILTERS} style={{ display: 'flex' }}>
           <Layout.Horizontal>
             <div data-tooltip-id="inline-deployToFilteredList" style={{ textAlign: 'center' }}>
               {getString('common.deployToFilteredList')}
