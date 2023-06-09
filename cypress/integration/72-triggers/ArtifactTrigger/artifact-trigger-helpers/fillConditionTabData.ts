@@ -25,18 +25,18 @@ export const fillConditionTabData = (
   const { buildOperator, buildValue } = buildCondition
   cy.get('input[name="buildOperator"]').clear().type(buildOperator)
   cy.contains('p', buildOperator).click({ force: true })
-  cy.get('input[name="buildValue"]').clear().clear().type(buildValue)
+  cy.get('input[name="buildValue"]').clear().type(buildValue)
 
   //Metadata Conditions
   metadataConditions.forEach((metadataCondition, index) => {
     const { key, operator, value } = metadataCondition
     cy.contains('p', '+ Add').click()
-    cy.get(`input[name="metaDataConditions.${index}.key"]`).clear().clear().type(key)
+    cy.get(`input[name="metaDataConditions.${index}.key"]`).clear().type(key)
     cy.get(`input[name="metaDataConditions.${index}.operator"]`).clear().type(operator)
     cy.contains('p', operator).click({ force: true })
-    cy.get(`input[name="metaDataConditions.${index}.value"]`).clear().clear().type(value)
+    cy.get(`input[name="metaDataConditions.${index}.value"]`).clear().type(value)
   })
 
   // JEXL Condition
-  cy.get('input[name="jexlCondition"]').clear().clear().type(jexlCondition)
+  cy.get('input[name="jexlCondition"]').clear().type(jexlCondition)
 }

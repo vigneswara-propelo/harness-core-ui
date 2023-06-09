@@ -60,7 +60,7 @@ nodes: nodes
 nodesLabel: Nodes
 amiTags: AMI Tags
 advancedConfiguration: 'Advanced Configuration'
-amiFilters: AMi Filters
+amiFilters: AMI Filters
 poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
 outOf: Out Of

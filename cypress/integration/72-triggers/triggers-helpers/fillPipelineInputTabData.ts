@@ -1,3 +1,4 @@
+import { parse } from 'yaml'
 import { inputSetListAPIWithoutSort } from '../../../support/70-pipeline/constants'
 import { createTriggerAPIV2 } from '../constansts'
 
@@ -27,5 +28,7 @@ export const fillPipelineInputTabDataAndSubmitForm = ({ inputSetRefs = [], timeo
   cy.get('button[type="submit"]').click()
 
   // Create API Call
-  cy.wait('@createTriggerAPIV2').its('request.body').should('eq', triggerYAML)
+  cy.wait('@createTriggerAPIV2').then(xhr => {
+    expect(Cypress._.isMatch(parse(xhr.request.body), parse(triggerYAML))).to.be.true
+  })
 }

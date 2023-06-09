@@ -21,18 +21,18 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { defaultTo, get } from 'lodash-es'
+import { get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getConnectorIdValue, amiFilters, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useListAwsRegions } from 'services/portal'
-import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import type { AMIRegistrySpec } from 'services/pipeline-ng'
 import { useListTagsForAmiArtifactMutation } from 'services/cd-ng-rq'
-import type { AMITagObject, ConnectorConfigDTO } from 'services/cd-ng'
+import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import MultiTypeArrayTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeArrayTagSelector'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -63,11 +63,15 @@ function FormComponent({
 
   useEffect(() => {
     if (!fetchingRegions && regionData?.resource) {
-      const regionValues = defaultTo(regionData?.resource, []).map(region => ({
-        value: region.value,
-        label: region.name
-      }))
-      setRegions(regionValues as SelectOption[])
+      setRegions(
+        regionData.resource.map(
+          region =>
+            ({
+              value: region.value,
+              label: region.name
+            } as SelectOption)
+        )
+      )
     }
   }, [regionData?.resource, fetchingRegions])
 
@@ -89,12 +93,7 @@ function FormComponent({
 
   useEffect(() => {
     if (!isTagsLoading && tagsData?.data) {
-      const tagOption = get(tagsData, 'data', []).map((tag: AMITagObject) => {
-        const tagName = tag?.tagName as string
-        return { label: tagName, value: tagName }
-      })
-
-      setTags(tagOption)
+      setTags(tagsData.data.map(({ tagName }) => ({ label: tagName, value: tagName } as SelectOption)))
     }
   }, [tagsData?.data, isTagsLoading])
 
@@ -106,7 +105,7 @@ function FormComponent({
 
   return (
     <FormikForm>
-      <div className={cx(css.connectorForm, formClassName)}>
+      <div className={cx(css.artifactForm, formClassName)}>
         <div className={css.jenkinsFieldContainer}>
           <FormInput.MultiTypeInput
             name="region"
@@ -130,7 +129,7 @@ function FormComponent({
                 const selectedRegionValue = (selectedRegion as unknown as any)?.value ?? selectedRegion
                 if (formik.values?.region !== selectedRegionValue) {
                   setTags([])
-                  resetFieldValue(formik, 'tags', {})
+                  resetFieldValue(formik, 'tags', [])
                 }
               }
             }}
@@ -139,25 +138,25 @@ function FormComponent({
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
-          <MultiTypeTagSelector
+          <MultiTypeArrayTagSelector
             name="tags"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED]}
             tags={tags}
             label={getString('pipeline.amiTags')}
             isLoadingTags={isTagsLoading}
-            initialTags={formik?.initialValues?.tags || {}}
+            initialTags={initialValues?.tags || []}
             errorMessage={get(tagsError, 'message', getString('common.noTags'))}
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
-          <MultiTypeTagSelector
+          <MultiTypeArrayTagSelector
             name="filters"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED]}
             tags={amiFilters}
             label={getString('pipeline.amiFilters')}
-            initialTags={initialValues?.filters}
+            initialTags={initialValues?.filters || []}
             errorMessage={get(tagsError, 'data.message', '')}
           />
         </div>
@@ -186,16 +185,6 @@ export function AmazonMachineImage(
   const { getString } = useStrings()
   const { handleSubmit, initialValues, prevStepData } = props
 
-  const submitFormData = (formData: AMIRegistrySpec, connectorId?: string): void => {
-    handleSubmit({
-      identifier: formData.identifier,
-      connectorRef: connectorId,
-      region: formData.region,
-      tags: formData.tags,
-      filters: formData.filters
-    })
-  }
-
   const schemaObject = {
     region: Yup.string().required(getString('validation.regionRequired'))
   }
@@ -212,12 +201,10 @@ export function AmazonMachineImage(
         formName="ami"
         validationSchema={primarySchema}
         onSubmit={formData => {
-          submitFormData?.(
-            {
-              ...formData
-            },
-            getConnectorIdValue(prevStepData)
-          )
+          handleSubmit?.({
+            ...formData,
+            connectorRef: getConnectorIdValue(prevStepData)
+          })
         }}
       >
         {formik => {

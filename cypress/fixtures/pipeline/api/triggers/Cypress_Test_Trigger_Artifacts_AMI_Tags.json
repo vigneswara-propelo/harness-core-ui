@@ -1,0 +1,19 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "tagName": "owner"
+    },
+    {
+      "tagName": "purpose"
+    },
+    {
+      "tagName": "team"
+    },
+    {
+      "tagName": "type"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "99327ce7-368a-470c-bff2-fd80f80c2026"
+}

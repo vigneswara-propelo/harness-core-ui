@@ -145,7 +145,7 @@ const TagSelector = ({
           <Layout.Vertical spacing="small">
             <Text className={css.textStyles}>{index === 0 ? getString('keyLabel') : null}</Text>
             <Select
-              name={`tagslabel${index + 1}`}
+              name={formatAsArray ? `${name}[${index}].name` : `tagslabel${index + 1}`}
               value={{ label: tag.key, value: tag.key }}
               items={availableTags}
               inputProps={{
