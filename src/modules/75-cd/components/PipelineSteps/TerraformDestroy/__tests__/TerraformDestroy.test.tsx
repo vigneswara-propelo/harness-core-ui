@@ -465,7 +465,7 @@ describe('Test TerraformDestroy', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('renders remote backend config when CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG is on for TerraformDestroy', async () => {
+  test('renders remote backend config', async () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={{
@@ -521,11 +521,6 @@ describe('Test TerraformDestroy', () => {
         }}
         type={StepType.TerraformDestroy}
         stepViewType={StepViewType.Edit}
-        testWrapperProps={{
-          defaultAppStoreValues: {
-            featureFlags: { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG: true }
-          }
-        }}
       />
     )
 

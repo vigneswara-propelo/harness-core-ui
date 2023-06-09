@@ -582,6 +582,30 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
                   class="divider"
                 />
                 <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                >
+                  <div
+                    class="fileSelect"
+                  >
+                    <select
+                      class="fileDropdown"
+                      data-testid="backendConfigurationOptions"
+                      name="spec.configuration.spec.backendConfig.type"
+                    >
+                      <option
+                        value="Inline"
+                      >
+                        inline
+                      </option>
+                      <option
+                        value="Remote"
+                      >
+                        remote
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
                   class="formGroup addMarginBottom"
                 >
                   <div
@@ -1568,6 +1592,30 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
                 <div
                   class="divider"
                 />
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                >
+                  <div
+                    class="fileSelect"
+                  >
+                    <select
+                      class="fileDropdown"
+                      data-testid="backendConfigurationOptions"
+                      name="spec.configuration.spec.backendConfig.type"
+                    >
+                      <option
+                        value="Inline"
+                      >
+                        inline
+                      </option>
+                      <option
+                        value="Remote"
+                      >
+                        remote
+                      </option>
+                    </select>
+                  </div>
+                </div>
                 <div
                   class="formGroup addMarginBottom"
                 >
@@ -2714,6 +2762,30 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
                 <div
                   class="divider"
                 />
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                >
+                  <div
+                    class="fileSelect"
+                  >
+                    <select
+                      class="fileDropdown"
+                      data-testid="backendConfigurationOptions"
+                      name="spec.configuration.spec.backendConfig.type"
+                    >
+                      <option
+                        value="Inline"
+                      >
+                        inline
+                      </option>
+                      <option
+                        value="Remote"
+                      >
+                        remote
+                      </option>
+                    </select>
+                  </div>
+                </div>
                 <div
                   class="formGroup addMarginBottom"
                 >

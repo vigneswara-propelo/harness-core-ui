@@ -1908,6 +1908,30 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
                 class="divider addMarginBottom"
               />
               <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+              >
+                <div
+                  class="fileSelect"
+                >
+                  <select
+                    class="fileDropdown"
+                    data-testid="backendConfigurationOptions"
+                    name="spec.configuration.backendConfig.type"
+                  >
+                    <option
+                      value="Inline"
+                    >
+                      inline
+                    </option>
+                    <option
+                      value="Remote"
+                    >
+                      remote
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div
                 class="formGroup addMarginBottom"
               >
                 <div

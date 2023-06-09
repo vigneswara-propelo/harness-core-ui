@@ -127,7 +127,6 @@ function TerraformPlanWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
   const {
-    CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG,
     CD_TERRAFORM_CLOUD_CLI_NG,
     CDS_TERRAFORM_CLI_OPTIONS_NG,
     CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
@@ -714,87 +713,81 @@ function TerraformPlanWidget(
                       />
 
                       <div className={cx(css.divider, css.addMarginBottom)} />
-                      {CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG ? (
-                        <>
-                          <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
-                            {get(values.spec, `${fieldPath}.backendConfig.type`) ===
-                              BackendConfigurationTypes.Remote && (
-                              <Layout.Vertical>
-                                <Label
-                                  data-tooltip-id={'TF-plan-remoteBackendConfiguration'}
-                                  style={{ color: Color.GREY_900 }}
-                                  className={css.configLabel}
-                                >
-                                  {getString('cd.backendConfigurationFile')}
-                                  <HarnessDocTooltip
-                                    useStandAlone={true}
-                                    tooltipId="TF-plan-remoteBackendConfiguration"
-                                  />
-                                </Label>
-                              </Layout.Vertical>
-                            )}
-                            <div className={css.fileSelect}>
-                              <select
-                                className={css.fileDropdown}
-                                name={`spec.${fieldPath}.backendConfig.type`}
-                                disabled={readonly}
-                                value={
-                                  get(values.spec, `${fieldPath}.backendConfig.type`) ||
-                                  BackendConfigurationTypes.Inline
-                                }
-                                onChange={e => {
-                                  /* istanbul ignore next */
-                                  onSelectChange(e, setFieldValue, fieldPath)
-                                }}
-                                data-testid="backendConfigurationOptions"
+                      <>
+                        <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
+                          {get(values.spec, `${fieldPath}.backendConfig.type`) === BackendConfigurationTypes.Remote && (
+                            <Layout.Vertical>
+                              <Label
+                                data-tooltip-id={'TF-plan-remoteBackendConfiguration'}
+                                style={{ color: Color.GREY_900 }}
+                                className={css.configLabel}
                               >
-                                <option value={BackendConfigurationTypes.Inline}>{getString('inline')}</option>
-                                <option value={BackendConfigurationTypes.Remote}>{getString('remote')}</option>
-                              </select>
-                            </div>
-                          </Layout.Horizontal>
-                          {get(values.spec, `${fieldPath}.backendConfig.type`) === BackendConfigurationTypes.Remote ? (
-                            <div
-                              className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
-                              onClick={() => {
-                                /* istanbul ignore next */
-                                setShowBackendConfigRemoteWizard(true)
-                              }}
-                              data-testid="remoteTemplate"
-                            >
-                              <>
-                                {!backendConfigFilePath && (
-                                  <a
-                                    className={css.configPlaceHolder}
-                                    onClick={() => setShowBackendConfigRemoteWizard(true)}
-                                  >
-                                    {getString('cd.backendConfigFilePlaceHolder')}
-                                  </a>
-                                )}
-                                {backendConfigFilePath && (
-                                  <>
-                                    <Text font="normal" lineClamp={1} width={200}>
-                                      /{backendConfigFilePath}
-                                    </Text>
-                                    <Button
-                                      minimal
-                                      icon="Edit"
-                                      withoutBoxShadow
-                                      iconProps={{ size: 16 }}
-                                      data-name="backend-config-edit"
-                                      withoutCurrentColor={true}
-                                    />
-                                  </>
-                                )}
-                              </>
-                            </div>
-                          ) : (
-                            inlineBackendConfig(formik, fieldPath)
+                                {getString('cd.backendConfigurationFile')}
+                                <HarnessDocTooltip
+                                  useStandAlone={true}
+                                  tooltipId="TF-plan-remoteBackendConfiguration"
+                                />
+                              </Label>
+                            </Layout.Vertical>
                           )}
-                        </>
-                      ) : (
-                        inlineBackendConfig(formik, fieldPath)
-                      )}
+                          <div className={css.fileSelect}>
+                            <select
+                              className={css.fileDropdown}
+                              name={`spec.${fieldPath}.backendConfig.type`}
+                              disabled={readonly}
+                              value={
+                                get(values.spec, `${fieldPath}.backendConfig.type`) || BackendConfigurationTypes.Inline
+                              }
+                              onChange={e => {
+                                /* istanbul ignore next */
+                                onSelectChange(e, setFieldValue, fieldPath)
+                              }}
+                              data-testid="backendConfigurationOptions"
+                            >
+                              <option value={BackendConfigurationTypes.Inline}>{getString('inline')}</option>
+                              <option value={BackendConfigurationTypes.Remote}>{getString('remote')}</option>
+                            </select>
+                          </div>
+                        </Layout.Horizontal>
+                        {get(values.spec, `${fieldPath}.backendConfig.type`) === BackendConfigurationTypes.Remote ? (
+                          <div
+                            className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
+                            onClick={() => {
+                              /* istanbul ignore next */
+                              setShowBackendConfigRemoteWizard(true)
+                            }}
+                            data-testid="remoteTemplate"
+                          >
+                            <>
+                              {!backendConfigFilePath && (
+                                <a
+                                  className={css.configPlaceHolder}
+                                  onClick={() => setShowBackendConfigRemoteWizard(true)}
+                                >
+                                  {getString('cd.backendConfigFilePlaceHolder')}
+                                </a>
+                              )}
+                              {backendConfigFilePath && (
+                                <>
+                                  <Text font="normal" lineClamp={1} width={200}>
+                                    /{backendConfigFilePath}
+                                  </Text>
+                                  <Button
+                                    minimal
+                                    icon="Edit"
+                                    withoutBoxShadow
+                                    iconProps={{ size: 16 }}
+                                    data-name="backend-config-edit"
+                                    withoutCurrentColor={true}
+                                  />
+                                </>
+                              )}
+                            </>
+                          </div>
+                        ) : (
+                          inlineBackendConfig(formik, fieldPath)
+                        )}
+                      </>
                       <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                         <MultiTypeList
                           name={`spec.${fieldPath}.targets`}
