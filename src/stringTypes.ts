@@ -244,6 +244,7 @@ export interface StringsMap {
   'common.defaultSettings': string
   'common.defineDelegateSelector': string
   'common.delay15Sec': string
+  'common.delegateExpressionList': string
   'common.delegateFailText1Part1': string
   'common.delegateFailText2': string
   'common.delegateFailed': string
