@@ -992,6 +992,7 @@ artifactsSelection:
   extension: Extension
   extensionPlaceholder: Enter Extension
   classifier: Classifier
+  container: container
   classifierPlaceholder: Enter Classifier
   digestPlaceholder: Enter Digest
   packageName: Package Name

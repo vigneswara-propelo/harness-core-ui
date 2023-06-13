@@ -3894,6 +3894,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactsArrayPath': string
   'pipeline.artifactsSelection.classifier': string
   'pipeline.artifactsSelection.classifierPlaceholder': string
+  'pipeline.artifactsSelection.container': string
   'pipeline.artifactsSelection.customArtifactManualFill': string
   'pipeline.artifactsSelection.customArtifactScriptFill': string
   'pipeline.artifactsSelection.delegateselectionPlaceholder': string
