@@ -25,9 +25,6 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import { TagsPopover, PageSpinner } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import DetailPageCard, { ContentType, Content } from '@common/components/DetailPageCard/DetailPageCard'
 import routes from '@common/RouteDefinitions'
@@ -37,6 +34,7 @@ import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { useQueryParams } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
+import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import css from '../TriggerLandingPage.module.scss'
 
 export interface Condition {
@@ -194,24 +192,7 @@ export default function TriggerDetailPage(): JSX.Element {
   const triggerResponseData = triggerResponse?.data
   const { lastTriggerExecutionDetails, name, description, identifier, tags, type } = defaultTo(triggerResponseData, {})
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
   const history = useHistory()
 
@@ -292,7 +273,7 @@ export default function TriggerDetailPage(): JSX.Element {
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
+  const isTriggerRbacDisabled = !isTriggerCreatePermission || isPipelineInvalid
 
   let pipelineInputSet
   if (get(triggerObj, 'inputSetRefs')?.length) {
