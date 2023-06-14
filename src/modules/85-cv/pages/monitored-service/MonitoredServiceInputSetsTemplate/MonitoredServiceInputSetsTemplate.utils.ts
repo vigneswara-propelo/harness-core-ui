@@ -11,6 +11,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import { AWSDataSourceType } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import { CustomHealthMetric } from '@cv/pages/health-source/HealthSourceDrawer/component/customiseHealthSource/CustomiseHealthSource.constant'
 import type { MonitoredServiceDTO } from 'services/cv'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
@@ -149,6 +150,9 @@ export const healthSourceTypeMapping = (type: HealthSourceTypes): ConnectorInfoD
       return Connectors.SignalFX
     case HealthSourceTypes.GrafanaLoki as ConnectorInfoDTO['type']:
     case HealthSourceTypes.GrafanaLokiLogs as ConnectorInfoDTO['type']:
+    case HealthSourceTypes.CustomHealth as ConnectorInfoDTO['type']:
+    case CustomHealthMetric.Metric as ConnectorInfoDTO['type']:
+    case CustomHealthMetric.Log as ConnectorInfoDTO['type']:
       return Connectors.CUSTOM
     default:
       return type as ConnectorInfoDTO['type']
