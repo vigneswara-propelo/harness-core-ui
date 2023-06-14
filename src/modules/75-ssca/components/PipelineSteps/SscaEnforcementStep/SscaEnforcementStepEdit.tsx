@@ -182,12 +182,8 @@ const SscaEnforcementStepEdit = (
               <MultiTypeTextField
                 name="spec.source.spec.image"
                 label={
-                  <Text
-                    className={css.formLabel}
-                    tooltipProps={{ dataTooltipId: 'image' }}
-                    placeholder={getString('imagePlaceholder')}
-                  >
-                    {getString('image')}
+                  <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'image' }}>
+                    {getString('imageLabel')}
                   </Text>
                 }
                 multiTextInputProps={{
