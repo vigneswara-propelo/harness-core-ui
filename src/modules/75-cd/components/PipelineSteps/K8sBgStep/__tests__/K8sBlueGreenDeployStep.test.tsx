@@ -221,7 +221,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
         timeout: '1m',
         spec: {
           skipDryRun: RUNTIME_INPUT_VALUE,
-          pruningEnabled: true
+          pruningEnabled: true,
+          skipUnchangedManifest: false
         }
       })
     )
@@ -236,7 +237,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
         timeout: '1m',
         spec: {
           skipDryRun: RUNTIME_INPUT_VALUE,
-          pruningEnabled: true
+          pruningEnabled: true,
+          skipUnchangedManifest: false
         }
       })
     )

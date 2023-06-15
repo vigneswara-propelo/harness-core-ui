@@ -6499,6 +6499,7 @@ export interface StringsMap {
   'cd.steps.common.enableKubernetesPruning': string
   'cd.steps.common.releaseNamePlaceholder': string
   'cd.steps.common.selectOrEnterClusterPlaceholder': string
+  'cd.steps.common.skipUnchangedManifest': string
   'cd.steps.common.specifyCredentials': string
   'cd.steps.common.undefinedType': string
   'cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer': string

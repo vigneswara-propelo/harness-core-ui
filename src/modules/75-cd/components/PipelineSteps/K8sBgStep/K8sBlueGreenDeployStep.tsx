@@ -29,6 +29,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -43,6 +44,7 @@ import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVa
 export interface K8sBGDeployData extends StepElementConfig {
   spec: Omit<K8sRollingStepInfo, 'skipDryRun'> & {
     skipDryRun?: boolean
+    skipUnchangedManifest?: boolean | undefined
   }
 }
 
@@ -65,6 +67,7 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_SUPPORT_SKIPPING_BG_DEPLOYMENT_NG } = useFeatureFlags()
   return (
     <>
       <Formik<K8sBGDeployData>
@@ -136,6 +139,20 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                           disabled={readonly}
                         />
                       </div>
+                      {CDS_SUPPORT_SKIPPING_BG_DEPLOYMENT_NG ? (
+                        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                          <FormMultiTypeCheckboxField
+                            name="spec.skipUnchangedManifest"
+                            label={getString('cd.steps.common.skipUnchangedManifest')}
+                            disabled={readonly}
+                            multiTypeTextbox={{
+                              expressions,
+                              disabled: readonly,
+                              allowableTypes
+                            }}
+                          />
+                        </div>
+                      ) : null}
                     </>
                   }
                 />
@@ -151,6 +168,8 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
 const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_SUPPORT_SKIPPING_BG_DEPLOYMENT_NG } = useFeatureFlags()
+
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -199,6 +218,22 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
           />
         </div>
       )}
+      {CDS_SUPPORT_SKIPPING_BG_DEPLOYMENT_NG
+        ? getMultiTypeFromValue(inputSetData?.template?.spec?.skipUnchangedManifest) === MultiTypeInputType.RUNTIME && (
+            <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <FormMultiTypeCheckboxField
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes
+                }}
+                name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipUnchangedManifest`}
+                label={getString('cd.steps.common.skipUnchangedManifest')}
+                disabled={inputSetData?.readonly}
+                setToFalseWhenEmpty={true}
+              />
+            </div>
+          )
+        : null}
     </>
   )
 }
@@ -327,7 +362,8 @@ export class K8sBlueGreenDeployStep extends PipelineStep<K8sBGDeployData> {
     type: StepType.K8sBlueGreenDeploy,
     spec: {
       skipDryRun: false,
-      pruningEnabled: false
+      pruningEnabled: false,
+      skipUnchangedManifest: false
     }
   }
 }

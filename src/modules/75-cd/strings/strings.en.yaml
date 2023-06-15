@@ -17,6 +17,7 @@ steps:
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
     enableKubernetesPruning: 'Enable Kubernetes Pruning'
+    skipUnchangedManifest: 'Skip deployment if Hash is same as previous deployments'
   commands:
     runTheCommands: Run the following commands
     addCommand: Add Command
