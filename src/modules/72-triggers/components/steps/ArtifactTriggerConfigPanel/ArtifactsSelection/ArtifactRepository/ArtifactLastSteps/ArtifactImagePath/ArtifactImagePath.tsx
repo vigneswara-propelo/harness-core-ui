@@ -24,14 +24,15 @@ interface ArtifactImagePathProps {
   connectorRef?: string
   region?: string
   artifactType?: ArtifactSource['type']
+  imagePath?: string
 }
 
 function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [images, setImages] = useState<SelectOption[]>([])
-  const { connectorRef, region, artifactType } = props
+  const { connectorRef, region, artifactType, imagePath } = props
+  const [images, setImages] = useState<SelectOption[]>([{ label: imagePath || '', value: imagePath || '' }])
 
   const imagesListAPIQueryParams: GetImagesListForEcrQueryParams = {
     accountIdentifier: accountId,

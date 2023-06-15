@@ -46,3 +46,4 @@ export const getNexusRepositories = ({ connectorId, repositoryFormat }): string 
   `ng/api/artifacts/nexus/getRepositories?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&repositoryFormat=${repositoryFormat}`
 export const getArtifactsAMITags = ({ connectorId, region }): string =>
   `ng/api/artifacts/ami/tags?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&region=${region}&connectorRef=${connectorId}`
+export const awsConnectorCall = `ng/api/connectors/testAWS?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`

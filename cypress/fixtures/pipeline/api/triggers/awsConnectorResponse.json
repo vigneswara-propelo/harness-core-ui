@@ -1,0 +1,50 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "connector": {
+      "name": "testAWS",
+      "identifier": "testAWS",
+      "description": "",
+      "orgIdentifier": "default",
+      "projectIdentifier": null,
+      "tags": {},
+      "type": "Aws",
+      "spec": {
+        "credential": {
+          "crossAccountAccess": null,
+          "type": "ManualConfig",
+          "spec": {
+            "accessKey": "testAWS",
+            "accessKeyRef": null,
+            "secretKeyRef": "default"
+          },
+          "region": null
+        },
+        "awsSdkClientBackOffStrategyOverride": null,
+        "delegateSelectors": [],
+        "executeOnDelegate": true
+      }
+    },
+    "createdAt": 1686042392594,
+    "lastModifiedAt": 1686730761933,
+    "status": {
+      "status": "SUCCESS",
+      "errorSummary": null,
+      "errors": null,
+      "testedAt": 1686730762617,
+      "lastTestedAt": 0,
+      "lastConnectedAt": 1686730762617
+    },
+    "activityDetails": {
+      "lastActivityTime": 1686730761949
+    },
+    "harnessManaged": false,
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "governanceMetadata": null
+  },
+  "metaData": null,
+  "correlationId": "96ee2546-99ea-4a0d-ab12-67d2f68bae2c"
+}

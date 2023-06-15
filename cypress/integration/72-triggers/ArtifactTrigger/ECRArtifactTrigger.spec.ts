@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getAWSRegions, getArtifactsECRGetImages } from '../constansts'
+import { getAWSRegions, getArtifactsECRGetImages, awsConnectorCall } from '../constansts'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
+import { defineArtifactSource } from './artifact-trigger-helpers/defineArtifactSource'
 import { fillArtifactTriggerData } from './artifact-trigger-helpers/fillArtifactTriggerData'
+import { fillArtifactWizardData } from './artifact-trigger-helpers/fillArtifactWizardData'
 
 describe('ECR Artifact Trigger', () => {
   visitTriggersPage()
@@ -53,6 +55,24 @@ describe('ECR Artifact Trigger', () => {
         inputSetRefs: ['inputset1', 'inputset2'],
         triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: ECR_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: Ecr\n      spec:\n        connectorRef: ${connectorId}\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n        imagePath: todolist\n        region: us-east-1\n        tag: <+trigger.artifact.build>\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
       })
+    })
+    it('3: On editing artifact source, imagePath should be preselected', () => {
+      cy.intercept('GET', awsConnectorCall, { fixture: 'pipeline/api/triggers/awsConnectorResponse.json' }).as(
+        'awsConnectorCall'
+      )
+      cy.contains('span', '+ New Trigger').click()
+
+      // Trigger Selection Drawer
+      cy.get(`section[data-cy="${artifactTypeCy}"]`).click()
+
+      defineArtifactSource()
+      fillArtifactWizardData({ connectorId, fillArtifactData })
+
+      cy.get('span[data-icon="Edit"]').eq(3).click({ force: true })
+      cy.wait('@awsConnectorCall')
+      cy.get('button[type="submit"]').click()
+      cy.wait(1000)
+      cy.get('input[name="imagePath"]').should('have.value', 'todolist')
     })
   })
 })

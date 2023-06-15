@@ -100,6 +100,7 @@ export function ECRArtifact({
                 connectorRef={getConnectorIdValue(prevStepData)}
                 region={values?.region}
                 artifactType={ENABLED_ARTIFACT_TYPES.Ecr}
+                imagePath={values?.imagePath}
               />
             </div>
 
