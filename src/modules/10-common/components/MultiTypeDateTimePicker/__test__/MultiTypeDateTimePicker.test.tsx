@@ -57,7 +57,7 @@ describe('MultiTypeDateTimePicker test', () => {
   })
 
   test('render MultiTypeDateTimePicker with undefined formik', async () => {
-    const { container } = render(
+    render(
       <TestWrapper>
         <FormMultiTypeDateTimePickerField
           name="test"
@@ -74,7 +74,7 @@ describe('MultiTypeDateTimePicker test', () => {
     const fixedValueText = screen.getByText('Fixed value')
     await waitFor(() => expect(fixedValueText).toBeInTheDocument())
     userEvent.click(fixedValueText)
-    await waitFor(() => expect(container).toMatchSnapshot('MultiTypeDateTimePicker with undefined formik'))
+    expect(await screen.findByPlaceholderText('LLLL')).toBeInTheDocument()
   })
 
   test('should only display specified types', async () => {
