@@ -1,5 +1,5 @@
-const mysql = require('mysql')
-const { DATA_POINTS } = require('./utils')
+import mysql from 'mysql'
+import { DATA_POINTS } from './utils.mjs'
 const convertMapDataToRows = (mapData, env, bench_mark_passed) => {
   const rowsData = []
   const date = new Date()
@@ -170,6 +170,4 @@ const getDataPastData = async (env, pagename) => {
   })
   return returnPromise
 }
-module.exports.insertDataintoDB = insertDataintoDB
-module.exports.getDataPastData = getDataPastData
-module.exports.createDatabaseAndTable = createDatabaseAndTable
+export default { insertDataintoDB, getDataPastData, createDatabaseAndTable }

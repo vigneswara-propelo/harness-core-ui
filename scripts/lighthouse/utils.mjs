@@ -1,4 +1,4 @@
-const DATA_POINTS = {
+export const DATA_POINTS = {
   PERFORMANCE: 'Performance',
   ACCESSIBILITY: 'Accessibility',
   BEST_PRACTICES: 'Best Practices',
@@ -23,7 +23,7 @@ const DATA_POINTS = {
   NETWORK_RTT_SCORE: 'Network Rtt Score',
   NETWORK_SERVER_LATENCY_SCORE: 'Network Server Latency Score'
 }
-const getAverageResult = (listOfResults, attributeName) => {
+export const getAverageResult = (listOfResults, attributeName) => {
   let listLength = listOfResults.length
   let returnAvg = 0
   if (listLength) {
@@ -35,7 +35,7 @@ const getAverageResult = (listOfResults, attributeName) => {
   }
   return returnAvg
 }
-const getFilterResults = resultsToBeFilterd => {
+export const getFilterResults = resultsToBeFilterd => {
   return {
     [DATA_POINTS.PERFORMANCE]: getAverageResult(resultsToBeFilterd, DATA_POINTS.PERFORMANCE).toFixed(2),
     Accessibility: getAverageResult(resultsToBeFilterd, DATA_POINTS.ACCESSIBILITY).toFixed(2),
@@ -99,7 +99,7 @@ const getFilterResults = resultsToBeFilterd => {
     ).toFixed(2)
   }
 }
-const percentageChangeInTwoParams = (dataToBeCompared, benchMarkData, parameter) => {
+export const percentageChangeInTwoParams = (dataToBeCompared, benchMarkData, parameter) => {
   const percentageChange = parseFloat(
     ((parseFloat(dataToBeCompared) - parseFloat(benchMarkData)) / parseFloat(benchMarkData)) * 100
   ).toFixed(2)
@@ -108,7 +108,3 @@ const percentageChangeInTwoParams = (dataToBeCompared, benchMarkData, parameter)
   )
   return percentageChange
 }
-module.exports.DATA_POINTS = DATA_POINTS
-module.exports.getFilterResults = getFilterResults
-module.exports.getAverageResult = getAverageResult
-module.exports.percentageChangeInTwoParams = percentageChangeInTwoParams

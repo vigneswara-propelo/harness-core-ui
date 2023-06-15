@@ -4,15 +4,17 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
+import puppeteer from 'puppeteer'
+import lighthouse from 'lighthouse'
 
-const puppeteer = require('puppeteer')
-const lighthouse = require('lighthouse')
-const reportGenerator = require('lighthouse/lighthouse-core/report/report-generator')
+import { generateReport } from 'lighthouse'
+
+import { DATA_POINTS, getFilterResults, percentageChangeInTwoParams } from './utils.mjs'
+
+import dbConnection from './connection.mjs'
 const PRE_QA_URL = 'https://stress.harness.io/ng/'
 const QA_URL = 'https://qa.harness.io/ng/'
 const PROD_URL = 'https://app.harness.io/ng/'
-const dbConnection = require('./connection')
-const { DATA_POINTS, getFilterResults, percentageChangeInTwoParams } = require('./utils')
 const pagesToBeTested = [
   { name: 'home', url: '/home/projects' },
   { name: 'getstarted', url: '/home/get-started' }
@@ -63,7 +65,7 @@ async function run() {
   }
 
   const getScores = resultSupplied => {
-    let json = reportGenerator.generateReport(resultSupplied.lhr, 'json')
+    let json = generateReport(resultSupplied.lhr, 'json')
     json = JSON.parse(json)
     let scores = {
       [DATA_POINTS.PERFORMANCE]: 0,
@@ -85,21 +87,21 @@ async function run() {
     scores[DATA_POINTS.SEO] = parseFloat(json.categories.seo.score) * 100
     // new values
 
-    scores[DATA_POINTS.TIME_TO_INTERACTIVE_SCORE] = json.audits.interactive.score
-    scores[DATA_POINTS.FIRST_MEANINGFUL_PAINT_SCORE] = json.audits['first-meaningful-paint'].score
-    scores[DATA_POINTS.FIRST_CONTENTFUL_PAINT_SCORE] = json.audits['first-contentful-paint'].score
-    scores[DATA_POINTS.LARGEST_CONTENTFUL_PAINT] = json.audits['largest-contentful-paint'].numericValue
-    scores[DATA_POINTS.LARGEST_CONTENTFUL_PAINT_SCORE] = json.audits['largest-contentful-paint'].score
-    scores[DATA_POINTS.ESTIMATED_INPUT_LATENCY] = json.audits['estimated-input-latency'].numericValue
-    scores[DATA_POINTS.ESTIMATED_INPUT_LATENCY_SCORE] = json.audits['estimated-input-latency'].score
-    scores[DATA_POINTS.TOTAL_BLOCKING_TIME] = json.audits['total-blocking-time'].numericValue
-    scores[DATA_POINTS.TOTAL_BLOCKING_TIME_SCORE] = json.audits['total-blocking-time'].score
-    scores[DATA_POINTS.FIRST_CPU_IDLE] = json.audits['first-cpu-idle'].numericValue
-    scores[DATA_POINTS.FIRST_CPU_IDLE_SCORE] = json.audits['first-cpu-idle'].score
-    scores[DATA_POINTS.NETWORK_RTT] = json.audits['network-rtt'].numericValue
-    scores[DATA_POINTS.NETWORK_RTT_SCORE] = json.audits['network-rtt'].score
-    scores[DATA_POINTS.NETWORK_SERVER_LATENCY] = json.audits['network-server-latency'].numericValue
-    scores[DATA_POINTS.NETWORK_SERVER_LATENCY_SCORE] = json.audits['network-server-latency'].score
+    scores[DATA_POINTS.TIME_TO_INTERACTIVE_SCORE] = json.audits.interactive?.score || 0
+    scores[DATA_POINTS.FIRST_MEANINGFUL_PAINT_SCORE] = json.audits['first-meaningful-paint']?.score || 0
+    scores[DATA_POINTS.FIRST_CONTENTFUL_PAINT_SCORE] = json.audits['first-contentful-paint']?.score || 0
+    scores[DATA_POINTS.LARGEST_CONTENTFUL_PAINT] = json.audits['largest-contentful-paint']?.numericValue || 0
+    scores[DATA_POINTS.LARGEST_CONTENTFUL_PAINT_SCORE] = json.audits['largest-contentful-paint']?.score || 0
+    scores[DATA_POINTS.ESTIMATED_INPUT_LATENCY] = json.audits['estimated-input-latency']?.numericValue || 0
+    scores[DATA_POINTS.ESTIMATED_INPUT_LATENCY_SCORE] = json.audits['estimated-input-latency']?.score || 0
+    scores[DATA_POINTS.TOTAL_BLOCKING_TIME] = json.audits['total-blocking-time']?.numericValue || 0
+    scores[DATA_POINTS.TOTAL_BLOCKING_TIME_SCORE] = json.audits['total-blocking-time']?.score || 0
+    scores[DATA_POINTS.FIRST_CPU_IDLE] = json.audits['first-cpu-idle']?.numericValue || 0
+    scores[DATA_POINTS.FIRST_CPU_IDLE_SCORE] = json.audits['first-cpu-idle']?.score || 0
+    scores[DATA_POINTS.NETWORK_RTT] = json.audits['network-rtt']?.numericValue || 0
+    scores[DATA_POINTS.NETWORK_RTT_SCORE] = json.audits['network-rtt']?.score || 0
+    scores[DATA_POINTS.NETWORK_SERVER_LATENCY] = json.audits['network-server-latency']?.numericValue || 0
+    scores[DATA_POINTS.NETWORK_SERVER_LATENCY_SCORE] = json.audits['network-server-latency']?.score || 0
 
     console.log(scores)
     return scores
@@ -140,7 +142,7 @@ async function run() {
       executablePath: '/usr/bin/google-chrome',
       args: ['--no-sandbox', `--remote-debugging-port=${PORT}`]
     })
-    let page = await browser.newPage()
+    let [page] = await browser.pages()
     await page.setDefaultNavigationTimeout(300000) // 5 minutes timeout
     await page.goto(passedUrl)
     await page.waitForXPath("//div[contains(text(),'Sign in')]")

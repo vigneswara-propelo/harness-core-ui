@@ -48,7 +48,7 @@
     "generate-certificate": "sh scripts/generate-certificate.sh",
     "generate-eslint": "node scripts/generate-eslint-config-for-imports.mjs",
     "build-docker": "sh scripts/docker-build.sh",
-    "lighthouse": "node scripts/lighthouse/lighthouse.js",
+    "lighthouse": "node scripts/lighthouse/lighthouse.mjs",
     "custom-coverage": "npx new-files-coverage-check --e !**/*.test.tsx !**/*.test.ts !**/*.snap !**/*.js !**/*.scss !**/*.mock.ts !**/*.spec.ts !**/*.d.ts !**/*.json !**/*.types.ts !**/types.ts !**/*.yml !**/*.yaml !**cypress/** !**/cypress/** !**/__test*/** !**/*.png !**/*.ico !**/*.svg !**/src/services/** !**/src/queries/** !**/src/**/__mocks__/** !**/src/**/RouteDestinations.tsx !**/*.sh !**/*.md !**/index.ts !**/src/modules/75-chaos/**"
   },
   "dependencies": {
@@ -197,7 +197,6 @@
     "jest-canvas-mock": "^2.3.0",
     "jest-fetch-mock": "^3.0.3",
     "jest-junit": "^12.0.0",
-    "lighthouse": "^6.5.0",
     "lint-staged": "^11.0.0",
     "mini-css-extract-plugin": "^2.4.2",
     "monaco-editor-webpack-plugin": "1.8.*",
@@ -210,7 +209,6 @@
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.3.2",
     "prompts": "^2.4.2",
-    "puppeteer": "^5.5.0",
     "react-test-renderer": "^17.0.2",
     "sass": "^1.32.8",
     "sass-loader": "^12.1.0",
