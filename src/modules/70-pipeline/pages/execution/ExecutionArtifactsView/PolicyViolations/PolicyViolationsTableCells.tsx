@@ -13,7 +13,7 @@ import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, Use
 import type { EnforcementResultResponseBody } from 'services/ssca'
 
 export type SortBy = {
-  sort: 'name' | 'supplier'
+  sort: 'name' | 'supplier' | 'license'
   order: 'ASC' | 'DESC'
 }
 export interface EnforcementResultColumnActions {
@@ -36,27 +36,34 @@ export interface CellTypeRegister {
 
 export const PackageNameCell: CellType = ({ row }) => {
   const data = row.original
-  return (
-    <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
-      {data.name}
-    </Text>
-  )
-}
 
-export const VersionCell: CellType = ({ row }) => {
-  const data = row.original
   return (
-    <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
-      {data.version}
-    </Text>
+    <Layout.Vertical spacing="xsmall">
+      <Text font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
+        {data.name}
+      </Text>
+
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
+        {data.version}
+      </Text>
+    </Layout.Vertical>
   )
 }
 
 export const PackageSupplierCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
+    <Text font={{ variation: FontVariation.SMALL }} lineClamp={1}>
       {data.supplier}
+    </Text>
+  )
+}
+
+export const LicenseCell: CellType = ({ row }) => {
+  const data = row.original
+  return (
+    <Text font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+      {data.license}
     </Text>
   )
 }

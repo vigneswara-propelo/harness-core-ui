@@ -13,10 +13,10 @@ import { useStrings } from 'framework/strings'
 import {
   PackageSupplierCell,
   PackageNameCell,
-  VersionCell,
   ViolationsDetailsCell,
   EnforcementResultColumnActions,
-  SortBy
+  SortBy,
+  LicenseCell
 } from './PolicyViolationsTableCells'
 import css from './PolicyViolations.module.scss'
 
@@ -46,17 +46,18 @@ export function PolicyViolationsTable({ data, sortBy, setSortBy }: PolicyViolati
         serverSortProps: getServerSortProps('name')
       },
       {
-        Header: getString('version'),
-        accessor: 'version',
-        Cell: VersionCell,
-        disableSortBy: true
-      },
-      {
         Header: getString('pipeline.supplier'),
         accessor: 'supplier',
         Cell: PackageSupplierCell,
         serverSortProps: getServerSortProps('supplier')
       },
+      {
+        Header: getString('pipeline.license'),
+        accessor: 'license',
+        Cell: LicenseCell,
+        serverSortProps: getServerSortProps('license')
+      },
+
       {
         Header: getString('pipeline.violationDetails'),
         accessor: 'violationDetails',

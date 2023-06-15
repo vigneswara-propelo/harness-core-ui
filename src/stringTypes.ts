@@ -4574,6 +4574,7 @@ export interface StringsMap {
   'pipeline.lastDeployed': string
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
+  'pipeline.license': string
   'pipeline.linuxOnly': string
   'pipeline.logDateTimeSettings': string
   'pipeline.logLevelSettings': string

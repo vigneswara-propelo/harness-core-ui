@@ -22,13 +22,13 @@
   [role='cell'],
   [role='columnheader'] {
     width: auto !important;
-    padding-right: var(--spacing-small);
   }
 
   div[class*='TableV2--cells'],
   div[class*='TableV2--header'] {
     display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr 2fr;
+    grid-template-columns: 12rem 1fr 1fr 2fr;
+    gap: 1rem;
   }
 }
 
