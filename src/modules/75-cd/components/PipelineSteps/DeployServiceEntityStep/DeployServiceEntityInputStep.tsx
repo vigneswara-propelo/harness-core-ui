@@ -27,7 +27,7 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { isMultiTypeExpression, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -170,11 +170,7 @@ export function DeployServiceEntityInputStep({
   }, [])
 
   useDeepCompareEffect(() => {
-    // This is specific handling for service as expression in templatized views
-    if (serviceIdentifiers.length === 1 && isValueExpression(serviceValue)) {
-      updateStageFormTemplate(undefined, `${fullPathPrefix}serviceInputs`)
-      formik.setFieldValue(`${localPathPrefix}serviceInputs`, undefined)
-
+    if (serviceInputType === MultiTypeInputType.EXPRESSION) {
       return
     }
 
@@ -293,6 +289,15 @@ export function DeployServiceEntityInputStep({
     item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
   ) as AllowedTypes
 
+  const onServiceInputTypeChange = (type: MultiTypeInputType): void => {
+    setServiceInputType(type)
+    // Resetting serviceInputs upon changing type to expression
+    if (type === MultiTypeInputType.EXPRESSION) {
+      updateStageFormTemplate(undefined, `${fullPathPrefix}serviceInputs`)
+      formik.setFieldValue(`${localPathPrefix}serviceInputs`, undefined)
+    }
+  }
+
   return (
     <>
       <Layout.Horizontal style={{ flexDirection: 'column' }}>
@@ -312,7 +317,7 @@ export function DeployServiceEntityInputStep({
                   expressions,
                   allowableTypes: allowableTypesWithoutExecution,
                   defaultValueToReset: '',
-                  onTypeChange: setServiceInputType
+                  onTypeChange: onServiceInputTypeChange
                 }}
               />
             ) : (
@@ -327,7 +332,7 @@ export function DeployServiceEntityInputStep({
                   selectProps: {
                     addClearBtn: !inputSetData?.readonly,
                     items: selectOptions,
-                    onTypeChange: setServiceInputType
+                    onTypeChange: onServiceInputTypeChange
                   }
                 }}
                 className={css.inputWidth}
