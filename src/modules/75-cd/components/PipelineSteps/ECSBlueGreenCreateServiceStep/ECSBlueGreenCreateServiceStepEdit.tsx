@@ -425,17 +425,19 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       loadingItems: loadingListeners
                     },
                     onChange: selectedValue => {
-                      const selectedValueString =
-                        typeof selectedValue === 'string'
-                          ? selectedValue
-                          : ((selectedValue as SelectOption).value as string)
-                      const updatedValues = produce(formik.values, draft => {
-                        draft.spec.prodListener = selectedValueString
-                        if (getMultiTypeFromValue(draft.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
-                          draft.spec.prodListenerRuleArn = ''
-                        }
-                      })
-                      formik.setValues(updatedValues)
+                      if (selectedValue) {
+                        const selectedValueString =
+                          typeof selectedValue === 'string'
+                            ? selectedValue
+                            : ((selectedValue as SelectOption).value as string)
+                        const updatedValues = produce(formik.values, draft => {
+                          draft.spec.prodListener = selectedValueString
+                          if (getMultiTypeFromValue(draft.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
+                            draft.spec.prodListenerRuleArn = ''
+                          }
+                        })
+                        formik.setValues(updatedValues)
+                      }
                     },
                     onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                       fetchListeners(e, formik.values.spec.loadBalancer)
