@@ -5041,6 +5041,7 @@ export interface StringsMap {
   'pipeline.stageExecutedBefore': string
   'pipeline.stageExecutionSettings': string
   'pipeline.stageExecutionsHelperText': string
+  'pipeline.stageExpired': string
   'pipeline.stageVariables': string
   'pipeline.stagetoRetryFrom': string
   'pipeline.startTime': string

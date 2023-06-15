@@ -18,6 +18,12 @@
     height: 100%;
   }
 
+  &.disabled {
+    background: linear-gradient(90deg, var(--grey-200) 9px, transparent 1%) center,
+      linear-gradient(var(--grey-200) 9px, transparent 1%) center, rgb(117, 144, 168);
+    background-size: 10px 10px;
+  }
+
   .stepDetails {
     position: absolute;
     top: 0;

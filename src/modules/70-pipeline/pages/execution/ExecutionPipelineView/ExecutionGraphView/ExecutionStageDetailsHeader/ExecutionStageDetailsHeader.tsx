@@ -130,7 +130,16 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
             endTime={stage?.endTs}
           />
         </>
-      ) : null}
+      ) : (
+        <Text
+          font={{
+            variation: FontVariation.H6
+          }}
+          color={Color.GREY_500}
+        >
+          {getString('pipeline.stageExpired')}
+        </Text>
+      )}
     </div>
   )
   const { CI_YAML_VERSIONING } = useFeatureFlags()
@@ -175,6 +184,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
             <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.H6 }} lineClamp={1}>
               {stage?.name}
             </Text>
+
             {!hideExecutionActionButtons &&
               (!!pipelineExecutionDetail?.pipelineExecutionSummary?.allowStageExecutions &&
               isExecutionComplete(stage?.status as ExecutionStatus) ? (
