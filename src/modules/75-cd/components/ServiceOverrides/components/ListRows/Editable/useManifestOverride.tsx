@@ -125,7 +125,7 @@ export default function useManifestOverride({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const { CDS_TAS_NG } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < manifestOverrides.length)
@@ -400,9 +400,9 @@ export default function useManifestOverride({
       return serviceType === ServiceDeploymentType.TAS ? TASOverrideManifests : AllowedManifestOverrideTypes
     } else {
       // Environment Configurations
-      return getAllowedOverrideManifests({ CDS_TAS_NG })
+      return getAllowedOverrideManifests({ NG_SVC_ENV_REDESIGN })
     }
-  }, [CDS_TAS_NG, serviceType])
+  }, [NG_SVC_ENV_REDESIGN, serviceType])
 
   const connectorDetailStepProps = {
     type: ManifestToConnectorMap[manifestStore],

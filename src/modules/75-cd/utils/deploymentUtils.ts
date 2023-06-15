@@ -48,14 +48,13 @@ export interface DeploymentTypeItem {
 
 export interface GetNgSupportedDeploymentTypesProps {
   NG_SVC_ENV_REDESIGN?: boolean
-  CDS_TAS_NG?: boolean
   CDS_ASG_NG?: boolean
   CDS_GOOGLE_CLOUD_FUNCTION?: boolean
   CDP_AWS_SAM?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { NG_SVC_ENV_REDESIGN, CDS_TAS_NG, CDS_GOOGLE_CLOUD_FUNCTION, CDP_AWS_SAM } = props
+  const { NG_SVC_ENV_REDESIGN, CDS_GOOGLE_CLOUD_FUNCTION, CDP_AWS_SAM } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -133,7 +132,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.AzureWebApp
     })
   }
-  if (CDS_TAS_NG) {
+  if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.tas',
       icon: deploymentIconMap[ServiceDeploymentType.TAS],

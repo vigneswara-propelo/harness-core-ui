@@ -123,10 +123,10 @@ export const TASOverrideManifests = [
   OverrideManifests.TasAutoScaler
 ]
 
-export function getAllowedOverrideManifests({ CDS_TAS_NG = false }): OverrideManifestTypes[] {
+export function getAllowedOverrideManifests({ NG_SVC_ENV_REDESIGN = false }): OverrideManifestTypes[] {
   let overrideManifests = [...AllowedManifestOverrideTypes]
 
-  if (CDS_TAS_NG) {
+  if (NG_SVC_ENV_REDESIGN) {
     overrideManifests = overrideManifests.concat(TASOverrideManifests)
   }
   return overrideManifests

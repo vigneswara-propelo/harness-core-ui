@@ -30,7 +30,6 @@ export const useGetConnectorsListHook = (
   catalogueMockData?: UseGetMockData<ResponseConnectorCatalogueResponse>
 ): UseGetConnectorsListHookReturn => {
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
-  const isTasEnabled = useFeatureFlag(FeatureFlag.CDS_TAS_NG)
 
   const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
 
@@ -149,8 +148,6 @@ export const useGetConnectorsListHook = (
         switch (connector) {
           case Connectors.ERROR_TRACKING:
             return isErrorTrackingEnabled
-          case Connectors.TAS:
-            return isTasEnabled
           case Connectors.SignalFX:
             return isSignalFXEnabled
           default:
