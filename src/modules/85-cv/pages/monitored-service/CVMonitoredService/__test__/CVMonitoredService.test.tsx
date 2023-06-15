@@ -312,7 +312,7 @@ describe('Monitored Service list', () => {
     const expectedResponse = {
       queryParams: {
         accountId: '1234_accountId',
-
+        hideNotConfiguredServices: false,
         projectIdentifier: '1234_project',
         orgIdentifier: '1234_org',
         filter: '',

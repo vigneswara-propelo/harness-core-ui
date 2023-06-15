@@ -69,7 +69,8 @@ export default function CDSideNav(): React.ReactElement {
   const { updateAppStore, selectedProject } = useAppStore()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
+
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
@@ -262,6 +263,12 @@ export default function CDSideNav(): React.ReactElement {
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label={getString('services')} to={routes.toServices({ ...params, module })} />
           <SidebarLink label={getString('environments')} to={routes.toEnvironment({ ...params, module })} />
+          {SRM_COMMON_MONITORED_SERVICE ? (
+            <SidebarLink
+              label={getString('common.monitoredServices')}
+              to={routes.toMonitoredServices({ ...params, module })}
+            />
+          ) : null}
           {isServiceOverridesEnabled && (
             <SidebarLink label={getString('common.overrides')} to={routes.toServiceOverrides({ ...params, module })} />
           )}

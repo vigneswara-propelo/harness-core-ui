@@ -11,6 +11,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { MonitoredServiceDTO } from 'services/cv'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { NGMonitoredServiceTemplateInfoConfig } from '@cv/components/MonitoredServiceTemplate/components/MonitoredServiceTemplateCanvas.types'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import { MonitoredServiceType } from './components/MonitoredServiceOverview/MonitoredServiceOverview.constants'
 import type { MonitoredServiceForm } from './Service.types'
 
@@ -119,4 +120,34 @@ export function updateMonitoredServiceDTOOnTypeChange(
 
   monitoredServiceDTO.type = type
   return monitoredServiceDTO
+}
+
+export function getIsNotifcationsSectionHidden(isTemplate?: boolean, config?: MonitoredServiceConfig): boolean {
+  return Boolean(isTemplate || config)
+}
+
+export function getIsHealthSrcSectionHidden(config: MonitoredServiceConfig | undefined, identifier: string): boolean {
+  const isMonitoredServiceConfigPresentInCreateMode = config && !identifier
+  return Boolean(isMonitoredServiceConfigPresentInCreateMode)
+}
+
+export function getIsChangeSrcSectionHidden(config: MonitoredServiceConfig | undefined, identifier: string): boolean {
+  const isChangeSourceSectionHidden = !config?.listing?.changeSource
+  const isCreateModeForNonCDModules = !isChangeSourceSectionHidden && !identifier
+  return Boolean(config && (isChangeSourceSectionHidden || isCreateModeForNonCDModules))
+}
+
+export function isRenderConfigDrivenConfigsInEditScenario(
+  config: MonitoredServiceConfig | undefined,
+  identifier: string
+): boolean {
+  return Boolean(config && identifier)
+}
+
+export function shouldShowSourcesSection(config: MonitoredServiceConfig | undefined): boolean {
+  return !config
+}
+
+export function shouldShowSaveAndDiscard(isTemplate: boolean | undefined): boolean {
+  return !isTemplate
 }

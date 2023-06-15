@@ -26,7 +26,6 @@ const DetailsHeaderTitle: React.FC<TitleProps> = ({ loading, monitoredService })
 
   return (
     <Layout.Horizontal spacing="small" height={45}>
-      {/* <Icon margin={{ right: 'xsmall' }} name="infrastructure" size={40}></Icon> */}
       <Container>
         <Layout.Horizontal flex spacing="small">
           <Heading level={3} color={Color.GREY_800} font={{ variation: FontVariation.H5 }}>

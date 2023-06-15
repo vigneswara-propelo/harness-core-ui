@@ -7,7 +7,7 @@ import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
-import { useUpdateBaseline1, VerificationOverview } from 'services/cv'
+import { useUpdateBaseline, VerificationOverview } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { canShowPinBaselineConfirmationModal } from '../TestSummaryView/TestsSummaryView.utils'
 import css from '../TestSummaryView/TestsSummaryView.module.scss'
@@ -24,7 +24,7 @@ export default function PinBaslineButton(props: PipelineBaselineProps): JSX.Elem
 
   const { showError } = useToaster()
 
-  const { mutate: updateBaseline, error } = useUpdateBaseline1({
+  const { mutate: updateBaseline, error } = useUpdateBaseline({
     accountIdentifier,
     orgIdentifier,
     projectIdentifier,

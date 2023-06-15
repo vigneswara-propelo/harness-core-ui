@@ -243,7 +243,7 @@ const licenseRedirectData: LicenseRedirectProps = {
   expiredTrialRedirect: RedirectToSubscriptions
 }
 
-const CDSideNavProps: SidebarContext = {
+export const CDSideNavProps: SidebarContext = {
   navComponent: CDSideNav,
   subtitle: 'Continuous',
   title: 'Delivery',

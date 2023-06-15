@@ -18,7 +18,7 @@ import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 
 export default function ChangeSourceTableContainer({
-  value,
+  value = [],
   onEdit,
   onSuccess,
   onAddNewChangeSource

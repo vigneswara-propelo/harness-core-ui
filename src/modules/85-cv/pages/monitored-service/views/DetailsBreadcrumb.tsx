@@ -11,29 +11,53 @@ import type { Views } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 
-const DetailsBreadcrumb: React.FC = () => {
+interface DetailsBreadcrumbProps {
+  config?: MonitoredServiceConfig
+}
+
+const DetailsBreadcrumb = (props: DetailsBreadcrumbProps): JSX.Element => {
+  const { config } = props
   const { getString } = useStrings()
   const { view } = useQueryParams<{ view?: Views.GRID }>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-
-  return (
-    <NGBreadcrumbs
-      links={[
-        {
-          url: `${routes.toCVMonitoringServices({
-            accountId,
-            orgIdentifier,
-            projectIdentifier
-          })}${getCVMonitoringServicesSearchParam({ view })}`,
-          label: getString('cv.monitoredServices.title')
-        }
-      ]}
-    />
-  )
+  const { module } = config || {}
+  if (config) {
+    return (
+      <NGBreadcrumbs
+        links={[
+          {
+            url: `${routes.toMonitoredServices({
+              projectIdentifier,
+              orgIdentifier,
+              accountId,
+              ...(module ? { module: module as Module } : {})
+            })}`,
+            label: getString('cv.monitoredServices.title')
+          }
+        ]}
+      />
+    )
+  } else {
+    return (
+      <NGBreadcrumbs
+        links={[
+          {
+            url: `${routes.toCVMonitoringServices({
+              accountId,
+              orgIdentifier,
+              projectIdentifier
+            })}${getCVMonitoringServicesSearchParam({ view })}`,
+            label: getString('cv.monitoredServices.title')
+          }
+        ]}
+      />
+    )
+  }
 }
 
 export default DetailsBreadcrumb

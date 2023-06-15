@@ -237,7 +237,7 @@ describe('Deployment progress and nodes unit tests', () => {
 
     test('Should show pin baseline button when applicableForBaseline property is true in baseline overview', async () => {
       const updateBaselineMock = jest.fn()
-      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+      jest.spyOn(cvServices, 'useUpdateBaseline').mockReturnValue({
         mutate: updateBaselineMock,
         cancel: function (): void {
           throw new Error('Function not implemented.')
@@ -275,7 +275,7 @@ describe('Deployment progress and nodes unit tests', () => {
 
     test('Should show error toast when update baseline API errors', async () => {
       const updateBaselineMock = jest.fn().mockReturnValue(Promise.reject())
-      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+      jest.spyOn(cvServices, 'useUpdateBaseline').mockReturnValue({
         mutate: updateBaselineMock,
         cancel: function (): void {
           throw new Error('Function not implemented.')
@@ -316,7 +316,7 @@ describe('Deployment progress and nodes unit tests', () => {
 
     test('Should show confirmation modal when pin baseline button is clicked with already available baseline', async () => {
       const updateBaselineMock = jest.fn()
-      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+      jest.spyOn(cvServices, 'useUpdateBaseline').mockReturnValue({
         mutate: updateBaselineMock,
         cancel: function (): void {
           throw new Error('Function not implemented.')
@@ -365,7 +365,7 @@ describe('Deployment progress and nodes unit tests', () => {
 
     test('Should show confirmation modal when pin baseline button is clicked and cancel button click should not make any API call', async () => {
       const updateBaselineMock = jest.fn()
-      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+      jest.spyOn(cvServices, 'useUpdateBaseline').mockReturnValue({
         mutate: updateBaselineMock,
         cancel: function (): void {
           throw new Error('Function not implemented.')
@@ -414,7 +414,7 @@ describe('Deployment progress and nodes unit tests', () => {
 
     test('Should not show confirmation modal when unpin baseline button is clicked with already available baseline', async () => {
       const updateBaselineMock = jest.fn()
-      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+      jest.spyOn(cvServices, 'useUpdateBaseline').mockReturnValue({
         mutate: updateBaselineMock,
         cancel: function (): void {
           throw new Error('Function not implemented.')

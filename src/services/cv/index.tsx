@@ -34,7 +34,7 @@ export interface ActiveServiceMonitoredFilterParams {
 }
 
 export interface AdditionalInfo {
-  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
+  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO' | 'SIMPLE'
 }
 
 export interface AffectedEntity {
@@ -54,7 +54,12 @@ export type AnalysedDeploymentNode = AbstractAnalysedNode & {
 }
 
 export interface AnalysedDeploymentTestDataNode {
-  analysisReason?: 'CUSTOM_FAIL_FAST_THRESHOLD' | 'ML_ANALYSIS' | 'NO_CONTROL_DATA' | 'NO_TEST_DATA'
+  analysisReason?:
+    | 'CUSTOM_FAIL_FAST_THRESHOLD'
+    | 'ML_ANALYSIS'
+    | 'NO_CONTROL_DATA'
+    | 'NO_TEST_DATA'
+    | 'NO_FAIL_FAST_THRESHOLD_BREACHED'
   analysisResult?: 'NO_ANALYSIS' | 'HEALTHY' | 'WARNING' | 'UNHEALTHY'
   appliedThresholds?: string[]
   controlData?: MetricValueV2[]
@@ -249,6 +254,14 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export interface AssociatedSLOsDetails {
+  errorBudgetBurnRate?: number
+  identifier?: string
+  name?: string
+  scopedMonitoredServiceIdentifier?: string
+  sloPerformance?: number
 }
 
 export interface AwsCodeCommitAuthenticationDTO {
@@ -984,6 +997,7 @@ export interface ConnectorInfoDTO {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
 }
 
 export interface ControlClusterSummary {
@@ -1003,8 +1017,10 @@ export interface CrossAccountAccess {
 
 export interface CustomChangeEvent {
   changeEventDetailsLink?: string
+  channelUrl?: string
   description?: string
   externalLinkToEntity?: string
+  msHealthReport?: MSHealthReport
 }
 
 export type CustomChangeEventMetadata = ChangeEventMetadata & {
@@ -1034,6 +1050,7 @@ export type CustomChangeSourceSpec = ChangeSourceSpec & {
 
 export interface CustomChangeWebhookEventDetail {
   changeEventDetailsLink?: string
+  channelUrl?: string
   description: string
   externalLinkToEntity?: string
   name: string
@@ -2640,6 +2657,8 @@ export interface HarnessAuthentication {
   type: 'Http' | 'Ssh'
 }
 
+export type HarnessCDChangeSourceSpec = ChangeSourceSpec & { [key: string]: any }
+
 export type HarnessCDCurrentGenChangeSourceSpec = ChangeSourceSpec & {
   harnessApplicationId: string
   harnessEnvironmentId: string
@@ -3464,6 +3483,13 @@ export interface MSDropdownResponse {
   serviceRef?: string
 }
 
+export interface MSHealthReport {
+  associatedSLOsDetails?: AssociatedSLOsDetails[]
+  changeSummary?: ChangeSummaryDTO
+  internalLinkToEntity?: string
+  serviceHealthDetails?: ServiceHealthDetails
+}
+
 export interface MessageFrequency {
   count?: number
   host?: string
@@ -3599,6 +3625,7 @@ export interface MetricPackValidationResponse {
 }
 
 export interface MetricRecordsResponse {
+  serviceInstances?: string[]
   timeSeriesData?: TimeSeries[]
 }
 
@@ -3759,6 +3786,17 @@ export interface MonitoredServiceListItemDTO {
   tags?: {
     [key: string]: string
   }
+  type?: 'Application' | 'Infrastructure'
+}
+
+export interface MonitoredServicePlatformResponse {
+  configuredChangeSources?: number
+  configuredHealthSources?: number
+  environmentRefs?: string[]
+  identifier?: string
+  name?: string
+  serviceName?: string
+  serviceRef?: string
   type?: 'Application' | 'Infrastructure'
 }
 
@@ -4134,6 +4172,17 @@ export interface PageMonitoredServiceListItemDTO {
   totalPages?: number
 }
 
+export interface PageMonitoredServicePlatformResponse {
+  content?: MonitoredServicePlatformResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageMonitoredServiceResponse {
   content?: MonitoredServiceResponse[]
   empty?: boolean
@@ -4480,6 +4529,34 @@ export interface QueryRecordsRequest {
     | 'GRAFANA_LOKI_LOGS'
   query: string
   startTime: number
+}
+
+export type RancherConnectorBearerTokenAuthenticationDTO = RancherConnectorConfigAuthenticationSpecDTO & {
+  passwordRef: string
+}
+
+export interface RancherConnectorConfigAuthCredentialsDTO {
+  spec?: RancherConnectorConfigAuthenticationSpecDTO
+  type: 'BearerToken'
+}
+
+export interface RancherConnectorConfigAuthDTO {
+  auth: RancherConnectorConfigAuthCredentialsDTO
+  rancherUrl: string
+}
+
+export interface RancherConnectorConfigAuthenticationSpecDTO {
+  [key: string]: any
+}
+
+export interface RancherConnectorConfigDTO {
+  spec?: RancherConnectorConfigAuthDTO
+  type: 'ManualConfig'
+}
+
+export type RancherConnectorDTO = ConnectorConfigDTO & {
+  credential?: RancherConnectorConfigDTO
+  delegateSelectors?: string[]
 }
 
 export interface RatioMetricPercentageGraph {
@@ -5181,6 +5258,13 @@ export interface ResponsePageMSDropdownResponse {
 export interface ResponsePageMonitoredServiceListItemDTO {
   correlationId?: string
   data?: PageMonitoredServiceListItemDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageMonitoredServicePlatformResponse {
+  correlationId?: string
+  data?: PageMonitoredServicePlatformResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6233,6 +6317,12 @@ export interface ServiceGuardTxnMetricAnalysisDataDTO {
   shortTermHistory?: number[]
 }
 
+export interface ServiceHealthDetails {
+  currentHealthScore?: number
+  pastHealthScore?: number
+  percentageChange?: number
+}
+
 export interface ServiceLevelIndicatorDTO {
   healthSourceRef?: string
   identifier?: string
@@ -7021,7 +7111,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface VerificationOverview {
-  appliedDeploymentAnalysisType?: 'CANARY' | 'NO_ANALYSIS' | 'ROLLING' | 'TEST'
+  appliedDeploymentAnalysisType?: 'CANARY' | 'NO_ANALYSIS' | 'ROLLING' | 'TEST' | 'SIMPLE'
   baselineOverview?: BaselineOverview
   controlNodes?: AnalysedNodeOverview
   errorClusters?: ClusterAnalysisOverview
@@ -7045,7 +7135,7 @@ export interface VerificationOverview {
 export interface VerificationSpec {
   analysedEnvIdentifier?: string
   analysedServiceIdentifier?: string
-  analysisType?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
+  analysisType?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO' | 'SIMPLE'
   baselineType?: 'LAST' | 'PINNED'
   durationInMinutes?: number
   isFailOnNoAnalysis?: boolean
@@ -7146,6 +7236,8 @@ export type AnnotationDTORequestBody = AnnotationDTO
 export type ChangeEventDTORequestBody = ChangeEventDTO
 
 export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
+
+export type CustomChangeWebhookPayloadRequestBody = CustomChangeWebhookPayload
 
 export type DowntimeDTORequestBody = DowntimeDTO
 
@@ -9919,30 +10011,30 @@ export const getMetricsAnalysisForVerifyStepExecutionIdPromise = (
     signal
   )
 
-export interface UpdateBaseline1PathParams {
+export interface UpdateBaselinePathParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
   verifyStepExecutionId: string
 }
 
-export type UpdateBaseline1Props = Omit<
-  MutateProps<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>,
+export type UpdateBaselineProps = Omit<
+  MutateProps<Baseline, unknown, void, Baseline, UpdateBaselinePathParams>,
   'path' | 'verb'
 > &
-  UpdateBaseline1PathParams
+  UpdateBaselinePathParams
 
 /**
  * use the verification as a baseline
  */
-export const UpdateBaseline1 = ({
+export const UpdateBaseline = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
   verifyStepExecutionId,
   ...props
-}: UpdateBaseline1Props) => (
-  <Mutate<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>
+}: UpdateBaselineProps) => (
+  <Mutate<Baseline, unknown, void, Baseline, UpdateBaselinePathParams>
     verb="POST"
     path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/baseline`}
     base={getConfig('cv/api')}
@@ -9950,25 +10042,25 @@ export const UpdateBaseline1 = ({
   />
 )
 
-export type UseUpdateBaseline1Props = Omit<
-  UseMutateProps<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>,
+export type UseUpdateBaselineProps = Omit<
+  UseMutateProps<Baseline, unknown, void, Baseline, UpdateBaselinePathParams>,
   'path' | 'verb'
 > &
-  UpdateBaseline1PathParams
+  UpdateBaselinePathParams
 
 /**
  * use the verification as a baseline
  */
-export const useUpdateBaseline1 = ({
+export const useUpdateBaseline = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
   verifyStepExecutionId,
   ...props
-}: UseUpdateBaseline1Props) =>
-  useMutate<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>(
+}: UseUpdateBaselineProps) =>
+  useMutate<Baseline, unknown, void, Baseline, UpdateBaselinePathParams>(
     'POST',
-    (paramsInPath: UpdateBaseline1PathParams) =>
+    (paramsInPath: UpdateBaselinePathParams) =>
       `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/baseline`,
     {
       base: getConfig('cv/api'),
@@ -9980,14 +10072,14 @@ export const useUpdateBaseline1 = ({
 /**
  * use the verification as a baseline
  */
-export const updateBaseline1Promise = (
+export const updateBaselinePromise = (
   {
     accountIdentifier,
     orgIdentifier,
     projectIdentifier,
     verifyStepExecutionId,
     ...props
-  }: MutateUsingFetchProps<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams> & {
+  }: MutateUsingFetchProps<Baseline, unknown, void, Baseline, UpdateBaselinePathParams> & {
     accountIdentifier: string
     orgIdentifier: string
     projectIdentifier: string
@@ -9995,7 +10087,7 @@ export const updateBaseline1Promise = (
   },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>(
+  mutateUsingFetch<Baseline, unknown, void, Baseline, UpdateBaselinePathParams>(
     'POST',
     getConfig('cv/api'),
     `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/baseline`,
@@ -12875,6 +12967,7 @@ export interface ListMonitoredServiceQueryParams {
   offset: number
   pageSize: number
   filter?: string
+  monitoredServiceType?: 'Application' | 'Infrastructure'
   servicesAtRiskFilter: boolean
 }
 
@@ -13358,6 +13451,67 @@ export const getMonitoredServiceListPromise = (
     props,
     signal
   )
+
+export interface GetMonitoredServicePlatformListQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  environmentIdentifiers?: string[]
+  offset: number
+  pageSize: number
+  filter?: string
+  monitoredServiceType?: 'Application' | 'Infrastructure'
+  hideNotConfiguredServices: boolean
+}
+
+export type GetMonitoredServicePlatformListProps = Omit<
+  GetProps<ResponsePageMonitoredServicePlatformResponse, unknown, GetMonitoredServicePlatformListQueryParams, void>,
+  'path'
+>
+
+/**
+ * get list of monitored service data
+ */
+export const GetMonitoredServicePlatformList = (props: GetMonitoredServicePlatformListProps) => (
+  <Get<ResponsePageMonitoredServicePlatformResponse, unknown, GetMonitoredServicePlatformListQueryParams, void>
+    path={`/monitored-service/platform/list`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMonitoredServicePlatformListProps = Omit<
+  UseGetProps<ResponsePageMonitoredServicePlatformResponse, unknown, GetMonitoredServicePlatformListQueryParams, void>,
+  'path'
+>
+
+/**
+ * get list of monitored service data
+ */
+export const useGetMonitoredServicePlatformList = (props: UseGetMonitoredServicePlatformListProps) =>
+  useGet<ResponsePageMonitoredServicePlatformResponse, unknown, GetMonitoredServicePlatformListQueryParams, void>(
+    `/monitored-service/platform/list`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get list of monitored service data
+ */
+export const getMonitoredServicePlatformListPromise = (
+  props: GetUsingFetchProps<
+    ResponsePageMonitoredServicePlatformResponse,
+    unknown,
+    GetMonitoredServicePlatformListQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageMonitoredServicePlatformResponse,
+    unknown,
+    GetMonitoredServicePlatformListQueryParams,
+    void
+  >(getConfig('cv/api'), `/monitored-service/platform/list`, props, signal)
 
 export interface GetMonitoredServiceFromServiceAndEnvironmentQueryParams {
   accountId: string

@@ -17,6 +17,8 @@ import type { CategoryCountDetails, CountServiceDTO, MonitoredServiceListItemDTO
 import { getRiskColorValue, getRiskLabelStringId } from '@cv/utils/CommonUtils'
 import ImageDeleteService from '@cv/assets/delete-service.svg'
 import type { FilterCardItem } from '@cv/components/FilterCard/FilterCard.types'
+import routes from '@common/RouteDefinitions'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import { RiskTagWithLabelProps, FilterTypes } from './CVMonitoredService.types'
 import { HistoricalTrendChartOption, DefaultChangePercentage } from './CVMonitoredService.constants'
 import css from './CVMonitoredService.module.scss'
@@ -170,4 +172,18 @@ export const getMonitoredServiceFilterOptions = (
       count: serviceCountData?.servicesAtRiskCount
     }
   ]
+}
+
+export const getPathNameOnCreateMonitoredService = (
+  pathParams: { accountId: string; orgIdentifier: string; projectIdentifier: string },
+  configData?: MonitoredServiceConfig
+): string => {
+  let pathName = routes.toCVAddMonitoringServicesSetup(pathParams)
+  if (configData) {
+    pathName = routes.toAddMonitoredServices({
+      ...pathParams,
+      ...(configData?.module && { module: configData?.module })
+    })
+  }
+  return pathName
 }

@@ -11,7 +11,7 @@ import { Route, useParams, Redirect } from 'react-router-dom'
 import CVHomePage from '@cv/pages/home/CVHomePage'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
 
@@ -52,6 +52,8 @@ import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
+import { CDSideNavProps } from '@cd/RouteDestinations'
+import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -67,7 +69,13 @@ import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 import CVCreateDowntime from './pages/slos/components/CVCreateDowntime/CVCreateDowntime'
+import {
+  CD_MONITORED_SERVICE_CONFIG,
+  PROJECT_MONITORED_SERVICE_CONFIG
+} from './components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
+import CommonMonitoredServiceDetails from './components/MonitoredServiceListWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
 import type { SRMCustomMicroFrontendProps } from './interface/SRMCustomMicroFrontendProps.types'
+import MonitoredServiceListWidget from './components/MonitoredServiceListWidget/MonitoredServiceListWidget'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -166,6 +174,11 @@ featureFactory.registerFeaturesByModule('cv', {
 export const cvModuleParams: ModulePathParams = {
   module: ':module(cv)'
 }
+
+export const cdModuleParams: ModulePathParams = {
+  module: ':module(cd)'
+}
+
 const RedirectToCVProject = (): React.ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
@@ -299,6 +312,79 @@ const RedirectToCVCodeErrorsControl = (): React.ReactElement => {
 
 export const SRMRoutes = (
   <>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
+      exact
+    >
+      <MonitoredServiceListWidget config={PROJECT_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toAddMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
+    >
+      <MonitoredServiceProvider isTemplate={false}>
+        <CommonMonitoredServiceDetails config={PROJECT_MONITORED_SERVICE_CONFIG} />
+      </MonitoredServiceProvider>
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toMonitoredServicesConfigurations({
+        ...accountPathProps,
+        ...orgPathProps,
+        ...projectPathProps,
+        ...editParams
+      })}
+      exact
+    >
+      <CommonMonitoredServiceDetails config={PROJECT_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      sidebarProps={CDSideNavProps}
+      path={routes.toMonitoredServices({
+        ...accountPathProps,
+        ...orgPathProps,
+        ...projectPathProps,
+        ...cdModuleParams
+      })}
+      exact
+    >
+      <MonitoredServiceListWidget config={CD_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CDSideNavProps}
+      path={routes.toAddMonitoredServices({
+        ...accountPathProps,
+        ...orgPathProps,
+        ...projectPathProps,
+        ...cdModuleParams
+      })}
+    >
+      <MonitoredServiceProvider isTemplate={false}>
+        <CommonMonitoredServiceDetails config={CD_MONITORED_SERVICE_CONFIG} />
+      </MonitoredServiceProvider>
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      sidebarProps={CDSideNavProps}
+      path={routes.toMonitoredServicesConfigurations({
+        ...accountPathProps,
+        ...orgPathProps,
+        ...projectPathProps,
+        ...cdModuleParams,
+        ...editParams
+      })}
+      exact
+    >
+      <CommonMonitoredServiceDetails config={CD_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
     <Route
       path={[routes.toCV({ ...accountPathProps }), routes.toCVProject({ ...accountPathProps, ...projectPathProps })]}
       exact
@@ -490,6 +576,7 @@ export const SRMRoutes = (
         <MonitoredServicePage />
       </MonitoredServiceProvider>
     </RouteWithLayout>
+
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}

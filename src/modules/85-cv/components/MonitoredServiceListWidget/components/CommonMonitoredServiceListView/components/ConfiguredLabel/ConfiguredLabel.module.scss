@@ -1,0 +1,19 @@
+.notConfiguredLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--grey-200) !important;
+  border-radius: var(--spacing-xsmall);
+  padding: var(--spacing-xsmall) !important;
+  width: 60% !important;
+}
+
+.configuredLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-2) !important;
+  border-radius: var(--spacing-xsmall);
+  padding: var(--spacing-xsmall) !important;
+  width: 60% !important;
+}

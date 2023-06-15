@@ -13,7 +13,6 @@ import { useParams } from 'react-router-dom'
 import { Formik, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { PageSpinner } from '@common/components'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -22,13 +21,22 @@ import type { TemplateFormRef } from '@templates-library/components/TemplateStud
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { ChangeSourceDrawer } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer'
 import SaveAndDiscardButton from '@cv/components/SaveAndDiscardButton/SaveAndDiscardButton'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import HealthSourceTableContainer from './components/HealthSourceTableContainer/HealthSourceTableContainer'
 import type { MonitoredServiceForm } from './Service.types'
 import MonitoredServiceOverview from './components/MonitoredServiceOverview/MonitoredServiceOverview'
-import { onSave, updateMonitoredServiceDTOOnTypeChange } from './Service.utils'
+import {
+  getIsNotifcationsSectionHidden,
+  isRenderConfigDrivenConfigsInEditScenario,
+  onSave,
+  shouldShowSaveAndDiscard,
+  shouldShowSourcesSection,
+  updateMonitoredServiceDTOOnTypeChange
+} from './Service.utils'
 import { getImperativeHandleRef, isUpdated } from '../../Configurations.utils'
 import ChangeSourceTableContainer from './components/ChangeSourceTableContainer/ChangeSourceTableContainer'
 import MonitoredServiceNotificationsContainer from './components/MonitoredServiceNotificationsContainer/MonitoredServiceNotificationsContainer'
+import CommonMonitoredServiceConfigurations from './components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations'
 import css from './Service.module.scss'
 
 function Service(
@@ -42,7 +50,8 @@ function Service(
     onChangeMonitoredServiceType,
     isTemplate,
     expressions,
-    updateTemplate
+    updateTemplate,
+    config
   }: {
     value: MonitoredServiceForm
     onSuccess: (val: any) => Promise<void>
@@ -54,6 +63,7 @@ function Service(
     isTemplate?: boolean
     updateTemplate?: (template: MonitoredServiceForm) => void
     expressions?: string[]
+    config?: MonitoredServiceConfig
   },
   formikRef?: TemplateFormRef
 ): JSX.Element {
@@ -61,6 +71,7 @@ function Service(
   const { projectIdentifier, identifier } = useParams<ProjectPathProps & { identifier: string }>()
   const isEdit = !!identifier
   const ref = useRef<any | null>()
+  const isNotificationsSectionHidden = getIsNotifcationsSectionHidden(isTemplate, config)
 
   React.useImperativeHandle(getImperativeHandleRef(isTemplate, formikRef), () => ({
     resetForm() {
@@ -150,7 +161,6 @@ function Service(
       {formik => {
         serviceTabformRef.current = formik
         ref.current = formik
-        const { serviceRef, environmentRef } = formik.values
         if (formik.dirty && !isTemplate) {
           setDBData?.(formik.values)
         }
@@ -179,12 +189,23 @@ function Service(
         }
 
         return (
-          <div>
-            {isEdit && !(serviceRef && environmentRef) ? (
-              <PageSpinner />
+          <>
+            {isRenderConfigDrivenConfigsInEditScenario(config, identifier) ? (
+              <CommonMonitoredServiceConfigurations
+                config={config}
+                identifier={identifier}
+                hideDrawer={hideDrawer}
+                showDrawer={hideDrawer}
+                openChangeSourceDrawer={openChangeSourceDrawer}
+                onSuccessChangeSource={onSuccessChangeSource}
+                isTemplate={isTemplate}
+                expressions={expressions}
+                onSuccess={onSuccess}
+                initialValues={initialValues}
+              />
             ) : (
               <>
-                {!isTemplate && (
+                {shouldShowSaveAndDiscard(isTemplate) && (
                   <div className={css.saveDiscardButton}>
                     <SaveAndDiscardButton
                       isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
@@ -203,50 +224,57 @@ function Service(
                     />
                   </div>
                 )}
-                <MonitoredServiceOverview
-                  formikProps={formik}
-                  isEdit={isEdit}
-                  onChangeMonitoredServiceType={type => {
-                    if (type === formik.values.type) {
-                      return
-                    }
-                    formik.setFieldValue('type', type)
-                    onChangeMonitoredServiceType({
-                      isEdit,
-                      ...updateMonitoredServiceDTOOnTypeChange(type, formik.values)
-                    })
-                  }}
-                />
-                <Text color={Color.BLACK} className={css.sourceTableLabel}>
-                  {getString('cv.healthSource.defineYourSource')}
-                </Text>
-                <ChangeSourceTableContainer
-                  onEdit={values => {
-                    showDrawer({ ...values, hideDrawer })
-                  }}
-                  onAddNewChangeSource={() => openChangeSourceDrawer({ formik, onSuccessChangeSource })}
-                  value={formik?.values?.sources?.changeSources || []}
-                  onSuccess={onSuccessChangeSource}
-                />
-                <HealthSourceTableContainer
-                  healthSourceListFromAPI={initialValues.sources?.healthSources}
-                  serviceFormFormik={formik}
-                  isTemplate={isTemplate}
-                  expressions={expressions}
-                  onSave={data => {
-                    onSave({
-                      formik: {
-                        ...formik,
-                        values: {
-                          ...(formik?.values || {}),
-                          sources: { ...formik.values?.sources, healthSources: data }
-                        }
-                      },
-                      onSuccess
-                    })
-                  }}
-                />
-                {!isTemplate && (
+                <>
+                  <MonitoredServiceOverview
+                    formikProps={formik}
+                    isEdit={isEdit}
+                    onChangeMonitoredServiceType={type => {
+                      if (type === formik.values.type) {
+                        return
+                      }
+                      formik.setFieldValue('type', type)
+                      onChangeMonitoredServiceType({
+                        isEdit,
+                        ...updateMonitoredServiceDTOOnTypeChange(type, formik.values)
+                      })
+                    }}
+                    config={config}
+                  />
+                  {shouldShowSourcesSection(config) ? (
+                    <>
+                      <Text color={Color.BLACK} className={css.sourceTableLabel}>
+                        {getString('cv.healthSource.defineYourSource')}
+                      </Text>
+                      <ChangeSourceTableContainer
+                        onEdit={values => {
+                          showDrawer({ ...values, hideDrawer })
+                        }}
+                        onAddNewChangeSource={() => openChangeSourceDrawer({ formik, onSuccessChangeSource })}
+                        value={formik?.values?.sources?.changeSources || []}
+                        onSuccess={onSuccessChangeSource}
+                      />
+                      <HealthSourceTableContainer
+                        healthSourceListFromAPI={initialValues.sources?.healthSources}
+                        serviceFormFormik={formik}
+                        isTemplate={isTemplate}
+                        expressions={expressions}
+                        onSave={data => {
+                          onSave({
+                            formik: {
+                              ...formik,
+                              values: {
+                                ...(formik?.values || {}),
+                                sources: { ...formik.values?.sources, healthSources: data }
+                              }
+                            },
+                            onSuccess
+                          })
+                        }}
+                      />
+                    </>
+                  ) : null}
+                </>
+                {isNotificationsSectionHidden ? null : (
                   <MonitoredServiceNotificationsContainer
                     setFieldValue={formik?.setFieldValue}
                     notificationRuleRefs={formik?.values?.notificationRuleRefs}
@@ -255,7 +283,7 @@ function Service(
                 )}
               </>
             )}
-          </div>
+          </>
         )
       }}
     </Formik>

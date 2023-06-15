@@ -8714,6 +8714,13 @@ export interface StringsMap {
   'cv.codeErrors.agents': string
   'cv.codeErrors.criticalEvents': string
   'cv.codeErrors.title': string
+  'cv.commonMonitoredServices.agentConfiguration': string
+  'cv.commonMonitoredServices.changeSource': string
+  'cv.commonMonitoredServices.configured': string
+  'cv.commonMonitoredServices.goTo': string
+  'cv.commonMonitoredServices.healthSource': string
+  'cv.commonMonitoredServices.monitoredService': string
+  'cv.commonMonitoredServices.notConfigured': string
   'cv.componentValidations.queryType': string
   'cv.componentValidations.queryTypeLabel': string
   'cv.componentValidations.requestMethod': string

@@ -142,7 +142,8 @@ describe('Monitored Service list', () => {
         queryParams: {
           accountId: 'accountId',
           environmentIdentifier: 'account.new_env_test',
-          filter: 'demo',
+          filter: '',
+          hideNotConfiguredServices: false,
           offset: 0,
           orgIdentifier: 'orgIdentifier',
           pageSize: 10,
@@ -162,8 +163,9 @@ describe('Monitored Service list', () => {
       expect(refetchListMonitoredService2).toHaveBeenCalledWith({
         queryParams: {
           accountId: 'accountId',
-          environmentIdentifier: 'all',
+          environmentIdentifier: 'account.new_env_test',
           filter: '',
+          hideNotConfiguredServices: false,
           offset: 0,
           orgIdentifier: 'orgIdentifier',
           pageSize: 10,

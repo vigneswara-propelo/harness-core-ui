@@ -642,6 +642,14 @@ monitoredServices:
     noData: No data available for service dependencies
   assignLabel: Select the services you want to apply the metric
   continuousVerification: Continuous Verification
+commonMonitoredServices:
+  goTo: go to
+  agentConfiguration: agent configuration
+  changeSource: change source
+  healthSource: health source
+  monitoredService: monitored service
+  notConfigured: not configured
+  configured: configured
 dependenciesHealthWithCount: Dependencies Health ({{ count }})
 notifications:
   deleteNotificationWarning: Are you sure you want to delete notification ‘{{ name }}’ ?

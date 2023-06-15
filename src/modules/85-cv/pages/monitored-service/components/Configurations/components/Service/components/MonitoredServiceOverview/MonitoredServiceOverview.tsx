@@ -32,6 +32,7 @@ import type { EnvironmentSelectOrCreateProps } from '@cv/components/HarnessServi
 import type { EnvironmentMultiSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
 import { useMonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
+import { getIfModuleIsCD } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.utils'
 import { MonitoredServiceTypeOptions } from './MonitoredServiceOverview.constants'
 import {
   updateMonitoredServiceNameForService,
@@ -43,7 +44,7 @@ import OrgAccountLevelServiceEnvField from './component/OrgAccountLevelServiceEn
 import css from './MonitoredServiceOverview.module.scss'
 
 export default function MonitoredServiceOverview(props: MonitoredServiceOverviewProps): JSX.Element {
-  const { formikProps, isEdit, onChangeMonitoredServiceType } = props
+  const { formikProps, isEdit, onChangeMonitoredServiceType, config } = props
   const { isTemplate, templateScope } = useMonitoredServiceContext()
   const { getString } = useStrings()
   const [tempServiceType, setTempServiceType] = useState<MonitoredServiceDTO['type']>()
@@ -52,6 +53,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
   const values = formikProps.values || {}
   const keys = useMemo(() => [Utils.randomId(), Utils.randomId()], [values.serviceRef, values.environmentRef])
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const isCDModule = getIfModuleIsCD(config)
 
   const { openDialog } = useConfirmationDialog({
     contentText: getString('cv.monitoredServices.changeMonitoredServiceTypeMessage'),
@@ -88,24 +90,26 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
       {!isEdit ? (
         <>
           <Layout.Horizontal spacing="large">
-            <FormInput.Select
-              name="type"
-              tooltipProps={{ dataTooltipId: 'monitoredServiceType' }}
-              items={MonitoredServiceTypeOptions}
-              label={getString('typeLabel')}
-              value={
-                formikProps.values?.type === 'Infrastructure'
-                  ? MonitoredServiceTypeOptions[1]
-                  : MonitoredServiceTypeOptions[0]
-              }
-              onChange={item => {
-                if (formikProps.values.type !== item.value) {
-                  openDialog()
-                  formikProps.setFieldValue('type', formikProps.values.type)
-                  setTempServiceType(item.value as MonitoredServiceDTO['type'])
+            {isCDModule ? null : (
+              <FormInput.Select
+                name="type"
+                tooltipProps={{ dataTooltipId: 'monitoredServiceType' }}
+                items={MonitoredServiceTypeOptions}
+                label={getString('typeLabel')}
+                value={
+                  formikProps.values?.type === 'Infrastructure'
+                    ? MonitoredServiceTypeOptions[1]
+                    : MonitoredServiceTypeOptions[0]
                 }
-              }}
-            />
+                onChange={item => {
+                  if (formikProps.values.type !== item.value) {
+                    openDialog()
+                    formikProps.setFieldValue('type', formikProps.values.type)
+                    setTempServiceType(item.value as MonitoredServiceDTO['type'])
+                  }
+                }}
+              />
+            )}
             {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
               <OrgAccountLevelServiceEnvField
                 isTemplate={isTemplate}

@@ -5,18 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { Page, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useListMonitoredService, useSetHealthMonitoringFlag, useDeleteMonitoredService } from 'services/cv'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import {
+  useListMonitoredService,
+  useSetHealthMonitoringFlag,
+  useDeleteMonitoredService,
+  useGetMonitoredServicePlatformList,
+  GetMonitoredServicePlatformListQueryParams
+} from 'services/cv'
+import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import { getErrorMessage, getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
+import CommonMonitoredServiceListView from '@cv/components/MonitoredServiceListWidget/components/CommonMonitoredServiceListView/CommonMonitoredServiceListView'
+import { getIfModuleIsCD } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.utils'
 import MonitoredServiceListView from './MonitoredServiceListView'
 import { FilterTypes, MonitoredServiceListProps } from '../../CVMonitoredService.types'
 import css from '../../CVMonitoredService.module.scss'
@@ -32,50 +40,97 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
   serviceCountLoading,
   serviceCountErrorMessage,
   refetchServiceCountData,
-  search
+  search,
+  config
 }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const pathParams = {
-    accountId,
-    orgIdentifier,
-    projectIdentifier
-  }
+  const isCDModule = getIfModuleIsCD(config)
 
+  const pathParams = useMemo(() => {
+    return {
+      accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  }, [accountId, orgIdentifier, projectIdentifier])
   const projectRef = useRef(projectIdentifier)
 
-  const {
-    data: monitoredServiceListData,
-    loading: monitoredServiceListLoading,
-    refetch: refetchMonitoredServiceList,
-    error: monitoredServiceListError
-  } = useListMonitoredService({
-    lazy: true,
-    queryParams: {
+  const commonQueryParams = useMemo(() => {
+    return {
       offset: page,
       pageSize: 10,
       ...pathParams,
       filter: search,
+      hideNotConfiguredServices: false,
+      servicesAtRiskFilter: false
+    }
+  }, [page, pathParams, search])
+
+  const srmListMonitoredServicesQueryParams = useMemo(() => {
+    return {
+      ...commonQueryParams,
       environmentIdentifier,
       servicesAtRiskFilter: selectedFilter === FilterTypes.RISK
     }
+  }, [commonQueryParams, environmentIdentifier, selectedFilter])
+
+  const platformListMonitoredServicesQueryParams = useMemo(() => {
+    return {
+      ...commonQueryParams,
+      hideNotConfiguredServices: false,
+      ...(isCDModule && {
+        monitoredServiceType: 'Application' as GetMonitoredServicePlatformListQueryParams['monitoredServiceType']
+      }),
+      environmentIdentifiers: [environmentIdentifier as string]
+    }
+  }, [commonQueryParams, environmentIdentifier, isCDModule])
+
+  const { mutate: setHealthMonitoringFlag, loading: healthMonitoringFlagLoading } = useSetHealthMonitoringFlag({
+    identifier: ''
   })
+
+  const { mutate: deleteMonitoredService, loading: deleteMonitoredServiceLoading } = useDeleteMonitoredService({
+    queryParams: pathParams
+  })
+
+  const {
+    data: srmMonitoredServiceListData,
+    loading: srmMonitoredServiceListLoading,
+    refetch: refetchSRMMonitoredServiceList,
+    error: srmMonitoredServiceListError
+  } = useListMonitoredService({
+    lazy: true,
+    queryParams: srmListMonitoredServicesQueryParams
+  })
+
+  const {
+    data: platformMonitoredServiceListData,
+    loading: platformMonitoredServiceListLoading,
+    refetch: platformRefetchMonitoredServiceList,
+    error: platformMonitoredServiceListError
+  } = useGetMonitoredServicePlatformList({
+    lazy: true,
+    queryParams: platformListMonitoredServicesQueryParams,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    }
+  })
+
+  const refetchMonitoredServiceList = config ? platformRefetchMonitoredServiceList : refetchSRMMonitoredServiceList
+  const monitoredServiceListError = config ? platformMonitoredServiceListError : srmMonitoredServiceListError
+  const monitoredServiceListLoading = config ? platformMonitoredServiceListLoading : srmMonitoredServiceListLoading
+  const monitoredServiceListData = config ? platformMonitoredServiceListData : srmMonitoredServiceListData
+  const queryParams = config ? platformListMonitoredServicesQueryParams : srmListMonitoredServicesQueryParams
 
   useDeepCompareEffect(() => {
     // On mount call and filter update happens here
     if (projectRef.current === projectIdentifier) {
       refetchServiceCountData()
       refetchMonitoredServiceList({
-        queryParams: {
-          offset: page,
-          pageSize: 10,
-          ...pathParams,
-          filter: search,
-          environmentIdentifier,
-          servicesAtRiskFilter: selectedFilter === FilterTypes.RISK
-        }
+        queryParams: queryParams
       })
     }
   }, [page, search, selectedFilter, environmentIdentifier])
@@ -92,19 +147,14 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
       })
       refetchMonitoredServiceList({
         queryParams: {
+          ...queryParams,
           offset: 0,
-          pageSize: 10,
-          ...pathParams,
           filter: '',
           servicesAtRiskFilter: false
         }
       })
     }
   }, [projectIdentifier])
-
-  const { mutate: setHealthMonitoringFlag, loading: healthMonitoringFlagLoading } = useSetHealthMonitoringFlag({
-    identifier: ''
-  })
 
   const onToggleService = async (identifier: string, checked: boolean): Promise<void> => {
     try {
@@ -130,10 +180,6 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
     }
   }
 
-  const { mutate: deleteMonitoredService, loading: deleteMonitoredServiceLoading } = useDeleteMonitoredService({
-    queryParams: pathParams
-  })
-
   const onDeleteService = async (identifier: string): Promise<void> => {
     try {
       await deleteMonitoredService(identifier)
@@ -154,14 +200,25 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
   }
 
   const onEditService = (identifier: string): void => {
-    history.push({
-      pathname: routes.toCVAddMonitoringServicesEdit({
-        ...pathParams,
-        identifier,
-        module: 'cv'
-      }),
-      search: getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })
-    })
+    if (config) {
+      const { module } = config
+      history.push({
+        pathname: routes.toMonitoredServicesConfigurations({
+          ...pathParams,
+          ...(module && { module: module as Module }),
+          identifier
+        })
+      })
+    } else {
+      history.push({
+        pathname: routes.toCVAddMonitoringServicesEdit({
+          ...pathParams,
+          identifier,
+          module: 'cv'
+        }),
+        search: getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })
+      })
+    }
   }
 
   return (
@@ -190,18 +247,29 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
       }}
       className={css.pageBody}
     >
-      <MonitoredServiceListView
-        serviceCountData={serviceCountData}
-        refetchServiceCountData={refetchServiceCountData}
-        monitoredServiceListData={monitoredServiceListData?.data}
-        selectedFilter={selectedFilter}
-        onFilter={onFilter}
-        onEditService={onEditService}
-        onDeleteService={onDeleteService}
-        setPage={setPage}
-        onToggleService={onToggleService}
-        healthMonitoringFlagLoading={healthMonitoringFlagLoading}
-      />
+      {config ? (
+        <CommonMonitoredServiceListView
+          monitoredServiceListData={monitoredServiceListData?.data}
+          selectedFilter={selectedFilter}
+          onEditService={onEditService}
+          onDeleteService={onDeleteService}
+          setPage={setPage}
+          config={config}
+        />
+      ) : (
+        <MonitoredServiceListView
+          serviceCountData={serviceCountData}
+          refetchServiceCountData={refetchServiceCountData}
+          monitoredServiceListData={monitoredServiceListData?.data}
+          selectedFilter={selectedFilter}
+          onFilter={onFilter}
+          onEditService={onEditService}
+          onDeleteService={onDeleteService}
+          setPage={setPage}
+          onToggleService={onToggleService}
+          healthMonitoringFlagLoading={healthMonitoringFlagLoading}
+        />
+      )}
     </Page.Body>
   )
 }

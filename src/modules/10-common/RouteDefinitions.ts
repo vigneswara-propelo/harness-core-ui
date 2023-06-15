@@ -871,6 +871,31 @@ const routes = {
       })
     }
   ),
+  toMonitoredServices: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return module
+        ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoredservices`
+        : `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoredservices`
+    }
+  ),
+  toMonitoredServicesConfigurations: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      identifier
+    }: Partial<
+      ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement; identifier: string }
+    >) => {
+      return module
+        ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoredservices/configurations/${identifier}`
+        : `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoredservices/configurations/${identifier}`
+    }
+  ),
   toServiceStudio: withAccountId(
     ({
       orgIdentifier,
@@ -1753,6 +1778,13 @@ const routes = {
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
+  ),
+  toAddMonitoredServices: withAccountId(
+    ({ projectIdentifier, orgIdentifier, module }: Partial<ProjectPathProps & { module: string }>) => {
+      return module
+        ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
+        : `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
+    }
   ),
   toCVAddMonitoringServicesEdit: withAccountId(
     ({

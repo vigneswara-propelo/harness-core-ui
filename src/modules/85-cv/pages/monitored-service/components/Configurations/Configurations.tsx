@@ -16,7 +16,7 @@ import { getCVMonitoringServicesSearchParam, getErrorMessage, getSearchString } 
 import { accountPathProps, projectPathProps, modulePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { editParams } from '@cv/utils/routeUtils'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useIndexedDBHook, CVObjectStoreNames } from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import {
   ChangeSourceDTO,
@@ -37,21 +37,29 @@ import { useStrings } from 'framework/strings'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import Service, { ServiceWithRef } from './components/Service/Service'
 import Dependency from './components/Dependency/Dependency'
 import { getInitFormData } from './components/Service/Service.utils'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
-import { determineUnSaveState, onTabChange, onSubmit, getImperativeHandleRef } from './Configurations.utils'
+import {
+  determineUnSaveState,
+  onTabChange,
+  onSubmit,
+  getImperativeHandleRef,
+  showDependencies
+} from './Configurations.utils'
 import { useMonitoredServiceContext } from '../../MonitoredServiceContext'
 import css from './Configurations.module.scss'
 
 interface ConfigurationsInterface {
   templateValue?: NGTemplateInfoConfig
   updateTemplate?: (template: MonitoredServiceForm) => void
+  config?: MonitoredServiceConfig
 }
 
 export default function Configurations(
-  { updateTemplate, templateValue }: ConfigurationsInterface,
+  { updateTemplate, templateValue, config }: ConfigurationsInterface,
   formikRef: TemplateFormRef
 ): JSX.Element {
   const { getString } = useStrings()
@@ -81,8 +89,8 @@ export default function Configurations(
   const dependencyTabformRef: React.MutableRefObject<FormikProps<MonitoredServiceForm> | null> = React.useRef(null)
   const [overrideBlockNavigation, setOverrideBlockNavigation] = useState<boolean>(false)
   const [defaultMonitoredService, setDefaultMonitoredService] = useState<MonitoredServiceDTO>()
-
   const projectRef = useRef(projectIdentifier)
+  const { module } = config || {}
 
   const {
     data: dataMonitoredServiceById,
@@ -155,16 +163,27 @@ export default function Configurations(
 
   useEffect(() => {
     if (overrideBlockNavigation && !redirectToSLO) {
-      history.push({
-        pathname: routes.toCVMonitoringServices({
-          orgIdentifier,
-          projectIdentifier,
-          accountId
-        }),
-        search: getCVMonitoringServicesSearchParam({ view })
-      })
+      if (config) {
+        history.push(
+          routes.toMonitoredServices({
+            projectIdentifier,
+            orgIdentifier,
+            accountId,
+            ...(module ? { module: module as Module } : {})
+          })
+        )
+      } else {
+        history.push({
+          pathname: routes.toCVMonitoringServices({
+            orgIdentifier,
+            projectIdentifier,
+            accountId
+          }),
+          search: getCVMonitoringServicesSearchParam({ view })
+        })
+      }
     }
-  }, [overrideBlockNavigation, redirectToSLO])
+  }, [overrideBlockNavigation, redirectToSLO, module, config])
 
   const [hasTemplateChangeSourceSet, sethasTemplateChangeSourceSet] = useState(false)
   useEffect(() => {
@@ -209,7 +228,7 @@ export default function Configurations(
   }, [yamlMonitoredService])
 
   useEffect(() => {
-    if (identifier) {
+    if (identifier && fetchMonitoredService) {
       fetchMonitoredService()
     } else if ((isTemplate && isNewTemplate(templateIdentifier)) || (!isTemplate && !identifier)) {
       fetchMonitoredServiceYAML()
@@ -419,10 +438,11 @@ export default function Configurations(
                   }
                 })
               }}
+              config={config}
             />
           }
         />
-        {!isTemplate && (
+        {showDependencies(isTemplate, config) && (
           <Tab
             id={getString('pipelines-studio.dependenciesGroupTitle')}
             title={getString('pipelines-studio.dependenciesGroupTitle')}

@@ -6,7 +6,9 @@
  */
 
 import { clone, omit } from 'lodash-es'
-import { isUpdated, determineUnSaveState, onSubmit } from '../Configurations.utils'
+import { PROJECT_MONITORED_SERVICE_CONFIG } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
+import { isUpdated, determineUnSaveState, onSubmit, showDependencies } from '../Configurations.utils'
 import { infraMonitoredService, monitoredService } from './Configurations.mock'
 
 const cachedInitialValues = clone(monitoredService)
@@ -151,5 +153,49 @@ describe('Validate configuration tab util function', () => {
       environmentRef: 'EnvironmentRef101',
       environmentRefList: ['EnvironmentRef101', 'EnvironmentRef102']
     })
+  })
+})
+
+describe('showDependencies', () => {
+  test('returns true when isTemplate is false and config is undefined', () => {
+    const isTemplate = false
+    const config: MonitoredServiceConfig | undefined = undefined
+
+    const result = showDependencies(isTemplate, config)
+
+    expect(result).toBe(true)
+  })
+
+  test('returns true when isTemplate is false and config.showDependencies is true', () => {
+    const isTemplate = false
+    const config: MonitoredServiceConfig = {
+      ...PROJECT_MONITORED_SERVICE_CONFIG,
+      showDependencies: true
+    }
+
+    const result = showDependencies(isTemplate, config)
+
+    expect(result).toBe(true)
+  })
+
+  test('returns false when isTemplate is true', () => {
+    const isTemplate = true
+    const config: MonitoredServiceConfig | undefined = PROJECT_MONITORED_SERVICE_CONFIG
+
+    const result = showDependencies(isTemplate, config)
+
+    expect(result).toBe(false)
+  })
+
+  test('returns false when isTemplate is false and config.showDependencies is false', () => {
+    const isTemplate = false
+    const config: MonitoredServiceConfig = {
+      ...PROJECT_MONITORED_SERVICE_CONFIG,
+      showDependencies: false
+    }
+
+    const result = showDependencies(isTemplate, config)
+
+    expect(result).toBe(false)
   })
 })

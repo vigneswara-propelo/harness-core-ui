@@ -19,6 +19,7 @@ import type {
 import type { UseStringsReturn } from 'framework/strings'
 import { CVObjectStoreNames } from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
 
 export const isUpdated = (
@@ -167,7 +168,7 @@ export const onSubmit = async ({
     payload.environmentRef = isSelectionOption ? environmentRef?.[0]?.value : environmentRef?.[0]
     payload.environmentRefList = isSelectionOption ? environmentRef.map(item => item.value) : environmentRef
   }
-  if (identifier) {
+  if (identifier && fetchMonitoredService) {
     await updateMonitoredService(payload)
     fetchMonitoredService()
   } else {
@@ -182,4 +183,8 @@ export const getImperativeHandleRef = (isTemplate?: boolean, formikRef?: Templat
     return defaultRef
   }
   return isTemplate ? formikRef : defaultRef
+}
+
+export function showDependencies(isTemplate: boolean, config: MonitoredServiceConfig | undefined): boolean {
+  return Boolean(!isTemplate && (!config || (config && config?.showDependencies)))
 }

@@ -20,6 +20,7 @@ declare const styles: {
   readonly noServiceAvailableImage: string
   readonly pageBody: string
   readonly pageContainer: string
+  readonly srmIcon: string
   readonly tags: string
   readonly tagsText: string
   readonly toggleFlagButton: string
