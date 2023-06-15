@@ -42,6 +42,7 @@ export class IACMTerraformPluginStep extends PipelineStep<IACMTerraformPluginSte
     type: StepType.IACMTerraformPlugin,
     name: '',
     identifier: '',
+    timeout: '10m',
     spec: {
       command: ''
     }
