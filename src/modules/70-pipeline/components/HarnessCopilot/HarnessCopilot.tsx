@@ -5,11 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Suspense, lazy, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment'
 import { Drawer, PopoverPosition, Position } from '@blueprintjs/core'
 import cx from 'classnames'
-const LazyReactMarkdown = lazy(() => import('react-markdown'))
 import { useParams } from 'react-router-dom'
 import { get, isEmpty } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
@@ -20,6 +19,7 @@ import { pluralize } from '@common/utils/StringUtils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useLocalStorage } from '@common/hooks'
 import { createFormDataFromObjectPayload } from '@common/constants/Utils'
+import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import {
   getCommandFromCurrentStep,
@@ -41,14 +41,6 @@ enum AIAnalysisStatus {
   InProgress = 'IN_PROGRESS',
   Success = 'SUCCESS',
   Failure = 'FAILURE'
-}
-
-function ReactMarkdown({ children, className }: { children: string; className: string }): React.ReactElement {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LazyReactMarkdown className={className}>{children}</LazyReactMarkdown>
-    </Suspense>
-  )
 }
 
 function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
@@ -314,7 +306,10 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
             <Text className={css.label} font={{ variation: FontVariation.H5 }}>
               {getString('pipeline.copilot.possibleSolutions')}
             </Text>
-            <ReactMarkdown className={cx(css.markdown, css.overflow)}>{remediation}</ReactMarkdown>
+            <div
+              className={cx(css.markdown, css.overflow)}
+              dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(remediation) }}
+            />
           </Layout.Vertical>
           <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
             {remediationsGeneratedAt ? (
