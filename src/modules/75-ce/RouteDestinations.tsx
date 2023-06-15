@@ -43,18 +43,11 @@ import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarni
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
 import CEHomePage from './pages/home/CEHomePage'
-import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
-import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
-import CECOEditGatewayPage from './pages/co-edit-gateway/CECOEditGatewayPage'
-import CECOLoadBalancersPage from './pages/co-access-points/CECOAccessPointsPage'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
 import OverviewPage from './pages/overview/OverviewPage'
 import formatCost from './utils/formatCost'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
-import CORuleDetailsPage from './pages/co-rule-details/CORuleDetailsPage'
-import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentOrchestration'
-import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/CommitmentOrchestrationSetup'
 import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
 import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
@@ -441,73 +434,6 @@ const CENonMFERoutes = (
       pageName={PAGE_NAME.CEOverviewPage}
     >
       <OverviewPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })}
-      exact
-      pageName={PAGE_NAME.CECOCreateGatewayPage}
-    >
-      <CECOCreateGatewayPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCECORules({ ...accountPathProps, params: '' })}
-      exact
-      pageName={PAGE_NAME.CECODashboardPage}
-    >
-      <CECODashboardPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCECORuleDetails({ ...accountPathProps, id: ':ruleId' })}
-      exact
-      pageName={PAGE_NAME.CECORuleDetailsPage}
-    >
-      <CORuleDetailsPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps })}
-      exact
-      pageName={PAGE_NAME.CECOLoadBalancersPage}
-    >
-      <CECOLoadBalancersPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCECOEditGateway({
-        ...accountPathProps,
-        ...projectPathProps,
-        gatewayIdentifier: ':gatewayIdentifier'
-      })}
-      exact
-      pageName={PAGE_NAME.CECOEditGatewayPage}
-    >
-      <CECOEditGatewayPage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCommitmentOrchestration({ ...accountPathProps })}
-      exact
-      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-    >
-      <CommitmentOrchestration />
-    </RouteWithLayout>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCommitmentOrchestrationSetup({ ...accountPathProps })}
-      exact
-      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-    >
-      <CommitmentOrchestrationSetup />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
