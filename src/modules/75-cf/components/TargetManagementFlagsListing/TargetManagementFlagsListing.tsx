@@ -87,7 +87,7 @@ const TargetManagementFlagsListing: FC<TargetManagementFlagsListingProps> = ({
     if (includeAddFlagCheckbox) {
       cols.unshift({
         Header: '',
-        width: '5%',
+        width: '6%',
         id: 'checked',
         Cell: AddFlagCheckboxCell
       })

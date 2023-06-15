@@ -16,7 +16,15 @@ type FlagDetailsCellParams = Parameters<typeof FlagDetailsCell>['0']
 
 const renderComponent = (props: Partial<FlagDetailsCellParams> = {}): RenderResult =>
   render(
-    <TestWrapper>
+    <TestWrapper
+      path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/"
+      pathParams={{
+        accountId: 'dummy',
+        orgIdentifier: 'dummy',
+        projectIdentifier: 'dummy',
+        environmentIdentifier: 'Mock_Environment'
+      }}
+    >
       <FlagDetailsCell row={{ original: mockFeatures[0] } as any} {...props} />
     </TestWrapper>
   )
@@ -41,5 +49,19 @@ describe('FlagDetailsCell', () => {
 
     expect(screen.getByText(flag.name)).toBeInTheDocument()
     expect(document.querySelectorAll('p')).toHaveLength(1)
+  })
+
+  test('The flag name should be a link to the flags detail page', async () => {
+    const flag = cloneDeep(mockFeatures[0])
+    flag.name = 'TEST FLAG NAME'
+
+    renderComponent({ row: { original: flag } })
+
+    expect(screen.getByText(flag.name)).toBeInTheDocument()
+
+    expect(screen.getByRole('link', { name: flag.name })).toHaveAttribute(
+      'href',
+      '/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/f1'
+    )
   })
 })

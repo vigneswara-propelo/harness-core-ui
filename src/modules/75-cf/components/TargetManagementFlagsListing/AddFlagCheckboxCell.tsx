@@ -19,7 +19,7 @@ const AddFlagCheckboxCell: FC<Cell<Feature>> = ({ row: { original: flag } }) => 
       label=""
       aria-label={getString('cf.segmentDetail.addFlagNameToTargetGroup', { flagName: flag.name })}
       name={`flags.${flag.identifier}.added`}
-      style={{ margin: 0 }}
+      style={{ marginBottom: 0 }}
     />
   )
 }

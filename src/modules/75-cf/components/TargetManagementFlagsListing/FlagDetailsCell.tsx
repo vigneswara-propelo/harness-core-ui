@@ -7,8 +7,11 @@
 
 import React, { FC } from 'react'
 import { Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
+import { Link, useParams } from 'react-router-dom'
 import type { Feature } from 'services/cf'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import routes from '@common/RouteDefinitions'
 
 export interface FlagDetailsCellProps {
   row: { original: Feature }
@@ -16,15 +19,32 @@ export interface FlagDetailsCellProps {
 
 export const FlagDetailsCell: FC<FlagDetailsCellProps> = ({
   row: {
-    original: { name, description }
+    original: { identifier, name, description }
   }
-}) => (
-  <>
-    <Text lineClamp={1} font={{ variation: FontVariation.BODY2 }}>
-      {name}
-    </Text>
-    {description && <Text lineClamp={2}>{description}</Text>}
-  </>
-)
+}) => {
+  const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
+  const { withActiveEnvironment } = useActiveEnvironment()
+
+  return (
+    <>
+      <Link
+        target="_blank"
+        to={withActiveEnvironment(
+          routes.toCFFeatureFlagsDetail({
+            featureFlagIdentifier: identifier,
+            orgIdentifier: orgIdentifier,
+            projectIdentifier: projectIdentifier,
+            accountId: accountIdentifier
+          })
+        )}
+      >
+        <Text lineClamp={1} font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
+          {name}
+        </Text>
+      </Link>
+      {description && <Text lineClamp={2}>{description}</Text>}
+    </>
+  )
+}
 
 export default FlagDetailsCell
