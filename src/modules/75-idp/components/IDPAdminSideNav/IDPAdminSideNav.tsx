@@ -56,6 +56,7 @@ export default function IDPAdminSideNav(): React.ReactElement {
           <SidebarLink label={getString('accessControl')} to={routes.toIDPAccessControl(params)} />
           <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectorsPage(params)} />
           <SidebarLink label={getString('idp.oAuthConfig')} to={routes.toIDPOAuthConfig(params)} />
+          <SidebarLink label={getString('idp.urlAllowList')} to={routes.toIDPAllowListURL(params)} />
         </>
       )}
     </Layout.Vertical>

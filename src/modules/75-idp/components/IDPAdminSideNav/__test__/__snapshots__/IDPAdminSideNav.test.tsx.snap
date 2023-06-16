@@ -92,6 +92,16 @@ exports[`IDP Sidenav render 1`] = `
         idp.oAuthConfig
       </p>
     </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/allowlist-url"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        idp.urlAllowList
+      </p>
+    </a>
   </div>
 </div>
 `;

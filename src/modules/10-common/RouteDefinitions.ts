@@ -2213,6 +2213,7 @@ const routes = {
   toIDPAccessControl: withAccountId(() => '/idp-admin/access-control'),
   toConnectorsPage: withAccountId(() => '/idp-admin/connectors'),
   toIDPOAuthConfig: withAccountId(() => '/idp-admin/oauth'),
+  toIDPAllowListURL: withAccountId(() => '/idp-admin/allowlist-url'),
 
   // Error Tracking
   toCET: withAccountId(() => '/cet'),

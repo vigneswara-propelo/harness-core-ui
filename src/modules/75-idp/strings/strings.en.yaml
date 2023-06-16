@@ -1,3 +1,4 @@
 adminHome: Admin Home
 layout: Layout
 oAuthConfig: OAuth Configurations
+urlAllowList: URL Allow List
