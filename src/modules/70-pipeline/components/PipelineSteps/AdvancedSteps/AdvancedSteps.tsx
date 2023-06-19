@@ -313,11 +313,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   onUpdateStrategy={strategy => {
                     formikProps.setValues(
                       produce(formikProps.values, (draft: any) => {
-                        if (isEmpty(strategy)) {
-                          unset(draft, 'strategy')
-                        } else {
-                          set(draft, 'strategy', strategy)
-                        }
+                        set(draft, 'strategy', strategy)
                       })
                     )
                   }}
