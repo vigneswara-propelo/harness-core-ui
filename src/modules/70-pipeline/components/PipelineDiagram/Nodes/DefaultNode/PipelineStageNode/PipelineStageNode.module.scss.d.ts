@@ -9,6 +9,5 @@
 declare const styles: {
   readonly conditional: string
   readonly loopingStrategy: string
-  readonly switch: string
 }
 export default styles
