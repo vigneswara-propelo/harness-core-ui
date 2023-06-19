@@ -598,6 +598,11 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
             pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
               ? pipelineWithGitDetails.gitDetails
               : defaultTo(data?.gitDetails, {}),
+          storeMetadata: {
+            ...storeMetadata,
+            storeType: pipelineMetaData?.data?.storeType,
+            connectorRef: pipelineMetaData?.data?.connectorRef
+          },
           templateTypes,
           templateIcons,
           templateServiceData,

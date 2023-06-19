@@ -83,7 +83,7 @@ export const getTemplateMetadataByIdentifier = (
     })
 }
 
-const getPipelineUrl = async (scope: EntityScope, identifier: string): Promise<string> => {
+export const getPipelineUrl = async (scope: EntityScope, identifier: string): Promise<string> => {
   const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '', branch = '' } = scope
   const pipelineMetadataResponse = await getPipelineMetadataByIdentifier(scope, identifier)
   const pipelineMetadata = pipelineMetadataResponse?.data

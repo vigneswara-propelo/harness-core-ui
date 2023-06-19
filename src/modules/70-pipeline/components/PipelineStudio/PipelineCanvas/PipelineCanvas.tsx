@@ -60,6 +60,7 @@ import type { Pipeline } from '@pipeline/utils/types'
 import { SettingType } from '@common/constants/Utils'
 import { useGetSettingValue } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { getPipelineUrl } from '@common/hooks/useGetEntityMetadata'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -191,6 +192,24 @@ export function PipelineCanvas({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [branch, gitDetails?.branch, module, originalPipeline?.identifier, projectIdentifier])
+
+  // Handling when user move a pipline to REMOTE but still opening pipelineStudio with INLINE url
+  React.useEffect(() => {
+    if (originalPipeline?.identifier !== DefaultNewPipelineId && storeMetadata?.storeType !== storeType) {
+      getPipelineUrl(
+        {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          branch: gitDetails?.branch
+        },
+        pipeline?.identifier
+      ).then((remotePiplineRoute: string) => {
+        history.push(remotePiplineRoute)
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gitDetails?.branch, storeType])
 
   const { showError, clear } = useToaster()
 
