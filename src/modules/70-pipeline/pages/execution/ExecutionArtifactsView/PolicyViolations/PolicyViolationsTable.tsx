@@ -8,32 +8,52 @@
 import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
-import type { EnforcementGetEnforcementResultsByIDResponseBody, EnforcementResultResponseBody } from 'services/ssca'
+import type {
+  EnforcementResult,
+  EnforcementnewGetEnforcementResultsByIdNewOkResponse
+} from '@harnessio/react-ssca-service-client'
 import { useStrings } from 'framework/strings'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useUpdateQueryParams, useQueryParams } from '@common/hooks'
 import {
   PackageSupplierCell,
   PackageNameCell,
   ViolationsDetailsCell,
-  EnforcementResultColumnActions,
   SortBy,
   LicenseCell
 } from './PolicyViolationsTableCells'
+import {
+  ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
+  ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
+  EnforcementViolationQueryParams,
+  getQueryParamOptions
+} from './utils'
 import css from './PolicyViolations.module.scss'
 
-export interface PolicyViolationsTableProps extends EnforcementResultColumnActions {
-  data: EnforcementGetEnforcementResultsByIDResponseBody | null
+export interface PolicyViolationsTableProps {
+  data: EnforcementnewGetEnforcementResultsByIdNewOkResponse
 }
 
-export function PolicyViolationsTable({ data, sortBy, setSortBy }: PolicyViolationsTableProps): React.ReactElement {
+export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): React.ReactElement {
   const { getString } = useStrings()
-  const columns: Column<EnforcementResultResponseBody>[] = React.useMemo(() => {
+  const { updateQueryParams } = useUpdateQueryParams<Partial<EnforcementViolationQueryParams>>()
+  const { sort, order } = useQueryParams<EnforcementViolationQueryParams>(getQueryParamOptions())
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data.pagination?.total || ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
+    pageSize: data.pagination?.pageSize || ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
+    pageCount: data.pagination?.pageCount || 0,
+    pageIndex: data.pagination?.pageNumber
+  })
+
+  const columns: Column<EnforcementResult>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
       return {
         enableServerSort: true,
-        isServerSorted: sortBy.sort === id,
-        isServerSortedDesc: sortBy.order === 'DESC',
-        getSortedColumn: ({ sort }: SortBy) => {
-          setSortBy({ sort, order: sortBy.order === 'DESC' ? 'ASC' : 'DESC' })
+        isServerSorted: sort === id,
+        isServerSortedDesc: order === 'DESC',
+        getSortedColumn: (sortBy: SortBy) => {
+          updateQueryParams({ sort: sortBy.sort, order: order === 'DESC' ? 'ASC' : 'DESC' })
         }
       }
     }
@@ -65,7 +85,15 @@ export function PolicyViolationsTable({ data, sortBy, setSortBy }: PolicyViolati
         disableSortBy: true
       }
     ]
-  }, [getString, setSortBy, sortBy.order, sortBy.sort])
+  }, [getString, order, sort, updateQueryParams])
 
-  return <TableV2 className={css.table} columns={columns} data={data?.results || []} sortable />
+  return (
+    <TableV2
+      className={css.table}
+      columns={columns}
+      data={data.content.results || []}
+      sortable
+      pagination={paginationProps}
+    />
+  )
 }

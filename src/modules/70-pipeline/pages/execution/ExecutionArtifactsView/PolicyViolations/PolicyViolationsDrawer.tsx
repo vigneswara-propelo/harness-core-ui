@@ -6,6 +6,7 @@
  */
 
 import { Drawer, Position } from '@blueprintjs/core'
+import { Color } from '@harness/design-system'
 import {
   Button,
   ButtonVariation,
@@ -15,15 +16,14 @@ import {
   Page,
   Text
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
-import React, { ReactElement, useRef, useState } from 'react'
-import { Width } from '@common/constants/Utils'
+import { useEnforcementnewGetEnforcementResultsByIdNewQuery } from '@harnessio/react-ssca-service-client'
+import React, { ReactElement, useRef } from 'react'
 import { useStrings } from 'framework/strings'
-import { useEnforcementGetEnforcementResultsById } from 'services/ssca'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
-import { ENFORCEMENT_VIOLATIONS_PAGE_INDEX, ENFORCEMENT_VIOLATIONS_PAGE_SIZE } from './utils'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { Width } from '@common/constants/Utils'
 import { PolicyViolationsTable } from './PolicyViolationsTable'
-import type { SortBy } from './PolicyViolationsTableCells'
+import { EnforcementViolationQueryParams, getQueryParamOptions } from './utils'
 import css from './PolicyViolations.module.scss'
 
 interface PolicyViolationsDrawerProps {
@@ -37,25 +37,24 @@ export function PolicyViolationsDrawer({
 }: PolicyViolationsDrawerProps): ReactElement {
   const { getString } = useStrings()
   const searchRef = useRef({} as ExpandingSearchInputHandle)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState<SortBy>({
-    sort: 'name',
-    order: 'ASC'
-  })
+  const { updateQueryParams } = useUpdateQueryParams<Partial<EnforcementViolationQueryParams>>()
+  const { page, size, searchTerm, sort, order } = useQueryParams<EnforcementViolationQueryParams>(
+    getQueryParamOptions()
+  )
 
   const resetFilter = (): void => {
-    setSearchTerm('')
+    updateQueryParams({ searchTerm: undefined, page: 0 })
     searchRef.current.clear()
   }
 
-  const { data, loading, error, refetch } = useEnforcementGetEnforcementResultsById({
+  const { data, isLoading, error, refetch } = useEnforcementnewGetEnforcementResultsByIdNewQuery({
     enforcementId,
     queryParams: {
-      page: ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
-      pageSize: ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
+      page,
+      pageSize: size,
       searchTerm,
-      sort: sortBy.sort,
-      order: sortBy.order
+      sort,
+      order
     }
   })
 
@@ -85,11 +84,13 @@ export function PolicyViolationsDrawer({
       </Heading>
 
       <Page.Body
-        loading={loading}
-        error={error?.message || error}
-        retryOnError={() => refetch()}
+        loading={isLoading}
+        error={error as string}
+        retryOnError={() => {
+          refetch()
+        }}
         noData={{
-          when: () => !error && !data?.results?.length,
+          when: () => !error && !data?.content.results?.length,
           image: EmptySearchResults,
           messageTitle: getString('common.filters.noResultsFound'),
           message: getString('common.filters.noMatchingFilterData'),
@@ -104,19 +105,19 @@ export function PolicyViolationsDrawer({
       >
         <div className={css.subHeader}>
           <Text color={Color.GREY_900} font={{ weight: 'bold' }}>
-            {`${getString('total')}: ${data?.results?.length}`}
+            {`${getString('total')}: ${data?.content.results?.length}`}
           </Text>
           <ExpandingSearchInput
             defaultValue={searchTerm}
             alwaysExpanded
-            onChange={setSearchTerm}
+            onChange={value => updateQueryParams({ searchTerm: value, page: 0 })}
             width={Width.LARGE}
             autoFocus={false}
             ref={searchRef}
           />
         </div>
 
-        <PolicyViolationsTable data={data} setSortBy={setSortBy} sortBy={sortBy} />
+        {data && <PolicyViolationsTable data={data} />}
       </Page.Body>
     </Drawer>
   )

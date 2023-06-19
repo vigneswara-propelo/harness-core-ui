@@ -17,6 +17,12 @@ import violationList from './mocks/violation-list.json'
 import executionContext from './mocks/execution-context.json'
 import ExecutionArtifactsView from '../ExecutionArtifactsView'
 
+jest.mock('@harnessio/react-ssca-service-client', () => ({
+  useEnforcementnewGetEnforcementResultsByIdNewQuery: jest.fn().mockImplementation(() => {
+    return { data: { content: violationList } }
+  })
+}))
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('services/pipeline-ng', () => ({
@@ -24,14 +30,6 @@ jest.mock('services/pipeline-ng', () => ({
     refetch: jest.fn(),
     loading: false,
     data: executionDetails
-  }))
-}))
-
-jest.mock('services/ssca', () => ({
-  useEnforcementGetEnforcementResultsById: jest.fn(() => ({
-    refetch: jest.fn(),
-    loading: false,
-    data: violationList
   }))
 }))
 
