@@ -774,7 +774,10 @@ export function RightDrawer(): React.ReactElement {
         isProvisioner
           ? get(selectedStage as StageElementWrapper<DeploymentStageElementConfig>, `stage.spec.${provisionerPath}`)
           : selectedStage?.stage?.spec?.execution,
-        key
+        key,
+        false,
+        false,
+        !!isRollbackToggled
       )
       const stepNodeName = stepDetails?.node?.name?.split(' ').join('')
 
