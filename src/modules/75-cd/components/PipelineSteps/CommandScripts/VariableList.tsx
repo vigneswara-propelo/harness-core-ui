@@ -9,7 +9,7 @@ import React from 'react'
 import { get } from 'lodash-es'
 import { FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { Button, ButtonVariation, FormInput, AllowedTypes } from '@harness/uicore'
+import { Button, ButtonVariation, FormInput, AllowedTypes, SelectOption } from '@harness/uicore'
 
 import type { NGVariable } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -26,10 +26,11 @@ interface VariableListProps {
   fieldLabel: string
   readonly?: boolean
   allowableTypes: AllowedTypes
+  items?: SelectOption[]
 }
 
 export const VariableList = (props: VariableListProps): React.ReactElement => {
-  const { varType, formik, fieldName, fieldLabel, readonly = false, allowableTypes } = props
+  const { varType, formik, fieldName, fieldLabel, readonly = false, allowableTypes, items = scriptInputType } = props
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
@@ -63,7 +64,7 @@ export const VariableList = (props: VariableListProps): React.ReactElement => {
                         disabled={readonly}
                       />
                       <FormInput.Select
-                        items={scriptInputType}
+                        items={items}
                         name={`${fieldName}[${i}].type`}
                         placeholder={getString('typeLabel')}
                         disabled={readonly}

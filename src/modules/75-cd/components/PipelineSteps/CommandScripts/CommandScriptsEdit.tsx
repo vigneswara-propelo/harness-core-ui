@@ -22,7 +22,7 @@ import { useStrings } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
-import type { CommandScriptsData, CommandScriptsFormData } from './CommandScriptsTypes'
+import { CommandScriptsData, CommandScriptsFormData, scriptOuputType } from './CommandScriptsTypes'
 import { CommandList } from './CommandList'
 import { VariableList } from './VariableList'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -135,6 +135,7 @@ function CommandScriptsEditWidget(
                       readonly={readonly}
                     />
                     <VariableList
+                      items={scriptOuputType}
                       varType={'Output'}
                       formik={formik}
                       fieldName={'spec.outputVariables'}

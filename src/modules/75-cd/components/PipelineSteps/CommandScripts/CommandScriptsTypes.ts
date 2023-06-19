@@ -48,7 +48,7 @@ export interface CommandScriptStepVariable {
   value: number | string
   id: string
   name?: string
-  type?: 'String' | 'Number'
+  type?: 'String' | 'Number' | 'Secret'
 }
 
 export interface CommandScriptsData extends StepElementConfig {
@@ -86,6 +86,11 @@ export enum SourceType {
 export const scriptInputType: SelectOption[] = [
   { label: 'String', value: 'String' },
   { label: 'Number', value: 'Number' }
+]
+
+export const scriptOuputType: SelectOption[] = [
+  { label: 'String', value: 'String' },
+  { label: 'Secret', value: 'Secret' }
 ]
 
 export enum CommandType {
