@@ -2315,7 +2315,7 @@ exports[`Create Secret Manager Wizard should render form 5`] = `
                 connectors.stepThreeName
               </p>
               <div
-                class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
+                class="Layout--vertical Layout--layout-spacing-large StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
               >
                 <div
                   class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"

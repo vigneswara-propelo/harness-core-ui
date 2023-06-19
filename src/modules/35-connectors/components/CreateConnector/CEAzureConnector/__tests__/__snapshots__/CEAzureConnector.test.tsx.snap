@@ -2582,7 +2582,7 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                 connectors.stepThreeName
               </p>
               <div
-                class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
+                class="Layout--vertical Layout--layout-spacing-large StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
               >
                 <div
                   class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"

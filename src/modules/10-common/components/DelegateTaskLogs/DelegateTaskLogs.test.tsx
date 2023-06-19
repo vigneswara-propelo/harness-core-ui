@@ -38,12 +38,13 @@ describe('Delegate Task Logs Modal', () => {
         }}
       >
         <DelegateTaskLogs
-          step={{ startTs: 123, endTs: 456, name: 'step name', delegateInfoList: [{ taskId: 'abc' }] }}
           telemetry={{
             taskContext: TaskContext.PipelineStep,
             hasError: false
           }}
-          taskList={[]}
+          taskIds={['abc']}
+          startTime={-300}
+          endTime={300}
         />
       </TestWrapper>
     )
@@ -100,7 +101,7 @@ describe('Delegate Task Logs Modal', () => {
     })
   })
 
-  test('should add a column for multiple taskids when step.delegateInfoList IS NOT empty and taskList IS empty', () => {
+  test('should render fine for multiple taskids', () => {
     const { getAllByRole } = render(
       <TestWrapper
         path={routes.toExecution({
@@ -120,54 +121,9 @@ describe('Delegate Task Logs Modal', () => {
         }}
       >
         <DelegateTaskLogs
-          step={{
-            startTs: 123,
-            endTs: 456,
-            name: 'step name',
-            delegateInfoList: [{ taskId: 'abc' }, { taskId: 'qwe' }]
-          }}
-          taskList={[]}
-          telemetry={{
-            taskContext: TaskContext.PipelineStep,
-            hasError: false
-          }}
-        />
-      </TestWrapper>
-    )
-
-    expect(getAllByRole('columnheader')).toHaveLength(5)
-  })
-
-  test('should render fine for multiple taskids when step.delegateInfoList IS empty and taskList IS NOT empty', () => {
-    const { getAllByRole } = render(
-      <TestWrapper
-        path={routes.toExecution({
-          accountId: ':accountId',
-          orgIdentifier: ':orgIdentifier',
-          projectIdentifier: ':projectIdentifier',
-          pipelineIdentifier: ':pipelineIdentifier',
-          executionIdentifier: ':executionIdentifier',
-          source: 'executions'
-        })}
-        pathParams={{
-          accountId: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          projectIdentifier: 'projectIdentifier',
-          pipelineIdentifier: 'pipelineIdentifier',
-          executionIdentifier: 'executionIdentifier'
-        }}
-      >
-        <DelegateTaskLogs
-          step={{
-            startTs: 123,
-            endTs: 456,
-            name: 'step name',
-            delegateInfoList: []
-          }}
-          taskList={[
-            { taskId: 'abc123', taskName: 'Artifact Task: artifact' },
-            { taskId: 'def456', taskName: 'Config Task: config' }
-          ]}
+          taskIds={['abc', 'qwe']}
+          startTime={123}
+          endTime={456}
           telemetry={{
             taskContext: TaskContext.PipelineStep,
             hasError: false

@@ -215,7 +215,7 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
         connectors.stepThreeName
       </p>
       <div
-        class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"
@@ -485,7 +485,7 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
         connectors.stepThreeName
       </p>
       <div
-        class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"
@@ -655,7 +655,7 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
         connectors.stepThreeName
       </p>
       <div
-        class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"
@@ -825,7 +825,7 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
         connectors.stepThreeName
       </p>
       <div
-        class="StyledProps--font StyledProps--main content StyledProps--padding-top-xxlarge"
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main content StyledProps--padding-top-xxlarge"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"
@@ -912,7 +912,7 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
         connectors.stepThreeName
       </p>
       <div
-        class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"
