@@ -5146,6 +5146,7 @@ export interface StringsMap {
   'pipeline.stepDescription.SaveCacheS3': string
   'pipeline.stepDescription.ServerlessLambdaDeploy': string
   'pipeline.stepDescription.ServerlessLambdaRollback': string
+  'pipeline.stepDescription.ServerlessPrepareRollback': string
   'pipeline.stepDescription.ServiceNowApproval': string
   'pipeline.stepDescription.ServiceNowCreate': string
   'pipeline.stepDescription.ServiceNowImportSet': string
@@ -6338,6 +6339,7 @@ export interface StringsMap {
   'cd.selectRepository': string
   'cd.selectedLabel': string
   'cd.serverlessDeployCommandOptions': string
+  'cd.serverlessVersionLabel': string
   'cd.serviceCreated': string
   'cd.serviceDashboard.6monthTrend': string
   'cd.serviceDashboard.activeInstanceCount': string

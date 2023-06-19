@@ -8,8 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { defaultTo } from 'lodash-es'
-import { v4 as nameSpace, v5 as uuid } from 'uuid'
+import { defaultTo, get } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import {
   Accordion,
@@ -29,31 +28,24 @@ import { useQueryParams } from '@common/hooks'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { MultiTypeListType } from '@common/components/MultiTypeList/MultiTypeList'
-import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { Connectors } from '@connectors/constants'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessPrepareRollbackStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
-import {
-  AwsSamBuildDeployStepFormikVaues,
-  AwsSamBuildDeployStepOptionalFields
-} from '../AwsSamBuildDeployStepOptionalFields'
+import { AwsSamServerlessStepCommonOptionalFieldsEdit } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from '../AwsSamBuildDeployStep.module.scss'
+import css from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFields.module.scss'
 
-export interface AwsSamDeployStepFormikValues extends StepElementConfig {
+export interface ServerlessPrepareRollbackStepFormikValues extends StepElementConfig {
   spec: {
     connectorRef: ConnectorRef
     image?: string
-    samVersion?: string
-    deployCommandOptions?: MultiTypeListType
-    stackName?: string
+    serverlessVersion?: string
     privileged?: boolean
     imagePullPolicy?: string
     runAsUser?: string
@@ -63,22 +55,20 @@ export interface AwsSamDeployStepFormikValues extends StepElementConfig {
         cpu?: string
       }
     }
-    envVariables?: MapValue
   }
 }
-export interface AwsSamDeployStepProps {
-  initialValues: AwsSamDeployStepInitialValues
-  onUpdate?: (data: AwsSamDeployStepFormikValues) => void
+export interface ServerlessPrepareRollbackStepProps {
+  initialValues: ServerlessPrepareRollbackStepInitialValues
+  onUpdate?: (data: ServerlessPrepareRollbackStepFormikValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsSamDeployStepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
 }
 
-const AwsSamDeployStepEdit = (
-  props: AwsSamDeployStepProps,
-  formikRef: StepFormikFowardRef<AwsSamDeployStepFormikValues>
+const ServerlessPrepareRollbackStepEdit = (
+  props: ServerlessPrepareRollbackStepProps,
+  formikRef: StepFormikFowardRef<ServerlessPrepareRollbackStepFormikValues>
 ): React.ReactElement => {
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -96,41 +86,65 @@ const AwsSamDeployStepEdit = (
     })
   })
 
-  const getInitialValues = (): AwsSamDeployStepFormikValues => {
-    return {
-      ...initialValues,
-      spec: {
-        ...initialValues.spec,
-        deployCommandOptions:
-          typeof initialValues.spec.deployCommandOptions === 'string'
-            ? initialValues.spec.deployCommandOptions
-            : initialValues.spec.deployCommandOptions?.map(deployCommandOption => ({
-                id: uuid('', nameSpace()),
-                value: deployCommandOption
-              })),
-        envVariables: Object.keys(defaultTo(initialValues.spec?.envVariables, {}))?.map(envKey => {
-          const envValue = initialValues.spec?.envVariables?.[envKey]
-          return {
-            id: uuid('', nameSpace()),
-            key: envKey,
-            value: defaultTo(envValue, '')
-          }
-        })
-      }
-    }
+  const renderConnectorField = (
+    formik: FormikProps<ServerlessPrepareRollbackStepFormikValues>,
+    fieldName: string,
+    fieldLabel: string
+  ): React.ReactElement => {
+    return (
+      <Container className={stepCss.formGroup}>
+        <FormMultiTypeConnectorField
+          width={510}
+          name={fieldName}
+          label={fieldLabel}
+          placeholder={getString('select')}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{ expressions, allowableTypes }}
+          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          enableConfigureOptions={false}
+          selected={get(formik?.values, fieldName) as string}
+          setRefValue
+          disabled={readonly}
+          gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
+        />
+        {getMultiTypeFromValue(get(formik.values, fieldName)) === MultiTypeInputType.RUNTIME && (
+          <ConnectorConfigureOptions
+            style={{ marginTop: 6 }}
+            value={get(formik.values, fieldName) as string}
+            type="String"
+            variableName={fieldName}
+            showRequiredField={false}
+            showDefaultField={false}
+            onChange={value => formik.setFieldValue(fieldName, value)}
+            isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
+              label: fieldLabel,
+              disabled: readonly,
+              gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
+            }}
+          />
+        )}
+      </Container>
+    )
   }
 
   return (
     <>
-      <Formik<AwsSamDeployStepFormikValues>
+      <Formik<ServerlessPrepareRollbackStepFormikValues>
         onSubmit={values => {
           onUpdate?.(values)
         }}
-        formName="AwsSamDeployStepEdit"
-        initialValues={getInitialValues()}
+        formName="ServerlessPrepareRollbackStepEdit"
+        initialValues={initialValues}
         validationSchema={validationSchema}
       >
-        {(formik: FormikProps<AwsSamDeployStepInitialValues>) => {
+        {(formik: FormikProps<ServerlessPrepareRollbackStepFormikValues>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -146,45 +160,7 @@ const AwsSamDeployStepEdit = (
                 {getString('cd.steps.awsSamDeployStep.containerConfigurationText')}
               </Text>
 
-              <Container className={stepCss.formGroup}>
-                <FormMultiTypeConnectorField
-                  width={510}
-                  name="spec.connectorRef"
-                  label={getString('pipelineSteps.connectorLabel')}
-                  placeholder={getString('select')}
-                  accountIdentifier={accountId}
-                  projectIdentifier={projectIdentifier}
-                  orgIdentifier={orgIdentifier}
-                  multiTypeProps={{ expressions, allowableTypes }}
-                  type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
-                  enableConfigureOptions={false}
-                  selected={formik?.values?.spec.connectorRef as string}
-                  setRefValue
-                  disabled={readonly}
-                  gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
-                />
-                {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-                  <ConnectorConfigureOptions
-                    style={{ marginTop: 6 }}
-                    value={formik.values.spec.connectorRef as string}
-                    type="String"
-                    variableName="spec.connectorRef"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={value => formik.setFieldValue('spec.connectorRef', value)}
-                    isReadonly={readonly}
-                    connectorReferenceFieldProps={{
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
-                      label: getString('pipelineSteps.connectorLabel'),
-                      disabled: readonly,
-                      gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
-                    }}
-                  />
-                )}
-              </Container>
+              {renderConnectorField(formik, 'spec.connectorRef', getString('pipelineSteps.connectorLabel'))}
 
               <Container className={stepCss.formGroup}>
                 <FormInput.MultiTextInput
@@ -221,12 +197,12 @@ const AwsSamDeployStepEdit = (
                   summary={getString('common.optionalConfig')}
                   details={
                     <Container margin={{ top: 'medium' }}>
-                      <AwsSamBuildDeployStepOptionalFields
+                      <AwsSamServerlessStepCommonOptionalFieldsEdit
                         readonly={readonly}
-                        stepViewType={stepViewType}
                         allowableTypes={allowableTypes}
-                        formik={formik as FormikProps<AwsSamBuildDeployStepFormikVaues>}
-                        isAwsSamDeployStep={true}
+                        formik={formik as FormikProps<ServerlessPrepareRollbackStepFormikValues>}
+                        versionFieldName={'spec.serverlessVersion'}
+                        versionFieldLabel={getString('cd.serverlessVersionLabel')}
                       />
                     </Container>
                   }
@@ -240,4 +216,4 @@ const AwsSamDeployStepEdit = (
   )
 }
 
-export const AwsSamDeployStepEditRef = React.forwardRef(AwsSamDeployStepEdit)
+export const ServerlessPrepareRollbackStepEditRef = React.forwardRef(ServerlessPrepareRollbackStepEdit)
