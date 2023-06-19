@@ -31,6 +31,9 @@ import type { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/I
 import type GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import type { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { isOnPrem } from '@common/utils/utils'
+import type { useGetResourceGroupListV2 } from 'services/resourcegroups'
+import type { getSelectedScopeLabel, useGetResourceTypeHandler } from '@rbac/pages/ResourceGroupDetails/utils'
+import type routes from '@common/RouteDefinitions'
 
 const { getToken: useGetToken } = SessionToken
 
@@ -53,6 +56,9 @@ export interface GovernanceCustomMicroFrontendProps {
     useGetProjectList: typeof useGetProjectList
     isOnPrem: typeof isOnPrem
     useGetConnectorListV2: typeof useGetConnectorListV2
+    useGetResourceGroupListV2: typeof useGetResourceGroupListV2
+    useGetResourceTypeHandler: typeof useGetResourceTypeHandler
+    getSelectedScopeLabel: typeof getSelectedScopeLabel
   }
   customComponents: {
     NGBreadcrumbs: typeof NGBreadcrumbs
@@ -67,5 +73,6 @@ export interface GovernanceCustomMicroFrontendProps {
     GitRemoteDetails: typeof GitRemoteDetails
     ErrorHandler: typeof ErrorHandler
   }
+  customRoutes: typeof routes
   baseRoutePath: string
 }
