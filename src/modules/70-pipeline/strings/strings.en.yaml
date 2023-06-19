@@ -1875,14 +1875,15 @@ violationDetails: Violation details
 supplier: Supplier
 copilot:
   analyzeFailure: Unsure how to analyze failure?
-  askAICopilot: Ask AI DevMate
-  label: Harness AI DevMate
+  askAIDA: Ask AIDA
+  label: Harness AIDA
+  aidaFullText: Harness AI Development Assistant
   assist: I can assist you with debugging the issue and suggest solutions.
-  analyzing: AI DevMate is analyzing
+  analyzing: AIDA is analyzing
   requestTimedOut: Request Timed Out
   noRemediationFound: Sorry, no remediation found.
   foundPossibleRemediations: 'We found few possible remediations'
   possibleSolutions: Possible Solutions
-  introduction: Introducing Harness AI DevMate
-  helpText: Click here for additional information on the errors occurring in this step and potential strategies for resolving them.
+  introduction: Introducing Harness AIDA
+  helpText: Harness AI Development Assistant(AIDA) can help find the root cause of the error and suggest possible solutions.
 license: License

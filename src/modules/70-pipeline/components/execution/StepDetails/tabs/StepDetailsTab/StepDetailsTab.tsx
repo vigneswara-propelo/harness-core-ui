@@ -54,7 +54,8 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
           <p>{errorMessage}</p>
         </div>
       ) : null}
-      {showHarnessCoPilot({
+      {isFailed &&
+      showHarnessCoPilot({
         pipelineStagesMap,
         selectedStageId,
         enableForCI: CI_AI_ENHANCED_REMEDIATIONS,

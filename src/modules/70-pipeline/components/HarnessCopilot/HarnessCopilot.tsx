@@ -7,12 +7,12 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment'
-import { Drawer, PopoverPosition, Position } from '@blueprintjs/core'
+import { Drawer, PopoverInteractionKind, PopoverPosition, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Infrastructure, RcaRequestBody, ResponseRemediation, rcaPromise, Error } from 'services/logs'
 import { useStrings } from 'framework/strings'
 import { pluralize } from '@common/utils/StringUtils'
@@ -44,6 +44,8 @@ enum AIAnalysisStatus {
   Failure = 'FAILURE'
 }
 
+const SHOW_DELAY_MSSG_AFTER_DURATION = 7000
+
 function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const { mode } = props
   const { getString } = useStrings()
@@ -65,6 +67,15 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const [status, setStatus] = useState<AIAnalysisStatus>(AIAnalysisStatus.NotInitiated)
   const currentStepId = resolveCurrentStep(selectedStepId, queryParams)
   const selectedStep = allNodeMap[currentStepId]
+  const [showDelayMssg, setShowDelayMessage] = useState<boolean>(false)
+
+  useEffect(() => {
+    let timerId: NodeJS.Timeout
+    if (status === AIAnalysisStatus.InProgress) {
+      timerId = setTimeout(() => setShowDelayMessage(true), SHOW_DELAY_MSSG_AFTER_DURATION)
+    }
+    return () => clearTimeout(timerId)
+  }, [status])
 
   useEffect(() => {
     if (remediations.length) {
@@ -94,14 +105,14 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
         body: createFormDataFromObjectPayload(apiBodyPayload)
       })
         .then((response: ResponseRemediation) => {
-          if (get(response, 'error_msg')) {
-            setError(response as Error)
-            setStatus(AIAnalysisStatus.Failure)
-          } else {
+          if (response?.rca) {
             const remediationFetched = [response]
             setRemediations(remediationFetched)
             setStatus(AIAnalysisStatus.Success)
             setRemediationsGeneratedAt(currentTime)
+          } else {
+            setStatus(AIAnalysisStatus.Failure)
+            setError(response as Error)
           }
         })
         .catch((err: Error) => {
@@ -187,7 +198,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
                   }}
                   className={css.copilot}
                 >
-                  {getString('pipeline.copilot.askAICopilot')}
+                  {getString('pipeline.copilot.askAIDA')}
                 </Text>
               </Layout.Horizontal>
             </Layout.Horizontal>
@@ -215,12 +226,14 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
                 {getString('common.stop')}
               </Text>
             </Layout.Horizontal>
-            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
-              <Icon name="info" size={15} color={footerColor} />
-              <Text color={footerColor} font={{ variation: FontVariation.SMALL }}>
-                {getString('common.delay15Sec')}
-              </Text>
-            </Layout.Horizontal>
+            {showDelayMssg ? (
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
+                <Icon name="info" size={15} color={footerColor} />
+                <Text color={footerColor} font={{ variation: FontVariation.SMALL }}>
+                  {getString('common.delay15Sec')}
+                </Text>
+              </Layout.Horizontal>
+            ) : null}
           </Layout.Vertical>
         )
       case AIAnalysisStatus.Success:
@@ -291,7 +304,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
       default:
         return <></>
     }
-  }, [status, showTooltip, remediations, error, logsToken])
+  }, [status, showTooltip, remediations, error, logsToken, showDelayMssg])
 
   const renderRemediation = useCallback(
     (remediation: string): JSX.Element => {
@@ -354,9 +367,26 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
                   className={css.closeBtn}
                 />
               </Container>
-              <Layout.Horizontal spacing="medium" flex={{ justifyContent: 'flex-start' }}>
-                <Icon name="harness-copilot" size={35} />
-                <Text font={{ variation: FontVariation.H2 }}>{getString('pipeline.copilot.label')}</Text>
+              <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start' }}>
+                <Layout.Horizontal spacing="medium" flex={{ justifyContent: 'flex-start' }}>
+                  <Icon name="harness-copilot" size={35} />
+                  <Text font={{ variation: FontVariation.H2 }}>{getString('pipeline.copilot.label')}</Text>
+                </Layout.Horizontal>
+                <Popover
+                  content={
+                    <Layout.Horizontal padding="large">
+                      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_100}>
+                        {getString('pipeline.copilot.aidaFullText')}
+                      </Text>
+                    </Layout.Horizontal>
+                  }
+                  usePortal={true}
+                  position={PopoverPosition.RIGHT}
+                  interactionKind={PopoverInteractionKind.HOVER}
+                  popoverClassName={css.popover}
+                >
+                  <Icon name="info" size={15} />
+                </Popover>
               </Layout.Horizontal>
             </Container>
             <Text>{getString('pipeline.copilot.assist')}</Text>

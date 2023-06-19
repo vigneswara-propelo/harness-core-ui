@@ -4086,9 +4086,10 @@ export interface StringsMap {
   'pipeline.configSource': string
   'pipeline.configureArtifactSource': string
   'pipeline.configureLogSettings': string
+  'pipeline.copilot.aidaFullText': string
   'pipeline.copilot.analyzeFailure': string
   'pipeline.copilot.analyzing': string
-  'pipeline.copilot.askAICopilot': string
+  'pipeline.copilot.askAIDA': string
   'pipeline.copilot.assist': string
   'pipeline.copilot.foundPossibleRemediations': string
   'pipeline.copilot.helpText': string

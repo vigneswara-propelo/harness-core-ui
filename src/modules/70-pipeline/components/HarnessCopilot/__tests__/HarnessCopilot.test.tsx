@@ -17,7 +17,7 @@ describe('Test HarnessCopilot component', () => {
         <HarnessCopilot mode="console-view" />
       </TestWrapper>
     )
-    expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+    expect(getByText('pipeline.copilot.askAIDA')).toBeInTheDocument()
 
     //tooltip and it's content is visible
     expect(getByText('pipeline.copilot.introduction')).toBeInTheDocument()

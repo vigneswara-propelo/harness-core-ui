@@ -294,10 +294,10 @@ describe('<LogsContent /> tests', () => {
         </TestWrapper>
       )
       // Verify footer is visible
-      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+      expect(getByText('pipeline.copilot.askAIDA')).toBeInTheDocument()
 
       act(() => {
-        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+        fireEvent.click(getByText('pipeline.copilot.askAIDA'))
       })
 
       // Should update status when clicked on Ask AI
@@ -318,10 +318,10 @@ describe('<LogsContent /> tests', () => {
       )
 
       // Verify footer is visible
-      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+      expect(getByText('pipeline.copilot.askAIDA')).toBeInTheDocument()
 
       act(() => {
-        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+        fireEvent.click(getByText('pipeline.copilot.askAIDA'))
       })
 
       // Should update status when clicked on Ask AI
@@ -373,7 +373,7 @@ describe('<LogsContent /> tests', () => {
       )
 
       // Ask AI option should be visible once again if a different step is selected
-      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+      expect(getByText('pipeline.copilot.askAIDA')).toBeInTheDocument()
     })
 
     test('Stop button option should be visible if remediations take too long to fetch', async () => {
@@ -386,7 +386,7 @@ describe('<LogsContent /> tests', () => {
       )
 
       act(() => {
-        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+        fireEvent.click(getByText('pipeline.copilot.askAIDA'))
       })
 
       // Should update status when clicked on Ask AI
@@ -418,7 +418,7 @@ describe('<LogsContent /> tests', () => {
       )
 
       act(() => {
-        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+        fireEvent.click(getByText('pipeline.copilot.askAIDA'))
       })
 
       await waitFor(() => {
@@ -442,7 +442,7 @@ describe('<LogsContent /> tests', () => {
       )
 
       act(() => {
-        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+        fireEvent.click(getByText('pipeline.copilot.askAIDA'))
       })
 
       await waitFor(() => {
@@ -460,7 +460,7 @@ describe('<LogsContent /> tests', () => {
       )
 
       act(() => {
-        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+        fireEvent.click(getByText('pipeline.copilot.askAIDA'))
       })
 
       await waitFor(() => {

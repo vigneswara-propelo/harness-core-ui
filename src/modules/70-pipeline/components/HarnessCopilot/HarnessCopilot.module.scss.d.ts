@@ -19,6 +19,7 @@ declare const styles: {
   readonly overflow: string
   readonly panel: string
   readonly pill: string
+  readonly popover: string
   readonly remediation: string
   readonly statusActionBtn: string
   readonly successPill: string

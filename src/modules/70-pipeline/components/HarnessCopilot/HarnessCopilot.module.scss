@@ -123,3 +123,21 @@
 .flex2 {
   flex: 2;
 }
+
+.popover {
+  background-color: var(--primary-9-dark) !important;
+  position: relative;
+  border-radius: 8px;
+  bottom: var(--spacing-xsmall);
+  :global {
+    .bp3-popover-arrow {
+      margin-top: var(--spacing-small);
+    }
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark);
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark);
+    }
+  }
+}
