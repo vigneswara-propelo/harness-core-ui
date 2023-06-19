@@ -89,10 +89,10 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
   const { content, pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = monitoredServiceListData || {}
   const isCDModule = getIfModuleIsCD(config)
   const {
-    listing: { changeSource, agentConfiguration, goto }
+    listing: { changeSource, goto }
   } = config || {}
 
-  const RenderContextMenuForProjects: Renderer<CellProps<MonitoredServicePlatformResponse>> = ({ row }) => {
+  const RenderContextMenu: Renderer<CellProps<MonitoredServicePlatformResponse>> = ({ row }) => {
     const monitoredService = row.original
     const { projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -113,45 +113,6 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
             onEdit={
               /* istanbul ignore next */ () => {
                 onEditService(monitoredService.identifier as string)
-              }
-            }
-            RbacPermissions={{
-              edit: {
-                permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-                resource: {
-                  resourceType: ResourceType.MONITOREDSERVICE,
-                  resourceIdentifier: projectIdentifier
-                }
-              },
-              delete: {
-                permission: PermissionIdentifier.DELETE_MONITORED_SERVICE,
-                resource: {
-                  resourceType: ResourceType.MONITOREDSERVICE,
-                  resourceIdentifier: projectIdentifier
-                }
-              }
-            }}
-          />
-        </Layout.Horizontal>
-      </>
-    )
-  }
-
-  const RenderContextMenuForCD: Renderer<CellProps<MonitoredServicePlatformResponse>> = ({ row }) => {
-    const monitoredService = row.original
-    const { projectIdentifier } = useParams<ProjectPathProps>()
-
-    return (
-      <>
-        <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
-          <ContextMenuActions
-            titleText={getString('common.delete', { name: monitoredService.serviceName })}
-            contentText={<ServiceDeleteContext serviceName={monitoredService.serviceName} />}
-            confirmButtonText={getString('yes')}
-            deleteLabel={getString('cv.monitoredServices.deleteService')}
-            onDelete={
-              /* istanbul ignore next */ () => {
-                onDeleteService(monitoredService.identifier as string)
               }
             }
             RbacPermissions={{
@@ -216,15 +177,6 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
                     }
                   ]
                 : []),
-              ...(agentConfiguration
-                ? [
-                    {
-                      Header: getString('cv.commonMonitoredServices.agentConfiguration').toLocaleUpperCase(),
-                      width: '13.5%',
-                      Cell: <></>
-                    }
-                  ]
-                : []),
               ...(goto
                 ? [
                     {
@@ -236,8 +188,8 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
                 : []),
               {
                 id: 'contextMenu',
-                width: isCDModule ? '70.5%' : '30%',
-                Cell: isCDModule ? RenderContextMenuForCD : RenderContextMenuForProjects
+                width: isCDModule ? '70.5%' : '43.5%',
+                Cell: RenderContextMenu
               }
             ]}
             data={content}
