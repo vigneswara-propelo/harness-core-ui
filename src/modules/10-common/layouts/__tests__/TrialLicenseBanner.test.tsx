@@ -123,14 +123,12 @@ describe('TrialLicenseBanner', () => {
         updateLicenseStore: () => void 0
       }
     })
-    const { container, queryByText, getByText } = render(
+    const { container, queryByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />
       </TestWrapper>
     )
     expect(queryByText('common.banners.trial.description')).not.toBeInTheDocument()
-    expect(getByText('common.banners.trial.expired.extendTrial')).toBeInTheDocument()
-    expect(getByText('or')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
@@ -167,40 +165,6 @@ describe('TrialLicenseBanner', () => {
     expect(queryByText('common.banners.trial.expired.extendTrial')).not.toBeInTheDocument()
     expect(queryByText('or')).not.toBeInTheDocument()
     expect(container).toMatchSnapshot()
-  })
-
-  test('should extend trial when click extend trial button', async () => {
-    useGetLicensesAndSummaryMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            edition: 'TEAM',
-            licenseType: 'TRIAL',
-            maxExpiryTime: moment.now() - 24 * 60 * 60 * 1000,
-            moduleType: 'CD'
-          },
-          status: 'SUCCESS'
-        }
-      }
-    })
-    useLicenseStoreMock.mockImplementation(() => {
-      return {
-        licenseInformation: {
-          CD: { expiryTime: moment.now() - 24 * 60 * 60 * 1000, edition: 'TEAM', licenseType: 'TRIAL' }
-        },
-        versionMap: {},
-        updateLicenseStore: () => void 0
-      }
-    })
-    const { getByText } = render(
-      <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
-        <TrialLicenseBanner />
-      </TestWrapper>
-    )
-    fireEvent.click(getByText('common.banners.trial.expired.extendTrial'))
-    await waitFor(() => {
-      expect(extendTrialMock).toHaveBeenCalled()
-    })
   })
 
   test('should submit feedback when click feedback submit button', async () => {

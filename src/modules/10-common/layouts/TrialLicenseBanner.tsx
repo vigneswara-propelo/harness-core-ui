@@ -22,7 +22,6 @@ import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContact
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   useExtendTrialLicense,
-  StartTrialDTO,
   useSaveFeedback,
   FeedbackFormDTO,
   useGetLicensesAndSummary,
@@ -35,9 +34,6 @@ import {
   FORM_TYPE,
   FeedbackFormValues
 } from '@common/modals/ExtendTrial/useExtendTrialOrFeedbackModal'
-import { Editions } from '@common/constants/SubscriptionTypes'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, LicenseActions } from '@common/constants/TrackingConstants'
 import css from './layouts.module.scss'
 
 export const BANNER_KEY = 'license_banner_dismissed'
@@ -137,14 +133,11 @@ const ExtendOrFeedBackBtn: React.FC<{
   module?: Module
   openExtendTrialOrFeedbackModal: () => void
   setExtendingTrial: React.Dispatch<React.SetStateAction<boolean>>
-}> = ({ isExpired, expiredDays, module, openExtendTrialOrFeedbackModal, setExtendingTrial }) => {
+}> = ({ isExpired, openExtendTrialOrFeedbackModal, setExtendingTrial }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { trackEvent } = useTelemetry()
-  const { showError } = useToaster()
-  const { licenseInformation, updateLicenseStore } = useLicenseStore()
 
-  const { mutate: extendTrial, loading } = useExtendTrialLicense({
+  const { loading } = useExtendTrialLicense({
     queryParams: {
       accountIdentifier: accountId
     }
@@ -152,25 +145,6 @@ const ExtendOrFeedBackBtn: React.FC<{
   useEffect(() => {
     setExtendingTrial(loading)
   }, [loading])
-
-  const handleExtendTrial = async (): Promise<void> => {
-    try {
-      trackEvent(LicenseActions.ExtendTrial, {
-        category: Category.LICENSE
-      })
-
-      const extendedData = await extendTrial({
-        moduleType: module as StartTrialDTO['moduleType'],
-        edition: Editions.ENTERPRISE
-      })
-      if (module) {
-        handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, extendedData?.data)
-      }
-      openExtendTrialOrFeedbackModal()
-    } catch (error) {
-      showError(error.data?.message || error.message)
-    }
-  }
 
   if (!isExpired) {
     return (
@@ -194,29 +168,8 @@ const ExtendOrFeedBackBtn: React.FC<{
       </Layout.Horizontal>
     )
   }
-  if (expiredDays > 14) {
-    return <></>
-  }
-  return (
-    <Layout.Horizontal padding={{ right: 'large' }} flex={{ alignItems: 'center' }}>
-      <Text
-        padding={{ left: 'small', right: 'small' }}
-        color={Color.WHITE}
-        font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
-      >
-        {'or'}
-      </Text>
-      <Text
-        onClick={handleExtendTrial}
-        color={Color.WHITE}
-        className={css.link}
-        flex={{ alignItems: 'center' }}
-        font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
-      >
-        {getString('common.banners.trial.expired.extendTrial')}
-      </Text>
-    </Layout.Horizontal>
-  )
+
+  return <></>
 }
 
 export const TrialLicenseBanner: React.FC = () => {
