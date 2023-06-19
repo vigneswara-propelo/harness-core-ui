@@ -58,7 +58,7 @@ const TemplateYamlView: React.FC = () => {
   const { enableEditMode } = useEnableEditModes()
   const { expressions } = useVariablesExpression()
 
-  const { DISABLE_TEMPLATE_SCHEMA_VALIDATION: isTemplateSchemaValidationDisabled, STATIC_YAML_SCHEMA } =
+  const { DISABLE_TEMPLATE_SCHEMA_VALIDATION: isTemplateSchemaValidationDisabled, PIE_STATIC_YAML_SCHEMA } =
     useFeatureFlags()
   const expressionRef = React.useRef<string[]>([])
   expressionRef.current = expressions
@@ -119,7 +119,7 @@ const TemplateYamlView: React.FC = () => {
       entityType: template.spec?.type || template.spec?.stageType,
       ...commonQueryParams
     },
-    lazy: isTemplateSchemaValidationDisabled || STATIC_YAML_SCHEMA
+    lazy: isTemplateSchemaValidationDisabled || PIE_STATIC_YAML_SCHEMA
   })
 
   const { data: templateStaticSchema } = useGetStaticSchemaYaml({
@@ -127,7 +127,7 @@ const TemplateYamlView: React.FC = () => {
       ...commonQueryParams,
       entityType: 'Template'
     },
-    lazy: isTemplateSchemaValidationDisabled || !STATIC_YAML_SCHEMA
+    lazy: isTemplateSchemaValidationDisabled || !PIE_STATIC_YAML_SCHEMA
   })
 
   const templateSchema = defaultTo(templateSchemaV1, templateStaticSchema)

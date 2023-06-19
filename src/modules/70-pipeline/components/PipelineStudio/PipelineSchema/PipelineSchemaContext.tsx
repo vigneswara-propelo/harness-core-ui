@@ -42,7 +42,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { STATIC_YAML_SCHEMA } = useFeatureFlags()
+  const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const commonQueryParams = {
     entityType: 'Pipelines',
@@ -56,14 +56,14 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     queryParams: {
       ...commonQueryParams
     } as GetSchemaYamlQueryParams,
-    lazy: STATIC_YAML_SCHEMA
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
 
   const { data: pipelineStaticSchema, error: staticSchemaError } = useGetStaticSchemaYaml({
     queryParams: {
       ...commonQueryParams
     } as GetStaticSchemaYamlQueryParams,
-    lazy: !STATIC_YAML_SCHEMA
+    lazy: !PIE_STATIC_YAML_SCHEMA
   })
 
   const pipelineSchema = defaultTo(pipelineSchemaV1, pipelineStaticSchema)

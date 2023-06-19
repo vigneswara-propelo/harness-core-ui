@@ -222,7 +222,7 @@ export function OverlayInputSetForm({
     }
   }, [accountId, orgIdentifier, pipelineIdentifier, projectIdentifier, repoIdentifier])
 
-  const { STATIC_YAML_SCHEMA } = useFeatureFlags()
+  const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const {
     data: overlayInputSetResponse,
@@ -676,14 +676,14 @@ export function OverlayInputSetForm({
     queryParams: {
       ...commonQueryParamsForSchema
     } as GetSchemaYamlQueryParams,
-    lazy: STATIC_YAML_SCHEMA
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
 
   const { loading: loadingStaticSchema, data: pipelineStaticSchema } = useGetStaticSchemaYaml({
     queryParams: {
       ...commonQueryParamsForSchema
     } as GetStaticSchemaYamlQueryParams,
-    lazy: !STATIC_YAML_SCHEMA
+    lazy: !PIE_STATIC_YAML_SCHEMA
   })
 
   const loading = defaultTo(loadingSchemaV1, loadingStaticSchema)
