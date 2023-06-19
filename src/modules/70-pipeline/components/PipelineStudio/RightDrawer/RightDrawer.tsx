@@ -298,7 +298,7 @@ const processNodeImpl = (
   )
 }
 
-const updateWithNodeIdentifier = async (
+export const updateWithNodeIdentifier = async (
   selectedStage: StageElementWrapper<StageElementConfig> | undefined,
   drawerType: DrawerTypes,
   processNode: StepElementConfig & TemplateStepNode,
