@@ -10,7 +10,7 @@ import { get, isEmpty, set } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
-import type { ValidateArtifactInputSetFieldArgs } from '../types'
+import type { ValidateArtifactInputSetFieldArgs, ValidateInputSetFieldArgs } from '../types'
 
 interface CheckForValidationAndSetErrorArgs {
   data: K8SDirectServiceStep
@@ -557,5 +557,132 @@ export const validateACRArtifactFields = ({
     isRequired,
     errors,
     errorMessage: getString?.('fieldRequired', { field: getString?.('repository') })
+  })
+}
+
+export const validateAzureArtifactFields = ({
+  data,
+  dataPathToField,
+  template,
+  templatePathToField,
+  getString,
+  isRequired,
+  errors
+}: ValidateArtifactInputSetFieldArgs): void => {
+  checkForValidationAndSetError({
+    data,
+    dataPathToField: `${dataPathToField}.project`,
+    template,
+    templatePathToField: `${templatePathToField}.project`,
+    isRequired,
+    errors,
+    errorMessage: getString?.('fieldRequired', { field: getString?.('projectLabel') })
+  })
+
+  checkForValidationAndSetError({
+    data,
+    dataPathToField: `${dataPathToField}.feed`,
+    template,
+    templatePathToField: `${templatePathToField}.feed`,
+    isRequired,
+    errors,
+    errorMessage: getString?.('fieldRequired', { field: getString?.('pipeline.artifactsSelection.feed') })
+  })
+
+  checkForValidationAndSetError({
+    data,
+    dataPathToField: `${dataPathToField}.package`,
+    template,
+    templatePathToField: `${templatePathToField}.package`,
+    isRequired,
+    errors,
+    errorMessage: getString?.('fieldRequired', { field: getString?.('pipeline.artifactsSelection.packageName') })
+  })
+}
+
+export const validateGoogleRegistryArtifactFields = ({
+  data,
+  dataPathToField,
+  template,
+  templatePathToField,
+  getString,
+  isRequired,
+  errors
+}: ValidateArtifactInputSetFieldArgs): void => {
+  checkForValidationAndSetError({
+    data,
+    dataPathToField: `${dataPathToField}.repositoryName`,
+    template,
+    templatePathToField: `${templatePathToField}.repositoryName`,
+    isRequired,
+    errors,
+    errorMessage: getString?.('fieldRequired', { field: getString?.('common.repositoryName') })
+  })
+  checkForValidationAndSetError({
+    data,
+    dataPathToField: `${dataPathToField}.package`,
+    template,
+    templatePathToField: `${templatePathToField}.package`,
+    isRequired,
+    errors,
+    errorMessage: getString?.('fieldRequired', { field: getString?.('pipeline.testsReports.callgraphField.package') })
+  })
+}
+
+export const validateConfigFilesFields = ({
+  data,
+  template,
+  isRequired,
+  errors,
+  getString
+}: ValidateInputSetFieldArgs): void => {
+  data?.configFiles?.forEach((configFile, index) => {
+    const currentFileTemplate = get(template, `configFiles[${index}].configFile.spec.store.spec`, '')
+    const isEmptyFiles = isEmpty(configFile?.configFile?.spec?.store?.spec?.files)
+    const isEmptySecretFiles = isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles)
+    if (
+      isEmptyFiles &&
+      isRequired &&
+      getMultiTypeFromValue(currentFileTemplate?.files) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `configFiles[${index}].configFile.spec.store.spec.files[0]`,
+        getString?.('fieldRequired', { field: 'File' })
+      )
+    }
+    if (!isEmptyFiles) {
+      configFile?.configFile?.spec?.store?.spec?.files?.forEach((value: string, fileIndex: number) => {
+        if (!value) {
+          set(
+            errors,
+            `configFiles[${index}].configFile.spec.store.spec.files[${fileIndex}]`,
+            getString?.('fieldRequired', { field: 'File' })
+          )
+        }
+      })
+    }
+    if (
+      isEmptySecretFiles &&
+      isRequired &&
+      getMultiTypeFromValue(currentFileTemplate?.secretFiles) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `configFiles[${index}].configFile.spec.store.spec.secretFiles[0]`,
+        getString?.('fieldRequired', { field: 'File' })
+      )
+    }
+    if (!isEmptySecretFiles) {
+      configFile?.configFile?.spec?.store?.spec?.secretFiles?.forEach((value: string, secretFileIndex: number) => {
+        if (!value) {
+          set(
+            errors,
+            `configFiles[${index}].configFile.spec.store.spec.secretFiles[${secretFileIndex}]`,
+            getString?.('fieldRequired', { field: 'File' })
+          )
+        }
+      })
+    }
   })
 }

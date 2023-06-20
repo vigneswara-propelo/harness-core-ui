@@ -21,7 +21,11 @@ import {
   ResponsePageConnectorResponse,
   ConnectorResponse
 } from 'services/cd-ng'
-import { ArtifactToConnectorMap, allowedArtifactTypes } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import {
+  ArtifactToConnectorMap,
+  allowedArtifactTypes,
+  ENABLED_ARTIFACT_TYPES
+} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { loggerFor } from 'framework/logging/logging'
@@ -36,9 +40,22 @@ import { SshServiceSpecVariablesForm, SshServiceSpecVariablesFormProps } from '.
 import { SshServiceSpecInputSetMode } from './SshServiceSpecInputSetMode'
 import SshServiceSpecEditable from './SshServiceSpecForm/SshServiceSpecEditable'
 import type { ValidateArtifactInputSetFieldArgs, ValidateInputSetFieldArgs } from '../Common/types'
+import {
+  validateCustomArtifactFields,
+  validateArtifactoryArtifactFields,
+  validateACRArtifactFields,
+  validateNexus3ArtifactFields,
+  validateCommonArtifactFields,
+  validateAmazonS3ArtifactFields,
+  validateECRArtifactFields,
+  validateGCRArtifactFields,
+  validateAzureArtifactFields,
+  validateConfigFilesFields,
+  validateJenkinsArtifactFields,
+  validateNexus2ArtifactFields
+} from '../Common/utils/runtimeViewValidation'
 
 const logger = loggerFor(ModuleName.CD)
-const tagExists = (value: unknown): boolean => typeof value === 'number' || !isEmpty(value)
 
 const ArtifactsPrimaryRegex = /^.+artifacts\.primary\.spec\.connectorRef$/
 const ArtifactsPrimaryTagRegex = /^.+artifacts\.primary\.spec\.artifactPath$/
@@ -163,6 +180,7 @@ export class SshServiceSpec extends Step<ServiceSpec> {
   }
 
   validateArtifactInputSetFields({
+    artifactType,
     data,
     dataPathToField,
     template,
@@ -171,77 +189,127 @@ export class SshServiceSpec extends Step<ServiceSpec> {
     isRequired,
     errors
   }: ValidateArtifactInputSetFieldArgs): void {
-    if (
-      isEmpty(get(data, `${dataPathToField}.connectorRef`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.connectorRef`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.connectorRef`, getString?.('fieldRequired', { field: 'Artifact Server' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.repository`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.repository`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.repository`, getString?.('fieldRequired', { field: 'Repository' }))
+    /** Most common artifact fields */
+    validateCommonArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
+    // Jenkins artifact specific fields
+    validateJenkinsArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
+
+    // Custom artifact specific fields
+    validateCustomArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
+
+    validateNexus2ArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
+
+    // Amazon S3 artifact specific fields
+    validateAmazonS3ArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
+
+    // Nexus3 artifact specific fields
+    if (artifactType === ENABLED_ARTIFACT_TYPES.Nexus3Registry) {
+      validateNexus3ArtifactFields({
+        data,
+        dataPathToField,
+        template,
+        templatePathToField,
+        getString,
+        isRequired,
+        errors
+      })
     }
 
-    if (
-      isEmpty(get(data, `${dataPathToField}.registryHostname`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.registryHostname`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.registryHostname`, getString?.('fieldRequired', { field: 'GCR Registry URL' }))
-    }
+    // Azure Artifact specific fields
+    validateAzureArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
-    if (
-      isEmpty(get(data, `${dataPathToField}.imagePath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${dataPathToField}.imagePath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.imagePath`, getString?.('fieldRequired', { field: 'Image Path' }))
-    }
+    // Azure Artifact specific fields
+    validateGCRArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
-    if (
-      isEmpty(get(data, `${dataPathToField}.artifactDirectory`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.artifactDirectory`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.artifactDirectory`, getString?.('fieldRequired', { field: 'Artifact Directory' }))
-    }
+    // ACR artifact specific fields
+    validateACRArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
-    if (
-      !tagExists(data?.artifacts?.primary?.spec?.artifactPath) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.spec?.artifactPath) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, 'artifacts.primary.spec.artifactPath', getString?.('fieldRequired', { field: 'Artifact Path' }))
-    }
+    // Artifactory artifact specific fields
+    validateArtifactoryArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
-    if (
-      isEmpty(get(data, `${dataPathToField}.artifactPathFilter`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.artifactPathFilter`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.artifactPathFilter`,
-        getString?.('fieldRequired', { field: 'Artifact Path Filter' })
-      )
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.tag`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.tag`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.tag`, getString?.('fieldRequired', { field: 'Tag' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.tagRegex`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.tagRegex`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.tagRegex`, getString?.('fieldRequired', { field: 'Tag Regex' }))
+    // ECR artifact specific fields
+    if (artifactType === ENABLED_ARTIFACT_TYPES.Ecr) {
+      validateECRArtifactFields({
+        data,
+        dataPathToField,
+        template,
+        templatePathToField,
+        getString,
+        isRequired,
+        errors
+      })
     }
   }
 
@@ -309,56 +377,6 @@ export class SshServiceSpec extends Step<ServiceSpec> {
     })
   }
 
-  validateConfigFields({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
-    data?.configFiles?.forEach((configFile, index) => {
-      const currentFileTemplate = get(template, `configFiles[${index}].configFile.spec.store.spec`, '')
-      if (
-        isEmpty(configFile?.configFile?.spec?.store?.spec?.files) &&
-        isRequired &&
-        getMultiTypeFromValue(currentFileTemplate?.files) === MultiTypeInputType.RUNTIME
-      ) {
-        set(
-          errors,
-          `configFiles[${index}].configFile.spec.store.spec.files[0]`,
-          getString?.('fieldRequired', { field: 'File' })
-        )
-      }
-      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.files)) {
-        configFile?.configFile?.spec?.store?.spec?.files?.forEach((value: string, fileIndex: number) => {
-          if (!value) {
-            set(
-              errors,
-              `configFiles[${index}].configFile.spec.store.spec.files[${fileIndex}]`,
-              getString?.('fieldRequired', { field: 'File' })
-            )
-          }
-        })
-      }
-      if (
-        isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles) &&
-        isRequired &&
-        getMultiTypeFromValue(currentFileTemplate?.secretFiles) === MultiTypeInputType.RUNTIME
-      ) {
-        set(
-          errors,
-          `configFiles[${index}].configFile.spec.store.spec.secretFiles[0]`,
-          getString?.('fieldRequired', { field: 'File' })
-        )
-      }
-      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles)) {
-        configFile?.configFile?.spec?.store?.spec?.secretFiles?.forEach((value: string, secretFileIndex: number) => {
-          if (!value) {
-            set(
-              errors,
-              `configFiles[${index}].configFile.spec.store.spec.files[${secretFileIndex}]`,
-              getString?.('fieldRequired', { field: 'File' })
-            )
-          }
-        })
-      }
-    })
-  }
-
   validateInputSet({
     data,
     template,
@@ -394,14 +412,8 @@ export class SshServiceSpec extends Step<ServiceSpec> {
       isRequired,
       errors
     })
-    // Config Fields Validation
-    this.validateConfigFields({
-      data,
-      template,
-      isRequired,
-      getString,
-      errors
-    })
+    /** Config Files Fields Validation */
+    validateConfigFilesFields({ data, template, isRequired, errors, getString })
     return errors
   }
 

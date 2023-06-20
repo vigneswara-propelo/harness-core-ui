@@ -37,6 +37,19 @@ import {
 import type { K8SDirectServiceStep } from './K8sServiceSpecInterface'
 import GenericServiceSpecEditable from '../Common/GenericServiceSpec/GenericServiceSpecEditable'
 import { GenericServiceSpecInputSetMode as GenericServiceSpecInputSetMode } from '../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
+import {
+  validateCustomArtifactFields,
+  validateArtifactoryArtifactFields,
+  validateACRArtifactFields,
+  validateNexus3ArtifactFields,
+  validateCommonArtifactFields,
+  validateAmazonS3ArtifactFields,
+  validateECRArtifactFields,
+  validateGCRArtifactFields,
+  validateAzureArtifactFields,
+  validateConfigFilesFields,
+  validateGoogleRegistryArtifactFields
+} from '../Common/utils/runtimeViewValidation'
 import type { ValidateArtifactInputSetFieldArgs, ValidateInputSetFieldArgs } from '../Common/types'
 
 const logger = loggerFor(ModuleName.CD)
@@ -317,7 +330,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.connectorRef`,
-          getString?.('fieldRequired', { field: 'Connector' })
+          getString?.('fieldRequired', { field: getString('connector') })
         )
       }
       if (
@@ -332,6 +345,17 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         )
       }
       if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.commitId) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.commitId) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.commitId`,
+          getString?.('fieldRequired', { field: getString('common.commitId') })
+        )
+      }
+      if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.paths?.[0]) &&
         isRequired &&
         getMultiTypeFromValue(currentManifestTemplate?.paths) === MultiTypeInputType.RUNTIME
@@ -339,7 +363,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.paths`,
-          getString?.('fieldRequired', { field: 'File or Folder Path' })
+          getString?.('fieldRequired', { field: getString?.('common.fileOrFolderPath') })
         )
       }
       if (
@@ -374,7 +398,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.files[0]`,
-          getString?.('fieldRequired', { field: 'File Store' })
+          getString?.('fieldRequired', { field: getString?.('resourcePage.fileStore') })
         )
       }
 
@@ -387,7 +411,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.region`,
-          getString?.('fieldRequired', { field: 'Region' })
+          getString?.('fieldRequired', { field: getString?.('regionLabel') })
         )
       }
       if (
@@ -398,7 +422,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.bucketName`,
-          getString?.('fieldRequired', { field: 'Bucket Name' })
+          getString?.('fieldRequired', { field: getString?.('common.bucketName') })
         )
       }
 
@@ -455,165 +479,95 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
     errors
   }: ValidateArtifactInputSetFieldArgs) {
     /** Most common artifact fields */
-    if (
-      isEmpty(get(data, `${dataPathToField}.connectorRef`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.connectorRef`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.connectorRef`, getString?.('fieldRequired', { field: 'Artifact Server' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.imagePath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.imagePath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.imagePath`, getString?.('fieldRequired', { field: 'Image Path' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.tag`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.tag`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.tag`, getString?.('fieldRequired', { field: 'Tag' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.tagRegex`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.tagRegex`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.tagRegex`, getString?.('fieldRequired', { field: 'Tag Regex' }))
-    }
+    validateCommonArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
-    // Common fields for Artifactory, Nexus3, ACR
-    if (
-      isEmpty(get(data, `${dataPathToField}.repository`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.repository`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.repository`, getString?.('fieldRequired', { field: 'Repository' }))
-    }
+    validateAmazonS3ArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // Artifactory artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.artifactPath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.artifactPath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
-    }
-
-    if (
-      isEmpty(get(data, `${dataPathToField}.repositoryUrl`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.repositoryUrl`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository Url' }))
-    }
+    validateArtifactoryArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // ECR artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.region`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.region`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.region`, getString?.('fieldRequired', { field: 'Region' }))
+    if (artifactType === ENABLED_ARTIFACT_TYPES.Ecr) {
+      validateECRArtifactFields({
+        data,
+        dataPathToField,
+        template,
+        templatePathToField,
+        getString,
+        isRequired,
+        errors
+      })
     }
 
     // Nexus3 artifact specific fields
     if (artifactType === ENABLED_ARTIFACT_TYPES.Nexus3Registry) {
-      if (
-        isEmpty(get(data, `${dataPathToField}.spec.repositoryUrl`)) &&
-        isRequired &&
-        getMultiTypeFromValue(get(template, `${templatePathToField}.spec.repositoryUrl`)) === MultiTypeInputType.RUNTIME
-      ) {
-        set(errors, `${dataPathToField}.spec.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository URL' }))
-      }
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.spec.artifactPath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.spec.artifactPath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.spec.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
+      validateNexus3ArtifactFields({
+        data,
+        dataPathToField,
+        template,
+        templatePathToField,
+        getString,
+        isRequired,
+        errors
+      })
     }
 
     // GCR artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.registryHostname`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.registryHostname`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.registryHostname`, getString?.('fieldRequired', { field: 'GCR Registry URL' }))
-    }
+    validateGCRArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // ACR artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.subscriptionId`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.subscriptionId`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.subscriptionId`, getString?.('fieldRequired', { field: 'Subscription Id' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.registry`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.registry`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.registry`, getString?.('fieldRequired', { field: 'Registry' }))
-    }
+    validateACRArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // Custom artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.timeout`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.timeout`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.timeout`, getString?.('fieldRequired', { field: 'Timeout' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.scripts.fetchAllArtifacts.spec.source.spec.script`)) &&
-      isRequired &&
-      getMultiTypeFromValue(
-        get(template, `${templatePathToField}.scripts.fetchAllArtifacts.spec.source.spec.script`)
-      ) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.scripts.fetchAllArtifacts.spec.source.spec.script`,
-        getString?.('fieldRequired', { field: 'Script' })
-      )
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.scripts.fetchAllArtifacts.artifactsArrayPath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.scripts.fetchAllArtifacts.artifactsArrayPath`)) ===
-        MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.scripts.fetchAllArtifacts.artifactsArrayPath`,
-        getString?.('fieldRequired', { field: 'Artifacts Array Path' })
-      )
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.scripts.fetchAllArtifacts.versionPath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.scripts.fetchAllArtifacts.versionPath`)) ===
-        MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.scripts.fetchAllArtifacts.versionPath`,
-        getString?.('fieldRequired', { field: 'Version Path' })
-      )
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.version`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.version`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.version`, getString?.('fieldRequired', { field: getString?.('version') }))
-    }
+    validateCustomArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // Github Package Registry specific fields
     if (
@@ -629,53 +583,26 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
     }
 
     // Azure Artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.project`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.project`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.project`, getString?.('fieldRequired', { field: getString?.('projectLabel') }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.feed`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.feed`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.feed`,
-        getString?.('fieldRequired', { field: getString?.('pipeline.artifactsSelection.feed') })
-      )
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.package`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.package`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.package`,
-        getString?.('fieldRequired', {
-          field:
-            artifactType === ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
-              ? getString?.('pipeline.testsReports.callgraphField.package')
-              : getString?.('pipeline.artifactsSelection.packageName')
-        })
-      )
-    }
+    validateAzureArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // Google Artifact Registry specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.repositoryName`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.repositoryName`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.repositoryName`,
-        getString?.('fieldRequired', { field: getString?.('common.repositoryName') })
-      )
-    }
+    validateGoogleRegistryArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
   }
 
   validatePrimaryArtifactInputSetFields({
@@ -786,6 +713,8 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
       isRequired,
       errors
     })
+    /** Config Files Fields Validation */
+    validateConfigFilesFields({ data, template, isRequired, errors, getString })
 
     return errors
   }

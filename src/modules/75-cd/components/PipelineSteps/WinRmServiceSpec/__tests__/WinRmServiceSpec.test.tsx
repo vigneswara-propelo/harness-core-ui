@@ -261,7 +261,10 @@ describe('WinRmServiceSpec tests', () => {
       artifacts: {
         primary: {
           spec: {
-            connectorRef: 'abc'
+            connectorRef: 'abc',
+            imagePath: 'abc',
+            tag: 'abc',
+            tagRegex: 'abc'
           }
         }
       }
