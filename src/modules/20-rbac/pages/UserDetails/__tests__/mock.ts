@@ -293,6 +293,7 @@ export const roleBindingsList = {
               'chaos_chaosgameday_view',
               'chaos_chaosexperiment_execute',
               'chaos_chaosgameday_delete',
+              'chaos_securitygovernance_edit',
               'core_setting_view',
               'core_account_view',
               'sto_testtarget_view',

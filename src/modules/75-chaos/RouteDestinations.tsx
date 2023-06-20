@@ -76,6 +76,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { Duration } from '@common/exports'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
+import { UserGroupsInput } from '@rbac/components/UserGroupsInput/UserGroupsInput'
+import { ScheduleFreezeForm } from '@freeze-windows/components/ScheduleFreezeForm/ScheduleFreezeForm'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -243,6 +245,19 @@ export default function ChaosRoutes(): React.ReactElement {
       [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
       [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
       [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    }
+  })
+
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SECURITY_GOVERNANCE, {
+    icon: 'chaos-main',
+    label: 'chaos.navLabels.security',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_SECURITY_GOVERNANCE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_SECURITY_GOVERNANCE]: (
+        <LocaleString stringID="rbac.permissionLabels.createEdit" />
+      ),
+      [PermissionIdentifier.DELETE_CHAOS_SECURITY_GOVERNANCE]: <LocaleString stringID="rbac.permissionLabels.delete" />
     }
   })
 
@@ -668,7 +683,9 @@ export default function ChaosRoutes(): React.ReactElement {
             OverviewChartsWithToggle,
             Duration,
             NavigationCheck,
-            SchedulePanel
+            SchedulePanel,
+            UserGroupsInput,
+            ScheduleFreezeForm
           }}
           customFunctions={{ validateYAMLWithSchema }}
         />
