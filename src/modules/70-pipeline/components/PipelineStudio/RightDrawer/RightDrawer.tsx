@@ -280,8 +280,6 @@ const processNodeImpl = (
         node.template = item.template
       }
 
-      if (isEmpty(node.spec)) delete node.spec
-
       if (data.stepConfig?.isStepGroup) {
         if ((item as K8sDirectInfraStepGroupElementConfig).sharedPaths) {
           set(node, 'sharedPaths', (item as K8sDirectInfraStepGroupElementConfig)?.sharedPaths)
