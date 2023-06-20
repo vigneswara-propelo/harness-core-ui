@@ -242,7 +242,6 @@ export function NexusArtifact({
                     items={[...k8sRepositoryFormatTypes, ...nexus3RepositoryFormatTypes]}
                   />
                 </div>
-
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTypeInput
                     selectItems={getRepository()}
@@ -292,8 +291,7 @@ export function NexusArtifact({
                     }}
                   />
                 </div>
-
-                {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
+                {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven && (
                   <>
                     <div className={css.imagePathContainer}>
                       {CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN ? (
@@ -424,7 +422,8 @@ export function NexusArtifact({
                       />
                     </div>
                   </>
-                ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Docker ? (
+                )}
+                {formik.values?.repositoryFormat === RepositoryFormatTypes.Docker && (
                   <>
                     <div className={css.imagePathContainer}>
                       <FormInput.MultiTextInput
@@ -471,7 +470,8 @@ export function NexusArtifact({
                       </div>
                     )}
                   </>
-                ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Raw ? (
+                )}{' '}
+                {formik.values?.repositoryFormat === RepositoryFormatTypes.Raw && (
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput
                       label={getString('rbac.group')}
@@ -482,7 +482,9 @@ export function NexusArtifact({
                       }}
                     />
                   </div>
-                ) : (
+                )}{' '}
+                {(formik.values?.repositoryFormat === RepositoryFormatTypes.NPM ||
+                  formik.values?.repositoryFormat === RepositoryFormatTypes.NuGet) && (
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput
                       label={getString('pipeline.artifactsSelection.packageName')}
