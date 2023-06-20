@@ -86,7 +86,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
   ) as AllowedTypes
 
   return (
-    <CardWithOuterTitle title={getString('overview')} className={css.monitoredService}>
+    <CardWithOuterTitle title={config && isEdit ? '' : getString('overview')} className={css.monitoredService}>
       {!isEdit ? (
         <>
           <Layout.Horizontal spacing="large">

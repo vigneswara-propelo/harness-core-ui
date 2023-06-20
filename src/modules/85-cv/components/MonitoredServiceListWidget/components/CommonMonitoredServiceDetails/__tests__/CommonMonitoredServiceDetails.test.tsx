@@ -5,6 +5,7 @@ import { createMemoryHistory } from 'history'
 import qs from 'qs'
 import { compile } from 'path-to-regexp'
 import userEvent from '@testing-library/user-event'
+import { Button, Container } from '@harness/uicore'
 import { useGetMonitoredService } from 'services/cv'
 import routes from '@common/RouteDefinitions'
 import { PROJECT_MONITORED_SERVICE_CONFIG } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
@@ -52,6 +53,43 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
 
+jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
+  useGetHarnessServices: () => ({
+    serviceOptions: [
+      { label: 'service1', value: 'service1' },
+      { label: 'AppDService101', value: 'AppDService101' }
+    ]
+  }),
+  HarnessServiceAsFormField: function MockComponent(props: any) {
+    return (
+      <Container>
+        <Button
+          className="addService"
+          onClick={() => props.serviceProps.onNewCreated({ name: 'newService', identifier: 'newService' })}
+        />
+      </Container>
+    )
+  },
+  HarnessEnvironmentAsFormField: function MockComponent(props: any) {
+    return (
+      <Container>
+        <Button
+          className="addEnv"
+          onClick={() => props.environmentProps.onNewCreated({ name: 'newEnv', identifier: 'newEnv' })}
+        />
+      </Container>
+    )
+  },
+  useGetHarnessEnvironments: () => {
+    return {
+      environmentOptions: [
+        { label: 'env1', value: 'env1' },
+        { label: 'AppDTestEnv1', value: 'AppDTestEnv1' }
+      ]
+    }
+  }
+}))
+
 const CommonMonitoredServiceDetailsWrapper = () => {
   const queryParams = {}
   const path = routes.toMonitoredServicesConfigurations({
@@ -80,7 +118,7 @@ describe('CommonMonitoredServiceDetails', () => {
   test('should render the loading state', () => {
     ;(useGetMonitoredService as jest.Mock).mockImplementation(() => ({
       loading: true,
-      data: {},
+      data: null,
       error: null
     }))
 

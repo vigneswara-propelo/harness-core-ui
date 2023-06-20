@@ -1,6 +1,6 @@
 import React from 'react'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@harness/uicore'
+import { Button, Container, Formik, FormikForm } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { PROJECT_MONITORED_SERVICE_CONFIG } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
 import CommonMonitoredServiceConfigurations, {
@@ -23,6 +23,43 @@ jest.mock('react-router-dom', () => ({
     projectIdentifier: 'projectIdentifier',
     identifier: 'identifier'
   })
+}))
+
+jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
+  useGetHarnessServices: () => ({
+    serviceOptions: [
+      { label: 'service1', value: 'service1' },
+      { label: 'AppDService101', value: 'AppDService101' }
+    ]
+  }),
+  HarnessServiceAsFormField: function MockComponent(props: any) {
+    return (
+      <Container>
+        <Button
+          className="addService"
+          onClick={() => props.serviceProps.onNewCreated({ name: 'newService', identifier: 'newService' })}
+        />
+      </Container>
+    )
+  },
+  HarnessEnvironmentAsFormField: function MockComponent(props: any) {
+    return (
+      <Container>
+        <Button
+          className="addEnv"
+          onClick={() => props.environmentProps.onNewCreated({ name: 'newEnv', identifier: 'newEnv' })}
+        />
+      </Container>
+    )
+  },
+  useGetHarnessEnvironments: () => {
+    return {
+      environmentOptions: [
+        { label: 'env1', value: 'env1' },
+        { label: 'AppDTestEnv1', value: 'AppDTestEnv1' }
+      ]
+    }
+  }
 }))
 
 function WrapperComponent(props: CommonMonitoredServiceConfigurationsProps): JSX.Element {
@@ -68,14 +105,20 @@ describe('CommonMonitoredServiceConfigurations', () => {
     openChangeSourceDrawer: mockOpenChangeSourceDrawer,
     initialValues: mockInitialValues,
     onSuccess: mockOnSuccess,
-    config: PROJECT_MONITORED_SERVICE_CONFIG
+    config: PROJECT_MONITORED_SERVICE_CONFIG,
+    isEdit: false,
+    onChangeMonitoredServiceType: jest.fn(),
+    cachedInitialValues: null,
+    onDiscard: jest.fn()
   }
 
   test('renders tabs correctly', () => {
     render(<WrapperComponent {...props} />)
-    const healthSourceTab = screen.getByRole('tab', { name: 'Health Source' })
-    const changeSourceTab = screen.getByRole('tab', { name: 'Change Source' })
+    const overViewTab = screen.getByRole('tab', { name: 'overview' })
+    const healthSourceTab = screen.getByRole('tab', { name: 'pipeline.verification.healthSourceLabel' })
+    const changeSourceTab = screen.getByRole('tab', { name: 'changeSource' })
 
+    expect(overViewTab).toBeInTheDocument()
     expect(healthSourceTab).toBeInTheDocument()
     expect(changeSourceTab).toBeInTheDocument()
   })
@@ -83,8 +126,8 @@ describe('CommonMonitoredServiceConfigurations', () => {
   test('should not show the tabs if the component is rendered in create scenario', () => {
     const updatedProps = { ...props, identifier: '' }
     const { queryByText } = render(<WrapperComponent {...updatedProps} />)
-    const healthSourceTab = queryByText('Health Source')
-    const changeSourceTab = queryByText('Change Source')
+    const healthSourceTab = queryByText('pipeline.verification.healthSourceLabel')
+    const changeSourceTab = queryByText('changeSource')
 
     expect(healthSourceTab).not.toBeInTheDocument()
     expect(changeSourceTab).not.toBeInTheDocument()
@@ -92,7 +135,7 @@ describe('CommonMonitoredServiceConfigurations', () => {
 
   test('should render', async () => {
     const { container, getByText, queryByText } = render(<WrapperComponent {...props} />)
-    userEvent.click(queryByText('Change Source')!)
+    userEvent.click(queryByText('changeSource')!)
     await waitFor(() => expect(getByText('cv.changeSource.addChangeSource')).toBeTruthy())
     act(() => {
       fireEvent.click(getByText('cv.changeSource.addChangeSource'))

@@ -202,6 +202,10 @@ function Service(
                 expressions={expressions}
                 onSuccess={onSuccess}
                 initialValues={initialValues}
+                isEdit={isEdit}
+                onChangeMonitoredServiceType={onChangeMonitoredServiceType}
+                onDiscard={onDiscard}
+                cachedInitialValues={cachedInitialValues}
               />
             ) : (
               <>

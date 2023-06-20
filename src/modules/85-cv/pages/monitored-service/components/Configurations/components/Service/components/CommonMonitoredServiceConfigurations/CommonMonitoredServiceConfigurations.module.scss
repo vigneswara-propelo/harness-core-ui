@@ -11,3 +11,12 @@
     }
   }
 }
+
+.saveDiscardButton {
+  right: var(--spacing-small);
+  margin-right: var(--spacing-xxlarge) !important;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing-large) !important;
+  padding-bottom: var(--spacing-medium) !important;
+}
