@@ -422,13 +422,11 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="groupName"]').click()
     cy.contains('span', 'Metric name must be unique').scrollIntoView().should('be.visible')
     cy.contains('p', 'appdMetric 101').click()
-    cy.get('input[name="groupName"]').should('have.value', 'Group 1')
-    cy.contains('p', 'appdMetric 10').click()
-    cy.get('input[name="metricName"]').should('have.value', 'appdMetric 10')
+    cy.findByText('Fill all required fields').should('be.visible')
 
     // Delete all custom metric
     cy.get('span[data-icon="main-delete"]').click({ multiple: true })
-    cy.contains('span', 'Add Metric').should('be.visible')
+    cy.contains('span', 'Add Metric').scrollIntoView().should('be.visible')
   })
 })
 
