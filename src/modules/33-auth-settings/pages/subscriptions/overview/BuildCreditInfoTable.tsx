@@ -40,7 +40,7 @@ export interface BuildCreditInfoTableProps {
   licenseData: CIModuleLicenseDTO | undefined
 }
 
-export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTableProps): React.ReactElement {
+export function BuildCreditInfoTable({ data }: BuildCreditInfoTableProps): React.ReactElement {
   const { getString } = useStrings()
   let totalCredits = 0
   if (data && data.length > 0) {
@@ -132,7 +132,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
       },
       {
         title: getString('common.plans.subscription'),
-        count: licenseData?.numberOfCommitters || 0,
+        count: data.length > 0 ? data.length : 0,
         className: pageCss.subClass
       },
       {

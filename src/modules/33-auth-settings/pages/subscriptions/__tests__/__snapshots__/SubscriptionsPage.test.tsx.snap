@@ -1279,7 +1279,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                     <p
                       class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
                     >
-                      200
+                      0
                     </p>
                   </div>
                 </div>

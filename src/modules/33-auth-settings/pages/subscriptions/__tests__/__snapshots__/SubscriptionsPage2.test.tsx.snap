@@ -1965,7 +1965,7 @@ exports[`Subscriptions Page should render CI details  with no data service table
                     <p
                       class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
                     >
-                      200
+                      0
                     </p>
                   </div>
                 </div>
