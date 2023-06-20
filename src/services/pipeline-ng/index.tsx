@@ -435,6 +435,7 @@ export interface AccessControlCheckError {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1789,6 +1790,7 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2168,6 +2170,7 @@ export interface ErrorMetadata {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   errorMessage?: string
 }
 
@@ -2772,6 +2775,7 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2868,6 +2872,9 @@ export type GCRStepInfo = StepSpecType & {
   buildArgs?: {
     [key: string]: string
   }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
   connectorRef: string
   context?: string
   dockerfile?: string
@@ -2919,6 +2926,7 @@ export type GitCloneStepInfo = StepSpecType & {
   cloneDirectory?: string
   connectorRef: string
   depth?: number
+  outputFilePathsContent?: string[]
   projectName?: string
   repoName?: string
   resources?: ContainerResource
@@ -3711,6 +3719,7 @@ export interface NGTriggerEventHistoryResponse {
     | 'NEW_ARTIFACT_EVENT_PROCESSED'
     | 'NEW_MANIFEST_EVENT_PROCESSED'
   message?: string
+  ngTriggerEventInfo?: NGTriggerEventInfo
   orgIdentifier?: string
   payload?: string
   projectIdentifier?: string
@@ -3719,6 +3728,10 @@ export interface NGTriggerEventHistoryResponse {
   triggerEventStatus?: TriggerEventStatus
   triggerIdentifier?: string
   type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
+}
+
+export interface NGTriggerEventInfo {
+  [key: string]: any
 }
 
 export interface NGTriggerResponse {
@@ -4581,6 +4594,10 @@ export type PmsSlackChannel = PmsNotificationChannel & {
   webhookUrl?: string
 }
 
+export type PmsWebhookChannel = PmsNotificationChannel & {
+  webhookUrl?: string
+}
+
 export interface PolicyConfig {
   policySets: string[]
 }
@@ -4598,7 +4615,7 @@ export type PolicyStepInfo = StepSpecType & {
 
 export interface PolicyStore {
   spec?: StoreSpec
-  type: 'harness'
+  type: 'Harness'
 }
 
 export interface PollingSubscriptionStatus {
@@ -5508,6 +5525,7 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -6435,6 +6453,8 @@ export interface StepData {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -18175,6 +18195,10 @@ export interface GetSchemaYamlQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18491,6 +18515,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -18805,6 +18833,10 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

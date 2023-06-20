@@ -11,12 +11,20 @@ import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { NotificationType } from '@rbac/interfaces/Notifications'
-import type { NotificationRules, PmsEmailChannel, PmsPagerDutyChannel, PmsSlackChannel } from 'services/pipeline-ng'
+import type {
+  NotificationRules,
+  PmsEmailChannel,
+  PmsPagerDutyChannel,
+  PmsSlackChannel,
+  PmsWebhookChannel
+} from 'services/pipeline-ng'
 import { NotificationTypeSelectOptions } from '@rbac/constants/NotificationConstants'
 import ConfigureEmailNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
 import ConfigureSlackNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
 import ConfigurePagerDutyNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
 import ConfigureMSTeamsNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
+import ConfigureWebhookNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureWebhookNotifications/ConfigureWebhookNotifications'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface NotificationMethodsProps extends StepProps<NotificationRules> {
   typeOptions?: SelectOption[]
@@ -31,6 +39,7 @@ function NotificationMethods({
   expressions
 }: NotificationMethodsProps): React.ReactElement {
   const { getString } = useStrings()
+  const { PIE_WEBHOOK_NOTIFICATION } = useFeatureFlags()
   const [method, setMethod] = useState<SelectOption | undefined>(
     prevStepData?.notificationMethod?.type
       ? {
@@ -39,6 +48,14 @@ function NotificationMethods({
         }
       : undefined
   )
+
+  const getFilteredOptions = (items: SelectOption[]): SelectOption[] => {
+    if (!PIE_WEBHOOK_NOTIFICATION) {
+      return items.filter(item => item.value !== NotificationType.Webhook)
+    }
+    return items
+  }
+
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
@@ -51,7 +68,7 @@ function NotificationMethods({
             {getString('rbac.notifications.notificationMethod')}
           </Text>
           <Select
-            items={typeOptions || NotificationTypeSelectOptions}
+            items={getFilteredOptions(typeOptions || NotificationTypeSelectOptions)}
             value={method}
             onChange={item => {
               setMethod(item)
@@ -176,6 +193,41 @@ function NotificationMethods({
               type: NotificationType.Slack,
               webhookUrl: (prevStepData?.notificationMethod?.spec as PmsSlackChannel)?.webhookUrl || '',
               userGroups: (prevStepData?.notificationMethod?.spec as PmsSlackChannel)?.userGroups || []
+            }}
+          />
+        ) : null}
+        {method?.value === NotificationType.Webhook ? (
+          <ConfigureWebhookNotifications
+            withoutHeading={true}
+            submitButtonText={getString('finish')}
+            onSuccess={data => {
+              nextStep?.({
+                ...prevStepData,
+                notificationMethod: {
+                  type: method.value.toString(),
+                  spec: {
+                    webhookUrl: data.webhookUrl
+                  }
+                }
+              })
+            }}
+            expressions={expressions}
+            hideModal={noop}
+            isStep={true}
+            onBack={data =>
+              previousStep?.({
+                ...prevStepData,
+                notificationMethod: {
+                  type: method.value.toString(),
+                  spec: {
+                    webhookUrl: data?.webhookUrl
+                  }
+                }
+              })
+            }
+            config={{
+              type: NotificationType.Webhook,
+              webhookUrl: (prevStepData?.notificationMethod?.spec as PmsWebhookChannel)?.webhookUrl || ''
             }}
           />
         ) : null}

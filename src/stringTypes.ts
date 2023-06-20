@@ -1488,6 +1488,8 @@ export interface StringsMap {
   'rbac.notifications.userGroupsPlaceholder': string
   'rbac.notifications.validationPDKey': string
   'rbac.notifications.validationWebhook': string
+  'rbac.notifications.webhookTestSuccess': string
+  'rbac.notifications.webhookUrl': string
   'rbac.org': string
   'rbac.pendingUsers': string
   'rbac.permissionLabels.access': string

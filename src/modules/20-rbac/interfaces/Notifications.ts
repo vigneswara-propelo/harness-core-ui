@@ -9,7 +9,8 @@ export enum NotificationType {
   Slack = 'Slack',
   Email = 'Email',
   PagerDuty = 'PagerDuty',
-  MsTeams = 'MsTeams'
+  MsTeams = 'MsTeams',
+  Webhook = 'Webhook'
 }
 
 interface NotificationConfiguration {
@@ -23,6 +24,11 @@ export interface EmailNotificationConfiguration extends NotificationConfiguratio
 
 export interface SlackNotificationConfiguration extends NotificationConfiguration {
   webhookUrl: string
+}
+
+export interface WebhookNotificationConfiguration {
+  webhookUrl: string
+  type: NotificationType
 }
 
 export interface MSTeamsNotificationConfiguration extends NotificationConfiguration {
