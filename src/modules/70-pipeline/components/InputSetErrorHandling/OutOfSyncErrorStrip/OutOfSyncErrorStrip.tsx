@@ -29,8 +29,6 @@ import {
   useUpdateOverlayInputSetForPipeline,
   useYamlDiffForInputSet
 } from 'services/pipeline-ng'
-import { useGetSettingValue } from 'services/cd-ng'
-import { SettingType } from '@common/constants/Utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -144,18 +142,6 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
 
-  const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
-    identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
-    queryParams: { accountIdentifier: accountId },
-    lazy: false
-  })
-
-  React.useEffect(() => {
-    if (allowDifferentRepoSettingsError) {
-      showError(getRBACErrorMessage(allowDifferentRepoSettingsError))
-    }
-  }, [allowDifferentRepoSettingsError, getRBACErrorMessage, showError])
-
   const reconcileBranch = isGitSyncEnabled
     ? overlayInputSetBranch ?? inputSetBranch
     : branch ?? get(inputSet, 'gitDetails.branch')
@@ -171,22 +157,19 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier: pipelineIdentifier ?? get(inputSet, 'pipelineIdentifier'),
-      ...(isGitSyncEnabled
-        ? {
-            pipelineRepoID: repoIdentifier,
-            pipelineBranch: branch
-          }
-        : {}),
       repoIdentifier: isGitSyncEnabled
         ? overlayInputSetRepoIdentifier ?? inputSetRepoIdentifier
         : repoName ?? get(inputSet, 'gitDetails.repoName'),
-      ...(allowDifferentRepoSettings?.data?.value !== 'true'
-        ? { branch: reconcileBranch }
-        : { pipelineBranch: reconcileBranch }),
-
       connectorRef: connectorRef ?? get(inputSet, 'connectorRef'),
       storeType: storeType ?? get(inputSet, 'storeType'),
-      ...gitParams
+      ...gitParams,
+      ...(isGitSyncEnabled
+        ? {
+            pipelineRepoID: repoIdentifier
+          }
+        : {}),
+      pipelineBranch: reconcileBranch,
+      branch: get(inputSet, 'gitDetails.branch')
     },
     inputSetIdentifier: overlayInputSetIdentifier ?? get(inputSet, 'identifier', ''),
     lazy: true
