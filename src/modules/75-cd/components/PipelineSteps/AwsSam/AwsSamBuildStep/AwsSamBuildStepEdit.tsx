@@ -91,11 +91,6 @@ const AwsSamBuildStepEdit = (
     spec: Yup.object().shape({
       connectorRef: Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.connectorLabel') })
-      ),
-      samBuildDockerRegistryConnectorRef: Yup.string().required(
-        getString('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry')
-        })
       )
     })
   })

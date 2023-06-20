@@ -4609,6 +4609,7 @@ export interface StringsMap {
   'pipeline.manifestType.attachPath': string
   'pipeline.manifestType.autoScalerPathRequired': string
   'pipeline.manifestType.autoScalerYAMLPath': string
+  'pipeline.manifestType.awsSamDirectory.samTemplateFile': string
   'pipeline.manifestType.azureRepoConnectorLabel': string
   'pipeline.manifestType.basePath': string
   'pipeline.manifestType.basePathPlaceholder': string

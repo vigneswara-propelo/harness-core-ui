@@ -331,6 +331,17 @@ export interface ServerlessLambdaWithS3DataType {
   paths: any
   configOverridePath?: string
 }
+
+export interface AwsSamDirectoryManifestDataType extends CommonManifestDataType {
+  identifier: string
+  branch: string | undefined
+  commitId: string | undefined
+  gitFetchType: 'Branch' | 'Commit'
+  paths: any
+  repoName?: string
+  samTemplateFile?: string
+}
+
 export interface TASWithHarnessStorePropType extends Omit<HarnessFileStoreFormData, 'skipResourceVersioning'> {
   varsPaths?: string[] | string
   autoScalerPath?: string[] | string
@@ -400,3 +411,5 @@ export type ServerlessLambdaWithS3ManifestLastStepPrevStepData = ServerlessLambd
   ManifestLastStepPrevStepData
 
 export type TASWithHarnessStoreManifestLastStepPrevStepData = TASWithHarnessStorePropType & ManifestLastStepPrevStepData
+
+export type AwsSamDirectoryManifestLastStepPrevStepData = AwsSamDirectoryManifestDataType & ManifestLastStepPrevStepData

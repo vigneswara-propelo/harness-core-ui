@@ -99,7 +99,8 @@ import type {
   HarnessFileStoreManifestLastStepPrevStepData,
   CustomRemoteManifestManifestLastStepPrevStepData,
   CommonManifestLastStepPrevStepData,
-  TASManifestLastStepPrevStepData
+  TASManifestLastStepPrevStepData,
+  AwsSamDirectoryManifestLastStepPrevStepData
 } from '../ManifestInterface'
 import K8sValuesManifest from '../ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import HelmWithGIT from '../ManifestWizardSteps/HelmWithGIT/HelmWithGIT'
@@ -125,6 +126,7 @@ import { ECSWithS3 } from '../ManifestWizardSteps/ECSWithS3/ECSWithS3'
 import { ServerlessLambdaWithS3 } from '../ManifestWizardSteps/ServerlessLambdaWithS3/ServerlessLambdaWithS3'
 import TasManifest from '../ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '../ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
+import { AwsSamDirectoryManifest } from '../ManifestWizardSteps/AwsSamDirectoryManifest/AwsSamDirectoryManifest'
 import { LocationValue } from '../../ConfigFilesSelection/ConfigFilesListView/LocationValue'
 import css from '../ManifestSelection.module.scss'
 
@@ -515,6 +517,15 @@ function ManifestListView({
           />
         )
         break
+      case selectedManifest === ManifestDataType.AwsSamDirectory && isGitTypeStores: {
+        manifestDetailStep = (
+          <AwsSamDirectoryManifest
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as AwsSamDirectoryManifestLastStepPrevStepData)}
+          />
+        )
+        break
+      }
       default:
         manifestDetailStep = (
           <CommonManifestDetails
