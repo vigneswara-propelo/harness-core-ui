@@ -42,7 +42,7 @@ import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompar
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
-import { hasCIStage } from '@pipeline/utils/stageHelpers'
+import { hasCIStage, hasIACMStage } from '@pipeline/utils/stageHelpers'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
@@ -518,10 +518,13 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
     queryParams
   )
   const showCI = hasCIStage(data)
+  const showIACM = hasIACMStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
+  const iacmData = defaultTo(data?.moduleInfo?.iacm, {})
+  const showTriggerInfo = (showCI && ciData) || (showIACM && iacmData)
+  const triggerInfo = showCI ? ciData : iacmData
   const prOrCommitTitle =
-    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch?.commits[0]?.message
-
+    triggerInfo.ciExecutionInfoDTO?.pullRequest?.title || triggerInfo.ciExecutionInfoDTO?.branch?.commits[0]?.message
   const triggerInfoCellTriggeredBySection = useMemo(() => {
     return (
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
@@ -571,9 +574,9 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
     )
   }, [pipelineIdentifier])
 
-  return showCI && ciData ? (
+  return showTriggerInfo ? (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
-      <CITriggerInfo {...(ciData as unknown as CITriggerInfoProps)} />
+      <CITriggerInfo {...(triggerInfo as unknown as CITriggerInfoProps)} />
       {prOrCommitTitle ? (
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
           {prOrCommitTitle}
