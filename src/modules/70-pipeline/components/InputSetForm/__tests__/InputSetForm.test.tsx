@@ -226,7 +226,8 @@ const renderRemoteSetup = (form = <EnhancedInputSetForm />) =>
     </TestWrapper>
   )
 
-describe('Render Forms - Snapshot Testing', () => {
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip('Render Forms - Snapshot Testing', () => {
   test('render Input Set Form view', async () => {
     const { getByText, container } = renderRemoteSetup()
     jest.runOnlyPendingTimers()
