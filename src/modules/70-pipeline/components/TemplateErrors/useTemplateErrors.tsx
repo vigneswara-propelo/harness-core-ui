@@ -24,7 +24,7 @@ interface OpenTemplateReconcileErrorsModalProps {
 
 interface UseTemplateErrorsReturnType {
   openTemplateReconcileErrorsModal: (props: OpenTemplateReconcileErrorsModalProps) => void
-  openSelectedTemplateErrorsModal?: (response: any) => void
+  openSelectedTemplateErrorsModal?: (response: any, latestTemplate?: NGTemplateInfoConfig) => void
 }
 
 interface TemplateErrors {
@@ -35,6 +35,7 @@ interface TemplateErrors {
 export default function useTemplateErrors({ entity, templateData }: TemplateErrors): UseTemplateErrorsReturnType {
   const [modalProps, setModalPros] = React.useState<OpenTemplateReconcileErrorsModalProps>()
   const [schemaErrors, setSchemaErrors] = React.useState<YamlSchemaErrorDTO[]>()
+  const [latestTemplateValues, setLatestTemplateValues] = React.useState<NGTemplateInfoConfig>()
   const [showReconcileDialog, hideReconcileDialog] = useModalHook(() => {
     return (
       <Dialog enforceFocus={false} isOpen={true} onClose={hideReconcileDialog} className={css.reconcileDialog}>
@@ -73,19 +74,23 @@ export default function useTemplateErrors({ entity, templateData }: TemplateErro
         errors={schemaErrors as YamlSchemaErrorDTO[]}
         gotoViewWithDetails={gotoViewWithDetails}
         onClose={hideErrorModal}
-        template={templateData}
+        template={templateData ?? latestTemplateValues}
       />
     ),
-    [schemaErrors]
+    [schemaErrors, latestTemplateValues]
   )
 
   const gotoViewWithDetails = React.useCallback((): void => {
     hideErrorModal()
   }, [])
 
-  const openSelectedTemplateErrorsModal = (schemaErrorsToShow: YamlSchemaErrorDTO[]) => {
+  const openSelectedTemplateErrorsModal = (
+    schemaErrorsToShow: YamlSchemaErrorDTO[],
+    latestTemplate?: NGTemplateInfoConfig
+  ) => {
     if (schemaErrorsToShow?.length) {
       setSchemaErrors(schemaErrorsToShow)
+      setLatestTemplateValues(latestTemplate)
       showErrorModal()
     }
   }

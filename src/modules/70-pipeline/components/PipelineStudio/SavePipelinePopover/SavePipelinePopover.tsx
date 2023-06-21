@@ -60,6 +60,7 @@ import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateEr
 import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { hasChainedPipelineStage } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 import css from './SavePipelinePopover.module.scss'
 
@@ -101,10 +102,13 @@ function SavePipelinePopover(
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
+  const { CDS_TEMPLATE_ERROR_HANDLING } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const isYaml = view === SelectedView.YAML
-  const { openTemplateReconcileErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
+  const { openTemplateReconcileErrorsModal, openSelectedTemplateErrorsModal } = useTemplateErrors({
+    entity: TemplateErrorEntity.PIPELINE
+  })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const isPipelineInline = supportingGitSimplification && storeType === StoreType.INLINE
@@ -306,11 +310,13 @@ function SavePipelinePopover(
             isEdit
           })
         } else {
-          showError(
-            getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
-            undefined,
-            'pipeline.save.pipeline.error'
-          )
+          CDS_TEMPLATE_ERROR_HANDLING
+            ? openSelectedTemplateErrorsModal?.((response as any)?.metadata?.schemaErrors)
+            : showError(
+                getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
+                undefined,
+                'pipeline.save.pipeline.error'
+              )
         }
       }
     }

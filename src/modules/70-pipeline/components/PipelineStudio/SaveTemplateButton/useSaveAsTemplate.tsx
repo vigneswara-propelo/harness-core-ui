@@ -38,6 +38,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import type { GovernanceMetadata } from 'services/pipeline-ng'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './SaveAsTemplate.module.scss'
 
 interface TemplateActionsReturnType {
@@ -58,9 +59,11 @@ export function useSaveAsTemplate({
   const { supportingTemplatesGitx } = React.useContext(AppStoreContext)
   const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
+  const { CDS_TEMPLATE_ERROR_HANDLING } = useFeatureFlags()
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
-  const { openTemplateReconcileErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
-
+  const { openTemplateReconcileErrorsModal, openSelectedTemplateErrorsModal } = useTemplateErrors({
+    entity: TemplateErrorEntity.TEMPLATE
+  })
   const { getRBACErrorMessage } = useRBACError()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
@@ -145,7 +148,12 @@ export function useSaveAsTemplate({
       })
     } else {
       clear()
-      showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+      if (CDS_TEMPLATE_ERROR_HANDLING) {
+        openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors, latestTemplate)
+        hideConfigModal()
+      } else {
+        showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+      }
     }
   }
 
