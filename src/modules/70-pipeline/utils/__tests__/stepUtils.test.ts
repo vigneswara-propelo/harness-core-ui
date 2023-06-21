@@ -138,11 +138,11 @@ describe('Test stepUtils', () => {
     expect(stepPaletteAPIPayload).toHaveLength(2)
 
     expect(stepPaletteAPIPayload[0].module).toBe('ci')
-    expect(stepPaletteAPIPayload[0].category).toBe('Plugin')
+    expect(stepPaletteAPIPayload[0].category).toBe('plugin')
     expect(stepPaletteAPIPayload[0].shouldShowCommonSteps).toBe(false)
 
     expect(stepPaletteAPIPayload[1].module).toBe('cd')
-    expect(stepPaletteAPIPayload[1].category).toBe('Plugin')
+    expect(stepPaletteAPIPayload[1].category).toBe('plugin')
     expect(stepPaletteAPIPayload[1].shouldShowCommonSteps).toBe(false)
   })
 })

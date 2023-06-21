@@ -69,12 +69,12 @@ export function getAllStepPaletteModuleInfos(): StepPalleteModuleInfo[] {
 const stepPalettePayloadContainerStepGroup = [
   {
     module: 'ci',
-    category: 'Plugin',
+    category: 'plugin',
     shouldShowCommonSteps: false
   },
   {
     module: 'cd',
-    category: 'Plugin',
+    category: 'plugin',
     shouldShowCommonSteps: false
   }
 ]
