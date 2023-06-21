@@ -12,6 +12,7 @@ import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import * as cdService from 'services/cd-ng'
+import mockImport from 'framework/utils/mockImport'
 import MonitoredServiceOverview from '../MonitoredServiceOverview'
 import { MonitoredServiceType } from '../MonitoredServiceOverview.constants'
 
@@ -48,6 +49,16 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
     )
   }
 }))
+
+mockImport('framework/LicenseStore/LicenseStoreContext', {
+  useLicenseStore: jest.fn().mockImplementation(() => ({
+    licenseInformation: {
+      CV: {
+        status: 'ACTIVE'
+      }
+    }
+  }))
+})
 
 const onChangeMonitoredServiceType = jest.fn()
 

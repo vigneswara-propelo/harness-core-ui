@@ -185,6 +185,10 @@ export const getImperativeHandleRef = (isTemplate?: boolean, formikRef?: Templat
   return isTemplate ? formikRef : defaultRef
 }
 
-export function showDependencies(isTemplate: boolean, config: MonitoredServiceConfig | undefined): boolean {
-  return Boolean(!isTemplate && (!config || (config && config?.showDependencies)))
+export function showDependencies(
+  isTemplate: boolean,
+  config: MonitoredServiceConfig | undefined,
+  isSRMLicensePresentAndActive: boolean
+): boolean {
+  return Boolean(!isTemplate && (!config || (config && config?.showDependencies)) && isSRMLicensePresentAndActive)
 }

@@ -13,6 +13,7 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as cvServices from 'services/cv'
+import mockImport from 'framework/utils/mockImport'
 import {
   yamlResponse,
   monitoredServiceMockData,
@@ -77,6 +78,16 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
     }
   }
 }))
+
+mockImport('framework/LicenseStore/LicenseStoreContext', {
+  useLicenseStore: jest.fn().mockImplementation(() => ({
+    licenseInformation: {
+      CV: {
+        status: 'ACTIVE'
+      }
+    }
+  }))
+})
 
 describe('Unit tests for createting monitored source', () => {
   beforeAll(() => {

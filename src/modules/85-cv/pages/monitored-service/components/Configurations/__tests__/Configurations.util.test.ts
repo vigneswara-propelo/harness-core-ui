@@ -33,6 +33,8 @@ export const defaultState = {
   getString: (val: any) => val
 }
 
+const isSRMLicensePresentAndActive = true
+
 describe('Validate configuration tab util function', () => {
   test('validate isUpdated ', () => {
     expect(isUpdated(false, monitoredService, null)).toEqual(false)
@@ -161,19 +163,31 @@ describe('showDependencies', () => {
     const isTemplate = false
     const config: MonitoredServiceConfig | undefined = undefined
 
-    const result = showDependencies(isTemplate, config)
+    const result = showDependencies(isTemplate, config, isSRMLicensePresentAndActive)
 
     expect(result).toBe(true)
   })
 
-  test('returns true when isTemplate is false and config.showDependencies is true', () => {
+  test('returns false when isTemplate is false and config.showDependencies is true and SRM license is not present', () => {
     const isTemplate = false
     const config: MonitoredServiceConfig = {
       ...PROJECT_MONITORED_SERVICE_CONFIG,
       showDependencies: true
     }
 
-    const result = showDependencies(isTemplate, config)
+    const result = showDependencies(isTemplate, config, false)
+
+    expect(result).toBe(false)
+  })
+
+  test('returns false when isTemplate is false and config.showDependencies is true and ', () => {
+    const isTemplate = false
+    const config: MonitoredServiceConfig = {
+      ...PROJECT_MONITORED_SERVICE_CONFIG,
+      showDependencies: true
+    }
+
+    const result = showDependencies(isTemplate, config, isSRMLicensePresentAndActive)
 
     expect(result).toBe(true)
   })
@@ -182,7 +196,7 @@ describe('showDependencies', () => {
     const isTemplate = true
     const config: MonitoredServiceConfig | undefined = PROJECT_MONITORED_SERVICE_CONFIG
 
-    const result = showDependencies(isTemplate, config)
+    const result = showDependencies(isTemplate, config, isSRMLicensePresentAndActive)
 
     expect(result).toBe(false)
   })
@@ -194,7 +208,7 @@ describe('showDependencies', () => {
       showDependencies: false
     }
 
-    const result = showDependencies(isTemplate, config)
+    const result = showDependencies(isTemplate, config, isSRMLicensePresentAndActive)
 
     expect(result).toBe(false)
   })

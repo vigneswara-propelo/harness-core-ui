@@ -21,6 +21,7 @@ import { MonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredSe
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { cvModuleParams } from '@cv/RouteDestinations'
 import { editParams } from '@cv/utils/routeUtils'
+import mockImport from 'framework/utils/mockImport'
 import * as configUtils from '../Configurations.utils'
 import Configurations, { ConfigurationsWithRef } from '../Configurations'
 import { cachedData, editModeData } from '../components/Service/__tests__/Service.mock'
@@ -91,6 +92,16 @@ jest.mock('services/cv', () => ({
     .fn()
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
+
+mockImport('framework/LicenseStore/LicenseStoreContext', {
+  useLicenseStore: jest.fn().mockImplementation(() => ({
+    licenseInformation: {
+      CV: {
+        status: 'ACTIVE'
+      }
+    }
+  }))
+})
 
 describe('Unit tests for Configuration', () => {
   test('Ensure that any infra change source is removed when switching type to application', async () => {

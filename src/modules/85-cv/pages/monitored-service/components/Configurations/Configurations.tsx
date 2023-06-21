@@ -38,6 +38,9 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
+import { ModuleName } from 'framework/types/ModuleName'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import Service, { ServiceWithRef } from './components/Service/Service'
 import Dependency from './components/Dependency/Dependency'
 import { getInitFormData } from './components/Service/Service.utils'
@@ -90,6 +93,8 @@ export default function Configurations(
   const [overrideBlockNavigation, setOverrideBlockNavigation] = useState<boolean>(false)
   const [defaultMonitoredService, setDefaultMonitoredService] = useState<MonitoredServiceDTO>()
   const projectRef = useRef(projectIdentifier)
+  const { licenseInformation } = useLicenseStore()
+  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
   const { module } = config || {}
 
   const {
@@ -442,7 +447,7 @@ export default function Configurations(
             />
           }
         />
-        {showDependencies(isTemplate, config) && (
+        {showDependencies(isTemplate, config, isSRMLicensePresentAndActive) && (
           <Tab
             id={getString('pipelines-studio.dependenciesGroupTitle')}
             title={getString('pipelines-studio.dependenciesGroupTitle')}

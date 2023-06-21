@@ -22,6 +22,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
 import routes from '@common/RouteDefinitions'
+import { ModuleName } from 'framework/types/ModuleName'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import type { CommonMonitoredServiceListViewProps } from './CommonMonitoredServiceListView.types'
 import ServiceName from './components/ServiceName/ServiceName'
 import ConfiguredLabel from './components/ConfiguredLabel/ConfiguredLabel'
@@ -87,6 +90,8 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
 }) => {
   const { getString } = useStrings()
   const { content, pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = monitoredServiceListData || {}
+  const { licenseInformation } = useLicenseStore()
+  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
   const isCDModule = getIfModuleIsCD(config)
   const {
     listing: { changeSource, goto }
@@ -168,7 +173,7 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
                 width: '13.5%',
                 Cell: RenderHealthSourceForProjects
               },
-              ...(changeSource
+              ...(changeSource && isSRMLicensePresentAndActive
                 ? [
                     {
                       Header: getString('cv.commonMonitoredServices.changeSource').toLocaleUpperCase(),
@@ -177,7 +182,7 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
                     }
                   ]
                 : []),
-              ...(goto
+              ...(goto && isSRMLicensePresentAndActive
                 ? [
                     {
                       Header: getString('cv.commonMonitoredServices.goTo').toLocaleUpperCase(),
@@ -188,7 +193,7 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
                 : []),
               {
                 id: 'contextMenu',
-                width: isCDModule ? '70.5%' : '43.5%',
+                width: isCDModule || !isSRMLicensePresentAndActive ? '70.5%' : '43.5%',
                 Cell: RenderContextMenu
               }
             ]}

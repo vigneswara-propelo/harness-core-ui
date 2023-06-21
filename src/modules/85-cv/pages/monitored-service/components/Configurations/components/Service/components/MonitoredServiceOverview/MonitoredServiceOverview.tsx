@@ -33,6 +33,9 @@ import type { EnvironmentMultiSelectOrCreateProps } from '@cv/components/Harness
 import { useMonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { getIfModuleIsCD } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.utils'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { MonitoredServiceTypeOptions } from './MonitoredServiceOverview.constants'
 import {
   updateMonitoredServiceNameForService,
@@ -54,6 +57,8 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
   const keys = useMemo(() => [Utils.randomId(), Utils.randomId()], [values.serviceRef, values.environmentRef])
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const isCDModule = getIfModuleIsCD(config)
+  const { licenseInformation } = useLicenseStore()
+  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
 
   const { openDialog } = useConfirmationDialog({
     contentText: getString('cv.monitoredServices.changeMonitoredServiceTypeMessage'),
@@ -90,7 +95,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
       {!isEdit ? (
         <>
           <Layout.Horizontal spacing="large">
-            {isCDModule ? null : (
+            {isCDModule || !isSRMLicensePresentAndActive ? null : (
               <FormInput.Select
                 name="type"
                 tooltipProps={{ dataTooltipId: 'monitoredServiceType' }}

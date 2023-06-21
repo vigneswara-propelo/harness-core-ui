@@ -12,6 +12,7 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps, modulePathProps } from '@common/utils/routeUtils'
 import * as dbHook from '@cv/hooks/IndexedDBHook/IndexedDBHook'
+import mockImport from 'framework/utils/mockImport'
 import Service from '../Service'
 import { editModeData, onUpdatePayload, cachedData } from './Service.mock'
 import { monitoredService } from '../../Dependency/__tests__/Dependency.mock'
@@ -39,6 +40,16 @@ jest.mock('@cv/hooks/useDrawerHook/useDrawerHook', () => ({
     return { showDrawer, hideDrawer }
   }
 }))
+
+mockImport('framework/LicenseStore/LicenseStoreContext', {
+  useLicenseStore: jest.fn().mockImplementation(() => ({
+    licenseInformation: {
+      CV: {
+        status: 'ACTIVE'
+      }
+    }
+  }))
+})
 
 jest.mock('@cv/components/ContextMenuActions/ContextMenuActions', () => () => {
   return (

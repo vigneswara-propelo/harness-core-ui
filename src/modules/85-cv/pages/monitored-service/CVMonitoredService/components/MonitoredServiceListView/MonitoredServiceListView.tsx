@@ -33,6 +33,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import { numberFormatter } from '@common/utils/utils'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import IconGrid from '../IconGrid/IconGrid'
 import {
   calculateTotalChangePercentage,
@@ -204,8 +205,7 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
   })
 
   const { licenseInformation } = useLicenseStore()
-
-  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === 'ACTIVE'
+  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
 
   const { CVNG_ENABLED: isSRMEnabled, CVNG_LICENSE_ENFORCEMENT: isSRMEnforcementLicenseEnabled } = useFeatureFlags()
 

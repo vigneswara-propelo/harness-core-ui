@@ -10,6 +10,7 @@ import {
   CD_MONITORED_SERVICE_CONFIG,
   PROJECT_MONITORED_SERVICE_CONFIG
 } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
+import mockImport from 'framework/utils/mockImport'
 import CommonMonitoredServiceListView from '../CommonMonitoredServiceListView'
 import { mockedMonitoredServiceListData } from './CommonMonitoredServiceListView.mock'
 
@@ -26,6 +27,16 @@ jest.mock('@cv/components/ContextMenuActions/ContextMenuActions', () => (props: 
       <div className="context-menu-mock-delete" onClick={props.onDelete} />
     </>
   )
+})
+
+mockImport('framework/LicenseStore/LicenseStoreContext', {
+  useLicenseStore: jest.fn().mockImplementation(() => ({
+    licenseInformation: {
+      CV: {
+        status: 'ACTIVE'
+      }
+    }
+  }))
 })
 
 export const testWrapperProps: TestWrapperProps = {
@@ -110,6 +121,31 @@ describe('CommonMonitoredServiceListView', () => {
     expect(queryByText('CV.COMMONMONITOREDSERVICES.HEALTHSOURCE')).toBeInTheDocument()
     expect(queryByText('CV.COMMONMONITOREDSERVICES.CHANGESOURCE')).toBeInTheDocument()
     expect(queryByText('CV.COMMONMONITOREDSERVICES.GOTO')).toBeInTheDocument()
+  })
+
+  test('should render the table columns correctly for Project level monitored service config when SRM license is not present', () => {
+    mockImport('framework/LicenseStore/LicenseStoreContext', {
+      useLicenseStore: jest.fn().mockImplementation(() => ({
+        licenseInformation: {}
+      }))
+    })
+
+    const { queryByText } = render(
+      <MemoryRouter>
+        <CommonMonitoredServiceListView
+          monitoredServiceListData={mockedMonitoredServiceListData}
+          selectedFilter={mockedSelectedFilter}
+          onEditService={mockedOnEditService}
+          onDeleteService={mockedOnDeleteService}
+          setPage={mockedSetPage}
+          config={PROJECT_MONITORED_SERVICE_CONFIG}
+        />
+      </MemoryRouter>
+    )
+    expect(queryByText('CV.COMMONMONITOREDSERVICES.MONITOREDSERVICE')).toBeInTheDocument()
+    expect(queryByText('CV.COMMONMONITOREDSERVICES.HEALTHSOURCE')).toBeInTheDocument()
+    expect(queryByText('CV.COMMONMONITOREDSERVICES.CHANGESOURCE')).not.toBeInTheDocument()
+    expect(queryByText('CV.COMMONMONITOREDSERVICES.GOTO')).not.toBeInTheDocument()
   })
 
   test('should render the table columns correctly for CD Monitored service config', () => {
