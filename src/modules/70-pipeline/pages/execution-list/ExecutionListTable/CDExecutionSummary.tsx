@@ -40,7 +40,7 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
   return serviceDisplayName || environment ? (
     <Layout.Horizontal spacing="medium" className={css.cdExecutionSummary}>
       {serviceDisplayName ? (
-        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
+        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center', flexShrink: 'unset' }}>
           <Icon name="services" size={14} />
           <Link
             to={routes.toServiceStudio({
@@ -61,7 +61,11 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
       ) : null}
 
       {environment ? (
-        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }} className={css.environment}>
+        <Layout.Horizontal
+          spacing="xsmall"
+          style={{ alignItems: 'center', flexShrink: 'unset' }}
+          className={css.environment}
+        >
           <Icon name="environments" size={12} />
           <Link
             to={routes.toEnvironmentDetails({
