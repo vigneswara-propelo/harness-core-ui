@@ -78,11 +78,14 @@ const scheduleAutoApproveActions = async (
 }
 
 describe('Harness Approval tests', () => {
+  let mockDateTime: jest.SpyInstance<unknown> | undefined
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
+    mockDateTime = jest.spyOn(Date.prototype, 'toLocaleTimeString').mockReturnValue('12:00:00 AM GMT+05:30')
   })
   afterAll(() => {
     jest.spyOn(global.Date, 'now').mockReset()
+    mockDateTime?.mockRestore()
   })
   beforeEach(() => {
     factory.registerStep(new HarnessApproval())

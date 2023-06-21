@@ -19,11 +19,13 @@ import {
   Text
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
+import { get } from 'lodash-es'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeDateTimePickerField } from '@common/components/MultiTypeDateTimePicker/MultiTypeDateTimePicker'
-import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
+import { ALL_TIME_ZONES, convertDateTimeBasedOnTimezone } from '@common/utils/dateUtils'
+import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { HarnessApprovalFormContentProps } from './types'
 import { ApproveAction } from './helper'
@@ -78,6 +80,21 @@ export default function ScheduleAutoApproval({
           }}
           usePortal
           disabled={isApprovalStepFieldDisabled(readonly) || !isApproveActionChecked}
+          onChange={timeZone => {
+            const formValue = get(formik?.values, 'spec.autoApproval.scheduledDeadline.time')
+            if (getMultiTypeFromValue(formValue) === MultiTypeInputType.FIXED) {
+              const prevTimezone = get(formik?.values, 'spec.autoApproval.scheduledDeadline.timeZone')
+
+              const adjustedTimeFromEpoch = convertDateTimeBasedOnTimezone(
+                prevTimezone,
+                timeZone.value as string,
+                formValue,
+                DATE_PARSE_FORMAT
+              )
+
+              formik?.setFieldValue('spec.autoApproval.scheduledDeadline.time', adjustedTimeFromEpoch)
+            }
+          }}
         />
       </div>
       <div className={cx(stepCss.formGroup, stepCss.lg)}>

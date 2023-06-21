@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, compact, isArray, has, defaultTo, set } from 'lodash-es'
+import { isEmpty, compact, isArray, has, defaultTo, set, get } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -52,6 +52,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { getTimeZoneOffsetInMinutes } from '@common/utils/dateUtils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -457,9 +458,24 @@ function HarnessApprovalStepMode(
                   .required(getString('common.validation.fieldIsRequired', { name: 'Time' }))
                   .test({
                     test(val: string): boolean | Yup.ValidationError {
-                      const minApprovalTime: number = Date.now() + parseStringToTime('15m')
-                      const formValue = moment(val, DATE_PARSE_FORMAT).valueOf()
-                      if (formValue < minApprovalTime)
+                      const currentTimezone = get(
+                        formikRef,
+                        'current.values.spec.autoApproval.scheduledDeadline.timeZone'
+                      )
+                      const currentDate = new Date()
+                      const currentTimeOffset = getTimeZoneOffsetInMinutes(currentTimezone)
+                      const currentTimeBasedOnTimezone = moment
+                        .utc(currentDate.getTime())
+                        .utcOffset(currentTimeOffset)
+                        .valueOf()
+
+                      const formValueTimeBasedOnTimezone =
+                        moment.utc(val, DATE_PARSE_FORMAT).utcOffset(currentTimeOffset).valueOf() -
+                        currentTimeOffset * 60000
+
+                      const minApprovalTime: number = currentTimeBasedOnTimezone + parseStringToTime('15m')
+
+                      if (formValueTimeBasedOnTimezone < minApprovalTime)
                         return this.createError({
                           message: getString('pipeline.approvalStep.validation.autoApproveScheduleCurrentTime')
                         })

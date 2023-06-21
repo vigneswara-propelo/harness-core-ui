@@ -6,6 +6,8 @@
  */
 
 import moment from 'moment'
+import { isUndefined } from 'lodash-es'
+import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 
 export const formatDatetoLocale = (date: number | string): string => {
   return `${new Date(date).toLocaleDateString()} ${new Date(date).toLocaleTimeString()}`
@@ -16,6 +18,57 @@ export const getReadableDateTime = (timestamp?: number, formatString = 'MMM DD, 
     return ''
   }
   return moment(timestamp).format(formatString)
+}
+
+// Ex. Asia/Calcutta --> +5:30
+export const getTimeZoneOffsetString = (timeZone?: string): string => {
+  if (!timeZone) {
+    return ''
+  }
+
+  return new Date()
+    .toLocaleTimeString('en-us', {
+      timeZone,
+      timeZoneName: 'longOffset' as Intl.DateTimeFormatOptions['timeZoneName']
+    })
+    .split('GMT')[1]
+}
+
+// Ex. Asia/Calcutta --> 330
+export const getTimeZoneOffsetInMinutes = (timeZone?: string): number => {
+  if (!timeZone) {
+    return 0
+  }
+
+  const timeZoneOffString = getTimeZoneOffsetString(timeZone)
+  if (isUndefined(timeZoneOffString)) {
+    return 0
+  }
+  const sign = timeZoneOffString.startsWith('+') ? 1 : -1
+  const [hours, minutes] = timeZoneOffString.substring(1).split(':').map(Number)
+
+  return (hours * 60 + minutes) * sign
+}
+
+// Ex. epoch: 1687321540567, timeZone: Asia/Calcutta  --> 2023-06-21 09:55 AM
+export const getTimeZoneBasedTimeFromEpoch = (epoch: number, timezone: string): string => {
+  const timeZoneOffset = getTimeZoneOffsetString(timezone)
+
+  return moment(epoch).utcOffset(timeZoneOffset).format(DATE_PARSE_FORMAT)
+}
+
+// Ex. [Aisa/Calcutta, 2023-06-21 5:30 AM] -> [Europe/London, 2023-06-21 01:00 AM]
+export const convertDateTimeBasedOnTimezone = (
+  orgTimezone: string,
+  targetTimezone: string,
+  date: string,
+  format: string
+): string => {
+  const timezoneOffset = getTimeZoneOffsetInMinutes(orgTimezone) * 60000
+  const utcEpoch = moment.utc(date, format).valueOf()
+
+  const convertedToTargetTimzone = getTimeZoneBasedTimeFromEpoch(utcEpoch - timezoneOffset, targetTimezone)
+  return convertedToTargetTimzone
 }
 
 export const ALL_TIME_ZONES = [
