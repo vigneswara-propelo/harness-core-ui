@@ -7,6 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly favorite: string
+  readonly favoriteActive: string
+  readonly headerContainer: string
   readonly listHeader: string
   readonly orgDropdown: string
   readonly pagination: string
@@ -18,6 +21,7 @@ declare const styles: {
   readonly projectContainerWrapper: string
   readonly projectSearch: string
   readonly projectText: string
+  readonly row: string
   readonly selectButton: string
   readonly selectContainer: string
   readonly selectedProject: string

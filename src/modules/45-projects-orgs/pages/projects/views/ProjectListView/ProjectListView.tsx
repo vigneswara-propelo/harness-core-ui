@@ -27,6 +27,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
@@ -213,7 +214,19 @@ const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row, colum
   const { openDialog } = useDeleteProjectDialog(data, onDeleted)
 
   return (
-    <Layout.Horizontal className={css.layout}>
+    <Layout.Horizontal padding={{ left: 'medium' }} className={css.layout}>
+      <FavoriteStar
+        isFavorite={row.original.projectResponse.isFavorite}
+        resourceId={data.identifier}
+        resourceType="PROJECT"
+        className={css.favorite}
+        activeClassName={css.favoriteActive}
+        key={data.identifier}
+        scope={{ orgIdentifier: data.orgIdentifier }}
+        onChange={favorite => {
+          row.original.projectResponse.isFavorite = favorite
+        }}
+      />
       <Popover
         isOpen={menuOpen}
         onInteraction={nextOpenState => {
@@ -256,7 +269,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
         Header: getString('projectLabel'),
         id: 'name',
         accessor: row => row.projectResponse.project.name,
-        width: '30%',
+        width: '28%',
         Cell: RenderColumnProject
       },
       {
@@ -296,7 +309,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
         Header: '',
         id: 'menu',
         accessor: row => row.projectResponse.project.identifier,
-        width: '5%',
+        width: '7%',
         Cell: RenderColumnMenu,
         refetchProjects: reloadPage,
         editProject: showEditProject,
@@ -329,6 +342,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
           })
         )
       }}
+      getRowClassName={() => css.row}
       pagination={paginationProps}
     />
   )

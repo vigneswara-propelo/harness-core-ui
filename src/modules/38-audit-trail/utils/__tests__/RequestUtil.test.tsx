@@ -139,7 +139,8 @@ describe('Request util', () => {
           identifier: 'projectIdentifier',
           name: 'projectName',
           orgIdentifier: 'orgIdentifier'
-        }
+        },
+        isFavorite: false
       }
     ])
     expect(projectDropdonwList).toEqual([

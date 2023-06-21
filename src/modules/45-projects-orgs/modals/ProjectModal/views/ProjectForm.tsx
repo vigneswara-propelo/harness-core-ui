@@ -141,7 +141,7 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
                   {Object.keys(formikProps.touched).length ? (
                     <ProjectCard
                       data={{
-                        projectResponse: { project: formikProps.values },
+                        projectResponse: { project: formikProps.values, isFavorite: false },
                         admins: [
                           { name: user.name, email: user?.email || '', uuid: user?.uuid || '', locked: user?.locked }
                         ]

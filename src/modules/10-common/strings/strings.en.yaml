@@ -1546,3 +1546,6 @@ atAGlance: At a Glance
 invite: Invite
 results: Results
 category: Category
+favorite:
+  add: Add to Favorites
+  remove: Remove from Favorites

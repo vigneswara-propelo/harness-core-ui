@@ -239,7 +239,8 @@ export const responseProjectAggregateDTO: ResponseProjectAggregateDTO = {
         modules: ['CD', 'CV', 'CI', 'CE', 'CF'],
         description: '',
         tags: { tag1: '', tag2: 'tag3', tag4: 'tag3', tag5: 'tag3', tag6: 'tag3' }
-      }
+      },
+      isFavorite: false
     },
     organization: {
       identifier: 'testOrg',
@@ -272,7 +273,8 @@ export const responseProjectAggregateDTOWithNoModules: ResponseProjectAggregateD
         modules: [],
         description: '',
         tags: {}
-      }
+      },
+      isFavorite: false
     },
     organization: {
       identifier: 'testOrg',

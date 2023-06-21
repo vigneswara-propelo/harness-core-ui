@@ -43,7 +43,8 @@ const projectMockData: UseGetMockData<ResponseProjectResponse> = {
         modules: ['CD', 'CV'],
         description: 'refetch returns new data',
         tags: {}
-      }
+      },
+      isFavorite: false
     },
     metaData: undefined,
     correlationId: '88124a30-e021-4890-8466-c2345e1d42d6'
@@ -79,7 +80,8 @@ const createMockData: UseMutateMockData<ResponseProjectResponse> = {
           modules: [],
           description: '',
           tags: {}
-        }
+        },
+        isFavorite: false
       },
       metaData: undefined,
       correlationId: '375d39b4-3552-42a2-a4e3-e6b9b7e51d44'
@@ -101,7 +103,8 @@ const editMockData: UseMutateMockData<ResponseProjectResponse> = {
           modules: ['CD'],
           description: 'test',
           tags: { tag1: '', tag2: 'tag3' }
-        }
+        },
+        isFavorite: false
       },
       metaData: undefined,
       correlationId: '375d39b4-3552-42a2-a4e3-e6b9b7e51d44'

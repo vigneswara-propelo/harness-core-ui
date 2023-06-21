@@ -219,7 +219,8 @@ export const projectMockData: ProjectResponse[] = [
       modules: ['CI', 'CD'],
       description: 'Test description',
       tags: { tag1: 'value' }
-    }
+    },
+    isFavorite: false
   },
   {
     project: {
@@ -230,7 +231,8 @@ export const projectMockData: ProjectResponse[] = [
       modules: ['CD'],
       description: '',
       tags: {}
-    }
+    },
+    isFavorite: false
   },
   {
     project: {
@@ -241,7 +243,8 @@ export const projectMockData: ProjectResponse[] = [
       modules: [],
       description: '',
       tags: {}
-    }
+    },
+    isFavorite: false
   },
   {
     project: {
@@ -252,6 +255,7 @@ export const projectMockData: ProjectResponse[] = [
       modules: ['CD', 'CF', 'CE', 'CI', 'CV'],
       description: '',
       tags: {}
-    }
+    },
+    isFavorite: false
   }
 ]

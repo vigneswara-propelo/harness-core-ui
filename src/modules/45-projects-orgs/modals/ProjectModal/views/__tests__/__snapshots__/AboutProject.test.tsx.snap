@@ -802,6 +802,9 @@ exports[`About Project test create project  2`] = `
                 class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
               >
                 <div
+                  class="Layout--horizontal StyledProps--main cardHeader StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+                />
+                <div
                   class="StyledProps--font StyledProps--main"
                   data-testid="card-content"
                 >

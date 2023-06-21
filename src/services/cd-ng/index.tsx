@@ -2967,6 +2967,7 @@ export interface ConnectorResponse {
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   harnessManaged?: boolean
+  isFavorite?: boolean
   lastModifiedAt?: number
   status?: ConnectorConnectivityDetails
 }
@@ -4051,6 +4052,7 @@ export type EcrArtifactConfig = ArtifactConfig & {
   imagePath: string
   metadata?: string
   region: string
+  registryId?: string
   tag?: string
   tagRegex?: string
 }
@@ -4550,6 +4552,7 @@ export interface EntityDetail {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -7241,6 +7244,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   )[]
   moduleType?:
     | 'CD'
@@ -7479,6 +7483,7 @@ export interface GitEntityFilterProperties {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7794,6 +7799,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8024,6 +8030,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8375,6 +8382,7 @@ export interface GitSyncEntityDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8599,6 +8607,7 @@ export interface GitSyncEntityListDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8840,6 +8849,7 @@ export interface GitSyncErrorDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8954,11 +8964,16 @@ export interface GithubPackageDTO {
 }
 
 export type GithubPackagesArtifactConfig = ArtifactConfig & {
+  artifactId?: string
   connectorRef: string
   digest?: string
+  extension?: string
+  groupId?: string
   org?: string
   packageName: string
   packageType: 'npm' | 'maven' | 'rubygems' | 'nuget' | 'container'
+  repository?: string
+  user?: string
   version?: string
   versionRegex?: string
 }
@@ -10327,6 +10342,7 @@ export type K8sBlueGreenStepInfo = StepSpecType & {
   commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   pruningEnabled?: boolean
+  skipDeploymentIfSameManifest?: boolean
   skipDryRun?: boolean
 }
 
@@ -10548,7 +10564,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -10556,6 +10572,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11302,9 +11319,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -12513,6 +12531,7 @@ export interface ProjectRequest {
 
 export interface ProjectResponse {
   createdAt?: number
+  isFavorite: boolean
   lastModifiedAt?: number
   project: Project
 }
@@ -12841,6 +12860,7 @@ export interface ReferencedByDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
 }
 
 export interface RefreshResponse {
@@ -14246,6 +14266,7 @@ export interface ResponseListEntityType {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -16989,6 +17010,19 @@ export type ServerlessAwsLambdaManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
+export type ServerlessAwsLambdaPrepareRollbackContainerStepInfo = StepSpecType & {
+  connectorRef?: string
+  delegateSelectors?: string[]
+  downloadManifestsFqn?: string
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  serverlessVersion?: string
+  settings: ParameterFieldMapStringJsonNode
+}
+
 export type ServerlessAwsLambdaRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
@@ -17992,6 +18026,7 @@ export interface StepData {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
+    | 'ServerlessPrepareRollback'
 }
 
 export interface StepElementConfig {
@@ -20689,6 +20724,7 @@ export interface ListActivitiesQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -20905,6 +20941,7 @@ export interface ListActivitiesQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -21225,6 +21262,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21441,6 +21479,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -22360,6 +22399,7 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
+  onlyFavorites?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -26459,6 +26499,7 @@ export const validateArtifactImageForDockerPromise = (
   )
 
 export interface GetBuildDetailsForEcrQueryParams {
+  registryId?: string
   imagePath: string
   region: string
   connectorRef: string
@@ -26521,6 +26562,7 @@ export const getBuildDetailsForEcrPromise = (
   )
 
 export interface GetBuildDetailsForEcrWithYamlQueryParams {
+  registryId?: string
   imagePath?: string
   region?: string
   connectorRef?: string
@@ -26615,6 +26657,7 @@ export const getBuildDetailsForEcrWithYamlPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getBuildDetailsV2`, props, signal)
 
 export interface GetImagesListForEcrQueryParams {
+  registryId?: string
   region?: string
   connectorRef?: string
   accountIdentifier: string
@@ -26708,6 +26751,7 @@ export const getImagesListForEcrPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getImages`, props, signal)
 
 export interface GetLastSuccessfulBuildForEcrQueryParams {
+  registryId?: string
   imagePath: string
   connectorRef: string
   accountIdentifier: string
@@ -26789,6 +26833,7 @@ export const getLastSuccessfulBuildForEcrPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getLastSuccessfulBuild`, props, signal)
 
 export interface GetLastSuccessfulBuildForEcrWithYamlQueryParams {
+  registryId?: string
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
@@ -26882,6 +26927,7 @@ export const getLastSuccessfulBuildForEcrWithYamlPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getLastSuccessfulBuildV2`, props, signal)
 
 export interface ValidateArtifactForEcrQueryParams {
+  registryId?: string
   imagePath: string
   region: string
   connectorRef: string
@@ -26944,6 +26990,7 @@ export const validateArtifactForEcrPromise = (
   )
 
 export interface ValidateArtifactServerForEcrQueryParams {
+  registryId?: string
   imagePath: string
   connectorRef: string
   region: string
@@ -26997,6 +27044,7 @@ export const validateArtifactServerForEcrPromise = (
   )
 
 export interface ValidateArtifactImageForEcrQueryParams {
+  registryId?: string
   imagePath: string
   region: string
   connectorRef: string
@@ -34156,6 +34204,7 @@ export interface GetConnectorListV2QueryParams {
   repoName?: string
   getDistinctFromBranches?: boolean
   version?: string
+  onlyFavorites?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -39957,6 +40006,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -40234,6 +40284,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   searchTerm?: string
 }
 
@@ -43722,6 +43773,7 @@ export interface GetReferencedByQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   searchTerm?: string
 }
 
@@ -46413,6 +46465,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -46697,6 +46750,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'SscaEnforcement'
       | 'IdpConnector'
       | 'CdSscaEnforcement'
+      | 'ServerlessPrepareRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -53218,6 +53272,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   yamlGroup?: string
 }
 
@@ -53562,6 +53617,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -54129,6 +54185,7 @@ export interface GetProjectListQueryParams {
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
+  isFavorite?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -54260,6 +54317,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
+  isFavorite?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -69437,6 +69495,7 @@ export interface GetYamlSchemaQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'ServerlessPrepareRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'

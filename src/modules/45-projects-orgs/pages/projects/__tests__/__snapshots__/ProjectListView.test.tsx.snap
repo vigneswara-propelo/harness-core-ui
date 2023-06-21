@@ -13,7 +13,7 @@ exports[`Project List render 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 30%;"
+        style="width: 28%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -98,7 +98,7 @@ exports[`Project List render 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 5%;"
+        style="width: 7%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -116,7 +116,7 @@ exports[`Project List render 1`] = `
       class="TableV2--body"
     >
       <div
-        class="TableV2--row TableV2--card TableV2--clickable"
+        class="TableV2--row TableV2--card TableV2--clickable row"
         role="row"
       >
         <div
@@ -125,7 +125,7 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 30%;"
+            style="width: 28%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
@@ -442,10 +442,10 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
+            style="width: 7%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main layout"
+              class="Layout--horizontal StyledProps--main layout StyledProps--padding-left-medium"
             >
               <span
                 class="bp3-popover-wrapper bp3-dark"
@@ -494,7 +494,7 @@ exports[`Project List render 1`] = `
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable"
+        class="TableV2--row TableV2--card TableV2--clickable row"
         role="row"
       >
         <div
@@ -503,7 +503,7 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 30%;"
+            style="width: 28%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
@@ -862,10 +862,10 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
+            style="width: 7%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main layout"
+              class="Layout--horizontal StyledProps--main layout StyledProps--padding-left-medium"
             >
               <span
                 class="bp3-popover-wrapper bp3-dark"
@@ -914,7 +914,7 @@ exports[`Project List render 1`] = `
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable"
+        class="TableV2--row TableV2--card TableV2--clickable row"
         role="row"
       >
         <div
@@ -923,7 +923,7 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 30%;"
+            style="width: 28%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
@@ -1246,10 +1246,10 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
+            style="width: 7%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main layout"
+              class="Layout--horizontal StyledProps--main layout StyledProps--padding-left-medium"
             >
               <span
                 class="bp3-popover-wrapper bp3-dark"
@@ -1298,7 +1298,7 @@ exports[`Project List render 1`] = `
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable"
+        class="TableV2--row TableV2--card TableV2--clickable row"
         role="row"
       >
         <div
@@ -1307,7 +1307,7 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 30%;"
+            style="width: 28%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
@@ -1518,10 +1518,10 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
+            style="width: 7%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main layout"
+              class="Layout--horizontal StyledProps--main layout StyledProps--padding-left-medium"
             >
               <span
                 class="bp3-popover-wrapper bp3-dark"
@@ -1570,7 +1570,7 @@ exports[`Project List render 1`] = `
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable"
+        class="TableV2--row TableV2--card TableV2--clickable row"
         role="row"
       >
         <div
@@ -1579,7 +1579,7 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 30%;"
+            style="width: 28%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
@@ -1867,10 +1867,10 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
+            style="width: 7%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main layout"
+              class="Layout--horizontal StyledProps--main layout StyledProps--padding-left-medium"
             >
               <span
                 class="bp3-popover-wrapper bp3-dark"
@@ -1919,7 +1919,7 @@ exports[`Project List render 1`] = `
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable"
+        class="TableV2--row TableV2--card TableV2--clickable row"
         role="row"
       >
         <div
@@ -1928,7 +1928,7 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 30%;"
+            style="width: 28%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
@@ -2396,10 +2396,10 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
+            style="width: 7%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main layout"
+              class="Layout--horizontal StyledProps--main layout StyledProps--padding-left-medium"
             >
               <span
                 class="bp3-popover-wrapper bp3-dark"
@@ -2448,7 +2448,7 @@ exports[`Project List render 1`] = `
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable"
+        class="TableV2--row TableV2--card TableV2--clickable row"
         role="row"
       >
         <div
@@ -2457,7 +2457,7 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 30%;"
+            style="width: 28%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
@@ -2774,10 +2774,10 @@ exports[`Project List render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
+            style="width: 7%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main layout"
+              class="Layout--horizontal StyledProps--main layout StyledProps--padding-left-medium"
             >
               <span
                 class="bp3-popover-wrapper bp3-dark"

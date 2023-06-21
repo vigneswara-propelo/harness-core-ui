@@ -27,10 +27,13 @@ import {
   sortByCreated,
   sortByLastModified,
   sortByName,
-  SortMethod
+  SortMethod,
+  Checkbox,
+  CheckboxVariant,
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { Column } from 'react-table'
+import type { CellProps, Column, Renderer } from 'react-table'
 import {
   RenderColumnProject,
   RenderColumnOrganization
@@ -43,9 +46,10 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-
+import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import pointerImage from './pointer.svg'
 import css from './ProjectSelector.module.scss'
 
@@ -54,15 +58,30 @@ export interface ProjectSelectorProps {
   moduleFilter?: Required<Project>['modules'][0]
 }
 
+const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
+  return (
+    <FavoriteStar
+      isFavorite={row.original.projectResponse.isFavorite}
+      resourceId={row.original.projectResponse.project.identifier}
+      resourceType="PROJECT"
+      className={css.favorite}
+      activeClassName={css.favoriteActive}
+      scope={{ orgIdentifier: row.original.projectResponse.project.orgIdentifier }}
+    />
+  )
+}
+
 const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
   const { accountId } = useParams<AccountPathProps>()
   const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
   const history = useHistory()
   const { selectedProject } = useAppStore()
   const [page, setPage] = useState(0)
+  const { PL_FAVORITES } = useFeatureFlags()
   const [searchTerm, setSearchTerm] = useState<string>()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
+  const [favorite, setFavorite] = useState<boolean>(false)
   const { preference: savedProjectView, setPreference: setSavedProjectView } = usePreferenceStore<Views | undefined>(
     PreferenceScope.MACHINE,
     'projectSelectorViewType'
@@ -77,7 +96,8 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
       searchTerm,
       pageIndex: page,
       pageSize: 50,
-      sortOrders: [sortPreference]
+      sortOrders: [sortPreference],
+      onlyFavorites: favorite
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -89,7 +109,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
         Header: getString('projectLabel'),
         id: 'name',
         accessor: row => row.projectResponse.project.name,
-        width: '60%',
+        width: '55%',
         Cell: RenderColumnProject
       },
       {
@@ -98,6 +118,13 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
         accessor: row => row.projectResponse.project.orgIdentifier,
         width: '40%',
         Cell: RenderColumnOrganization
+      },
+      {
+        Header: '',
+        id: 'menu',
+        accessor: row => row.projectResponse.project.identifier,
+        width: '7%',
+        Cell: RenderColumnMenu
       }
     ],
     []
@@ -184,15 +211,28 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
           />
         </Layout.Horizontal>
         {loading && <PageSpinner />}
-        <ListHeader
-          selectedSortMethod={sortPreference}
-          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
-          onSortMethodChange={option => {
-            setSortPreference(option.value as SortMethod)
-          }}
-          totalCount={data?.data?.totalItems}
-          className={css.listHeader}
-        />
+        <Layout.Horizontal flex className={css.headerContainer}>
+          <ListHeader
+            selectedSortMethod={sortPreference}
+            sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+            onSortMethodChange={option => {
+              setSortPreference(option.value as SortMethod)
+            }}
+            totalCount={data?.data?.totalItems}
+            className={css.listHeader}
+          />
+          {PL_FAVORITES && (
+            <Checkbox
+              variant={CheckboxVariant.BOXED}
+              checked={favorite}
+              className={css.favorite}
+              labelElement={<Icon name="star" color={Color.YELLOW_900} size={14} />}
+              onChange={e => {
+                setFavorite(e.currentTarget.checked)
+              }}
+            />
+          )}
+        </Layout.Horizontal>
         {data?.data?.content?.length ? (
           <>
             {projectView === Views.GRID ? (
@@ -230,7 +270,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
                 <TableV2<ProjectAggregateDTO>
                   columns={columns}
                   name="ProjectListView"
-                  getRowClassName={_row => Classes.POPOVER_DISMISS}
+                  getRowClassName={_row => cx(Classes.POPOVER_DISMISS, css.row)}
                   data={data?.data?.content || []}
                   onRowClick={projectAggregate => {
                     onSelect(projectAggregate.projectResponse.project)

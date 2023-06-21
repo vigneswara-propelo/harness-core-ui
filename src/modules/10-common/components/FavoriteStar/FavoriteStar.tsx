@@ -12,14 +12,17 @@ import {
   deleteFavorite as deleteFavoritePromise,
   DeleteFavoriteProjectQueryParams
 } from '@harnessio/react-ng-manager-client'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import React, { useState } from 'react'
-import { useToaster } from '@harness/uicore'
+import { Text, Utils, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import classNames from 'classnames'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { Module } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import type { ResourceScope } from 'services/cd-ng'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './FavoriteStar.module.scss'
 
 interface FavoriteStarProps {
@@ -28,16 +31,20 @@ interface FavoriteStarProps {
   module?: Module
   isFavorite?: boolean
   scope?: ResourceScope
+  activeClassName?: string
+  className?: string
+  onChange?: (favorite: boolean) => void
 }
 
 const FavoriteStar: React.FC<FavoriteStarProps> = props => {
   const [isFavorite, setIsFavorite] = useState<boolean>(Boolean(props.isFavorite))
   const [apiInProgress, setAPIInProgress] = useState<boolean>(false)
   const { currentUserInfo } = useAppStore()
+  const { PL_FAVORITES } = useFeatureFlags()
   const { showError } = useToaster()
   const { getString } = useStrings()
-  const { accountId: accountIdFromParams } = useParams<AccountPathProps>()
-  const { accountIdentifier: accountId = accountIdFromParams, projectIdentifier, orgIdentifier } = props.scope || {}
+  const { module } = useParams<ModulePathParams>()
+  const { accountIdentifier: accountId, projectIdentifier, orgIdentifier } = props.scope || {}
 
   const deleteFavorite = async (): Promise<void> => {
     try {
@@ -53,6 +60,7 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
         setIsFavorite(true)
         showError(getString('common.errorUnFavorite'))
       } else {
+        props.onChange?.(false)
         setIsFavorite(false)
       }
     } catch (error) {
@@ -71,8 +79,10 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
           user_id: currentUserInfo.uuid,
           resource_id: props.resourceId,
           resource_type: props.resourceType,
-          module: props.module || 'CORE',
-          account: accountId
+          module: module ? module.toUpperCase() : 'CORE',
+          account: accountId,
+          project: projectIdentifier,
+          org: orgIdentifier
         },
         pathParams: {
           org: orgIdentifier,
@@ -85,6 +95,7 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
         setIsFavorite(false)
       } else {
         setIsFavorite(true)
+        props.onChange?.(true)
       }
     } catch (error) {
       showError(getString('common.errorFavorite'))
@@ -108,15 +119,30 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
     }
   }
 
+  const { activeClassName = '' } = props
+
+  if (!PL_FAVORITES) {
+    return null
+  }
+
   return (
-    <Icon
-      name={isFavorite ? 'star' : 'star-empty'}
-      color={isFavorite ? Color.YELLOW_900 : Color.GREY_400}
-      size={24}
-      onClick={handleClick}
-      className={css.star}
-      padding="small"
-    />
+    <Utils.WrapOptionalTooltip
+      tooltip={
+        <Text color={Color.GREY_100} padding="small">
+          {isFavorite ? getString('common.favorite.remove') : getString('common.favorite.add')}
+        </Text>
+      }
+      tooltipProps={{ isDark: true, interactionKind: PopoverInteractionKind.HOVER }}
+    >
+      <Icon
+        name={isFavorite ? 'star' : 'star-empty'}
+        color={isFavorite ? Color.YELLOW_700 : Color.GREY_400}
+        size={24}
+        onClick={handleClick}
+        className={classNames(css.star, props.className, { [activeClassName]: isFavorite })}
+        padding="xsmall"
+      />
+    </Utils.WrapOptionalTooltip>
   )
 }
 

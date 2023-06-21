@@ -14,8 +14,15 @@
   -webkit-box-orient: vertical;
 }
 
-.listHeader {
-  margin: var(--spacing-medium) 0 !important;
+.headerContainer {
+  .listHeader {
+    margin: var(--spacing-medium) 0 !important;
+    flex: 1;
+  }
+
+  .favorite {
+    margin-left: var(--spacing-small) !important;
+  }
 }
 
 .pickProjectHelp {
@@ -115,4 +122,19 @@
 }
 .pagination {
   padding: var(--spacing-xlarge) var(--spacing-xlarge) var(--spacing-xsmall) 0px !important;
+}
+
+.row {
+  .favorite {
+    visibility: hidden;
+  }
+  .favoriteActive {
+    visibility: visible;
+  }
+
+  &:hover {
+    .favorite {
+      visibility: visible;
+    }
+  }
 }

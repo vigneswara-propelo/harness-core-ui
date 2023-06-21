@@ -10,6 +10,9 @@ exports[`Project Card test Preview is ok 1`] = `
       class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
     >
       <div
+        class="Layout--horizontal StyledProps--main cardHeader StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+      />
+      <div
         class="StyledProps--font StyledProps--main"
         data-testid="card-content"
       >
@@ -373,43 +376,47 @@ exports[`Project Card test initializes ok  1`] = `
       class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
     >
       <div
-        class="Card--cardMenu"
+        class="Layout--horizontal StyledProps--main cardHeader StyledProps--flex StyledProps--flex-justifyContent-flex-end"
       >
         <div
-          class="Card--dots"
+          class="Card--cardMenu menu"
         >
-          <span
-            class="bp3-popover-wrapper bp3-dark"
+          <div
+            class="Card--dots"
           >
             <span
-              class="bp3-popover-target"
+              class="bp3-popover-wrapper bp3-dark"
             >
-              <button
-                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Card--menu Button--with-current-color Button--round Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                type="button"
+              <span
+                class="bp3-popover-target"
               >
-                <span
-                  class="bp3-icon bp3-icon-more StyledProps--main"
-                  icon="more"
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Card--menu Button--with-current-color Button--round Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                  type="button"
                 >
-                  <svg
-                    data-icon="more"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    width="16"
+                  <span
+                    class="bp3-icon bp3-icon-more StyledProps--main"
+                    icon="more"
                   >
-                    <desc>
-                      more
-                    </desc>
-                    <path
-                      d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </button>
+                    <svg
+                      data-icon="more"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        more
+                      </desc>
+                      <path
+                        d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
             </span>
-          </span>
+          </div>
         </div>
       </div>
       <div
