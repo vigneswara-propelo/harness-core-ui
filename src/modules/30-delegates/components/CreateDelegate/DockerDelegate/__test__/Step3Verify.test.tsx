@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { render, act } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import Step3Verify from '../Step3Verify/Step3Verify'
 
@@ -34,13 +33,12 @@ describe('Create Docker Step3Verify', () => {
     )
 
     const doneBtn = getByRole('button', { name: 'done' })
-    act(() => {
-      userEvent.click(doneBtn!)
-    })
+
+    fireEvent.click(doneBtn!)
 
     expect(container).toMatchSnapshot()
   })
-  test('render data and go back', () => {
+  test('render data and go back', async () => {
     const { container } = render(
       <TestWrapper>
         <Step3Verify />
@@ -49,7 +47,7 @@ describe('Create Docker Step3Verify', () => {
 
     const backBtn = container.querySelector('button') as HTMLButtonElement
 
-    userEvent.click(backBtn!)
+    fireEvent.click(backBtn!)
 
     expect(container).toMatchSnapshot()
   })

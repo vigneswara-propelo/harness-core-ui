@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { Form, Formik } from 'formik'
 import { act, getByText, render, waitFor } from '@testing-library/react'
@@ -163,23 +170,18 @@ describe('StageSelection', () => {
 
     const { getByTestId } = render(<TestComponent onSubmit={onSubmit} initialValues={initialValues} />)
     const selectStagesButton = getByTestId(testId)
-    act(() => {
-      userEvent.click(selectStagesButton)
-    })
+
+    await userEvent.click(selectStagesButton)
     const popoverContainer = findPopoverContainer()
     expect(popoverContainer).toBeInTheDocument()
     expect(popoverContainer?.querySelectorAll('label.bp3-checkbox')).toHaveLength(getStagesExecutionListData.length + 1)
-    act(() => {
-      userEvent.click(getByText(popoverContainer!, 'S2'))
-    })
-    act(() => {
-      userEvent.click(getByText(popoverContainer!, 'S3'))
-    })
+
+    await userEvent.click(getByText(popoverContainer!, 'S2'))
+
+    await userEvent.click(getByText(popoverContainer!, 'S3'))
     const submitButton = getByTestId('submit')
 
-    act(() => {
-      userEvent.click(submitButton)
-    })
+    await userEvent.click(submitButton)
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith(
@@ -195,9 +197,7 @@ describe('StageSelection', () => {
       })
     })
 
-    act(() => {
-      userEvent.click(submitButton)
-    })
+    await userEvent.click(submitButton)
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith(
@@ -224,29 +224,21 @@ describe('StageSelection', () => {
 
     const { getByTestId } = render(<TestComponent onSubmit={onSubmit} initialValues={initialValues} />)
     const selectStagesButton = getByTestId(testId)
-    act(() => {
-      userEvent.click(selectStagesButton)
-    })
+    await userEvent.click(selectStagesButton)
+
     const popoverContainer = findPopoverContainer()
     expect(popoverContainer).toBeInTheDocument()
     expect(popoverContainer?.querySelectorAll('label.bp3-checkbox')).toHaveLength(getStagesExecutionListData.length + 1)
-    act(() => {
-      userEvent.click(getByText(popoverContainer!, 'S1'))
-    })
-    act(() => {
-      userEvent.click(getByText(popoverContainer!, 'S2'))
-    })
-    act(() => {
-      userEvent.click(getByText(popoverContainer!, 'S3'))
-    })
-    act(() => {
-      userEvent.click(getByText(popoverContainer!, 'S4'))
-    })
+    await userEvent.click(getByText(popoverContainer!, 'S1'))
+
+    await userEvent.click(getByText(popoverContainer!, 'S2'))
+
+    await userEvent.click(getByText(popoverContainer!, 'S3'))
+    await userEvent.click(getByText(popoverContainer!, 'S4'))
+
     const submitButton = getByTestId('submit')
 
-    act(() => {
-      userEvent.click(submitButton)
-    })
+    await userEvent.click(submitButton)
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith(
@@ -274,9 +266,8 @@ describe('StageSelection', () => {
 
     const { getByTestId } = render(<TestComponent onSubmit={onSubmit} initialValues={initialValues} />)
     const selectStagesButton = getByTestId(testId)
-    act(() => {
-      userEvent.click(selectStagesButton)
-    })
+    await userEvent.click(selectStagesButton)
+
     const popoverContainer = findPopoverContainer()
     expect(popoverContainer).toBeInTheDocument()
     expect(popoverContainer?.querySelectorAll('label.bp3-checkbox')).toHaveLength(getStagesExecutionListData.length + 1)

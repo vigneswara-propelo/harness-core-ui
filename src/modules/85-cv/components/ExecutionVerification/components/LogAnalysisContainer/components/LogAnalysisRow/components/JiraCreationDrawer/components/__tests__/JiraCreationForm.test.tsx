@@ -1,5 +1,12 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
@@ -103,30 +110,22 @@ describe('JiraViewDetails', () => {
 
     const addFieldButton = screen.getByText(/pipeline.jiraCreateStep.addFields/)
 
-    act(() => {
-      userEvent.click(addFieldButton)
-    })
+    await userEvent.click(addFieldButton)
 
     const keyInput = screen.getByPlaceholderText(/pipeline.keyPlaceholder/)
     const valueInput = screen.getByPlaceholderText(/Type and press enter to create a tag/)
 
     await waitFor(() => expect(keyInput).toBeInTheDocument())
 
-    act(() => {
-      userEvent.type(keyInput, 'key1')
-    })
+    await userEvent.type(keyInput, 'key1')
 
     await waitFor(() => expect(keyInput).toHaveValue('key1'))
 
-    act(() => {
-      userEvent.type(valueInput, 'value1')
-    })
+    await userEvent.type(valueInput, 'value1')
 
     await waitFor(() => expect(valueInput).toHaveValue('value1'))
 
-    act(() => {
-      userEvent.click(addFieldButton)
-    })
+    await userEvent.click(addFieldButton)
 
     const keyInputs = screen.getAllByPlaceholderText(/pipeline.keyPlaceholder/)
 
@@ -134,9 +133,7 @@ describe('JiraViewDetails', () => {
 
     const deleteIcon = container.querySelector('[data-icon="main-trash"]:last-child')
 
-    act(() => {
-      userEvent.click(deleteIcon!)
-    })
+    await userEvent.click(deleteIcon!)
 
     expect(showErrorMock).toHaveBeenCalled()
   })
@@ -149,9 +146,7 @@ describe('JiraViewDetails', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId('jiraDrawerClose_button'))
-    })
+    await userEvent.click(screen.getByTestId('jiraDrawerClose_button'))
 
     await waitFor(() => expect(onHideCallbackMock).toHaveBeenCalled())
   })

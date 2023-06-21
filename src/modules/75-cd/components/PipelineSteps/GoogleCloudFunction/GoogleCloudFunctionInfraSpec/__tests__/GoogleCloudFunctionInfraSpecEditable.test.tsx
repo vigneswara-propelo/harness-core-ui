@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, getByText as getElementByText, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -78,13 +78,13 @@ factory.registerStep(new GoogleCloudFunctionInfraSpec())
 const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> => {
   // Type regex and submit
   // check if field has desired value
-  await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
-  const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await waitFor(() => expect(screen.getByText('common.configureOptions.regex')).toBeInTheDocument())
+  const regexRadio = screen.getByText('common.configureOptions.regex')
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByNameAttribute('regExValues', cogModal) as HTMLInputElement
   fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
-  const cogSubmit = getElementByText(cogModal, 'submit')
+  const cogSubmit = screen.getByText('submit')
   userEvent.click(cogSubmit)
 }
 
@@ -149,7 +149,7 @@ describe('GoogleCloudFunctionInfraSpecEditable tests', () => {
     const connectorInput = queryByNameAttribute('connectorRef', container) as HTMLInputElement
     expect(connectorInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogConnectorRef = document.getElementById('configureOptions_connectorRef')
-    userEvent.click(cogConnectorRef!)
+    await userEvent.click(cogConnectorRef!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGConnectorRef = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGConnectorRef)
@@ -158,7 +158,7 @@ describe('GoogleCloudFunctionInfraSpecEditable tests', () => {
     const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
     expect(regionInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogRegion = document.getElementById('configureOptions_region')
-    userEvent.click(cogRegion!)
+    await userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal)
@@ -167,7 +167,7 @@ describe('GoogleCloudFunctionInfraSpecEditable tests', () => {
     const projectInput = queryByNameAttribute('project', container) as HTMLInputElement
     expect(projectInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogProject = document.getElementById('configureOptions_project')
-    userEvent.click(cogProject!)
+    await userEvent.click(cogProject!)
     await waitFor(() => expect(modals.length).toBe(1))
     const projectCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(projectCOGModal)

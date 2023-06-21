@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, findByText, act } from '@testing-library/react'
+import { render, findByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -39,14 +39,12 @@ describe('ConfigFilesSelection tests', () => {
     )
     const addBtn = await findByText(container, 'pipeline.configFiles.addConfigFile')
     expect(addBtn).toBeInTheDocument()
-    act(() => {
-      userEvent.click(addBtn)
-    })
+    await userEvent.click(addBtn)
+
     const dialog = document.body.querySelector('.bp3-dialog') as HTMLElement
     const closeBtn = dialog.querySelector('.bp3-minimal') as HTMLElement
-    act(() => {
-      userEvent.click(closeBtn)
-    })
+    await userEvent.click(closeBtn)
+
     expect(container).toBeInTheDocument()
   })
 })

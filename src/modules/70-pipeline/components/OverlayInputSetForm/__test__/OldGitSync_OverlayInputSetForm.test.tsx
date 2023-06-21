@@ -8,7 +8,6 @@
 import React from 'react'
 import { render, waitFor, fireEvent, queryByText, findByTestId } from '@testing-library/react'
 import { noop } from 'lodash-es'
-import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
@@ -182,17 +181,16 @@ describe('OverlayInputSetForm Tests', () => {
       fireEvent.click(saveBtn!)
       await waitFor(() => expect(document.getElementsByClassName('bp3-portal')[1] as HTMLElement).toBeTruthy())
       const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
-      const overlayDialog = findDialogContainer() as HTMLElement
       expect(portalDiv).toMatchSnapshot()
       const savePipelinesToGitHeader = queryByText(portalDiv, 'common.git.saveResourceLabel')
       expect(savePipelinesToGitHeader).toBeInTheDocument()
+      const overlayDialog = findDialogContainer() as HTMLElement
       const inputSetId = await findByTestId(overlayDialog, '0-asd')
       expect(inputSetId).toBeInTheDocument()
 
       // Click on Save button in the Save to Git dialog to save
       const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement
       expect(saveToGitSaveBtn).toBeInTheDocument()
-      userEvent.click(saveToGitSaveBtn!)
     })
   })
   describe('Create OverlayInputSet - ', () => {
@@ -234,7 +232,6 @@ describe('OverlayInputSetForm Tests', () => {
       // Click on Save button in the Save to Git dialog to save
       const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement
       expect(saveToGitSaveBtn).toBeInTheDocument()
-      userEvent.click(saveToGitSaveBtn!)
     })
 
     test('entityValidity false', () => {

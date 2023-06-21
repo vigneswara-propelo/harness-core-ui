@@ -36,8 +36,6 @@ const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult 
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
-
   return result
 }
 
@@ -48,7 +46,9 @@ describe('useArchiveDialog', () => {
 
     renderComponent()
 
-    userEvent.type(screen.getByRole('textbox'), incorrectFlagIdentifier)
+    await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
+
+    await userEvent.type(screen.getByRole('textbox'), incorrectFlagIdentifier)
 
     const archiveFlagTextbox = screen.getByRole('textbox')
 
@@ -56,14 +56,14 @@ describe('useArchiveDialog', () => {
     expect(screen.getByText('cf.featureFlags.archiving.mismatchIdentifierError')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'archive' })).toBeDisabled()
 
-    userEvent.clear(archiveFlagTextbox)
+    await userEvent.clear(archiveFlagTextbox)
 
     // checking user cannot paste into textbox so they have to manually type in the flag identifier
     fireEvent.paste(archiveFlagTextbox, pastedText)
     expect(archiveFlagTextbox).not.toHaveValue(pastedText)
 
-    userEvent.clear(archiveFlagTextbox)
-    userEvent.type(archiveFlagTextbox, mockFeature.identifier)
+    await userEvent.clear(archiveFlagTextbox)
+    await userEvent.type(archiveFlagTextbox, mockFeature.identifier)
 
     expect(screen.queryByText('cf.featureFlags.archiving.mismatchIdentifierError')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'archive' })).toBeEnabled()
@@ -71,9 +71,10 @@ describe('useArchiveDialog', () => {
 
   test('it should allow user to archive a flag', async () => {
     renderComponent()
-    userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
+    await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
+    await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
 
-    userEvent.click(screen.getByRole('button', { name: 'archive' }))
+    await userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
     await waitFor(() =>
       expect(deleteFeatureFlagMock).toHaveBeenCalledWith(mockFeature.identifier, {
@@ -87,10 +88,11 @@ describe('useArchiveDialog', () => {
 
     deleteFeatureFlagMock.mockRejectedValue({ message: error })
     renderComponent()
+    await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
 
-    userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
+    await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
 
-    userEvent.click(screen.getByRole('button', { name: 'archive' }))
+    await userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
     await waitFor(() => expect(screen.getByText(error)).toBeInTheDocument())
   })

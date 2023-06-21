@@ -51,7 +51,7 @@ describe('GitSyncSetupModal', () => {
     const saveBtn = screen.getByRole('button', { name: 'save' })
     expect(saveBtn).toBeVisible()
 
-    userEvent.click(saveBtn)
+    await userEvent.click(saveBtn)
 
     await waitFor(() => {
       expect(screen.getByText('common.git.validation.repoRequired')).toBeVisible()
@@ -68,9 +68,9 @@ describe('GitSyncSetupModal', () => {
     const saveBtn = screen.getByRole('button', { name: 'save' })
     const filePathField = screen.getByPlaceholderText('gitsync.gitSyncForm.enterYamlPath')
 
-    await userEvent.type(filePathField, './invalidPath.yaml', { allAtOnce: true })
+    await userEvent.type(filePathField, './invalidPath.yaml')
 
-    userEvent.click(saveBtn)
+    await userEvent.click(saveBtn)
 
     await waitFor(() => {
       expect(screen.getByText('gitsync.gitSyncForm.yamlPathInvalid')).toBeVisible()
@@ -104,7 +104,7 @@ describe('GitSyncSetupModal', () => {
       const hideModalMock = jest.fn()
       renderComponent({ hideModal: hideModalMock })
 
-      userEvent.click(screen.getByRole('button', { name: 'save' }))
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
       await waitFor(() => {
         expect(createGitRepo).toHaveBeenCalled()
@@ -119,7 +119,7 @@ describe('GitSyncSetupModal', () => {
 
       renderComponent({ hideModal: hideModalMock })
 
-      userEvent.click(screen.getByRole('button', { name: 'save' }))
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
       await waitFor(() => {
         expect(createGitRepo).toHaveBeenCalled()

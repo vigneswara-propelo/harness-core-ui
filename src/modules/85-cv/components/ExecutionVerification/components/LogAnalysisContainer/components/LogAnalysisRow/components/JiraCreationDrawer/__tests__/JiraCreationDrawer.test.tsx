@@ -1,5 +1,12 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -39,9 +46,7 @@ describe('JiraViewDetails', () => {
 
     screen.debug(container, 50000)
 
-    act(() => {
-      userEvent.click(screen.getByTestId(/jiraDrawerClose_button_top/))
-    })
+    await userEvent.click(screen.getByTestId(/jiraDrawerClose_button_top/))
 
     await waitFor(() => expect(onHideCallbackMock).toHaveBeenCalled())
   })

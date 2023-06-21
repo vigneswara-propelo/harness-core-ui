@@ -145,7 +145,7 @@ describe('Pipeline Stage advanced specifications test', () => {
     renderComponent()
 
     const button = await screen.findByText('Conditional Execution button')
-    userEvent.click(button as HTMLElement)
+    await userEvent.click(button as HTMLElement)
 
     expect(pipelineContextMockValue.getStageFromPipeline).toBeCalled()
     expect(pipelineContextMockValue.getStageFromPipeline).toBeCalledWith(

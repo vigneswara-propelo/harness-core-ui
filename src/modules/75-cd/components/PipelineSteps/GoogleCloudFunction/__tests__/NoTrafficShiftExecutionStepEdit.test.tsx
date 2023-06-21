@@ -71,30 +71,30 @@ describe('NoTrafficShiftExecutionStepEdit tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.clear(nameInput!)
-    userEvent.type(nameInput!, 'No Traffic Step 1')
+    await userEvent.clear(nameInput!)
+    await userEvent.type(nameInput!, 'No Traffic Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('No Traffic Step 1'))
     expect(getByText('No_Traffic_Step_1')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '10')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '10')
     fireEvent.keyDown(timeoutInput!, { key: 'enter', keyCode: 13 })
     const invalidSyntaxError = await findByText('Invalid syntax provided')
     expect(invalidSyntaxError).toBeInTheDocument()
 
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '5s')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '5s')
     fireEvent.keyDown(timeoutInput!, { key: 'enter', keyCode: 13 })
     const minimumTimeoutError = await findByText('Value must be greater than or equal to "10s"')
     expect(minimumTimeoutError).toBeInTheDocument()
 
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '10s')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '10s')
 
     const fieldMaskInput = queryByNameAttribute('spec.updateFieldMask', container)
-    userEvent.clear(fieldMaskInput!)
-    userEvent.type(fieldMaskInput!, 'abcd')
+    await userEvent.clear(fieldMaskInput!)
+    await userEvent.type(fieldMaskInput!, 'abcd')
 
     act(() => {
       formikRef.current?.submitForm()

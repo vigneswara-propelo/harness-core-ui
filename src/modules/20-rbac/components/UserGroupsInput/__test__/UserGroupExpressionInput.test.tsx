@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -47,7 +47,7 @@ describe('UserGroup Expression Input tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByLabelText('common.combined')!)
+    await userEvent.click(screen.getByLabelText('common.combined')!)
     waitFor(() => {
       expect(
         screen.getByPlaceholderText('( <+pipeline.variables.group1> + "," + <+pipeline.variables.group2>).split(",")')
@@ -83,9 +83,7 @@ describe('UserGroup Expression Input tests', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.type(container.querySelector('input[name="spec.approvers.userGroups"]')!, '<+test>')
-    })
+    await userEvent.type(container.querySelector('input[name="spec.approvers.userGroups"]')!, '<+test>')
 
     waitFor(() => {
       expect(container.querySelector('input[name="spec.approvers.userGroups"]')!).toHaveValue('<+test>')

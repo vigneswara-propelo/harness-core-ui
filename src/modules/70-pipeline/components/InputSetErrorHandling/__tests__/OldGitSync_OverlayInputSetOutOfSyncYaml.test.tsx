@@ -73,7 +73,8 @@ jest.mock('react-monaco-editor', () => ({
 }))
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
+jest.runAllTimers()
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const fetchRepos = jest.fn(() => Promise.resolve(mockRepos))
@@ -169,9 +170,9 @@ const clickOnReconcileButton = async (): Promise<void> => {
   const reconcileMenuOption = await screen.findByRole('button', {
     name: /overlay input set menu actions/i
   })
-  userEvent.click(reconcileMenuOption)
+  await userEvent.click(reconcileMenuOption)
   const reconcileBtn = await screen.findByText('pipeline.outOfSyncErrorStrip.reconcile')
-  userEvent.click(reconcileBtn)
+  await userEvent.click(reconcileBtn)
   expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 }
 
@@ -233,7 +234,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Old Git Sync')
 
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
       const portalDiv = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
@@ -243,7 +244,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
       gitSaveBtn = gitSave.parentElement as HTMLElement
       expect(gitSaveBtn).toBeInTheDocument()
     })
-    userEvent.click(gitSaveBtn!)
+    await userEvent.click(gitSaveBtn!)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -265,7 +266,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     const reconcileDialog = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
   })
 
@@ -289,7 +290,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     const deleteOverlayISBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })
     expect(deleteInputSetModal).toMatchSnapshot('Delete Overlay Input Set Modal - OLd Git Sync')
 
-    userEvent.click(deleteOverlayISBtn)
+    await userEvent.click(deleteOverlayISBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })

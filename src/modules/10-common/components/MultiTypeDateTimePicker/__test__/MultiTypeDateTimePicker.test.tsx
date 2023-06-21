@@ -70,11 +70,12 @@ describe('MultiTypeDateTimePicker test', () => {
         />
       </TestWrapper>
     )
-    userEvent.click(screen.getByTestId('multi-type-button'))
+    await userEvent.click(screen.getByTestId('multi-type-button'))
     const fixedValueText = screen.getByText('Fixed value')
     await waitFor(() => expect(fixedValueText).toBeInTheDocument())
-    userEvent.click(fixedValueText)
-    expect(await screen.findByPlaceholderText('LLLL')).toBeInTheDocument()
+    await userEvent.click(fixedValueText)
+    const test = screen.queryByPlaceholderText('LLLL')
+    await waitFor(() => expect(test).toBeInTheDocument())
   })
 
   test('should only display specified types', async () => {
@@ -88,7 +89,7 @@ describe('MultiTypeDateTimePicker test', () => {
     expect(screen.queryByText('Runtime input')).not.toBeInTheDocument()
     expect(screen.queryByText('Expression')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByTestId('multi-type-button'))
+    await userEvent.click(screen.getByTestId('multi-type-button'))
     await waitFor(() => {
       expect(screen.getByText('Fixed value')).toBeInTheDocument()
       expect(screen.getByText('Runtime input')).toBeInTheDocument()
@@ -102,7 +103,7 @@ describe('MultiTypeDateTimePicker test', () => {
     expect(onChangeMock).not.toHaveBeenCalled()
     const multiTypeButton = screen.getByTestId('multi-type-button')
 
-    userEvent.click(multiTypeButton)
+    await userEvent.click(multiTypeButton)
     const runtimeInputText = screen.getByText('Runtime input')
     await waitFor(() => expect(runtimeInputText).toBeInTheDocument())
     userEvent.click(runtimeInputText)
@@ -122,7 +123,7 @@ describe('MultiTypeDateTimePicker test', () => {
       expect(onChangeMock).toHaveBeenCalledWith('dummy', MultiTypeInputValue.STRING, MultiTypeInputType.EXPRESSION)
     )
 
-    userEvent.click(multiTypeButton)
+    await userEvent.click(multiTypeButton)
     const fixedValueText = screen.getByText('Fixed value')
     await waitFor(() => expect(fixedValueText).toBeInTheDocument())
     userEvent.click(fixedValueText)
@@ -140,7 +141,7 @@ describe('MultiTypeDateTimePicker test', () => {
     })
     expect(onChangeMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByTestId('multi-type-button'))
+    await userEvent.click(screen.getByTestId('multi-type-button'))
     const fixedValueText = screen.getByText('Fixed value')
 
     await waitFor(() => expect(fixedValueText).toBeInTheDocument())

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { render, screen, fireEvent, waitFor, getByText as getByTextBody, act } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, getByText as getByTextBody } from '@testing-library/react'
 import { MultiTypeInputType, Formik } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -128,9 +128,7 @@ describe('Test VarFileList', () => {
     const { getByTestId, container } = renderComponent(defaultProps)
     const removeLabel = getByTestId('remove-varFile-0')
 
-    act(() => {
-      userEvent.click(removeLabel)
-    })
+    await userEvent.click(removeLabel)
 
     expect(container.querySelector('span[data-icon="Inline"]')).toBeInTheDocument()
     const addButton = await screen.findByText('plusAdd')

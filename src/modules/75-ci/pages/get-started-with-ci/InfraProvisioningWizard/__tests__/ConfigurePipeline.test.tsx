@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, act, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -42,12 +42,8 @@ describe('Test ConfigurePipeline component', () => {
         <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.ConfigurePipeline} />
       </TestWrapper>
     )
-    await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
-    })
-    await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.generatePipelineConfig'))
-    })
+    await userEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
+    await userEvent.click(getByText('ci.getStartedWithCI.generatePipelineConfig'))
     expect(container.querySelectorAll('.bp3-card')[0]).toHaveClass('Card--selected')
   })
 
@@ -110,9 +106,7 @@ describe('Test ConfigurePipeline component', () => {
         />
       </TestWrapper>
     )
-    await act(async () => {
-      userEvent.click(getByText('common.seeAdvancedOptions'))
-    })
+    await userEvent.click(getByText('common.seeAdvancedOptions'))
     expect(getByText('pipelineSteps.deploy.inputSet.branch')).toBeInTheDocument()
     expect(getByText('gitsync.gitSyncForm.yamlPathLabel')).toBeInTheDocument()
     rerender(
@@ -120,9 +114,7 @@ describe('Test ConfigurePipeline component', () => {
         <ConfigurePipeline {...props} showError={true} />
       </TestWrapper>
     )
-    await act(async () => {
-      userEvent.click(getByText('common.seeAdvancedOptions'))
-    })
+    await userEvent.click(getByText('common.seeAdvancedOptions'))
     const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="branch"]')
     expect(yamlPathValidationError).toBeInTheDocument()
   })

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -73,7 +80,7 @@ describe('Test Trigger Detail Page Test', () => {
     expect(getByText('triggers.activityHistory.emptyStateMessage')).toBeDefined()
   })
 
-  test('Show error message and retry button when listing api fails', () => {
+  test('Show error message and retry button when listing api fails', async () => {
     const refetchList = jest.fn()
     jest.spyOn(pipelineServices, 'useTriggerEventHistoryNew').mockImplementation((): any => {
       return {
@@ -88,7 +95,7 @@ describe('Test Trigger Detail Page Test', () => {
     expect(getByText('Failed to fetch')).toBeDefined()
     const retryButton = getByText(/Retry/)
     expect(retryButton).toBeDefined()
-    userEvent.click(retryButton)
+    await userEvent.click(retryButton)
     expect(refetchList).toHaveBeenCalled()
   })
 
@@ -123,9 +130,9 @@ describe('Test Trigger Detail Page Test', () => {
     })
     render(<TestComponent />)
     const viewPayloadyButton = document.querySelectorAll('[data-icon="main-notes"]')[1]
-    userEvent.click(viewPayloadyButton)
+    await userEvent.click(viewPayloadyButton)
     expect(await screen.findByRole('heading', { name: 'common.payload' })).toBeInTheDocument()
-    userEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }))
     await waitFor(() => {
       expect(viewPayloadyButton).toBeInTheDocument()
     })
@@ -137,7 +144,7 @@ describe('Test Trigger Detail Page Test', () => {
     })
     render(<TestComponent />)
     const viewPayloadyButton = document.querySelectorAll('[data-icon="main-notes"]')[2]
-    userEvent.click(viewPayloadyButton)
+    await userEvent.click(viewPayloadyButton)
     expect(await screen.findByRole('heading', { name: 'common.payload' })).toBeInTheDocument()
   })
 })

@@ -74,10 +74,10 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   const Harness = queryByValueAttribute('Harness')
   expect(Harness).not.toBeNull()
 
-  userEvent.click(Git!)
+  await userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)
   expect(connnectorRefInput).toBeTruthy()
-  userEvent.click(connnectorRefInput!)
+  await userEvent.click(connnectorRefInput!)
 
   await act(async () => {
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
@@ -85,7 +85,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
     expect(githubConnector1).toBeTruthy()
     const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
     expect(githubConnector2).toBeTruthy()
-    userEvent.click(githubConnector1)
+    await userEvent.click(githubConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
     await act(async () => {
       fireEvent.click(applySelected)
@@ -94,7 +94,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   })
   const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
   await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-  userEvent.click(secondStepContinueButton)
+  await userEvent.click(secondStepContinueButton)
 }
 
 const testGcfManifestLastStep = async (portal: HTMLElement): Promise<void> => {
@@ -108,7 +108,7 @@ const testGcfManifestLastStep = async (portal: HTMLElement): Promise<void> => {
     fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
   })
   const submitButton = getElementByText(portal, 'submit').parentElement as HTMLElement
-  userEvent.click(submitButton)
+  await userEvent.click(submitButton)
 }
 
 const testUpdateGcfFunctionDefinitionManifest = async (): Promise<void> => {
@@ -153,7 +153,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     const functionDefinitionSection = screen.getByTestId('function-definition-card')
     const addFunctionDefinitionBtn = within(functionDefinitionSection).getByText('common.addName')
     expect(addFunctionDefinitionBtn).toBeInTheDocument()
-    userEvent.click(addFunctionDefinitionBtn)
+    await userEvent.click(addFunctionDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -231,7 +231,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(editButtons).toHaveLength(1)
     const functionDefinitionManifestEditButton = editButtons[0]
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestEditButton)
+    await userEvent.click(functionDefinitionManifestEditButton)
 
     await testUpdateGcfFunctionDefinitionManifest()
 
@@ -270,7 +270,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(editButtons).toHaveLength(1)
     const functionDefinitionManifestEditButton = editButtons[0]
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestEditButton)
+    await userEvent.click(functionDefinitionManifestEditButton)
 
     await testUpdateGcfFunctionDefinitionManifest()
 
@@ -306,7 +306,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(1)
     const functionDefinitionManifestDeleteButton = deleteButtons[0]
     expect(functionDefinitionManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestDeleteButton)
+    await userEvent.click(functionDefinitionManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgGoogleCloudFunctionDefinitionManifestDelete)
@@ -341,7 +341,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(1)
     const functionDefinitionManifestDeleteButton = deleteButtons[0]
     expect(functionDefinitionManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestDeleteButton)
+    await userEvent.click(functionDefinitionManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgGoogleCloudFunctionGenOneDefinitionManifestDelete)
@@ -378,7 +378,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
     expect(editButtons).toHaveLength(1)
     const functionDefinitionManifestEditButton = editButtons[0]
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestEditButton)
+    await userEvent.click(functionDefinitionManifestEditButton)
 
     await testUpdateGcfFunctionDefinitionManifest()
 

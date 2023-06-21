@@ -79,8 +79,8 @@ describe('', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByLabelText('pipeline menu actions'))
-    userEvent.click(screen.getByText('pipeline.outOfSyncErrorStrip.reconcile'))
+    await userEvent.click(screen.getByLabelText('pipeline menu actions'))
+    await userEvent.click(screen.getByText('pipeline.outOfSyncErrorStrip.reconcile'))
 
     expect(await screen.findByText('pipeline.outOfSyncErrorStrip.reconcileStarted')).toBeInTheDocument()
 

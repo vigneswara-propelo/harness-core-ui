@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, act, waitFor } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -77,9 +77,7 @@ describe('FilterTagsSideBar', () => {
     expect(setFilteredTagsMock).not.toHaveBeenCalled()
 
     const tagButton = screen.getByText('one') as HTMLButtonElement
-    await act(async () => {
-      userEvent.click(tagButton)
-    })
+    await userEvent.click(tagButton)
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())
     const clickedTag = setFilteredTagsMock.mock.calls[0][0]
@@ -94,9 +92,7 @@ describe('FilterTagsSideBar', () => {
     expect(setFilteredTagsMock).not.toHaveBeenCalled()
 
     const tagButton = screen.getByText('two') as HTMLButtonElement
-    await act(async () => {
-      userEvent.click(tagButton)
-    })
+    await userEvent.click(tagButton)
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())
     const clickedTag = setFilteredTagsMock.mock.calls[0][0]

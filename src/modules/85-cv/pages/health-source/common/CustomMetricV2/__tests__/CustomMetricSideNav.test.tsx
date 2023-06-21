@@ -1,6 +1,13 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import * as Formik from 'formik'
-import { act, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import CustomMetricSideNav from '../components/CustomMetricSideNav'
@@ -40,7 +47,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     } as unknown as any)
   })
 
-  test('should render the component', () => {
+  test('should render the component', async () => {
     const { container } = render(
       <TestWrapper>
         <Formik.Formik initialValues={formikValuesMock} onSubmit={() => Promise.resolve()}>
@@ -51,15 +58,11 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     screen.debug(container)
 
-    act(() => {
-      userEvent.click(screen.getByTestId('invalidMetricSelect'))
-    })
+    await userEvent.click(screen.getByTestId('invalidMetricSelect'))
 
     expect(setFieldValueMock).not.toHaveBeenCalled()
 
-    act(() => {
-      userEvent.click(screen.getByTestId('validMetricSelect'))
-    })
+    await userEvent.click(screen.getByTestId('validMetricSelect'))
 
     expect(setFieldValueMock).toHaveBeenCalled()
   })

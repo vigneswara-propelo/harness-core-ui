@@ -7,7 +7,7 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   externalAPICallLogsJSONResponse,
@@ -74,11 +74,9 @@ describe('ExternalAPICallContent', () => {
       screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query')
     ).toBeInTheDocument()
 
-    await act(async () => {
-      await userEvent.click(
-        screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query')
-      )
-    })
+    await userEvent.click(
+      screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query')
+    )
 
     expect(screen.getByTestId('externalAPICallBodyContent_Json')).toBeInTheDocument()
   })

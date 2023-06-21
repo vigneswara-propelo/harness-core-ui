@@ -149,7 +149,7 @@ describe('Pipeline Stage shell view tests', () => {
     const previousButton = await screen.findByRole('button', {
       name: /previous/i
     })
-    userEvent.click(previousButton)
+    await userEvent.click(previousButton)
     expect(overviewTab.getAttribute('aria-selected')).toBe('true')
 
     // Outputs Tab

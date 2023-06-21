@@ -46,7 +46,7 @@ jest.mock('lodash-es', () => ({
   noop: jest.fn()
 }))
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 jest.mock('resize-observer-polyfill', () => {
   class ResizeObserver {
     static default = ResizeObserver
@@ -114,7 +114,7 @@ describe('PipelineStageOutputSection Test', () => {
     const configureButton = screen.getByRole('button', {
       name: /cog/i
     })
-    userEvent.click(configureButton)
+    await userEvent.click(configureButton)
     const configureOptionsDialog = findDialogContainer() as HTMLElement
     expect(
       await findByRole(configureOptionsDialog, 'heading', {
@@ -130,7 +130,7 @@ describe('PipelineStageOutputSection Test', () => {
 
     // Delete button test
     const deleteOutputButton = await screen.findByTestId('delete-output-2')
-    userEvent.click(deleteOutputButton)
+    await userEvent.click(deleteOutputButton)
     expect(screen.queryByTestId('output-row-2')).not.toBeInTheDocument()
 
     // Add Output button test
@@ -168,19 +168,19 @@ describe('PipelineStageOutputSection Test', () => {
     const newOutputAddButton = screen.getByRole('button', {
       name: 'pipeline.pipelineChaining.newOutput'
     })
-    userEvent.click(newOutputAddButton)
+    await userEvent.click(newOutputAddButton)
     const firstOutputRow = await screen.findByTestId('output-row-0')
     const firstOutputNameInput = await within(firstOutputRow).findByPlaceholderText(
       'pipeline.pipelineChaining.enterOutputName'
     )
-    userEvent.type(firstOutputNameInput, 'output1')
+    await userEvent.type(firstOutputNameInput, 'output1')
 
-    userEvent.click(newOutputAddButton)
+    await userEvent.click(newOutputAddButton)
     const secondOutputRow = await screen.findByTestId('output-row-1')
     const secondOutputNameInput = await within(secondOutputRow).findByPlaceholderText(
       'pipeline.pipelineChaining.enterOutputName'
     )
-    userEvent.type(secondOutputNameInput, 'output1')
+    await userEvent.type(secondOutputNameInput, 'output1')
     act(() => {
       formikRef.current?.submitForm()
     })

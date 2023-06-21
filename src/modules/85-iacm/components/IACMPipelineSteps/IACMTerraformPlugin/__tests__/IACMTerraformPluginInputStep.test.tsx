@@ -85,7 +85,7 @@ describe('Test iacm terraform plugin input step', () => {
     expect(timeout).toBeInTheDocument()
   })
 
-  test('timeout should be updated', () => {
+  test('timeout should be updated', async () => {
     const data = {
       type: StepType.IACMTerraformPlugin,
       name: 'test name',
@@ -98,7 +98,7 @@ describe('Test iacm terraform plugin input step', () => {
     const { getByPlaceholderText } = renderComponent(data)
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    userEvent.type(timeout, '10m')
+    await userEvent.type(timeout, '10m')
     expect(timeout).toHaveDisplayValue('10m')
   })
 })

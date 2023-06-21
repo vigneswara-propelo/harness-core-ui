@@ -78,7 +78,7 @@ jest.mock('react-monaco-editor', () => ({
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 const branches = { data: ['master', 'devBranch', 'feature'], status: 'SUCCESS' }
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))

@@ -8,7 +8,6 @@
 
 import React from 'react'
 import { act, findByText, fireEvent, render, waitFor, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -204,7 +203,7 @@ describe('Bamboo Artifact tests', () => {
     })
   })
 
-  test('onclick of previous button', () => {
+  test('onclick of previous button', async () => {
     const { container } = render(
       <TestWrapper>
         <BambooArtifact
@@ -222,7 +221,7 @@ describe('Bamboo Artifact tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByRole('button', { name: /back/i }))
+    fireEvent.click(screen.getByRole('button', { name: /back/i }))
 
     expect(container).toMatchSnapshot()
   })

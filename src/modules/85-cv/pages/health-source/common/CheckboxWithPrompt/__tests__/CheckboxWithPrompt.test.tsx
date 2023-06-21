@@ -1,7 +1,13 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import CheckboxWithPrompt from '../CheckboxWithPrompt'
 
@@ -35,18 +41,14 @@ describe('CheckboxWithPrompt', () => {
 
     expect(container.querySelector('input[type="checkbox"]')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(container.querySelector('input[type="checkbox"]')!)
-    })
+    await userEvent.click(container.querySelector('input[type="checkbox"]')!)
 
     expect(onChange).not.toHaveBeenCalled()
 
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
     const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-    act(() => {
-      userEvent.click(modalDeleteBtn!)
-    })
+    await userEvent.click(modalDeleteBtn!)
 
     await waitFor(() => {
       expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
@@ -69,9 +71,7 @@ describe('CheckboxWithPrompt', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(container.querySelector('input[type="checkbox"]')!)
-    })
+    await userEvent.click(container.querySelector('input[type="checkbox"]')!)
 
     expect(onChange).toHaveBeenCalledWith(false, 'test checkbox name')
   })

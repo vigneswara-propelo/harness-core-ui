@@ -61,7 +61,7 @@ describe('ConnectorReferenceField tests', () => {
 
     const clearSelectionIcon = queryByAttribute('data-icon', container, 'main-delete')
     expect(clearSelectionIcon).toBeInTheDocument()
-    userEvent.click(clearSelectionIcon!)
+    await userEvent.click(clearSelectionIcon!)
     expect(clearSelectionHandler).toBeCalledTimes(1)
     expect(getByText(placeholderText)).toBeInTheDocument()
     expect(clearSelectionIcon).not.toBeInTheDocument()

@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import mockImport from 'framework/utils/mockImport'
 
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
@@ -53,7 +52,7 @@ describe('ServicesListPage', () => {
     )
 
     const row = container.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0]
-    await fireEvent.click(row!)
+    fireEvent.click(row!)
     await waitFor(() => getByTestId('location'))
 
     expect(getByTestId('location')).toHaveTextContent('/account/dummy/cd/orgs/dummy/projects/dummy/services/dfg')
@@ -78,11 +77,11 @@ describe('ServicesListPage', () => {
     )
 
     const row = container.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0]
-    await fireEvent.click(row!)
+    fireEvent.click(row!)
     await waitFor(() => expect(getByText('cd.serviceList.noIdentifier')).toBeInTheDocument())
   })
 
-  test('Should open Add-ServiceModal, grid and list view on click', () => {
+  test('Should open Add-ServiceModal, grid and list view on click', async () => {
     mockImport('services/cd-ng', {
       useGetServiceList: () => ({
         data: serviceListResponse,
@@ -98,12 +97,12 @@ describe('ServicesListPage', () => {
         <ServicesListPage />
       </TestWrapper>
     )
-    userEvent.click(container.querySelector('[data-testid="add-service"]') as HTMLElement)
+    fireEvent.click(container.querySelector('[data-testid="add-service"]') as HTMLElement)
     const form = findDialogContainer()
     expect(form).toBeTruthy()
     expect(form).toMatchSnapshot()
-    userEvent.click(container.querySelector('[icon="grid-view"]') as HTMLElement)
-    userEvent.click(container.querySelector('[icon="list"]') as HTMLElement)
+    fireEvent.click(container.querySelector('[icon="grid-view"]') as HTMLElement)
+    fireEvent.click(container.querySelector('[icon="list"]') as HTMLElement)
     expect(container).toMatchSnapshot()
   })
 

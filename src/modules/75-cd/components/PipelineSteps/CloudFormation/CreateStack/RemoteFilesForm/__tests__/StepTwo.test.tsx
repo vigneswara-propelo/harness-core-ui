@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, act } from '@testing-library/react'
+import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -106,9 +106,7 @@ describe('Test cloudformation remote wizard step one', () => {
       </TestWrapper>
     )
     const submit = getByTestId('submit')
-    act(() => {
-      userEvent.click(submit)
-    })
+    await userEvent.click(submit)
     expect(container).toMatchSnapshot()
   })
 
@@ -463,15 +461,13 @@ describe('Test cloudformation remote wizard step one', () => {
       </TestWrapper>
     )
     const addButton = getByTestId('add-header')
-    act(() => {
-      userEvent.click(addButton)
-    })
+    fireEvent.click(addButton)
+
     expect(container).toMatchSnapshot()
 
     const removeButton = getByTestId('remove-header-0')
-    act(() => {
-      userEvent.click(removeButton)
-    })
+    fireEvent.click(removeButton)
+
     expect(container).toMatchSnapshot()
   })
 

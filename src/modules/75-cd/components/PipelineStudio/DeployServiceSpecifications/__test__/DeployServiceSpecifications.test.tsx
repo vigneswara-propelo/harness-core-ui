@@ -7,7 +7,7 @@
 
 /* eslint-disable jest/no-disabled-tests */
 import React from 'react'
-import { act, fireEvent, render, waitFor, getByText as getElementByText, within } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, getByText as getElementByText, within, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { Formik } from '@harness/uicore'
@@ -109,7 +109,7 @@ describe('Deploy service stage specifications', () => {
     factory.registerStep(new ECSServiceSpec())
   })
   test(`Propagate from option and dropdown to select previous stage and service should be present`, async () => {
-    const { getByPlaceholderText, getByText } = render(
+    const { getByText } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
           <PipelineContext.Provider value={getOverrideContextValue()}>
@@ -121,14 +121,13 @@ describe('Deploy service stage specifications', () => {
       </TestWrapper>
     )
 
-    const propagateFromDropdownDiv = document.getElementsByClassName('stageSelectDropDown')[0]
-    act(() => {
-      fireEvent.click(propagateFromDropdownDiv)
-    })
-    const propagateFromDropdown = getByPlaceholderText('- pipeline.selectStagePlaceholder -')
-    act(() => {
-      userEvent.selectOptions(propagateFromDropdown, 'st1')
-    })
+    const propagateFromDropdownDiv = document.querySelector('.stageSelectDropDown') as HTMLElement
+    expect(propagateFromDropdownDiv).toBeInTheDocument()
+    await userEvent.click(propagateFromDropdownDiv)
+
+    const propagateFromDropdown = screen.getByPlaceholderText(/pipeline.selectStagePlaceholder/)
+    expect(propagateFromDropdown).toBeInTheDocument()
+    await userEvent.click(propagateFromDropdown)
 
     //  Service 1 Option
     const service1Option = getByText('Stage [Stage 1] - Service [Service 1]')
@@ -229,7 +228,7 @@ describe('Deploy service stage specifications', () => {
     expect(getByText('deploymentTypeText')).toBeInTheDocument()
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
-    userEvent.click(serverlessLambda)
+    await userEvent.click(serverlessLambda)
     await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeInTheDocument())
   })
 
@@ -247,10 +246,10 @@ describe('Deploy service stage specifications', () => {
     expect(getByText('deploymentTypeText')).toBeDefined()
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
-    userEvent.click(serverlessLambda)
+    await userEvent.click(serverlessLambda)
     await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeDefined())
     const addManifestButton = getByText('pipeline.manifestType.addManifestLabel')
-    userEvent.click(addManifestButton)
+    await userEvent.click(addManifestButton)
 
     // Find Add Manifest dialog portal div
     const portalDivElements = document.getElementsByClassName('bp3-portal')
@@ -296,7 +295,7 @@ describe('Deploy service stage specifications', () => {
 
     // Select ECS deployment type
     const amazonEcs = getByText('pipeline.serviceDeploymentTypes.amazonEcs')
-    userEvent.click(amazonEcs)
+    await userEvent.click(amazonEcs)
 
     // By checking Add buttons, check if manifest section for each manifest type is rendered
     const allPlusAddManifestButtons = await findAllByText(/common.addName/)

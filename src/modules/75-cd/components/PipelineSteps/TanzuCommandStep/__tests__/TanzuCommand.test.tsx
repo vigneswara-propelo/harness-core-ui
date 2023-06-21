@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -59,14 +59,14 @@ describe('TanzuCommandStep tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.clear(nameInput!)
-    userEvent.type(nameInput!, 'Tanzu Command Step')
+    await userEvent.clear(nameInput!)
+    await userEvent.type(nameInput!, 'Tanzu Command Step')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Tanzu Command Step'))
     expect(getByText('Tanzu_Command_Step')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '20m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('20m'))
 
     fireEvent.click(container.querySelector('[data-icon="fixed-input"]') as HTMLElement)
@@ -133,11 +133,10 @@ describe('TanzuCommandStep tests', () => {
 
     const scriptTypeDropdown = getByTestId('templateOptions')
     expect((getByText('resourcePage.fileStore') as HTMLOptionElement).selected).toBeTruthy()
-    fireEvent.click(scriptTypeDropdown!)
+    await userEvent.click(scriptTypeDropdown!)
 
-    act(() => {
-      userEvent.selectOptions(scriptTypeDropdown, 'inline')
-    })
+    await userEvent.click(screen.getByText('inline'))
+
     expect(container).toMatchSnapshot()
   })
   test('should show error on submit with invalid data with inline script', async () => {
@@ -276,7 +275,7 @@ describe('TanzuCommandStep tests', () => {
     )
 
     const submitBtn = getByText('Submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(container).toMatchSnapshot()
     await waitFor(() => expect(getByText('fieldRequired')).toBeInTheDocument())
@@ -325,7 +324,7 @@ describe('TanzuCommandStep tests', () => {
       />
     )
     const submitBtn = getByText('Submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('fieldRequired')).toBeInTheDocument())
   })
 
@@ -374,11 +373,11 @@ describe('TanzuCommandStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '10m')
-    userEvent.click(submitBtn)
+    await userEvent.type(timeoutInput!, '10m')
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Tanzu_Command_Step',

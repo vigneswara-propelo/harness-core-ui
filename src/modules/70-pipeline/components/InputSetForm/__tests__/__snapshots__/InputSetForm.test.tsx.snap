@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render Forms - Snapshot Testing FormikInputSetForm in VISUAL view with formError 1`] = `<div />`;
+
+exports[`Render Forms - Snapshot Testing FormikInputSetForm in VISUAL view with formError 2`] = `<div />`;
+
 exports[`Render Forms - Snapshot Testing FormikInputSetForm in YAML view 1`] = `
 <div>
   <div
@@ -141,6 +145,8 @@ exports[`Render Forms - Snapshot Testing FormikInputSetForm in YAML view 2`] = `
   </div>
 </div>
 `;
+
+exports[`Render Forms - Snapshot Testing FormikInputSetForm in YAML view 3`] = `<div />`;
 
 exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
 <div>

@@ -242,7 +242,7 @@ describe('<LogsContent /> tests', () => {
   })
 
   describe('Logs test', () => {
-    test('SingleSectionLogs', () => {
+    test('SingleSectionLogs', async () => {
       ;(useLogsContent as jest.Mock).mockImplementation(() => ({
         state: { ...testReducerState, units: ['Section 1'] },
         actions
@@ -254,7 +254,7 @@ describe('<LogsContent /> tests', () => {
         </TestWrapper>
       )
       const button = getByText('Bottom')
-      userEvent.click(button)
+      fireEvent.click(button)
       expect(container).toMatchSnapshot()
     })
 

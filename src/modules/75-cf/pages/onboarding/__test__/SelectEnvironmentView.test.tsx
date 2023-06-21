@@ -105,7 +105,7 @@ describe('SelectEnvironmentView', () => {
 
     const envInput = screen.getByRole('textbox', { name: 'cf.onboarding.selectOrCreateEnvironment' })
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     await waitFor(() => {
       // one existing environment in dropdown
@@ -113,16 +113,16 @@ describe('SelectEnvironmentView', () => {
       expect(document.getElementsByTagName('li')[0]).toHaveTextContent('bar')
     })
 
-    await userEvent.type(envInput, 'new env name', { allAtOnce: true })
+    await userEvent.type(envInput, 'new env name')
 
     // click to open Create Environment modal
-    userEvent.click(screen.getByText('plus'))
+    await userEvent.click(screen.getByText('plus'))
 
     await waitFor(() => {
       expect(screen.getByText('cf.environments.create.title')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cancel'))
+    await userEvent.click(screen.getByText('cancel'))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.environments.create.title')).not.toBeInTheDocument()
@@ -191,7 +191,7 @@ describe('SelectEnvironmentView', () => {
 
     expect(createNewEnvTextbox).toBeInTheDocument()
 
-    await userEvent.type(createNewEnvTextbox, 'new env name', { allAtOnce: true })
+    await userEvent.type(createNewEnvTextbox, 'new env name')
     userEvent.click(screen.getByRole('button', { name: 'cf.onboarding.createEnv' }))
 
     // modal should be open
@@ -256,7 +256,7 @@ describe('SelectEnvironmentView', () => {
 
     const envInput = screen.getByRole('textbox', { name: 'cf.onboarding.selectOrCreateEnvironment' })
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     await waitFor(() => {
       // one existing environment in dropdown
@@ -265,17 +265,17 @@ describe('SelectEnvironmentView', () => {
     })
 
     // type env name
-    await userEvent.type(envInput, 'new env name', { allAtOnce: true })
+    await userEvent.type(envInput, 'new env name')
 
     // click to open Create Environment modal
-    userEvent.click(screen.getByText('plus'))
+    await userEvent.click(screen.getByText('plus'))
 
     await waitFor(() => {
       // modal should be open
       expect(screen.getByText('cf.environments.create.title')).toBeVisible()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(createEnvironment).toHaveBeenCalled()
@@ -322,7 +322,7 @@ describe('SelectEnvironmentView', () => {
       expect(setApiKey).not.toHaveBeenCalled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'cf.environments.apiKeys.addKeyTitle' })).toBeVisible()
@@ -330,15 +330,9 @@ describe('SelectEnvironmentView', () => {
       expect(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' })).toBeVisible()
     })
 
-    await userEvent.type(
-      screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }),
-      'foo bar server sdk key',
-      {
-        allAtOnce: true
-      }
-    )
+    await userEvent.type(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }), 'foo bar server sdk key')
 
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(createKey).toHaveBeenCalled()
@@ -381,7 +375,7 @@ describe('SelectEnvironmentView', () => {
       expect(setApiKey).not.toHaveBeenCalled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'cf.environments.apiKeys.addKeyTitle' })).toBeVisible()
@@ -389,15 +383,9 @@ describe('SelectEnvironmentView', () => {
       expect(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' })).toBeVisible()
     })
 
-    await userEvent.type(
-      screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }),
-      'foo bar client sdk key',
-      {
-        allAtOnce: true
-      }
-    )
+    await userEvent.type(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }), 'foo bar client sdk key')
 
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(createKey).toHaveBeenCalled()

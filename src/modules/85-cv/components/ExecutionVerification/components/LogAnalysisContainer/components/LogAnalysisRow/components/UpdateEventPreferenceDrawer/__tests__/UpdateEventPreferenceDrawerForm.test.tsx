@@ -1,6 +1,13 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import UpdateEventPreferenceDrawerForm from '../UpdateEventPreferenceDrawerForm'
@@ -12,7 +19,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-  test('UpdateEventPreferenceDrawerForm calls correct function upon submitting the form', () => {
+  test('UpdateEventPreferenceDrawerForm calls correct function upon submitting the form', async () => {
     render(
       <TestWrapper
         path="/:accountId/:projectIdentifier/:orgIdentifier"
@@ -22,9 +29,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId(/updatePreferenceDrawerClose_button/))
-    })
+    await userEvent.click(screen.getByTestId(/updatePreferenceDrawerClose_button/))
 
     expect(onHideCallbackMock).toHaveBeenCalled()
   })
@@ -39,9 +44,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId(/updatePreferenceDrawerSubmit_button/))
-    })
+    await userEvent.click(screen.getByTestId(/updatePreferenceDrawerSubmit_button/))
 
     await waitFor(() => {
       expect(screen.getByText(/cv.logs.riskPriorityValidation/)).toBeInTheDocument()
@@ -73,18 +76,14 @@ describe('UpdateEventPreferenceDrawerForm', () => {
 
     const reasonTextarea = screen.getByPlaceholderText('cv.logs.reasonPlaceholder')
 
-    act(() => {
-      userEvent.clear(reasonTextarea)
-      userEvent.type(reasonTextarea, 'This is not a risk again')
-    })
+    await userEvent.clear(reasonTextarea)
+    await userEvent.type(reasonTextarea, 'This is not a risk again')
 
     const eventPreferenceSubmitButton = screen.getByTestId('updatePreferenceDrawerSubmit_button')
 
     expect(eventPreferenceSubmitButton).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(eventPreferenceSubmitButton)
-    })
+    await userEvent.click(eventPreferenceSubmitButton)
 
     await waitFor(() => {
       expect(onHideCallbackMock).toHaveBeenCalledWith(true)

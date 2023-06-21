@@ -95,7 +95,7 @@ describe('ExecutionArtifactListView', () => {
     renderArtifactsTab()
     const rows = await screen.findAllByRole('row')
 
-    userEvent.click(
+    await userEvent.click(
       within(rows[2]).getByRole('button', {
         name: '5'
       })

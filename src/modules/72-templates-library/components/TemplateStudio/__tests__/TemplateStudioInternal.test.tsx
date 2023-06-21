@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Link } from 'react-router-dom'
 
 import userEvent from '@testing-library/user-event'
@@ -171,20 +171,14 @@ describe('<TemplateStudioInternal /> tests', () => {
     )
 
     const toggle = container.querySelector('[data-name="toggle-option-two"]')
-    act(() => {
-      userEvent.click(toggle!)
-    })
+    await userEvent.click(toggle!)
     await waitFor(() => expect(toggle?.className).toContain('PillToggle--selected'))
 
     const toggle2 = container.querySelector('[data-name="toggle-option-one"]')
-    act(() => {
-      userEvent.click(toggle2!)
-    })
+    await userEvent.click(toggle2!)
     await waitFor(() => expect(toggle2?.className).toContain('PillToggle--selected'))
 
-    act(() => {
-      userEvent.click(toggle2!)
-    })
+    await userEvent.click(toggle2!)
     await waitFor(() => expect(toggle2?.className).not.toEqual('PillToggle--item'))
   })
 
@@ -232,7 +226,7 @@ describe('<TemplateStudioInternal /> tests', () => {
 })
 
 describe('yaml validation in template studio', () => {
-  test('yaml parsed but error in validation', () => {
+  test('yaml parsed but error in validation', async () => {
     const errorMap = new Map()
     errorMap.set(1, 'err1')
     errorMap.set(2, 'err2')
@@ -254,14 +248,14 @@ describe('yaml validation in template studio', () => {
     )
 
     const toggle = container.querySelector('[data-name="toggle-option-two"]')
-    userEvent.click(toggle!)
+    await userEvent.click(toggle!)
     expect(toggle?.className).toContain('PillToggle--selected')
 
     const toggle2 = container.querySelector('[data-name="toggle-option-one"]')
-    userEvent.click(toggle2!)
+    await userEvent.click(toggle2!)
     waitFor(() => expect(toggle2?.className).toContain('PillToggle--selected'))
 
-    userEvent.click(toggle2!)
+    await userEvent.click(toggle2!)
     waitFor(() => expect(toggle2?.className).not.toEqual('PillToggle--item'))
   })
 })

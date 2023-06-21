@@ -5,7 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { fireEvent, render, act } from '@testing-library/react'
+const eventSourcePolyfillFn = jest.fn().mockImplementation((_, options) => {
+  receivedHeaders = options.headers
+  return eventSource
+})
+
+import { fireEvent, render, act, waitFor } from '@testing-library/react'
 import React from 'react'
 import SessionToken from 'framework/utils/SessionToken'
 import routes from '@common/RouteDefinitions'
@@ -30,10 +35,7 @@ const eventSource: EventSource = {
 }
 
 let receivedHeaders: Record<string, string>
-const eventSourcePolyfillFn = jest.fn().mockImplementation((_, options) => {
-  receivedHeaders = options.headers
-  return eventSource
-})
+
 jest.mock('event-source-polyfill', () => ({
   EventSourcePolyfill: eventSourcePolyfillFn
 }))
@@ -130,7 +132,7 @@ describe('use Event Source Stream', () => {
       </TestWrapper>
     )
 
-    expect(eventSourcePolyfillFn).toHaveBeenCalled()
+    await waitFor(() => expect(eventSourcePolyfillFn).toHaveBeenCalled())
     expect(receivedHeaders['x-foo']).toEqual('bar')
     expect(receivedHeaders['Authorization']).toEqual('Bearer token')
   })

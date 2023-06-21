@@ -8,7 +8,6 @@
 import React from 'react'
 import { render, waitFor, findByText as findByTextGlobal, queryByAttribute, getByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { act } from 'react-dom/test-utils'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
@@ -65,19 +64,19 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     const toggle = container.querySelector('.Toggle--input')!
 
-    userEvent.click(toggle)
+    await userEvent.click(toggle)
 
     const multi = await findByTestId('multi-select-dropdown-button')
 
-    userEvent.click(multi)
+    await userEvent.click(multi)
 
     await waitFor(() => expect(document.body.querySelector('.bp3-menu')).toBeInTheDocument())
 
     const menu = document.body.querySelector<HTMLDivElement>('.bp3-menu')!
     const svc1 = await findByTextGlobal(menu, 'Service 1')
-    userEvent.click(svc1)
+    await userEvent.click(svc1)
 
-    userEvent.click(multi)
+    await userEvent.click(multi)
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({
@@ -128,7 +127,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     const delBtn = await findByTestId('delete-service-svc_1')
 
     expect(container).toMatchSnapshot()
-    userEvent.click(delBtn)
+    await userEvent.click(delBtn)
 
     const confirmationModal1 = await findByTextGlobal(
       document.body,
@@ -137,13 +136,9 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     const cancel = await findByTextGlobal(confirmationModal1.parentElement!.parentElement!, 'cancel')
 
-    act(() => {
-      userEvent.click(cancel)
-    })
+    await userEvent.click(cancel)
 
-    act(() => {
-      userEvent.click(delBtn)
-    })
+    await userEvent.click(delBtn)
 
     const confirmationModal2 = await findByTextGlobal(
       document.body,
@@ -151,7 +146,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     )
 
     const apply = await findByTextGlobal(confirmationModal2.parentElement!.parentElement!, 'applyChanges')
-    userEvent.click(apply)
+    await userEvent.click(apply)
 
     expect(onUpdate).toHaveBeenLastCalledWith({
       services: {
@@ -183,7 +178,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     await waitFor(() => expect(container.querySelector('.bp3-spinner')).not.toBeInTheDocument())
 
     const apply = queryByAttribute('name', container, 'parallel')!
-    userEvent.click(apply)
+    await userEvent.click(apply)
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({
@@ -234,15 +229,13 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     const toggle = container.querySelector('.Toggle--input')!
 
-    act(() => {
-      userEvent.click(toggle)
-    })
+    await userEvent.click(toggle)
 
     const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
-    userEvent.click(fixedIcon)
+    await userEvent.click(fixedIcon)
 
     const runtimeMenu = await findByTextGlobal(document.body, 'Runtime input')
-    userEvent.click(runtimeMenu)
+    await userEvent.click(runtimeMenu)
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({ services: { values: '<+input>', metadata: { parallel: true } } })
@@ -279,7 +272,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     const toggle = container.querySelector('.Toggle--input')!
 
-    userEvent.click(toggle)
+    await userEvent.click(toggle)
 
     const confirmationDialog = findDialogContainer() as HTMLElement
     await waitFor(() => expect(confirmationDialog).toBeTruthy())

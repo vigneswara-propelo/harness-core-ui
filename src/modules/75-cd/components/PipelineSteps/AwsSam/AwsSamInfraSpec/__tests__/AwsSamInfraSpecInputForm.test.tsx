@@ -116,7 +116,7 @@ describe('AwsSamInfraSpecInputForm tests', () => {
 
     // Choose region
     const regionDropdownIcon = allDropDownIcons[1]
-    userEvent.click(regionDropdownIcon!)
+    await userEvent.click(regionDropdownIcon!)
     expect(portalDivs.length).toBe(2)
     const regionDropdownPortalDiv = portalDivs[1]
     const regionSelectListMenu = regionDropdownPortalDiv.querySelector('.bp3-menu')

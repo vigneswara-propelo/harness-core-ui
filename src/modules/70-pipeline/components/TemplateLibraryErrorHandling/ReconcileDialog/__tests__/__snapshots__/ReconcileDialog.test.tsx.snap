@@ -255,7 +255,7 @@ exports[`<ReconcileDialog /> tests initial render with children 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-align-center StyledProps--color StyledProps--color-red500"
                   >
-                    template_ng_1.getYamlDiffPromise is not a function
+                    (0 , template_ng_1.getYamlDiffPromise) is not a function
                   </p>
                   <button
                     aria-label="Retry"

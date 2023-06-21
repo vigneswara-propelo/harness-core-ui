@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { render, waitFor, screen, RenderResult, within, getByTestId } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 import mockImport from 'framework/utils/mockImport'
 import * as usePermission from '@rbac/hooks/usePermission'
@@ -25,7 +24,7 @@ import services from './mocks/services.json'
 import environments from './mocks/environments.json'
 import pipelines from './mocks/pipelinesWithRecentExecutions.json'
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 const showMigrateResourceModal = jest.fn()
 const openRunPipelineModal = jest.fn()
@@ -195,7 +194,7 @@ describe('CD Pipeline List Page', () => {
       name: /refresh/i
     })
     expect(mutateListOfPipelines).toHaveBeenCalledTimes(1)
-    userEvent.click(refresh)
+    await userEvent.click(refresh)
     expect(mutateListOfPipelines).toHaveBeenCalledTimes(2)
   })
 
@@ -203,7 +202,7 @@ describe('CD Pipeline List Page', () => {
     renderPipelinesListPage()
     expect(useGetRepositoryList).toBeCalled()
     const addPipeline = (await screen.findAllByTestId('add-pipeline'))[0]
-    userEvent.click(addPipeline)
+    await userEvent.click(addPipeline)
     const location = await screen.findByTestId('location')
     expect(
       location.innerHTML.endsWith(routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: '-1' } as any))
@@ -212,12 +211,12 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able to import pipeline', async () => {
     renderPipelinesListPage()
-    userEvent.click(
+    await userEvent.click(
       await screen.findByRole('button', {
         name: /chevron-down/i
       })
     )
-    userEvent.click(await screen.findByText('common.importFromGit'))
+    await userEvent.click(await screen.findByText('common.importFromGit'))
     expect(showMigrateResourceModal).toHaveBeenCalled()
   })
 
@@ -228,10 +227,10 @@ describe('CD Pipeline List Page', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const runPipeline = await within(menuContent).findByText('runPipelineText')
-    userEvent.click(runPipeline)
+    await userEvent.click(runPipeline)
     expect(openRunPipelineModal).toHaveBeenCalled()
   })
 
@@ -242,10 +241,10 @@ describe('CD Pipeline List Page', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const viewPipeline = await within(menuContent).findByText('pipeline.viewPipeline')
-    userEvent.click(viewPipeline)
+    await userEvent.click(viewPipeline)
     const location = await screen.findByTestId('location')
     expect(
       location.innerHTML.endsWith(
@@ -265,13 +264,13 @@ describe('CD Pipeline List Page', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const deleteBtn = await within(menuContent).findByText('delete')
-    userEvent.click(deleteBtn)
+    await userEvent.click(deleteBtn)
     await waitFor(() => screen.getByText('delete common.pipeline'))
     const form = findDialogContainer() as HTMLElement
-    userEvent.click(
+    await userEvent.click(
       within(form).getByRole('button', {
         name: /delete/i
       })
@@ -288,7 +287,7 @@ describe('CD Pipeline List Page', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const moveConfigToRemote = getByTestId(menuContent, 'moveConfigToRemote')
     expect(moveConfigToRemote?.classList.contains('bp3-disabled')).toBe(false)
@@ -302,7 +301,7 @@ describe('CD Pipeline List Page', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const moveConfigToRemote = getByTestId(menuContent, 'moveConfigToRemote')
     expect(moveConfigToRemote?.classList.contains('bp3-disabled')).toBe(true)
@@ -321,7 +320,7 @@ describe('CD Pipeline List Page', () => {
     expect(useGetRepositoryList).toBeCalled()
     expect(await screen.findByText('NG Docker Image')).toBeInTheDocument()
     mutateListOfPipelines.mockReset()
-    userEvent.type(screen.getByRole('searchbox'), 'asd')
+    await userEvent.type(screen.getByRole('searchbox'), 'asd')
     jest.runOnlyPendingTimers()
     expect(mutateListOfPipelines).toHaveBeenCalledWith(
       { filterType: 'PipelineSetup' },
@@ -350,15 +349,15 @@ describe('CD Pipeline List Page', () => {
       expect(element).toBeInTheDocument()
       return element
     })
-    userEvent.click(filtersButton!)
+    await userEvent.click(filtersButton!)
 
     const newFilterButton = await screen.findByLabelText('filters.newFilter')
-    userEvent.click(newFilterButton)
+    await userEvent.click(newFilterButton)
 
     const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
-    userEvent.clear(filterNameInput)
-    userEvent.type(filterNameInput, 'foo')
-    userEvent.click(screen.getByLabelText('save'))
+    await userEvent.clear(filterNameInput)
+    await userEvent.type(filterNameInput, 'foo')
+    await userEvent.click(screen.getByLabelText('save'))
 
     expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
   })
@@ -393,7 +392,7 @@ describe('CI Pipeline List Page', () => {
 
     // test sorting
     mutateListOfPipelines.mockReset()
-    userEvent.click(screen.getByText('pipeline.lastExecution'))
+    await userEvent.click(screen.getByText('pipeline.lastExecution'))
     expect(mutateListOfPipelines).toHaveBeenCalledWith(
       { filterType: 'PipelineSetup' },
       {
@@ -474,19 +473,17 @@ describe('CI Pipeline List Page', () => {
     renderPipelinesListPage('ci')
     const rows = await screen.findAllByRole('row')
     const pipelineRow = rows[1]
-    await act(async () => {
-      userEvent.click(pipelineRow)
-      await waitFor(() => getByTestId(document.body, 'location'))
-      expect(
-        getByTestId(document.body, 'location').innerHTML.endsWith(
-          routes.toPipelineStudioV1({
-            ...getModuleParams('ci'),
-            pipelineIdentifier: 'Sonar_Develop',
-            storeType: 'INLINE'
-          } as any)
-        )
-      ).toBeTruthy()
-    })
+    await userEvent.click(pipelineRow)
+    await waitFor(() => getByTestId(document.body, 'location'))
+    expect(
+      getByTestId(document.body, 'location').innerHTML.endsWith(
+        routes.toPipelineStudioV1({
+          ...getModuleParams('ci'),
+          pipelineIdentifier: 'Sonar_Develop',
+          storeType: 'INLINE'
+        } as any)
+      )
+    ).toBeTruthy()
   })
 })
 

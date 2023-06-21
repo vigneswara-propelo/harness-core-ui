@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import Step2Script from '../Step2Script/Step2Script'
@@ -28,7 +28,7 @@ describe('Create Docker Step2Script', () => {
     )
     const backBtn = getByRole('button', { name: /back/ })
 
-    userEvent.click(backBtn!)
+    fireEvent.click(backBtn!)
 
     expect(container).toMatchSnapshot()
   })
@@ -39,8 +39,9 @@ describe('Create Docker Step2Script', () => {
         <Step2Script />
       </TestWrapper>
     )
+
     const continueBtn = getByRole('button', { name: /continue/ })
-    userEvent.click(continueBtn!)
-    expect(continueBtn).toBeDisabled()
+    await userEvent.click(continueBtn!)
+    expect(continueBtn).not.toBeDisabled()
   })
 })

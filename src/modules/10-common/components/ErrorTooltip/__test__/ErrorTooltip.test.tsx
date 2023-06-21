@@ -25,11 +25,11 @@ describe('ErrorTooltip', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-icon="more"]')!)
+    await userEvent.click(container.querySelector('[data-icon="more"]')!)
 
     expect(getByText('common.friendlyMessage: somethingWentWrong')).toBeInTheDocument()
 
-    userEvent.click(queryByText('retry')!)
+    await userEvent.click(queryByText('retry')!)
 
     expect(onRetry).toBeCalledTimes(0)
   })
@@ -43,11 +43,11 @@ describe('ErrorTooltip', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-icon="more"]')!)
+    await userEvent.click(container.querySelector('[data-icon="more"]')!)
 
     expect(queryByText(`common.friendlyMessage: ${errorMessage}`)).toBeInTheDocument()
 
-    userEvent.click(queryByText('retry')!)
+    await userEvent.click(queryByText('retry')!)
 
     expect(onRetry).toBeCalledTimes(1)
   })

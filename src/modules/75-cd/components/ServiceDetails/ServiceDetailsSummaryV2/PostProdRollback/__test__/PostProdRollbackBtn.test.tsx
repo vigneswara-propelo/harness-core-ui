@@ -93,7 +93,7 @@ describe('PostProdRollbackBtn tests - ', () => {
   configurations()
   test('should validate if the button is enabled and validate content on confirmation dailog', async () => {
     const { container } = renderPPRollbackBtn()
-    userEvent.click(container.querySelector('button[id="rollbackBtn"]') as HTMLButtonElement)
+    await userEvent.click(container.querySelector('button[id="rollbackBtn"]') as HTMLButtonElement)
     const confirmationDialog = findDialogContainer()
 
     //match dailog content
@@ -114,7 +114,7 @@ describe('PostProdRollbackBtn tests - ', () => {
   test('should trigger a valid rollback and validate new tab navigation to rollback execution', async () => {
     window.open = jest.fn()
     const { container } = renderPPRollbackBtn()
-    userEvent.click(container.querySelector('button[id="rollbackBtn"]') as HTMLButtonElement)
+    await userEvent.click(container.querySelector('button[id="rollbackBtn"]') as HTMLButtonElement)
     const confirmationDialog = findDialogContainer()
     expect(confirmationDialog).toBeTruthy()
 
@@ -136,7 +136,7 @@ describe('PostProdRollbackBtn tests - ', () => {
       })
     })
     const { container } = renderPPRollbackBtn({ rollbackStatus: 'UNAVAILABLE' })
-    userEvent.click(container.querySelector('button[id="rollbackBtn"]') as HTMLButtonElement)
+    await userEvent.click(container.querySelector('button[id="rollbackBtn"]') as HTMLButtonElement)
     const confirmationDialog = findDialogContainer()
     expect(confirmationDialog).toBeTruthy()
 

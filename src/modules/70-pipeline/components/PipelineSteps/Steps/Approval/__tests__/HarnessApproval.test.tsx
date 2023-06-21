@@ -51,8 +51,8 @@ const scheduleAutoApproveActions = async (
   container: HTMLElement,
   getByText: RenderResult['getByText']
 ): Promise<void> => {
-  act(() => {
-    userEvent.click(getByText('pipeline.approvalStep.scheduleAutoApprovalOptional'))
+  await act(async () => {
+    await userEvent.click(getByText('pipeline.approvalStep.scheduleAutoApprovalOptional'))
   })
 
   const autoApproveCheckBox = container.querySelector('input[name="AutoApprove"]')
@@ -65,7 +65,7 @@ const scheduleAutoApproveActions = async (
   expect(messageTextArea).toBeDisabled()
 
   // add auto approval
-  userEvent.click(autoApproveCheckBox as HTMLInputElement)
+  await userEvent.click(autoApproveCheckBox as HTMLInputElement)
   expect(autoApproveCheckBox).toBeChecked()
   expect(timeField).not.toBeDisabled()
   expect(messageTextArea).not.toBeDisabled()
@@ -460,7 +460,7 @@ describe('Harness Approval tests', () => {
 
     const btn = await findByText(/project/i)
     expect(btn).toBeTruthy()
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
     fireEvent.click(document.querySelector('.bp3-dialog div[data-tab-id="account"]') as HTMLElement)
@@ -487,10 +487,10 @@ describe('Harness Approval tests', () => {
     await scheduleAutoApproveActions(container, getByText)
 
     //make timeout as runtime and check warning msg
-    userEvent.click(container.querySelector('[data-id="timeout-1"] [data-icon="fixed-input"]') as HTMLElement)
+    await userEvent.click(container.querySelector('[data-id="timeout-1"] [data-icon="fixed-input"]') as HTMLElement)
     const timeoutField = findPopoverContainer()
     expect(timeoutField).toBeTruthy()
-    userEvent.click(getByText('Runtime input'))
+    await userEvent.click(getByText('Runtime input'))
 
     //check warning msg
     expect(getByText('pipeline.approvalStep.validation.autoApproveScheduleTimeout'))
