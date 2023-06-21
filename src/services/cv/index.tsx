@@ -257,11 +257,13 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
 }
 
 export interface AssociatedSLOsDetails {
+  currentSLOPerformance?: number
   errorBudgetBurnRate?: number
   identifier?: string
   name?: string
+  pastSLOPerformance?: number
   scopedMonitoredServiceIdentifier?: string
-  sloPerformance?: number
+  sloTarget?: number
 }
 
 export interface AwsCodeCommitAuthenticationDTO {
@@ -1021,6 +1023,7 @@ export interface CustomChangeEvent {
   description?: string
   externalLinkToEntity?: string
   msHealthReport?: MSHealthReport
+  webhookUrl?: string
 }
 
 export type CustomChangeEventMetadata = ChangeEventMetadata & {
@@ -1054,6 +1057,7 @@ export interface CustomChangeWebhookEventDetail {
   description: string
   externalLinkToEntity?: string
   name: string
+  webhookUrl?: string
 }
 
 export interface CustomChangeWebhookPayload {
@@ -1965,6 +1969,7 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2410,6 +2415,7 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3486,8 +3492,8 @@ export interface MSDropdownResponse {
 export interface MSHealthReport {
   associatedSLOsDetails?: AssociatedSLOsDetails[]
   changeSummary?: ChangeSummaryDTO
+  currentHealthScore?: number
   internalLinkToEntity?: string
-  serviceHealthDetails?: ServiceHealthDetails
 }
 
 export interface MessageFrequency {
@@ -3797,6 +3803,9 @@ export interface MonitoredServicePlatformResponse {
   name?: string
   serviceName?: string
   serviceRef?: string
+  tags?: {
+    [key: string]: string
+  }
   type?: 'Application' | 'Infrastructure'
 }
 
@@ -3908,6 +3917,7 @@ export interface NotificationRuleCondition {
     | 'HealthScore'
     | 'ChangeObserved'
     | 'CodeErrors'
+    | 'FireHydrantReport'
 }
 
 export interface NotificationRuleConditionSpec {
@@ -3921,7 +3931,7 @@ export interface NotificationRuleDTO {
   notificationMethod: CVNGNotificationChannel
   orgIdentifier?: string
   projectIdentifier?: string
-  type: 'MonitoredService' | 'ServiceLevelObjective'
+  type: 'MonitoredService' | 'ServiceLevelObjective' | 'FireHydrant'
 }
 
 export interface NotificationRuleRefDTO {
@@ -5151,6 +5161,7 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -6317,12 +6328,6 @@ export interface ServiceGuardTxnMetricAnalysisDataDTO {
   shortTermHistory?: number[]
 }
 
-export interface ServiceHealthDetails {
-  currentHealthScore?: number
-  pastHealthScore?: number
-  percentageChange?: number
-}
-
 export interface ServiceLevelIndicatorDTO {
   healthSourceRef?: string
   identifier?: string
@@ -6383,7 +6388,7 @@ export interface ServiceNowAuthCredentialsDTO {
 
 export interface ServiceNowAuthenticationDTO {
   spec: ServiceNowAuthCredentialsDTO
-  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate'
+  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate' | 'RefreshTokenGrantType'
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
@@ -6393,6 +6398,14 @@ export type ServiceNowConnector = ConnectorConfigDTO & {
   serviceNowUrl: string
   username?: string
   usernameRef?: string
+}
+
+export type ServiceNowRefreshTokenDTO = ServiceNowAuthCredentialsDTO & {
+  clientIdRef: string
+  clientSecretRef?: string
+  refreshTokenRef: string
+  scope?: string
+  tokenUrl: string
 }
 
 export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
@@ -7113,11 +7126,13 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
 export interface VerificationOverview {
   appliedDeploymentAnalysisType?: 'CANARY' | 'NO_ANALYSIS' | 'ROLLING' | 'TEST' | 'SIMPLE'
   baselineOverview?: BaselineOverview
+  controlDataStartTimestamp?: number
   controlNodes?: AnalysedNodeOverview
   errorClusters?: ClusterAnalysisOverview
   logClusters?: ClusterAnalysisOverview
   metricsAnalysis?: MetricsAnalysisOverview
   spec?: VerificationSpec
+  testDataStartTimestamp?: number
   testNodes?: AnalysedNodeOverview
   verificationEndTimestamp?: number
   verificationProgressPercentage?: number
@@ -7263,7 +7278,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type SaveMonitoredServiceFromTemplateInputBodyRequestBody = string
 
 export interface SaveAccountLevelAnnotationPathParams {
   accountIdentifier: string
@@ -13461,7 +13476,7 @@ export interface GetMonitoredServicePlatformListQueryParams {
   pageSize: number
   filter?: string
   monitoredServiceType?: 'Application' | 'Infrastructure'
-  hideNotConfiguredServices: boolean
+  hideNotConfiguredServices?: boolean
 }
 
 export type GetMonitoredServicePlatformListProps = Omit<
@@ -13585,7 +13600,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13599,7 +13614,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >
     verb="POST"
@@ -13614,7 +13629,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13628,7 +13643,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -13640,7 +13655,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -13649,7 +13664,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 

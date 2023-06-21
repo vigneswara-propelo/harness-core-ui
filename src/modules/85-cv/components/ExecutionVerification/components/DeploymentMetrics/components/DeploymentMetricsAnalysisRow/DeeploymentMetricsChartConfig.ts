@@ -6,17 +6,38 @@
  */
 
 import moment from 'moment'
+import type { PointOptionsObject } from 'highcharts'
 import { getRiskColorValue, getSecondaryRiskColorValue } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { HostControlTestData, HostTestData } from './DeploymentMetricsAnalysisRow.constants'
 import type { DeploymentMetricsAnalysisRowChartSeries } from './DeploymentMetricsAnalysisRow.types'
+import type { StartTimestampDataType } from '../../DeploymentMetrics.types'
+
+const getPointIndex = (hoveredXValue: number, points?: PointOptionsObject[]): number | null => {
+  if (!points) {
+    return null
+  }
+
+  let foundIndex = null
+
+  const isPointWithSameValueExists = points.some((point, index) => {
+    if (point.x === hoveredXValue) {
+      foundIndex = index
+    }
+
+    return point.x === hoveredXValue
+  })
+
+  return isPointWithSameValueExists ? foundIndex : null
+}
 
 export function chartsConfig(
   series: DeploymentMetricsAnalysisRowChartSeries[],
   width: number,
   testData: HostTestData | undefined,
   controlData: HostControlTestData | undefined,
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  startTimestampData?: StartTimestampDataType
 ): Highcharts.Options {
   return {
     chart: {
@@ -65,25 +86,34 @@ export function chartsConfig(
     },
     tooltip: {
       formatter: function tooltipFormatter(): string {
+        const { controlDataStartTimestamp, testDataStartTimestamp } = startTimestampData || {}
+
         // eslint-disable-next-line
         // @ts-ignore
-        const baseDataValue = controlData?.points[this.points[0]?.point.index]?.y
+        const hoveredXValue = this.points[0]?.x
+
+        const controlHostHoveredPointIndex = getPointIndex(hoveredXValue, controlData?.points as PointOptionsObject[])
+        const testHostHoveredPointIndex = getPointIndex(hoveredXValue, testData?.points as PointOptionsObject[])
+
         // eslint-disable-next-line
         // @ts-ignore
-        const testDataValue = testData?.points[this.points[0]?.point.index]?.y
+        const baseDataValue = controlData?.points[controlHostHoveredPointIndex]?.y
+        // eslint-disable-next-line
+        // @ts-ignore
+        const testDataValue = testData?.points[testHostHoveredPointIndex]?.y
 
         // to show "No data" text when the y axis value is null
-        const baseDataDisplayValue = baseDataValue?.toFixed(3) ?? getString('noData')
-        const testDataDisplayValue = testDataValue?.toFixed(3) ?? getString('noData')
+        const baseDataDisplayValue = baseDataValue?.toFixed(4) ?? getString('noData')
+        const testDataDisplayValue = testDataValue?.toFixed(4) ?? getString('noData')
 
         // eslint-disable-next-line
         // @ts-ignore
-        const baseDataTime = controlData?.points[this?.points?.[0]?.point.index]?.x + controlData?.initialXvalue
+        const baseDataTime = controlData?.points[controlHostHoveredPointIndex]?.x + controlDataStartTimestamp
         const baseDataTimestamp = baseDataTime ? moment(baseDataTime).format('lll') : getString('noData')
 
         // eslint-disable-next-line
         // @ts-ignore
-        const testeDataTime = testData?.points[this?.points?.[0]?.point.index]?.x + testData?.initialXvalue
+        const testeDataTime = testData?.points[testHostHoveredPointIndex]?.x + testDataStartTimestamp
         const testDataTimestamp = testeDataTime ? moment(testeDataTime).format('lll') : getString('noData')
 
         return `

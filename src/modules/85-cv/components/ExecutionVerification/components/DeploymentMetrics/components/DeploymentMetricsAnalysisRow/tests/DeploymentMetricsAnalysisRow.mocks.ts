@@ -178,18 +178,31 @@ export const seriesMock = [
 
 export const testDataMock = {
   points: [
-    { x: 1642941960000, y: 456.6666666666667 },
-    { x: 1642942020000, y: 386.6666666666667 },
-    { x: 1642942080000, y: 466.6666666666667 },
-    { x: 1642942140000, y: 702 }
+    {
+      x: 0,
+      y: 81.25
+    },
+    {
+      x: 60000,
+      y: 76.5
+    },
+    {
+      x: 120000,
+      y: 67.5
+    },
+    {
+      x: 180000,
+      y: 75.75
+    }
   ],
+
   risk: 'HEALTHY',
   name: 'harness-deployment-canary-56b5cc7c5b-9rpq7'
 }
 
 export const controlDataMock = {
   points: [
-    { x: 1642941960000, y: 456.6666666666667 },
+    { x: 0, y: 456.6666666666667 },
     { x: 1642942020000, y: 10 },
     { x: 1642942080000, y: 466.6666666666667 },
     { x: 1642942140000, y: 702 }
@@ -297,4 +310,9 @@ export const expectedChartConfigData = {
       text: ''
     }
   }
+}
+
+export const startTimestampDataMock = {
+  controlDataStartTimestamp: 1642941960000,
+  testDataStartTimestamp: 1642942080000
 }

@@ -24,6 +24,9 @@ describe('ExecutionVerificationStepShortView', () => {
         <ExecutionVerificationStepShortView
           step={stepDetails as unknown as ExecutionNode}
           executionMetadata={executionMetadata}
+          refetchOverview={jest.fn()}
+          overviewError={null}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -49,6 +52,9 @@ describe('ExecutionVerificationStepShortView', () => {
         <ExecutionVerificationStepShortView
           step={stepDetailsWithoutPolicy as unknown as ExecutionNode}
           executionMetadata={executionMetadata}
+          refetchOverview={jest.fn()}
+          overviewError={null}
+          overviewData={null}
         />
       </TestWrapper>
     )

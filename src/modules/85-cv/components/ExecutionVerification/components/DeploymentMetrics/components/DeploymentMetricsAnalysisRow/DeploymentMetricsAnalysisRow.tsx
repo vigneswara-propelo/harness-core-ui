@@ -30,6 +30,7 @@ import {
   MINIMUM_DEVIATION
 } from './DeploymentMetricsAnalysisRow.constants'
 import MetricAnalysisMetricThresolds from './components/MetricAnalysisMetricThresolds/MetricAnalysisMetricThresolds'
+import type { StartTimestampDataType } from '../../DeploymentMetrics.types'
 import css from './DeploymentMetricsAnalysisRow.module.scss'
 
 export interface DeploymentMetricsAnalysisRowProps {
@@ -45,10 +46,20 @@ export interface DeploymentMetricsAnalysisRowProps {
   healthSource: MetricsAnalysis['healthSource']
   deeplinkURL?: string
   appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
+  startTimestampData?: StartTimestampDataType
 }
 
 export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRowProps): JSX.Element {
-  const { controlData = [], testData = [], className, metricName, transactionName, thresholds, healthSource } = props
+  const {
+    controlData = [],
+    testData = [],
+    className,
+    metricName,
+    transactionName,
+    thresholds,
+    healthSource,
+    startTimestampData
+  } = props
   const { getString } = useStrings()
   const graphContainerRef = useRef<HTMLDivElement>(null)
   const [graphWidth, setGraphWidth] = useState(0)
@@ -85,7 +96,14 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
               <div className={css.graphs} ref={graphContainerRef}>
                 <HighchartsReact
                   highcharts={Highcharts}
-                  options={chartsConfig(series, graphWidth, testData?.[index], controlData?.[index], getString)}
+                  options={chartsConfig(
+                    series,
+                    graphWidth,
+                    testData?.[index],
+                    controlData?.[index],
+                    getString,
+                    startTimestampData
+                  )}
                 />
                 <Container className={css.metricDetails}>
                   <Container className={css.metricInfo} padding={{ bottom: 'small', left: 'small' }}>

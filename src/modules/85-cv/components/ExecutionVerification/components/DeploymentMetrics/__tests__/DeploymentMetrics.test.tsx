@@ -202,6 +202,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -281,6 +282,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -344,6 +346,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -378,6 +381,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -419,6 +423,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -457,6 +462,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -508,7 +514,11 @@ describe('Unit tests for Deployment metrics ', () => {
 
     const { container } = render(
       <TestWrapper>
-        <DeploymentMetrics step={clonedNode} activityId={clonedNode!.progressData!.activityId as unknown as string} />
+        <DeploymentMetrics
+          step={clonedNode}
+          activityId={clonedNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
+        />
       </TestWrapper>
     )
 
@@ -659,6 +669,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )
@@ -698,6 +709,7 @@ describe('Unit tests for Deployment metrics ', () => {
         <DeploymentMetrics
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+          overviewData={null}
         />
       </TestWrapper>
     )

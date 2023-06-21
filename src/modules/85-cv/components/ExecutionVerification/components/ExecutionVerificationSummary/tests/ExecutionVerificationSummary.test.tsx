@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
+import type { GetDataError } from 'restful-react'
 import { waitFor, fireEvent } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import * as cvService from 'services/cv'
 import { RiskValues, getRiskColorValue } from '@cv/utils/CommonUtils'
 import { ExecutionVerificationSummary } from '../ExecutionVerificationSummary'
 import { SampleResponse } from './ExecutionVerificationSummary.mock'
@@ -35,12 +35,16 @@ describe('Unit tests for VerifyExection', () => {
     jest.resetAllMocks()
   })
   test('Ensure content is rendered correctly based on api response', async () => {
-    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
-      data: SampleResponse
-    } as any)
+    const refetchFn = jest.fn()
+
     const { container, getByText } = render(
       <TestWrapper>
-        <ExecutionVerificationSummary step={{}} />
+        <ExecutionVerificationSummary
+          step={{}}
+          refetchOverview={refetchFn}
+          overviewData={SampleResponse}
+          overviewError={null}
+        />
       </TestWrapper>
     )
 
@@ -75,13 +79,15 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that loading indicator is displayed when api is loading', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
-      loading: true,
-      refetch: refetchFn as unknown
-    } as any)
+
     const { container } = render(
       <TestWrapper>
-        <ExecutionVerificationSummary step={{ progressData: { activityId: '1234_id' as any } }} />
+        <ExecutionVerificationSummary
+          step={{ progressData: { activityId: '1234_id' as any } }}
+          refetchOverview={refetchFn}
+          overviewData={null}
+          overviewError={null}
+        />
       </TestWrapper>
     )
 
@@ -90,13 +96,15 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that error is displayed when api errors out', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
-      error: { data: { message: 'mockError' } },
-      refetch: refetchFn as unknown
-    } as any)
+
     const { container, getByText } = render(
       <TestWrapper>
-        <ExecutionVerificationSummary step={{ progressData: { activityId: 'asadasd_' as any } }} />
+        <ExecutionVerificationSummary
+          step={{ progressData: { activityId: 'asadasd_' as any } }}
+          refetchOverview={refetchFn}
+          overviewData={null}
+          overviewError={{ data: { message: 'mockError' } } as GetDataError<unknown>}
+        />
       </TestWrapper>
     )
 
@@ -107,12 +115,10 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that when activity id is not there empty statee is rendered', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
-      refetch: refetchFn as unknown
-    } as any)
+
     const { container } = render(
       <TestWrapper>
-        <ExecutionVerificationSummary step={{}} />
+        <ExecutionVerificationSummary step={{}} refetchOverview={refetchFn} overviewData={null} overviewError={null} />
       </TestWrapper>
     )
 
@@ -121,12 +127,15 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that when there is a failure message in the step, it is displayed', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
-      refetch: refetchFn as unknown
-    } as any)
+
     const { rerender, container, getByText } = render(
       <TestWrapper>
-        <ExecutionVerificationSummary step={{ failureInfo: { message: 'mockError' } }} />
+        <ExecutionVerificationSummary
+          step={{ failureInfo: { message: 'mockError' } }}
+          refetchOverview={refetchFn}
+          overviewData={null}
+          overviewError={null}
+        />
       </TestWrapper>
     )
 
@@ -135,7 +144,7 @@ describe('Unit tests for VerifyExection', () => {
     // ensure that message is not displayed
     rerender(
       <TestWrapper>
-        <ExecutionVerificationSummary step={{}} />
+        <ExecutionVerificationSummary step={{}} refetchOverview={refetchFn} overviewData={null} overviewError={null} />
       </TestWrapper>
     )
 
@@ -144,12 +153,15 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that manual intervention is displayed when the status is waiting', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
-      refetch: refetchFn as unknown
-    } as any)
+
     const { container } = render(
       <TestWrapper>
-        <ExecutionVerificationSummary step={{ status: ExecutionStatusEnum.InterventionWaiting }} />
+        <ExecutionVerificationSummary
+          step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+          refetchOverview={refetchFn}
+          overviewData={null}
+          overviewError={null}
+        />
       </TestWrapper>
     )
 

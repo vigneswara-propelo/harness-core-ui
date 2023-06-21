@@ -7,7 +7,10 @@
 
 import { transformMetricsExpectedResult } from './DeploymentMetrics.mock'
 import { transformMetricData } from '../DeploymentMetrics.utils'
-import { InputData } from '../components/DeploymentMetricsAnalysisRow/tests/DeploymentMetricsAnalysisRow.mocks'
+import {
+  InputData,
+  startTimestampDataMock
+} from '../components/DeploymentMetricsAnalysisRow/tests/DeploymentMetricsAnalysisRow.mocks'
 
 describe('Unit tests for DeploymentMetrics utils', () => {
   test('Ensure transformMetricData works correctly', async () => {
@@ -15,6 +18,8 @@ describe('Unit tests for DeploymentMetrics utils', () => {
     const metricData = {
       content: InputData
     }
-    expect(transformMetricData(selectedDataFormat, metricData)).toEqual(transformMetricsExpectedResult)
+    expect(transformMetricData(selectedDataFormat, startTimestampDataMock, metricData)).toEqual(
+      transformMetricsExpectedResult
+    )
   })
 })

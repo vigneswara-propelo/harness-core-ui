@@ -10,6 +10,7 @@ import {
   controlDataMock,
   expectedChartConfigData,
   seriesMock,
+  startTimestampDataMock,
   testDataMock
 } from './DeploymentMetricsAnalysisRow.mocks'
 import { chartsConfig } from '../DeeploymentMetricsChartConfig'
@@ -28,16 +29,23 @@ describe('DeploymentMetricsChartConfig', () => {
   test('it should give correct tooltip data', () => {
     const getString = (key: StringKeys): string => key
 
-    // eslint-disable-next-line
-    // @ts-ignore
-    const { tooltip } = chartsConfig(seriesMock, 312.5806451612903, testDataMock, controlDataMock, getString)
+    const { tooltip } = chartsConfig(
+      // eslint-disable-next-line
+      // @ts-ignore
+      seriesMock,
+      312.5806451612903,
+      testDataMock,
+      controlDataMock,
+      getString,
+      startTimestampDataMock
+    )
 
     // eslint-disable-next-line
     // @ts-ignore
-    const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 1 } }] }, null)
+    const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 1 }, x: 0 }] }, null)
 
-    expect(tooltipResult).toMatch(/386.667/)
-    expect(tooltipResult).toMatch(/10.000/)
+    expect(tooltipResult).toMatch(/81.25/)
+    expect(tooltipResult).toMatch(/456.6667/)
   })
 
   test('it should give correct tooltip data when different length of data is passed', () => {
@@ -53,15 +61,22 @@ describe('DeploymentMetricsChartConfig', () => {
       name: 'control host name'
     }
 
-    // eslint-disable-next-line
-    // @ts-ignore
-    const { tooltip } = chartsConfig(seriesMock, 312.5806451612903, testDataMock, controlDataMockLocal, getString)
+    const { tooltip } = chartsConfig(
+      // eslint-disable-next-line
+      // @ts-ignore
+      seriesMock,
+      312.5806451612903,
+      testDataMock,
+      controlDataMockLocal,
+      getString,
+      startTimestampDataMock
+    )
 
     // eslint-disable-next-line
     // @ts-ignore
-    const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 3 } }] }, null)
+    const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 3 }, x: 180000 }] }, null)
 
-    expect(tooltipResult).toMatch(/702.00/)
+    expect(tooltipResult).toMatch(/75.75/)
     expect(tooltipResult).toMatch(/noData/)
   })
 })
