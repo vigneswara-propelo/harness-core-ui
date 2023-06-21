@@ -140,7 +140,7 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                         />
                       </div>
                       {CDS_SUPPORT_SKIPPING_BG_DEPLOYMENT_NG ? (
-                        <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                        <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
                           <FormMultiTypeCheckboxField
                             name="spec.skipUnchangedManifest"
                             label={getString('cd.steps.common.skipUnchangedManifest')}
@@ -220,7 +220,7 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
       )}
       {CDS_SUPPORT_SKIPPING_BG_DEPLOYMENT_NG
         ? getMultiTypeFromValue(inputSetData?.template?.spec?.skipUnchangedManifest) === MultiTypeInputType.RUNTIME && (
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <div className={cx(stepCss.formGroup, stepCss.lg)}>
               <FormMultiTypeCheckboxField
                 multiTypeTextbox={{
                   expressions,
