@@ -450,8 +450,8 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               selectedSecretManager?.identifier ||
               (!initialSecretManagerChangedOrSearchStared && defaultSecretManagerId) ||
               '',
-            orgIdentifier,
-            projectIdentifier,
+            orgIdentifier: editing ? secret?.orgIdentifier : orgIdentifier,
+            projectIdentifier: editing ? secret?.projectIdentifier : projectIdentifier,
             templateInputs: templateInputSets,
             ...pick(secret, ['name', 'identifier', 'description', 'tags']),
             ...pick(secret?.spec, ['valueType', 'secretManagerIdentifier']),
