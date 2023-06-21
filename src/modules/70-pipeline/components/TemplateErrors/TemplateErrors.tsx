@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { Classes, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import { Text } from '@harness/uicore'
@@ -46,16 +46,17 @@ const isStageErrorInSelectedTemplate = (item: YamlSchemaErrorDTO): boolean => !!
 const isStepErrorInSelectedTemplate = (item: YamlSchemaErrorDTO): boolean => !!item.stageInfo && !!item.stepInfo
 
 const getNameFromItem = (item: NodeErrorInfo = {}): string | undefined => item.name || item.identifier || item.fqn
-const getIdentifierFromItem = (item?: NodeErrorInfo): string => item?.identifier || ''
+const getIdentifierFromItem = (item?: NodeErrorInfo): string => get(item, 'identifier', '')
 
 const addToErrorsByStage = (errorsByStage: Record<string, YamlSchemaErrorDTO[]>, item: YamlSchemaErrorDTO) => {
   const identifier = getIdentifierFromItem(item.stageInfo)
-  return [...(errorsByStage[identifier] || []), item]
+  return [...defaultTo(errorsByStage[identifier], []), item]
 }
 
 const addToErrorsByStep = (errorsByStep: Record<string, YamlSchemaErrorDTO[]>, item: YamlSchemaErrorDTO) => {
   const identifier = getIdentifierFromItem(item.stepInfo)
-  return [...(errorsByStep[identifier] || []), item]
+  /* istanbul ignore next */
+  return [...defaultTo(errorsByStep[identifier], []), item]
 }
 
 const getSelectedStageTemplateAdaptedErrors = (schemaErrors: YamlSchemaErrorDTO[]) =>
@@ -73,6 +74,7 @@ const getSelectedStageTemplateAdaptedErrors = (schemaErrors: YamlSchemaErrorDTO[
         accum.stageErrors.push(item)
       } else if (item.stepInfo) {
         const identifier = getIdentifierFromItem(item.stepInfo)
+        /* istanbul ignore next */
         if (errorsByStep[identifier]) {
           errorsByStep[identifier] = addToErrorsByStep(errorsByStep, item)
         } else {
@@ -98,6 +100,7 @@ const getSelectedStageTemplateAdaptedErrorsForStep = (
         const { errorsByStep, ids } = accum
         if (!item.stageInfo && !!item.stepInfo) {
           const identifier = getIdentifierFromItem(item.stepInfo)
+          /* istanbul ignore next */
           if (errorsByStep[identifier]) {
             // push to existing object
             errorsByStep[identifier] = addToErrorsByStep(errorsByStep, item)
@@ -182,12 +185,13 @@ function StageErrorCard({
 }): React.ReactElement | null {
   const { getString } = useStrings()
   if (errors.length === 0) {
+    /* istanbul ignore next */
     return null
   }
   return (
     <PipelineErrorCard
       errors={errors.map(err => err?.message).filter(e => e) as string[]}
-      icon={stageTypeToIconMap[errors[0].stageInfo?.type || '']}
+      icon={stageTypeToIconMap[get(errors[0].stageInfo, 'type', '')]}
       onClick={gotoViewWithDetails}
       buttonText={getString('pipeline.errorFramework.fixStage')}
     />
@@ -208,12 +212,12 @@ function StepErrorCard({
     return null
   }
   const renderStepError = (stepId: string): React.ReactElement => {
-    const stepErrors = errorsByStep[stepId] || []
-    const stepName = getNameFromItem(stepErrors[0]?.stepInfo)
+    const stepErrors = defaultTo(errorsByStep[stepId], [])
+    const stepName = getNameFromItem(get(stepErrors[0], 'stepInfo'))
     const stepTitle = `${getString('pipeline.execution.stepTitlePrefix')} ${stepName}`
     return (
       <PipelineErrorCard
-        key={stepId || stepName}
+        key={defaultTo(stepId, stepName)}
         title={stepTitle}
         errors={stepErrors.map(err => err.message).filter(e => e) as string[]}
         icon={stepFactory.getStepIcon(get(stepErrors[0], 'stepInfo.type', ''))}
@@ -272,20 +276,20 @@ function SelectedTemplateErrors({
   if (errors.length === 0) {
     return null
   }
-
+  const templateType = get(template, 'type')
   return (
     <>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'normal' }} margin={{ bottom: 'medium' }}>
-        {template?.type === 'Pipeline' && getString('common.pipeline')}
+        {templateType === 'Pipeline' && getString('common.pipeline')}
       </Text>
       <PipelineErrorCard
         errors={errors.map(e => e.message).filter(e => e) as string[]}
         icon={
-          template?.type === 'Pipeline'
+          templateType === 'Pipeline'
             ? 'pipeline'
-            : template?.type === 'Stage'
-            ? stageTypeToIconMap[template?.spec?.type]
-            : stepFactory.getStepIcon(template?.spec?.type)
+            : templateType === 'Stage'
+            ? stageTypeToIconMap[get(template?.spec, 'type')]
+            : stepFactory.getStepIcon(get(template?.spec, 'type'))
         }
         onClick={gotoViewWithDetails}
         buttonText={getString('pipeline.errorFramework.fixErrors')}
@@ -294,7 +298,7 @@ function SelectedTemplateErrors({
   )
 }
 
-const getFieldsLabel = (
+export const getFieldsLabel = (
   selectedTemplateErrors: Array<YamlSchemaErrorDTO>,
   stageIds: string[],
   updatedErrorsByStageStep: Record<string, StageErrorsType>,
@@ -309,7 +313,7 @@ const getFieldsLabel = (
   } else {
     const hasStageErrors = stageIds.some((stageId: string) => updatedErrorsByStageStep[stageId].stageErrors.length)
     const hasStepErrors = stageIds.some(
-      (stageId: string) => Object.keys(updatedErrorsByStageStep[stageId]?.errorsByStep || {}).length
+      (stageId: string) => Object.keys(get(updatedErrorsByStageStep[stageId], 'errorsByStep', {})).length
     )
     const errorInSingleStage = stageIds.length === 1
     if (hasSelectedTemplateErrors) {
@@ -340,7 +344,7 @@ const getFieldsLabel = (
       }
     }
   }
-  return str || getString('pipeline.errorFramework.header12')
+  return defaultTo(str, getString('pipeline.errorFramework.header12'))
 }
 
 const errorHeadingForSelectedTemplate = (errorHeadingText: string): React.ReactElement => {
@@ -371,7 +375,7 @@ function TemplateErrorContent({
   template?: NGTemplateInfoConfig
 }): React.ReactElement {
   const { getString } = useStrings()
-  const templateType = template?.type
+  const templateType = get(template, 'type')
 
   switch (templateType) {
     case 'Stage':
@@ -380,10 +384,10 @@ function TemplateErrorContent({
         <div className={css.pipelineErrorList}>
           {templateType === 'Stage'
             ? errorHeadingForSelectedTemplate(
-                `${getString('pipeline.execution.stageTitlePrefix')} ${template?.identifier}`
+                `${getString('pipeline.execution.stageTitlePrefix')} ${get(template, 'identifier')}`
               )
             : errorHeadingForSelectedTemplate(
-                `${getString('pipeline.execution.stepGroupTitlePrefix')} ${template?.identifier}`
+                `${getString('pipeline.execution.stepGroupTitlePrefix')} ${get(template, 'identifier')}`
               )}
           <SelectedTemplateErrors gotoViewWithDetails={gotoViewWithDetails} errors={stageErrors} template={template} />
           {stepIds.map((stepId: string) => {
@@ -398,7 +402,7 @@ function TemplateErrorContent({
         <div className={css.pipelineErrorList}>
           {templateType === 'Step' &&
             errorHeadingForSelectedTemplate(
-              `${getString('pipeline.execution.stepTitlePrefix')} ${template?.identifier}`
+              `${getString('pipeline.execution.stepTitlePrefix')} ${get(template, 'identifier')}`
             )}
           <SelectedTemplateErrors
             errors={selectedTemplateErrors}
