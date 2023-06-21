@@ -416,7 +416,7 @@ function CICodebaseInputSetFormInternal({
               .then((result: ResponseGitBranchesResponseDTO) => {
                 setIsFetchingBranches(false)
                 const branchName = result.data?.defaultBranch?.name || ''
-                formik.setFieldValue(codeBaseInputFieldFormName.branch, branchName)
+                formik.setFieldValue(buildPath, { spec: { branch: branchName }, type: CodebaseTypes.BRANCH })
                 savedValues.current.branch = branchName as string
 
                 if (result.data?.defaultBranch?.name) {
