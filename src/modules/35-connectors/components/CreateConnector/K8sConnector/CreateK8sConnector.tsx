@@ -47,7 +47,7 @@ const CreateK8sConnector: React.FC<CreateConnectorModalProps> = props => {
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         mock={props.mock}
-        helpPanelReferenceId="RancherConnectorOverview"
+        helpPanelReferenceId="KubernetesConnectorOverview"
       />
       <Stepk8ClusterDetails
         name={getString('details')}
