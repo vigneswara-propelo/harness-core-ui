@@ -77,8 +77,6 @@ describe('CVSLOsListingPage', () => {
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
     cy.intercept('GET', listSLOsCallWithCalender, listSLOsCallResponse)
     cy.intercept('GET', listSLOsCallWithRolling, updatedListSLOsCallResponse)
-    cy.intercept('GET', listSLOsCallWithAvailability, listSLOsCallResponse)
-    cy.intercept('GET', listSLOsCallWithLatency, updatedListSLOsCallResponse)
     cy.intercept('GET', listSLOsCallWithUnhealthy, listSLOsCallResponse)
     cy.intercept('GET', listSLOsCallWithHealthy, updatedListSLOsCallResponse)
 
@@ -114,14 +112,6 @@ describe('CVSLOsListingPage', () => {
     cy.findByTestId('sloTargetAndBudget-filter').click()
     cy.contains('p', 'All').click({ force: true })
 
-    cy.findAllByTestId('sliType-filter').click()
-    cy.contains('p', 'Availability').click({ force: true })
-    cy.contains('h2', 'You don’t have any SLO created yet').should('be.visible')
-    cy.findAllByTestId('sliType-filter').click()
-    cy.contains('p', 'Latency').click({ force: true })
-    cy.contains('p', 'SLO-1').should('be.visible')
-
-    cy.contains('span', 'Clear Filters').click()
     cy.contains('span', 'Clear Filters').should('not.exist')
 
     cy.contains('p', 'Unhealthy').click()

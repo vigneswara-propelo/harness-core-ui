@@ -415,13 +415,11 @@ describe('CVSLOsListingPage', () => {
       const userJourneyFilter = screen.getByTestId('userJourney-filter')
       const monitoredServicesFilter = screen.getByTestId('monitoredServices-filter')
       const sloTargetAndBudgetFilter = screen.getByTestId('sloTargetAndBudget-filter')
-      const sliTypeFilter = screen.getByTestId('sliType-filter')
       const evaluationTypeFilter = screen.getByTestId('evaluationType-filter')
 
       expect(userJourneyFilter).toBeInTheDocument()
       expect(monitoredServicesFilter).toBeInTheDocument()
       expect(sloTargetAndBudgetFilter).toBeInTheDocument()
-      expect(sliTypeFilter).toBeInTheDocument()
       expect(evaluationTypeFilter).toBeInTheDocument()
     })
   })

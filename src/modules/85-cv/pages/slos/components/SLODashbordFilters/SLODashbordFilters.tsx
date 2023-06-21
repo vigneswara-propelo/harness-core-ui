@@ -18,7 +18,6 @@ import {
   getIsMonitoresServicePageClearFilterDisabled,
   getMonitoredServicesOptionsForFilter,
   getPeriodTypeOptionsForFilter,
-  getSliTypeOptionsForFilter,
   getUserJourneyOptionsForFilter,
   SLODashboardFilterActions
 } from '../../CVSLOListingPage.utils'
@@ -50,7 +49,7 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
     [filterState]
   )
 
-  const { updateUserJourney, updateMonitoredServices, updateTargetType, updateSliType, updateEvaluationType } =
+  const { updateUserJourney, updateMonitoredServices, updateTargetType, updateEvaluationType } =
     SLODashboardFilterActions
 
   return (
@@ -102,20 +101,6 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
           }}
         />
       </Layout.Vertical>
-      {!isAccountLevel && (
-        <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="sliType-filter">
-          <Select
-            value={{
-              label: `${getString('cv.slos.sliType')}: ${defaultTo(filterState?.sliTypes?.label, getString('all'))}`,
-              value: defaultTo(filterState?.sliTypes?.value, getString('all'))
-            }}
-            items={getSliTypeOptionsForFilter(getString)}
-            onChange={item => {
-              dispatch(updateSliType({ sliTypes: item }))
-            }}
-          />
-        </Layout.Vertical>
-      )}
       {!isAccountLevel && enableRequestSLO && (
         <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="evaluationType-filter">
           <Select
