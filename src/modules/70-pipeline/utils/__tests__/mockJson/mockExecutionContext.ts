@@ -6,6 +6,7 @@
  */
 
 import type { GraphLayoutNode, PipelineExecutionDetail } from 'services/pipeline-ng'
+import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
 
 export const nodeLayoutForCIStage: GraphLayoutNode = {
   nodeType: 'CI',
@@ -484,5 +485,60 @@ export const ciStagePipelineExecutionDetails: PipelineExecutionDetail = {
     allowStageExecutions: false,
     executionMode: 'NORMAL',
     stagesExecution: false
+  }
+}
+
+export const pipelineExecutionDetailMock: ExecutionContextParams['pipelineExecutionDetail'] = {
+  pipelineExecutionSummary: {
+    pipelineIdentifier: 'test_pipeline_id',
+    orgIdentifier: 'default',
+    projectIdentifier: 'pro',
+    planExecutionId: 'nuvaZmhSTpSuIoX86jU6zQ',
+    name: 'child',
+    status: 'Success',
+    tags: [],
+    moduleInfo: {},
+    layoutNodeMap: {
+      CI_Stage_1: {
+        nodeType: 'CI',
+        nodeGroup: 'STAGE',
+        nodeIdentifier: 'prdatacollectiondslcheckstyle',
+        name: 'Java Builds',
+        nodeUuid: 'Iw4FKBaCTsadnOuOgzGHxw',
+        status: 'Failed',
+        module: 'ci',
+        moduleInfo: {
+          ci: {}
+        },
+        startTs: 1686181937264,
+        endTs: 1686182216191,
+        edgeLayoutList: {
+          currentNodeChildren: [],
+          nextIds: []
+        },
+        nodeRunInfo: {
+          whenCondition: '<+OnPipelineSuccess>',
+          evaluatedCondition: true,
+          expressions: [
+            {
+              expression: 'OnPipelineSuccess',
+              expressionValue: 'true',
+              count: 1
+            }
+          ]
+        },
+        failureInfo: {
+          message: '1 error occurred:\n\t* exit status 1\n\n'
+        },
+        failureInfoDTO: {
+          message: '1 error occurred:\n\t* exit status 1\n\n',
+          failureTypeList: ['APPLICATION_ERROR'],
+          responseMessages: []
+        },
+        nodeExecutionId: 'z9V7UOgdQN2fzLeDsYeL_Q',
+        executionInputConfigured: false,
+        isRollbackStageNode: false
+      }
+    }
   }
 }

@@ -327,6 +327,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
           {showHarnessCoPilot({
             pipelineStagesMap,
             selectedStageId,
+            pipelineExecutionDetail,
             enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
             enableForCD: CD_AI_ENHANCED_REMEDIATIONS
           }) ? (

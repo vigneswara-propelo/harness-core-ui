@@ -1559,15 +1559,24 @@ export const getInfraTypeFromStageForCurrentStep = ({
 export const showHarnessCoPilot = ({
   pipelineStagesMap,
   selectedStageId,
+  pipelineExecutionDetail,
   enableForCI = false,
   enableForCD = false
 }: {
   pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
   selectedStageId: ExecutionContextParams['selectedStageId']
+  pipelineExecutionDetail: ExecutionContextParams['pipelineExecutionDetail']
   enableForCI?: boolean
   enableForCD?: boolean
 }): boolean => {
-  const selectedModule = getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module
+  /* It is possible for a stageId to be not present in "pipelineStagesMap" and be present in "pipelineExecutionSummary.layoutNodeMap" */
+  let selectedModule = getSelectedStageModule(pipelineStagesMap, selectedStageId)
+  if (!selectedModule) {
+    const pipelineStagesMapFromExecutionDetails = new Map(
+      Object.entries(get(pipelineExecutionDetail, 'pipelineExecutionSummary.layoutNodeMap', {}))
+    ) as Map<string, GraphLayoutNode>
+    selectedModule = getSelectedStageModule(pipelineStagesMapFromExecutionDetails, selectedStageId)
+  }
   return (enableForCI && 'ci' === selectedModule) || (enableForCD && 'cd' === selectedModule)
 }
 

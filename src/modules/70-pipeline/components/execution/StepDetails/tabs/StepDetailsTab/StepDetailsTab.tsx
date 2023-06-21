@@ -35,7 +35,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
   const { step, executionMetadata, labels } = props
   const { pathname } = useLocation()
   const queryParams = useQueryParams<ExecutionQueryParams>()
-  const { pipelineStagesMap, selectedStageId } = useExecutionContext()
+  const { pipelineStagesMap, selectedStageId, pipelineExecutionDetail } = useExecutionContext()
   const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
 
   const logUrl = `${pathname}?${qs.stringify({ ...queryParams, view: 'log' })}`
@@ -58,6 +58,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
       showHarnessCoPilot({
         pipelineStagesMap,
         selectedStageId,
+        pipelineExecutionDetail,
         enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
         enableForCD: CD_AI_ENHANCED_REMEDIATIONS
       }) ? (

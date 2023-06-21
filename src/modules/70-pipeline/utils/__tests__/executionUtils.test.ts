@@ -15,7 +15,8 @@ import {
   ciStagePipelineExecutionDetails,
   nodeLayoutForCDStage,
   nodeLayoutForCIStage,
-  nodeLayoutForPMS
+  nodeLayoutForPMS,
+  pipelineExecutionDetailMock
 } from './mockJson/mockExecutionContext'
 
 jest.mock('@pipeline/components/PipelineSteps/PipelineStepFactory', () => ({}))
@@ -384,7 +385,8 @@ describe('ExecutionUtils tests', () => {
     test('Test showHarnessCoPilot method', () => {
       const args = {
         pipelineStagesMap: new Map<string, GraphLayoutNode>([['', {}]]),
-        selectedStageId: 'CI_stage_1'
+        selectedStageId: 'CI_stage_1',
+        pipelineExecutionDetail: {}
       }
       /* Testing for modules CI and CD */
       expect(utils.showHarnessCoPilot(args)).toBe(false)
@@ -408,7 +410,8 @@ describe('ExecutionUtils tests', () => {
         utils.showHarnessCoPilot({
           pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage_1', nodeLayoutForCDStage]]),
           selectedStageId: 'CD_stage_1',
-          enableForCD: true
+          enableForCD: true,
+          pipelineExecutionDetail: {}
         })
       ).toBe(true)
       expect(
@@ -422,7 +425,8 @@ describe('ExecutionUtils tests', () => {
       expect(
         utils.showHarnessCoPilot({
           selectedStageId: 'PMS_Stage_1',
-          pipelineStagesMap: new Map<string, GraphLayoutNode>([['PMS_Stage_1', nodeLayoutForPMS]])
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['PMS_Stage_1', nodeLayoutForPMS]]),
+          pipelineExecutionDetail: {}
         })
       ).toBe(false)
 
@@ -435,9 +439,31 @@ describe('ExecutionUtils tests', () => {
             ['CD_Stage_2', nodeLayoutForCDStage]
           ]),
           enableForCI: true,
-          enableForCD: true
+          enableForCD: true,
+          pipelineExecutionDetail: {}
         })
       ).toBe(true)
+
+      // branch coverage for use case: a stageId to be not present in "pipelineStagesMap" and be present in "pipelineExecutionSummary.layoutNodeMap"
+      expect(
+        utils.showHarnessCoPilot({
+          selectedStageId: 'CI_Stage_1',
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_Stage_2', nodeLayoutForCIStage]]),
+          enableForCI: true,
+          enableForCD: true,
+          pipelineExecutionDetail: pipelineExecutionDetailMock
+        })
+      ).toBe(true)
+
+      expect(
+        utils.showHarnessCoPilot({
+          selectedStageId: 'CI_Stage',
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_Stage_2', nodeLayoutForCIStage]]),
+          enableForCI: true,
+          enableForCD: true,
+          pipelineExecutionDetail: {}
+        })
+      ).toBe(false)
     })
 
     test('Test resolveCurrentStep method', () => {
