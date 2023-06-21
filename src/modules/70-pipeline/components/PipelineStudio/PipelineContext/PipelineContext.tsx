@@ -50,6 +50,7 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { useDeleteStage, useDeleteStageReturnType } from '@pipeline/hooks/useDeleteStage'
 import {
   getResolvedCustomDeploymentDetailsByRef,
   getTemplateTypesByRef,
@@ -308,6 +309,7 @@ export interface PipelineContextInterface {
   /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
   setIntermittentLoading: (isIntermittentLoading: boolean) => void
   setValidationUuid: (uuid: string) => void
+  deleteStage?: useDeleteStageReturnType['deleteStage']
 }
 
 interface PipelinePayload {
@@ -1062,7 +1064,8 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   setSelection: (_selectedState: PipelineSelectionState | undefined) => undefined,
   getStagePathFromPipeline: () => '',
   setIntermittentLoading: () => undefined,
-  setValidationUuid: () => undefined
+  setValidationUuid: () => undefined,
+  deleteStage: (_stageId: string) => undefined
 })
 
 export interface PipelineProviderProps {
@@ -1351,6 +1354,8 @@ export function PipelineProvider({
     [updatePipeline]
   )
 
+  const { deleteStage } = useDeleteStage(state.pipeline, getStageFromPipeline, updatePipeline)
+
   useGlobalEventListener('focus', () => {
     _softFetchPipeline(
       dispatch,
@@ -1425,7 +1430,8 @@ export function PipelineProvider({
         setTemplateIcons,
         setTemplateServiceData,
         setIntermittentLoading,
-        setValidationUuid
+        setValidationUuid,
+        deleteStage
       }}
     >
       {children}

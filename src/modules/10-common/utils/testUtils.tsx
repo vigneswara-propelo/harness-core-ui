@@ -61,6 +61,13 @@ export const findPopoverContainer = (): HTMLElement | null => document.querySele
 export const findDrawerContainer = (): HTMLElement | null => document.querySelector('.bp3-drawer')
 export const findTransitionContainer = (): HTMLElement | null => document.querySelector('.bp3-transition-container')
 
+export const cleanupBp3Overlay = (): void => {
+  const els = document.documentElement.getElementsByClassName('bp3-overlay')
+  Array.from(els).forEach(el => {
+    el?.parentNode?.removeChild(el)
+  })
+}
+
 export interface TestWrapperProps {
   path?: string
   pathParams?: Record<string, string | number>

@@ -41,6 +41,7 @@ import type {
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
@@ -68,6 +69,7 @@ import PipelineYamlView from '../PipelineYamlView/PipelineYamlView'
 import { RightBar } from '../RightBar/RightBar'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { PipelineCanvasHeader } from './PipelineCanvasHeader'
+import StageConfigurationDrawer from '../StageConfigurationDrawer/StageConfigurationDrawer'
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -171,6 +173,7 @@ export function PipelineCanvas({
   } = state
 
   const { getString } = useStrings()
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & GitQueryParams
   >()
@@ -849,6 +852,7 @@ export function PipelineCanvas({
         </Layout.Vertical>
       </div>
       <RightBar />
+      {CDS_PIPELINE_STUDIO_UPGRADES && <StageConfigurationDrawer />}
     </PipelineVariablesContextProvider>
   )
 }
