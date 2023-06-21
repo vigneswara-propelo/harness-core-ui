@@ -295,7 +295,7 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
                 </span>
               </a>
               <div
-                class="Layout--horizontal StyledProps--main"
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
               >
                 <span
                   class="bp3-popover-wrapper bp3-dark"
@@ -922,7 +922,7 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
                 </span>
               </a>
               <div
-                class="Layout--horizontal StyledProps--main"
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
               >
                 <span
                   class="bp3-popover-wrapper bp3-dark"

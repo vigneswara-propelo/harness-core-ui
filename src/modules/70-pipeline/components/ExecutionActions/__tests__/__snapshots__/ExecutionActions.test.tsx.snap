@@ -3,7 +3,7 @@
 exports[`<ExecutionActions /> tests if feature restriction is applied on rerun button: repeat button should be disabled as cd, ci are not allowed 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -106,7 +106,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -209,7 +209,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Expired" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -312,7 +312,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: Menu 1`] = `
 exports[`<ExecutionActions /> tests snapshot tests "Failed" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -415,7 +415,7 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: Menu 1`]
 exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -518,7 +518,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: Menu 1`] = `
 exports[`<ExecutionActions /> tests snapshot tests "Paused" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -621,7 +621,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: Menu 1`] = `
 exports[`<ExecutionActions /> tests snapshot tests "Queued" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -724,7 +724,7 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: Men
 exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -827,7 +827,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Running" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -930,7 +930,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Success" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"
@@ -1033,7 +1033,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: Menu 1`] 
 exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: container 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
   >
     <span
       class="bp3-popover-wrapper bp3-dark"

@@ -320,7 +320,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   /*--------------------------------------Run Pipeline---------------------------------------------*/
 
   return (
-    <Layout.Horizontal onClick={killEvent}>
+    <Layout.Horizontal onClick={killEvent} flex={{ alignItems: 'center' }}>
       {!menuOnlyActions && stageId && (
         <>
           {canAbort && (
