@@ -140,7 +140,7 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                         />
                       </div>
                       {CDS_SUPPORT_SKIPPING_BG_DEPLOYMENT_NG ? (
-                        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                        <div className={cx(stepCss.formGroup, stepCss.lg)}>
                           <FormMultiTypeCheckboxField
                             name="spec.skipUnchangedManifest"
                             label={getString('cd.steps.common.skipUnchangedManifest')}
