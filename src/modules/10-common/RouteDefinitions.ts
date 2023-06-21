@@ -2191,19 +2191,6 @@ const routes = {
   // SSCA
   toSSCA: withAccountId(() => '/ssca'),
   toSSCAOverview: withAccountId(() => '/ssca/overview'),
-  toAllowDenyList: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
-      const path = `allow-deny-list`
-      return getScopeBasedRoute({
-        scope: {
-          orgIdentifier,
-          projectIdentifier,
-          module
-        },
-        path
-      })
-    }
-  ),
   toSSCAGettingStarted: withAccountId(() => '/ssca/getting-started'),
   // IDP
   toIDPDefaultPath: withAccountId(() => '/idp-default'),

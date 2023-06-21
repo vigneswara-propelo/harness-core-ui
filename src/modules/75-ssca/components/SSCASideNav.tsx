@@ -52,7 +52,6 @@ export default function SSCASideNav(): React.ReactElement {
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
           <SidebarLink label={getString('common.pipelineExecution')} to={routes.toDeployments(params)} />
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
-          <SidebarLink label={getString('ssca.allowDenyList')} to={routes.toAllowDenyList(params)} />
           <ProjectSetupMenu module={module} />
         </>
       )}

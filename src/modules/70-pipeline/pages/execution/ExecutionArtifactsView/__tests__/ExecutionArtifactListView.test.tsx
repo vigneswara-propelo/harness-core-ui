@@ -8,6 +8,7 @@
 import { RenderResult, render, screen, within } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
+import { useEnforcementnewGetEnforcementResultsByIdNewQuery } from '@harnessio/react-ssca-service-client'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -16,6 +17,8 @@ import executionDetails from './mocks/execution-with-artifacts.json'
 import violationList from './mocks/violation-list.json'
 import executionContext from './mocks/execution-context.json'
 import ExecutionArtifactsView from '../ExecutionArtifactsView'
+
+jest.useFakeTimers({ advanceTimers: true })
 
 jest.mock('@harnessio/react-ssca-service-client', () => ({
   useEnforcementnewGetEnforcementResultsByIdNewQuery: jest.fn().mockImplementation(() => {
@@ -91,7 +94,7 @@ describe('ExecutionArtifactListView', () => {
     ).toBeInTheDocument()
   })
 
-  test('should show violation list view for enforcement step', async () => {
+  test('should show violation list view for enforcement step | search | sort', async () => {
     renderArtifactsTab()
     const rows = await screen.findAllByRole('row')
 
@@ -105,5 +108,22 @@ describe('ExecutionArtifactListView', () => {
         name: 'pipeline.artifactViolationDetails'
       })
     ).toBeInTheDocument()
+
+    await userEvent.type(screen.getByRole('searchbox'), 'my search term')
+    jest.runOnlyPendingTimers()
+    expect(useEnforcementnewGetEnforcementResultsByIdNewQuery).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        queryParams: { order: 'ASC', page: 0, pageSize: 20, searchTerm: 'my search term', sort: 'name' }
+      })
+    )
+
+    const supplier = await screen.findByText('pipeline.supplier')
+    await userEvent.click(supplier)
+    jest.runOnlyPendingTimers()
+    expect(useEnforcementnewGetEnforcementResultsByIdNewQuery).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        queryParams: expect.objectContaining({ order: 'DESC', sort: 'supplier' })
+      })
+    )
   })
 })

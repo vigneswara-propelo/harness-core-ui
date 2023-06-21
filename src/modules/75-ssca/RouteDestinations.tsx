@@ -61,7 +61,6 @@ export default (
       sidebarProps={SSCASideNavProps}
       path={[
         routes.toSSCAOverview({ ...accountPathProps }),
-        routes.toAllowDenyList({ ...projectPathProps, ...moduleParams }),
         routes.toProjectOverview({ ...projectPathProps, ...moduleParams })
       ]}
     >

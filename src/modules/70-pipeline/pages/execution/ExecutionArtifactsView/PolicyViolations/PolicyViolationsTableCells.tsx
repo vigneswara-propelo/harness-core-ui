@@ -49,9 +49,15 @@ export const PackageNameCell: CellType = ({ row }) => {
 export const PackageSupplierCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-      {data.supplier}
-    </Text>
+    <Layout.Vertical spacing="xsmall">
+      <Text font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
+        {data.supplier}
+      </Text>
+
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
+        {data.supplierType}
+      </Text>
+    </Layout.Vertical>
   )
 }
 

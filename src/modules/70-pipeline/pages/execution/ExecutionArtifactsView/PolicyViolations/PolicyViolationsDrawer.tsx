@@ -105,7 +105,7 @@ export function PolicyViolationsDrawer({
       >
         <div className={css.subHeader}>
           <Text color={Color.GREY_900} font={{ weight: 'bold' }}>
-            {`${getString('total')}: ${data?.content.results?.length}`}
+            {`${getString('total')}: ${data?.pagination?.total}`}
           </Text>
           <ExpandingSearchInput
             defaultValue={searchTerm}
