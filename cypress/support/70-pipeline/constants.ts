@@ -407,7 +407,8 @@ export const triggersListData = {
     'ACR',
     'Custom',
     'Github Package Registry',
-    'Google Artifact Registry'
+    'Google Artifact Registry',
+    'Google Cloud Storage'
   ],
   Manifest: ['Helm Chart'],
   Scheduled: ['Cron']
