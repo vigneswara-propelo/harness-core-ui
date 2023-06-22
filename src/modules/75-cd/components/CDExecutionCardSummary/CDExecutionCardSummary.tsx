@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { Layout } from '@harness/uicore'
-import { identity, uniqBy } from 'lodash-es'
+import { uniqBy } from 'lodash-es'
 import { String } from 'framework/strings'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
-import type { CDPipelineModuleInfo, CDStageModuleInfo, ServiceExecutionSummary } from 'services/cd-ng'
+import type { CDPipelineModuleInfo, CDStageModuleInfo, Environment, ServiceExecutionSummary } from 'services/cd-ng'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
 import { ServicesList } from '../CDExecutionSummary/ServicesList'
 import { EnvironmentsList } from '../CDExecutionSummary/EnvironmentsList'
@@ -26,12 +26,12 @@ export function CDExecutionCardSummary(props: ExecutionCardInfoProps): React.Rea
   const { servicesMap, environments } = React.useMemo(() => {
     const stagesMap = getPipelineStagesMap(nodeMap, startingNodeId)
     const serviceMapObj: ServiceExecutionSummary[] = []
-    const environmentsList: string[] = []
+    const environmentsList: Environment[] = []
     stagesMap.forEach(stage => {
       const stageInfo = stage.moduleInfo?.cd || ({} as CDStageModuleInfo)
       const serviceInfo = stageInfo?.serviceInfo
       if (stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier) {
-        environmentsList.push(stageInfo.infraExecutionSummary.name || stageInfo.infraExecutionSummary.identifier)
+        environmentsList.push(stageInfo.infraExecutionSummary)
       }
       // istanbul ignore else
       if (serviceInfo?.identifier) {
@@ -39,7 +39,10 @@ export function CDExecutionCardSummary(props: ExecutionCardInfoProps): React.Rea
       }
     })
 
-    return { servicesMap: uniqBy(serviceMapObj, s => s.identifier), environments: uniqBy(environmentsList, identity) }
+    return {
+      servicesMap: uniqBy(serviceMapObj, s => s.identifier),
+      environments: uniqBy(environmentsList, env => env.identifier)
+    }
   }, [nodeMap, startingNodeId])
 
   return (

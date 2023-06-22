@@ -7,10 +7,11 @@
 
 import React from 'react'
 import { Icon } from '@harness/uicore'
-import { defaultTo, identity, uniqBy } from 'lodash-es'
+import { uniqBy } from 'lodash-es'
 import type {
   CDPipelineModuleInfo,
   CDStageModuleInfo,
+  Environment,
   GitOpsExecutionSummary,
   ServiceExecutionSummary
 } from 'services/cd-ng'
@@ -29,7 +30,7 @@ export function CDExecutionSummary(props: ExecutionSummaryProps<CDPipelineModule
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const services: ServiceExecutionSummary[] = []
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    const environments: string[] = []
+    const environments: Environment[] = []
 
     nodeMap.forEach(stage => {
       const stageInfo = stage.moduleInfo?.cd || /* istanbul ignore next */ ({} as CDStageModuleInfo)
@@ -40,20 +41,18 @@ export function CDExecutionSummary(props: ExecutionSummaryProps<CDPipelineModule
 
       // This will removed with the multi service env list view effort
       const gitOpsEnvironments = Array.isArray(stageInfo.gitopsExecutionSummary?.environments)
-        ? (stageInfo.gitopsExecutionSummary as Required<GitOpsExecutionSummary>).environments.map(envForGitOps =>
-            defaultTo(envForGitOps.name, '')
-          )
+        ? (stageInfo.gitopsExecutionSummary as Required<GitOpsExecutionSummary>).environments
         : []
 
       // istanbul ignore else
       if (gitOpsEnvironments.length) {
         environments.push(...gitOpsEnvironments)
       } else if (stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier) {
-        environments.push(stageInfo.infraExecutionSummary.name || stageInfo.infraExecutionSummary.identifier)
+        environments.push(stageInfo.infraExecutionSummary)
       }
     })
 
-    return { services: uniqBy(services, s => s.identifier), environments: uniqBy(environments, identity) }
+    return { services: uniqBy(services, s => s.identifier), environments: uniqBy(environments, env => env.identifier) }
   }, [nodeMap])
 
   return (

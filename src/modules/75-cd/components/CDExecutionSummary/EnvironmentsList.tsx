@@ -20,10 +20,11 @@ import routes from '@common/RouteDefinitions'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { String } from 'framework/strings'
+import { Environment } from 'services/cd-ng'
 import css from './CDExecutionSummary.module.scss'
 
 interface EnvironmentsListProps {
-  environments: string[]
+  environments: Environment[]
   className?: string
   limit?: number
 }
@@ -39,20 +40,20 @@ export function EnvironmentsList({ environments, limit = 2, className }: Environ
             <Icon name="environments" className={css.envIcon} size={14} />
             <Container flex>
               {environments.slice(0, limit).map(env => {
-                const envScope = getScopeFromValue(defaultTo(env, ''))
+                const envScope = getScopeFromValue(defaultTo(env.identifier, ''))
                 return (
-                  <Text className={css.envName} lineClamp={1} key={env} margin={{ right: 'small' }}>
+                  <Text className={css.envName} lineClamp={1} key={env.identifier} margin={{ right: 'small' }}>
                     <Link
                       to={`${routes.toEnvironmentDetails({
                         accountId,
                         ...(envScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                         ...(envScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-                        environmentIdentifier: defaultTo(getIdentifierFromScopedRef(env), ''),
+                        environmentIdentifier: defaultTo(getIdentifierFromScopedRef(defaultTo(env.identifier, '')), ''),
                         module,
                         accountRoutePlacement: 'settings'
                       })}`}
                     >
-                      {env}
+                      {env.name}
                     </Link>
                   </Text>
                 )

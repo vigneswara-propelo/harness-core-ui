@@ -7,19 +7,35 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import type { ServiceExecutionSummary } from 'services/cd-ng'
+import { defaultTo } from 'lodash-es'
+import type { Environment, ServiceExecutionSummary } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 
+import { Scope } from '@common/interfaces/SecretsInterface'
+import routes from '@common/RouteDefinitions'
+import { executionPathProps, modulePathProps } from '@common/utils/routeUtils'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import { CDExecutionSummary } from '../CDExecutionSummary'
 import { EnvironmentsList } from '../EnvironmentsList'
 import { ServicesList } from '../ServicesList'
 import { ServicesTableProps, ServicesTable } from '../ServicesTable'
 import props from './props.json'
 
-const environmentProps = {
-  environments: ['demo1', 'demo2', 'demo3'],
+const environmentProps: { environments: Environment[]; className: string } = {
+  environments: [
+    { name: 'demo1', identifier: 'demo1' },
+    { name: 'demo2', identifier: 'demo2' },
+    { name: 'demo3', identifier: 'demo3' }
+  ],
   className: 'demo'
 }
+const getModuleParams = (scope: Scope, module = 'cd') => ({
+  accountId: 'accountId',
+  ...(scope != Scope.ACCOUNT && { orgIdentifier: 'orgIdentifier' }),
+  ...(scope === Scope.PROJECT && { projectIdentifier: 'projectIdentifier' }),
+  module
+})
 
 const servicesTableProps: ServicesTableProps = {
   services: [
@@ -83,5 +99,47 @@ describe('<CDExecutionSummary /> tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+})
+
+describe('CDExecutionSummary links navigation test', () => {
+  test('Service & Env detail should be links to respective summary/config pages', () => {
+    const envId = defaultTo(props.nodeMap[1].moduleInfo.cd.infraExecutionSummary?.identifier, '')
+    const serviceId = defaultTo(props.nodeMap[1].moduleInfo.cd.serviceInfo?.identifier, '')
+    const envScope = getScopeFromValue(envId)
+    const serviceScope = getScopeFromValue(serviceId)
+    const { getByText } = render(
+      <TestWrapper
+        path={routes.toExecutionPipelineView({ ...executionPathProps, ...modulePathProps })}
+        pathParams={{
+          ...getModuleParams(Scope.PROJECT),
+          pipelineIdentifier: 'pipeline',
+          executionIdentifier: 'execution',
+          source: 'deployments'
+        }}
+      >
+        <CDExecutionSummary {...(props as any)} />
+      </TestWrapper>
+    )
+    const envText = getByText('UAT')
+    const serviceText = getByText('service1')
+
+    expect(envText).toHaveAttribute(
+      'href',
+      routes.toEnvironmentDetails({
+        ...getModuleParams(envScope),
+        environmentIdentifier: defaultTo(getIdentifierFromScopedRef(envId), ''),
+        accountRoutePlacement: 'settings'
+      } as any)
+    )
+
+    expect(serviceText).toHaveAttribute(
+      'href',
+      routes.toServiceStudio({
+        ...getModuleParams(serviceScope),
+        serviceId: defaultTo(getIdentifierFromScopedRef(serviceId), ''),
+        accountRoutePlacement: 'settings'
+      } as any)
+    )
   })
 })
