@@ -41,7 +41,7 @@ function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
     className,
     ...rest
   } = props
-  const { name, label, placeholder, tooltipProps, multiTextInputProps, disabled, variableNamePath } = rest
+  const { name, label, placeholder, tooltipProps, multiTextInputProps, disabled, variableNamePath, onChange } = rest
   const value = get(formik?.values, name, '')
   const variableName = variableNamePath ? get(formik?.values, variableNamePath, name) : name
 
@@ -53,7 +53,8 @@ function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
     allowedTypes: defaultTo(multiTextInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template,
     readonly: disabled,
-    tooltipProps
+    tooltipProps,
+    onChange
   })
 
   const inputField = shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template) ? (
