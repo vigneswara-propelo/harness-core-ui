@@ -40,7 +40,6 @@ import {
   NGTriggerSourceV2,
   useGetSchemaYaml,
   ResponseNGTriggerResponse,
-  GetTriggerQueryParams,
   CreateTriggerQueryParams,
   UpdateTriggerQueryParams,
   useGetMergeInputSetFromPipelineTemplateWithListInput
@@ -130,6 +129,12 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     manifestType,
     artifactType
   } = useQueryParams<TriggerGitQueryParams>()
+  const gitXQueryParams = {
+    branch,
+    repoName: pipelineRepoName,
+    repoIdentifier,
+    parentEntityConnectorRef: pipelineConnectorRef
+  }
   const history = useHistory()
   const { getString } = useStrings()
   const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
@@ -140,7 +145,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch
+      // GitX related query params
+      ...gitXQueryParams
     },
     body: {
       stageIdentifiers: []
@@ -154,9 +160,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier,
-      branch
-    } as GetTriggerQueryParams,
+      targetIdentifier: pipelineIdentifier
+    },
     lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
@@ -166,7 +171,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -226,9 +232,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true

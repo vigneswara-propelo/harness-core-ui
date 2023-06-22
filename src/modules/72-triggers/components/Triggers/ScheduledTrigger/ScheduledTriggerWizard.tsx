@@ -128,6 +128,12 @@ export default function ScheduledTriggerWizard(
     branch,
     storeType
   } = useQueryParams<GitQueryParams>()
+  const gitXQueryParams = {
+    branch,
+    repoName: pipelineRepoName,
+    repoIdentifier,
+    parentEntityConnectorRef: pipelineConnectorRef
+  }
 
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
@@ -135,9 +141,8 @@ export default function ScheduledTriggerWizard(
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     body: {
       stageIdentifiers: []
@@ -152,9 +157,8 @@ export default function ScheduledTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -245,9 +249,8 @@ export default function ScheduledTriggerWizard(
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true

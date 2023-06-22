@@ -36,7 +36,7 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
   const allowStageExecutions = resolvedPipeline?.allowStageExecutions
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } =
     useParams<TriggerPathProps>()
-  const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
+  const { branch, connectorRef, repoName, repoIdentifier } = useQueryParams<GitQueryParams>()
 
   const [selectedStages, setSelectedStages] = useState<SelectOption[]>(
     /**
@@ -60,8 +60,9 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
     // GitX related query params
     branch,
     repoName,
+    repoIdentifier,
     parentEntityConnectorRef: connectorRef,
-    parentEntityRepoName: repoIdentifier
+    parentEntityRepoName: repoName
   }
 
   const { data: stageExecutionData } = useGetStagesExecutionList({

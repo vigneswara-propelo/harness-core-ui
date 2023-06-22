@@ -107,7 +107,10 @@ function WebhookPipelineInputPanelForm({
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
+      // GitX related query params
       branch,
+      repoName,
+      repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
     },

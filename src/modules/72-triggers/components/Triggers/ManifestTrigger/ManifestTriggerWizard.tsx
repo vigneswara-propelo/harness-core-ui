@@ -52,7 +52,6 @@ import { useStrings } from 'framework/strings'
 
 import { Failure, getConnectorListV2Promise, GetConnectorQueryParams, useGetConnector } from 'services/cd-ng'
 import {
-  GetTriggerQueryParams,
   NGTriggerConfigV2,
   NGTriggerSourceV2,
   PipelineInfoConfig,
@@ -130,6 +129,12 @@ export default function ManifestTriggerWizard(
     triggerType: triggerTypeOnNew,
     manifestType
   } = useQueryParams<TriggerGitQueryParams>()
+  const gitXQueryParams = {
+    branch,
+    repoName: pipelineRepoName,
+    repoIdentifier,
+    parentEntityConnectorRef: pipelineConnectorRef
+  }
   const history = useHistory()
   const { getString } = useStrings()
   const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
@@ -140,9 +145,8 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     body: {
       stageIdentifiers: []
@@ -156,9 +160,8 @@ export default function ManifestTriggerWizard(
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier,
-      branch
-    } as GetTriggerQueryParams,
+      targetIdentifier: pipelineIdentifier
+    },
     lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
@@ -168,9 +171,8 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -186,28 +188,9 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      ...(isNewGitSyncRemotePipeline
-        ? {
-            ignoreError,
-            branch,
-            connectorRef: pipelineConnectorRef,
-            repoName: pipelineRepoName,
-            storeType
-          }
-        : undefined)
+      ignoreError
     }),
-    [
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      ignoreError,
-      isNewGitSyncRemotePipeline,
-      branch,
-      pipelineConnectorRef,
-      pipelineRepoName,
-      storeType
-    ]
+    [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, ignoreError]
   )
   const retryFn = useRef<() => void>(noop)
   const [retrySavingConfirmationMessage, setRetrySavingConfirmation] = useState('')
@@ -250,9 +233,8 @@ export default function ManifestTriggerWizard(
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true

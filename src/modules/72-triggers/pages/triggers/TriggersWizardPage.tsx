@@ -42,7 +42,6 @@ import {
   NGTriggerSourceV2,
   useGetSchemaYaml,
   ResponseNGTriggerResponse,
-  GetTriggerQueryParams,
   useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 import {
@@ -163,6 +162,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     manifestType,
     artifactType
   } = useQueryParams<TriggerGitQueryParams>()
+  const gitXQueryParams = {
+    branch,
+    repoName: pipelineRepoName,
+    repoIdentifier,
+    parentEntityConnectorRef: pipelineConnectorRef
+  }
   const history = useHistory()
   const { getString } = useStrings()
   const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
@@ -172,9 +177,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     body: {
       stageIdentifiers: []
@@ -188,9 +192,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier,
-      branch
-    } as GetTriggerQueryParams,
+      targetIdentifier: pipelineIdentifier
+    },
     lazy: isNewTrigger(triggerIdentifier)
   })
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
@@ -200,9 +203,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -290,9 +292,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: branch,
-      parentEntityConnectorRef: pipelineConnectorRef,
-      parentEntityRepoName: pipelineRepoName
+      // GitX related query params
+      ...gitXQueryParams
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true

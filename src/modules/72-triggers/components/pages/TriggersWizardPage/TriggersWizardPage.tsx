@@ -10,15 +10,10 @@ import { useParams } from 'react-router-dom'
 
 import { PageSpinner } from '@harness/uicore'
 
-import { GetTriggerQueryParams, NGTriggerConfigV2, useGetTrigger } from 'services/pipeline-ng'
+import { NGTriggerConfigV2, useGetTrigger } from 'services/pipeline-ng'
 
 import { useQueryParams } from '@common/hooks'
-import type {
-  GitQueryParams,
-  PipelinePathProps,
-  TriggerPathProps,
-  TriggerQueryParams
-} from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, TriggerPathProps, TriggerQueryParams } from '@common/interfaces/RouteInterfaces'
 import { parse } from '@common/utils/YamlHelperMethods'
 
 import factory from '@triggers/factory/TriggerFactory'
@@ -43,9 +38,7 @@ export default function TriggersWizardPage(): JSX.Element {
     pipelineIdentifier,
     triggerIdentifier
   } = useParams<PipelinePathProps & TriggerPathProps>()
-  const { triggerType, sourceRepo, artifactType, manifestType, branch, scheduleType } = useQueryParams<
-    TriggerQueryParams & GitQueryParams
-  >()
+  const { triggerType, sourceRepo, artifactType, manifestType, scheduleType } = useQueryParams<TriggerQueryParams>()
 
   const [type, setType] = useState<TriggerSubType>(
     (sourceRepo as SourceRepo) ||
@@ -62,9 +55,8 @@ export default function TriggersWizardPage(): JSX.Element {
       accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier,
-      branch
-    } as GetTriggerQueryParams,
+      targetIdentifier: pipelineIdentifier
+    },
     lazy: isNewTrigger(triggerIdentifier)
   })
 

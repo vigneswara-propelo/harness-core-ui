@@ -100,7 +100,12 @@ function ManifestTriggerInputPanelForm({
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch
+      // GitX related query params
+      branch,
+      repoName,
+      repoIdentifier,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     },
     body: {
       stageIdentifiers: formikProps.values?.stagesToExecute ?? []

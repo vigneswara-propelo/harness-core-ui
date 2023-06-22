@@ -189,7 +189,10 @@ function WebhookPipelineInputPanelForm({
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
+      // GitX related query params
       branch,
+      repoName,
+      repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
     },
@@ -217,7 +220,10 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
+      // GitX related query params
       branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch,
+      repoName,
+      repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
     },
