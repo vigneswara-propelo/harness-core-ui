@@ -44,6 +44,7 @@ import serviceEmptyStateSvg from '@cd/icons/ServiceDetailsEmptyState.svg'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Sort, SortFields } from '@common/utils/listUtils'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import {
@@ -94,6 +95,8 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
     description: '',
     tags: {}
   })
+
+  useDocumentTitle(getString('services'))
 
   useEffect(() => {
     if (isEdit) {
