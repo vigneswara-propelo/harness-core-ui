@@ -16,7 +16,8 @@ import css from '../DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.mo
 
 const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> = props => {
   const {
-    analysisRow: { metricName, risk, transactionName, nodeRiskCount, healthSource, deeplinkURL }
+    analysisRow: { metricName, risk, transactionName, nodeRiskCount, healthSource, deeplinkURL },
+    isSimpleVerification
   } = props
   const { name, type } = healthSource || {}
 
@@ -63,9 +64,11 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
         {risk}
       </Text>
 
-      <Container>
-        <NodeCount nodeRiskCount={nodeRiskCount} />
-      </Container>
+      {!isSimpleVerification && (
+        <Container>
+          <NodeCount nodeRiskCount={nodeRiskCount} />
+        </Container>
+      )}
     </>
   )
 }

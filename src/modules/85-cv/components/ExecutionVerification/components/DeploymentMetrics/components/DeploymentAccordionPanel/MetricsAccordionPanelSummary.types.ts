@@ -2,4 +2,5 @@ import type { DeploymentMetricsAnalysisRowProps } from '../DeploymentMetricsAnal
 
 export interface MetricsAccordionPanelSummaryProps {
   analysisRow: DeploymentMetricsAnalysisRowProps
+  isSimpleVerification?: boolean
 }

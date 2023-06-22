@@ -5,13 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React from 'react'
+import { render, screen, waitFor } from '@testing-library/react'
+import { Formik } from 'formik'
+import userEvent from '@testing-library/user-event'
+import { MultiTypeInputType } from '@harness/uicore'
+import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { validateMonitoredService } from '../ContinousVerificationWidget.utils'
 import {
   expectedErrorsForEmptyTemplateInputs,
+  formikMockValues,
+  formikMockValuesWithSimpleVerification,
   mockedTemplateInputs,
   mockedTemplateInputsToValidate
 } from './ContinousVerificationWidget.mock'
+import SelectVerificationType from '../components/ContinousVerificationWidgetSections/components/SelectVerificationType/SelectVerificationType'
 
 describe('Unit tests for ContinousVerificationWidget Utils', () => {
   const type = 'Default'
@@ -161,5 +170,79 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         isMultiServiesOrEnvs
       )
     ).toEqual(expectedErrorsForEmptyTemplateInputs)
+  })
+
+  describe('Simple verification', () => {
+    test('Should not add Simple verification option if feature flag is disabled', async () => {
+      render(
+        <TestWrapper>
+          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+            <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+          </Formik>
+        </TestWrapper>
+      )
+
+      const verificationTypeDropdownInput = document.querySelector('input[name="spec.type"]')
+
+      expect(verificationTypeDropdownInput).toBeInTheDocument()
+
+      await userEvent.click(verificationTypeDropdownInput!)
+
+      expect(screen.getByText('Rolling Update')).toBeInTheDocument()
+      expect(screen.queryByText('pipeline.deploymentType.thresholdAnalysis')).not.toBeInTheDocument()
+    })
+
+    test('Should show Simple verification option if feature flag is enabled', async () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_SIMPLE_VERIFICATION: true }}>
+          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+            <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+          </Formik>
+        </TestWrapper>
+      )
+
+      const verificationTypeDropdownInput = document.querySelector('input[name="spec.type"]')
+
+      expect(verificationTypeDropdownInput).toBeInTheDocument()
+
+      await userEvent.click(verificationTypeDropdownInput!)
+
+      expect(screen.getByText('Rolling Update')).toBeInTheDocument()
+
+      const simpleVerificationOption = screen.getByText('pipeline.deploymentType.thresholdAnalysis')
+
+      expect(simpleVerificationOption).toBeInTheDocument()
+
+      await userEvent.click(simpleVerificationOption)
+    })
+
+    test('Should should render the form based on the deployment type selected', async () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_SIMPLE_VERIFICATION: true }}>
+          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
+            <SelectVerificationType
+              allowableTypes={[MultiTypeInputType.FIXED]}
+              formik={formikMockValuesWithSimpleVerification}
+            />
+          </Formik>
+        </TestWrapper>
+      )
+
+      const verificationTypeDropdownInput = document.querySelector('input[name="spec.type"]')
+
+      expect(verificationTypeDropdownInput).toBeInTheDocument()
+
+      await userEvent.click(verificationTypeDropdownInput!)
+
+      expect(screen.getByText('Rolling Update')).toBeInTheDocument()
+
+      const simpleVerificationOption = screen.getByText('pipeline.deploymentType.thresholdAnalysis')
+
+      expect(simpleVerificationOption).toBeInTheDocument()
+
+      await userEvent.click(simpleVerificationOption)
+
+      await waitFor(() => expect(screen.getByTestId(/simpleVerification_form/)).toBeInTheDocument())
+    })
   })
 })

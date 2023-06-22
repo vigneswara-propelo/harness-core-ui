@@ -5,6 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+@mixin common-tooltip-styles {
+  background: var(--primary-9-dark) !important;
+  width: 25%;
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  box-shadow: var(--elevation-3);
+  padding-bottom: var(--spacing-xxlarge) !important;
+}
+
 .main {
   width: 100% !important;
   border: 1px solid #effbff;
@@ -79,35 +88,44 @@
 }
 
 :global(.metricsGraph_tooltip.highcharts-tooltip) {
-  background: var(--primary-9-dark) !important;
-  width: 25%;
+  @include common-tooltip-styles;
+
   min-height: 80%;
-  border: 1px solid var(--grey-200);
-  border-radius: 10px;
-  box-shadow: var(--elevation-3);
-  padding-bottom: var(--spacing-xxlarge) !important;
 }
-:global(.metricsGraph_tooltip.highcharts-tooltip > span) {
+
+:global(.metricsGraph_tooltip_onlyTestData.highcharts-tooltip) {
+  @include common-tooltip-styles;
+
+  min-height: 60%;
+}
+
+:global(.metricsGraph_tooltip.highcharts-tooltip > span),
+:global(.metricsGraph_tooltip_onlyTestData.highcharts-tooltip > span) {
   padding-top: var(--spacing-xsmall);
 }
-:global(.metricsGraph_tooltip.highcharts-tooltip .sectionParent) {
+
+:global(.metricsGraph_tooltip.highcharts-tooltip .sectionParent),
+:global(.metricsGraph_tooltip_onlyTestData.highcharts-tooltip .sectionParent) {
   display: flex;
   align-items: flex-start;
   margin-bottom: var(--spacing-small);
 }
 
-:global(.metricsGraph_tooltip.highcharts-tooltip .riskIndicator) {
+:global(.metricsGraph_tooltip.highcharts-tooltip .riskIndicator),
+:global(.metricsGraph_tooltip_onlyTestData.highcharts-tooltip .riskIndicator) {
   height: 10px;
   min-width: 10px;
   border-radius: 1px;
 }
 
-:global(.metricsGraph_tooltip.highcharts-tooltip p) {
+:global(.metricsGraph_tooltip.highcharts-tooltip p),
+:global(.metricsGraph_tooltip_onlyTestData.highcharts-tooltip p) {
   margin-bottom: var(--spacing-tiny);
   margin-top: -2px;
 }
 
-:global(.metricsGraph_tooltip.highcharts-tooltip path) {
+:global(.metricsGraph_tooltip.highcharts-tooltip path),
+:global(.metricsGraph_tooltip_onlyTestData.highcharts-tooltip path) {
   display: none !important;
 }
 

@@ -5,15 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { FormInput, AllowedTypes, SelectOption, Text, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import Card from '@cv/components/Card/Card'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { continousVerificationTypes } from './constants'
 import ConfigureFields from '../ConfigureFields/ConfigureFields'
+import { VerificationTypes } from '../ConfigureFields/constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface SelectVerificationTypeProps {
   formik: FormikProps<ContinousVerificationData>
@@ -22,7 +25,25 @@ interface SelectVerificationTypeProps {
 
 export default function SelectVerificationType(props: SelectVerificationTypeProps): React.ReactElement {
   const { formik, allowableTypes } = props
+
   const { getString } = useStrings()
+
+  const isSimpleVerificationEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_SIMPLE_VERIFICATION)
+
+  const continousVerificationTypeOptions = useMemo(() => {
+    const options = [...continousVerificationTypes]
+
+    if (isSimpleVerificationEnabled) {
+      options.push({
+        value: VerificationTypes.SimpleVerification,
+        label: getString('pipeline.deploymentType.thresholdAnalysis'),
+        icon: { name: 'simple-verification' }
+      })
+    }
+
+    return options
+  }, [isSimpleVerificationEnabled])
+
   return (
     <Card>
       <>
@@ -32,7 +53,7 @@ export default function SelectVerificationType(props: SelectVerificationTypeProp
             <FormInput.Select
               name="spec.type"
               label={getString('connectors.cdng.continousVerificationType')}
-              items={continousVerificationTypes as SelectOption[]}
+              items={continousVerificationTypeOptions as SelectOption[]}
             />
           </div>
         </Layout.Vertical>

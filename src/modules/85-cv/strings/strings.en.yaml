@@ -836,6 +836,7 @@ metricsAnalysis:
     mlAnalysis: '{{ verificationType }} by the Harness ML analysis'
     noControlData: No control data to compare against.
     noTestData: No data to be analysed.
+    noFailFast: No fail-fast threshold was breached.
   showDetails: Show details
   controlDataType:
     minDeviation: Host with minimum deviation

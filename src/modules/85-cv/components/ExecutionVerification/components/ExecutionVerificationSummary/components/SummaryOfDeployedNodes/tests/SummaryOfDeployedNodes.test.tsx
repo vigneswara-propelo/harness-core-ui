@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SummaryOfDeployedNodes } from '../SummaryOfDeployedNodes'
 
@@ -35,5 +35,27 @@ describe('Unit tests for SummaryOfDeployedNodes', () => {
     await waitFor(() => expect(getByText('pipeline.verification.metricsInViolation')).not.toBeNull())
     expect(container).toMatchSnapshot()
     fireEvent.click(container.querySelector('[class*="viewDetails"]')!)
+  })
+
+  test('should render only metrics data the analysisType is SIMPLE', async () => {
+    render(
+      <TestWrapper>
+        <SummaryOfDeployedNodes
+          metricsInViolation={3}
+          totalMetrics={20}
+          logClustersInViolation={5}
+          totalLogClusters={5}
+          errorClustersInViolation={7}
+          totalErrorClusters={11}
+          analysisType="SIMPLE"
+        />
+      </TestWrapper>
+    )
+
+    expect(screen.getByText(/pipeline.verification.metricsInViolation/)).toBeInTheDocument()
+
+    expect(screen.queryByText(/pipeline.verification.logClustersInViolation/)).not.toBeInTheDocument()
+
+    expect(screen.queryByText(/pipeline.verification.errorClustersInViolation/)).not.toBeInTheDocument()
   })
 })

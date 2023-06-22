@@ -5,6 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { FormikProps } from 'formik'
+import { ContinousVerificationData } from '../../../types'
+
 export const mockedTemplateInputsToValidate = {
   identifier: '<+monitoredService.serviceRef>_<+monitoredService.environmentRef>',
   type: 'Application',
@@ -109,6 +112,75 @@ export const expectedErrorsForEmptyTemplateInputs = {
         }
       },
       type: 'Template Selection is required.'
+    }
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+export const formikMockValues: FormikProps<ContinousVerificationData> = {
+  setFieldValue: jest.fn(),
+  values: {
+    type: 'Verify',
+    name: 'Verify',
+    identifier: 'Verify',
+    timeout: '30m',
+    spec: {
+      type: 'Auto',
+      monitoredService: {
+        type: 'Default',
+        spec: {}
+      },
+      spec: {
+        sensitivity: {
+          label: 'High',
+          value: 'HIGH'
+        },
+        duration: {
+          label: '10 min',
+          value: '10m'
+        },
+        deploymentTag: 'test',
+        failOnNoAnalysis: true,
+        baseline: '',
+        trafficsplit: ''
+      },
+      isMultiServicesOrEnvs: false,
+      monitoredServiceRef: '',
+      healthSources: [],
+      initialMonitoredService: {
+        type: 'Default',
+        spec: {}
+      }
+    },
+    failureStrategies: [
+      {
+        onFailure: {
+          errors: ['Unknown'],
+          action: {
+            type: 'ManualIntervention',
+            spec: {
+              timeout: '2h',
+              onTimeout: {
+                action: {
+                  type: 'Ignore'
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+
+export const formikMockValuesWithSimpleVerification: FormikProps<ContinousVerificationData> = {
+  ...formikMockValues,
+  values: {
+    ...formikMockValues.values,
+    spec: {
+      ...formikMockValues.values.spec,
+      type: 'SimpleVerification'
     }
   }
 }

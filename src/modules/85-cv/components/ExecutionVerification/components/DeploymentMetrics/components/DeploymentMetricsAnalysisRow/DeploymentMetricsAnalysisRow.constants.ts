@@ -38,6 +38,8 @@ export const getAnalysisReason = (
       return getString('cv.metricsAnalysis.analysisReason.noControlData')
     case 'NO_TEST_DATA':
       return getString('cv.metricsAnalysis.analysisReason.noTestData')
+    case 'NO_FAIL_FAST_THRESHOLD_BREACHED':
+      return getString('cv.metricsAnalysis.analysisReason.noFailFast')
     default:
       return ''
   }

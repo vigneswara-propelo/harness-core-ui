@@ -31,13 +31,38 @@ const getPointIndex = (hoveredXValue: number, points?: PointOptionsObject[]): nu
   return isPointWithSameValueExists ? foundIndex : null
 }
 
+const getControlDataTooltipData = ({
+  baseDataTimestamp,
+  baseDataDisplayValue,
+  getString,
+  isSimpleVerification
+}: {
+  baseDataTimestamp: string
+  baseDataDisplayValue: string
+  getString: UseStringsReturn['getString']
+  isSimpleVerification?: boolean
+}): string => {
+  if (isSimpleVerification) {
+    return ''
+  }
+
+  return ` <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350)">${baseDataTimestamp}</div>
+  <div class="sectionParent"> 
+  <div class="riskIndicator" style="border: 1px solid var(--primary-7);background: var(--primary-2); margin:0 10px 0 4px"></div> 
+  <p><span style="color: var(--grey-350)">${getString(
+    'pipeline.verification.controlData'
+  )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)" >${baseDataDisplayValue}</span></p>
+  </div>`
+}
+
 export function chartsConfig(
   series: DeploymentMetricsAnalysisRowChartSeries[],
   width: number,
   testData: HostTestData | undefined,
   controlData: HostControlTestData | undefined,
   getString: UseStringsReturn['getString'],
-  startTimestampData?: StartTimestampDataType
+  startTimestampData?: StartTimestampDataType,
+  isSimpleVerification?: boolean
 ): Highcharts.Options {
   return {
     chart: {
@@ -116,6 +141,10 @@ export function chartsConfig(
         const testeDataTime = testData?.points[testHostHoveredPointIndex]?.x + testDataStartTimestamp
         const testDataTimestamp = testeDataTime ? moment(testeDataTime).format('lll') : getString('noData')
 
+        const testDataLabel = isSimpleVerification
+          ? getString('valueLabel')
+          : getString('pipeline.verification.testData')
+
         return `
         <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350)">${testDataTimestamp}</div>
         <div class="sectionParent" style="margin-top: 4px">
@@ -123,18 +152,10 @@ export function chartsConfig(
           testData?.risk
         )};background: ${getSecondaryRiskColorValue(testData?.risk)}; margin:0 10px 0 4px"></div>
         <div>
-        <p><span style="color: var(--grey-350)">${getString(
-          'pipeline.verification.testData'
-        )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)">${testDataDisplayValue}</span></p>
+        <p><span style="color: var(--grey-350)">${testDataLabel}:</span><span style="color: var(--white); margin-left: var(--spacing-small)">${testDataDisplayValue}</span></p>
         </div>
         </div>      
-        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350)">${baseDataTimestamp}</div>
-        <div class="sectionParent"> 
-        <div class="riskIndicator" style="border: 1px solid var(--primary-7);background: var(--primary-2); margin:0 10px 0 4px"></div> 
-        <p><span style="color: var(--grey-350)">${getString(
-          'pipeline.verification.controlData'
-        )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)" >${baseDataDisplayValue}</span></p>
-        </div>`
+        ${getControlDataTooltipData({ baseDataDisplayValue, baseDataTimestamp, getString, isSimpleVerification })}`
       },
       positioner: (_, __, point) => {
         const { plotX } = point || {}
@@ -151,7 +172,7 @@ export function chartsConfig(
       },
       useHTML: true,
       outside: false,
-      className: 'metricsGraph_tooltip',
+      className: isSimpleVerification ? 'metricsGraph_tooltip_onlyTestData' : 'metricsGraph_tooltip',
       shared: true
     },
     subtitle: undefined,

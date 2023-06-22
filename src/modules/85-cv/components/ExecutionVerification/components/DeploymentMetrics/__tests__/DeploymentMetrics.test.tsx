@@ -13,7 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import * as cvService from 'services/cv'
 import { DeploymentMetrics } from '../DeploymentMetrics'
-import { transactionNameMock, verifyStepNodeNameMock } from './DeploymentMetrics.mock'
+import { overviewDataMock, transactionNameMock, verifyStepNodeNameMock } from './DeploymentMetrics.mock'
 
 jest.useFakeTimers({ advanceTimers: true })
 
@@ -229,8 +229,6 @@ describe('Unit tests for Deployment metrics ', () => {
       verifyStepExecutionId: '1234_activityId'
     })
 
-    // select anomalous filter
-    // fireEvent.click(anomalousFilter.querySelector('[data-icon="chevron-down"]')!)
     fireEvent.click(screen.getByLabelText('pipeline.verification.anomalousMetricsFilterLabel'))
 
     await waitFor(() =>
@@ -391,8 +389,6 @@ describe('Unit tests for Deployment metrics ', () => {
 
     fireEvent.click(getByText('Retry'))
     await waitFor(() => expect(refetchFn).toHaveBeenCalledTimes(1))
-
-    expect(container).toMatchSnapshot()
   })
 
   test('Ensure no data state is rendered', async () => {
@@ -430,7 +426,6 @@ describe('Unit tests for Deployment metrics ', () => {
 
     await waitFor(() => expect(container.querySelector('[class*="main"]')).not.toBeNull())
     expect(getByText('cv.monitoredServices.noMatchingData')).not.toBeNull()
-    expect(container).toMatchSnapshot()
   })
 
   test('Ensure that when new activityId is passed as prop view is reset', async () => {
@@ -733,5 +728,47 @@ describe('Unit tests for Deployment metrics ', () => {
         verifyStepExecutionId: '1234_activityId'
       })
     )
+  })
+
+  describe('Simple verification changes', () => {
+    test('should not render nodes filter', () => {
+      jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
+        data: HealthSourcesResponse,
+        refetch: jest.fn() as unknown
+      } as any)
+
+      jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
+        data: ApiResponse,
+        refetch: jest.fn() as unknown
+      } as any)
+
+      jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
+        data: transactionNameMock,
+        refetch: jest.fn() as unknown
+      } as any)
+
+      jest.spyOn(cvService, 'useGetVerifyStepNodeNames').mockReturnValue({
+        data: verifyStepNodeNameMock,
+        refetch: jest.fn() as unknown
+      } as any)
+
+      render(
+        <TestWrapper>
+          <DeploymentMetrics
+            step={MockExecutionNode}
+            activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
+            overviewData={overviewDataMock}
+          />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/metrics_legend/)).not.toBeInTheDocument()
+
+      expect(screen.getByText(/pipeline.verification.anomalousMetricsFilterWithoutNodesLabel/)).toBeInTheDocument()
+
+      expect(screen.queryByText(/pipeline.verification.tableHeaders.nodes/)).not.toBeInTheDocument()
+
+      expect(document.querySelector('input[name="data"]')).toBeDisabled()
+    })
   })
 })

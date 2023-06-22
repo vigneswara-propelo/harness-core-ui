@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { RestResponseTransactionMetricInfoSummaryPageDTO } from 'services/cv'
+import type { RestResponseTransactionMetricInfoSummaryPageDTO, VerificationOverview } from 'services/cv'
 
 export const transactionMetricInfoSummary: RestResponseTransactionMetricInfoSummaryPageDTO = {
   metaData: {},
@@ -277,4 +277,65 @@ export const transactionNameMock = {
 
 export const verifyStepNodeNameMock = {
   resource: ['V', 'W']
+}
+
+export const overviewDataMock: VerificationOverview = {
+  spec: {
+    analysedServiceIdentifier: 'svcgcpmetrics',
+    analysedEnvIdentifier: 'envgcpmetrics',
+    monitoredServiceType: 'DEFAULT',
+    monitoredServiceIdentifier: 'svcgcpmetrics_envgcpmetrics',
+    analysisType: 'SIMPLE',
+    sensitivity: 'HIGH',
+    durationInMinutes: 10,
+    isFailOnNoAnalysis: true,
+    baselineType: 'LAST'
+  },
+  appliedDeploymentAnalysisType: 'SIMPLE',
+  verificationStatus: 'VERIFICATION_FAILED',
+  verificationProgressPercentage: 100,
+  verificationStartTimestamp: 1687172877165,
+  testNodes: {
+    nodeType: 'POST_DEPLOYMENT',
+    nodes: [
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'cv-nextgen-6f5c776f58-dl5q9',
+        verificationResult: 'FAILED',
+        failedMetrics: 1,
+        failedLogClusters: 0
+      }
+    ]
+  },
+  controlNodes: {
+    nodeType: 'PRE_DEPLOYMENT',
+    nodes: [
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'cv-nextgen-6f5c776f58-8d2p8'
+      },
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'cv-nextgen-76d9478db-lvs7j'
+      }
+    ]
+  },
+  metricsAnalysis: {
+    healthy: 0,
+    warning: 0,
+    unhealthy: 1,
+    noAnalysis: 0
+  },
+  logClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  },
+  errorClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  },
+  controlDataStartTimestamp: 1687172100000,
+  testDataStartTimestamp: 1687172820000
 }

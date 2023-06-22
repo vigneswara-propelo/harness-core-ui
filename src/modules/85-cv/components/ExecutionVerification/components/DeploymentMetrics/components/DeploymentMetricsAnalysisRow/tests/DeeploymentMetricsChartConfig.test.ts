@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { TooltipOptions } from 'highcharts'
 import type { StringKeys } from 'framework/strings'
 import {
   controlDataMock,
@@ -78,5 +79,41 @@ describe('DeploymentMetricsChartConfig', () => {
 
     expect(tooltipResult).toMatch(/75.75/)
     expect(tooltipResult).toMatch(/noData/)
+  })
+
+  test('should provide correct config for simple verification', () => {
+    const getString = (key: StringKeys): string => key
+
+    const controlDataMockLocal = {
+      points: [
+        { x: 1642941960000, y: 456.6666666666667 },
+        { x: 1642942020000, y: 10 },
+        { x: 1642942080000, y: 466.6666666666667 }
+      ],
+      risk: 'HEALTHY',
+      name: 'control host name'
+    }
+
+    const { tooltip } = chartsConfig(
+      // eslint-disable-next-line
+      // @ts-ignore
+      seriesMock,
+      312.5806451612903,
+      testDataMock,
+      controlDataMockLocal,
+      getString,
+      startTimestampDataMock,
+      true
+    )
+
+    const { className } = tooltip as TooltipOptions
+
+    expect(className).toBe('metricsGraph_tooltip_onlyTestData')
+
+    // eslint-disable-next-line
+    // @ts-ignore
+    const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 3 }, x: 180000 }] }, null)
+
+    expect(tooltipResult).toMatch(/valueLabel/)
   })
 })

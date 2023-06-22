@@ -27,6 +27,7 @@ import { ContinousVerificationWidgetSections } from './components/ContinousVerif
 import { getMonitoredServiceRefFromType, validateMonitoredService } from './ContinousVerificationWidget.utils'
 import { getIsMultiServiceOrEnvs } from '../../utils'
 import { Category, VerifyStepActions } from '../../constants'
+import { VerificationTypes } from './components/ContinousVerificationWidgetSections/components/ConfigureFields/constants'
 
 /**
  * Spec
@@ -67,8 +68,15 @@ export function ContinousVerificationWidget(
       healthSources = [],
       monitoredService: { type },
       monitoredService,
-      initialMonitoredService
+      initialMonitoredService,
+      type: verificationType,
+      spec
     } = formData?.spec || {}
+    if (verificationType !== VerificationTypes.SimpleVerification && isEmpty(spec?.sensitivity)) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      errors['spec.spec.sensitivity'] = getString('connectors.cdng.validations.sensitivityRequired')
+    }
 
     const monitoredServiceRef = getMonitoredServiceRefFromType(monitoredService, type, formData)
     const { monitoredServiceTemplateRef = '', templateInputs = {} as unknown } = monitoredService?.spec || {}
@@ -103,7 +111,6 @@ export function ContinousVerificationWidget(
       type: Yup.string().required(getString('connectors.cdng.validations.verificationTypeRequired')),
       spec: Yup.object().shape({
         duration: Yup.string().required(getString('connectors.cdng.validations.durationRequired')),
-        sensitivity: Yup.string().required(getString('connectors.cdng.validations.sensitivityRequired')),
         deploymentTag: Yup.string().required(getString('connectors.cdng.validations.deploymentTagRequired'))
       })
     })

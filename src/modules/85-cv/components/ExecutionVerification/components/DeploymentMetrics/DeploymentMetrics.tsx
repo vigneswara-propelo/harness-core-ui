@@ -44,6 +44,7 @@ import {
 import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
 import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 import noDataImage from '@cv/assets/noData.svg'
+import { VerificationJobType } from '@cv/constants'
 import { POLLING_INTERVAL, PAGE_SIZE, DATA_OPTIONS, INITIAL_PAGE_NUMBER } from './DeploymentMetrics.constants'
 import { RefreshViewForNewData } from '../RefreshViewForNewDataButton/RefreshForNewData'
 import {
@@ -70,6 +71,7 @@ import MetricsAccordionPanelSummary from './components/DeploymentAccordionPanel/
 import { HealthSourceMultiSelectDropDown } from '../HealthSourcesMultiSelectDropdown/HealthSourceMultiSelectDropDown'
 import DeploymentMetricsLables from './components/DeploymentMetricsLables'
 import type { StartTimestampDataType } from './DeploymentMetrics.types'
+
 import css from './DeploymentMetrics.module.scss'
 
 interface DeploymentMetricsProps {
@@ -91,6 +93,8 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const { step, selectedNode, activityId, overviewData, overviewLoading } = props
   const { getString } = useStrings()
   const pageParams = useQueryParams<ExecutionQueryParams>()
+
+  const isSimpleVerification = overviewData?.spec?.analysisType === VerificationJobType.SIMPLE
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -154,7 +158,8 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     verifyStepExecutionId: activityId,
     queryParams: {
       accountId
-    }
+    },
+    lazy: isSimpleVerification
   })
 
   const accordionIdsRef = useRef<string[]>([])
@@ -342,7 +347,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
 
     return (
       <>
-        <DeploymentMetricsLables />
+        <DeploymentMetricsLables isSimpleVerification={isSimpleVerification} />
         <Accordion
           allowMultiOpen
           panelClassName={css.deploymentMetricsAccordionPanel}
@@ -356,7 +361,9 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
               <Accordion.Panel
                 key={`${transactionName}-${metricName}-${type}`}
                 id={`${transactionName}-${metricName}-${type}`}
-                summary={<MetricsAccordionPanelSummary analysisRow={analysisRow} />}
+                summary={
+                  <MetricsAccordionPanelSummary analysisRow={analysisRow} isSimpleVerification={isSimpleVerification} />
+                }
                 details={
                   <DeploymentMetricsAnalysisRow
                     key={`${transactionName}-${metricName}-${type}`}
@@ -364,6 +371,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
                     selectedDataFormat={selectedDataFormat}
                     className={css.analysisRow}
                     startTimestampData={startTimestampData}
+                    isSimpleVerification={isSimpleVerification}
                   />
                 }
               />
@@ -393,14 +401,16 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           onChange={handleTransactionNameChange}
           buttonTestId={'transaction_name_filter'}
         />
-        <MultiSelectDropDown
-          placeholder={getFilteredText(selectedNodeName, 'pipeline.nodesLabel')}
-          value={selectedNodeName}
-          className={css.filterDropdown}
-          items={getDropdownItems(nodeNames?.resource as string[], nodeNamesLoading, nodeNamesError)}
-          onChange={handleNodeNameChange}
-          buttonTestId={'node_name_filter'}
-        />
+        {!isSimpleVerification && (
+          <MultiSelectDropDown
+            placeholder={getFilteredText(selectedNodeName, 'pipeline.nodesLabel')}
+            value={selectedNodeName}
+            className={css.filterDropdown}
+            items={getDropdownItems(nodeNames?.resource as string[], nodeNamesLoading, nodeNamesError)}
+            onChange={handleNodeNameChange}
+            buttonTestId="node_name_filter"
+          />
+        )}
         <HealthSourceMultiSelectDropDown
           data={healthSourcesDataOptions}
           loading={healthSourcesLoading}
@@ -415,6 +425,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           className={css.filterDropdown}
           value={selectedDataFormat}
           items={DATA_OPTIONS}
+          disabled={isSimpleVerification}
           onChange={hanldeDataFormatChange}
         />
         {showClearFilters ? (
@@ -431,7 +442,11 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
       <Checkbox
         onChange={updatedAnomalousMetricsFilter}
         checked={anomalousMetricsFilterChecked}
-        label={getString('pipeline.verification.anomalousMetricsFilterLabel')}
+        label={
+          isSimpleVerification
+            ? getString('pipeline.verification.anomalousMetricsFilterWithoutNodesLabel')
+            : getString('pipeline.verification.anomalousMetricsFilterLabel')
+        }
         data-testid="anomalousFilterCheckbox"
         className={css.anomolousCheckbox}
       />
@@ -468,15 +483,17 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
               }}
             />
           )}
-          <Layout.Horizontal className={css.legend}>
-            <span className={css.predicted} />
-            <Text font={{ variation: FontVariation.SMALL }}> {getString('connectors.cdng.baseline')}</Text>
-            <span className={css.actualFail} />
-            <span className={css.actualWarning} />
-            <span className={css.actualObserve} />
-            <span className={css.actualHealthy} />
-            <Text font={{ variation: FontVariation.SMALL }}>{getString('common.current')}</Text>
-          </Layout.Horizontal>
+          {!isSimpleVerification && (
+            <Layout.Horizontal className={css.legend} data-testid="metrics_legend">
+              <span className={css.predicted} />
+              <Text font={{ variation: FontVariation.SMALL }}> {getString('connectors.cdng.baseline')}</Text>
+              <span className={css.actualFail} />
+              <span className={css.actualWarning} />
+              <span className={css.actualObserve} />
+              <span className={css.actualHealthy} />
+              <Text font={{ variation: FontVariation.SMALL }}>{getString('common.current')}</Text>
+            </Layout.Horizontal>
+          )}
         </Layout.Horizontal>
       </Layout.Horizontal>
       <Container

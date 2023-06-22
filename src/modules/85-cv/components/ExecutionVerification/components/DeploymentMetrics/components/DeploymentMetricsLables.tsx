@@ -10,7 +10,11 @@ import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from '../DeploymentMetrics.module.scss'
 
-const DeploymentMetricsLables: React.FC = () => {
+interface DeploymentMetricsLablesProps {
+  isSimpleVerification?: boolean
+}
+
+const DeploymentMetricsLables: React.FC<DeploymentMetricsLablesProps> = ({ isSimpleVerification }) => {
   const { getString } = useStrings()
 
   return (
@@ -19,7 +23,7 @@ const DeploymentMetricsLables: React.FC = () => {
       <Text>{getString('pipeline.verification.tableHeaders.group')}</Text>
       <Text className={css.healthSourceLabel}>{getString('pipeline.verification.healthSourceLabel')}</Text>
       <Text>{getString('pipeline.verification.logs.risk')}</Text>
-      <Text>{getString('pipeline.verification.tableHeaders.nodes')}</Text>
+      {!isSimpleVerification && <Text>{getString('pipeline.verification.tableHeaders.nodes')}</Text>}
     </Container>
   )
 }

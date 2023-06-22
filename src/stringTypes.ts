@@ -4186,6 +4186,7 @@ export interface StringsMap {
   'pipeline.deploymentFrequency': string
   'pipeline.deploymentRepo': string
   'pipeline.deploymentRepoStore': string
+  'pipeline.deploymentType.thresholdAnalysis': string
   'pipeline.depth': string
   'pipeline.digest': string
   'pipeline.digestDependencyRequired': string
@@ -5354,6 +5355,7 @@ export interface StringsMap {
   'pipeline.verification.anomalousLogClusters': string
   'pipeline.verification.anomalousMetrics': string
   'pipeline.verification.anomalousMetricsFilterLabel': string
+  'pipeline.verification.anomalousMetricsFilterWithoutNodesLabel': string
   'pipeline.verification.baselineMessages.expired': string
   'pipeline.verification.baselineMessages.failed': string
   'pipeline.verification.baselineMessages.passed': string
@@ -5408,6 +5410,8 @@ export interface StringsMap {
   'pipeline.verification.pinBaseline': string
   'pipeline.verification.predicted': string
   'pipeline.verification.refreshViewForNewData': string
+  'pipeline.verification.simpleVerificationMessages.failed': string
+  'pipeline.verification.simpleVerificationMessages.passed': string
   'pipeline.verification.tableHeaders.group': string
   'pipeline.verification.tableHeaders.metricName': string
   'pipeline.verification.tableHeaders.nodes': string
@@ -8977,6 +8981,7 @@ export interface StringsMap {
   'cv.metricsAnalysis.analysisReason.customFailFastThreshold': string
   'cv.metricsAnalysis.analysisReason.mlAnalysis': string
   'cv.metricsAnalysis.analysisReason.noControlData': string
+  'cv.metricsAnalysis.analysisReason.noFailFast': string
   'cv.metricsAnalysis.analysisReason.noTestData': string
   'cv.metricsAnalysis.controlDataType.minDeviation': string
   'cv.metricsAnalysis.metricThresholds.applied': string

@@ -47,6 +47,7 @@ export interface DeploymentMetricsAnalysisRowProps {
   deeplinkURL?: string
   appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
   startTimestampData?: StartTimestampDataType
+  isSimpleVerification?: boolean
 }
 
 export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRowProps): JSX.Element {
@@ -58,7 +59,8 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
     transactionName,
     thresholds,
     healthSource,
-    startTimestampData
+    startTimestampData,
+    isSimpleVerification
   } = props
   const { getString } = useStrings()
   const graphContainerRef = useRef<HTMLDivElement>(null)
@@ -90,6 +92,8 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
     <>
       {filteredCharts.map((series, index) => {
         const verificationType = getVerificationType(testData?.[index]?.risk as RiskValues, getString)
+        const testHostLabel = isSimpleVerification ? getString('service') : getString('pipeline.verification.testHost')
+
         return (
           <>
             <Container key={index} className={cx(css.main, className)}>
@@ -102,7 +106,8 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                     testData?.[index],
                     controlData?.[index],
                     getString,
-                    startTimestampData
+                    startTimestampData,
+                    isSimpleVerification
                   )}
                 />
                 <Container className={css.metricDetails}>
@@ -116,18 +121,24 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                       font={{ variation: FontVariation.SMALL }}
                       margin={{ right: 'large' }}
                     >
-                      {`${getString('pipeline.verification.testHost')}: ${testData?.[index]?.name}`}
+                      {`${testHostLabel}: ${testData?.[index]?.name}`}
                     </Text>
-                    <Container
-                      style={{ borderColor: Color.PRIMARY_7 }}
-                      className={css.node}
-                      background={Color.PRIMARY_2}
-                    ></Container>
-                    <Text
-                      tooltip={controlData?.[index]?.name as string}
-                      font={{ variation: FontVariation.SMALL }}
-                    >{`${getString('pipeline.verification.controlHost')}: ${controlData?.[index]?.name}`}</Text>
-                    {controlData?.[index]?.controlDataType === MINIMUM_DEVIATION ? (
+
+                    {!isSimpleVerification && (
+                      <>
+                        <Container
+                          style={{ borderColor: Color.PRIMARY_7 }}
+                          className={css.node}
+                          background={Color.PRIMARY_2}
+                        ></Container>
+                        <Text
+                          tooltip={controlData?.[index]?.name as string}
+                          font={{ variation: FontVariation.SMALL }}
+                        >{`${getString('pipeline.verification.controlHost')}: ${controlData?.[index]?.name}`}</Text>
+                      </>
+                    )}
+
+                    {controlData?.[index]?.controlDataType === MINIMUM_DEVIATION && !isSimpleVerification ? (
                       <Text font={{ variation: FontVariation.SMALL }} padding={{ left: 'small' }}>
                         {`(${getControlDataType(controlData?.[index]?.controlDataType, getString)})`}
                       </Text>

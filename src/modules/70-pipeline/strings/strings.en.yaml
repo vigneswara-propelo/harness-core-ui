@@ -70,6 +70,8 @@ totalCount: 'Total: {{ count }}'
 approvalStage:
   settingUpStage: Getting stage data
   approvalStageLogsViewMessage: This step is waiting for your approval. Please click on the Approval button on the right to approve or reject.
+deploymentType:
+  thresholdAnalysis: Threshold Analysis [No ML]
 filters:
   pipelineNamePlaceholder: Enter Pipeline Name
   deploymentTypePlaceholder: Search/Select Deployment Type
@@ -1103,6 +1105,9 @@ verification:
     pinModalTitle: Pin Baseline Verification
     pinModalMessage: An existing verification has been pinned as the baseline. If you choose to set a new verification as baseline, the current pinned verification will be unpinned. Are you sure you want to proceed?
     pinConfirmationButtonText: Yes, Pin baseline verification
+  simpleVerificationMessages:
+    passed: A simple verification analysis has been applied. Change the verification type if you wish to apply Harness machine learning to the analysis.
+    failed: The verification failed due to anomalies in the metric threshold. Threshold Analysis verification was performed. Change the verification type if you wish to apply Harness machine learning to the analysis.
   baselineTest: Baseline test
   pinBaseline: Pin baseline
   unpinBaseline: Unpin baseline
@@ -1128,6 +1133,7 @@ verification:
     logs: 'Logs'
   controlHostName: Control Hostname
   anomalousMetricsFilterLabel: Display only anomalous metrics and affected nodes
+  anomalousMetricsFilterWithoutNodesLabel: Display only anomalous metrics
   testHostName: Test Hostname
   expandAll: Expand All
   collapseAll: Collapse All

@@ -7,7 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly baselineStatusMessage: string
   readonly baselineTest: string
   readonly dialog: string
   readonly mainLabel: string
