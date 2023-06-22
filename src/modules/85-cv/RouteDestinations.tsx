@@ -50,10 +50,12 @@ import NotificationMethods from '@pipeline/components/Notifications/Steps/Notifi
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
+import { useQueryParams, useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
+import { Stepper } from '@common/components/Stepper/Stepper'
 import { CDSideNavProps } from '@cd/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
+import { NameIdDescriptionTags } from '@common/components'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -76,6 +78,18 @@ import {
 import CommonMonitoredServiceDetails from './components/MonitoredServiceListWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
 import type { SRMCustomMicroFrontendProps } from './interface/SRMCustomMicroFrontendProps.types'
 import MonitoredServiceListWidget from './components/MonitoredServiceListWidget/MonitoredServiceListWidget'
+import {
+  useGetHarnessServices,
+  useGetHarnessEnvironments,
+  HarnessServiceAsFormField,
+  HarnessEnvironmentAsFormField
+} from './components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
+import {
+  updatedMonitoredServiceNameForEnv,
+  updateMonitoredServiceNameForService
+} from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/MonitoredServiceOverview.utils'
+import OrgAccountLevelServiceEnvField from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
+import SLOTargetNotifications from './pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -493,10 +507,6 @@ export const SRMRoutes = (
       <CVCreateDowntime />
     </RouteWithLayout>
 
-    <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
-      <CVSLOsListingPage />
-    </RouteWithLayout>
-
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
@@ -662,7 +672,11 @@ export const SRMRoutes = (
 export const SRMMFERoutes: React.FC = () => {
   const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
   const mfePaths = enableMicroFrontend
-    ? [routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]
+    ? [
+        routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routes.toAccountCVSLOs({ ...accountPathProps }),
+        routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })
+      ]
     : []
 
   return (
@@ -671,22 +685,45 @@ export const SRMMFERoutes: React.FC = () => {
         <RouteWithLayout exact path={[...mfePaths]} sidebarProps={CVSideNavProps}>
           <ChildAppMounter<SRMCustomMicroFrontendProps>
             ChildApp={SrmMicroFrontendPath}
-            customHooks={{ useQueryParams, useFeatureFlag, useFeatureFlags, useDeepCompareEffect }}
+            customHooks={{
+              useMutateAsGet,
+              useQueryParams,
+              useFeatureFlag,
+              useFeatureFlags,
+              useDeepCompareEffect,
+              useGetHarnessServices,
+              useGetHarnessEnvironments
+            }}
             customFunctions={{
               formatDatetoLocale,
-              getReadableDateTime
+              getReadableDateTime,
+              updatedMonitoredServiceNameForEnv,
+              updateMonitoredServiceNameForService
             }}
             customConstants={{ ALL_TIME_ZONES }}
+            customComponents={{
+              Stepper,
+              NameIdDescriptionTags,
+              SLOTargetNotifications,
+              HarnessServiceAsFormField,
+              HarnessEnvironmentAsFormField,
+              OrgAccountLevelServiceEnvField
+            }}
           />
         </RouteWithLayout>
       ) : (
-        <RouteWithLayout
-          exact
-          sidebarProps={CVSideNavProps}
-          path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-        >
-          <CVSLOsListingPage />
-        </RouteWithLayout>
+        <>
+          <RouteWithLayout
+            exact
+            sidebarProps={CVSideNavProps}
+            path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+          >
+            <CVSLOsListingPage />
+          </RouteWithLayout>
+          <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
+            <CVSLOsListingPage />
+          </RouteWithLayout>
+        </>
       )}
     </>
   )
