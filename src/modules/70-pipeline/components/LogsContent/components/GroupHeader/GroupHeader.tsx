@@ -32,6 +32,7 @@ export interface GroupHeaderProps {
   status: LogViewerAccordionStatus
   isOpen?: boolean
   onSectionClick?(id: string, props: GroupHeaderProps): boolean | void
+  onCopyToClipboard: (event: React.MouseEvent<Element, MouseEvent>) => void
 }
 
 const statusIconMap: Record<LogViewerAccordionStatus, IconName> = {
@@ -48,7 +49,8 @@ const statusIconMap: Record<LogViewerAccordionStatus, IconName> = {
  * Component which renders a section of a log
  */
 export function GroupHeader(props: GroupHeaderProps): React.ReactElement {
-  const { title, isOpen, status, id, onSectionClick, startTime, endTime, onGoToBottom, onGoToTop } = props
+  const { title, isOpen, status, id, onSectionClick, startTime, endTime, onGoToBottom, onGoToTop, onCopyToClipboard } =
+    props
   const [open, setOpen] = React.useState(!!isOpen)
 
   // sync `isOpen` flag
@@ -81,6 +83,16 @@ export function GroupHeader(props: GroupHeaderProps): React.ReactElement {
           <div>
             {open ? (
               <React.Fragment>
+                {!!onCopyToClipboard && (
+                  <Button
+                    className={css.copyToClipboard}
+                    variation={ButtonVariation.ICON}
+                    size={ButtonSize.SMALL}
+                    iconProps={{ size: 10 }}
+                    icon="copy-alt"
+                    onClick={onCopyToClipboard}
+                  />
+                )}
                 <Button
                   className={css.scrollBtn}
                   variation={ButtonVariation.ICON}

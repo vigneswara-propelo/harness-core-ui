@@ -22,7 +22,8 @@ const props: GroupHeaderProps = {
   startTime: 1000,
   endTime: 1120,
   onGoToBottom: jest.fn(),
-  onGoToTop: jest.fn()
+  onGoToTop: jest.fn(),
+  onCopyToClipboard: jest.fn()
 }
 
 describe('<GroupHeader /> tests', () => {

@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly chevron: string
+  readonly copyToClipboard: string
   readonly duration: string
   readonly groupedHeader: string
   readonly scrollBtn: string

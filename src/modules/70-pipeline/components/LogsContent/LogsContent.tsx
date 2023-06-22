@@ -27,7 +27,7 @@ import routes from '@common/RouteDefinitions'
 import { ErrorList, extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import { String as StrTemplate, useStrings } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import { useGlobalEventListener } from '@common/hooks'
+import { useGlobalEventListener, useCopyToClipboard } from '@common/hooks'
 import type {
   ConsoleViewStepDetailProps,
   LogsContentProps,
@@ -48,6 +48,7 @@ import type { UseActionCreatorReturn } from './LogsState/actions'
 import { useLogSettings } from './useLogsSettings'
 import { InputOutputTab } from '../execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import ExecutionStatusLabel from '../ExecutionStatusLabel/ExecutionStatusLabel'
+import { formatLogsForClipboard, getRawLogLines } from './logsUtils'
 import css from './LogsContent.module.scss'
 
 enum ConsoleDetailTab {
@@ -153,6 +154,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const isSingleSectionLogs = state.units.length === 1
   const { openDialog } = useLogSettings()
   const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
+  const { copyToClipboard } = useCopyToClipboard()
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
   const { setPreference: setSavedExecutionView } = usePreferenceStore<string | undefined>(
@@ -231,6 +233,13 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
     hasError = true
   }
 
+  const handleCopyToClipboard = (event: React.MouseEvent): void => {
+    event.stopPropagation()
+    const rawLogLines = getRawLogLines(state)
+    const formattedLogs = formatLogsForClipboard(rawLogLines)
+    copyToClipboard(formattedLogs)
+  }
+
   return (
     <div ref={rootRef} className={cx(css.main, { [css.hasErrorMessage]: hasError })} data-mode={mode}>
       <div className={css.header}>
@@ -251,6 +260,16 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
             onPrev={/* istanbul ignore next */ () => actions.goToPrevSearchResult()}
             onEnter={/* istanbul ignore next */ () => actions.goToNextSearchResult()}
           />
+          {isSingleSectionLogs && (
+            <Button
+              icon={'copy-alt'}
+              iconProps={{ size: 18 }}
+              className={css.fullScreen}
+              variation={ButtonVariation.ICON}
+              withoutCurrentColor
+              onClick={handleCopyToClipboard}
+            />
+          )}
           <Button
             icon={'nav-settings'}
             iconProps={{ size: 22 }}

@@ -9,10 +9,11 @@ import React from 'react'
 import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso'
 import { sum } from 'lodash-es'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
-
+import { useCopyToClipboard } from '@common/hooks'
 import { GroupHeader, GroupHeaderProps, LogViewerAccordionStatus } from './GroupHeader/GroupHeader'
 import { MultiLogLineMemo as MultiLogLine } from './MultiLogLine/MultiLogLine'
 import type { CommonLogsProps } from './LogsProps'
+import { formatLogsForClipboard, getRawLogLines } from '../logsUtils'
 import css from '../LogsContent.module.scss'
 
 const STATUSES_FOR_ACCORDION_SKIP: LogViewerAccordionStatus[] = ['LOADING', 'NOT_STARTED']
@@ -23,11 +24,22 @@ export function GroupedLogs(
   props: GroupedLogsProps,
   ref: React.ForwardedRef<null | GroupedVirtuosoHandle>
 ): React.ReactElement {
+  const { copyToClipboard } = useCopyToClipboard()
   const { state, actions } = props
   const groupedCounts = state.logKeys.map(key => {
     const section = state.dataMap[key]
     return section.isOpen ? section.data.length : 0
   })
+
+  function handleCopyToClipboard(logKey: string) {
+    return (event: React.MouseEvent<Element, MouseEvent>) => {
+      event.stopPropagation()
+
+      const rawLogLines = getRawLogLines(state, logKey)
+      const formattedLogs = formatLogsForClipboard(rawLogLines)
+      copyToClipboard(formattedLogs)
+    }
+  }
 
   function handleGoToIndex(index: number) {
     return (event: React.MouseEvent<Element, MouseEvent>) => {
@@ -81,6 +93,7 @@ export function GroupedLogs(
               onSectionClick={handleSectionClick}
               onGoToTop={handleGoToIndex(startIndex)}
               onGoToBottom={handleGoToIndex(endIndex)}
+              onCopyToClipboard={handleCopyToClipboard(logKey)}
             />
           )
         }}

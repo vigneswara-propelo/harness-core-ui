@@ -345,6 +345,30 @@ exports[`<LogsContent /> tests Logs test SingleSectionLogs 1`] = `
         >
           <span
             class="bp3-icon StyledProps--main"
+            data-icon="copy-alt"
+          >
+            <svg
+              fill="none"
+              height="18"
+              viewBox="0 0 8 9"
+              width="18"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main fullScreen Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+          type="button"
+        >
+          <span
+            class="bp3-icon StyledProps--main"
             data-icon="nav-settings"
           >
             <svg
