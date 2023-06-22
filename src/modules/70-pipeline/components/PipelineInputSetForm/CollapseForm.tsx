@@ -10,7 +10,7 @@ import { Layout, Icon, Text } from '@harness/uicore'
 import type { TextProps } from '@harness/uicore/dist/components/Text/Text'
 
 export interface CollapseFormProps {
-  header: string
+  header: JSX.Element | string
   children: React.ReactNode
   headerProps?: TextProps
   headerColor?: string
@@ -25,6 +25,19 @@ export function CollapseForm({
   open = true
 }: CollapseFormProps): React.ReactElement {
   const [isOpen, setOpen] = React.useState(open)
+
+  function renderHeader(): React.ReactElement {
+    if (typeof header === 'string') {
+      return (
+        <Text {...headerProps} style={{ color: headerColor }}>
+          {header}
+        </Text>
+      )
+    } else {
+      return header
+    }
+  }
+
   return (
     <div style={{ width: '100%' }}>
       <Layout.Horizontal
@@ -32,9 +45,7 @@ export function CollapseForm({
         style={{ cursor: 'pointer' }}
         onClick={() => setOpen(prev => !prev)}
       >
-        <Text {...headerProps} style={{ color: headerColor }}>
-          {header}
-        </Text>
+        {renderHeader()}
         <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} size={20} style={{ color: 'var(--pipeline-form-blue)' }} />
       </Layout.Horizontal>
       {isOpen && <Layout.Vertical padding={{ top: 'medium', bottom: 'medium' }}> {children}</Layout.Vertical>}
