@@ -264,6 +264,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MATRIX_FIELD_NA
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_EXPRESSION_ENGINE_V2, {
+  label: 'defaultSettings.enableExpressionsJsonSupport',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
+})
+
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'

@@ -86,6 +86,7 @@ export enum SettingType {
   ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY = 'allow_user_to_mark_step_as_failed_explicitly',
   ENABLE_NODE_EXECUTION_AUDIT_EVENTS = 'enable_node_execution_audit_events',
   ENABLE_MATRIX_FIELD_NAME_SETTING = 'enable_matrix_label_by_name',
+  ENABLE_EXPRESSION_ENGINE_V2 = 'enable_expression_engine_v2',
   SHOW_ANOMALIES = 'show_anomalies',
   SHOW_OTHERS = 'show_others',
   SHOW_UNALLOCATED_CUSTER_COST = 'show_unallocated_cluster_cost',

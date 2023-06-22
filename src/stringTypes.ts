@@ -1712,6 +1712,7 @@ export interface StringsMap {
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.defaultGitConnector': string
   'defaultSettings.emailToNonHarnessUsers': string
+  'defaultSettings.enableExpressionsJsonSupport': string
   'defaultSettings.enableForceDelete': string
   'defaultSettings.enableGitCommands': string
   'defaultSettings.enableMatrixFieldNames': string
