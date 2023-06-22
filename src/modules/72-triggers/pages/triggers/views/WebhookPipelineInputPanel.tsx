@@ -535,8 +535,15 @@ function WebhookPipelineInputPanelForm({
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
       <Layout.Horizontal className={css.infoBar}>
         <Icon name="info-message" size={14} color={Color.GREEN_500} />
-
-        <Text color={Color.WHITE}>{getString('triggers.toast.payloadInfoBar')}</Text>
+        <Text color={Color.WHITE}>
+          <Text color={Color.WHITE}>{getString('triggers.toast.payloadInfoBar')}</Text>
+          <a
+            href={'https://developer.harness.io/docs/platform/pipelines/w_pipeline-steps-reference/triggers-reference/'}
+            style={{ color: Color.WHITE }}
+          >
+            {getString('learnMore')}
+          </a>
+        </Text>
       </Layout.Horizontal>
 
       {loading && !isPipelineBranchNameInFocus() ? (

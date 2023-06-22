@@ -282,7 +282,17 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
                       >
-                        triggers.toast.payloadInfoBar
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+                        >
+                          triggers.toast.payloadInfoBar
+                        </p>
+                        <a
+                          href="https://developer.harness.io/docs/platform/pipelines/w_pipeline-steps-reference/triggers-reference/"
+                          style="color: white;"
+                        >
+                          learnMore
+                        </a>
                       </p>
                     </div>
                     <div
