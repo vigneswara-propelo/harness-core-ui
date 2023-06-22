@@ -100,25 +100,37 @@ export const getModifiedFormikValues = (
           : values.sharedPaths.map((listValue: { id: string; value: string }) => listValue.value)
     }
 
-    let labels: { [key: string]: string }[] = []
+    let labels: { [key: string]: string } = {}
     if (values.labels && values.labels.length > 0) {
-      labels = values.labels.map((listValue: { key: string; value: string }) => ({
-        [listValue.key]: listValue.value
-      }))
+      labels = values.labels.reduce(
+        (agg: { [key: string]: string }, listValue: { key: string; value: string }) => ({
+          ...agg,
+          [listValue.key]: listValue.value
+        }),
+        {}
+      )
     }
 
-    let annotations: { [key: string]: string }[] = []
+    let annotations: { [key: string]: string } = {}
     if (values.annotations && values.annotations.length > 0) {
-      annotations = values.annotations.map((listValue: { key: string; value: string }) => ({
-        [listValue.key]: listValue.value
-      }))
+      annotations = values.annotations.reduce(
+        (agg: { [key: string]: string }, listValue: { key: string; value: string }) => ({
+          ...agg,
+          [listValue.key]: listValue.value
+        }),
+        {}
+      )
     }
 
-    let nodeSelector: { [key: string]: string }[] = []
+    let nodeSelector: { [key: string]: string } = {}
     if (values.nodeSelector && values.nodeSelector.length > 0) {
-      nodeSelector = values.nodeSelector.map((listValue: { key: string; value: string }) => ({
-        [listValue.key]: listValue.value
-      }))
+      nodeSelector = values.nodeSelector.reduce(
+        (agg: { [key: string]: string }, listValue: { key: string; value: string }) => ({
+          ...agg,
+          [listValue.key]: listValue.value
+        }),
+        {}
+      )
     }
 
     let tolerations: string | Toleration[] = []

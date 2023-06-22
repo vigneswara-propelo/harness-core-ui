@@ -10,36 +10,38 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import cx from 'classnames'
-import type { AllowedTypes } from '@harness/uicore'
+import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
 
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import type { StringsMap } from 'framework/strings/StringsContext'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
-import { AwsSamBuildDeployStepOptionalFieldsInputSet } from '../AwsSamBuildDeployStepOptionalFieldsInputSet'
+import type { ServerlessPackageStepInitialValues } from '@pipeline/utils/types'
+import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-interface AwsSamBuildStepInputSetProps {
-  initialValues: AwsSamBuildStepInitialValues
+interface ServerlessPackageStepInputSetProps {
+  initialValues: ServerlessPackageStepInitialValues
   allowableTypes: AllowedTypes
   inputSetData: {
-    allValues?: AwsSamBuildStepInitialValues
-    template?: AwsSamBuildStepInitialValues
+    allValues?: ServerlessPackageStepInitialValues
+    template?: ServerlessPackageStepInitialValues
     path?: string
     readonly?: boolean
   }
   formik?: FormikProps<PipelineInfoConfig>
 }
 
-function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.ReactElement {
-  const { initialValues, inputSetData, allowableTypes } = props
+function ServerlessPackageStepInputSet(props: ServerlessPackageStepInputSetProps): React.ReactElement {
+  const { initialValues, inputSetData, allowableTypes, formik } = props
   const { template, path, readonly } = inputSetData
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -83,6 +85,30 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
     )
   }
 
+  const renderMultiTypeListInputSet = ({
+    fieldName,
+    fieldLabel
+  }: {
+    fieldName: string
+    fieldLabel: keyof StringsMap
+  }): React.ReactElement => (
+    <div className={cx(stepCss.formGroup, stepCss.md)}>
+      <MultiTypeListInputSet
+        name={fieldName}
+        multiTextInputProps={{
+          expressions,
+          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+        }}
+        formik={formik}
+        multiTypeFieldSelectorProps={{
+          label: getString('optionalField', { name: getString(fieldLabel) }),
+          allowedTypes: [MultiTypeInputType.FIXED]
+        }}
+        disabled={readonly}
+      />
+    </div>
+  )
+
   return (
     <>
       {isValueRuntimeInput(get(template, `timeout`)) && (
@@ -105,12 +131,6 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
       {isValueRuntimeInput(get(template, `spec.connectorRef`)) &&
         renderConnectorField(`${prefix}spec.connectorRef`, getString('connector'))}
 
-      {isValueRuntimeInput(get(template, `spec.samBuildDockerRegistryConnectorRef`)) &&
-        renderConnectorField(
-          `${prefix}spec.samBuildDockerRegistryConnectorRef`,
-          getString('optionalField', { name: getString('cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry') })
-        )}
-
       {isValueRuntimeInput(get(template, `spec.image`)) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
@@ -128,26 +148,32 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
         </div>
       )}
 
-      {isValueRuntimeInput(get(template, `spec.samVersion`)) && (
+      {isValueRuntimeInput(get(template, `spec.serverlessVersion`)) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
-            name={`${prefix}spec.samVersion`}
-            label={getString('optionalField', { name: getString('cd.samVersionLabel') })}
-            placeholder={getString('common.enterPlaceholder', { name: getString('cd.samVersionLabel') })}
+            name={`${prefix}spec.serverlessVersion`}
+            label={getString('optionalField', { name: getString('cd.serverlessVersionLabel') })}
+            placeholder={getString('common.enterPlaceholder', { name: getString('cd.serverlessVersionLabel') })}
             disabled={readonly}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            fieldPath={`spec.samVersion`}
+            fieldPath={`spec.serverlessVersion`}
             template={template}
           />
         </div>
       )}
 
-      <AwsSamBuildDeployStepOptionalFieldsInputSet {...props} isAwsSamBuildStep={true} />
+      {isValueRuntimeInput(get(template, `spec.packageCommandOptions`)) &&
+        renderMultiTypeListInputSet({
+          fieldName: `${prefix}spec.packageCommandOptions`,
+          fieldLabel: 'cd.steps.serverlessPackageStep.packageCommandOptions'
+        })}
+
+      <AwsSamServerlessStepCommonOptionalFieldsInputSet allowableTypes={allowableTypes} inputSetData={inputSetData} />
     </>
   )
 }
 
-export const AwsSamBuildStepInputSetMode = connect(AwsSamBuildStepInputSet)
+export const ServerlessPackageStepInputSetMode = connect(ServerlessPackageStepInputSet)

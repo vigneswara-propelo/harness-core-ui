@@ -5154,6 +5154,7 @@ export interface StringsMap {
   'pipeline.stepDescription.SaveCacheS3': string
   'pipeline.stepDescription.ServerlessLambdaDeploy': string
   'pipeline.stepDescription.ServerlessLambdaRollback': string
+  'pipeline.stepDescription.ServerlessPackage': string
   'pipeline.stepDescription.ServerlessPrepareRollback': string
   'pipeline.stepDescription.ServiceNowApproval': string
   'pipeline.stepDescription.ServiceNowCreate': string
@@ -6571,6 +6572,7 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.serverlessPackageStep.packageCommandOptions': string
   'cd.steps.shellScriptOutputVariablesLabel': string
   'cd.steps.tas.additionalRoutes': string
   'cd.steps.tas.downScaleOldFirstLabel': string

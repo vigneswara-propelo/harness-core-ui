@@ -116,7 +116,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name={versionFieldName}
-          label={getString('optionalField', { name: versionFieldLabel })}
+          label={versionFieldLabel}
           placeholder={getString('common.enterPlaceholder', { name: versionFieldLabel })}
           disabled={readonly}
           multiTextInputProps={{
@@ -149,9 +149,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
             }}
             multiTypeFieldSelectorProps={{
-              label: getString('optionalField', {
-                name: commandOptionsFieldLabel
-              }),
+              label: defaultTo(commandOptionsFieldLabel, ''),
               allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
             }}
             disabled={readonly}
@@ -170,7 +168,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
         <Container className={stepCss.formGroup}>
           <FormInput.MultiTextInput
             name="spec.stackName"
-            label={getString('optionalField', { name: getString('cd.cloudFormation.stackName') })}
+            label={getString('cd.cloudFormation.stackName')}
             placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
             disabled={readonly}
             multiTextInputProps={{
@@ -200,7 +198,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
       <Container className={cx(stepCss.formGroup, stepCss.md)}>
         <FormMultiTypeCheckboxField
           name={'spec.privileged'}
-          label={getString('optionalField', { name: getString('pipeline.buildInfra.privileged') })}
+          label={getString('pipeline.buildInfra.privileged')}
           multiTypeTextbox={{
             expressions,
             allowableTypes,
@@ -215,7 +213,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTypeInput
           name="spec.imagePullPolicy"
-          label={getString('optionalField', { name: getString('pipelineSteps.pullLabel') })}
+          label={getString('pipelineSteps.pullLabel')}
           selectItems={getImagePullPolicyOptions(getString)}
           placeholder={getString('select')}
           disabled={readonly}
@@ -243,7 +241,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name="spec.runAsUser"
-          label={getString('optionalField', { name: getString('pipeline.stepCommonFields.runAsUser') })}
+          label={getString('pipeline.stepCommonFields.runAsUser')}
           placeholder="1000"
           disabled={readonly}
           multiTextInputProps={{
@@ -270,7 +268,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name="spec.resources.limits.memory"
-          label={getString('optionalField', { name: getString('pipelineSteps.limitMemoryLabel') })}
+          label={getString('pipelineSteps.limitMemoryLabel')}
           placeholder={getString('common.enterPlaceholder', { name: getString('pipelineSteps.limitMemoryLabel') })}
           disabled={readonly}
           multiTextInputProps={{
@@ -298,7 +296,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name="spec.resources.limits.cpu"
-          label={getString('optionalField', { name: getString('pipelineSteps.limitCPULabel') })}
+          label={getString('pipelineSteps.limitCPULabel')}
           placeholder={getString('common.enterPlaceholder', { name: getString('pipelineSteps.limitCPULabel') })}
           disabled={readonly}
           multiTextInputProps={{

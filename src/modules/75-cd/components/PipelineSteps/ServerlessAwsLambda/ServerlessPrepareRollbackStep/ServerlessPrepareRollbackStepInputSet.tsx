@@ -125,7 +125,7 @@ function ServerlessPrepareRollbackStepInputSet(props: ServerlessPrepareRollbackS
       {isValueRuntimeInput(get(template, `spec.serverlessVersion`)) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
-            name={`${prefix}spec.samVersion`}
+            name={`${prefix}spec.serverlessVersion`}
             label={getString('optionalField', { name: getString('cd.serverlessVersionLabel') })}
             placeholder={getString('common.enterPlaceholder', { name: getString('cd.serverlessVersionLabel') })}
             disabled={readonly}

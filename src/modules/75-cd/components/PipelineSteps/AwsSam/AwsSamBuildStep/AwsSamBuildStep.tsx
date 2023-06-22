@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, set } from 'lodash-es'
 import type { FormikErrors } from 'formik'
-import type { IconName, AllowedTypes } from '@harness/uicore'
+import { IconName, AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
@@ -126,12 +126,22 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
     getString,
     viewType
   }: ValidateInputSetProps<AwsSamBuildStepInitialValues>): FormikErrors<AwsSamBuildStepInitialValues> {
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
     }) as FormikErrors<AwsSamBuildStepInitialValues>
+
+    if (
+      isEmpty(data?.spec?.connectorRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `spec.connectorRef`, getString?.('fieldRequired', { field: getString?.('connector') }))
+    }
 
     if (isEmpty(errors.spec)) {
       delete errors.spec

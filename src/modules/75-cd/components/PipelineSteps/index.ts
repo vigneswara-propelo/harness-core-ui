@@ -139,6 +139,7 @@ import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
 import { AwsSamDownloadManifestsStep } from './AwsSam/AwsSamDownloadManifests/AwsSamDownloadManifestsStep'
 import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifestsStep/DownloadServerlessManifestsStep'
 import { ServerlessPrepareRollbackStep } from './ServerlessAwsLambda/ServerlessPrepareRollbackStep/ServerlessPrepareRollbackStep'
+import { ServerlessPackageStep } from './ServerlessAwsLambda/ServerlessPackageStep/ServerlessPackageStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -272,3 +273,4 @@ factory.registerStep(new AwsSamInfraSpec())
 factory.registerStep(new AwsSamDownloadManifestsStep())
 factory.registerStep(new DownloadServerlessManifestsStep())
 factory.registerStep(new ServerlessPrepareRollbackStep())
+factory.registerStep(new ServerlessPackageStep())

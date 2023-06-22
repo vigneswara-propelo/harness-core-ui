@@ -162,3 +162,21 @@ export interface ServerlessPrepareRollbackStepInitialValues extends StepElementC
     }
   }
 }
+
+export interface ServerlessPackageStepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+    packageCommandOptions?: string | string[]
+    serverlessVersion?: string
+    runAsUser?: string
+  }
+}

@@ -21,7 +21,7 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import type { ListUIType } from '@common/components/List/List'
-import type { MapType, MapUIType } from '@common/components/Map/Map'
+import type { MapUIType } from '@common/components/Map/Map'
 import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
@@ -35,7 +35,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface StepGroupWidgetProps {
   initialValues: K8sDirectInfraStepGroupElementConfig
   isNewStep?: boolean
-  onUpdate?: (data: K8sDirectInfraStepGroupElementConfig) => void
+  onUpdate?: (data: StepGroupFormikValues) => void
   stepViewType?: StepViewType
   readonly?: boolean
   allowableTypes?: AllowedTypes
@@ -63,19 +63,6 @@ const validateUniqueList = ({
   } else {
     return Yup.string()
   }
-}
-
-const getInitialMapValues: (value?: MapType[]) => MapUIType = value => {
-  const modifiedList = (value || []).map(currValue => {
-    const objKey = Object.keys(currValue)[0]
-    const keyValue = currValue[objKey]
-    return {
-      id: uuid('', nameSpace()),
-      key: objKey,
-      value: keyValue
-    }
-  })
-  return modifiedList
 }
 
 const getInitialListValues = (value: MultiTypeListType): MultiTypeListUIType => {
@@ -254,6 +241,34 @@ function StepGroupStepEdit(
 
   const getKubernetesInfraPayload = (): Omit<StepGroupFormikValues, 'identifier' | 'name'> => {
     const autoServiceAccountToken = initialValues.stepGroupInfra?.spec?.automountServiceAccountToken
+
+    const labels = Object.keys(defaultTo(initialValues.stepGroupInfra?.spec?.labels, {}))?.map(key => {
+      const value = initialValues.stepGroupInfra?.spec?.labels?.[key]
+      return {
+        id: uuid('', nameSpace()),
+        key: key,
+        value: defaultTo(value, '')
+      }
+    })
+
+    const annotations = Object.keys(defaultTo(initialValues.stepGroupInfra?.spec?.annotations, {}))?.map(key => {
+      const value = initialValues.stepGroupInfra?.spec?.annotations?.[key]
+      return {
+        id: uuid('', nameSpace()),
+        key: key,
+        value: defaultTo(value, '')
+      }
+    })
+
+    const nodeSelectors = Object.keys(defaultTo(initialValues.stepGroupInfra?.spec?.nodeSelector, {}))?.map(key => {
+      const value = initialValues.stepGroupInfra?.spec?.nodeSelector?.[key]
+      return {
+        id: uuid('', nameSpace()),
+        key: key,
+        value: defaultTo(value, '')
+      }
+    })
+
     return {
       type: 'KubernetesDirect',
       connectorRef: initialValues.stepGroupInfra?.spec.connectorRef,
@@ -262,8 +277,8 @@ function StepGroupStepEdit(
       volumes: initialValues.stepGroupInfra?.spec?.volumes,
       runAsUser: initialValues.stepGroupInfra?.spec?.containerSecurityContext?.runAsUser,
       initTimeout: initialValues.stepGroupInfra?.spec?.initTimeout,
-      annotations: getInitialMapValues((initialValues.stepGroupInfra?.spec?.annotations as any) || []),
-      labels: getInitialMapValues((initialValues.stepGroupInfra?.spec?.labels as any) || []),
+      labels: labels,
+      annotations: annotations,
       priorityClassName: initialValues.stepGroupInfra?.spec?.priorityClassName as unknown as string,
       automountServiceAccountToken: typeof autoServiceAccountToken === 'undefined' ? true : autoServiceAccountToken,
       privileged: initialValues.stepGroupInfra?.spec?.containerSecurityContext?.privileged,
@@ -277,7 +292,7 @@ function StepGroupStepEdit(
       runAsNonRoot: initialValues.stepGroupInfra?.spec?.containerSecurityContext?.runAsNonRoot,
       readOnlyRootFilesystem: initialValues.stepGroupInfra?.spec?.containerSecurityContext?.readOnlyRootFilesystem,
       tolerations: getInitialComplexMapValues(initialValues.stepGroupInfra?.spec?.tolerations),
-      nodeSelector: getInitialMapValues((initialValues.stepGroupInfra?.spec?.nodeSelector as any) || []),
+      nodeSelector: nodeSelectors,
       harnessImageConnectorRef: initialValues.stepGroupInfra?.spec?.harnessImageConnectorRef,
       os: initialValues.stepGroupInfra?.spec?.os || OsTypes.Linux,
       hostNames: getInitialListValues(initialValues.stepGroupInfra?.spec?.hostNames || [])

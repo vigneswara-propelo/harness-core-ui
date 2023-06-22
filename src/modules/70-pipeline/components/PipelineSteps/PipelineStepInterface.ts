@@ -218,7 +218,8 @@ export enum StepType {
   DownloadManifests = 'DownloadManifests',
   IACMTerraformPlugin = 'IACMTerraformPlugin',
   DownloadServerlessManifests = 'DownloadServerlessManifests',
-  ServerlessPrepareRollback = 'ServerlessPrepareRollback'
+  ServerlessAwsLambdaPrepareRollbackV2 = 'ServerlessAwsLambdaPrepareRollbackV2',
+  ServerlessAwsLambdaPackageV2 = 'ServerlessAwsLambdaPackageV2'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

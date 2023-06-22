@@ -13,57 +13,55 @@ import { IconName, AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } fro
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { ListValue } from '@common/components/MultiTypeList/MultiTypeList'
-import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessPackageStepInitialValues } from '@pipeline/utils/types'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
-import { AwsSamDeployStepInputSetMode } from './AwsSamDeployStepInputSet'
-import { AwsSamDeployStepEditRef, AwsSamDeployStepFormikValues } from './AwsSamDeployStepEdit'
+import { ServerlessPackageStepInputSetMode } from './ServerlessPackageStepInputSet'
+import { ServerlessPackageStepEditRef, ServerlessPackageStepFormikValues } from './ServerlessPackageStepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-export interface AwsSamDeployStepEditProps {
-  initialValues: AwsSamDeployStepInitialValues
-  onUpdate?: (data: AwsSamDeployStepInitialValues) => void
+export interface ServerlessPackageStepEditProps {
+  initialValues: ServerlessPackageStepInitialValues
+  onUpdate?: (data: ServerlessPackageStepInitialValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsSamDeployStepInitialValues) => void
+  onChange?: (data: ServerlessPackageStepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData: {
-    template?: AwsSamDeployStepInitialValues
+    template?: ServerlessPackageStepInitialValues
     path?: string
     readonly?: boolean
   }
 }
 
-export interface AwsSamDeployVariableStepProps {
-  initialValues: AwsSamDeployStepInitialValues
+export interface ServerlessPackageVariableStepProps {
+  initialValues: ServerlessPackageStepInitialValues
   stageIdentifier: string
-  onUpdate?(data: AwsSamDeployStepInitialValues): void
+  onUpdate?(data: ServerlessPackageStepInitialValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: AwsSamDeployStepInitialValues
+  variablesData: ServerlessPackageStepInitialValues
 }
 
-export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues> {
-  protected type = StepType.AwsSamDeploy
-  protected stepName = 'AWS SAM Deploy Step'
-  protected stepIcon: IconName = 'aws-sam-deploy'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsSamDeploy'
+export class ServerlessPackageStep extends PipelineStep<ServerlessPackageStepInitialValues> {
+  protected type = StepType.ServerlessAwsLambdaPackageV2
+  protected stepName = 'Serverless Package Step'
+  protected stepIcon: IconName = 'serverless-deploy-step'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessPackage'
   protected isHarnessSpecific = false
-  protected referenceId = 'AwsSamDeployStep'
+  protected referenceId = 'ServerlessPackageStep'
 
-  protected defaultValues: AwsSamDeployStepInitialValues = {
+  protected defaultValues: ServerlessPackageStepInitialValues = {
     identifier: '',
     name: '',
-    type: StepType.AwsSamDeploy,
+    type: StepType.ServerlessAwsLambdaPackageV2,
     timeout: '10m',
     spec: {
-      connectorRef: '',
-      image: ''
+      connectorRef: ''
     }
   }
 
@@ -73,7 +71,7 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<AwsSamDeployStepInitialValues>): JSX.Element {
+  renderStep(props: StepProps<ServerlessPackageStepInitialValues>): JSX.Element {
     const {
       initialValues,
       stepViewType,
@@ -88,14 +86,14 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <AwsSamDeployStepInputSetMode
+        <ServerlessPackageStepInputSetMode
           initialValues={initialValues}
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<AwsSamDeployStepInitialValues>}
+          inputSetData={inputSetData as InputSetData<ServerlessPackageStepInitialValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as AwsSamDeployVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as ServerlessPackageVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -107,9 +105,9 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     }
 
     return (
-      <AwsSamDeployStepEditRef
+      <ServerlessPackageStepEditRef
         initialValues={initialValues}
-        onUpdate={(formData: AwsSamDeployStepFormikValues) => onUpdate?.(this.processFormData(formData))}
+        onUpdate={(formData: ServerlessPackageStepFormikValues) => onUpdate?.(this.processFormData(formData))}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}
@@ -124,7 +122,7 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<AwsSamDeployStepInitialValues>): FormikErrors<AwsSamDeployStepInitialValues> {
+  }: ValidateInputSetProps<ServerlessPackageStepInitialValues>): FormikErrors<ServerlessPackageStepInitialValues> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
     const errors = validateGenericFields({
@@ -132,7 +130,7 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
       template,
       getString,
       viewType
-    }) as FormikErrors<AwsSamDeployStepInitialValues>
+    }) as FormikErrors<ServerlessPackageStepInitialValues>
 
     if (
       isEmpty(data?.spec?.connectorRef) &&
@@ -149,25 +147,18 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     return errors
   }
 
-  processFormData(formData: any): AwsSamDeployStepInitialValues {
+  processFormData(formData: ServerlessPackageStepFormikValues): ServerlessPackageStepInitialValues {
     return {
       ...formData,
       spec: {
         ...formData.spec,
-        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
-        deployCommandOptions:
-          typeof formData.spec.deployCommandOptions === 'string'
-            ? formData.spec.deployCommandOptions
-            : (formData.spec.deployCommandOptions as ListValue)?.map(
-                (deployCommandOption: { id: string; value: string }) => deployCommandOption.value
+        packageCommandOptions:
+          typeof formData.spec.packageCommandOptions === 'string'
+            ? formData.spec.packageCommandOptions
+            : (formData.spec.packageCommandOptions as ListValue)?.map(
+                (packageCommandOption: { id: string; value: string }) => packageCommandOption.value
               ),
-        envVariables: (formData.spec?.envVariables as MapValue).reduce(
-          (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
-            ...agg,
-            [envVar.key]: envVar.value
-          }),
-          {}
-        )
+        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType)
       }
     }
   }

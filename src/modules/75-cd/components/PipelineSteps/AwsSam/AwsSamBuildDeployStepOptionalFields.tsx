@@ -59,7 +59,7 @@ export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptio
           name={'spec.envVariables'}
           valueMultiTextInputProps={{ expressions, allowableTypes }}
           multiTypeFieldSelectorProps={{
-            label: getString('optionalField', { name: getString('environmentVariables') }),
+            label: getString('environmentVariables'),
             disableTypeSelection: true
           }}
           configureOptionsProps={{

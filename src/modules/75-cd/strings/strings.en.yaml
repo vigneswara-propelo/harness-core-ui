@@ -179,6 +179,8 @@ steps:
   awsSamBuildStep:
     samBuildDockerContainerRegistry: SAM Build Docker Container Registry
     awsSamBuildCommandOptions: AWS SAM Build Command Options
+  serverlessPackageStep:
+    packageCommandOptions: Package Command Options
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

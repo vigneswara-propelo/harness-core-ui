@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, set } from 'lodash-es'
 import type { FormikErrors } from 'formik'
-import type { IconName, AllowedTypes } from '@harness/uicore'
+import { IconName, AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
@@ -50,7 +50,7 @@ export interface ServerlessPrepareRollbackVariableStepProps {
 }
 
 export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepareRollbackStepInitialValues> {
-  protected type = StepType.ServerlessPrepareRollback
+  protected type = StepType.ServerlessAwsLambdaPrepareRollbackV2
   protected stepName = 'Serverless Prepare Rollback Step'
   protected stepIcon: IconName = 'serverless-deploy-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessPrepareRollback'
@@ -60,7 +60,7 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
   protected defaultValues: ServerlessPrepareRollbackStepInitialValues = {
     identifier: '',
     name: '',
-    type: StepType.ServerlessPrepareRollback,
+    type: StepType.ServerlessAwsLambdaPrepareRollbackV2,
     timeout: '10m',
     spec: {
       connectorRef: ''
@@ -125,12 +125,22 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
     getString,
     viewType
   }: ValidateInputSetProps<ServerlessPrepareRollbackStepInitialValues>): FormikErrors<ServerlessPrepareRollbackStepInitialValues> {
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
     }) as FormikErrors<ServerlessPrepareRollbackStepInitialValues>
+
+    if (
+      isEmpty(data?.spec?.connectorRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `spec.connectorRef`, getString?.('fieldRequired', { field: getString?.('connector') }))
+    }
 
     if (isEmpty(errors.spec)) {
       delete errors.spec

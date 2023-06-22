@@ -32,12 +32,10 @@ export const containerStepGroupInitialValues: K8sDirectInfraStepGroupElementConf
       serviceAccountName: 'testServiceAccountName',
       automountServiceAccountToken: true,
       priorityClassName: 'pc1',
-      labels: [
-        {
-          k1: 'v1'
-        }
-      ] as any,
-      annotations: [{ aKey1: 'aValue1' }] as any,
+      labels: {
+        k1: 'v1'
+      },
+      annotations: { aKey1: 'aValue1' },
       containerSecurityContext: {
         capabilities: {
           add: ['c1'],
@@ -49,11 +47,9 @@ export const containerStepGroupInitialValues: K8sDirectInfraStepGroupElementConf
         readOnlyRootFilesystem: true,
         runAsUser: 2000
       },
-      nodeSelector: [
-        {
-          nsKey1: 'nsValue1'
-        }
-      ] as any,
+      nodeSelector: {
+        nsKey1: 'nsValue1'
+      },
       tolerations: [
         {
           effect: 'e1',
@@ -95,12 +91,10 @@ export const containerStepGroupTemplate: K8sDirectInfraStepGroupElementConfig = 
       serviceAccountName: RUNTIME_INPUT_VALUE,
       automountServiceAccountToken: RUNTIME_INPUT_VALUE as any,
       priorityClassName: RUNTIME_INPUT_VALUE,
-      labels: [
-        {
-          k1: RUNTIME_INPUT_VALUE
-        }
-      ] as any,
-      annotations: [{ aKey1: RUNTIME_INPUT_VALUE }] as any,
+      labels: {
+        k1: RUNTIME_INPUT_VALUE
+      },
+      annotations: { aKey1: RUNTIME_INPUT_VALUE },
       containerSecurityContext: {
         capabilities: {
           add: ['c1'],
@@ -112,11 +106,9 @@ export const containerStepGroupTemplate: K8sDirectInfraStepGroupElementConfig = 
         readOnlyRootFilesystem: RUNTIME_INPUT_VALUE as any,
         runAsUser: RUNTIME_INPUT_VALUE as any
       },
-      nodeSelector: [
-        {
-          nsKey1: RUNTIME_INPUT_VALUE
-        }
-      ] as any,
+      nodeSelector: {
+        nsKey1: RUNTIME_INPUT_VALUE
+      },
       tolerations: RUNTIME_INPUT_VALUE as any,
       hostNames: RUNTIME_INPUT_VALUE as any,
       initTimeout: RUNTIME_INPUT_VALUE,
