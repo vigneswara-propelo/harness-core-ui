@@ -20,6 +20,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
+import { illegalIdentifiers } from '@common/utils/StringUtils'
 import { getVaribaleTypeOptions, VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 
@@ -104,6 +105,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
               getString('common.validation.fieldMustBeAlphanumeric', { name: getString('name') })
             )
             .notOneOf(existingNames, getString('common.validation.variableAlreadyExists'))
+            .notOneOf(illegalIdentifiers, getString('common.invalidNames', { names: illegalIdentifiers.join(', ') }))
         })}
         onSubmit={data => {
           if (data && selectedVariable) {

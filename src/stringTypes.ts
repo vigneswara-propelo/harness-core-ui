@@ -565,6 +565,7 @@ export interface StringsMap {
   'common.instanceValidation.required': string
   'common.invalid': string
   'common.invalidIdentifiers': string
+  'common.invalidNames': string
   'common.invite': string
   'common.isHelpful': string
   'common.jexlCondition': string

@@ -1095,6 +1095,7 @@ importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git
 environmentOverrides: Environment Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
+invalidNames: 'Name must not be one of the following values: {{names}}'
 repositoryFormat: Repository Format
 scopeLabel: Scope
 hostLabel: Host

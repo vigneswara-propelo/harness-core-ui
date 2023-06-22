@@ -38,7 +38,9 @@ export const illegalIdentifiers = [
   'parallel',
   'stepGroup',
   'org',
-  'account'
+  'account',
+  'class',
+  'shellScriptProvisioner'
 ]
 
 export const DEFAULT_DATE_FORMAT = 'MM/DD/YYYY hh:mm a'
