@@ -522,7 +522,7 @@ export function getReferenceFieldProps({
           body: merge(
             {
               ...(!category && { types: Array.isArray(type) ? type : [type] }),
-              category,
+              categories: !isEmpty(category) ? (Array.isArray(category) ? category : [category]) : undefined,
               filterType: 'Connector',
               projectIdentifier: scope === Scope.PROJECT || allTabSelected ? [projectIdentifier as string] : undefined,
               orgIdentifier:
