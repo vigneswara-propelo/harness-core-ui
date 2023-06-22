@@ -87,6 +87,7 @@ export enum SettingType {
   ENABLE_NODE_EXECUTION_AUDIT_EVENTS = 'enable_node_execution_audit_events',
   ENABLE_MATRIX_FIELD_NAME_SETTING = 'enable_matrix_label_by_name',
   ENABLE_EXPRESSION_ENGINE_V2 = 'enable_expression_engine_v2',
+  DEFAULT_IMAGE_PULL_POLICY_FOR_ADD_ON_CONTAINER = 'default_image_pull_policy_for_add_on_container',
   SHOW_ANOMALIES = 'show_anomalies',
   SHOW_OTHERS = 'show_others',
   SHOW_UNALLOCATED_CUSTER_COST = 'show_unallocated_cluster_cost',

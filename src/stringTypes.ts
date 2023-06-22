@@ -1713,6 +1713,7 @@ export interface StringsMap {
   'defaultSettings.azureIncludeRefunds': string
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.defaultGitConnector': string
+  'defaultSettings.defaultImagePullPolicyForAddOnContainer': string
   'defaultSettings.emailToNonHarnessUsers': string
   'defaultSettings.enableExpressionsJsonSupport': string
   'defaultSettings.enableForceDelete': string

@@ -270,6 +270,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_EXPRESSION_ENGI
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_IMAGE_PULL_POLICY_FOR_ADD_ON_CONTAINER, {
+  label: 'defaultSettings.defaultImagePullPolicyForAddOnContainer',
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
+  yupValidation: Yup.string(),
+  settingCategory: 'PMS'
+})
+
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'
