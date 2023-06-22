@@ -264,7 +264,8 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
+      isAnyPipelineRuntimeInput
     })
 
     if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
@@ -586,6 +587,8 @@ export default function ManifestTriggerWizard(
     return parse(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline
   }, [template?.data?.inputSetTemplateYaml])
 
+  const isAnyPipelineRuntimeInput = !isEmpty(yamlTemplate)
+
   const getFormErrors = async ({
     latestPipeline,
     latestYamlTemplate,
@@ -737,7 +740,8 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
+      isAnyPipelineRuntimeInput
     })
     submitTrigger(triggerYaml)
   }

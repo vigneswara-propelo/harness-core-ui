@@ -623,6 +623,7 @@ export default function ScheduledTriggerWizard(
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
     })
+    const noPipelineInput = isEmpty(yamlTemplate)
     return clearNullUndefined({
       name,
       identifier,
@@ -643,9 +644,11 @@ export default function ScheduledTriggerWizard(
           }
         }
       },
-      inputYaml: stringifyPipelineRuntimeInput,
       pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : undefined,
-      inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+      ...(!noPipelineInput && {
+        inputYaml: stringifyPipelineRuntimeInput,
+        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+      })
     })
   }
 

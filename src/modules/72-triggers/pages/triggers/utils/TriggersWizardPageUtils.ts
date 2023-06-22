@@ -2251,7 +2251,8 @@ export const getArtifactManifestTriggerYaml = ({
   projectIdentifier,
   pipelineIdentifier,
   persistIncomplete = false,
-  gitAwareForTriggerEnabled: _gitAwareForTriggerEnabled
+  gitAwareForTriggerEnabled: _gitAwareForTriggerEnabled,
+  isAnyPipelineRuntimeInput
 }: {
   values: any
   orgIdentifier: string
@@ -2261,6 +2262,7 @@ export const getArtifactManifestTriggerYaml = ({
   manifestType?: string
   persistIncomplete?: boolean
   gitAwareForTriggerEnabled: boolean | undefined
+  isAnyPipelineRuntimeInput: boolean
 }): TriggerConfigDTO => {
   const {
     name,
@@ -2388,9 +2390,12 @@ export const getArtifactManifestTriggerYaml = ({
         ...artifactSourceSpec
       }
     },
-    inputYaml: stringifyPipelineRuntimeInput,
     pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
-    inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+    // Pass inputYaml or inputSetRefs if there is any pipeline runtime input
+    ...(isAnyPipelineRuntimeInput && {
+      inputYaml: stringifyPipelineRuntimeInput,
+      inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+    })
   }
   if (artifactType) {
     if (triggerYaml?.source?.spec && Object.getOwnPropertyDescriptor(triggerYaml?.source?.spec, 'manifestRef')) {

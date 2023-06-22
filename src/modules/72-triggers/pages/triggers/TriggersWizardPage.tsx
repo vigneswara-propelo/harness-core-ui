@@ -358,7 +358,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
-        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
+        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
+        isAnyPipelineRuntimeInput
       })
     }
 
@@ -713,9 +714,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             }
           }
         },
-        inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+        // Pass inputYaml or inputSetRefs if there is any pipeline runtime input
+        ...(isAnyPipelineRuntimeInput && {
+          inputYaml: stringifyPipelineRuntimeInput,
+          inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+        })
       } as NGTriggerConfigV2
       if (triggerYaml.source?.spec?.spec) {
         triggerYaml.source.spec.spec.spec.payloadConditions = persistIncomplete
@@ -760,9 +764,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
             }
           }
         },
-        inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+        // Pass inputYaml or inputSetRefs if there is any pipeline runtime input
+        ...(isAnyPipelineRuntimeInput && {
+          inputYaml: stringifyPipelineRuntimeInput,
+          inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+        })
       } as NGTriggerConfigV2
 
       if (triggerYaml.source?.spec) {
@@ -1261,9 +1268,12 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           }
         }
       },
-      inputYaml: stringifyPipelineRuntimeInput,
       pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : undefined,
-      inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+      // Pass inputYaml or inputSetRefs if there is any pipeline runtime input
+      ...(isAnyPipelineRuntimeInput && {
+        inputYaml: stringifyPipelineRuntimeInput,
+        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+      })
     })
   }
 
@@ -1287,6 +1297,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   const yamlTemplate = useMemo(() => {
     return parse(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline
   }, [template?.data?.inputSetTemplateYaml])
+
+  const isAnyPipelineRuntimeInput = !isEmpty(yamlTemplate)
 
   const getFormErrors = async ({
     latestPipeline,
@@ -1474,7 +1486,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
+      isAnyPipelineRuntimeInput
     })
     submitTrigger(triggerYaml)
   }

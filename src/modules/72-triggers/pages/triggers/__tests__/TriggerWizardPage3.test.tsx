@@ -29,7 +29,8 @@ import {
   GetParseableArtifactTriggerResponse,
   GetParseableParallelStageArtifactTriggerResponse,
   clearedArtifactIdentifierResponse,
-  GithubWebhookAuthenticationEnabledFalse
+  GithubWebhookAuthenticationEnabledFalse,
+  triggerYamlWithoutPipelineInput
 } from './webhookMockResponses'
 
 import {
@@ -188,9 +189,9 @@ describe('Artifact Trigger Tests', () => {
     }))
 
     jest.spyOn(pipelineNg, 'useGetPipeline').mockReturnValue(GetParallelArtifactPipelineResponse as any)
-    jest
-      .spyOn(pipelineNg, 'useGetTemplateFromPipeline')
-      .mockReturnValue(GetParseableParallelArtifactTemplateFromPipelineResponse as any)
+    jest.spyOn(pipelineNg, 'useGetTemplateFromPipeline').mockReturnValue({
+      mutate: jest.fn().mockReturnValue(GetParseableArtifactTemplateFromPipelineResponse.data) as unknown
+    } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(pipelineNg, 'useGetTrigger').mockReturnValue(GetParseableParallelStageArtifactTriggerResponse as any)
     jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
       mutate: jest.fn().mockReturnValue(GetParseableParallelArtifactTemplateFromPipelineResponse) as unknown
@@ -220,5 +221,66 @@ describe('Artifact Trigger Tests', () => {
 
     expect(mockUpdate).toBeCalled()
     expect(mockUpdate).toBeCalledWith(clearedArtifactIdentifierResponse)
+  })
+  test('Artifact Trigger - When there is no pipeline runtime input', async () => {
+    const mockUpdate = jest.fn().mockReturnValue(Promise.resolve({ data: {}, status: {} }))
+
+    jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
+      return {
+        data: GetSchemaYaml as any,
+        refetch: jest.fn(),
+        error: null,
+        loading: false,
+        absolutePath: '',
+        cancel: jest.fn(),
+        response: null
+      }
+    })
+
+    jest.spyOn(pipelineNg, 'useCreateVariablesV2').mockImplementation(() => ({
+      cancel: jest.fn(),
+      loading: false,
+      error: null,
+      mutate: jest.fn().mockImplementation(() => PostCreateVariables)
+    }))
+
+    jest.spyOn(pipelineNg, 'useGetPipeline').mockReturnValue(GetParallelArtifactPipelineResponse as any)
+    jest.spyOn(pipelineNg, 'useGetTemplateFromPipeline').mockReturnValue({
+      mutate: jest.fn().mockReturnValue({
+        data: {
+          modules: ['pms'],
+          hasInputSets: true
+        }
+      }) as unknown
+    } as UseMutateReturn<any, any, any, any, any>)
+    jest.spyOn(pipelineNg, 'useGetTrigger').mockReturnValue(GetParseableParallelStageArtifactTriggerResponse as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
+      mutate: jest.fn().mockReturnValue(GetParseableParallelArtifactTemplateFromPipelineResponse) as unknown
+    } as UseMutateReturn<any, any, any, any, any>)
+    jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
+      mutate: mockUpdate as unknown
+    } as UseMutateReturn<any, any, any, any, any>)
+    jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    const { container } = render(<WrapperComponent />)
+    await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
+
+    const tab3 = container.querySelector('[data-tab-id="Pipeline Input"]')
+
+    if (!tab3) {
+      throw Error('No Pipeline Input tab')
+    }
+    fireEvent.click(tab3)
+
+    await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
+    const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
+    if (!updateButton) {
+      throw Error('Cannot find Update Trigger button')
+    }
+
+    fireEvent.click(updateButton)
+    await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1))
+
+    expect(mockUpdate).toBeCalled()
+    expect(mockUpdate).toBeCalledWith(triggerYamlWithoutPipelineInput)
   })
 })

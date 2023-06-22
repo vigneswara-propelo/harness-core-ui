@@ -1004,9 +1004,12 @@ export default function WebhookTriggerWizard(
             }
           }
         },
-        inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+        // Pass inputYaml or inputSetRefs if there is any pipeline runtime input
+        ...(isAnyPipelineRuntimeInput && {
+          inputYaml: stringifyPipelineRuntimeInput,
+          inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+        })
       } as NGTriggerConfigV2
       if (triggerYaml.source?.spec?.spec) {
         triggerYaml.source.spec.spec.spec.payloadConditions = persistIncomplete
@@ -1051,9 +1054,12 @@ export default function WebhookTriggerWizard(
             }
           }
         },
-        inputYaml: stringifyPipelineRuntimeInput,
         pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
-        inputSetRefs
+        // Pass inputYaml or inputSetRefs if there is any pipeline runtime input
+        ...(isAnyPipelineRuntimeInput && {
+          inputYaml: stringifyPipelineRuntimeInput,
+          inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
+        })
       } as NGTriggerConfigV2
 
       if (secureToken && triggerYaml.source?.spec) {
@@ -1183,6 +1189,8 @@ export default function WebhookTriggerWizard(
   const yamlTemplate = useMemo(() => {
     return parse(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline
   }, [template?.data?.inputSetTemplateYaml])
+
+  const isAnyPipelineRuntimeInput = !isEmpty(yamlTemplate)
 
   const getFormErrors = async ({
     latestPipeline,

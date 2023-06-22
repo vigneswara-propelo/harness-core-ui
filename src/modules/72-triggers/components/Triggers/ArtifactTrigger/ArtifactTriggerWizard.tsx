@@ -263,7 +263,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
+      isAnyPipelineRuntimeInput
     })
 
     if (values.inputSetRefs?.length || values.inputSetSelected?.length) {
@@ -617,6 +618,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     return parse(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline
   }, [template?.data?.inputSetTemplateYaml])
 
+  const isAnyPipelineRuntimeInput = !isEmpty(yamlTemplate)
+
   const getFormErrors = async ({
     latestPipeline,
     latestYamlTemplate,
@@ -770,7 +773,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
+      isAnyPipelineRuntimeInput
     })
     submitTrigger(triggerYaml)
   }
