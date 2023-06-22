@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { act, findAllByText, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as pipelineNg from 'services/pipeline-ng'
 import { mockRepos, mockBranches, gitConnectorMock } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
@@ -79,7 +79,7 @@ const inputSetInitialValues = {
   repoName: 'sunnykesh-gitSync'
 }
 
-describe('ImportResource - Pipeline', () => {
+describe('Move Resource to Remote', () => {
   beforeEach(() => {
     onSuccess.mockReset()
     onFailure.mockReset()
@@ -105,6 +105,45 @@ describe('ImportResource - Pipeline', () => {
     await waitFor(() => expect(getByText('validation.sshConnectorRequired')).toBeInTheDocument())
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('Validating connector selection and form validation for new branch input', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
+        <MoveResource
+          resourceType={ResourceType.PIPELINES}
+          migrationType={MigrationType.INLINE_TO_REMOTE}
+          initialValues={pipelineInitialValues}
+        />
+      </TestWrapper>
+    )
+    expect(getByText('name')).toBeInTheDocument()
+    // Git fields should be enabled for pipelines
+    const connectorSelector = container.querySelector('button[data-testid="cr-field-connectorRef"]')
+    expect(connectorSelector).not.toHaveAttribute('disabled')
+    fireEvent.click(connectorSelector!)
+    // selecting a git connector
+    await act(async () => {
+      const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0]
+      const githubConnector = await findAllByText(connectorSelectorDialog as HTMLElement, 'ValidGithubRepo')
+      expect(githubConnector).toBeTruthy()
+      fireEvent.click(githubConnector?.[0])
+      const applySelected = getByText('entityReference.apply')
+      await act(async () => {
+        fireEvent.click(applySelected)
+      })
+    })
+    expect(connectorSelector).toMatchSnapshot()
+    expect(screen.queryByText('gitsync.baseBranchToFork')).not.toBeInTheDocument()
+    // Clicking new branch radio button
+    const newBranchRadioBtn = document.querySelector('[data-test="newBranchRadioBtn"]')
+    act(() => {
+      fireEvent.click(newBranchRadioBtn!)
+    })
+    expect(screen.queryByText('gitsync.baseBranchToFork')).toBeInTheDocument()
+    const moveButton = getByText('common.moveToGit')
+    await userEvent.click(moveButton)
+    expect(screen.queryByText('common.git.validation.branchRequired')).toBeInTheDocument()
   })
 
   test('testing for Input set should have pre-filled and disabled git info and call move API', async () => {

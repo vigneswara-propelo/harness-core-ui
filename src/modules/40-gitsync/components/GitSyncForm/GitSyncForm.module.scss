@@ -14,4 +14,22 @@
       width: 350px !important;
     }
   }
+
+  .branchSection {
+    :global {
+      .bp3-form-group {
+        margin-top: var(--spacing-small);
+        margin-bottom: 0;
+        margin-left: var(--spacing-huge);
+        width: 302px;
+
+        input,
+        .bp3-popover,
+        .bp3-input-group,
+        .bp3-menu {
+          width: 302px !important;
+        }
+      }
+    }
+  }
 }

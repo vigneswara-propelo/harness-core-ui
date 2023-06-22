@@ -117,7 +117,7 @@ export default function MoveResource({
   }
 
   const movePipeline = (formValues: ModifiedInitialValuesType): void => {
-    const { identifier, connectorRef, repo, branch, filePath, commitMsg } = formValues
+    const { identifier, connectorRef, repo, branch, filePath, commitMsg, baseBranch } = formValues
     setIsLoading(true)
     moveConfigsPromise({
       pipelineIdentifier: identifier,
@@ -130,7 +130,7 @@ export default function MoveResource({
         branch,
         filePath,
         moveConfigType: migrationType as MoveConfigsQueryParams['moveConfigType'],
-        isNewBranch: false,
+        ...(baseBranch ? { isNewBranch: true, baseBranch } : { isNewBranch: false }),
         commitMsg,
         pipelineIdentifier: identifier
       },
@@ -146,7 +146,7 @@ export default function MoveResource({
   }
 
   const moveInputSet = (formValues: ModifiedInitialValuesType): void => {
-    const { identifier, connectorRef, repo, branch, filePath, commitMsg } = formValues
+    const { identifier, connectorRef, repo, branch, filePath, commitMsg, baseBranch } = formValues
     setIsLoading(true)
     inputSetMoveConfigPromise({
       inputSetIdentifier: identifier,
@@ -159,7 +159,7 @@ export default function MoveResource({
         branch,
         filePath,
         moveConfigType: migrationType as MoveConfigsQueryParams['moveConfigType'],
-        isNewBranch: false,
+        ...(baseBranch ? { isNewBranch: true, baseBranch } : { isNewBranch: false }),
         commitMsg,
         pipelineIdentifier: pipelineIdentifier,
         inputSetIdentifier: identifier
@@ -254,6 +254,7 @@ export default function MoveResource({
                   errorData={errorResponse}
                   disableFields={getDisableFields(resourceType)}
                   className={css.gitSyncForm}
+                  supportNewBranch
                 />
                 <FormInput.TextArea
                   className={css.commitMessage}

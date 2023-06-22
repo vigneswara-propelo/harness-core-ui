@@ -17,7 +17,7 @@ export interface ExtraQueryParams {
 
 export type InitialValuesType = NameIdDescriptionTagsType &
   StoreMetadata & { versionLabel?: string; commitMsg?: string }
-export type ModifiedInitialValuesType = Omit<InitialValuesType, 'repoName'> & { repo?: string }
+export type ModifiedInitialValuesType = Omit<InitialValuesType, 'repoName'> & { repo?: string; baseBranch?: string }
 
 export const getDisableFields = (resourceType: ResourceType): Record<string, boolean> | undefined => {
   if (resourceType === ResourceType.INPUT_SETS) {

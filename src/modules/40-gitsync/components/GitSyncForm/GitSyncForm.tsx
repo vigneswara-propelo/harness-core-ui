@@ -11,7 +11,8 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { Container, FormInput, Layout, SelectOption, useToaster } from '@harness/uicore'
+import { Container, FormInput, Layout, SelectOption, useToaster, Radio, Icon, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
   ConnectorReferenceField,
@@ -38,6 +39,7 @@ export interface GitSyncFormFields {
   connectorRef?: ConnectorSelectedValue | string
   repo?: string
   branch?: string
+  baseBranch?: string
   filePath?: string
   versionLabel?: string
 }
@@ -57,6 +59,11 @@ interface GitSyncFormProps<T> {
   filePathPrefix?: string
   skipDefaultConnectorSetting?: boolean
   skipBranch?: boolean
+  supportNewBranch?: boolean
+}
+
+interface NewGitBranchProps<T> {
+  formikProps: FormikContextType<T>
 }
 
 export const gitSyncFormSchema = (
@@ -93,6 +100,97 @@ const getSupportedProviders = (): Array<ConnectorInfoDTO['type']> => {
   return supportedRepoProviders
 }
 
+function NewGitBranch<T extends GitSyncFormFields = GitSyncFormFields>(
+  props: NewGitBranchProps<T>
+): React.ReactElement {
+  const { formikProps } = props
+  const { getString } = useStrings()
+  const [isNewBranch, setIsNewBranch] = React.useState(Boolean(formikProps.values?.baseBranch))
+
+  const handleBranchTypeChange = (isNew: boolean, formik: FormikContextType<T>): void => {
+    if (isNewBranch !== isNew) {
+      setIsNewBranch(isNew)
+      formik.setFieldValue('branch', '')
+      formik.setFieldValue('baseBranch', '')
+      formik.setFieldTouched('branch', false)
+      formik.setFieldTouched('baseBranch', false)
+    }
+  }
+
+  return (
+    <Layout.Vertical spacing="medium">
+      <Container
+        className={css.branchSection}
+        padding={{
+          top: 'xSmall',
+          bottom: 'xSmall'
+        }}
+      >
+        <Radio large onChange={() => handleBranchTypeChange(false, formikProps)} checked={!isNewBranch}>
+          <Icon name="git-branch-existing"></Icon>
+          <Text margin={{ left: 'small' }} inline font={{ variation: FontVariation.BODY }}>
+            {getString('common.git.existingBranchCommitLabel')}
+          </Text>
+        </Radio>
+        {!isNewBranch && (
+          <RepoBranchSelectV2
+            key={formikProps?.values?.repo}
+            connectorIdentifierRef={(formikProps?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value}
+            repoName={formikProps?.values?.repo}
+            onChange={(selected: SelectOption) => {
+              // This is to handle auto fill after default selection, without it form validation will fail
+              if (formikProps.values.branch !== selected.value) {
+                formikProps.setFieldValue?.('branch', selected.value)
+              }
+            }}
+            selectedValue={formikProps.values.branch}
+            noLabel
+          />
+        )}
+      </Container>
+      <Container
+        className={css.branchSection}
+        padding={{
+          top: 'xSmall',
+          bottom: 'xSmall'
+        }}
+        margin={{ bottom: 'large' }}
+      >
+        <Radio
+          data-test="newBranchRadioBtn"
+          large
+          onChange={() => handleBranchTypeChange(true, formikProps)}
+          checked={isNewBranch}
+        >
+          <Icon name="git-new-branch" color={Color.GREY_700}></Icon>
+          <Text inline margin={{ left: 'small' }} font={{ variation: FontVariation.BODY }}>
+            {getString('common.git.newBranchCommitLabel')}
+          </Text>
+        </Radio>
+        {isNewBranch && (
+          <Container>
+            <FormInput.Text name="branch" placeholder={getString('common.git.branchName')} />
+            <RepoBranchSelectV2
+              key={formikProps?.values?.repo}
+              name="baseBranch"
+              connectorIdentifierRef={(formikProps?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value}
+              repoName={formikProps?.values?.repo}
+              onChange={(selected: SelectOption) => {
+                // This is to handle auto fill after default selection, without it form validation will fail
+                if (formikProps.values.baseBranch !== selected.value) {
+                  formikProps.setFieldValue?.('baseBranch', selected.value)
+                }
+              }}
+              selectedValue={formikProps.values.baseBranch}
+              label={getString('gitsync.baseBranchToFork')}
+            />
+          </Container>
+        )}
+      </Container>
+    </Layout.Vertical>
+  )
+}
+
 export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
   props: GitSyncFormProps<T>
 ): React.ReactElement {
@@ -106,7 +204,8 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     className = '',
     filePathPrefix,
     skipDefaultConnectorSetting = false,
-    skipBranch = false
+    skipBranch = false,
+    supportNewBranch = false
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
@@ -265,7 +364,9 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             disabled={isEdit || disableFields.repoName}
             setErrorResponse={setErrorResponse}
           />
-          {skipBranch ? null : (
+          {skipBranch ? null : supportNewBranch ? (
+            <NewGitBranch formikProps={formikProps} />
+          ) : (
             <RepoBranchSelectV2
               key={formikProps?.values?.repo}
               connectorIdentifierRef={formikConnectorRef || preSelectedConnector}

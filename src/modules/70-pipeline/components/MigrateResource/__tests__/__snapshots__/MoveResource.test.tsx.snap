@@ -1,6 +1,95 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ImportResource - Pipeline initial rendering snapshot testing for pipeline 1`] = `
+exports[`Move Resource to Remote Validating connector selection and form validation for new branch input 1`] = `
+<button
+  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+  data-testid="cr-field-connectorRef"
+  style="width: 350px;"
+  type="button"
+>
+  <span
+    class="bp3-button-text"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main selectWrapper StyledProps--flex StyledProps--flex-distribution-space-between"
+    >
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target Text--targetClass"
+        >
+          <p
+            class="StyledProps--font StyledProps--main label StyledProps--color StyledProps--color-grey800"
+            tabindex="0"
+          >
+            ValidGithubRepo
+          </p>
+        </span>
+      </span>
+      <div
+        class="rightStatus"
+      >
+        <span
+          class="bp3-icon bp3-icon-full-circle StyledProps--main status greenStatus"
+          data-testid="crf-status"
+          icon="full-circle"
+        >
+          <svg
+            data-icon="full-circle"
+            height="6"
+            viewBox="0 0 16 16"
+            width="6"
+          >
+            <desc>
+              full-circle
+            </desc>
+            <path
+              d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
+          class="Tag--main"
+        >
+          <span
+            class="bp3-tag bp3-minimal"
+            id="tag"
+          >
+            <span
+              class="bp3-text-overflow-ellipsis bp3-fill"
+            >
+              project
+            </span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </span>
+  <span
+    class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+    icon="chevron-down"
+  >
+    <svg
+      data-icon="chevron-down"
+      height="14"
+      viewBox="0 0 16 16"
+      width="14"
+    >
+      <desc>
+        chevron-down
+      </desc>
+      <path
+        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+        fill-rule="evenodd"
+      />
+    </svg>
+  </span>
+</button>
+`;
+
+exports[`Move Resource to Remote initial rendering snapshot testing for pipeline 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main migrateResourceForm"
@@ -312,75 +401,140 @@ exports[`ImportResource - Pipeline initial rendering snapshot testing for pipeli
                   </div>
                 </div>
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
                 >
                   <div
-                    class="bp3-form-group branchSelector"
-                    data-id="branch-3"
+                    class="StyledProps--font StyledProps--main branchSection"
                   >
                     <label
-                      class="bp3-label"
-                      for="branch"
+                      class="bp3-control bp3-radio bp3-large StyledProps--font Radio--radio StyledProps--main"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="moveConfig_branch"
-                      >
-                        gitBranch
-                      </span>
-                       
-                      <span
-                        class="bp3-text-muted"
+                      <input
+                        checked=""
+                        type="radio"
                       />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="git-branch-existing"
+                      >
+                        <svg
+                          fill="none"
+                          height="16"
+                          viewBox="0 0 16 9"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M12.403 3.67H16v1.626h-3.597a4.477 4.477 0 01-8.807 0H0V3.67h3.596a4.477 4.477 0 018.807 0zm-7.26.813a2.857 2.857 0 105.714 0 2.857 2.857 0 00-5.714 0z"
+                            fill="#383946"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--inline StyledProps--font-variation-body"
+                      >
+                        common.git.existingBranchCommitLabel
+                      </span>
                     </label>
                     <div
-                      class="bp3-form-content"
+                      class="Layout--horizontal StyledProps--main"
                     >
                       <div
-                        class="bp3-popover-wrapper Select--main bp3-fill"
+                        class="bp3-form-group branchSelector"
+                        data-id="branch-3"
                       >
+                        
                         <div
-                          class="bp3-popover-target"
+                          class="bp3-form-content"
                         >
                           <div
-                            class="bp3-input-group"
+                            class="bp3-popover-wrapper Select--main bp3-fill"
                           >
-                            <input
-                              autocomplete="off"
-                              class="bp3-input"
-                              name="branch"
-                              placeholder="- common.git.selectBranchPlaceholder -"
-                              style="padding-right: 0px;"
-                              type="text"
-                              value="main"
-                            />
-                            <span
-                              class="bp3-input-action"
+                            <div
+                              class="bp3-popover-target"
                             >
-                              <span
-                                class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                icon="chevron-down"
+                              <div
+                                class="bp3-input-group"
                               >
-                                <svg
-                                  data-icon="chevron-down"
-                                  height="14"
-                                  viewBox="0 0 16 16"
-                                  width="14"
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  name="branch"
+                                  placeholder="- common.git.selectBranchPlaceholder -"
+                                  style="padding-right: 0px;"
+                                  type="text"
+                                  value="main"
+                                />
+                                <span
+                                  class="bp3-input-action"
                                 >
-                                  <desc>
-                                    chevron-down
-                                  </desc>
-                                  <path
-                                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
-                            </span>
+                                  <span
+                                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                    icon="chevron-down"
+                                  >
+                                    <svg
+                                      data-icon="chevron-down"
+                                      height="14"
+                                      viewBox="0 0 16 16"
+                                      width="14"
+                                    >
+                                      <desc>
+                                        chevron-down
+                                      </desc>
+                                      <path
+                                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main branchSection StyledProps--margin-bottom-large"
+                  >
+                    <label
+                      class="bp3-control bp3-radio bp3-large StyledProps--font Radio--radio StyledProps--main"
+                    >
+                      <input
+                        data-test="newBranchRadioBtn"
+                        type="radio"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey700"
+                        data-icon="git-new-branch"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 13 16"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.406.003a2.399 2.399 0 00-.8 4.658v.94a.8.8 0 01-.8.8H4.001a2.413 2.413 0 00-.8.14V4.66A2.399 2.399 0 002.402 0a2.399 2.399 0 00-.8 4.661v6.678a2.399 2.399 0 00.8 4.661 2.399 2.399 0 00.8-4.661v-2.54a.8.8 0 01.8-.799h4.803a2.4 2.4 0 002.402-2.4v-.939a2.399 2.399 0 00-.8-4.658z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-left-small StyledProps--font-variation-body"
+                      >
+                        common.git.newBranchCommitLabel
+                      </span>
+                    </label>
                   </div>
                 </div>
                 <div
@@ -488,7 +642,7 @@ exports[`ImportResource - Pipeline initial rendering snapshot testing for pipeli
 </div>
 `;
 
-exports[`ImportResource - Pipeline testing for Input set should have pre-filled and disabled git info and call move API 1`] = `
+exports[`Move Resource to Remote testing for Input set should have pre-filled and disabled git info and call move API 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main migrateResourceForm"
@@ -762,76 +916,140 @@ exports[`ImportResource - Pipeline testing for Input set should have pre-filled 
                   </div>
                 </div>
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
                 >
                   <div
-                    class="bp3-form-group bp3-disabled branchSelector"
-                    data-id="branch-3"
+                    class="StyledProps--font StyledProps--main branchSection"
                   >
                     <label
-                      class="bp3-label"
-                      for="branch"
+                      class="bp3-control bp3-radio bp3-large StyledProps--font Radio--radio StyledProps--main"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="moveConfig_branch"
-                      >
-                        gitBranch
-                      </span>
-                       
-                      <span
-                        class="bp3-text-muted"
+                      <input
+                        checked=""
+                        type="radio"
                       />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="git-branch-existing"
+                      >
+                        <svg
+                          fill="none"
+                          height="16"
+                          viewBox="0 0 16 9"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M12.403 3.67H16v1.626h-3.597a4.477 4.477 0 01-8.807 0H0V3.67h3.596a4.477 4.477 0 018.807 0zm-7.26.813a2.857 2.857 0 105.714 0 2.857 2.857 0 00-5.714 0z"
+                            fill="#383946"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--inline StyledProps--font-variation-body"
+                      >
+                        common.git.existingBranchCommitLabel
+                      </span>
                     </label>
                     <div
-                      class="bp3-form-content"
+                      class="Layout--horizontal StyledProps--main"
                     >
                       <div
-                        class="bp3-popover-wrapper Select--main bp3-fill"
+                        class="bp3-form-group branchSelector"
+                        data-id="branch-3"
                       >
+                        
                         <div
-                          class="bp3-popover-target"
+                          class="bp3-form-content"
                         >
                           <div
-                            class="bp3-input-group bp3-disabled"
+                            class="bp3-popover-wrapper Select--main bp3-fill"
                           >
-                            <input
-                              autocomplete="off"
-                              class="bp3-input"
-                              disabled=""
-                              name="branch"
-                              placeholder="- common.git.selectBranchPlaceholder -"
-                              style="padding-right: 0px;"
-                              type="text"
-                              value="master"
-                            />
-                            <span
-                              class="bp3-input-action"
+                            <div
+                              class="bp3-popover-target"
                             >
-                              <span
-                                class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                icon="chevron-down"
+                              <div
+                                class="bp3-input-group"
                               >
-                                <svg
-                                  data-icon="chevron-down"
-                                  height="14"
-                                  viewBox="0 0 16 16"
-                                  width="14"
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  name="branch"
+                                  placeholder="- common.git.selectBranchPlaceholder -"
+                                  style="padding-right: 0px;"
+                                  type="text"
+                                  value="master"
+                                />
+                                <span
+                                  class="bp3-input-action"
                                 >
-                                  <desc>
-                                    chevron-down
-                                  </desc>
-                                  <path
-                                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
-                            </span>
+                                  <span
+                                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                    icon="chevron-down"
+                                  >
+                                    <svg
+                                      data-icon="chevron-down"
+                                      height="14"
+                                      viewBox="0 0 16 16"
+                                      width="14"
+                                    >
+                                      <desc>
+                                        chevron-down
+                                      </desc>
+                                      <path
+                                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main branchSection StyledProps--margin-bottom-large"
+                  >
+                    <label
+                      class="bp3-control bp3-radio bp3-large StyledProps--font Radio--radio StyledProps--main"
+                    >
+                      <input
+                        data-test="newBranchRadioBtn"
+                        type="radio"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey700"
+                        data-icon="git-new-branch"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 13 16"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.406.003a2.399 2.399 0 00-.8 4.658v.94a.8.8 0 01-.8.8H4.001a2.413 2.413 0 00-.8.14V4.66A2.399 2.399 0 002.402 0a2.399 2.399 0 00-.8 4.661v6.678a2.399 2.399 0 00.8 4.661 2.399 2.399 0 00.8-4.661v-2.54a.8.8 0 01.8-.799h4.803a2.4 2.4 0 002.402-2.4v-.939a2.399 2.399 0 00-.8-4.658z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-left-small StyledProps--font-variation-body"
+                      >
+                        common.git.newBranchCommitLabel
+                      </span>
+                    </label>
                   </div>
                 </div>
                 <div
@@ -939,7 +1157,7 @@ exports[`ImportResource - Pipeline testing for Input set should have pre-filled 
 </div>
 `;
 
-exports[`ImportResource - Pipeline when move throws error with responseMessages 1`] = `
+exports[`Move Resource to Remote when move throws error with responseMessages 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main migrateResourceForm"
@@ -1210,75 +1428,139 @@ exports[`ImportResource - Pipeline when move throws error with responseMessages 
                   </div>
                 </div>
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
                 >
                   <div
-                    class="bp3-form-group bp3-disabled branchSelector"
+                    class="StyledProps--font StyledProps--main branchSection"
                   >
                     <label
-                      class="bp3-label"
-                      for="branch"
+                      class="bp3-control bp3-radio bp3-large StyledProps--font Radio--radio StyledProps--main"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="moveConfig_branch"
-                      >
-                        gitBranch
-                      </span>
-                       
-                      <span
-                        class="bp3-text-muted"
+                      <input
+                        checked=""
+                        type="radio"
                       />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="git-branch-existing"
+                      >
+                        <svg
+                          fill="none"
+                          height="16"
+                          viewBox="0 0 16 9"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M12.403 3.67H16v1.626h-3.597a4.477 4.477 0 01-8.807 0H0V3.67h3.596a4.477 4.477 0 018.807 0zm-7.26.813a2.857 2.857 0 105.714 0 2.857 2.857 0 00-5.714 0z"
+                            fill="#383946"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--inline StyledProps--font-variation-body"
+                      >
+                        common.git.existingBranchCommitLabel
+                      </span>
                     </label>
                     <div
-                      class="bp3-form-content"
+                      class="Layout--horizontal StyledProps--main"
                     >
                       <div
-                        class="bp3-popover-wrapper Select--main bp3-fill"
+                        class="bp3-form-group branchSelector"
                       >
+                        
                         <div
-                          class="bp3-popover-target"
+                          class="bp3-form-content"
                         >
                           <div
-                            class="bp3-input-group bp3-disabled"
+                            class="bp3-popover-wrapper Select--main bp3-fill"
                           >
-                            <input
-                              autocomplete="off"
-                              class="bp3-input"
-                              disabled=""
-                              name="branch"
-                              placeholder="- common.git.selectBranchPlaceholder -"
-                              style="padding-right: 0px;"
-                              type="text"
-                              value="master"
-                            />
-                            <span
-                              class="bp3-input-action"
+                            <div
+                              class="bp3-popover-target"
                             >
-                              <span
-                                class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                icon="chevron-down"
+                              <div
+                                class="bp3-input-group"
                               >
-                                <svg
-                                  data-icon="chevron-down"
-                                  height="14"
-                                  viewBox="0 0 16 16"
-                                  width="14"
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  name="branch"
+                                  placeholder="- common.git.selectBranchPlaceholder -"
+                                  style="padding-right: 0px;"
+                                  type="text"
+                                  value="master"
+                                />
+                                <span
+                                  class="bp3-input-action"
                                 >
-                                  <desc>
-                                    chevron-down
-                                  </desc>
-                                  <path
-                                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
-                            </span>
+                                  <span
+                                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                    icon="chevron-down"
+                                  >
+                                    <svg
+                                      data-icon="chevron-down"
+                                      height="14"
+                                      viewBox="0 0 16 16"
+                                      width="14"
+                                    >
+                                      <desc>
+                                        chevron-down
+                                      </desc>
+                                      <path
+                                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main branchSection StyledProps--margin-bottom-large"
+                  >
+                    <label
+                      class="bp3-control bp3-radio bp3-large StyledProps--font Radio--radio StyledProps--main"
+                    >
+                      <input
+                        data-test="newBranchRadioBtn"
+                        type="radio"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey700"
+                        data-icon="git-new-branch"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 13 16"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.406.003a2.399 2.399 0 00-.8 4.658v.94a.8.8 0 01-.8.8H4.001a2.413 2.413 0 00-.8.14V4.66A2.399 2.399 0 002.402 0a2.399 2.399 0 00-.8 4.661v6.678a2.399 2.399 0 00.8 4.661 2.399 2.399 0 00.8-4.661v-2.54a.8.8 0 01.8-.799h4.803a2.4 2.4 0 002.402-2.4v-.939a2.399 2.399 0 00-.8-4.658z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-left-small StyledProps--font-variation-body"
+                      >
+                        common.git.newBranchCommitLabel
+                      </span>
+                    </label>
                   </div>
                 </div>
                 <div

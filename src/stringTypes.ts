@@ -3435,6 +3435,7 @@ export interface StringsMap {
   'gitsync.addFolder': string
   'gitsync.addNewHarnessFolderLabel': string
   'gitsync.baseBranch': string
+  'gitsync.baseBranchToFork': string
   'gitsync.branchToSync': string
   'gitsync.configSaveToaster': string
   'gitsync.configureHarnessFolder': string

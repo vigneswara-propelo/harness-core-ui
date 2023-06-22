@@ -33,6 +33,7 @@ failedToLoadData: Failed to load data
 fullSyncTitle: Where do you want to sync the resources?
 fullSyncSubTitle: Select a branch in your Git where you want to save resources created in Harness
 branchToSync: Select branch to sync
+baseBranchToFork: Base branch to fork
 enterBranchToSync: Enter new branch name
 startPullRequest: Start a pull request
 baseBranch: Base branch
