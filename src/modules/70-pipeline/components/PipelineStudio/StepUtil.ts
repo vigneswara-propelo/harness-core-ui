@@ -1167,5 +1167,3 @@ export const getTemplatePath = (path: string, parentPath: string): string => {
   }
   return path
 }
-
-export const TerraformSteps: string[] = [StepType.TerraformApply, StepType.TerraformPlan, StepType.TerraformDestroy]

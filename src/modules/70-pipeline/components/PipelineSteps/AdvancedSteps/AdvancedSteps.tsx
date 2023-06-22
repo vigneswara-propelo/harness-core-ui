@@ -20,7 +20,7 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
-import { debounce, defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, noop, set } from 'lodash-es'
 
 import produce from 'immer'
 import { useStrings, String as LocaleString } from 'framework/strings'
@@ -227,7 +227,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                             if (isMultiTypeRuntime(type)) {
                               set(draft, 'when', RUNTIME_INPUT_VALUE)
                             } else {
-                              unset(draft, 'when')
+                              set(draft, 'when', undefined)
                             }
                           })
                         )
@@ -261,7 +261,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                             if (isMultiTypeRuntime(type)) {
                               set(draft, 'failureStrategies', RUNTIME_INPUT_VALUE)
                             } else {
-                              unset(draft, 'failureStrategies')
+                              set(draft, 'failureStrategies', undefined)
                             }
                           })
                         )
@@ -297,7 +297,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                             if (isMultiTypeRuntime(type)) {
                               set(draft, 'strategy', RUNTIME_INPUT_VALUE)
                             } else {
-                              unset(draft, 'strategy')
+                              set(draft, 'strategy', undefined)
                             }
                           })
                         )
