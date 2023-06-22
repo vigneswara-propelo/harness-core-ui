@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es'
 import type {
   ApplicationSettingsConfiguration,
   ConfigFileWrapper,
@@ -10,17 +11,10 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import type { RequiredField } from '@common/interfaces/RouteInterfaces'
 
 export enum ServiceOverridesTab {
-  ENVIRONMENT_GLOBAL = 'ENVIRONMENT_GLOBAL',
-  ENVIRONMENT_SERVICE_SPECIFIC = 'ENVIRONMENT_SERVICE_SPECIFIC',
-  INFRA_GLOBAL = 'INFRA_GLOBAL',
-  INFRA_SERVICE_SPECIFIC = 'INFRA_SERVICE_SPECIFIC'
-}
-interface RowConfig {
-  headerWidth?: string | number
-  rowWidth?: string | number
-  value: StringKeys
-  accessKey?: 'environmentRef' | 'infraIdentifier' | 'serviceRef' | 'overrideType'
-  mapper?: Record<any, any>
+  ENV_GLOBAL_OVERRIDE = 'ENV_GLOBAL_OVERRIDE',
+  ENV_SERVICE_OVERRIDE = 'ENV_SERVICE_OVERRIDE',
+  INFRA_GLOBAL_OVERRIDE = 'INFRA_GLOBAL_OVERRIDE',
+  INFRA_SERVICE_OVERRIDE = 'INFRA_SERVICE_OVERRIDE'
 }
 
 export enum OverrideTypes {
@@ -48,155 +42,6 @@ export const noOverridesStringMap: Record<Required<ServiceOverridesResponseDTOV2
   CLUSTER_SERVICE_OVERRIDE: 'common.serviceOverrides.noOverrides.globalInfrastructure'
 }
 
-export const rowConfigMap: Record<Required<ServiceOverridesResponseDTOV2>['type'], RowConfig[]> = {
-  ENV_GLOBAL_OVERRIDE: [
-    {
-      headerWidth: 160,
-      rowWidth: 156,
-      value: 'environment',
-      accessKey: 'environmentRef'
-    },
-    {
-      headerWidth: 150,
-      rowWidth: 150,
-      value: 'common.serviceOverrides.overrideType',
-      accessKey: 'overrideType',
-      mapper: overridesLabelStringMap
-    },
-    {
-      value: 'common.serviceOverrides.overrideInfo'
-    }
-  ],
-  ENV_SERVICE_OVERRIDE: [
-    {
-      headerWidth: 160,
-      rowWidth: 156,
-      value: 'environment',
-      accessKey: 'environmentRef'
-    },
-    {
-      headerWidth: 160,
-      rowWidth: 160,
-      value: 'service',
-      accessKey: 'serviceRef'
-    },
-    {
-      headerWidth: 150,
-      rowWidth: 150,
-      value: 'common.serviceOverrides.overrideType',
-      accessKey: 'overrideType',
-      mapper: overridesLabelStringMap
-    },
-    {
-      value: 'common.serviceOverrides.overrideInfo'
-    }
-  ],
-  INFRA_GLOBAL_OVERRIDE: [
-    {
-      headerWidth: 160,
-      rowWidth: 156,
-      value: 'environment',
-      accessKey: 'environmentRef'
-    },
-    {
-      headerWidth: 160,
-      rowWidth: 160,
-      value: 'infrastructureText',
-      accessKey: 'infraIdentifier'
-    },
-    {
-      headerWidth: 150,
-      rowWidth: 150,
-      value: 'common.serviceOverrides.overrideType',
-      accessKey: 'overrideType',
-      mapper: overridesLabelStringMap
-    },
-    {
-      value: 'common.serviceOverrides.overrideInfo'
-    }
-  ],
-  INFRA_SERVICE_OVERRIDE: [
-    {
-      headerWidth: 160,
-      rowWidth: 156,
-      value: 'environment',
-      accessKey: 'environmentRef'
-    },
-    {
-      headerWidth: 160,
-      rowWidth: 160,
-      value: 'infrastructureText',
-      accessKey: 'infraIdentifier'
-    },
-    {
-      headerWidth: 160,
-      rowWidth: 160,
-      value: 'service',
-      accessKey: 'serviceRef'
-    },
-    {
-      headerWidth: 150,
-      rowWidth: 150,
-      value: 'common.serviceOverrides.overrideType',
-      accessKey: 'overrideType',
-      mapper: overridesLabelStringMap
-    },
-    {
-      rowWidth: '40%',
-      value: 'common.serviceOverrides.overrideInfo'
-    }
-  ],
-  CLUSTER_GLOBAL_OVERRIDE: [
-    {
-      headerWidth: '12%',
-      rowWidth: '12%',
-      value: 'environment'
-    },
-    {
-      headerWidth: '12%',
-      rowWidth: '12%',
-      value: 'infrastructureText'
-    },
-    {
-      headerWidth: '12%',
-      rowWidth: '12%',
-      value: 'common.serviceOverrides.overrideType'
-    },
-    {
-      headerWidth: '62%',
-      rowWidth: '62%',
-      value: 'common.serviceOverrides.overrideInfo'
-    }
-  ],
-  CLUSTER_SERVICE_OVERRIDE: [
-    {
-      headerWidth: '12%',
-      rowWidth: '12%',
-      value: 'environment'
-    },
-    {
-      headerWidth: '12%',
-      rowWidth: '12%',
-      value: 'infrastructureText'
-    },
-    {
-      headerWidth: '12%',
-      rowWidth: '12%',
-      value: 'service'
-    },
-    {
-      headerWidth: '12%',
-      rowWidth: '12%',
-      value: 'common.serviceOverrides.overrideType'
-    },
-    {
-      headerWidth: '50%',
-      rowWidth: '50%',
-      value: 'common.serviceOverrides.overrideInfo'
-    }
-  ]
-}
-
 export interface ServiceOverrideRowProps {
   /**
    * isNew is set to true when creating a new override row
@@ -207,7 +52,11 @@ export interface ServiceOverrideRowProps {
    */
   isEdit: boolean
   /**
-   * rowIndex is used to identify the row in case of any actions - duplicate, edit, delete
+   * isClone is set to true when cloning an existing override row
+   */
+  isClone: boolean
+  /**
+   * rowIndex is used to identify the row in case of any actions - clone, edit, delete
    */
   rowIndex: number
   /**
@@ -285,3 +134,46 @@ export type ServiceOverridesResponseDTOV2 = RequiredField<
   CDServiceOverridesResponseDTOV2,
   'environmentRef' | 'identifier' | 'spec' | 'type'
 >
+
+export const validateServiceOverrideRow = (
+  values: ServiceOverrideRowFormState,
+  serviceOverrideType: Required<ServiceOverridesResponseDTOV2>['type']
+): StringKeys[] => {
+  const validationArray: StringKeys[] = []
+
+  if (isEmpty(values.environmentRef)) {
+    validationArray.push('environment')
+  }
+
+  if (
+    isEmpty(values.infraIdentifier) &&
+    (serviceOverrideType === 'INFRA_GLOBAL_OVERRIDE' || serviceOverrideType === 'INFRA_SERVICE_OVERRIDE')
+  ) {
+    validationArray.push('infrastructureText')
+  }
+
+  if (
+    isEmpty(values.serviceRef) &&
+    (serviceOverrideType === 'ENV_SERVICE_OVERRIDE' || serviceOverrideType === 'INFRA_SERVICE_OVERRIDE')
+  ) {
+    validationArray.push('service')
+  }
+
+  if (isEmpty(values.overrideType)) {
+    validationArray.push('common.serviceOverrides.overrideType', 'common.serviceOverrides.overrideSpec')
+  }
+
+  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(values.variables?.[0]?.name)) {
+    validationArray.push('variableNameLabel')
+  }
+
+  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(values.variables?.[0]?.type)) {
+    validationArray.push('common.variableType')
+  }
+
+  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(values.variables?.[0]?.value)) {
+    validationArray.push('cd.overrideValue')
+  }
+
+  return validationArray
+}

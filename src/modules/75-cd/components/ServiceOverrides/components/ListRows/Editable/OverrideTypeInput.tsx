@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useFormikContext } from 'formik'
 
-import { FormInput, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, FormInput, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import type {
@@ -13,7 +13,7 @@ import type {
 
 import { OverrideTypes, overridesLabelStringMap } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
 import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
-import useServiceManifestOverride from './useManifestOverride'
+import useManifestOverride from './useManifestOverride'
 import useConfigFileOverride from './useConfigFileOverride'
 import useApplicationSettingOverride from './useApplicationSettingOverride'
 import useConnectionStringOverride from './useConnectionStringOverride'
@@ -47,13 +47,18 @@ export default function OverrideTypeInput({ readonly }: { readonly?: boolean }):
     []
   )
 
-  const { createNewManifestOverride } = useServiceManifestOverride({
+  const allowableTypes: AllowedTypes =
+    serviceOverrideType === 'ENV_GLOBAL_OVERRIDE' || serviceOverrideType === 'ENV_SERVICE_OVERRIDE'
+      ? [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+      : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+
+  const { createNewManifestOverride } = useManifestOverride({
     manifestOverrides: [],
     isReadonly: false,
     handleManifestOverrideSubmit: manifestObj => handleOverrideSubmit(manifestObj, 'manifests'),
     fromEnvConfigPage: true,
     expressions: [],
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    allowableTypes
   })
 
   const { createNewFileOverride } = useConfigFileOverride({
@@ -62,18 +67,18 @@ export default function OverrideTypeInput({ readonly }: { readonly?: boolean }):
     fromEnvConfigPage: true,
     handleConfigFileOverrideSubmit: filesObj => handleOverrideSubmit(filesObj, 'configFiles'),
     expressions: [],
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    allowableTypes
   })
 
   const { showApplicationSettingModal } = useApplicationSettingOverride({
     isReadonly: false,
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    allowableTypes,
     handleSubmitConfig: config => handleOverrideSubmit(config, 'applicationSettings')
   })
 
   const { showConnectionStringModal } = useConnectionStringOverride({
     isReadonly: false,
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    allowableTypes,
     handleSubmitConfig: config => handleOverrideSubmit(config, 'connectionStrings')
   })
 

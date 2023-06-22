@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty, isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
 
-import { FormInput, SelectOption } from '@harness/uicore'
+import { FormInput, SelectOption, shouldShowError, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
-import { useGetInfrastructureList } from 'services/cd-ng'
+import { InfrastructureResponse, useGetInfrastructureList } from 'services/cd-ng'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -14,17 +14,21 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
 
 import type { ServiceOverrideRowFormState } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 export default function InfrastructureSelect({ readonly }: { readonly?: boolean }): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [infraOptions, setInfraOptions] = useState<SelectOption[]>([])
   const { values } = useFormikContext<ServiceOverrideRowFormState>()
+  const { getRBACErrorMessage } = useRBACError()
+  const { showError } = useToaster()
   const { getString } = useStrings()
 
   const envScope = getScopeFromValue(values.environmentRef as string)
 
   const {
     data: infrastructuresListResponse,
+    error: listError,
     loading: loadingInfrastructuresList,
     refetch: refetchInfrastructuresList
   } = useGetInfrastructureList({
@@ -46,18 +50,27 @@ export default function InfrastructureSelect({ readonly }: { readonly?: boolean 
   }, [values.environmentRef, accountId, orgIdentifier, projectIdentifier, envScope])
 
   useEffect(() => {
-    const infraList = infrastructuresListResponse?.data?.content
-    if (!loadingInfrastructuresList && infraList) {
-      setInfraOptions(
-        !isEmpty(infraList)
-          ? infraList.map(infraInList => ({
-              label: infraInList.infrastructure?.name as string,
-              value: infraInList.infrastructure?.identifier as string
-            }))
-          : []
-      )
+    const _infraOptions = get(infrastructuresListResponse, 'data.content', []).map(
+      (infraInList: InfrastructureResponse) => ({
+        label: infraInList.infrastructure?.name as string,
+        value: infraInList.infrastructure?.identifier as string
+      })
+    )
+    if (!loadingInfrastructuresList && !isEmpty(_infraOptions) && !isEqual(_infraOptions, infraOptions)) {
+      setInfraOptions(_infraOptions)
     }
   }, [loadingInfrastructuresList, infrastructuresListResponse])
+
+  useEffect(() => {
+    /* istanbul ignore else */
+    if (listError?.message) {
+      /* istanbul ignore else */
+      if (shouldShowError(listError)) {
+        showError(getRBACErrorMessage(listError))
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listError])
 
   return (
     <FormInput.Select

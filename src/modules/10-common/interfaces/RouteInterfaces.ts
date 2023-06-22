@@ -196,7 +196,11 @@ export interface EnvironmentGroupQueryParams {
 }
 
 export interface ServiceOverridesQueryParams {
-  sectionId?: 'ENVIRONMENT_GLOBAL' | 'ENVIRONMENT_SERVICE_SPECIFIC' | 'INFRA_GLOBAL' | 'INFRA_SERVICE_SPECIFIC'
+  serviceOverrideType?:
+    | 'ENV_GLOBAL_OVERRIDE'
+    | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
 }
 
 export interface CVDataSourceTypePathProps {

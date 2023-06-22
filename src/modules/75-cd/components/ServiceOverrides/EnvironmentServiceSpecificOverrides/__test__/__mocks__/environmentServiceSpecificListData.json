@@ -1,0 +1,95 @@
+[
+  {
+    "identifier": "Env_1_Svc_1",
+    "accountId": "dummyAcc",
+    "orgIdentifier": "dummyOrg",
+    "projectIdentifier": "dummyProject",
+    "environmentRef": "Env_1",
+    "serviceRef": "Svc_1",
+    "type": "ENV_SERVICE_OVERRIDE",
+    "spec": {
+      "variables": [
+        {
+          "name": "v1",
+          "type": "String",
+          "value": "<+input>",
+          "description": null,
+          "required": false,
+          "default": null
+        },
+        {
+          "name": "v4",
+          "type": "String",
+          "value": "v4FromOverride",
+          "description": null,
+          "required": false,
+          "default": null
+        }
+      ],
+      "configFiles": [
+        {
+          "configFile": {
+            "identifier": "cf1",
+            "spec": {
+              "store": {
+                "spec": {
+                  "files": "<+input>",
+                  "secretFiles": []
+                },
+                "metadata": null,
+                "type": "Harness"
+              },
+              "configFileAttributeStepParameters": {
+                "store": {
+                  "type": "Harness",
+                  "spec": {
+                    "type": "Harness",
+                    "files": "<+input>",
+                    "secretFiles": []
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "newlyCreated": false
+  },
+  {
+    "identifier": "Env_2_Svc_2",
+    "accountId": "dummyAcc",
+    "orgIdentifier": "dummyOrg",
+    "projectIdentifier": "dummyProject",
+    "environmentRef": "Env_2",
+    "serviceRef": "Svc_2",
+    "type": "ENV_SERVICE_OVERRIDE",
+    "spec": {
+      "manifests": [
+        {
+          "manifest": {
+            "identifier": "sDsad",
+            "type": "Values",
+            "spec": {
+              "store": {
+                "spec": {
+                  "connectorRef": "<+input>",
+                  "gitFetchType": "Branch",
+                  "branch": "ASDasdas",
+                  "commitId": null,
+                  "paths": ["ddasdas"],
+                  "folderPath": null,
+                  "repoName": "asdas"
+                },
+                "metadata": null,
+                "type": "Git"
+              },
+              "metadata": null
+            }
+          }
+        }
+      ]
+    },
+    "newlyCreated": false
+  }
+]

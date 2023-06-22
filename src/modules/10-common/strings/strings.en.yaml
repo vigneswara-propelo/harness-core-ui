@@ -1517,12 +1517,14 @@ serviceOverrides:
   newOverride: New Override
   overrideType: Override Type
   overrideInfo: Override Info
+  overrideSpec: Override Spec
   noOverrides:
     globalEnvironment: You have no global Environment Overrides
     environmentServiceSpecific: You have no Environment Service specific Overrides
     globalInfrastructure: You have no global Infrastructure Overrides
     infrastructureServiceSpecific: You have no Infrastructure Service specific Overrides
   editablePlaceholderExists: Editable Override Placeholder already exists
+  fillValuesBeforeSubmit: Please enter the following values before submitting
 cloudSpends: Cloud Spends
 variableType: Variable Type
 displayName: Display Name

@@ -1,38 +1,28 @@
 import React from 'react'
 
-import { Container, Layout, Text } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
-
 import ListRows from './ListRows/ListRows'
 import ListHeaders from './ListHeaders/ListHeaders'
+import NewButtonWithSearchFilter from './NewButtonWithSearchFilter/NewButtonWithSearchFilter'
+import NoServiceOverrides from './NoServiceOverrides'
+
 import { useServiceOverridesContext } from '../context/ServiceOverrideContext'
-import { noOverridesStringMap } from '../ServiceOverridesUtils'
-import NewServiceOverrideButton from './NewServiceOverrideButton'
-import NoServiceOverrideImg from './NoServiceOverride.svg'
 
 export default function BaseServiceOverrides(): React.ReactElement {
-  const { getString } = useStrings()
-  const { serviceOverrideType, listRowItems } = useServiceOverridesContext()
+  const { listRowItems } = useServiceOverridesContext()
 
   const showOverridesList = Array.isArray(listRowItems) && listRowItems.length > 0
 
   return (
-    <Container padding={{ right: 'xlarge', left: 'xlarge' }}>
-      <Layout.Horizontal border={{ bottom: true }} padding={{ bottom: 'medium' }}>
-        <NewServiceOverrideButton />
-      </Layout.Horizontal>
+    <React.Fragment>
+      <NewButtonWithSearchFilter />
       {showOverridesList ? (
-        <>
+        <React.Fragment>
           <ListHeaders />
           <ListRows />
-        </>
+        </React.Fragment>
       ) : (
-        <Layout.Vertical flex={{ justifyContent: 'center', alignItems: 'center' }} height={'82vh'} spacing={'medium'}>
-          <img src={NoServiceOverrideImg} width={230} height={140} />
-          <Text>{getString(noOverridesStringMap[serviceOverrideType])}</Text>
-          <NewServiceOverrideButton />
-        </Layout.Vertical>
+        <NoServiceOverrides />
       )}
-    </Container>
+    </React.Fragment>
   )
 }

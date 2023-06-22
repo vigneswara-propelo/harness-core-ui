@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { useFormikContext } from 'formik'
+import cx from 'classnames'
 import { Classes, IconName, Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 
 import { Button, Container, Tabs, SelectOption, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 
 import { TAB_ID } from '@common/components/EntityReference/EntityReference.types'
@@ -24,7 +26,7 @@ export interface ScopedEntitySelectProps {
 export default function ScopedEntitySelect<T>({
   fieldKey,
   readonly,
-  width = 140
+  width = 160
 }: ScopedEntitySelectProps): React.ReactElement {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const { getString } = useStrings()
@@ -64,6 +66,8 @@ export default function ScopedEntitySelect<T>({
     )
   }
 
+  const buttonColor = disabled ? Color.GREY_400 : selectedOption?.label ? Color.BLACK : Color.GREY_300
+
   return (
     <Popover
       isOpen={isPopoverOpen}
@@ -76,6 +80,7 @@ export default function ScopedEntitySelect<T>({
       lazy
       usePortal
       fill
+      onClose={() => setIsPopoverOpen(false)}
       content={
         <Container className={css.tabList}>
           <Tabs
@@ -114,8 +119,8 @@ export default function ScopedEntitySelect<T>({
     >
       <Button
         minimal
-        data-testid={`scoped-select-popover-field`}
-        className={css.container}
+        data-testid={`scoped-select-popover-field_${fieldKey}`}
+        className={cx(css.container, { [css.disabled]: disabled })}
         withoutCurrentColor={true}
         width={width}
         disabled={disabled}
@@ -124,7 +129,9 @@ export default function ScopedEntitySelect<T>({
           setIsPopoverOpen(true)
         }}
       >
-        {selectedOption?.label || getString('common.entityPlaceholderText')}
+        <Text lineClamp={1} color={buttonColor}>
+          {selectedOption?.label || getString('common.entityPlaceholderText')}
+        </Text>
       </Button>
     </Popover>
   )

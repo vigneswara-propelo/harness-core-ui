@@ -44,20 +44,18 @@ export default function ConfigFileOverrideInfo({
     : pathsLocation
 
   return (
-    <Layout.Horizontal spacing={'medium'}>
-      <Layout.Vertical width={180} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
-        <Text lineClamp={1} width={150}>
-          {configFile?.identifier}
-        </Text>
+    <React.Fragment>
+      <Layout.Vertical width={160} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID').toUpperCase()}</Text>
+        <Text lineClamp={1}>{configFile?.identifier}</Text>
       </Layout.Vertical>
-      <Layout.Vertical width={180} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <Layout.Vertical width={160} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
           {getString('pipeline.configFiles.fileType').toUpperCase()}
         </Text>
-        <div>{filesType}</div>
+        <Text lineClamp={1}>{filesType}</Text>
       </Layout.Vertical>
-      <Layout.Vertical width={180} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <Layout.Vertical width={160} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
           {getString('pipelineSteps.serviceTab.manifestList.manifestStore').toUpperCase()}
         </Text>
@@ -68,7 +66,7 @@ export default function ConfigFileOverrideInfo({
             size={20}
             width={20}
           />
-          <Text margin={{ left: 'xsmall' }} inline width={150} lineClamp={1}>
+          <Text margin={{ left: 'xsmall' }} inline width={130} lineClamp={1}>
             {getString(ConfigFileTypeTitle[configFile?.spec?.store?.type as ConfigFileType])}
           </Text>
         </Layout.Horizontal>
@@ -77,8 +75,6 @@ export default function ConfigFileOverrideInfo({
         <Layout.Vertical width={180} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
           {<Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>}
           <Text
-            lineClamp={1}
-            width={200}
             tooltip={
               Array.isArray(filesLocation) ? (
                 <LocationValue
@@ -106,6 +102,6 @@ export default function ConfigFileOverrideInfo({
           </Text>
         </Layout.Vertical>
       )}
-    </Layout.Horizontal>
+    </React.Fragment>
   )
 }

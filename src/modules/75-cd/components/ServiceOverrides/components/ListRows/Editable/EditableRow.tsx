@@ -1,9 +1,20 @@
 import React, { useCallback } from 'react'
 import { useFormikContext } from 'formik'
-import { isEmpty, isNil } from 'lodash-es'
+import { isNil } from 'lodash-es'
 
-import { Button, ButtonVariation, Container, Formik, FormikForm, Layout, MultiTypeInputType } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import {
+  AllowedTypes,
+  Button,
+  ButtonVariation,
+  Container,
+  Formik,
+  FormikForm,
+  Layout,
+  MultiTypeInputType,
+  Text,
+  useToaster
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 
 import type {
   ApplicationSettingsConfiguration,
@@ -11,6 +22,7 @@ import type {
   ConnectionStringsConfiguration,
   ManifestConfigWrapper
 } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
 
 import type { RequiredField } from '@common/interfaces/RouteInterfaces'
 import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
@@ -25,8 +37,9 @@ import {
   ServiceOverrideRowFormState,
   ServiceOverrideRowProps,
   VariableOverrideDetails,
-  rowConfigMap
+  validateServiceOverrideRow
 } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
+import { serviceOverridesConfig } from '@cd/components/ServiceOverrides/ServiceOverridesConfig'
 import type {
   OverrideManifestStoresTypes,
   OverrideManifestTypes
@@ -49,16 +62,40 @@ import css from '../ListRows.module.scss'
 export default function EditableRow({
   rowIndex,
   overrideDetails,
-  isEdit
-}: PartiallyRequired<ServiceOverrideRowProps, 'rowIndex' | 'isEdit'>): React.ReactElement {
-  const { onAdd, onUpdate } = useServiceOverridesContext()
+  isNew,
+  isEdit,
+  isClone
+}: PartiallyRequired<ServiceOverrideRowProps, 'rowIndex' | 'isEdit' | 'isClone'>): React.ReactElement {
+  const { getString } = useStrings()
+  const { showError, clear } = useToaster()
+
+  const { onAdd, onUpdate, serviceOverrideType } = useServiceOverridesContext()
 
   const { overrideType, environmentRef, infraIdentifier, serviceRef } = overrideDetails || ({} as OverrideDetails)
 
-  const handleSubmit = (values: ServiceOverrideRowFormState): void =>
-    isNil(overrideDetails)
-      ? onAdd?.(values)
-      : onUpdate?.(rowIndex, values as RequiredField<ServiceOverrideRowFormState, 'environmentRef'>)
+  const handleSubmit = (values: ServiceOverrideRowFormState): void => {
+    const validationArray = validateServiceOverrideRow(values, serviceOverrideType)
+
+    if (validationArray.length) {
+      clear()
+      showError(
+        <Layout.Vertical>
+          <Text color={Color.WHITE}>{getString('common.serviceOverrides.fillValuesBeforeSubmit')} -</Text>
+          {validationArray.map(validationStringKey => {
+            return (
+              <Text key={validationStringKey} color={Color.WHITE} padding={{ top: 'xsmall', bottom: 'xsmall' }}>
+                &#8226; {getString(validationStringKey)}{' '}
+              </Text>
+            )
+          })}
+        </Layout.Vertical>
+      )
+    } else {
+      isNew || isClone
+        ? onAdd?.(values)
+        : onUpdate?.(rowIndex, values as RequiredField<ServiceOverrideRowFormState, 'environmentRef'>)
+    }
+  }
 
   return (
     <Formik<ServiceOverrideRowFormState>
@@ -83,7 +120,7 @@ export default function EditableRow({
       onSubmit={handleSubmit}
     >
       <FormikForm>
-        <EditableRowInternal overrideDetails={overrideDetails} isEdit={isEdit} />
+        <EditableRowInternal overrideDetails={overrideDetails} isEdit={isEdit} isClone={isClone} />
       </FormikForm>
     </Formik>
   )
@@ -91,15 +128,17 @@ export default function EditableRow({
 
 function EditableRowInternal({
   overrideDetails,
-  isEdit
+  isEdit,
+  isClone
 }: {
   isEdit: boolean
+  isClone: boolean
   overrideDetails?: OverrideDetails
 }): React.ReactElement {
   const { values, setFieldValue, submitForm } = useFormikContext<ServiceOverrideRowFormState>()
 
   const { serviceOverrideType } = useServiceOverridesContext()
-  const rowConfigs = rowConfigMap[serviceOverrideType]
+  const rowConfigs = serviceOverridesConfig[serviceOverrideType]
 
   const handleOverrideSubmit = useCallback(
     (
@@ -125,13 +164,18 @@ function EditableRowInternal({
     []
   )
 
+  const allowableTypes: AllowedTypes =
+    serviceOverrideType === 'ENV_GLOBAL_OVERRIDE' || serviceOverrideType === 'ENV_SERVICE_OVERRIDE'
+      ? [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+      : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+
   const { editManifestOverride } = useServiceManifestOverride({
     manifestOverrides: isEdit ? [(overrideDetails as ManifestOverrideDetails).manifestValue] : [],
     isReadonly: false,
     handleManifestOverrideSubmit: manifestObj => handleOverrideSubmit(manifestObj, 'manifests'),
     fromEnvConfigPage: true,
     expressions: [],
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    allowableTypes
   })
 
   const { editFileOverride } = useConfigFileOverride({
@@ -140,7 +184,7 @@ function EditableRowInternal({
     fromEnvConfigPage: true,
     handleConfigFileOverrideSubmit: filesObj => handleOverrideSubmit(filesObj, 'configFiles'),
     expressions: [],
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    allowableTypes
   })
 
   const { editApplicationConfig } = useApplicationSettingOverride({
@@ -148,7 +192,7 @@ function EditableRowInternal({
       ? (overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue
       : undefined,
     isReadonly: false,
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    allowableTypes,
     handleSubmitConfig: config => handleOverrideSubmit(config, 'applicationSettings')
   })
 
@@ -157,7 +201,7 @@ function EditableRowInternal({
       ? (overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue
       : undefined,
     isReadonly: false,
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    allowableTypes,
     handleSubmitConfig: config => handleOverrideSubmit(config, 'connectionStrings')
   })
 
@@ -170,8 +214,8 @@ function EditableRowInternal({
       {rowConfigs.map(rowConfig => {
         if (rowConfig.accessKey) {
           return (
-            <Container width={rowConfig.rowWidth}>
-              <RowItemFromValue value={rowConfig.value} isEdit={!!isEdit} />
+            <Container width={rowConfig.rowWidth} key={rowConfig.value} margin={{ right: 'small' }}>
+              <RowItemFromValue value={rowConfig.value} isEdit={isEdit} isClone={isClone} />
             </Container>
           )
         } else {
@@ -179,52 +223,57 @@ function EditableRowInternal({
 
           return (
             <Layout.Horizontal
+              key={rowConfig.value}
               flex={{ justifyContent: 'space-between' }}
-              width={rowConfig.rowWidth}
-              spacing={'medium'}
-              style={{ flexGrow: 1 }}
+              className={css.flexGrow}
             >
-              {overrideTypeValue === OverrideTypes.VARIABLE && <VariableOverrideEditable />}
-              {overrideTypeValue === OverrideTypes.MANIFEST && isEdit && (
-                <ManifestOverrideInfo {...(overrideDetails as ManifestOverrideDetails).manifestValue} />
-              )}
-              {overrideTypeValue === OverrideTypes.CONFIG && isEdit && (
-                <ConfigFileOverrideInfo {...(overrideDetails as ConfigFileOverrideDetails).configFileValue} />
-              )}
-              {overrideTypeValue === OverrideTypes.APPLICATIONSETTING && isEdit && (
-                <ApplicationSettingOverrideInfo
-                  {...(overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue}
-                />
-              )}
-              {overrideTypeValue === OverrideTypes.CONNECTIONSTRING && isEdit && (
-                <ConnectionStringOverrideInfo
-                  {...(overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue}
-                />
-              )}
-              {overrideDetails && overrideTypeValue && overrideTypeValue !== OverrideTypes.VARIABLE && (
-                <Button
-                  icon="Edit"
-                  variation={ButtonVariation.ICON}
-                  font={{ variation: FontVariation.BODY1 }}
-                  onClick={() => {
-                    if (overrideTypeValue === OverrideTypes.MANIFEST) {
-                      editManifestOverride(
-                        (overrideDetails as ManifestOverrideDetails).manifestValue.manifest
-                          ?.type as OverrideManifestTypes,
-                        (overrideDetails as ManifestOverrideDetails).manifestValue.manifest?.spec?.store
-                          ?.type as OverrideManifestStoresTypes
-                      )
-                    } else if (overrideTypeValue === OverrideTypes.CONFIG) {
-                      editFileOverride()
-                    } else if (overrideTypeValue === OverrideTypes.APPLICATIONSETTING) {
-                      editApplicationConfig()
-                    } else if (overrideTypeValue === OverrideTypes.CONNECTIONSTRING) {
-                      editConnectionString()
-                    }
-                  }}
-                />
-              )}
-              {!isEmpty(overrideTypeValue) && <RowActionButtons />}
+              <Layout.Horizontal
+                padding={{ left: 'medium', right: 'small' }}
+                flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                className={css.flexWrap}
+              >
+                {overrideTypeValue === OverrideTypes.VARIABLE && <VariableOverrideEditable />}
+                {overrideTypeValue === OverrideTypes.MANIFEST && isEdit && (
+                  <ManifestOverrideInfo {...(overrideDetails as ManifestOverrideDetails).manifestValue} />
+                )}
+                {overrideTypeValue === OverrideTypes.CONFIG && isEdit && (
+                  <ConfigFileOverrideInfo {...(overrideDetails as ConfigFileOverrideDetails).configFileValue} />
+                )}
+                {overrideTypeValue === OverrideTypes.APPLICATIONSETTING && isEdit && (
+                  <ApplicationSettingOverrideInfo
+                    {...(overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue}
+                  />
+                )}
+                {overrideTypeValue === OverrideTypes.CONNECTIONSTRING && isEdit && (
+                  <ConnectionStringOverrideInfo
+                    {...(overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue}
+                  />
+                )}
+                {overrideDetails && overrideTypeValue && overrideTypeValue !== OverrideTypes.VARIABLE && (
+                  <Button
+                    icon="Edit"
+                    variation={ButtonVariation.ICON}
+                    font={{ variation: FontVariation.BODY1 }}
+                    onClick={() => {
+                      if (overrideTypeValue === OverrideTypes.MANIFEST) {
+                        editManifestOverride(
+                          (overrideDetails as ManifestOverrideDetails).manifestValue.manifest
+                            ?.type as OverrideManifestTypes,
+                          (overrideDetails as ManifestOverrideDetails).manifestValue.manifest?.spec?.store
+                            ?.type as OverrideManifestStoresTypes
+                        )
+                      } else if (overrideTypeValue === OverrideTypes.CONFIG) {
+                        editFileOverride()
+                      } else if (overrideTypeValue === OverrideTypes.APPLICATIONSETTING) {
+                        editApplicationConfig()
+                      } else if (overrideTypeValue === OverrideTypes.CONNECTIONSTRING) {
+                        editConnectionString()
+                      }
+                    }}
+                  />
+                )}
+              </Layout.Horizontal>
+              <RowActionButtons />
             </Layout.Horizontal>
           )
         }

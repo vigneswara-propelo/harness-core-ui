@@ -9,7 +9,10 @@
 declare const styles: {
   readonly bottomBorderRadius: string
   readonly editableRow: string
+  readonly flexGrow: string
+  readonly flexWrap: string
   readonly listRowCard: string
+  readonly listRowContainer: string
   readonly newOrEditCard: string
   readonly roundedCard: string
   readonly topBorderRadius: string

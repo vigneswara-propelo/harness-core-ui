@@ -7,12 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly content: string
-  readonly footer: string
-  readonly header: string
-  readonly layout: string
-  readonly loading: string
-  readonly serviceOverrideTabs: string
-  readonly toolbar: string
+  readonly noServiceOverrideContainer: string
+  readonly serviceOverridePageBody: string
 }
 export default styles

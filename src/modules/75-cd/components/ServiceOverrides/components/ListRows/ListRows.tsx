@@ -10,9 +10,9 @@ export default function ListRows(): React.ReactElement {
   const { listRowItems } = useServiceOverridesContext()
 
   return (
-    <>
+    <Container padding={{ right: 'xlarge', left: 'xlarge' }} className={css.listRowContainer}>
       {listRowItems.map((listRowItem, index) => {
-        const { isNew, isEdit, overrideDetails, rowIndex, groupKey } = listRowItem
+        const { isNew, isEdit, isClone, overrideDetails, rowIndex, groupKey } = listRowItem
         const hasTopMargin = index === 0 ? false : groupKey !== listRowItems[index - 1].groupKey
         const hasTopBorder = index === 0 ? false : !hasTopMargin
         const hasTopBorderRadius = index === 0 || hasTopMargin
@@ -20,7 +20,7 @@ export default function ListRows(): React.ReactElement {
           index === listRowItems.length - 1 ? true : groupKey !== listRowItems[index + 1].groupKey
 
         return (
-          <>
+          <React.Fragment key={groupKey + index}>
             {hasTopBorder && <Container height={1} />}
             <Card
               key={index}
@@ -33,19 +33,24 @@ export default function ListRows(): React.ReactElement {
               })}
             >
               {isNew ? (
-                <EditableRow rowIndex={rowIndex} isEdit={false} />
+                <EditableRow rowIndex={rowIndex} isNew={isNew} isEdit={false} isClone={isClone} />
               ) : (
                 overrideDetails &&
                 (isEdit ? (
-                  <EditableRow rowIndex={rowIndex} overrideDetails={overrideDetails} isEdit={true} />
+                  <EditableRow
+                    rowIndex={rowIndex}
+                    overrideDetails={overrideDetails}
+                    isEdit={isEdit}
+                    isClone={isClone}
+                  />
                 ) : (
                   <ViewOnlyRow rowIndex={rowIndex} overrideDetails={overrideDetails} />
                 ))
               )}
             </Card>
-          </>
+          </React.Fragment>
         )
       })}
-    </>
+    </Container>
   )
 }

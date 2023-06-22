@@ -8,8 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly container: string
+  readonly disabled: string
   readonly listContainer: string
-  readonly placeholder: string
+  readonly listRow: string
   readonly searchInput: string
   readonly tabList: string
 }

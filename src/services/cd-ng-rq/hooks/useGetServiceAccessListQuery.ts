@@ -50,6 +50,7 @@ export interface GetServiceAccessListQueryQueryParams {
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   deploymentMetadataYaml?: string
+  includeAllServicesAccessibleAtScope?: boolean
 }
 
 export type GetServiceAccessListOkResponse = ResponseListServiceResponse

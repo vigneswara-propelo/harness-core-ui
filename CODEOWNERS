@@ -71,6 +71,7 @@ src/modules/75-cd/components/Services/ServiceStudio @harness/ui-cd-core
 src/modules/75-cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts @harness/ui-cd-core
 src/modules/75-cd/components/PipelineSteps/K8sServiceSpec/PrimaryArtifact @harness/ui-cd-core
 src/modules/75-cd/components/EnvironmentsV2 @harness/ui-cd-core
+src/modules/75-cd/components/ServiceOverrides @harness/ui-cd-core
 src/modules/75-cd/components/PipelineSteps/DeployClusterEntityStep @harness/ui-cd-core
 src/modules/75-cd/components/PipelineSteps/DeployEnvironmentEntityStep @harness/ui-cd-core
 src/modules/75-cd/components/PipelineSteps/DeployInfrastructureEntityStep @harness/ui-cd-core

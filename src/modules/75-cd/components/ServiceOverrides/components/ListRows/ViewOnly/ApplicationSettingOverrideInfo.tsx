@@ -27,25 +27,30 @@ export default function ApplicationSettingOverrideInfo({
   const paths = store.spec.paths
 
   return (
-    <Layout.Horizontal spacing={'medium'}>
-      <Layout.Vertical width={180} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+    <React.Fragment>
+      <Layout.Vertical
+        width={200}
+        height={40}
+        flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+        margin={{ right: 'small' }}
+      >
         <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('store').toLocaleUpperCase()}</Text>
         <Layout.Horizontal spacing={'small'}>
           <Icon inline name={ConnectorIcons[store?.type as ConnectorTypes]} size={20} width={25} />
           {store.type === 'Harness' ? getString('harness') : <ConnectorField connectorRef={connectorRef} />}
         </Layout.Horizontal>
       </Layout.Vertical>
-      <Layout.Vertical width={180} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <Layout.Vertical width={200} height={40} flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location').toLocaleUpperCase()}</Text>
 
         {!!paths?.length && (
-          <Text lineClamp={1} width={200}>
+          <Text lineClamp={1}>
             <span>{typeof paths === 'string' ? paths : paths.join(', ')}</span>
           </Text>
         )}
         {files?.length && (
           <div>
-            <Text lineClamp={1} width={200}>
+            <Text lineClamp={1}>
               <LocationValue
                 locations={Array.isArray(files) ? files : [files]}
                 onClick={(path: string, scope: string) => openFileStoreModal(path, scope)}
@@ -56,12 +61,12 @@ export default function ApplicationSettingOverrideInfo({
         )}
         {secretFiles?.length && (
           <div>
-            <Text lineClamp={1} width={200}>
+            <Text lineClamp={1}>
               <span>{store.spec.secretFiles}</span>
             </Text>
           </div>
         )}
       </Layout.Vertical>
-    </Layout.Horizontal>
+    </React.Fragment>
   )
 }

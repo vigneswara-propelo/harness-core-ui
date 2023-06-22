@@ -1,3 +1,13 @@
+.list-row-container {
+  /* 43px is the height of the tabs
+   * 20px is the default top margin of tab panel 
+   * 49px is the height of the new override button with bottom padding
+   * 50px is the height of the headers
+   */
+  height: calc(100vh - var(--page-header-height) - 43px - 20px - 49px - 50px);
+  overflow-y: scroll;
+}
+
 .list-row-card {
   width: 100%;
   border-radius: 0px !important;
@@ -29,5 +39,17 @@
     .bp3-form-group {
       margin: 0 !important;
     }
+
+    .TextInput--main {
+      margin-bottom: 0;
+    }
   }
+}
+
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+
+.flex-grow {
+  flex-grow: 1 !important;
 }

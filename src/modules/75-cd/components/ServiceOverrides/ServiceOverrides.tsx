@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
-import { Container, HarnessDocTooltip, Heading, Page, Tabs } from '@harness/uicore'
+import { HarnessDocTooltip, Heading, Page, Tabs } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 
@@ -26,10 +26,10 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 
 import { ServiceOverridesTab } from './ServiceOverridesUtils'
 
-import GlobalEnvironmentOverrides from './GlobalEnvironmentOverrides'
-import EnvironmentServiceSpecificOverrides from './EnvironmentServiceSpecificOverrides'
-import GlobalInfrastructureOverrides from './GlobalInfrastructureOverrides'
-import InfrastructureServiceSpecificOverrides from './InfrastructureServiceSpecificOverrides'
+import GlobalEnvironmentOverrides from './GlobalEnvironmentOverrides/GlobalEnvironmentOverrides'
+import EnvironmentServiceSpecificOverrides from './EnvironmentServiceSpecificOverrides/EnvironmentServiceSpecificOverrides'
+import GlobalInfrastructureOverrides from './GlobalInfrastructureOverrides/GlobalInfrastructureOverrides'
+import InfrastructureServiceSpecificOverrides from './InfrastructureServiceSpecificOverrides/InfrastructureServiceSpecificOverrides'
 
 import css from './ServiceOverrides.module.scss'
 
@@ -38,14 +38,16 @@ export default function ServiceOverrides(): React.ReactElement {
   const { getString } = useStrings()
   useDocumentTitle(getString('common.overrides'))
 
-  const { sectionId } = useQueryParams<ServiceOverridesQueryParams>()
-  const [selectedTabId, setSelectedTabId] = useState(defaultTo(sectionId, ServiceOverridesTab.ENVIRONMENT_GLOBAL))
+  const { serviceOverrideType } = useQueryParams<ServiceOverridesQueryParams>()
+  const [selectedTabId, setSelectedTabId] = useState(
+    defaultTo(serviceOverrideType, ServiceOverridesTab.ENV_GLOBAL_OVERRIDE)
+  )
 
   const { updateQueryParams } = useUpdateQueryParams<ServiceOverridesQueryParams>()
 
   const handleTabChange = (tabId: ServiceOverridesTab): void => {
     updateQueryParams({
-      sectionId: ServiceOverridesTab[ServiceOverridesTab[tabId]]
+      serviceOverrideType: ServiceOverridesTab[ServiceOverridesTab[tabId]]
     })
     setSelectedTabId(tabId)
   }
@@ -53,7 +55,7 @@ export default function ServiceOverrides(): React.ReactElement {
   return (
     <>
       <HelpPanel referenceId="serviceOverrides" type={HelpPanelType.FLOATING_CONTAINER} />
-      <main className={css.layout}>
+      <main>
         <Page.Header
           title={
             <Heading level={3} font={{ variation: FontVariation.H4 }} data-tooltip-id={'serviceOverridesV2'}>
@@ -62,39 +64,36 @@ export default function ServiceOverrides(): React.ReactElement {
             </Heading>
           }
           breadcrumbs={<NGBreadcrumbs customPathParams={{ module }} />}
-          className={css.header}
         />
-        <Page.Body>
-          <Container className={css.serviceOverrideTabs}>
-            <Tabs
-              id="serviceOverridesV2"
-              onChange={handleTabChange}
-              selectedTabId={selectedTabId}
-              data-tabId={selectedTabId}
-              tabList={[
-                {
-                  id: ServiceOverridesTab.ENVIRONMENT_GLOBAL,
-                  title: getString('common.serviceOverrides.globalEnvironment'),
-                  panel: <GlobalEnvironmentOverrides />
-                },
-                {
-                  id: ServiceOverridesTab.ENVIRONMENT_SERVICE_SPECIFIC,
-                  title: getString('common.serviceOverrides.environmentServiceSpecific'),
-                  panel: <EnvironmentServiceSpecificOverrides />
-                },
-                {
-                  id: ServiceOverridesTab.INFRA_GLOBAL,
-                  title: getString('common.serviceOverrides.globalInfra'),
-                  panel: <GlobalInfrastructureOverrides />
-                },
-                {
-                  id: ServiceOverridesTab.INFRA_SERVICE_SPECIFIC,
-                  title: getString('common.serviceOverrides.infrastructureServiceSpecific'),
-                  panel: <InfrastructureServiceSpecificOverrides />
-                }
-              ]}
-            />
-          </Container>
+        <Page.Body className={css.serviceOverridePageBody}>
+          <Tabs
+            id="serviceOverridesV2"
+            onChange={handleTabChange}
+            selectedTabId={selectedTabId}
+            data-tabId={selectedTabId}
+            tabList={[
+              {
+                id: ServiceOverridesTab.ENV_GLOBAL_OVERRIDE,
+                title: getString('common.serviceOverrides.globalEnvironment'),
+                panel: <GlobalEnvironmentOverrides />
+              },
+              {
+                id: ServiceOverridesTab.ENV_SERVICE_OVERRIDE,
+                title: getString('common.serviceOverrides.environmentServiceSpecific'),
+                panel: <EnvironmentServiceSpecificOverrides />
+              },
+              {
+                id: ServiceOverridesTab.INFRA_GLOBAL_OVERRIDE,
+                title: getString('common.serviceOverrides.globalInfra'),
+                panel: <GlobalInfrastructureOverrides />
+              },
+              {
+                id: ServiceOverridesTab.INFRA_SERVICE_OVERRIDE,
+                title: getString('common.serviceOverrides.infrastructureServiceSpecific'),
+                panel: <InfrastructureServiceSpecificOverrides />
+              }
+            ]}
+          />
         </Page.Body>
       </main>
     </>

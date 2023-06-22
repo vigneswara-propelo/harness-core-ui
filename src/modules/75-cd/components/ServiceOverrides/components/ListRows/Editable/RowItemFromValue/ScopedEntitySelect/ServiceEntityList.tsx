@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty, isEqual, isNil } from 'lodash-es'
 
 import {
   Container,
@@ -46,17 +46,16 @@ export default function ServiceEntityList({
     queryParams: {
       searchTerm,
       accountIdentifier: accountId,
-      ...((scope === Scope.PROJECT || scope === Scope.ORG) && { orgIdentifier }),
-      ...(scope === Scope.PROJECT && { projectIdentifier })
+      ...((scope === Scope.PROJECT || scope === Scope.ORG || (isNil(scope) && orgIdentifier)) && { orgIdentifier }),
+      ...((scope === Scope.PROJECT || (isNil(scope) && orgIdentifier)) && { projectIdentifier }),
+      includeAllServicesAccessibleAtScope: isNil(scope)
     }
   })
 
   useEffect(() => {
-    const listData = listResponse?.data
-    if (!loadingList && listData && !isEmpty(listData)) {
-      setSelectOptions(
-        !isEmpty(listData) ? listData.map(entityInList => entityInList.service as ServiceResponseDto) : []
-      )
+    const _selectOptions = get(listResponse, 'data', []).map(entityInList => entityInList.service as ServiceResponseDto)
+    if (!loadingList && !isEmpty(_selectOptions) && !isEqual(_selectOptions, selectOptions)) {
+      setSelectOptions(_selectOptions)
     }
   }, [loadingList, listResponse])
 
@@ -75,12 +74,7 @@ export default function ServiceEntityList({
   return (
     <>
       <ExpandingSearchInput throttle={300} alwaysExpanded onChange={setSearchTerm} className={css.searchInput} />
-      <Container
-        height={240}
-        margin={{ top: 'medium' }}
-        padding={{ left: 'medium', right: 'medium' }}
-        className={css.listContainer}
-      >
+      <Container height={240} padding={{ left: 'medium', right: 'medium' }} className={css.listContainer}>
         {loadingList ? (
           <ContainerSpinner height={'100%'} width={'100%'} flex={{ justifyContent: 'center', alignItems: 'center' }} />
         ) : selectOptions.length === 0 ? (
@@ -96,8 +90,8 @@ export default function ServiceEntityList({
                 flex={{ justifyContent: 'flex-start' }}
                 spacing="small"
                 margin={{ bottom: 'small' }}
-                padding={'small'}
-                style={{ cursor: 'pointer' }}
+                padding={{ top: 'small', bottom: 'small' }}
+                className={css.listRow}
                 onClick={() =>
                   onSelect({
                     label: name as string,

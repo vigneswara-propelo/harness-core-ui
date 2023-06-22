@@ -3,16 +3,19 @@ import { Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
-import { rowConfigMap } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
+import { serviceOverridesConfig } from '@cd/components/ServiceOverrides/ServiceOverridesConfig'
 import css from './ListHeaders.module.scss'
 
 export default function ListHeaders(): React.ReactElement {
   const { getString } = useStrings()
   const { serviceOverrideType } = useServiceOverridesContext()
-  const headerConfigs = rowConfigMap[serviceOverrideType]
+  const headerConfigs = serviceOverridesConfig[serviceOverrideType]
 
   return (
-    <Layout.Horizontal margin={{ top: 'large', bottom: 'medium', left: 'large' }}>
+    <Layout.Horizontal
+      margin={{ top: 'large', bottom: 'medium', left: 'large' }}
+      padding={{ right: 'xlarge', left: 'xlarge' }}
+    >
       {headerConfigs.map(headerConfig => {
         if (headerConfig.value === 'common.serviceOverrides.overrideInfo') {
           return (

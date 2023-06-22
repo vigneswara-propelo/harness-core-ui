@@ -1049,6 +1049,7 @@ export interface StringsMap {
   'common.serviceOverridePrefix': string
   'common.serviceOverrides.editablePlaceholderExists': string
   'common.serviceOverrides.environmentServiceSpecific': string
+  'common.serviceOverrides.fillValuesBeforeSubmit': string
   'common.serviceOverrides.globalEnvironment': string
   'common.serviceOverrides.globalInfra': string
   'common.serviceOverrides.infrastructureServiceSpecific': string
@@ -1059,6 +1060,7 @@ export interface StringsMap {
   'common.serviceOverrides.noOverrides.globalInfrastructure': string
   'common.serviceOverrides.noOverrides.infrastructureServiceSpecific': string
   'common.serviceOverrides.overrideInfo': string
+  'common.serviceOverrides.overrideSpec': string
   'common.serviceOverrides.overrideType': string
   'common.servicePrefix': string
   'common.serviceReliabilityManagement': string
