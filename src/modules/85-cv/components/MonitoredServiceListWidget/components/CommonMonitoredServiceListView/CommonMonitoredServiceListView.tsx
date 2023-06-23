@@ -59,24 +59,45 @@ const RenderGoToColumn: Renderer<CellProps<MonitoredServicePlatformResponse>> = 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   return (
-    <Icon
-      name="cv-main"
-      size={20}
-      className={css.srmIcon}
-      onClick={
-        /* istanbul ignore next */ () => {
-          history.push(
-            routes.toCVAddMonitoringServicesEdit({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              identifier,
-              module: 'cv'
-            })
-          )
+    <Layout.Horizontal>
+      <Icon
+        name="cd-main"
+        size={20}
+        className={css.srmIcon}
+        padding={{ right: 'medium' }}
+        onClick={
+          /* istanbul ignore next */ () => {
+            history.push(
+              routes.toMonitoredServicesConfigurations({
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                identifier,
+                module: 'cd'
+              })
+            )
+          }
         }
-      }
-    />
+      />
+      <Icon
+        name="cv-main"
+        size={20}
+        className={css.srmIcon}
+        onClick={
+          /* istanbul ignore next */ () => {
+            history.push(
+              routes.toCVAddMonitoringServicesEdit({
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                identifier,
+                module: 'cv'
+              })
+            )
+          }
+        }
+      />
+    </Layout.Horizontal>
   )
 }
 
