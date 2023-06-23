@@ -110,6 +110,12 @@ export function PipelineStages<T = Record<string, unknown>>({
       // Do nothing.. user cancelled template selection
     }
   }
+  React.useEffect(() => {
+    // when in minimal view , this global event repositions popover for minimal stage view
+    if (!showMenu && showSelectMenu) {
+      window.dispatchEvent(new CustomEvent('UPDATE_POPOVER_POSITION'))
+    }
+  }, [showMenu, showSelectMenu])
 
   const selectedStageIndex = selected?.index || 0
   const stage = React.Children.toArray(children)[selectedStageIndex] as React.ReactElement<PipelineStageProps>
