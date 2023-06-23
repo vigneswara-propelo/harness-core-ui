@@ -100,7 +100,7 @@ exports[`Move Resource to Remote initial rendering snapshot testing for pipeline
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
       >
-        Please make sure you move associated input-sets to Git as well and
+        Please make sure you move associated input sets to Git as well and
         <a
           href="https://developer.harness.io/docs/platform/Git-Experience/move-inline-entities-to-git"
           rel="noreferrer"

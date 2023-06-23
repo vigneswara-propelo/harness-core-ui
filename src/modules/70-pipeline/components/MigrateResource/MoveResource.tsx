@@ -219,7 +219,7 @@ export default function MoveResource({
       {resourceType === ResourceType.PIPELINES ? (
         <Callout className={css.migrateResourceWarning} intent="warning" icon={null}>
           <Text font={{ variation: FontVariation.BODY2 }}>
-            Please make sure you move associated input-sets to Git as well and
+            Please make sure you move associated input sets to Git as well and
             <a
               href="https://developer.harness.io/docs/platform/Git-Experience/move-inline-entities-to-git"
               target="_blank"

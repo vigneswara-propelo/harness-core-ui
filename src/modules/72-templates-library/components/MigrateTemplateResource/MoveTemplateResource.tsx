@@ -53,7 +53,7 @@ import type { NameIdDescriptionTagsType } from '@common/utils/Validation'
 import css from './MoveTemplateResource.module.scss'
 
 export type InitialValuesType = NameIdDescriptionTagsType & StoreMetadata & { versionLabel: string; commitMsg?: string }
-export type ModifiedInitialValuesType = Omit<InitialValuesType, 'repoName'> & { repo?: string }
+export type ModifiedInitialValuesType = Omit<InitialValuesType, 'repoName'> & { repo?: string; baseBranch?: string }
 
 export interface MoveResourceProps {
   migrationType: MigrationType
@@ -136,7 +136,7 @@ export default function MoveTemplateResource({
   }
 
   const moveTemplate = (formValues: ModifiedInitialValuesType): void => {
-    const { identifier, connectorRef, repo, branch, filePath, commitMsg, versionLabel } = formValues
+    const { identifier, connectorRef, repo, branch, filePath, commitMsg, versionLabel, baseBranch } = formValues
     setIsLoading(true)
     moveTemplateConfigsPromise({
       templateIdentifier: identifier,
@@ -149,7 +149,7 @@ export default function MoveTemplateResource({
         branch,
         filePath,
         moveConfigType: migrationType as MigrationType.INLINE_TO_REMOTE,
-        isNewBranch: false,
+        ...(baseBranch ? { isNewBranch: true, baseBranch } : { isNewBranch: false }),
         versionLabel,
         commitMsg
       },
@@ -246,6 +246,7 @@ export default function MoveTemplateResource({
                     isEdit={false}
                     errorData={errorResponse}
                     disableFields={getDisableFields(resourceType)}
+                    supportNewBranch
                     className={css.gitSyncForm}
                   />
                   <FormInput.TextArea
