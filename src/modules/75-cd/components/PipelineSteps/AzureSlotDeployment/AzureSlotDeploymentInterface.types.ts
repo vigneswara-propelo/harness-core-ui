@@ -9,6 +9,7 @@ import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { SelectedStageType } from './utils'
 
 export interface AzureSlotDeploymentStepInfo {
   name: string
@@ -35,6 +36,7 @@ export interface AzureSlotDeploymentVariableStepProps {
   variablesData?: AzureSlotDeploymentData
   stepType?: string
   onUpdate?(data: AzureSlotDeploymentData): void
+  selectedStage: SelectedStageType
 }
 
 export interface AzureSlotDeploymentProps<T = AzureSlotDeploymentData> {
@@ -53,4 +55,6 @@ export interface AzureSlotDeploymentProps<T = AzureSlotDeploymentData> {
   path?: string
   stepType?: string
   allValues?: T
+  customStepProps?: Record<string, T>
+  selectedStage: SelectedStageType
 }

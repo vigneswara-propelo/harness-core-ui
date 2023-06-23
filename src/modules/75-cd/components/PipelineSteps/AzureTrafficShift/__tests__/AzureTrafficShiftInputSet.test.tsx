@@ -12,6 +12,7 @@ import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@ha
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { selectedStageMock } from '../../AzureSlotDeployment/__tests__/mock'
 
 import AzureTrafficShiftInputSet from '../AzureTrafficShiftInputSet'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -42,6 +43,7 @@ describe('Test Azure Traffic Shift input set', () => {
               }}
               path="test"
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
+              selectedStage={selectedStageMock}
             />
           </FormikForm>
         </Formik>

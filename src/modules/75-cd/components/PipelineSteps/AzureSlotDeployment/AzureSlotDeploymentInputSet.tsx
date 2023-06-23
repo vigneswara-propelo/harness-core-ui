@@ -9,12 +9,18 @@ import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { FormikForm, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
+
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+
+import { AzureSlotDeploymentDynamicField, AzureSlotDeploymentDynamicProps } from './AzureWebAppField'
 import type { AzureSlotDeploymentData, AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -23,12 +29,61 @@ const isRuntime = (value: string): boolean => getMultiTypeFromValue(value) === M
 export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData = AzureSlotDeploymentData>(
   props: AzureSlotDeploymentProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, allowableTypes, stepViewType } = props
+  const { inputSetData, readonly, allowableTypes, stepViewType, formik, path } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
+  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
+
   return (
     <FormikForm>
+      {CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS && formik ? (
+        <AzureSlotDeploymentDynamicField
+          webAppNamePath={`${path}.spec.webApp`}
+          webAppSlotPath={`${path}.spec.deploymentSlot`}
+          isRuntime={true}
+          {...(props as AzureSlotDeploymentDynamicProps)}
+        />
+      ) : (
+        <>
+          {isRuntime(inputSetData?.template?.spec?.webApp as string) && (
+            <TextFieldInputSetView
+              label={getString('cd.serviceDashboard.webApp')}
+              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.webApp`}
+              disabled={readonly}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
+              fieldPath={'spec.webApp'}
+              template={inputSetData?.template}
+              className={cx(stepCss.formGroup, stepCss.md)}
+            />
+          )}
+          {isRuntime(inputSetData?.template?.spec?.deploymentSlot as string) && (
+            <TextFieldInputSetView
+              label={getString('cd.serviceDashboard.deploymentSlotTitle')}
+              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.deploymentSlot`}
+              disabled={readonly}
+              multiTextInputProps={{
+                expressions,
+                disabled: readonly,
+                allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
+              fieldPath={'spec.deploymentSlot'}
+              template={inputSetData?.template}
+              className={cx(stepCss.formGroup, stepCss.md)}
+            />
+          )}
+        </>
+      )}
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
@@ -50,42 +105,6 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
           />
         )
       }
-      {isRuntime(inputSetData?.template?.spec?.webApp as string) && (
-        <TextFieldInputSetView
-          label={'Web App Name'}
-          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.webApp`}
-          disabled={readonly}
-          multiTextInputProps={{
-            expressions,
-            disabled: readonly,
-            allowableTypes
-          }}
-          configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-          }}
-          fieldPath={'spec.webApp'}
-          template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.md)}
-        />
-      )}
-      {isRuntime(inputSetData?.template?.spec?.deploymentSlot as string) && (
-        <TextFieldInputSetView
-          label={'Deployment Slot'}
-          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.deploymentSlot`}
-          disabled={readonly}
-          multiTextInputProps={{
-            expressions,
-            disabled: readonly,
-            allowableTypes
-          }}
-          configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-          }}
-          fieldPath={'spec.deploymentSlot'}
-          template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.md)}
-        />
-      )}
     </FormikForm>
   )
 }

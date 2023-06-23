@@ -86,6 +86,8 @@ steps:
     deploymentSlotError: 'No deployment slots groups found with given Web App Name'
     targetSlotError: 'No target slots found with given Web App Name'
     webAppInfraheader: 'Web App Infrastructure Details'
+    targetSlotTitle: Target slot
+    targetSlotSpecify: Specify target slot
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
@@ -393,6 +395,9 @@ serviceDashboard:
   host: host
   deploymentSlot: deploymentSlot
   webApp: Web App Name
+  webAppPlaceholder: Specify web app name
+  deploymentSlotPlaceholder: Specify deployment slot
+  deploymentSlotTitle: Deployment Slot
   artifact: artifact
   totalPipelines: Total Pipelines
   totalDeployments: Total Deployments

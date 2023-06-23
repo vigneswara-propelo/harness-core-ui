@@ -6375,6 +6375,8 @@ export interface StringsMap {
   'cd.serviceDashboard.deployedByHotfix': string
   'cd.serviceDashboard.deploymentDetails': string
   'cd.serviceDashboard.deploymentSlot': string
+  'cd.serviceDashboard.deploymentSlotPlaceholder': string
+  'cd.serviceDashboard.deploymentSlotTitle': string
   'cd.serviceDashboard.driftDetection': string
   'cd.serviceDashboard.ec2InstanceId': string
   'cd.serviceDashboard.elastigroupId': string
@@ -6448,6 +6450,7 @@ export interface StringsMap {
   'cd.serviceDashboard.unitDay': string
   'cd.serviceDashboard.updatedTime': string
   'cd.serviceDashboard.webApp': string
+  'cd.serviceDashboard.webAppPlaceholder': string
   'cd.serviceList.noIdentifier': string
   'cd.serviceName': string
   'cd.serviceOverrides.configFileOverrides': string
@@ -6498,6 +6501,8 @@ export interface StringsMap {
   'cd.steps.azureWebAppInfra.targetSlotError': string
   'cd.steps.azureWebAppInfra.targetSlotInfoText': string
   'cd.steps.azureWebAppInfra.targetSlotPlaceHolder': string
+  'cd.steps.azureWebAppInfra.targetSlotSpecify': string
+  'cd.steps.azureWebAppInfra.targetSlotTitle': string
   'cd.steps.azureWebAppInfra.webAppInfraheader': string
   'cd.steps.azureWebAppInfra.webAppNameError': string
   'cd.steps.azureWebAppInfra.webAppPlaceholder': string

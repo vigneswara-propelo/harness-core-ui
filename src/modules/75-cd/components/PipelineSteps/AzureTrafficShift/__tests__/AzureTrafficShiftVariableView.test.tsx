@@ -12,6 +12,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { TestWrapper } from '@common/utils/testUtils'
 import type { AzureTrafficShiftVariableStepProps } from '../AzureTrafficShiftInterface.types'
 import { AzureTrafficShiftVariableStep } from '../AzureTrafficShiftVariableView'
+import { selectedStageMock } from '../../AzureSlotDeployment/__tests__/mock'
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const props = {
@@ -55,7 +57,8 @@ const props = {
       }
     }
   },
-  stepType: StepType.AzureTrafficShift
+  stepType: StepType.AzureTrafficShift,
+  selectedStage: selectedStageMock
 } as AzureTrafficShiftVariableStepProps
 
 describe('Azure Traffic Shift Variable view ', () => {
@@ -78,6 +81,7 @@ describe('Azure Traffic Shift Variable view ', () => {
           metadataMap: props.metadataMap,
           variablesData: props.variablesData
         }}
+        selectedStage={selectedStageMock}
       />
     )
 
@@ -104,6 +108,7 @@ describe('Azure Traffic Shift Variable view ', () => {
             metadataMap: props.metadataMap,
             variablesData: props.variablesData
           }}
+          selectedStage={selectedStageMock}
         />
       </TestWrapper>
     )

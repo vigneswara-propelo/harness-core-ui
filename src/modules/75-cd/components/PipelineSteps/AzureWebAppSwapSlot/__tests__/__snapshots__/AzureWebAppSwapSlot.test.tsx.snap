@@ -232,7 +232,7 @@ exports[`Test Azure Web App Rollback step should error on submit 1`] = `
             class="Tooltip--acenter"
             data-tooltip-id="AzureWebAppSwapSlot-_spec.targetSlot"
           >
-            Target Slot
+            cd.steps.azureWebAppInfra.targetSlotTitle
           </span>
            
           <span
@@ -253,7 +253,7 @@ exports[`Test Azure Web App Rollback step should error on submit 1`] = `
                 class="bp3-input"
                 disabled=""
                 name="spec.targetSlot"
-                placeholder="Specify target slot"
+                placeholder="cd.steps.azureWebAppInfra.targetSlotSpecify"
                 type="text"
                 value=""
               />
@@ -521,7 +521,7 @@ exports[`Test Azure Web App Rollback step should render edit view as new step 1`
             class="Tooltip--acenter"
             data-tooltip-id="AzureWebAppSwapSlot-_spec.targetSlot"
           >
-            Target Slot
+            cd.steps.azureWebAppInfra.targetSlotTitle
           </span>
            
           <span
@@ -541,7 +541,7 @@ exports[`Test Azure Web App Rollback step should render edit view as new step 1`
                 autocomplete="off"
                 class="bp3-input"
                 name="spec.targetSlot"
-                placeholder="Specify target slot"
+                placeholder="cd.steps.azureWebAppInfra.targetSlotSpecify"
                 type="text"
                 value=""
               />
@@ -782,7 +782,7 @@ exports[`Test Azure Web App Rollback step should render swap slot step view 1`] 
             class="Tooltip--acenter"
             data-tooltip-id="AzureWebAppSwapSlot-_spec.targetSlot"
           >
-            Target Slot
+            cd.steps.azureWebAppInfra.targetSlotTitle
           </span>
            
           <span
@@ -803,7 +803,7 @@ exports[`Test Azure Web App Rollback step should render swap slot step view 1`] 
                 class="bp3-input"
                 disabled=""
                 name="spec.targetSlot"
-                placeholder="Specify target slot"
+                placeholder="cd.steps.azureWebAppInfra.targetSlotSpecify"
                 type="text"
                 value="targetSlot"
               />
@@ -1084,7 +1084,7 @@ exports[`Test Azure Web App Rollback step should show runtime component 1`] = `
             class="Tooltip--acenter"
             data-tooltip-id="AzureWebAppSwapSlot-_spec.targetSlot"
           >
-            Target Slot
+            cd.steps.azureWebAppInfra.targetSlotTitle
           </span>
            
           <span
@@ -1349,7 +1349,7 @@ exports[`Test Azure Web App Rollback step should submit swap slot form 1`] = `
             class="Tooltip--acenter"
             data-tooltip-id="AzureWebAppSwapSlot-_spec.targetSlot"
           >
-            Target Slot
+            cd.steps.azureWebAppInfra.targetSlotTitle
           </span>
            
           <span
@@ -1370,7 +1370,7 @@ exports[`Test Azure Web App Rollback step should submit swap slot form 1`] = `
                 class="bp3-input"
                 disabled=""
                 name="spec.targetSlot"
-                placeholder="Specify target slot"
+                placeholder="cd.steps.azureWebAppInfra.targetSlotSpecify"
                 type="text"
                 value="targetSlot"
               />

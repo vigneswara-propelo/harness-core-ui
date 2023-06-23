@@ -50,11 +50,11 @@ describe('Azure Slot Deployment step', () => {
     await act(async () => await userEvent.type(timeout!, '10s'))
     expect(timeout).toHaveDisplayValue('10s')
 
-    const webApp = getByPlaceholderText('Specify web app name')
+    const webApp = getByPlaceholderText('cd.steps.azureWebAppInfra.webAppPlaceholder')
     await act(async () => await userEvent.type(webApp!, 'New azure web App Name'))
     expect(webApp).toHaveDisplayValue('New azure web App Name')
 
-    const deploymentSlot = getByPlaceholderText('Specify deployment slot')
+    const deploymentSlot = getByPlaceholderText('cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder')
     await act(async () => await userEvent.type(deploymentSlot!, 'New azure deployment Slot'))
     expect(deploymentSlot).toHaveDisplayValue('New azure deployment Slot')
 
