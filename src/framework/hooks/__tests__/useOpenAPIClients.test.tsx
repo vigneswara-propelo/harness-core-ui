@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { renderHook } from '@testing-library/react-hooks'
+import fetchMock from 'jest-fetch-mock'
 
 import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-audit-service-client'
 import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
@@ -14,6 +15,7 @@ import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-clie
 import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
 
 import useOpenApiClients, { getOpenAPIClientInitiator } from 'framework/hooks/useOpenAPIClients'
+import SecureStorage from 'framework/utils/SecureStorage'
 import { TestWrapper } from '@common/utils/testUtils'
 
 jest.mock('@harnessio/react-audit-service-client')
@@ -24,6 +26,7 @@ jest.mock('@harnessio/react-ng-manager-client')
 ;(IDPServiceAPIClient as jest.Mock).mockImplementation()
 ;(PipelineServiceAPIClient as jest.Mock).mockImplementation()
 ;(NGManagerServiceAPIClient as jest.Mock).mockImplementation()
+fetchMock.enableMocks() // needed to mock Request constructor
 
 describe('useOpenAPIClients tests', () => {
   test('calls useOpenAPIClients hook', async () => {
@@ -51,15 +54,35 @@ describe('useOpenAPIClients tests', () => {
 
     const globalResponseHandlerMock = jest.fn()
     const accountId = 'dummyAccountId'
+    const url = 'https://example.com'
+    SecureStorage.set('token', 'mockedToken')
     const openAPIClientInitiator = getOpenAPIClientInitiator(globalResponseHandlerMock, accountId)
+
+    // Testing Response Interceptor
     const response = new Response()
+    const authHeader = 'Bearer mockedToken'
     openAPIClientInitiator.responseInterceptor(response)
     expect(globalResponseHandlerMock).toHaveBeenCalled()
 
+    // Testing URL Interceptor
     const newUrl = openAPIClientInitiator.urlInterceptor('dummyUrl')
     expect(newUrl).toBe('prefix/dummyUrl')
 
-    const requestHeaders = openAPIClientInitiator.getRequestHeaders()
-    expect(requestHeaders).toStrictEqual({ 'Harness-Account': accountId, token: '' })
+    // Testing Request Interceptor
+    const oldRequest = new Request(url, {
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    window.noAuthHeader = false
+    const expectedHeaders = new Headers()
+    expectedHeaders.append('Harness-Account', accountId)
+    expectedHeaders.append('Authorization', authHeader)
+    expectedHeaders.append('content-type', 'application/json')
+    const result = openAPIClientInitiator.requestInterceptor(oldRequest)
+    expect(result.headers).toEqual(expectedHeaders)
+    expect(result.headers.get('Authorization')).toEqual(authHeader)
+    expect(result.headers.get('Harness-Account')).toEqual(accountId)
+    expect(result.headers.get('content-type')).toEqual('application/json')
   })
 })

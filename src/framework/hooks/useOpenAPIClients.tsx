@@ -33,10 +33,23 @@ export const getOpenAPIClientInitiator = (
   const urlInterceptor = (url: string): string => {
     return window.getApiBaseUrl(url)
   }
-  const getRequestHeaders = (): Record<string, string> => {
-    return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+  const requestInterceptor = (request: Request): Request => {
+    const oldRequest = request.clone()
+    const headers = new Headers()
+    for (const key of oldRequest.headers.keys()) {
+      const value = oldRequest.headers.get(key) as string
+      if (key.toLowerCase() !== 'authorization') {
+        headers.append(key, value)
+      }
+    }
+    if (!window.noAuthHeader) {
+      headers.append('Authorization', `Bearer ${SessionToken.getToken()}`)
+    }
+    headers.append('Harness-Account', accountId)
+    const newRequest = new Request(oldRequest, { headers })
+    return newRequest
   }
-  return { responseInterceptor, urlInterceptor, getRequestHeaders }
+  return { responseInterceptor, urlInterceptor, requestInterceptor }
 }
 
 const useOpenApiClients = (

@@ -164,13 +164,8 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       }
     }
   }
-  const {
-    auditServiceClientRef,
-    idpServiceClientRef,
-    pipelineServiceClientRef,
-    ngManagerServiceClientRef,
-    sscaServiceClientRef
-  } = useOpenApiClients(globalResponseHandler, accountId)
+
+  useOpenApiClients(globalResponseHandler, accountId)
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -202,7 +197,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     if (refreshTokenResponse?.resource) {
       SecureStorage.set('token', refreshTokenResponse.resource)
       SecureStorage.set('lastTokenSetTime', Date.now())
-      updateHeadersForOpenApiClients({ token: refreshTokenResponse.resource })
     }
   }, [refreshTokenResponse])
 
@@ -240,14 +234,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       globalResponseHandler(detail.response)
     }
   })
-
-  const updateHeadersForOpenApiClients = (headers: Record<string, any>): void => {
-    auditServiceClientRef.current?.updateHeaders(headers)
-    idpServiceClientRef.current?.updateHeaders(headers)
-    pipelineServiceClientRef.current?.updateHeaders(headers)
-    ngManagerServiceClientRef.current?.updateHeaders(headers)
-    sscaServiceClientRef.current?.updateHeaders(headers)
-  }
 
   return (
     <RestfulProvider
