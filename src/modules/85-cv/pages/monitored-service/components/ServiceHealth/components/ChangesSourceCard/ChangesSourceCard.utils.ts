@@ -12,7 +12,7 @@ import type { CategoryCountDetails, ChangeSourceDTO, ChangeSummaryDTO } from 'se
 import type { ChangeSourceCardData } from './ChangesSourceCard.types'
 import { changeLabel } from './ChangesSourceCard.constants'
 
-const labelByCategory = (
+export const labelByCategory = (
   categoryType: ChangeSourceDTO['category'] | 'Changes',
   getString: UseStringsReturn['getString']
 ): string => {
@@ -26,7 +26,7 @@ const labelByCategory = (
     case ChangeSourceCategoryName.ALERT:
       return getString('cv.changeSource.tooltip.incidents')
     case ChangeSourceCategoryName.CHAOS_EXPERIMENT:
-      return getString('chaos.chaosExperiment')
+      return getString('chaos.navLabels.chaosExperiments')
     case changeLabel:
       return getString('changes')
     default:

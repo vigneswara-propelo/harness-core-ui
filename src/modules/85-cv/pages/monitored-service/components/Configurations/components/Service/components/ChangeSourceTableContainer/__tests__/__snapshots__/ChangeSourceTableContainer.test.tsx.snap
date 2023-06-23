@@ -61,7 +61,7 @@ exports[`Test ChangeSourceTable should render 1`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 25%;"
+            style="width: 27%;"
             title="Toggle SortBy"
           >
             <p
@@ -93,24 +93,12 @@ exports[`Test ChangeSourceTable should render 1`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 45%;"
+            style="width: 43%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
               WebHook
-            </p>
-          </div>
-          <div
-            class="TableV2--cell TableV2--sortable"
-            colspan="1"
-            role="columnheader"
-            style="width: 150px;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              source
             </p>
           </div>
         </div>
@@ -158,66 +146,72 @@ exports[`Test ChangeSourceTable should render 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 25%;"
+                style="width: 27%;"
               >
-                Deployment
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    deploymentText
+                  </p>
+                </div>
               </div>
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 45%;"
-              >
-                na
-              </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 150px;"
+                style="width: 43%;"
               >
                 <div
                   class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
                 >
-                  <span
-                    class="bp3-popover-wrapper"
+                  na
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
                   >
                     <span
-                      class="bp3-popover-target"
+                      class="bp3-popover-wrapper"
                     >
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey350 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-                        type="button"
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="Options"
+                        <button
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey350 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
+                          type="button"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="16"
-                            viewBox="0 0 4 16"
-                            width="16"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="Options"
                           >
-                            <circle
-                              cx="2"
-                              cy="2"
-                              r="1.5"
-                            />
-                            <circle
-                              cx="2"
-                              cy="8"
-                              r="1.5"
-                            />
-                            <circle
-                              cx="2"
-                              cy="14"
-                              r="1.5"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              viewBox="0 0 4 16"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="2"
+                                cy="2"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="8"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="14"
+                                r="1.5"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -320,7 +314,7 @@ exports[`Test ChangeSourceTable should render 2`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 25%;"
+            style="width: 27%;"
             title="Toggle SortBy"
           >
             <p
@@ -352,24 +346,12 @@ exports[`Test ChangeSourceTable should render 2`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 45%;"
+            style="width: 43%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
               WebHook
-            </p>
-          </div>
-          <div
-            class="TableV2--cell TableV2--sortable"
-            colspan="1"
-            role="columnheader"
-            style="width: 150px;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              source
             </p>
           </div>
         </div>
@@ -417,66 +399,72 @@ exports[`Test ChangeSourceTable should render 2`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 25%;"
+                style="width: 27%;"
               >
-                Deployment
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    deploymentText
+                  </p>
+                </div>
               </div>
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 45%;"
-              >
-                na
-              </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 150px;"
+                style="width: 43%;"
               >
                 <div
                   class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
                 >
-                  <span
-                    class="bp3-popover-wrapper"
+                  na
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
                   >
                     <span
-                      class="bp3-popover-target"
+                      class="bp3-popover-wrapper"
                     >
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey350 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
-                        type="button"
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="Options"
+                        <button
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey350 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-icon"
+                          type="button"
                         >
-                          <svg
-                            fill="currentColor"
-                            height="16"
-                            viewBox="0 0 4 16"
-                            width="16"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="Options"
                           >
-                            <circle
-                              cx="2"
-                              cy="2"
-                              r="1.5"
-                            />
-                            <circle
-                              cx="2"
-                              cy="8"
-                              r="1.5"
-                            />
-                            <circle
-                              cx="2"
-                              cy="14"
-                              r="1.5"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              viewBox="0 0 4 16"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="2"
+                                cy="2"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="8"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="14"
+                                r="1.5"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>

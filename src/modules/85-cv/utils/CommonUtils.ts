@@ -19,10 +19,17 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { ResponseListEnvironmentResponse, EnvironmentResponse } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import type { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
-import type { AnalysedDeploymentNode, CVNGLogTag, MonitoredServiceDetail, SloHealthIndicatorDTO } from 'services/cv'
+import type {
+  AnalysedDeploymentNode,
+  CVNGLogTag,
+  ChangeEventDTO,
+  MonitoredServiceDetail,
+  SloHealthIndicatorDTO
+} from 'services/cv'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
 export enum EVENT_TYPE {
   KNOWN = 'KNOWN',
@@ -136,6 +143,26 @@ export const getRiskLabelStringId = (
       return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.exhausted'
     default:
       return 'na'
+  }
+}
+
+export const getChangeCategory = (
+  category: ChangeEventDTO['category'],
+  getString: UseStringsReturn['getString']
+): string => {
+  switch (category) {
+    case ChangeSourceCategoryName.INFRASTRUCTURE:
+      return getString('infrastructureText')
+    case ChangeSourceCategoryName.DEPLOYMENT:
+      return getString('deploymentText')
+    case ChangeSourceCategoryName.FEATURE_FLAG:
+      return getString('common.moduleTitles.cf')
+    case ChangeSourceCategoryName.ALERT:
+      return getString('cv.changeSource.incident')
+    case ChangeSourceCategoryName.CHAOS_EXPERIMENT:
+      return getString('chaos.chaosExperiment')
+    default:
+      return getString('na')
   }
 }
 

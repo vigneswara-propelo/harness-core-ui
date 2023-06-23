@@ -9,10 +9,13 @@ import React from 'react'
 import moment from 'moment'
 import { Text, Container } from '@harness/uicore'
 import type { Renderer, CellProps } from 'react-table'
+import { ChangeEventDTO } from 'services/cv'
+import { useStrings } from 'framework/strings'
+import { getChangeCategory } from '@cv/utils/CommonUtils'
 import { timeFormat, dateFormat } from './ChangesTable.constants'
 import css from './ChangeTable.module.scss'
 
-export const renderTime: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
+export const RenderTime: Renderer<CellProps<ChangeEventDTO>> = ({ row }): JSX.Element => {
   const rowdata = row?.original
   const date = moment(rowdata.eventTime).format(dateFormat)
   const time = moment(rowdata.eventTime).format(timeFormat)
@@ -24,7 +27,7 @@ export const renderTime: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
   )
 }
 
-export const renderName: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
+export const RenderName: Renderer<CellProps<ChangeEventDTO>> = ({ row }): JSX.Element => {
   const rowdata = row?.original
   return (
     <Container className={css.changeSoureName}>
@@ -35,7 +38,7 @@ export const renderName: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
   )
 }
 
-export const renderImpact: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
+export const RenderImpact: Renderer<CellProps<ChangeEventDTO>> = ({ row }): JSX.Element => {
   const rowdata = row?.original
   return (
     <>
@@ -45,7 +48,7 @@ export const renderImpact: Renderer<CellProps<any>> = ({ row }): JSX.Element => 
   )
 }
 
-export const renderType: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
+export const RenderType: Renderer<CellProps<ChangeEventDTO>> = ({ row }): JSX.Element => {
   const rowdata = row?.original
   return (
     <Container className={css.changeSoureName}>
@@ -56,7 +59,8 @@ export const renderType: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
   )
 }
 
-export const renderChangeType: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
+export const RenderChangeType: Renderer<CellProps<ChangeEventDTO>> = ({ row }): JSX.Element => {
+  const { getString } = useStrings()
   const rowdata = row?.original
-  return <Text font={{ size: 'small' }}>{rowdata.category === 'Alert' ? 'Incident' : rowdata.category}</Text>
+  return <Text font={{ size: 'small' }}>{getChangeCategory(rowdata.category, getString)}</Text>
 }

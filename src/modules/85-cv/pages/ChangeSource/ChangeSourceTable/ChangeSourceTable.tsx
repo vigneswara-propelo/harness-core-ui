@@ -19,6 +19,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import WebhookIcon from '@cv/assets/webhook.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
+import { getChangeCategory } from '@cv/utils/CommonUtils'
 import type { ChangeSourceTableInterface } from './ChangeSourceTable.types'
 import { ChangeSourceTypes, CustomChangeSourceList } from '../ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { getIconBySource } from '../ChangeSource.utils'
@@ -50,7 +51,7 @@ export default function ChangeSourceTable({ value, onSuccess, onEdit }: ChangeSo
   //   await onSuccess(updatedChangeSources as ChangeSourceDTO[])
   // }
 
-  const renderName: Renderer<CellProps<ChangeSourceDTO>> = ({ row }): JSX.Element => {
+  const RenderName: Renderer<CellProps<ChangeSourceDTO>> = ({ row }): JSX.Element => {
     const rowdata = row?.original
     return (
       <Layout.Horizontal spacing={'small'}>
@@ -64,73 +65,84 @@ export default function ChangeSourceTable({ value, onSuccess, onEdit }: ChangeSo
     )
   }
 
-  const renderEnable: Renderer<CellProps<ChangeSourceDTO>> = ({ row }): JSX.Element => {
+  const RenderType: Renderer<CellProps<ChangeSourceDTO>> = ({ row }): JSX.Element => {
     const rowdata = row?.original
     return (
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <ContextMenuActions
-          titleText={getString('cv.admin.activitySources.dialogDeleteTitle')}
-          contentText={getString('cv.changeSource.deleteChangeSourceWarning') + `: ${rowdata.identifier}`}
-          onDelete={async () => await deleteChangeSource(rowdata)}
-          onEdit={() => {
-            onEdit({ isEdit: true, tableData, rowdata, onSuccess })
-          }}
-          RbacPermissions={{
-            edit: {
-              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
-              }
-            },
-            delete: {
-              permission: PermissionIdentifier.DELETE_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
-              }
-            }
-          }}
-        />
+      <Layout.Horizontal spacing={'small'}>
+        <Text>{getChangeCategory(rowdata?.category, getString)}</Text>
       </Layout.Horizontal>
     )
   }
 
-  const RenderWebHook: Renderer<CellProps<ChangeSourceDTO>> = ({ row }) => {
+  const RenderContextMenu = ({ rowdata }: { rowdata: ChangeSourceDTO }): JSX.Element => (
+    <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+      <ContextMenuActions
+        titleText={getString('cv.admin.activitySources.dialogDeleteTitle')}
+        contentText={getString('cv.changeSource.deleteChangeSourceWarning') + `: ${rowdata.identifier}`}
+        onDelete={async () => await deleteChangeSource(rowdata)}
+        onEdit={() => {
+          onEdit({ isEdit: true, tableData, rowdata, onSuccess })
+        }}
+        RbacPermissions={{
+          edit: {
+            permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+            resource: {
+              resourceType: ResourceType.MONITOREDSERVICE,
+              resourceIdentifier: projectIdentifier
+            }
+          },
+          delete: {
+            permission: PermissionIdentifier.DELETE_MONITORED_SERVICE,
+            resource: {
+              resourceType: ResourceType.MONITOREDSERVICE,
+              resourceIdentifier: projectIdentifier
+            }
+          }
+        }}
+      />
+    </Layout.Horizontal>
+  )
+
+  const RenderWebHookAndContextMenu: Renderer<CellProps<ChangeSourceDTO>> = ({ row }) => {
     const rowdata = row?.original
     const { spec, type } = rowdata
     const { showSuccess } = useToaster()
     const isCustomChangeSource = CustomChangeSourceList.includes(type as ChangeSourceTypes)
-    return isCustomChangeSource ? (
-      <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-        <img src={WebhookIcon} />
-        <Text
-          font={{ variation: FontVariation.SMALL }}
-          color={Color.PRIMARY_7}
-          tooltip={<Container padding="small">{getString('cv.copyURL')}</Container>}
-          onClick={e => {
-            e.stopPropagation()
-            copy(spec?.webhookUrl)
-            showSuccess(getString('cv.urlCopied'), 3000)
-          }}
-        >
-          {getString('triggers.copyAsUrl')}
-        </Text>
-        <Text
-          font={{ variation: FontVariation.SMALL }}
-          color={Color.PRIMARY_7}
-          tooltip={<Container padding="small">{getString('cv.copycURL')}</Container>}
-          onClick={e => {
-            e.stopPropagation()
-            copy(spec?.webhookCurlCommand)
-            showSuccess(getString('cv.cURLCopied'), 3000)
-          }}
-        >
-          {getString('cv.onboarding.changeSourceTypes.Custom.copyCURL')}
-        </Text>
+    return (
+      <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+        {isCustomChangeSource ? (
+          <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+            <img src={WebhookIcon} />
+            <Text
+              font={{ variation: FontVariation.SMALL }}
+              color={Color.PRIMARY_7}
+              tooltip={<Container padding="small">{getString('cv.copyURL')}</Container>}
+              onClick={e => {
+                e.stopPropagation()
+                copy(spec?.webhookUrl)
+                showSuccess(getString('cv.urlCopied'), 3000)
+              }}
+            >
+              {getString('triggers.copyAsUrl')}
+            </Text>
+            <Text
+              font={{ variation: FontVariation.SMALL }}
+              color={Color.PRIMARY_7}
+              tooltip={<Container padding="small">{getString('cv.copycURL')}</Container>}
+              onClick={e => {
+                e.stopPropagation()
+                copy(spec?.webhookCurlCommand)
+                showSuccess(getString('cv.cURLCopied'), 3000)
+              }}
+            >
+              {getString('cv.onboarding.changeSourceTypes.Custom.copyCURL')}
+            </Text>
+          </Layout.Horizontal>
+        ) : (
+          getString('na')
+        )}
+        <RenderContextMenu rowdata={rowdata} />
       </Layout.Horizontal>
-    ) : (
-      getString('na')
     )
   }
 
@@ -151,21 +163,18 @@ export default function ChangeSourceTable({ value, onSuccess, onEdit }: ChangeSo
               Header: getString('name'),
               accessor: 'name',
               width: '30%',
-              Cell: renderName
+              Cell: RenderName
             },
             {
               Header: getString('typeLabel'),
               accessor: 'category',
-              width: '25%'
+              width: '27%',
+              Cell: RenderType
             },
             {
               Header: 'WebHook',
-              width: '45%',
-              Cell: RenderWebHook
-            },
-            {
-              Header: getString('source'),
-              Cell: renderEnable
+              width: '43%',
+              Cell: RenderWebHookAndContextMenu
             }
           ]}
           data={tableData}

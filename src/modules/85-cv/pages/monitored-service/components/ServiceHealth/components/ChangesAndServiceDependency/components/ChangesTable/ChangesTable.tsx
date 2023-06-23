@@ -27,7 +27,7 @@ import routes from '@common/RouteDefinitions'
 import noDataImage from '@cv/assets/noChangesData.svg'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { ChangesTableContentWrapper, ChangesTableInterface } from './ChangesTable.types'
-import { renderTime, renderName, renderImpact, renderType, renderChangeType } from './ChangesTable.utils'
+import { RenderTime, RenderName, RenderImpact, RenderType, RenderChangeType } from './ChangesTable.utils'
 import { PAGE_SIZE } from './ChangesTable.constants'
 import ChangeEventCard from './components/ChangeEventCard/ChangeEventCard'
 import ChangesTableWrapper from './ChangesTableWrapper'
@@ -183,25 +183,25 @@ export default function ChangesTable({
       customCols || [
         {
           Header: getString('timeLabel'),
-          Cell: renderTime,
+          Cell: RenderTime,
           accessor: 'eventTime',
           width: '15%'
         },
         {
           Header: getString('name'),
-          Cell: renderName,
+          Cell: RenderName,
           accessor: 'name',
           width: '30%'
         },
         {
           Header: getString('cv.monitoredServices.changesTable.impact'),
-          Cell: renderImpact,
+          Cell: RenderImpact,
           accessor: 'serviceIdentifier',
           width: '20%'
         },
         {
           Header: getString('source'),
-          Cell: renderType,
+          Cell: RenderType,
           accessor: 'type',
           width: '20%'
         },
@@ -209,7 +209,7 @@ export default function ChangesTable({
           Header: getString('typeLabel'),
           width: '15%',
           accessor: 'category',
-          Cell: renderChangeType
+          Cell: RenderChangeType
         }
       ],
     [customCols, content]

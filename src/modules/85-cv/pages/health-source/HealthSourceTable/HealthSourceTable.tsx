@@ -58,7 +58,7 @@ export default function HealthSourceTable({
     [tableData]
   )
 
-  const renderTypeWithIcon: Renderer<CellProps<RowData>> = ({ row }): JSX.Element => {
+  const RenderTypeWithIcon: Renderer<CellProps<RowData>> = ({ row }): JSX.Element => {
     const rowdata = row?.original
     return (
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
@@ -93,7 +93,7 @@ export default function HealthSourceTable({
     )
   }
 
-  const renderTypeByFeature: Renderer<CellProps<RowData>> = ({ row }): JSX.Element => {
+  const RenderTypeByFeature: Renderer<CellProps<RowData>> = ({ row }): JSX.Element => {
     const rowdata = row?.original
     return <Text>{getTypeByFeature(rowdata?.type as string, getString)}</Text>
   }
@@ -130,14 +130,14 @@ export default function HealthSourceTable({
               },
               {
                 Header: getString('typeLabel'),
-                width: '35%',
-                Cell: renderTypeByFeature
+                width: '27%',
+                Cell: RenderTypeByFeature
               },
               {
                 Header: getString('source'),
                 accessor: 'type',
-                width: '35%',
-                Cell: renderTypeWithIcon
+                width: '43%',
+                Cell: RenderTypeWithIcon
               }
             ]}
             data={healthSourceTableData}

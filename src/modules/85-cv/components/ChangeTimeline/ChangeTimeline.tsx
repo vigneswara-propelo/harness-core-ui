@@ -13,10 +13,12 @@ import type { TimePeriodEnum } from '@cv/pages/monitored-service/components/Serv
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
+  ChangeSourceDTO,
   useChangeEventTimeline,
   useChangeEventTimelineForAccount,
   useGetMonitoredServiceChangeTimeline
 } from 'services/cv'
+import { labelByCategory } from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesSourceCard/ChangesSourceCard.utils'
 import type { ChangeTimelineProps } from './ChangeTimeline.types'
 import { Timeline } from './components/Timeline/Timeline'
 import {
@@ -24,12 +26,7 @@ import {
   defaultCategoryTimeline,
   defaultCategoryTimelineWithChaos
 } from './ChangeTimeline.constants'
-import {
-  createChangeInfoCardData,
-  createTimelineSeriesData,
-  getStartAndEndTime,
-  labelByCategory
-} from './ChangeTimeline.utils'
+import { createChangeInfoCardData, createTimelineSeriesData, getStartAndEndTime } from './ChangeTimeline.utils'
 import ChangeTimelineError from './components/ChangeTimelineError/ChangeTimelineError'
 
 export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element {
@@ -219,7 +216,7 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
       isLoading={loading}
       rowOffset={90}
       timelineRows={Object.entries(categoryTimeline || skeletonLoadingCategory).map(timeline => ({
-        labelName: labelByCategory(timeline[0], getString),
+        labelName: labelByCategory(timeline[0] as ChangeSourceDTO['category'], getString),
         data: createTimelineSeriesData(timeline[0] as ChangeSourceTypes, getString, timeline[1])
       }))}
       timestamps={[startTimeRoundedOffToNearest30min, endTimeRoundedOffToNearest30min]}

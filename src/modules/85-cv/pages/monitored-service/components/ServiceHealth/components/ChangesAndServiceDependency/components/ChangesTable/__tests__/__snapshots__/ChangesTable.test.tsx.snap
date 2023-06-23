@@ -475,7 +475,7 @@ exports[`Change table should verify changetable rendering with data 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                     >
-                      Infrastructure
+                      infrastructureText
                     </p>
                   </div>
                 </div>
@@ -566,7 +566,7 @@ exports[`Change table should verify changetable rendering with data 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                     >
-                      Deployment
+                      deploymentText
                     </p>
                   </div>
                 </div>
@@ -657,7 +657,7 @@ exports[`Change table should verify changetable rendering with data 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                     >
-                      Deployment
+                      deploymentText
                     </p>
                   </div>
                 </div>
@@ -748,7 +748,7 @@ exports[`Change table should verify changetable rendering with data 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                     >
-                      Incident
+                      cv.changeSource.incident
                     </p>
                   </div>
                 </div>
@@ -839,7 +839,7 @@ exports[`Change table should verify changetable rendering with data 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                     >
-                      FeatureFlag
+                      common.moduleTitles.cf
                     </p>
                   </div>
                 </div>

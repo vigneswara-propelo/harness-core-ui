@@ -44,7 +44,7 @@ describe('Test Change Source Table', () => {
     // verify changesource name
     await waitFor(() => expect(getByText('Harness CD')).toBeTruthy())
     // verify changesource type
-    await waitFor(() => expect(getByText('Deployment')).toBeTruthy())
+    await waitFor(() => expect(getByText('deploymentText')).toBeTruthy())
     // verify onEdit isClickable
     await act(() => {
       fireEvent.click(container.querySelector('.context-menu-mock-edit')!)

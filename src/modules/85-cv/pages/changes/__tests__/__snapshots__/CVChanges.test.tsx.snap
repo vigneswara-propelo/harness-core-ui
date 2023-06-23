@@ -707,7 +707,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                         >
-                          Infrastructure
+                          infrastructureText
                         </p>
                       </div>
                       <div
@@ -798,7 +798,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                         >
-                          Deployment
+                          deploymentText
                         </p>
                       </div>
                       <div
@@ -889,7 +889,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                         >
-                          Deployment
+                          deploymentText
                         </p>
                       </div>
                       <div
@@ -980,7 +980,7 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                         >
-                          Incident
+                          cv.changeSource.incident
                         </p>
                       </div>
                       <div

@@ -45,11 +45,11 @@ import { getTimePeriods } from '../monitored-service/components/ServiceHealth/Se
 import { ChangesHeader, ChangeTimeLineHeader, PBody } from './changes.styled'
 import ChangesTable from '../monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
 import {
-  renderChangeType,
-  renderImpact,
-  renderName,
-  renderTime,
-  renderType
+  RenderChangeType,
+  RenderImpact,
+  RenderName,
+  RenderTime,
+  RenderType
 } from '../monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable.utils'
 import { ChangeSourceConnectorOptions } from './CVChanges.constant'
 import css from './CVChanges.module.scss'
@@ -125,19 +125,19 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
     () => [
       {
         Header: getString('timeLabel'),
-        Cell: renderTime,
+        Cell: RenderTime,
         accessor: 'eventTime',
         width: '15%'
       },
       {
         Header: getString('description'),
-        Cell: renderName,
+        Cell: RenderName,
         accessor: 'name',
         width: '30%'
       },
       {
         Header: getString('connectors.cdng.monitoredService.label' as keyof StringsMap),
-        Cell: renderImpact,
+        Cell: RenderImpact,
         accessor: 'serviceIdentifier',
         width: '25%'
       },
@@ -145,11 +145,11 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
         Header: getString('typeLabel'),
         width: '15%',
         accessor: 'category',
-        Cell: renderChangeType
+        Cell: RenderChangeType
       },
       {
         Header: getString('source'),
-        Cell: renderType,
+        Cell: RenderType,
         accessor: 'type',
         width: '15%'
       }

@@ -25,7 +25,8 @@ import {
   getMonitoredServiceIdentifiers,
   getEnvironmentOptions,
   getMonitoredServiceIdentifierProp,
-  nearestMinutes
+  nearestMinutes,
+  getChangeCategory
 } from '../CommonUtils'
 import {
   monitoredServiceDetails,
@@ -194,6 +195,17 @@ describe('Test for getRiskLabelStringId', () => {
       'cv.monitoredServices.serviceHealth.serviceDependencies.states.exhausted'
     )
     expect(getRiskLabelStringId(undefined)).toEqual('na')
+  })
+})
+
+describe('Test for getChangeCategory', () => {
+  test('test for getting correct change category values', () => {
+    expect(getChangeCategory('Deployment', getString)).toEqual(getString('deploymentText'))
+    expect(getChangeCategory('Infrastructure', getString)).toEqual(getString('infrastructureText'))
+    expect(getChangeCategory('Alert', getString)).toEqual(getString('cv.changeSource.incident'))
+    expect(getChangeCategory('FeatureFlag', getString)).toEqual(getString('common.moduleTitles.cf'))
+    expect(getChangeCategory('ChaosExperiment', getString)).toEqual(getString('chaos.chaosExperiment'))
+    expect(getChangeCategory(undefined, getString)).toEqual(getString('na'))
   })
 })
 

@@ -154,7 +154,7 @@ describe('Verify Service', () => {
       expect(container.querySelectorAll('.changeSourceTableWrapper .TableV2--body [role="row"]').length).toEqual(1)
     )
     await waitFor(() => expect(getByText('PagerDuty 101')).toBeTruthy()) // name
-    await waitFor(() => expect(getByText('Alert')).toBeTruthy()) // type
+    await waitFor(() => expect(getByText('cv.changeSource.incident')).toBeTruthy()) // type
     await waitFor(() => expect(container.querySelector('span[data-icon="service-pagerduty"]')).toBeTruthy()) // source icon
 
     // Health Source populates

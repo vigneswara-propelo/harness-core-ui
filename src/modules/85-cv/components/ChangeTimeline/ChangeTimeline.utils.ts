@@ -135,23 +135,6 @@ export const createTooltipLabel = (
   }
 }
 
-export const labelByCategory = (categoryType: string, getString: UseStringsReturn['getString']): string => {
-  switch (categoryType) {
-    case ChangeSourceTypes.Infrastructure:
-      return getString('infrastructureText')
-    case ChangeSourceTypes.Deployment:
-      return getString('deploymentsText')
-    case ChangeSourceTypes.FeatureFlag:
-      return getString('common.purpose.cf.continuous')
-    case ChangeSourceTypes.Alert:
-      return getString('cv.changeSource.tooltip.incidents')
-    case ChangeSourceTypes.ChaosExperiment:
-      return getString('chaos.navLabels.chaosExperiments')
-    default:
-      return ''
-  }
-}
-
 export const createChangeInfoCardData = (
   getString: UseStringsReturn['getString'],
   startTime?: number,

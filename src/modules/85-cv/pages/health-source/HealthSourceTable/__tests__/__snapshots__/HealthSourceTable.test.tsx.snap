@@ -61,7 +61,7 @@ exports[`HealthSource table Verify HealthSource Table in CV 1`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 35%;"
+            style="width: 27%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -73,7 +73,7 @@ exports[`HealthSource table Verify HealthSource Table in CV 1`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 35%;"
+            style="width: 43%;"
             title="Toggle SortBy"
           >
             <p
@@ -122,7 +122,7 @@ exports[`HealthSource table Verify HealthSource Table in CV 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 35%;"
+                style="width: 27%;"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -133,7 +133,7 @@ exports[`HealthSource table Verify HealthSource Table in CV 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 35%;"
+                style="width: 43%;"
               >
                 <div
                   class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
@@ -186,7 +186,7 @@ exports[`HealthSource table Verify HealthSource Table in CV 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 35%;"
+                style="width: 27%;"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -197,7 +197,7 @@ exports[`HealthSource table Verify HealthSource Table in CV 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 35%;"
+                style="width: 43%;"
               >
                 <div
                   class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
