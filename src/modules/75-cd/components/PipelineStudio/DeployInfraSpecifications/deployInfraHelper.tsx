@@ -96,7 +96,22 @@ export const getInfrastructureDefaultValue = (
         provisioner
       }
     }
+    case InfraDeploymentType.KubernetesRancher: {
+      const connectorRef = infrastructure?.spec?.connectorRef
+      const namespace = infrastructure?.spec?.namespace
+      const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
+      const cluster = infrastructure?.spec?.cluster
+      const provisioner = infrastructure?.spec?.provisioner
 
+      return {
+        connectorRef,
+        namespace,
+        releaseName,
+        allowSimultaneousDeployments,
+        provisioner,
+        cluster
+      }
+    }
     case InfraDeploymentType.ServerlessAwsLambda: {
       const connectorRef = infrastructure?.spec?.connectorRef
       const region = infrastructure?.spec?.region
@@ -300,7 +315,8 @@ export interface InfrastructureGroup {
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
   getString: UseStringsReturn['getString'],
-  isSvcEnvEntityEnabled: boolean
+  isSvcEnvEntityEnabled: boolean,
+  isRancherEnabled: boolean
 ): InfrastructureGroup[] => {
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
@@ -427,6 +443,14 @@ export const getInfraGroups = (
       ]
     }
   ]
+  const defaultKubernetes = [
+    InfraDeploymentType.KubernetesGcp,
+    InfraDeploymentType.KubernetesAzure,
+    InfraDeploymentType.KubernetesAws
+  ]
+  const kubernetesItems = isRancherEnabled
+    ? [...defaultKubernetes, InfraDeploymentType.KubernetesRancher]
+    : [...defaultKubernetes]
 
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
@@ -435,10 +459,7 @@ export const getInfraGroups = (
     },
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.viaCloudProvider'),
-      items: getInfraGroupItems(
-        [InfraDeploymentType.KubernetesGcp, InfraDeploymentType.KubernetesAzure, InfraDeploymentType.KubernetesAws],
-        getString
-      )
+      items: getInfraGroupItems(kubernetesItems, getString)
     }
   ]
 
@@ -544,6 +565,11 @@ const infraGroupItems: {
     label: 'pipeline.serviceDeploymentTypes.tas',
     icon: 'tas',
     value: InfraDeploymentType.TAS
+  },
+  [InfraDeploymentType.KubernetesRancher]: {
+    label: 'connectors.rancher.title',
+    icon: 'rancher',
+    value: InfraDeploymentType.KubernetesRancher
   }
 }
 

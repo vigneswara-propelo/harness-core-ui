@@ -3170,7 +3170,9 @@ export interface StringsMap {
   'connectors.prometheusLabel': string
   'connectors.rancher.delegateOutClusterInfo': string
   'connectors.rancher.delegateSelector': string
+  'connectors.rancher.rancherConnectorLabel': string
   'connectors.rancher.rancherUrlLabel': string
+  'connectors.rancher.title': string
   'connectors.rancher.validation': string
   'connectors.rancherConnectorDetails': string
   'connectors.readMore': string

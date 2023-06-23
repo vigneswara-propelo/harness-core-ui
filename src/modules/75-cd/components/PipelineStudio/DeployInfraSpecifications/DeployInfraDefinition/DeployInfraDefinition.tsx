@@ -38,7 +38,8 @@ import {
   ElastigroupInfrastructure,
   TanzuApplicationServiceInfrastructure,
   AsgInfrastructure,
-  ServiceDefinition
+  ServiceDefinition,
+  K8sRancherInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -49,6 +50,7 @@ import type {
 } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import type { PDCInfrastructureSpec } from '@cd/components/PipelineSteps/PDCInfrastructureSpec/PDCInfrastructureSpec'
+import type { RancherInfrastructureSpec } from '@cd/components/PipelineSteps/RancherInfrastructureSpec/RancherInfrastructureSpec'
 import type { SshWinRmAwsInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAwsInfrastructureSpec/SshWinRmAwsInfrastructureSpec'
 import type { SshWinRmAzureInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { useStrings } from 'framework/strings'
@@ -141,6 +143,7 @@ type InfraTypes =
   | TanzuApplicationServiceInfrastructure
   | AsgInfrastructure
   | GoogleCloudFunctionInfrastructure
+  | K8sRancherInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<DeployInfraDefinitionProps>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -171,7 +174,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
     [updateStage]
   )
 
-  const { NG_SVC_ENV_REDESIGN: isSvcEnvEnabled } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN: isSvcEnvEnabled, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { accountId } = useParams<{
@@ -187,7 +190,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
   )
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled)
+    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled, !!CDS_RANCHER_SUPPORT_NG)
   )
 
   useEffect(() => {
@@ -261,7 +264,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled)
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled, !!CDS_RANCHER_SUPPORT_NG)
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -275,7 +278,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled))
+
+    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled, !!CDS_RANCHER_SUPPORT_NG))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
@@ -442,6 +446,32 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.KubernetesGcp
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.KubernetesRancher: {
+        return (
+          <StepWidget<RancherInfrastructureSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as RancherInfrastructureSpec}
+            type={StepType.KubernetesRancher}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  cluster: value.cluster,
+                  namespace: value.namespace,
+                  releaseName: value.releaseName,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
+                },
+                InfraDeploymentType.KubernetesRancher
               )
             }
           />

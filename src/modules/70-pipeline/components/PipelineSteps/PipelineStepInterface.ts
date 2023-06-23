@@ -218,6 +218,9 @@ export enum StepType {
   DownloadManifests = 'DownloadManifests',
   IACMTerraformPlugin = 'IACMTerraformPlugin',
   DownloadServerlessManifests = 'DownloadServerlessManifests',
+  Rancher = 'Rancher',
+  KubernetesRancher = 'KubernetesRancher',
+  ServerlessPrepareRollback = 'ServerlessPrepareRollback',
   ServerlessAwsLambdaPrepareRollbackV2 = 'ServerlessAwsLambdaPrepareRollbackV2',
   ServerlessAwsLambdaPackageV2 = 'ServerlessAwsLambdaPackageV2'
 }
