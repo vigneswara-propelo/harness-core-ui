@@ -728,14 +728,6 @@ function ServiceNowUpdateStepMode(
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
           ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType')),
-          description: Yup.string().when('useServiceNowTemplate', {
-            is: false,
-            then: Yup.string().required(getString('pipeline.serviceNowCreateStep.validations.description'))
-          }),
-          shortDescription: Yup.string().when('useServiceNowTemplate', {
-            is: false,
-            then: Yup.string().required(getString('pipeline.serviceNowCreateStep.validations.shortDescription'))
-          }),
           ticketNumber: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.issueNumber')),
           templateName: Yup.string().when('useServiceNowTemplate', {
             is: true,

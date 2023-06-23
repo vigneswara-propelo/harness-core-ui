@@ -74,8 +74,6 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
         .should('be.visible')
         .should('have.class', 'FormError--error')
       cy.contains('span', 'Ticket Type is required').should('be.visible').should('have.class', 'FormError--error')
-      cy.contains('span', 'Description is required').should('be.visible').should('have.class', 'FormError--error')
-      cy.contains('span', 'Short Description is required').should('be.visible').should('have.class', 'FormError--error')
       cy.wait(1000)
     })
 
@@ -217,8 +215,6 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
         .should('have.class', 'FormError--error')
       cy.contains('span', 'Ticket Type is required').should('be.visible').should('have.class', 'FormError--error')
       cy.contains('span', 'Ticket Number is required').should('be.visible').should('have.class', 'FormError--error')
-      cy.contains('span', 'Description is required').should('be.visible').should('have.class', 'FormError--error')
-      cy.contains('span', 'Short Description is required').should('be.visible').should('have.class', 'FormError--error')
       cy.wait(1000)
     })
 

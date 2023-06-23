@@ -18,7 +18,7 @@ import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
 import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import type { ServiceNowCreateData, ServiceNowCreateVariableListModeProps } from './types'
-import { FieldType, ServiceNowStaticFields } from './types'
+import { FieldType } from './types'
 import { processFormData, processInitialValues } from './helper'
 import ServiceNowCreateStepModeWithRef from './ServiceNowCreateStepMode'
 import ServiceNowCreateDeploymentMode from './ServiceNowCreateDeploymentMode'
@@ -65,7 +65,6 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
   }: ValidateInputSetProps<ServiceNowCreateData>): FormikErrors<ServiceNowCreateData> {
     const errors: FormikErrors<ServiceNowCreateData> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    let errorFields
     if (
       typeof template?.spec?.connectorRef === 'string' &&
       isRequired &&
@@ -117,50 +116,6 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
       errors.spec = {
         ...errors.spec,
         templateName: getString?.('pipeline.serviceNowCreateStep.validations.templateName')
-      }
-    }
-
-    if (template?.spec?.fields && template?.spec?.fields.length > 0) {
-      const descriptionFieldIndex = template?.spec?.fields?.findIndex(
-        field => field.name === ServiceNowStaticFields.description
-      )
-      const shortDescriptionFieldIndex = template?.spec?.fields?.findIndex(
-        field => field.name === ServiceNowStaticFields.short_description
-      )
-      const description = template?.spec?.fields?.find(
-        field => field.name === ServiceNowStaticFields.description
-      )?.value
-      const shortDescription = template?.spec?.fields?.find(
-        field => field.name === ServiceNowStaticFields.short_description
-      )?.value
-
-      if (
-        typeof description === 'string' &&
-        isRequired &&
-        getMultiTypeFromValue(description) === MultiTypeInputType.RUNTIME &&
-        isEmpty(data?.spec?.fields[descriptionFieldIndex].value)
-      ) {
-        errorFields = new Array(template?.spec?.fields.length)
-        errorFields[descriptionFieldIndex] = {
-          value: getString?.('pipeline.serviceNowCreateStep.validations.description')
-        }
-      }
-      if (
-        typeof shortDescription === 'string' &&
-        isRequired &&
-        getMultiTypeFromValue(shortDescription) === MultiTypeInputType.RUNTIME &&
-        isEmpty(data?.spec?.fields[shortDescriptionFieldIndex].value)
-      ) {
-        errorFields = errorFields ? errorFields : new Array(template?.spec?.fields.length)
-        errorFields[shortDescriptionFieldIndex] = {
-          value: getString?.('pipeline.serviceNowCreateStep.validations.shortDescription')
-        }
-      }
-      if (errorFields && errorFields.length > 0) {
-        errors.spec = {
-          ...errors.spec,
-          fields: errorFields
-        }
       }
     }
     return errors

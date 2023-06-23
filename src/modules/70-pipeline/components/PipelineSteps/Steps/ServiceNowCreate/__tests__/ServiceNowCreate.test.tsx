@@ -167,7 +167,6 @@ describe('ServiceNow Create tests', () => {
     await waitFor(() => {
       expect(queryByText('pipeline.serviceNowApprovalStep.validations.ticketType')).toBeTruthy()
     })
-    await waitFor(() => expect(queryByText('pipeline.serviceNowCreateStep.validations.description')).toBeTruthy())
   })
 
   test('Open a saved step - edit stage view', async () => {
