@@ -155,7 +155,12 @@ function FormComponent({
       label: getString('common.artifactPaths'),
       name: 'spec.artifactPaths',
       placeholder: fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder'),
-      multiSelectTypeInputProps: {}
+      multiSelectTypeInputProps: {
+        multiSelectProps: {
+          allowCreatingNewItems: true,
+          items: defaultTo(artifactPaths, [])
+        }
+      }
     }
     return <FormInput.MultiSelectTypeInput {...commonProps} />
   }, [artifactPaths, fetchingArtifacts, getString, isTasDeploymentTypeSelected])
@@ -355,6 +360,12 @@ function FormComponent({
                 )
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
+                }
                 onFocus(e, refetchBambooBuild)
               },
               allowableTypes
