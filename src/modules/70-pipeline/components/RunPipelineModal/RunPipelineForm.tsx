@@ -183,6 +183,8 @@ function RunPipelineFormBasic({
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [currentPipeline, setCurrentPipeline] = useState<PipelineInfoConfig | undefined>()
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
+  const [submitCount, setSubmitCount] = useState<number>(0)
+  const validateFormRef = useRef<(values?: PipelineInfoConfig) => Promise<FormikErrors<PipelineInfoConfig>>>()
 
   const [canSaveInputSet, canEditYaml] = usePermission(
     {
@@ -524,7 +526,8 @@ function RunPipelineFormBasic({
 
   const handleRunPipeline = useCallback(
     async (valuesPipeline?: PipelineInfoConfig, forceSkipFlightCheck = false) => {
-      if (Object.keys(formErrors).length) {
+      const errors = await validateFormRef.current?.(valuesPipeline)
+      if (errors && Object.keys(errors).length) {
         return
       }
 
@@ -766,6 +769,9 @@ function RunPipelineFormBasic({
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
   const handleValidation = async (values: Pipeline | PipelineInfoConfig): Promise<FormikErrors<InputSetDTO>> => {
+    if (submitCount === 0) {
+      return Promise.resolve({})
+    }
     let pl: PipelineInfoConfig | undefined
 
     if ((values as Pipeline)?.pipeline) {
@@ -860,14 +866,16 @@ function RunPipelineFormBasic({
           formName="runPipeline"
           onSubmit={values => {
             // DO NOT return from here, causing the Formik form to handle loading state inconsistently
+            setSubmitCount(submitCount + 1)
             handleRunPipeline(values, false)
           }}
           validate={handleValidation}
         >
           {formik => {
-            const { submitForm, values, setValues, setFormikState } = formik
+            const { submitForm, values, setValues, setFormikState, validateForm } = formik
             formikRef.current = formik
             valuesPipelineRef.current = values
+            validateFormRef.current = validateForm
 
             return (
               <OverlaySpinner show={isExecutingPipeline}>
