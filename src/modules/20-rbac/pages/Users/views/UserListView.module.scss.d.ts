@@ -13,6 +13,7 @@ declare const styles: {
   readonly popover: string
   readonly roleButton: string
   readonly table: string
+  readonly username: string
   readonly wordbreak: string
 }
 export default styles

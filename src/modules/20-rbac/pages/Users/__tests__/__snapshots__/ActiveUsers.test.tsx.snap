@@ -1368,7 +1368,7 @@ exports[`UsersPage Test render data 1`] = `
               style="width: 30%;"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main overflow StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-small"
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main overflow StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
               >
                 <div
                   class="Avatar--Avatar Avatar--contentStyle"
@@ -1390,8 +1390,7 @@ exports[`UsersPage Test render data 1`] = `
                   </span>
                 </div>
                 <div
-                  class="Layout--vertical StyledProps--main"
-                  style="width: 100%;"
+                  class="Layout--vertical StyledProps--main username"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -1548,7 +1547,7 @@ exports[`UsersPage Test render data 1`] = `
               style="width: 30%;"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main overflow StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-small"
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main overflow StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
               >
                 <span
                   class="bp3-icon bp3-icon-lock StyledProps--main lockIcon StyledProps--border StyledProps--color StyledProps--color-white StyledProps--background-grey300 StyledProps--flex StyledProps--flex-align-center-center StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall"
@@ -1571,8 +1570,7 @@ exports[`UsersPage Test render data 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="Layout--vertical StyledProps--main"
-                  style="width: 100%;"
+                  class="Layout--vertical StyledProps--main username"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main"

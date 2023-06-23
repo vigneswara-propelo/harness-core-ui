@@ -88,7 +88,7 @@ const RenderColumnUser: Renderer<CellProps<UserAggregate>> = ({ row }) => {
       spacing="small"
       className={css.overflow}
       flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-      padding={{ right: 'small' }}
+      padding={{ right: 'medium' }}
     >
       {data.locked ? (
         <Icon
@@ -105,7 +105,7 @@ const RenderColumnUser: Renderer<CellProps<UserAggregate>> = ({ row }) => {
       ) : (
         <Avatar name={data.name || data.email} email={data.email} hoverCard={false} />
       )}
-      <Layout.Vertical width={'100%'}>
+      <Layout.Vertical className={css.username}>
         <Text lineClamp={1}>{data.name}</Text>
         {data.locked ? (
           <Text font={'small'} color={Color.GREY_400}>
