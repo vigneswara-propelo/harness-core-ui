@@ -8735,6 +8735,7 @@ export interface StringsMap {
   'cv.changesPage.changeSourceDetails': string
   'cv.changesPage.changeSummary': string
   'cv.changesPage.eventCount': string
+  'cv.changesPage.externalLink': string
   'cv.changesPage.viewKubernetesEvents': string
   'cv.clusterType': string
   'cv.codeErrors.agentTokens': string

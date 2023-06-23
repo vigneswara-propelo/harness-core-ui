@@ -132,6 +132,7 @@ changesPage:
   changeSummary: 'Change Summary'
   eventCount: 'Event Count'
   viewKubernetesEvents: 'View Kubernetes Change Summary'
+  externalLink: External link
 admin:
   activitySources:
     dialogDeleteTitle: 'Delete Change Source'

@@ -39,18 +39,6 @@ export default function ChangeSourceTable({ value, onSuccess, onEdit }: ChangeSo
     [tableData]
   )
 
-  // Not Planned For Release
-  //
-  // const onToggle = async (selectedRow: ChangeSourceDTO): Promise<void> => {
-  //   const updatedChangeSources = tableData?.map(changeSource => {
-  //     if (changeSource.identifier === selectedRow.identifier) {
-  //       changeSource.enabled = !selectedRow.enabled
-  //     }
-  //     return changeSource
-  //   })
-  //   await onSuccess(updatedChangeSources as ChangeSourceDTO[])
-  // }
-
   const RenderName: Renderer<CellProps<ChangeSourceDTO>> = ({ row }): JSX.Element => {
     const rowdata = row?.original
     return (

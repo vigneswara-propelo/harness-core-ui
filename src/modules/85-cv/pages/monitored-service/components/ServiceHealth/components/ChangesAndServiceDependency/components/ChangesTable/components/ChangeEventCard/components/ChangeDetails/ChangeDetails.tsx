@@ -82,8 +82,10 @@ export const getChanges = (details: {
             {shouldVisible ? getDetailsLabel(item[0], getString) : ''}
           </Text>
           <Text
+            lineClamp={1}
             className={css.isLink}
             title={value}
+            font={{ size: 'small' }}
             onClick={() => {
               if (value) {
                 window.open(value || '', '_blank', 'noreferrer')

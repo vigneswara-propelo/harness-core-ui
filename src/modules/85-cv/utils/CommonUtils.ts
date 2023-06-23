@@ -341,6 +341,8 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
       return getString('pipeline.verification.logs.eventType')
     case 'updatedBy':
       return getString('common.updatedBy')
+    case 'externalLinkToEntity':
+      return getString('cv.changesPage.externalLink')
     default:
       return key
   }
