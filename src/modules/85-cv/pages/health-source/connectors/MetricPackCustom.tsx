@@ -5,18 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Container, FormInput, Icon, PageError } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useGetMetricPacks, GetMetricPacksQueryParams, MetricPackDTO, TimeSeriesMetricPackDTO } from 'services/cv'
 import CheckboxWithPrompt from '../common/CheckboxWithPrompt/CheckboxWithPrompt'
 import { isGivenMetricPackContainsThresholds } from '../common/MetricThresholds/MetricThresholds.utils'
 import type { MetricThresholdType, ThresholdsPropertyNames } from '../common/MetricThresholds/MetricThresholds.types'
+import { getMetricData } from './MetricPackCustom.utils'
 import css from './MonitoredServiceConnector.module.scss'
 
 export default function MetricPackCustom({
@@ -36,7 +38,9 @@ export default function MetricPackCustom({
 }): JSX.Element {
   const { getString } = useStrings()
 
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
+  const { sourceData } = useContext(SetupSourceTabsContext)
+  const { isEdit } = sourceData
 
   const { setFieldValue, values: formValues } = useFormikContext()
 
@@ -75,9 +79,7 @@ export default function MetricPackCustom({
 
   useEffect(() => {
     if (metricPacks) {
-      const metricData: { [key: string]: boolean } = {}
-      const metricList: MetricPackDTO[] = (metricPackValue?.length ? metricPackValue : metricPacks?.resource) || []
-      metricList.forEach((i: MetricPackDTO) => (metricData[i.identifier as string] = true))
+      const metricData = getMetricData({ isEdit, metricPacks, metricPackValue })
       if (!isEmpty(metricData)) {
         setMetricDataValue(metricData)
       }
