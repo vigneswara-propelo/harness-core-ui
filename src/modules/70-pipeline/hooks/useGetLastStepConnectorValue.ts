@@ -6,9 +6,8 @@
  */
 
 import React, { useEffect } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { ConnectorResponse, useGetConnector } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
@@ -16,6 +15,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { isValueFixed } from '@common/utils/utils'
 
 interface LastStepConnectorValueProps {
   connectorList?: ConnectorResponse[]
@@ -25,6 +25,9 @@ interface LastStepConnectorValueProps {
 
 export function useGetLastStepConnectorValue(props: LastStepConnectorValueProps) {
   const { connectorList, initialConnectorRef, isEditMode } = props
+
+  const isInitialConnectorRefString = typeof initialConnectorRef === 'string'
+  const isInitialConnectorRefFixed = isValueFixed(initialConnectorRef)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -36,7 +39,7 @@ export function useGetLastStepConnectorValue(props: LastStepConnectorValueProps)
   }, [initialConnectorRef])
 
   const selectedConnectorRef = React.useMemo(() => {
-    return typeof initialConnectorRef === 'string'
+    return isInitialConnectorRefString
       ? getIdentifierFromValue(initialConnectorRef || '')
       : (selectedConnector as ConnectorSelectedValue)?.connector?.identifier
   }, [initialConnectorRef, selectedConnector])
@@ -75,18 +78,14 @@ export function useGetLastStepConnectorValue(props: LastStepConnectorValueProps)
   })
 
   React.useEffect(() => {
-    if (getMultiTypeFromValue(initialConnectorRef) === MultiTypeInputType.FIXED && isEditMode) {
-      if (typeof initialConnectorRef === 'string' && initialConnectorRef?.length > 0) {
-        refetchConnector()
-      }
+    // istanbul ignore else
+    if (isEditMode && isInitialConnectorRefFixed && isInitialConnectorRefString && initialConnectorRef?.length > 0) {
+      refetchConnector()
     }
   }, [initialConnectorRef, isEditMode, refetchConnector])
 
   React.useEffect(() => {
-    if (
-      typeof initialConnectorRef === 'string' &&
-      getMultiTypeFromValue(initialConnectorRef) === MultiTypeInputType.FIXED
-    ) {
+    if (isInitialConnectorRefString && isInitialConnectorRefFixed) {
       if (connectorData && connectorData?.connector?.name) {
         const scope = getScopeFromValue(defaultTo(initialConnectorRef, ''))
         const value = {
@@ -99,17 +98,15 @@ export function useGetLastStepConnectorValue(props: LastStepConnectorValueProps)
           live: connectorData?.status?.status === 'SUCCESS',
           connector: connectorData?.connector
         }
-        setSelectedConnector(value)
+        if (!isEqual(value, selectedConnector)) {
+          setSelectedConnector(value)
+        }
       }
     }
   }, [connectorData, initialConnectorRef])
 
   React.useEffect(() => {
-    if (
-      typeof initialConnectorRef === 'string' &&
-      getMultiTypeFromValue(initialConnectorRef) === MultiTypeInputType.FIXED &&
-      !fetchingConnector
-    ) {
+    if (isInitialConnectorRefString && isInitialConnectorRefFixed && !fetchingConnector) {
       if (connectorDataFromAPI && connectorDataFromAPI.data?.connector?.name) {
         const scope = getScopeFromValue(defaultTo(initialConnectorRef, ''))
         const value = {
@@ -122,13 +119,15 @@ export function useGetLastStepConnectorValue(props: LastStepConnectorValueProps)
           live: connectorDataFromAPI.data?.status?.status === 'SUCCESS',
           connector: connectorDataFromAPI.data?.connector
         }
-        setSelectedConnector(value)
+        if (!isEqual(value, selectedConnector)) {
+          setSelectedConnector(value)
+        }
       }
     }
   }, [connectorDataFromAPI, initialConnectorRef, fetchingConnector])
 
   return {
     selectedConnector,
-    fetchingConnector
+    fetchingConnector: fetchingConnector || (typeof selectedConnector === 'string' && isValueFixed(selectedConnector))
   }
 }

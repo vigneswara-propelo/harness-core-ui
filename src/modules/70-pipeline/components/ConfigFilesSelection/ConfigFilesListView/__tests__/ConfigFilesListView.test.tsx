@@ -21,7 +21,7 @@ import ConfigFilesListView from '../ConfigFilesListView'
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => {
-    return { data: connectorsData.data.content[1], refetch: fetchConnectors, loading: false }
+    return { data: { data: connectorsData.data.content[1] }, refetch: fetchConnectors, loading: false }
   })
 }))
 
