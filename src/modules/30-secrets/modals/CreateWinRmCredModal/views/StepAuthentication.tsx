@@ -125,8 +125,9 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
       is: 'NTLM',
       then: Yup.string().trim().required(getString('secrets.createSSHCredWizard.validateUsername'))
     }),
-    password: Yup.string().when('authScheme', {
-      is: 'NTLM',
+    password: Yup.string().when(['authScheme', 'tgtGenerationMethod'], {
+      is: (authScheme, tgtGenerationMethod) =>
+        authScheme === 'NTLM' || (authScheme === 'Kerberos' && tgtGenerationMethod == 'Password'),
       then: Yup.string().required(getString('secrets.createWinRmCredWizard.validatePassword'))
     }),
     principal: Yup.string().when('authScheme', {
@@ -141,7 +142,12 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
       is: (authScheme, tgtGenerationMethod) => authScheme === 'Kerberos' && tgtGenerationMethod == 'KeyTabFilePath',
       then: Yup.string().trim().required(getString('secrets.createSSHCredWizard.validateKeypath'))
     }),
-
+    tgtGenerationMethod: Yup.string().when('authScheme', {
+      is: 'Kerberos',
+      then: Yup.string()
+        .trim()
+        .required(getString?.('fieldRequired', { field: getString('secrets.sshAuthFormFields.labelTGT') }))
+    }),
     parameters: Yup.lazy((parameters: any): Yup.Schema<unknown> => {
       return Yup.array().of(
         Yup.mixed().test({
@@ -191,7 +197,7 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
             realm: '',
             useNoProfile: false,
             skipCertChecks: false,
-            tgtGenerationMethod: 'None',
+            tgtGenerationMethod: undefined,
             useSSL: false,
             username: '',
             keyPath: '',
