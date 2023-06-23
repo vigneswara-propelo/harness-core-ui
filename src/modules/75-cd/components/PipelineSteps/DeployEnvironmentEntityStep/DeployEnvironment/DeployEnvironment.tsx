@@ -50,6 +50,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isAsgDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
@@ -624,7 +625,10 @@ export default function DeployEnvironment({
             gitOpsEnabled={gitOpsEnabled}
           />
         )}
-        {!(isFixed && isEmpty(selectedEnvironments)) && !isMultiEnvironment && CD_NG_DYNAMIC_PROVISIONING_ENV_V2 ? (
+        {!(isFixed && isEmpty(selectedEnvironments)) &&
+        !isMultiEnvironment &&
+        CD_NG_DYNAMIC_PROVISIONING_ENV_V2 &&
+        !isAsgDeploymentType(deploymentType) ? (
           <DeployProvisioner initialValues={initialValues} allowableTypes={allowableTypes} />
         ) : null}
         {shouldRenderChildEntity && !loading && !isMultiEnvironment && (

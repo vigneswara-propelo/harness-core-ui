@@ -1065,3 +1065,7 @@ export enum GoogleCloudFunctionsEnvType {
   GenOne = 'GenOne',
   GenTwo = 'GenTwo'
 }
+
+export const isAsgDeploymentType = (type: string): boolean => {
+  return type === ServiceDeploymentType.Asg
+}
