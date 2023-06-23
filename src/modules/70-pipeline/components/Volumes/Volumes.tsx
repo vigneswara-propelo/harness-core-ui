@@ -38,6 +38,7 @@ interface VolumesPropsInterface {
   expressions?: string[]
   disabled?: boolean
   allowableTypes?: AllowedTypes
+  dataTooltipId?: string
 }
 
 const emptyRow = { mountPath: '', type: '' }
@@ -270,7 +271,8 @@ export default function Volumes({
   name,
   expressions,
   disabled,
-  allowableTypes
+  allowableTypes,
+  dataTooltipId
 }: VolumesPropsInterface): JSX.Element {
   const { setFieldValue, values = {} } = formik
   const { getString } = useStrings()
@@ -303,7 +305,7 @@ export default function Volumes({
             <Text
               font={{ variation: FontVariation.FORM_LABEL }}
               margin={{ bottom: 'xsmall' }}
-              tooltipProps={{ dataTooltipId: 'volumes' }}
+              tooltipProps={{ dataTooltipId: dataTooltipId ? dataTooltipId : 'volumes' }}
             >
               {getString('pipeline.buildInfra.volumes')}
             </Text>

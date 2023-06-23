@@ -204,7 +204,6 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
             allowableTypes,
             disabled: readonly
           }}
-          tooltipProps={{ dataTooltipId: 'privileged' }}
           disabled={readonly}
           configureOptionsProps={{ hideExecutionTimeField: true }}
         />

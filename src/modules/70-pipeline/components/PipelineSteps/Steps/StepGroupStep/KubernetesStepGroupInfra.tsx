@@ -89,12 +89,10 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
 
   const renderCheckboxFields = ({
     name,
-    stringKey,
-    tooltipId
+    stringKey
   }: {
     name: string
     stringKey: keyof StringsMap
-    tooltipId: string
   }): React.ReactElement => {
     return (
       <Container className={cx(stepCss.formGroup, stepCss.md)}>
@@ -106,7 +104,6 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             allowableTypes,
             disabled: readonly
           }}
-          tooltipProps={{ dataTooltipId: tooltipId }}
           disabled={readonly}
         />
       </Container>
@@ -123,14 +120,12 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
 
         {renderCheckboxFields({
           name: 'privileged',
-          stringKey: 'pipeline.buildInfra.privileged',
-          tooltipId: 'privileged'
+          stringKey: 'pipeline.buildInfra.privileged'
         })}
 
         {renderCheckboxFields({
           name: 'allowPrivilegeEscalation',
-          stringKey: 'pipeline.buildInfra.allowPrivilegeEscalation',
-          tooltipId: 'allowPrivilegeEscalation'
+          stringKey: 'pipeline.buildInfra.allowPrivilegeEscalation'
         })}
 
         <Container className={stepCss.formGroup}>
@@ -141,11 +136,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
             }}
             multiTypeFieldSelectorProps={{
-              label: (
-                <Text tooltipProps={{ dataTooltipId: 'addCapabilities' }}>
-                  {getString('pipeline.buildInfra.addCapabilities')}
-                </Text>
-              ),
+              label: getString('pipeline.buildInfra.addCapabilities'),
               allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
             }}
             configureOptionsProps={{
@@ -163,11 +154,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
             }}
             multiTypeFieldSelectorProps={{
-              label: (
-                <Text tooltipProps={{ dataTooltipId: 'dropCapabilities' }}>
-                  {getString('pipeline.buildInfra.dropCapabilities')}
-                </Text>
-              ),
+              label: getString('pipeline.buildInfra.dropCapabilities'),
               allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
             }}
             configureOptionsProps={{
@@ -179,14 +166,12 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
 
         {renderCheckboxFields({
           name: 'runAsNonRoot',
-          stringKey: 'pipeline.buildInfra.runAsNonRoot',
-          tooltipId: 'runAsNonRoot'
+          stringKey: 'pipeline.buildInfra.runAsNonRoot'
         })}
 
         {renderCheckboxFields({
           name: 'readOnlyRootFilesystem',
-          stringKey: 'pipeline.buildInfra.readOnlyRootFilesystem',
-          tooltipId: 'readOnlyRootFilesystem'
+          stringKey: 'pipeline.buildInfra.readOnlyRootFilesystem'
         })}
 
         <Container className={stepCss.formGroup}>
@@ -231,11 +216,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
             }}
             multiTypeFieldSelectorProps={{
-              label: (
-                <Text tooltipProps={{ dataTooltipId: 'sharedPaths' }}>
-                  {getString('pipelineSteps.build.stageSpecifications.sharedPaths')}
-                </Text>
-              ),
+              label: getString('pipelineSteps.build.stageSpecifications.sharedPaths'),
               allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
             }}
             disabled={readonly}
@@ -249,6 +230,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             expressions={expressions}
             disabled={readonly}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            dataTooltipId={'stepGroup_volumes'}
           />
         </Container>
 
@@ -346,15 +328,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
             }}
             formik={formikRef}
             multiTypeFieldSelectorProps={{
-              label: (
-                <Text
-                  font={{ variation: FontVariation.FORM_LABEL }}
-                  margin={{ bottom: 'xsmall' }}
-                  tooltipProps={{ dataTooltipId: 'tolerations' }}
-                >
-                  {getString('pipeline.buildInfra.tolerations')}
-                </Text>
-              ),
+              label: getString('pipeline.buildInfra.tolerations'),
               allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
             }}
             configureOptionsProps={{
@@ -374,7 +348,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
             }}
             multiTypeFieldSelectorProps={{
-              label: <Text tooltipProps={{ dataTooltipId: 'hostNames' }}>{getString('common.hostNames')}</Text>,
+              label: getString('common.hostNames'),
               allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
             }}
             configureOptionsProps={{
@@ -430,9 +404,6 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          tooltipProps={{
-            dataTooltipId: 'k8sCluster'
-          }}
           multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
           gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
           setRefValue
