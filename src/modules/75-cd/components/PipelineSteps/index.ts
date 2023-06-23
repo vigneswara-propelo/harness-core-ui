@@ -46,7 +46,7 @@ import { SshWinRmAwsInfrastructureSpec } from './SshWinRmAwsInfrastructureSpec/S
 import { SshWinRmAzureInfrastructureSpec } from './SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { PolicyStep } from './PolicyStep/PolicyStep'
 import { ServerlessLambdaDeployStep } from './ServerlessAwsLambda/ServerlessLambdaDeploy/ServerlessLambdaDeploy'
-import { ServerlessLambdaRollbackStep } from './ServerlessLambdaRollback/ServerlessLambdaRollback'
+import { ServerlessLambdaRollbackStep } from './ServerlessAwsLambda/ServerlessLambdaRollback/ServerlessLambdaRollback'
 import { ServerlessAwsLambdaInfraSpec } from './ServerlessAwsLambdaInfraSpec/ServerlessAwsLambdaInfraSpec'
 import { ServerlessAzureSpec } from './ServerlessAzure/ServerlessAzureSpec'
 import { ServerlessGCPSpec } from './ServerlessGCP/ServerlessGCPSpec'
@@ -140,6 +140,7 @@ import { AwsSamDownloadManifestsStep } from './AwsSam/AwsSamDownloadManifests/Aw
 import { RancherInfrastructureSpec } from './RancherInfrastructureSpec/RancherInfrastructureSpec'
 import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifestsStep/DownloadServerlessManifestsStep'
 import { ServerlessPrepareRollbackStep } from './ServerlessAwsLambda/ServerlessPrepareRollbackStep/ServerlessPrepareRollbackStep'
+import { ServerlessAwsLambdaRollbackV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaRollbackV2/ServerlessAwsLambdaRollbackV2'
 import { ServerlessPackageStep } from './ServerlessAwsLambda/ServerlessPackageStep/ServerlessPackageStep'
 
 factory.registerStep(new CommandScriptsStep())
@@ -275,4 +276,5 @@ factory.registerStep(new AwsSamDownloadManifestsStep())
 factory.registerStep(new DownloadServerlessManifestsStep())
 factory.registerStep(new RancherInfrastructureSpec())
 factory.registerStep(new ServerlessPrepareRollbackStep())
+factory.registerStep(new ServerlessAwsLambdaRollbackV2Step())
 factory.registerStep(new ServerlessPackageStep())

@@ -199,7 +199,10 @@ export function getStepPaletteModuleInfosFromStage(
           shouldShowCommonSteps: false
         }
       ]
-    case StageType.CUSTOM:
+    case StageType.CUSTOM: {
+      if (isContainerStepGroup) {
+        return stepPalettePayloadContainerStepGroup
+      }
       return [
         {
           module: 'cd',
@@ -222,6 +225,8 @@ export function getStepPaletteModuleInfosFromStage(
           shouldShowCommonSteps: false
         }
       ]
+    }
+
     case StageType.DEPLOY: {
       if (isContainerStepGroup) {
         return stepPalettePayloadContainerStepGroup
@@ -286,11 +291,27 @@ export function getStepPaletteModuleInfosFromStage(
           shouldShowCommonSteps: false
         }
       ]
+    case StageType.APPROVAL: {
+      if (isContainerStepGroup) {
+        return stepPalettePayloadContainerStepGroup
+      }
+      return [
+        {
+          module: 'cd',
+          category: 'Approval',
+          shouldShowCommonSteps: true
+        },
+        {
+          module: 'cv',
+          shouldShowCommonSteps: false
+        }
+      ]
+    }
     default:
       return [
         {
           module: 'cd',
-          category: stageType === StageType.APPROVAL ? 'Approval' : category,
+          category: category,
           shouldShowCommonSteps: true
         },
         {
