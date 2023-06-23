@@ -14,15 +14,9 @@
   -webkit-box-orient: vertical;
 }
 
-.headerContainer {
-  .listHeader {
-    margin: var(--spacing-medium) 0 !important;
-    flex: 1;
-  }
-
-  .favorite {
-    margin-left: var(--spacing-small) !important;
-  }
+.listHeader {
+  margin: var(--spacing-medium) 0 !important;
+  flex: 1;
 }
 
 .pickProjectHelp {
@@ -45,8 +39,12 @@
 }
 
 .orgDropdown {
-  margin-right: var(--spacing-small);
+  margin-right: var(--spacing-xsmall);
   width: 180px;
+
+  &.orgwidth {
+    width: 139px;
+  }
 }
 
 .projectContainerWrapper {

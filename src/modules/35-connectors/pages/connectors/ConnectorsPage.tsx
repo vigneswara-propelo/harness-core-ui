@@ -704,7 +704,9 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
               imageClassName={css.connectorEmptyStateImg}
               buttonText={!searchTerm ? getString('connectors.createConnector') : undefined}
               image={ConnectorsEmptyState}
-              message={searchTerm ? getString('noConnectorFound') : getString('connectors.connectorEmptyState')}
+              message={
+                searchTerm || favorite ? getString('noConnectorFound') : getString('connectors.connectorEmptyState')
+              }
             />
           )}
         </Page.Body>

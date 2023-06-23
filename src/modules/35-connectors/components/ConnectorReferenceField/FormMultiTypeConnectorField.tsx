@@ -61,6 +61,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import type { ItemInterface } from '@common/components/AddDrawer/AddDrawer'
 import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   ConnectorReferenceFieldProps,
   getReferenceFieldProps,
@@ -154,6 +155,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     selected: false,
     inlineModalClosed: false
   })
+  const { PL_FAVORITES } = useFeatureFlags()
   const scopeFromSelected =
     typeof selectedValue === 'string' && selectedValue.length > 0
       ? getScopeFromValue(selectedValue || '')
@@ -436,7 +438,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     setPagedConnectorData,
     isRecordDisabled,
     renderRecordDisabledWarning,
-    version
+    version,
+    isFavoritesEnabled: PL_FAVORITES
   })
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
@@ -471,6 +474,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
           disabled: isDisabled,
           hideModal: inlineSelection.selected && inlineSelection.inlineModalClosed,
           createNewLabel: createNewLabel || getString('newConnector'),
+          enableFavorite: true,
           createNewBtnComponent: (
             <RbacButton
               variation={ButtonVariation.SECONDARY}

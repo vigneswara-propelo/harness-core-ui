@@ -195,9 +195,21 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
               setPage(0)
             }}
           />
+          {PL_FAVORITES && (
+            <Checkbox
+              variant={CheckboxVariant.BOXED}
+              checked={favorite}
+              className={css.favorite}
+              labelElement={<Icon name="star" color={Color.YELLOW_900} size={14} />}
+              onChange={e => {
+                setFavorite(e.currentTarget.checked)
+              }}
+              margin={{ right: 'small' }}
+            />
+          )}
           <OrgDropdown
             value={selectedOrg}
-            className={css.orgDropdown}
+            className={cx(css.orgDropdown, { [css.orgwidth]: PL_FAVORITES })}
             onChange={org => {
               setSelectedOrg(org)
             }}
@@ -211,28 +223,15 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
           />
         </Layout.Horizontal>
         {loading && <PageSpinner />}
-        <Layout.Horizontal flex className={css.headerContainer}>
-          <ListHeader
-            selectedSortMethod={sortPreference}
-            sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
-            onSortMethodChange={option => {
-              setSortPreference(option.value as SortMethod)
-            }}
-            totalCount={data?.data?.totalItems}
-            className={css.listHeader}
-          />
-          {PL_FAVORITES && (
-            <Checkbox
-              variant={CheckboxVariant.BOXED}
-              checked={favorite}
-              className={css.favorite}
-              labelElement={<Icon name="star" color={Color.YELLOW_900} size={14} />}
-              onChange={e => {
-                setFavorite(e.currentTarget.checked)
-              }}
-            />
-          )}
-        </Layout.Horizontal>
+        <ListHeader
+          selectedSortMethod={sortPreference}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+          onSortMethodChange={option => {
+            setSortPreference(option.value as SortMethod)
+          }}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         {data?.data?.content?.length ? (
           <>
             {projectView === Views.GRID ? (

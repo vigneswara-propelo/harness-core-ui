@@ -9,9 +9,9 @@
 declare const styles: {
   readonly favorite: string
   readonly favoriteActive: string
-  readonly headerContainer: string
   readonly listHeader: string
   readonly orgDropdown: string
+  readonly orgwidth: string
   readonly pagination: string
   readonly pickProjectHelp: string
   readonly popover: string

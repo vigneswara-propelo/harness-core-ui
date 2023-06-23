@@ -493,7 +493,7 @@ export function getReferenceFieldProps({
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod, isFavorite) => {
+    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod, favorite) => {
       const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier, allTabSelected })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
@@ -514,7 +514,7 @@ export function getReferenceFieldProps({
             pageSize: 10,
             ...(version ? { version } : undefined),
             includeAllConnectorsAvailableAtScope: allTabSelected,
-            ...(isFavoritesEnabled ? { isFavorite } : undefined),
+            ...(isFavoritesEnabled ? { onlyFavorites: favorite } : undefined),
             // eslint-disable-next-line
             // @ts-ignore
             sortOrders: sortMethod
