@@ -376,6 +376,57 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="bp3-form-group"
+          data-id="gitOpsAppNames-7"
+        >
+          <label
+            class="bp3-label"
+            for="gitOpsAppNames"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="pipelineFilterFormTest_gitOpsAppNames"
+            >
+              applications
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="bp3-popover-wrapper MultiSelect--main bp3-fill"
+            >
+              <div
+                class="bp3-popover-target"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="bp3-input bp3-tag-input bp3-multi-select"
+                  >
+                    <div
+                      class="bp3-tag-input-values"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                        name="gitOpsAppNames"
+                        placeholder="- Select -"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <span
           class="separator"
         >
@@ -387,7 +438,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </span>
         <div
           class="bp3-form-group"
-          data-id="buildType-7"
+          data-id="buildType-8"
         >
           <label
             class="bp3-label"

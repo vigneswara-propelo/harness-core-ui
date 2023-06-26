@@ -1874,6 +1874,7 @@ export interface Servicev1ApplicationQuery {
    * Filters for Application. Eg. "app.status.sync.status": "Synced" or "app.status.sync.status": { "$in": ["Synced", "NotSynced"]
    */
   filter?: { [key: string]: any }
+  metadataOnly?: boolean
   /**
    * Organization Identifier for the Entity.
    */

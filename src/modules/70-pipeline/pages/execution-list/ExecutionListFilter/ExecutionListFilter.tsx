@@ -17,6 +17,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
 import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/pipeline-ng'
 import { useGetEnvironmentListV2, useGetServiceDefinitionTypes, useGetServiceList } from 'services/cd-ng'
+import { Servicev1Application, useApplicationServiceListApps } from 'services/gitops'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
@@ -55,6 +56,7 @@ const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILT
 export function ExecutionListFilter(): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps>>()
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<ExecutionListPageQueryParams>>()
+  const [gitOpsAppNameOptions, setGitOpsAppNameOptions] = React.useState<SelectOption[] | undefined>([])
   const queryParams = useExecutionListQueryParams()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -97,6 +99,35 @@ export function ExecutionListFilter(): React.ReactElement {
     },
     lazy: !filterDrawerOpenedRef.current
   })
+
+  const { mutate: getApplications } = useApplicationServiceListApps({})
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      if (!filterDrawerOpenedRef.current) {
+        return
+      }
+
+      const { content } = await getApplications({
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        metadataOnly: true,
+        pageIndex: 0,
+        pageSize: 1000
+      })
+
+      const options = content?.map((item: Servicev1Application) => ({
+        label: `${item?.name} (${item.agentIdentifier})`,
+        value: item?.name || ''
+      }))
+
+      setGitOpsAppNameOptions(options)
+    }
+
+    // Comment this line, if this breaks on local, if GitOps MFE is not enabled
+    fetchData()
+  }, [filterDrawerOpenedRef.current])
 
   const { mutate: createFilter, loading: isCreateFilterLoading } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
@@ -163,7 +194,7 @@ export function ExecutionListFilter(): React.ReactElement {
     pipelineTags: _pipelineTags
   } = (filterProperties as PipelineExecutionFilterProperties) || {}
   const { ci, cd } = moduleProperties || {}
-  const { serviceDefinitionTypes, infrastructureType, serviceIdentifiers, envIdentifiers } = cd || {}
+  const { serviceDefinitionTypes, infrastructureType, serviceIdentifiers, envIdentifiers, gitOpsAppNames } = cd || {}
   const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
   const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
   const buildType = getBuildType(moduleProperties || {})
@@ -269,7 +300,8 @@ export function ExecutionListFilter(): React.ReactElement {
             initialValues={{
               environments: getMultiSelectFormOptions(environmentsResponse?.data?.content, 'environment'),
               services: getMultiSelectFormOptions(servicesResponse?.data?.content, 'service'),
-              deploymentType: deploymentTypeSelectOptions
+              deploymentType: deploymentTypeSelectOptions,
+              gitOpsAppNames: gitOpsAppNameOptions
             }}
             type="PipelineExecution"
           />
@@ -289,7 +321,8 @@ export function ExecutionListFilter(): React.ReactElement {
             deploymentType: serviceDefinitionTypes,
             infrastructureType,
             services: getMultiSelectFormOptions(serviceIdentifiers, 'service'),
-            environments: getMultiSelectFormOptions(envIdentifiers, 'environment')
+            environments: getMultiSelectFormOptions(envIdentifiers, 'environment'),
+            gitOpsAppNames: getMultiSelectFormOptions(gitOpsAppNames, 'gitOpsAppName')
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}

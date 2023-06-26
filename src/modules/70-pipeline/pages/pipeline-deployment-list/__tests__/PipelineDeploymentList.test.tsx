@@ -20,6 +20,7 @@ import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deplo
 import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
 import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
+import { mockApplicationResponse } from '@pipeline/components/PipelineSteps/Steps/SyncStep/__tests__/SyncStepTestHelper'
 import { useGetListOfExecutions } from 'services/pipeline-ng'
 import { PipelineDeploymentList } from '../PipelineDeploymentList'
 const mockGetCallFunction = jest.fn()
@@ -112,6 +113,13 @@ jest.mock('services/pipeline-ng', () => ({
 
 jest.mock('services/pipeline-rq', () => ({
   useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsMockResponse)
+}))
+
+jest.mock('services/gitops', () => ({
+  useApplicationServiceListApps: jest.fn().mockImplementation(() => ({
+    mutate: jest.fn(() => mockApplicationResponse),
+    cancel: jest.fn()
+  }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))

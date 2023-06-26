@@ -21,6 +21,7 @@ import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipelin
 import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
 import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
+import { mockApplicationResponse } from '@pipeline/components/PipelineSteps/Steps/SyncStep/__tests__/SyncStepTestHelper'
 import { useGetExecutionData, useGetListOfExecutions } from 'services/pipeline-ng'
 import { ExecutionList } from '../ExecutionList'
 
@@ -137,6 +138,13 @@ jest.mock('services/cd-ng-rq', () => ({
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
+}))
+
+jest.mock('services/gitops', () => ({
+  useApplicationServiceListApps: jest.fn().mockImplementation(() => ({
+    mutate: jest.fn(() => mockApplicationResponse),
+    cancel: jest.fn()
+  }))
 }))
 
 const commonRequest = (): any =>
