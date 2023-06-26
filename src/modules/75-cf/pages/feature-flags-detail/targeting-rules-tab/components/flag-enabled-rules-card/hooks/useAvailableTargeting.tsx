@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { useMemo } from 'react'
 import type { Segment, Target, Variation } from 'services/cf'
 import {
   FormVariationMap,
@@ -16,8 +17,8 @@ import {
 } from '../../../types'
 
 // Currently 1 target/target group can be added per targeting rule
-// This hook returns the available target groups/targets that has not been added to a rule,
-// and returns the availble variations used in the "Add Targeting" button/dropdown
+// This hook returns the available target groups/targets that have not been added to a rule,
+// and returns the available variations to be used in the "Add Targeting" button/dropdown
 interface UseAvailableTargetingProps {
   featureFlagVariations: Variation[]
   targetingRuleItems: (FormVariationMap | VariationPercentageRollout)[]
@@ -37,51 +38,57 @@ const useAvailableTargeting = ({
   segments,
   targets
 }: UseAvailableTargetingProps): UseAvailableTargetingReturn => {
-  const targetingDropdownVariations = featureFlagVariations.filter(
-    variation =>
-      !targetingRuleItems
-        .filter(x => x.status !== TargetingRuleItemStatus.DELETED)
-        .map(targetingRuleItem => (targetingRuleItem as FormVariationMap).variationIdentifier)
-        .includes(variation.identifier)
-  )
+  const targetingDropdownVariations = useMemo<Variation[]>(() => {
+    return featureFlagVariations.filter(
+      variation =>
+        !targetingRuleItems
+          .filter(x => x.status !== TargetingRuleItemStatus.DELETED)
+          .map(targetingRuleItem => (targetingRuleItem as FormVariationMap).variationIdentifier)
+          .includes(variation.identifier)
+    )
+  }, [featureFlagVariations, targetingRuleItems])
 
-  const usedSegments: VariationTargetGroup[] = []
-  targetingRuleItems
-    .filter(x => x.status !== TargetingRuleItemStatus.DELETED)
-    .forEach(targetingRuleItem => {
-      if (targetingRuleItem.type === TargetingRuleItemType.VARIATION) {
-        const item = targetingRuleItem as FormVariationMap
-        usedSegments.push(...item.targetGroups)
-      } else {
-        const item = targetingRuleItem as VariationPercentageRollout
-        usedSegments.push({
-          priority: item.priority,
-          label: segments.find(segment => segment.identifier === item.clauses[0].values[0])?.name as string,
-          value: item.clauses[0].values[0],
-          ruleId: item.ruleId || ''
-        })
-      }
-    })
+  const availableSegments = useMemo<Segment[]>(() => {
+    const usedSegments: VariationTargetGroup[] = []
+    targetingRuleItems
+      .filter(x => x.status !== TargetingRuleItemStatus.DELETED)
+      .forEach(targetingRuleItem => {
+        if (targetingRuleItem.type === TargetingRuleItemType.VARIATION) {
+          const item = targetingRuleItem as FormVariationMap
+          usedSegments.push(...item.targetGroups)
+        } else {
+          const item = targetingRuleItem as VariationPercentageRollout
+          usedSegments.push({
+            priority: item.priority,
+            label: segments.find(segment => segment.identifier === item.clauses[0].values[0])?.name as string,
+            value: item.clauses[0].values[0],
+            ruleId: item.ruleId || ''
+          })
+        }
+      })
 
-  const availableSegments = segments.filter(
-    segment =>
-      !usedSegments.some(usedSegment => segment.identifier === usedSegment.value || segment.name === usedSegment.label)
-  )
+    return segments.filter(
+      segment =>
+        !usedSegments.some(
+          usedSegment => segment.identifier === usedSegment.value || segment.name === usedSegment.label
+        )
+    )
+  }, [segments, targetingRuleItems])
 
-  const usedTargets: VariationTarget[] = []
-  targetingRuleItems
-    .filter(x => x.status !== TargetingRuleItemStatus.DELETED)
-    .forEach(targetingRuleItem => {
-      if (targetingRuleItem.type === TargetingRuleItemType.VARIATION) {
-        const item = targetingRuleItem as FormVariationMap
-        usedTargets.push(...item.targets)
-      }
-    })
+  const availableTargets = useMemo<Target[]>(() => {
+    const usedTargets: VariationTarget[] = []
+    targetingRuleItems
+      .filter(x => x.status !== TargetingRuleItemStatus.DELETED)
+      .forEach(targetingRuleItem => {
+        if (targetingRuleItem.type === TargetingRuleItemType.VARIATION) {
+          const item = targetingRuleItem as FormVariationMap
+          usedTargets.push(...item.targets)
+        }
+      })
 
-  const availableTargets = targets.filter(
-    target =>
-      !usedTargets.some(usedTarget => target.identifier === usedTarget.value || target.name === usedTarget.label)
-  )
+    return targets.filter(target => !usedTargets.some(usedTarget => target.identifier === usedTarget.value))
+  }, [targetingRuleItems, targets])
+
   return {
     targetingDropdownVariations,
     availableSegments,

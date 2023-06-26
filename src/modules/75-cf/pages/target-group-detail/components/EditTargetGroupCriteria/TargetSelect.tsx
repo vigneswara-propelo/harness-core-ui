@@ -7,10 +7,13 @@
 
 import React, { FC, ReactNode, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { useFormikContext } from 'formik'
+import { get } from 'lodash-es'
 import { FormInput, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetAllTargets, UseGetAllTargetsProps } from 'services/cf'
 import targetToSelectOption from '@cf/utils/targetToSelectOption'
+import { renderMultiSelectListItem } from '@cf/components/MultiSelectListItem/MultiSelectListItem'
 
 import css from './TargetSelect.module.scss'
 
@@ -23,6 +26,7 @@ export interface TargetSelectProps {
 const TargetSelect: FC<TargetSelectProps> = ({ environmentIdentifier, fieldName, label }) => {
   const { getString } = useStrings()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const { values } = useFormikContext<Record<string, any>>()
 
   const queryParams: UseGetAllTargetsProps['queryParams'] = {
     environmentIdentifier,
@@ -43,17 +47,23 @@ const TargetSelect: FC<TargetSelectProps> = ({ environmentIdentifier, fieldName,
     [targets?.targets]
   )
 
+  const availableTargetOptions = useMemo<SelectOption[]>(() => {
+    const selectedTargetIds = get(values, fieldName, []).map(({ value }: SelectOption) => value)
+    return targetOptions.filter(({ value }) => !selectedTargetIds.includes(value))
+  }, [values, fieldName, targetOptions])
+
   return (
     <FormInput.MultiSelect
       name={fieldName}
       label={label}
       className={css.input}
-      items={targetOptions}
+      items={availableTargetOptions}
       usePortal
       multiSelectProps={{
         allowCreatingNewItems: false,
         placeholder: getString('cf.segmentDetail.searchTarget'),
-        onQueryChange: async query => await refetchTargets({ queryParams: { ...queryParams, targetName: query } })
+        onQueryChange: async query => await refetchTargets({ queryParams: { ...queryParams, targetName: query } }),
+        itemRender: renderMultiSelectListItem
       }}
     />
   )

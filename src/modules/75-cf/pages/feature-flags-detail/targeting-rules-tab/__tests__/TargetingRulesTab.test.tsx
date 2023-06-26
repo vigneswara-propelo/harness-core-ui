@@ -141,7 +141,7 @@ describe('TargetingRulesTab', () => {
     test('it should render target groups tags/dropdown correctly', async () => {
       renderComponent()
 
-      // assert correct target groups are prepopulated
+      // assert correct target groups are pre-populated
       const targetGroupTagInputValue = screen
         .getByTestId('false_target_groups')
         .querySelectorAll('span[data-tag-index]')
@@ -162,18 +162,16 @@ describe('TargetingRulesTab', () => {
     test('it should render target tags/dropdown correctly', async () => {
       renderComponent()
 
-      // assert correct target are prepopulated
-      await waitFor(() => expect(screen.getByTestId('false_targets')).toHaveTextContent(/target_1/))
+      // assert correct target are pre-populated
+      expect(screen.getByTestId('false_targets')).toHaveTextContent('target_1')
 
-      // assert availble targets appear on click
-      const targetsTagInput = screen.getByTestId('false_targets').querySelector('input') as HTMLInputElement
-      await userEvent.type(targetsTagInput, 'target')
-      const targetsInputList = document.querySelector('ul')
-      await waitFor(() => expect(targetsInputList).toBeInTheDocument())
-      expect(document.querySelectorAll('li')).toHaveLength(3)
-      expect(document.querySelectorAll('li')[0]).toHaveTextContent(/target_4/)
-      expect(document.querySelectorAll('li')[1]).toHaveTextContent(/target_3/)
-      expect(document.querySelectorAll('li')[2]).toHaveTextContent(/target_2/)
+      // assert available targets appear on click
+      await userEvent.type(screen.getByTestId('false_targets').querySelector('input') as HTMLInputElement, 'target')
+
+      const targetsInputList = screen.getAllByRole('listitem')
+      expect(targetsInputList[0]).toHaveTextContent(/target_4/)
+      expect(targetsInputList[1]).toHaveTextContent(/target_3/)
+      expect(targetsInputList[2]).toHaveTextContent(/target_2/)
     })
 
     test('it should update Target Groups for a variation correctly', async () => {
@@ -512,7 +510,7 @@ describe('TargetingRulesTab', () => {
       await waitFor(() => screen.getByText('target_2'))
       await userEvent.click(screen.getByText('target_2'))
 
-      // update percentage rollout target grourp
+      // update percentage rollout target group
       const targetGroup = document.querySelector(
         'input[name="targetingRuleItems[1].clauses[0].values[0]"]'
       ) as HTMLElement

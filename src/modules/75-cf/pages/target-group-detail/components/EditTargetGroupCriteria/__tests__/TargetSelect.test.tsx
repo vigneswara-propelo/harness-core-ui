@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import type { Target } from 'services/cf'
@@ -36,7 +37,9 @@ const renderComponent = (props: Partial<TargetSelectProps> = {}): RenderResult =
       }}
       queryParams={{ environment: 'env' }}
     >
-      <TargetSelect environmentIdentifier="env" fieldName="testField" label="Field" {...props} />
+      <Formik initialValues={{}} onSubmit={jest.fn()}>
+        <TargetSelect environmentIdentifier="env" fieldName="testField" label="Field" {...props} />
+      </Formik>
     </TestWrapper>
   )
 

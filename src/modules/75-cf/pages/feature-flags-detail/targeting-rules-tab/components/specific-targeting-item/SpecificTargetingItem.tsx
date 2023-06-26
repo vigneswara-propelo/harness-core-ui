@@ -11,6 +11,7 @@ import React, { ReactElement } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { Segment, Target } from 'services/cf'
+import { renderMultiSelectListItem } from '@cf/components/MultiSelectListItem/MultiSelectListItem'
 import type { FormVariationMap, VariationColorMap, VariationTarget, VariationTargetGroup } from '../../types'
 import DisabledFeatureTooltip from '../disabled-feature-tooltip/DisabledFeatureTooltip'
 
@@ -75,7 +76,8 @@ const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement 
               multiSelectProps={{
                 allowCreatingNewItems: false,
                 placeholder: getString('cf.featureFlags.rules.searchTargets'),
-                onQueryChange: query => refetchTargets(query)
+                onQueryChange: query => refetchTargets(query),
+                itemRender: renderMultiSelectListItem
               }}
               disabled={disabled}
             />
@@ -95,7 +97,8 @@ const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement 
               multiSelectProps={{
                 allowCreatingNewItems: false,
                 placeholder: getString('cf.featureFlags.rules.searchTargetGroups'),
-                onQueryChange: query => refetchSegments(query)
+                onQueryChange: query => refetchSegments(query),
+                itemRender: renderMultiSelectListItem
               }}
               disabled={disabled}
             />
