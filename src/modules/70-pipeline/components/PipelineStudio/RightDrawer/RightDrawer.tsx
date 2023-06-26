@@ -889,15 +889,12 @@ export function RightDrawer(): React.ReactElement {
     isRollback: boolean
   ): Promise<void> => {
     try {
-      const stepType =
-        (data?.stepConfig?.node as StepElementConfig)?.type ||
-        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef) ||
-        (stageType as string)
+      const childType = selectedTemplate.childType || (stageType as string)
 
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         filterProperties: {
-          childTypes: [stepType]
+          childTypes: [childType]
         },
         selectedTemplate,
         gitDetails,
