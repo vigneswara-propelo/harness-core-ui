@@ -222,7 +222,18 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   HelmRepoOverride: [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart, ManifestStoreMap.S3, ManifestStoreMap.Gcs],
   AwsLambdaFunctionDefinition: [...gitStoreTypes, ManifestStoreMap.Harness],
   AwsLambdaFunctionAliasDefinition: [...gitStoreTypes, ManifestStoreMap.Harness],
-  AwsSamDirectory: [...gitStoreTypes, ManifestStoreMap.Harness]
+  AwsSamDirectory: [...gitStoreTypes]
+}
+
+export const getManifestStoresByDeploymentType = (
+  selectedDeploymentType: ServiceDefinition['type'],
+  selectedManifest: ManifestTypes | null
+): ManifestStores[] => {
+  if (selectedDeploymentType === ServiceDeploymentType.AwsSam && selectedManifest === ManifestDataType.Values) {
+    const valuesManifestStores = ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
+    return valuesManifestStores.filter(manifestStore => manifestStore !== ManifestStoreMap.Harness)
+  }
+  return ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {

@@ -139,6 +139,23 @@ function AwsSamDeployStepInputSet(props: AwsSamDeployStepInputSetProps): React.R
         </div>
       )}
 
+      {isValueRuntimeInput(get(template, `spec.stackName`)) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <TextFieldInputSetView
+            name={`${prefix}spec.stackName`}
+            label={getString('optionalField', { name: getString('cd.cloudFormation.stackName') })}
+            placeholder={getString('common.enterPlaceholder', { name: getString('cd.cloudFormation.stackName') })}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            fieldPath={`spec.stackName`}
+            template={template}
+          />
+        </div>
+      )}
+
       <AwsSamBuildDeployStepOptionalFieldsInputSet {...props} />
     </>
   )

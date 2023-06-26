@@ -61,7 +61,6 @@ import {
   ManifestStoreMap,
   manifestTypeIcons,
   manifestTypeLabels,
-  ManifestTypetoStoreMap,
   ManifestToPathKeyMap,
   getManifestLocation,
   showAddManifestBtn,
@@ -70,7 +69,8 @@ import {
   ManifestToPathMap,
   isECSTypeManifest,
   TASManifestAllowedPaths,
-  TASManifestTypes
+  TASManifestTypes,
+  getManifestStoresByDeploymentType
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -651,7 +651,7 @@ function ManifestListView({
         <div className={css.createConnectorWizard}>
           <ManifestWizard
             types={availableManifestTypes}
-            manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
+            manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest)}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}

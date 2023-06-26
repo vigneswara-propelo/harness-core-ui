@@ -17,7 +17,6 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
-import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamBuildStepInitialValues, AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { getHasValuesAsRuntimeInputFromTemplate } from '@pipeline/utils/CIUtils'
@@ -128,23 +127,6 @@ export function AwsSamBuildDeployStepOptionalFieldsInputSet(
             ? 'cd.steps.awsSamBuildStep.awsSamBuildCommandOptions'
             : 'cd.steps.awsSamDeployStep.awsSamDeployCommandOptions'
         })}
-
-      {isValueRuntimeInput(get(template, `spec.stackName`)) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${prefix}spec.stackName`}
-            label={getString('optionalField', { name: getString('cd.cloudFormation.stackName') })}
-            placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.stackName`}
-            template={template}
-          />
-        </div>
-      )}
 
       <AwsSamServerlessStepCommonOptionalFieldsInputSet inputSetData={inputSetData} allowableTypes={allowableTypes} />
 

@@ -92,6 +92,9 @@ const AwsSamDeployStepEdit = (
     spec: Yup.object().shape({
       connectorRef: Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.connectorLabel') })
+      ),
+      stackName: Yup.string().required(
+        getString('common.validation.fieldIsRequired', { name: getString('cd.cloudFormation.stackName') })
       )
     })
   })
@@ -214,6 +217,35 @@ const AwsSamDeployStepEdit = (
                 )}
               </Container>
 
+              <Container className={stepCss.formGroup}>
+                <FormInput.MultiTextInput
+                  name="spec.stackName"
+                  label={getString('cd.cloudFormation.stackName')}
+                  placeholder={getString('common.enterPlaceholder', { name: getString('cd.cloudFormation.stackName') })}
+                  disabled={readonly}
+                  multiTextInputProps={{
+                    expressions,
+                    disabled: readonly,
+                    allowableTypes
+                  }}
+                />
+                {getMultiTypeFromValue((formik.values as AwsSamDeployStepFormikValues).spec?.stackName) ===
+                  MultiTypeInputType.RUNTIME &&
+                  !readonly && (
+                    <ConfigureOptions
+                      value={(formik.values as AwsSamDeployStepFormikValues).spec?.stackName as string}
+                      type="String"
+                      variableName="spec.stackName"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('spec.stackName', value)
+                      }}
+                      isReadonly={readonly}
+                    />
+                  )}
+              </Container>
+
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
                   id="aws-sam-deploy-optional-accordion"
@@ -226,7 +258,6 @@ const AwsSamDeployStepEdit = (
                         stepViewType={stepViewType}
                         allowableTypes={allowableTypes}
                         formik={formik as FormikProps<AwsSamBuildDeployStepFormikVaues>}
-                        isAwsSamDeployStep={true}
                       />
                     </Container>
                   }

@@ -26,11 +26,10 @@ interface AwsSamDeployStepOptionalFieldsProps {
   readonly?: boolean
   formik: FormikProps<AwsSamBuildDeployStepFormikVaues>
   isAwsSamBuildStep?: boolean
-  isAwsSamDeployStep?: boolean
 }
 
 export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptionalFieldsProps): React.ReactElement {
-  const { readonly, allowableTypes, formik, isAwsSamBuildStep, isAwsSamDeployStep } = props
+  const { readonly, allowableTypes, formik, isAwsSamBuildStep } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -50,7 +49,6 @@ export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptio
             : getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions')
         }
         isAwsSamBuildStep={isAwsSamBuildStep}
-        isAwsSamDeployStep={isAwsSamDeployStep}
       />
 
       <Container className={stepCss.formGroup}>

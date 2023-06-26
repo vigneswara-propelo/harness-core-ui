@@ -43,7 +43,6 @@ interface AwsSamServerlessStepCommonOptionalFieldsEditProps {
   commandOptionsFieldName?: string
   commandOptionsFieldLabel?: string
   isAwsSamBuildStep?: boolean
-  isAwsSamDeployStep?: boolean
 }
 
 export function AwsSamServerlessStepCommonOptionalFieldsEdit(
@@ -57,8 +56,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
     versionFieldLabel,
     commandOptionsFieldName,
     commandOptionsFieldLabel,
-    isAwsSamBuildStep,
-    isAwsSamDeployStep
+    isAwsSamBuildStep
   } = props
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -163,37 +161,6 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           'spec.samBuildDockerRegistryConnectorRef',
           getString('cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry')
         )}
-
-      {isAwsSamDeployStep && (
-        <Container className={stepCss.formGroup}>
-          <FormInput.MultiTextInput
-            name="spec.stackName"
-            label={getString('cd.cloudFormation.stackName')}
-            placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-          />
-          {getMultiTypeFromValue((formik.values as AwsSamDeployStepFormikValues).spec?.stackName) ===
-            MultiTypeInputType.RUNTIME &&
-            !readonly && (
-              <ConfigureOptions
-                value={(formik.values as AwsSamDeployStepFormikValues).spec?.stackName as string}
-                type="String"
-                variableName="spec.stackName"
-                showRequiredField={false}
-                showDefaultField={false}
-                onChange={value => {
-                  formik.setFieldValue('spec.stackName', value)
-                }}
-                isReadonly={readonly}
-              />
-            )}
-        </Container>
-      )}
 
       <Container className={cx(stepCss.formGroup, stepCss.md)}>
         <FormMultiTypeCheckboxField

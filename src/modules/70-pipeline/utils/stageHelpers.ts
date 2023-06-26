@@ -681,7 +681,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
   [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details',
   [ServiceDeploymentType.Asg]: 'AWS Details',
-  [ServiceDeploymentType.GoogleCloudFunctions]: 'Google Cloud Provider Details'
+  [ServiceDeploymentType.GoogleCloudFunctions]: 'Google Cloud Provider Details',
+  [ServiceDeploymentType.AwsSam]: 'Amazon Web Services Details'
 }
 
 export const getSelectedDeploymentType = (
@@ -847,7 +848,7 @@ export const isEnvironmentPresent = (stage: DeploymentStageElementConfig): boole
 }
 
 export const isExecutionFieldPresent = (stage: DeploymentStageElementConfig): boolean => {
-  return !!(stage.spec?.execution && stage.spec?.execution.steps && stage.spec?.execution.steps?.length > 0)
+  return !!(stage.spec?.execution && stage.spec?.execution.steps && stage.spec?.execution.steps?.length)
 }
 
 export const isServiceDefinitionSpecDataPresent = (stage: DeploymentStageElementConfig): boolean => {
