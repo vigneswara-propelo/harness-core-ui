@@ -279,7 +279,9 @@ export const ExecutionCell: CellType = ({ row }) => {
   const { module } = useModuleInfo()
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
-  const useExecutionTriggerInfo = ['MANUAL', 'WEBHOOK_CUSTOM'].includes(get(data, 'executionTriggerInfo.triggerType'))
+  const useExecutionTriggerInfo = ['MANUAL', 'SCHEDULER_CRON', 'WEBHOOK', 'WEBHOOK_CUSTOM'].includes(
+    get(data, 'executionTriggerInfo.triggerType')
+  )
   const name = useExecutionTriggerInfo
     ? get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
       get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.name') ||
