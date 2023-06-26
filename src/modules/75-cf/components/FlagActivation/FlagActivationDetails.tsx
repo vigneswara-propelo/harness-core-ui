@@ -76,7 +76,6 @@ const VariationsList: React.FC<{
   const { variations } = featureFlag
   const { getString } = useStrings()
   const typeToStringMapping = useFeatureFlagTypeToStringMapping()
-  const { activeEnvironment } = useActiveEnvironment()
 
   return (
     <Layout.Vertical margin={{ bottom: 'xlarge' }}>
@@ -93,9 +92,7 @@ const VariationsList: React.FC<{
           feature={featureFlag}
           permission={{
             permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-            resource: activeEnvironment
-              ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
-              : { resourceType: ResourceType.FEATUREFLAG }
+            resource: { resourceType: ResourceType.ENVIRONMENT }
           }}
           onSuccess={onEditSuccess}
           minimal

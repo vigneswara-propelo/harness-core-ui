@@ -117,9 +117,7 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
           onClick={() => openModal()}
           permission={{
             permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-            resource: activeEnvironment
-              ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
-              : { resourceType: ResourceType.FEATUREFLAG }
+            resource: { resourceType: ResourceType.ENVIRONMENT }
           }}
           featuresProps={{
             featuresRequest: {

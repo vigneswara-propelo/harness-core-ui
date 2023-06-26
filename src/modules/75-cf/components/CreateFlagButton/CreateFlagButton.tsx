@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import React, { FC } from 'react'
 import { ButtonVariation } from '@harness/uicore'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -15,7 +15,6 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 
 export interface CreateFlagButtonProps {
   disabled?: boolean
@@ -23,10 +22,7 @@ export interface CreateFlagButtonProps {
   isLinkVariation?: boolean
 }
 
-const CreateFlagButton = (props: CreateFlagButtonProps): ReactElement => {
-  const { disabled, showModal, isLinkVariation } = props
-  const { activeEnvironment } = useActiveEnvironment()
-
+const CreateFlagButton: FC<CreateFlagButtonProps> = ({ disabled, showModal, isLinkVariation }) => {
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
   const { trackEvent } = useTelemetry()
@@ -40,6 +36,7 @@ const CreateFlagButton = (props: CreateFlagButtonProps): ReactElement => {
         }
       }
     : undefined
+
   return (
     <RbacButton
       data-testid="create-flag-button"
@@ -57,9 +54,7 @@ const CreateFlagButton = (props: CreateFlagButtonProps): ReactElement => {
       margin={isLinkVariation ? { top: 'xlarge' } : {}}
       permission={{
         permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-        resource: activeEnvironment
-          ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
-          : { resourceType: ResourceType.FEATUREFLAG }
+        resource: { resourceType: ResourceType.ENVIRONMENT }
       }}
       {...planEnforcementProps}
     />
