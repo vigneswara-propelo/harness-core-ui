@@ -10,10 +10,10 @@ import type { IconName } from '@harness/uicore'
 import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
-import type { TemplateSummaryResponse } from 'services/template-ng'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
+import { TemplateSummaryResponse } from 'services/template-ng'
 import { MonitoredTemplateCanvasWithRef } from './MonitoredServiceTemplateCanvas'
 import { getMonitoredServiceTemplateScope } from './MonitoredServiceTemplateCanvas.utils'
 
@@ -36,11 +36,14 @@ export class MonitoredServiceTemplate extends Template {
   renderTemplateInputsForm(
     props: TemplateInputsProps & {
       accountId: string
-      template: TemplateInputsProps['template'] & { templateScope: TemplateSummaryResponse['templateScope'] }
+      template: TemplateInputsProps['template'] & {
+        templateScope: TemplateSummaryResponse['templateScope']
+        gitDetails: TemplateSummaryResponse['gitDetails']
+      }
     }
   ): JSX.Element {
     const { template, accountId } = props
-    const { identifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '' } = template
+    const { identifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '', gitDetails } = template
 
     const templateScope = getMonitoredServiceTemplateScope(accountId, template)
 
@@ -50,7 +53,8 @@ export class MonitoredServiceTemplate extends Template {
       orgIdentifier,
       projectIdentifier,
       versionLabel,
-      templateScope
+      templateScope,
+      gitDetails
     }
     return <MonitoredServiceInputSetsTemplate templateData={templateData} />
   }

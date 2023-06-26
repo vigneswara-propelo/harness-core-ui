@@ -35,6 +35,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeBasedProjectPathParams } from '@common/components/EntityReference/EntityReference'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import ServiceEnvironmentInputSet from './components/ServiceEnvironmentInputSet/ServiceEnvironmentInputSet'
 import HealthSourceInputset from './components/HealthSourceInputset/HealthSourceInputset'
 import MonitoredServiceInputsetVariables from './components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
@@ -71,8 +72,16 @@ export default function MonitoredServiceInputSetsTemplate({
     accountId: templateAccountId,
     projectIdentifier: templateProjectId,
     orgIdentifier: templateOrgId,
-    templateScope: templateRefScope
+    templateScope: templateRefScope,
+    gitDetails
   } = templateRefData || {}
+
+  const gitXQueryParam = {
+    storeMetadata: {},
+    params: pathParams,
+    repoIdentifier: gitDetails?.repoIdentifier,
+    branch: gitDetails?.branch
+  }
 
   // InputSet Yaml
   const {
@@ -92,6 +101,7 @@ export default function MonitoredServiceInputSetsTemplate({
         },
         templateRefScope as Scope
       ),
+      ...getGitQueryParamsWithParentScope(gitXQueryParam),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
     },
@@ -114,6 +124,7 @@ export default function MonitoredServiceInputSetsTemplate({
         },
         templateRefScope as Scope
       ),
+      ...getGitQueryParamsWithParentScope(gitXQueryParam),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
     }
@@ -151,7 +162,9 @@ export default function MonitoredServiceInputSetsTemplate({
 
   const templateIdentifierWithScope = useMemo(
     () =>
-      templateScope !== Scope.PROJECT ? `${templateScope}.${templateRefData?.identifier}` : templateRefData?.identifier,
+      templateScope && templateScope !== Scope.PROJECT
+        ? `${templateScope}.${templateRefData?.identifier}`
+        : templateRefData?.identifier,
     [templateScope, templateRefData?.identifier]
   )
 
@@ -274,6 +287,7 @@ export default function MonitoredServiceInputSetsTemplate({
                     templateRef: templateIdentifierWithScope,
                     versionLabel: templateRefData?.versionLabel
                   }}
+                  storeMetadata={{ branch: gitDetails?.branch }}
                   isReadonly={isReadOnlyInputSet}
                   onOpenTemplateSelector={onUseTemplate}
                 />
