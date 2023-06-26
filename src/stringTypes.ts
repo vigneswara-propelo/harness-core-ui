@@ -1722,6 +1722,7 @@ export interface StringsMap {
   'defaultSettings.enablePipelineExecutionAuditEvents': string
   'defaultSettings.enableServiceOverrideV2': string
   'defaultSettings.enforceGitExperience': string
+  'defaultSettings.exportServiceVariablesAsEnvVariables': string
   'defaultSettings.fetchingDefaultConnector': string
   'defaultSettings.gcpIncludeDiscounts': string
   'defaultSettings.gcpIncludeTaxes': string
