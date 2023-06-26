@@ -26,10 +26,12 @@ import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/Abs
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import { OsTypes } from '@pipeline/utils/constants'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import type { MultiTypeListType, MultiTypeListUIType } from '../StepsTypes'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import { KubernetesStepGroupInfra } from './KubernetesStepGroupInfra'
 import type { K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues, TolerationFormik } from './StepGroupUtil'
+import { StepGroupCustomStepProps } from './StepGroupStep'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface StepGroupWidgetProps {
@@ -39,6 +41,7 @@ interface StepGroupWidgetProps {
   stepViewType?: StepViewType
   readonly?: boolean
   allowableTypes?: AllowedTypes
+  customStepProps: StepGroupCustomStepProps
 }
 
 const validateUniqueList = ({
@@ -51,7 +54,7 @@ const validateUniqueList = ({
   getString: UseStringsReturn['getString']
   uniqueKey?: string
   stringKey?: keyof StringsMap
-}): any => {
+}): Yup.NotRequiredArraySchema<unknown> | Yup.StringSchema => {
   if (Array.isArray(value)) {
     return Yup.array().test('valuesShouldBeUnique', getString(stringKey || 'validation.uniqueValues'), list => {
       if (!list) {
@@ -93,7 +96,8 @@ function StepGroupStepEdit(
   props: StepGroupWidgetProps,
   formikRef: StepFormikFowardRef<StepGroupFormikValues>
 ): React.ReactElement {
-  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
+  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, customStepProps } = props
+  const { selectedStage } = customStepProps
 
   const { getString } = useStrings()
   const { CDS_CONTAINER_STEP_GROUP } = useFeatureFlags()
@@ -120,7 +124,12 @@ function StepGroupStepEdit(
     }
   }, [isContainerBasedExecutionEnabled, formikRef])
 
-  const getFieldSchema = (value: MapUIType, regex: RegExp): Record<string, any> => {
+  const getFieldSchema = (
+    value: MapUIType,
+    regex: RegExp
+  ):
+    | Yup.NotRequiredArraySchema<Yup.Shape<object | undefined, { key: string | undefined; value: string | undefined }>>
+    | Yup.StringSchema => {
     if (Array.isArray(value)) {
       return Yup.array()
         .of(
@@ -211,8 +220,10 @@ function StepGroupStepEdit(
           },
           message: getString('common.validation.fieldIsRequired', { name: getString('typeLabel') })
         }),
-      annotations: Yup.lazy((value: MapUIType) => getFieldSchema(value, k8sAnnotationRegex) as Yup.Schema<MapUIType>),
-      labels: Yup.lazy((value: MapUIType) => getFieldSchema(value, k8sLabelRegex) as Yup.Schema<MapUIType>),
+      annotations: Yup.lazy(
+        (value: MapUIType) => getFieldSchema(value, k8sAnnotationRegex) as unknown as Yup.Schema<MapUIType>
+      ),
+      labels: Yup.lazy((value: MapUIType) => getFieldSchema(value, k8sLabelRegex) as unknown as Yup.Schema<MapUIType>),
       addCapabilities: Yup.lazy(value => validateUniqueList({ value, getString })),
       dropCapabilities: Yup.lazy(value => validateUniqueList({ value, getString })),
       tolerations: Yup.lazy(value =>
@@ -304,7 +315,7 @@ function StepGroupStepEdit(
       const sharedPaths: ListUIType | string =
         typeof initialValues.sharedPaths === 'string'
           ? initialValues.sharedPaths
-          : (initialValues.sharedPaths as any)
+          : initialValues.sharedPaths
               ?.filter((path: string) => !!path)
               ?.map((_value: string) => ({
                 id: uuid('', nameSpace()),
@@ -338,7 +349,7 @@ function StepGroupStepEdit(
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
               </div>
-              {CDS_CONTAINER_STEP_GROUP && (
+              {CDS_CONTAINER_STEP_GROUP && selectedStage.stage?.type !== StageType.BUILD && (
                 <>
                   <Switch
                     checked={isContainerBasedExecutionEnabled}

@@ -14,9 +14,15 @@ import type { K8sDirectInfra, StepGroupElementConfig } from 'services/cd-ng'
 import { InputSetData, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { StageElementWrapper, DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StepGroupStepEditRef } from './StepGroupStepEdit'
 import { StepGroupStepInputSetMode } from './StepGroupStepInputSetMode'
 import { getModifiedFormikValues, K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues } from './StepGroupUtil'
+
+export interface StepGroupCustomStepProps {
+  selectedStage: StageElementWrapper<DeploymentStageElementConfig>
+  stageIdentifier: string
+}
 
 export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
   protected type = StepType.StepGroup
@@ -78,8 +84,17 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
   }
 
   renderStep(props: StepProps<StepGroupElementConfig>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, formikRef, isNewStep, readonly, allowableTypes, inputSetData } =
-      props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      formikRef,
+      isNewStep,
+      readonly,
+      allowableTypes,
+      inputSetData,
+      customStepProps
+    } = props
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
@@ -99,6 +114,7 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
         ref={formikRef}
         readonly={readonly}
         allowableTypes={allowableTypes}
+        customStepProps={customStepProps as StepGroupCustomStepProps}
       />
     )
   }

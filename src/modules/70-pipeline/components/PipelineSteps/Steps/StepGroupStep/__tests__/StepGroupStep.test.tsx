@@ -16,6 +16,7 @@ import { awsConnectorListResponse } from '@connectors/components/ConnectorRefere
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepGroupElementConfig } from 'services/pipeline-ng'
 import { StepGroupStep } from '../StepGroupStep'
 import { StepGroupStepEditRef } from '../StepGroupStepEdit'
@@ -37,7 +38,7 @@ jest.mock('services/portal', () => ({
   })
 }))
 
-const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined) => {
+const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined): string => {
   return vars?.stringToAppend ? `${str}_${vars.stringToAppend}` : str
 }
 
@@ -72,6 +73,16 @@ describe('StepGroupStep tests', () => {
         }}
         isNewStep={false}
         stepViewType={StepViewType.Edit}
+        customStepProps={{
+          stageIdentifier: 'stage_1',
+          selectedStage: {
+            stage: {
+              identifier: 'stage_1',
+              name: 'Stage 1',
+              type: StageType.DEPLOY
+            }
+          }
+        }}
       />
     )
 
@@ -92,6 +103,16 @@ describe('StepGroupStep tests', () => {
             name: ''
           }}
           stepViewType={StepViewType.Edit}
+          customStepProps={{
+            stageIdentifier: 'stage_1',
+            selectedStage: {
+              stage: {
+                identifier: 'stage_1',
+                name: 'Stage 1',
+                type: StageType.DEPLOY
+              }
+            }
+          }}
         />
       </TestWrapper>
     )
@@ -128,6 +149,16 @@ describe('StepGroupStep tests', () => {
         testWrapperProps={{
           defaultFeatureFlagValues: {
             CDS_CONTAINER_STEP_GROUP: true
+          }
+        }}
+        customStepProps={{
+          stageIdentifier: 'stage_1',
+          selectedStage: {
+            stage: {
+              identifier: 'stage_1',
+              name: 'Stage 1',
+              type: StageType.DEPLOY
+            }
           }
         }}
       />
@@ -275,6 +306,16 @@ describe('StepGroupStep tests', () => {
             CDS_CONTAINER_STEP_GROUP: true
           }
         }}
+        customStepProps={{
+          stageIdentifier: 'stage_1',
+          selectedStage: {
+            stage: {
+              identifier: 'stage_1',
+              name: 'Stage 1',
+              type: StageType.DEPLOY
+            }
+          }
+        }}
       />
     )
 
@@ -344,6 +385,16 @@ describe('StepGroupStep tests', () => {
         testWrapperProps={{
           defaultFeatureFlagValues: {
             CDS_CONTAINER_STEP_GROUP: true
+          }
+        }}
+        customStepProps={{
+          stageIdentifier: 'stage_1',
+          selectedStage: {
+            stage: {
+              identifier: 'stage_1',
+              name: 'Stage 1',
+              type: StageType.DEPLOY
+            }
           }
         }}
       />

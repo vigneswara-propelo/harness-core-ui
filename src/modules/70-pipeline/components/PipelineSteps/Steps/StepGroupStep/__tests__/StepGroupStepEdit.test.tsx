@@ -13,6 +13,7 @@ import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepGroupElementConfig } from 'services/pipeline-ng'
 import { StepGroupStep } from '../StepGroupStep'
 import { StepGroupStepEditRef } from '../StepGroupStepEdit'
@@ -64,6 +65,16 @@ describe('StepGroupStepEdit tests', () => {
           }}
           isNewStep={false}
           stepViewType={StepViewType.Edit}
+          customStepProps={{
+            stageIdentifier: 'stage_1',
+            selectedStage: {
+              stage: {
+                identifier: 'stage_1',
+                name: 'Stage 1',
+                type: StageType.DEPLOY
+              }
+            }
+          }}
         />
       </TestWrapper>
     )
@@ -85,6 +96,16 @@ describe('StepGroupStepEdit tests', () => {
             name: ''
           }}
           stepViewType={StepViewType.Edit}
+          customStepProps={{
+            stageIdentifier: 'stage_1',
+            selectedStage: {
+              stage: {
+                identifier: 'stage_1',
+                name: 'Stage 1',
+                type: StageType.DEPLOY
+              }
+            }
+          }}
         />
       </TestWrapper>
     )
@@ -106,7 +127,7 @@ describe('StepGroupStepEdit tests', () => {
     )
   })
 
-  test('renders as expected in EDIT view when stepGroupInfra IS present', async () => {
+  test('renders as expected in EDIT view when stepGroupInfra IS present and state type is Deployment', async () => {
     const onUpdate = jest.fn()
     const ref = createRef<StepFormikRef<StepGroupElementConfig>>()
 
@@ -118,6 +139,16 @@ describe('StepGroupStepEdit tests', () => {
           stepViewType={StepViewType.Edit}
           ref={ref}
           onUpdate={onUpdate}
+          customStepProps={{
+            stageIdentifier: 'stage_1',
+            selectedStage: {
+              stage: {
+                identifier: 'stage_1',
+                name: 'Stage 1',
+                type: StageType.DEPLOY
+              }
+            }
+          }}
         />
       </TestWrapper>
     )
@@ -292,5 +323,64 @@ describe('StepGroupStepEdit tests', () => {
 
     await act(async () => ref.current?.submitForm())
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
+  })
+
+  test('renders as expected in EDIT view when stepGroupInfra IS present and state type is Build', async () => {
+    const onUpdate = jest.fn()
+    const ref = createRef<StepFormikRef<StepGroupElementConfig>>()
+
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ CDS_CONTAINER_STEP_GROUP: true }}>
+        <StepGroupStepEditRef
+          initialValues={{
+            identifier: 'container_step_group_1',
+            name: 'Container Step Group 1',
+            steps: []
+          }}
+          isNewStep={false}
+          stepViewType={StepViewType.Edit}
+          ref={ref}
+          onUpdate={onUpdate}
+          customStepProps={{
+            stageIdentifier: 'stage_1',
+            selectedStage: {
+              stage: {
+                identifier: 'stage_1',
+                name: 'Stage 1',
+                type: StageType.BUILD
+              }
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    const queryByName = (nameValue: string): HTMLElement | null => queryByNameAttribute(nameValue, container)
+
+    // Name
+    const nameInput = queryByName('name') as HTMLInputElement
+    expect(nameInput).toBeInTheDocument()
+    expect(nameInput.value).toBe('Container Step Group 1')
+
+    // Enable container based execution switch should be ON
+    const enableContainerBasedExecutionSwitch = screen.queryByText('pipeline.enableContainerBasedExecution')
+    expect(enableContainerBasedExecutionSwitch).not.toBeInTheDocument()
+
+    // Namespace
+    const namespaceInput = queryByName('namespace') as HTMLInputElement
+    expect(namespaceInput).not.toBeInTheDocument()
+
+    // Open Optional Configurations
+    const optionalConfigAccordionTitle = screen.queryByText('common.optionalConfig')
+    expect(optionalConfigAccordionTitle).not.toBeInTheDocument()
+
+    await act(async () => ref.current?.submitForm())
+    await waitFor(() =>
+      expect(onUpdate).toHaveBeenCalledWith({
+        identifier: 'container_step_group_1',
+        name: 'Container Step Group 1',
+        steps: []
+      })
+    )
   })
 })
