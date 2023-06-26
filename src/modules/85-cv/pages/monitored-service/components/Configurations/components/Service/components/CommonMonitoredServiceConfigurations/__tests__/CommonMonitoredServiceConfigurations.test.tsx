@@ -115,8 +115,8 @@ describe('CommonMonitoredServiceConfigurations', () => {
   test('renders tabs correctly', () => {
     render(<WrapperComponent {...props} />)
     const overViewTab = screen.getByRole('tab', { name: 'overview' })
-    const healthSourceTab = screen.getByRole('tab', { name: 'pipeline.verification.healthSourceLabel' })
-    const changeSourceTab = screen.getByRole('tab', { name: 'changeSource' })
+    const healthSourceTab = screen.getByRole('tab', { name: 'connectors.cdng.healthSources.label' })
+    const changeSourceTab = screen.getByRole('tab', { name: 'cv.navLinks.adminSideNavLinks.activitySources' })
 
     expect(overViewTab).toBeInTheDocument()
     expect(healthSourceTab).toBeInTheDocument()
@@ -126,8 +126,8 @@ describe('CommonMonitoredServiceConfigurations', () => {
   test('should not show the tabs if the component is rendered in create scenario', () => {
     const updatedProps = { ...props, identifier: '' }
     const { queryByText } = render(<WrapperComponent {...updatedProps} />)
-    const healthSourceTab = queryByText('pipeline.verification.healthSourceLabel')
-    const changeSourceTab = queryByText('changeSource')
+    const healthSourceTab = queryByText('connectors.cdng.healthSources.label')
+    const changeSourceTab = queryByText('cv.navLinks.adminSideNavLinks.activitySources')
 
     expect(healthSourceTab).not.toBeInTheDocument()
     expect(changeSourceTab).not.toBeInTheDocument()
@@ -135,7 +135,7 @@ describe('CommonMonitoredServiceConfigurations', () => {
 
   test('should render', async () => {
     const { container, getByText, queryByText } = render(<WrapperComponent {...props} />)
-    userEvent.click(queryByText('changeSource')!)
+    await userEvent.click(queryByText('cv.navLinks.adminSideNavLinks.activitySources')!)
     await waitFor(() => expect(getByText('cv.changeSource.addChangeSource')).toBeTruthy())
     act(() => {
       fireEvent.click(getByText('cv.changeSource.addChangeSource'))

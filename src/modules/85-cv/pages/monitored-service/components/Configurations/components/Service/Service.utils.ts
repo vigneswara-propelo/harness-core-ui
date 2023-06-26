@@ -122,8 +122,12 @@ export function updateMonitoredServiceDTOOnTypeChange(
   return monitoredServiceDTO
 }
 
-export function getIsNotifcationsSectionHidden(isTemplate?: boolean, config?: MonitoredServiceConfig): boolean {
-  return Boolean(isTemplate || config)
+export function getIsNotifcationsSectionHidden(
+  isTemplate?: boolean,
+  config?: MonitoredServiceConfig,
+  identifier?: string
+): boolean {
+  return Boolean(isTemplate || config || !identifier)
 }
 
 export function getIsHealthSrcSectionHidden(config: MonitoredServiceConfig | undefined, identifier: string): boolean {
@@ -135,13 +139,6 @@ export function getIsChangeSrcSectionHidden(config: MonitoredServiceConfig | und
   const isChangeSourceSectionHidden = !config?.listing?.changeSource
   const isCreateModeForNonCDModules = !isChangeSourceSectionHidden && !identifier
   return Boolean(config && (isChangeSourceSectionHidden || isCreateModeForNonCDModules))
-}
-
-export function isRenderConfigDrivenConfigsInEditScenario(
-  config: MonitoredServiceConfig | undefined,
-  identifier: string
-): boolean {
-  return Boolean(config && identifier)
 }
 
 export function shouldShowSourcesSection(config: MonitoredServiceConfig | undefined): boolean {

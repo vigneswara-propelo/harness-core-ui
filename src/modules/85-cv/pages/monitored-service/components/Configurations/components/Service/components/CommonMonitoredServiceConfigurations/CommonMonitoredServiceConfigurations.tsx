@@ -1,4 +1,4 @@
-import { Container, Tab, Tabs, Text } from '@harness/uicore'
+import { Container, Tab, Tabs } from '@harness/uicore'
 import React from 'react'
 import { FormikContextType, useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -13,13 +13,16 @@ import { useStrings } from 'framework/strings'
 import {
   getIsChangeSrcSectionHidden,
   getIsHealthSrcSectionHidden,
+  getIsNotifcationsSectionHidden,
   onSave,
+  shouldShowSaveAndDiscard,
   updateMonitoredServiceDTOOnTypeChange
 } from '../../Service.utils'
 import ChangeSourceTableContainer from '../ChangeSourceTableContainer/ChangeSourceTableContainer'
 import HealthSourceTableContainer from '../HealthSourceTableContainer/HealthSourceTableContainer'
 import type { MonitoredServiceForm } from '../../Service.types'
 import MonitoredServiceOverview from '../MonitoredServiceOverview/MonitoredServiceOverview'
+import MonitoredServiceNotificationsContainer from '../MonitoredServiceNotificationsContainer/MonitoredServiceNotificationsContainer'
 import css from './CommonMonitoredServiceConfigurations.module.scss'
 
 export interface CommonMonitoredServiceConfigurationsProps {
@@ -68,6 +71,7 @@ export default function CommonMonitoredServiceConfigurations(
   const isHealthSrcSectionHidden = getIsHealthSrcSectionHidden(config, identifier)
   const { projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
   const { getString } = useStrings()
+  const isNotificationsSectionHidden = getIsNotifcationsSectionHidden(isTemplate, config, identifier)
 
   const handleMonitoredServiceTypeChange = (type: MonitoredServiceDTO['type']): void => {
     if (type === formik.values.type) {
@@ -85,25 +89,27 @@ export default function CommonMonitoredServiceConfigurations(
       <Tabs id={'monitoredServiceConfigurations'} defaultSelectedTabId={'monitoredServiceOverview'}>
         <Tab
           id="monitoredServiceOverview"
-          title={<Text>{getString('overview')}</Text>}
+          title={getString('overview')}
           panel={
             <>
               <Container className={css.saveDiscardButton}>
-                <SaveAndDiscardButton
-                  isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
-                  onSave={() => onSave({ formik, onSuccess })}
-                  onDiscard={() => {
-                    formik.resetForm()
-                    onDiscard?.()
-                  }}
-                  RbacPermission={{
-                    permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-                    resource: {
-                      resourceType: ResourceType.MONITOREDSERVICE,
-                      resourceIdentifier: projectIdentifier
-                    }
-                  }}
-                />
+                {shouldShowSaveAndDiscard(isTemplate) ? (
+                  <SaveAndDiscardButton
+                    isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
+                    onSave={() => onSave({ formik, onSuccess })}
+                    onDiscard={() => {
+                      formik.resetForm()
+                      onDiscard?.()
+                    }}
+                    RbacPermission={{
+                      permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                      resource: {
+                        resourceType: ResourceType.MONITOREDSERVICE,
+                        resourceIdentifier: projectIdentifier
+                      }
+                    }}
+                  />
+                ) : null}
               </Container>
               <MonitoredServiceOverview
                 formikProps={formik}
@@ -117,7 +123,7 @@ export default function CommonMonitoredServiceConfigurations(
         {isHealthSrcSectionHidden ? null : (
           <Tab
             id={'healthSource'}
-            title={<Text>{getString('pipeline.verification.healthSourceLabel')}</Text>}
+            title={getString('connectors.cdng.healthSources.label')}
             panel={
               <HealthSourceTableContainer
                 healthSourceListFromAPI={initialValues.sources?.healthSources}
@@ -145,7 +151,7 @@ export default function CommonMonitoredServiceConfigurations(
         {isChangeSrcSectionHidden ? null : (
           <Tab
             id={'changeSource'}
-            title={<Text>{getString('changeSource')}</Text>}
+            title={getString('cv.navLinks.adminSideNavLinks.activitySources')}
             panel={
               <ChangeSourceTableContainer
                 onEdit={values => {
@@ -159,6 +165,38 @@ export default function CommonMonitoredServiceConfigurations(
                 value={formik.values?.sources?.changeSources}
                 onSuccess={onSuccessChangeSource}
               />
+            }
+          />
+        )}
+        {isNotificationsSectionHidden ? null : (
+          <Tab
+            id={'notifications'}
+            title={getString('rbac.notifications.name')}
+            panel={
+              <>
+                <Container className={css.saveDiscardButton}>
+                  <SaveAndDiscardButton
+                    isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
+                    onSave={() => onSave({ formik, onSuccess })}
+                    onDiscard={() => {
+                      formik.resetForm()
+                      onDiscard?.()
+                    }}
+                    RbacPermission={{
+                      permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                      resource: {
+                        resourceType: ResourceType.MONITOREDSERVICE,
+                        resourceIdentifier: projectIdentifier
+                      }
+                    }}
+                  />
+                </Container>
+                <MonitoredServiceNotificationsContainer
+                  setFieldValue={formik?.setFieldValue}
+                  notificationRuleRefs={formik?.values?.notificationRuleRefs}
+                  identifier={identifier}
+                />
+              </>
             }
           />
         )}
