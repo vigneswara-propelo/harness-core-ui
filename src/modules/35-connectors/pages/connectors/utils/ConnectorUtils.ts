@@ -52,6 +52,10 @@ export interface DelegateCardInterface {
   icon?: IconName
   disabled?: boolean
 }
+export enum VaultType {
+  MANUAL = 'manual',
+  FETCH = 'fetch'
+}
 
 export enum AzureSecretKeyType {
   SECRET = 'Secret',
@@ -1997,7 +2001,8 @@ export const buildAzureKeyVaultPayload = (formData: FormData): BuildAzureKeyVaul
     spec: {
       ...pick(formData, ['tenantId', 'default', 'subscription', 'vaultName', 'delegateSelectors']),
       ...delegateOutClusterFields,
-      ...delegateInClusterFields
+      ...delegateInClusterFields,
+      vaultConfiguredManually: formData.vaultType === VaultType.MANUAL
     }
   }
 
@@ -2543,7 +2548,8 @@ export const setupAzureKeyVaultFormData = async (
 
 export const setupAzureKeyVaultNameFormData = async (connectorInfo: ConnectorInfoDTO): Promise<FormData> => {
   return {
-    vaultName: connectorInfo?.spec?.vaultName
+    vaultName: connectorInfo?.spec?.vaultName,
+    vaultType: !connectorInfo?.spec?.vaultConfiguredManually ? VaultType.FETCH : VaultType.MANUAL
   }
 }
 

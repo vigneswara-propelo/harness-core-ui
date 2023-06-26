@@ -23,6 +23,7 @@ import {
   shouldShowError
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import type { IOptionProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import {
@@ -31,14 +32,16 @@ import {
   AzureKeyVaultMetadataSpecDTO,
   useCreateConnector,
   useUpdateConnector,
-  ConnectorRequestBody
+  ConnectorRequestBody,
+  ConnectorInfoDTO
 } from 'services/cd-ng'
 import type { StepDetailsProps, ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
 import { PageSpinner } from '@common/components'
 import {
   buildAzureKeyVaultPayload,
   setupAzureKeyVaultNameFormData,
-  buildAzureKeyVaultMetadataPayload
+  buildAzureKeyVaultMetadataPayload,
+  VaultType
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
@@ -46,13 +49,18 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-
+import css from '../CreateAzureKeyVaultConnector.module.scss'
 export interface SetupVaultFormData {
   vaultName?: string
+
+  vaultType?: VaultType
 }
 
-const defaultInitialFormData: SetupVaultFormData = {
-  vaultName: undefined
+const defaultInitialFormData = (vaultManual: boolean) => {
+  return {
+    vaultName: undefined,
+    vaultType: vaultManual ? VaultType.MANUAL : VaultType.FETCH
+  }
 }
 
 const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = ({
@@ -67,7 +75,9 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess } = useToaster()
-  const [initialValues, setInitialValues] = useState(defaultInitialFormData)
+  const [initialValues, setInitialValues] = useState(
+    defaultInitialFormData((connectorInfo as ConnectorInfoDTO)?.spec?.vaultConfiguredManually) as SetupVaultFormData
+  )
   const [vaultNameOptions, setVaultNameOptions] = useState<SelectOption[]>([])
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
@@ -163,6 +173,17 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
     category: Category.CONNECTOR
   })
 
+  const vaultTypeOptions: IOptionProps[] = [
+    {
+      label: getString('connectors.azureKeyVault.labels.fetchVault'),
+      value: VaultType.FETCH
+    },
+    {
+      label: getString('connectors.azureKeyVault.labels.manuallyConfigureVault'),
+      value: VaultType.MANUAL
+    }
+  ]
+
   return (
     <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }}>{getString('connectors.azureKeyVault.labels.setupVault')}</Text>
@@ -177,7 +198,8 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
           enableReinitialize
           initialValues={initialValues}
           validationSchema={Yup.object().shape({
-            vaultName: Yup.string().required(getString('connectors.azureKeyVault.validation.vaultName'))
+            vaultName: Yup.string().required(getString('connectors.azureKeyVault.validation.vaultName')),
+            vaultType: Yup.string().required(getString('connectors.azureKeyVault.validation.vaultType'))
           })}
           onSubmit={formData => {
             trackEvent(ConnectorActions.SetupVaultSubmit, {
@@ -186,41 +208,56 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
             handleCreateOrEdit(formData)
           }}
         >
-          <FormikForm>
-            <Container height={490}>
-              <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-                <FormInput.Select
-                  name="vaultName"
-                  label={getString('connectors.azureKeyVault.labels.vaultName')}
-                  items={vaultNameOptions}
-                  disabled={vaultNameOptions.length === 0 || loading}
-                />
-                <Button
-                  margin={{ top: 'large' }}
-                  intent="primary"
-                  text={getString('connectors.azureKeyVault.labels.fetchVault')}
-                  onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
-                  disabled={loading}
-                  loading={loading}
-                />
-              </Layout.Horizontal>
-            </Container>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                type="submit"
-                intent="primary"
-                rightIcon="chevron-right"
-                text={getString('saveAndContinue')}
-                disabled={creating || updating}
-              />
-            </Layout.Horizontal>
-          </FormikForm>
+          {formik => {
+            return (
+              <FormikForm>
+                <Container height={490}>
+                  <FormInput.RadioGroup name="vaultType" radioGroup={{ inline: true }} items={vaultTypeOptions} />
+                  <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                    {formik.values['vaultType'] === VaultType.MANUAL ? (
+                      <FormInput.Text
+                        name="vaultName"
+                        className={css.vaultFields}
+                        label={getString('connectors.azureKeyVault.labels.vaultName')}
+                      />
+                    ) : (
+                      <>
+                        <FormInput.Select
+                          name="vaultName"
+                          label={getString('connectors.azureKeyVault.labels.vaultName')}
+                          items={vaultNameOptions}
+                          disabled={vaultNameOptions.length === 0 || loading}
+                        />
+                        <Button
+                          margin={{ top: 'large' }}
+                          intent="primary"
+                          text={getString('connectors.azureKeyVault.labels.fetchVault')}
+                          onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
+                          disabled={loading}
+                          loading={loading}
+                        />
+                      </>
+                    )}
+                  </Layout.Horizontal>
+                </Container>
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    type="submit"
+                    intent="primary"
+                    rightIcon="chevron-right"
+                    text={getString('saveAndContinue')}
+                    disabled={creating || updating}
+                  />
+                </Layout.Horizontal>
+              </FormikForm>
+            )
+          }}
         </Formik>
       )}
     </Container>

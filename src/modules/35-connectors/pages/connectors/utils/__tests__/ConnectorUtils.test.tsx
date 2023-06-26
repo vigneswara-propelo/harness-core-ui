@@ -836,6 +836,7 @@ describe('Connector Utils', () => {
             subscription: '123',
             vaultName: 'Aman-test',
             delegateSelectors: [],
+            vaultConfiguredManually: false,
             secretKey: 'account.secretdevxDDUx'
           }
         }

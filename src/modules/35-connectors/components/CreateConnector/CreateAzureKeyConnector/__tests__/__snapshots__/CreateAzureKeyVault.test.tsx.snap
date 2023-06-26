@@ -1435,11 +1435,58 @@ exports[`Create Secret Manager Wizard edit connector 3`] = `
                 style="height: 490px;"
               >
                 <div
+                  class="bp3-form-group"
+                  data-id="vaultType-0"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="StyledProps--main"
+                    >
+                      
+                      <div
+                        class="RadioButtonGroup--inline"
+                      >
+                        <label
+                          class="RadioButton--radio StyledProps--main"
+                        >
+                          <input
+                            checked=""
+                            class="RadioButton--input"
+                            name="vaultType"
+                            type="radio"
+                            value="fetch"
+                          />
+                          <span
+                            class="RadioButton--radioIcon"
+                          />
+                          connectors.azureKeyVault.labels.fetchVault
+                        </label>
+                        <label
+                          class="RadioButton--radio StyledProps--main"
+                        >
+                          <input
+                            class="RadioButton--input"
+                            name="vaultType"
+                            type="radio"
+                            value="manual"
+                          />
+                          <span
+                            class="RadioButton--radioIcon"
+                          />
+                          connectors.azureKeyVault.labels.manuallyConfigureVault
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="vaultName-0"
+                    data-id="vaultName-1"
                   >
                     <label
                       class="bp3-label"
@@ -4066,11 +4113,58 @@ exports[`Create Secret Manager Wizard should be able to render first step form 3
                 style="height: 490px;"
               >
                 <div
+                  class="bp3-form-group"
+                  data-id="vaultType-0"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="StyledProps--main"
+                    >
+                      
+                      <div
+                        class="RadioButtonGroup--inline"
+                      >
+                        <label
+                          class="RadioButton--radio StyledProps--main"
+                        >
+                          <input
+                            checked=""
+                            class="RadioButton--input"
+                            name="vaultType"
+                            type="radio"
+                            value="fetch"
+                          />
+                          <span
+                            class="RadioButton--radioIcon"
+                          />
+                          connectors.azureKeyVault.labels.fetchVault
+                        </label>
+                        <label
+                          class="RadioButton--radio StyledProps--main"
+                        >
+                          <input
+                            class="RadioButton--input"
+                            name="vaultType"
+                            type="radio"
+                            value="manual"
+                          />
+                          <span
+                            class="RadioButton--radioIcon"
+                          />
+                          connectors.azureKeyVault.labels.manuallyConfigureVault
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="vaultName-0"
+                    data-id="vaultName-1"
                   >
                     <label
                       class="bp3-label"

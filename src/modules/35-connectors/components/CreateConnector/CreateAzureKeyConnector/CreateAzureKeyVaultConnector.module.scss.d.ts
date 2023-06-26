@@ -9,6 +9,7 @@
 declare const styles: {
   readonly formElm: string
   readonly step: string
+  readonly vaultFields: string
   readonly wizardNav: string
   readonly wrapper: string
 }

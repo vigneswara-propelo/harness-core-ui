@@ -340,13 +340,52 @@ describe('Create Secret Manager Wizard', () => {
 
     // Step 4
     expect(getAllByText('connectors.azureKeyVault.labels.setupVault')[1]).toBeTruthy()
+    expect(getAllByText('connectors.azureKeyVault.labels.setupVault').length).toEqual(2)
     expect(container).toMatchSnapshot()
     expect(updateConnectorCalled).toEqual(false)
     await act(async () => {
       clickSubmit(container)
     })
     await waitFor(() => expect(updateConnectorCalled).toEqual(true))
+
     expect(updateConnectorCalled).toEqual(true)
+  })
+
+  test('edit connector with manual vault details', async () => {
+    const manualConfigDataPayload = {
+      ...azureConnectorMockData.data.connector,
+      spec: { ...azureConnectorMockData.data.connector.spec, vaultConfiguredManually: true }
+    }
+    const { container, getAllByText } = render(
+      <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
+        <CreateAzureKeyVaultConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={manualConfigDataPayload as any}
+        />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // Step 2
+    expect(getAllByText('common.clientId')[0]).toBeTruthy()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // Step 3
+    expect(getAllByText('delegate.DelegateselectionLabel')[1]).toBeTruthy()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // Step 4
+    expect(getAllByText('connectors.azureKeyVault.labels.fetchVault').length).toEqual(1)
   })
 
   test('when vault data fetching fails', async () => {

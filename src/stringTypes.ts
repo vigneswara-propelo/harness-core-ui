@@ -2537,6 +2537,7 @@ export interface StringsMap {
   'connectors.azureArtifacts.azureArtifactsUrlRequired': string
   'connectors.azureArtifacts.tokenRefRequired': string
   'connectors.azureKeyVault.labels.fetchVault': string
+  'connectors.azureKeyVault.labels.manuallyConfigureVault': string
   'connectors.azureKeyVault.labels.setupVault': string
   'connectors.azureKeyVault.labels.subscription': string
   'connectors.azureKeyVault.labels.tenantId': string
@@ -2544,6 +2545,7 @@ export interface StringsMap {
   'connectors.azureKeyVault.validation.subscription': string
   'connectors.azureKeyVault.validation.tenantId': string
   'connectors.azureKeyVault.validation.vaultName': string
+  'connectors.azureKeyVault.validation.vaultType': string
   'connectors.bamboo.bamboo': string
   'connectors.bamboo.bambooConnectorLabel': string
   'connectors.bamboo.bambooUrl': string
