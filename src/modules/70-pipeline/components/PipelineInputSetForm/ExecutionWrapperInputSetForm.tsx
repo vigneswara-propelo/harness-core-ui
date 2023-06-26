@@ -314,11 +314,7 @@ export function ExecutionWrapperInputSetForm(props: {
                           ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.steps`
                           : `${path}[${index}].parallel[${indexp}].stepGroup.steps`
                       }
-                      allValues={
-                        isTemplateStepGroup
-                          ? nodep.stepGroup?.template?.templateInputs?.steps
-                          : stepGroup?.stepGroup?.steps
-                      }
+                      allValues={stepGroup?.stepGroup?.steps}
                       values={
                         isTemplateStepGroup
                           ? nodep.stepGroup?.template?.templateInputs?.steps
@@ -439,11 +435,7 @@ export function ExecutionWrapperInputSetForm(props: {
                       ? `${path}[${index}].stepGroup.template.templateInputs.steps`
                       : `${path}[${index}].stepGroup.steps`
                   }
-                  allValues={
-                    isTemplateStepGroup
-                      ? initialValues?.stepGroup?.template?.templateInputs?.steps
-                      : initialValues?.stepGroup?.steps
-                  }
+                  allValues={stepGroup?.stepGroup?.steps}
                   values={
                     isTemplateStepGroup
                       ? initialValues?.stepGroup?.template?.templateInputs?.steps

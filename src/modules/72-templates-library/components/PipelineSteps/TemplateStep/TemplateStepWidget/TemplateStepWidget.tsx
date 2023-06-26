@@ -280,7 +280,7 @@ function TemplateStepWidget(
                           path={`${TEMPLATE_INPUT_PATH}.steps`}
                           allowableTypes={allowableTypes}
                           values={formik.values.template?.templateInputs?.steps}
-                          allValues={formik.values.template?.templateInputs?.steps}
+                          allValues={(allValues as StepGroupElementConfig)?.steps}
                           viewType={StepViewType.TemplateUsage}
                           customStepProps={{
                             stageType: customStepProps?.stageType,
