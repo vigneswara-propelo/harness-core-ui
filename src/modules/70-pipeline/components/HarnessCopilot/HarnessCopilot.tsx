@@ -309,7 +309,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const renderRemediation = useCallback(
     (remediation: string): JSX.Element => {
       return (
-        <Layout.Vertical spacing="xsmall">
+        <Layout.Vertical spacing="xsmall" height="100%">
           <Layout.Vertical
             className={css.remediation}
             padding={{ top: 'large', left: 'xlarge', right: 'xlarge' }}
@@ -391,7 +391,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
             </Container>
             <Text>{getString('pipeline.copilot.assist')}</Text>
           </Layout.Vertical>
-          <Layout.Vertical>
+          <Layout.Vertical className={css.remediations}>
             {remediations.map((remediation: ResponseRemediation) => renderRemediation(remediation.rca))}
           </Layout.Vertical>
         </Layout.Vertical>

@@ -10,6 +10,7 @@
 }
 
 .panel {
+  height: 100%;
   padding: var(--spacing-medium) var(--spacing-xlarge) var(--spacing-xlarge) var(--spacing-xxlarge) !important;
 }
 
@@ -40,6 +41,8 @@
 }
 
 .remediation {
+  max-height: calc(100% - 25px);
+  height: fit-content;
   border: 4px solid var(--ai-purple-200);
   border-radius: 10px;
 }
@@ -140,4 +143,8 @@
       background-color: var(--primary-9-dark);
     }
   }
+}
+
+.remediations {
+  height: calc(100% - 110px);
 }

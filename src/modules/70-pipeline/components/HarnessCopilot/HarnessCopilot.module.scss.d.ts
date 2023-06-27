@@ -21,6 +21,7 @@ declare const styles: {
   readonly pill: string
   readonly popover: string
   readonly remediation: string
+  readonly remediations: string
   readonly statusActionBtn: string
   readonly successPill: string
   readonly tooltip: string
