@@ -34,6 +34,8 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
   getFqnPath,
   getValidInitialValuePath,
   getYamlData,
@@ -82,18 +84,21 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     branch
   }
 
-  const connectorRefValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef)
+  const connectorRefValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`)
   )
-  const orgValue = defaultTo(get(initialValues?.artifacts, `${artifactPath}.spec.org`), get(artifact, `spec.org`))
-  const packageNameValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.packageName`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageName`, ''), artifact?.spec?.packageName)
+  const orgValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.org`, ''), artifact?.spec?.org),
+    get(initialValues?.artifacts, `${artifactPath}.spec.org`)
   )
-  const packageTypeValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageType`, ''), artifact?.spec?.packageType)
+  const packageNameValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageName`, ''), artifact?.spec?.packageName),
+    get(initialValues?.artifacts, `${artifactPath}.spec.packageName`)
+  )
+  const packageTypeValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageType`, ''), artifact?.spec?.packageType),
+    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`)
   )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -109,9 +114,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     lazy: true,
     queryParams: {
       ...commonParams,
-      connectorRef: defaultTo(connectorRefValue, ''),
-      packageType: defaultTo(packageTypeValue, ''),
-      org: orgValue
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      packageType: getFinalQueryParamValue(packageTypeValue) as string,
+      org: getFinalQueryParamValue(orgValue)
     }
   })
 
@@ -132,9 +137,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     },
     queryParams: {
       ...commonParams,
-      connectorRef: defaultTo(connectorRefValue, ''),
-      packageType: defaultTo(packageTypeValue, ''),
-      org: orgValue,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      packageType: getFinalQueryParamValue(packageTypeValue),
+      org: getFinalQueryParamValue(orgValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
@@ -177,11 +182,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     lazy: true,
     queryParams: {
       ...commonParams,
-      packageType: defaultTo(packageTypeValue, ''),
-      packageName: defaultTo(packageNameValue, ''),
-      connectorRef: defaultTo(connectorRefValue, ''),
+      packageType: getFinalQueryParamValue(packageTypeValue) as string,
+      packageName: getFinalQueryParamValue(packageNameValue) as string,
+      connectorRef: getFinalQueryParamValue(connectorRefValue) as string,
       versionRegex: '*',
-      org: orgValue
+      org: getFinalQueryParamValue(orgValue)
     }
   })
 
@@ -200,11 +205,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     },
     queryParams: {
       ...commonParams,
-      packageType: defaultTo(packageTypeValue, ''),
-      packageName: defaultTo(packageNameValue, ''),
-      connectorRef: defaultTo(connectorRefValue, ''),
+      packageType: getFinalQueryParamValue(packageTypeValue),
+      packageName: getFinalQueryParamValue(packageNameValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
       versionRegex: '*',
-      org: orgValue,
+      org: getFinalQueryParamValue(orgValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
