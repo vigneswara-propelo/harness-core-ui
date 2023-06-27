@@ -19,7 +19,7 @@ import {
   Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
+import { cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import {
@@ -39,7 +39,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
-import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { memoizedParse } from '@common/utils/YamlHelperMethods'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal'
@@ -59,7 +59,8 @@ import {
   getErrorMessage,
   TriggerGitEventTypes,
   TriggerGitEvent,
-  ciCodebaseBuildIssueComment
+  ciCodebaseBuildIssueComment,
+  isArtifactOrManifestTrigger
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -115,8 +116,8 @@ const applySelectedArtifactToPipelineObject = (
 ): PipelineInfoConfig => {
   // Cloning or making into a new object
   // so the original pipeline is not effected
-  const newPipelineObject = { ...pipelineObj }
-  if (!newPipelineObject) {
+  const newPipelineObject = cloneDeep(pipelineObj)
+  if (isEmpty(newPipelineObject)) {
     return {} as PipelineInfoConfig
   }
 
@@ -391,7 +392,7 @@ function WebhookPipelineInputPanelForm({
 
   useEffect(() => {
     if (template?.data?.inputSetTemplateYaml && selectedInputSets && selectedInputSets.length > 0) {
-      const pipelineObject = memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)
+      const inputSetTemplate = memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)
 
       const fetchData = async (): Promise<void> => {
         const data = await mergeInputSet({
@@ -399,14 +400,22 @@ function WebhookPipelineInputPanelForm({
         })
         if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
           const parsedInputSets = memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline
+          const { triggerType } = formikProps.values
 
-          const newPipelineObject = clearRuntimeInput(
-            merge(resolvedPipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
-          )
+          /*
+           * This is for Artifact and Manifest trigger for Service V1.
+           *
+           * User flow:
+           * 1: Choose Artifact/Manifest from the available options from Pipeline Service in Configuration step
+           * 2: Apply user provided values of Artifact/Manifest to the inputSetTemplate pipeline
+           */
+          const updatedInputSetTemplatePipeline = isArtifactOrManifestTrigger(triggerType)
+            ? applySelectedArtifactToPipelineObject(inputSetTemplate.pipeline, formikProps)
+            : inputSetTemplate.pipeline
 
           const mergedPipeline = mergeTemplateWithInputSetData({
             inputSetPortion: { pipeline: parsedInputSets },
-            templatePipeline: { pipeline: newPipelineObject },
+            templatePipeline: { pipeline: updatedInputSetTemplatePipeline },
             allValues: { pipeline: resolvedPipeline },
             shouldUseDefaultValues: triggerIdentifier === 'new'
           })
