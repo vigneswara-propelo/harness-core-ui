@@ -80,7 +80,7 @@ const AwsSamDeployStepEdit = (
   props: AwsSamDeployStepProps,
   formikRef: StepFormikFowardRef<AwsSamDeployStepFormikValues>
 ): React.ReactElement => {
-  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
+  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, onChange } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -131,6 +131,9 @@ const AwsSamDeployStepEdit = (
         }}
         formName="AwsSamDeployStepEdit"
         initialValues={getInitialValues()}
+        validate={formValues => {
+          onChange?.(formValues as AwsSamDeployStepInitialValues)
+        }}
         validationSchema={validationSchema}
       >
         {(formik: FormikProps<AwsSamDeployStepInitialValues>) => {

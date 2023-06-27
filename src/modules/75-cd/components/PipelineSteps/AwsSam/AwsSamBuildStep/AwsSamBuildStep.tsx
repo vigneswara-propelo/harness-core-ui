@@ -84,6 +84,7 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
       readonly,
       allowableTypes,
       onUpdate,
+      onChange,
       formikRef
     } = props
 
@@ -111,6 +112,7 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
       <AwsSamBuildStepEditRef
         initialValues={initialValues}
         onUpdate={(formData: AwsSamBuildStepFormikValues) => onUpdate?.(this.processFormData(formData))}
+        onChange={(formData: AwsSamBuildStepFormikValues) => onChange?.(this.processFormData(formData))}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}

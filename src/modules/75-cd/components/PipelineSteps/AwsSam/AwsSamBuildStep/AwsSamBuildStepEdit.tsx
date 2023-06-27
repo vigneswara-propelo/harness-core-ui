@@ -69,6 +69,7 @@ export interface AwsSamBuildStepFormikValues extends StepElementConfig {
 export interface AwsSamBuildStepProps {
   initialValues: AwsSamBuildStepInitialValues
   onUpdate?: (data: AwsSamBuildStepFormikValues) => void
+  onChange?: (data: AwsSamBuildStepFormikValues) => void
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
   readonly?: boolean
@@ -79,7 +80,7 @@ const AwsSamBuildStepEdit = (
   props: AwsSamBuildStepProps,
   formikRef: StepFormikFowardRef<AwsSamBuildStepFormikValues>
 ): React.ReactElement => {
-  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
+  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, onChange } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -175,6 +176,9 @@ const AwsSamBuildStepEdit = (
         }}
         formName="AwsSamBuildStepEdit"
         initialValues={getInitialValues()}
+        validate={data => {
+          onChange?.(data)
+        }}
         validationSchema={validationSchema}
       >
         {(formik: FormikProps<AwsSamBuildStepFormikValues>) => {
