@@ -96,7 +96,8 @@ export enum StepNodeType {
   INFRASTRUCTURE_TASKSTEP_V2 = 'INFRASTRUCTURE_TASKSTEP_V2',
   SERVICE_V3 = 'SERVICE_V3',
   PIPELINE_STAGE = 'PIPELINE_STAGE',
-  INTEGRATION_STAGE_STEP_PMS = 'IntegrationStageStepPMS'
+  INTEGRATION_STAGE_STEP_PMS = 'IntegrationStageStepPMS',
+  InitializeContainer = 'InitializeContainer'
 }
 
 export const NonSelectableStepNodes: StepNodeType[] = [
@@ -147,7 +148,8 @@ export const StepTypeIconsMap: { [key in StepNodeType]: IconName } = {
   STRATEGY: 'step-group',
   RUNTIME_INPUT: 'runtime-input',
   PIPELINE_STAGE: 'chained-pipeline',
-  IntegrationStageStepPMS: 'step-group'
+  IntegrationStageStepPMS: 'step-group',
+  InitializeContainer: 'initialize-ci-step'
 }
 
 export const StepV2TypeIconsMap: {
