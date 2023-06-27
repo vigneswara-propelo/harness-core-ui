@@ -159,7 +159,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     description
   } = (filterProperties as PipelineFilterProperties) || {}
   const { ci, cd } = moduleProperties || {}
-  const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
+  const { branch, tag, ciExecutionInfoDTO, repoNames: repositoryName } = ci || {}
   const { deploymentTypes, environmentNames, infrastructureTypes, serviceNames } = cd || {}
   const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
   const buildType = getBuildType(moduleProperties || {})
@@ -244,6 +244,55 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
 
   /**End Handlers */
 
+  const filterFormValues = useMemo(() => {
+    const formValues = {
+      name: pipelineName,
+      pipelineTags: _pipelineTags?.reduce((obj, item) => Object.assign(obj, { [item.key]: item.value }), {}),
+      description,
+      branch,
+      tag,
+      sourceBranch,
+      targetBranch,
+      buildType,
+      repositoryName,
+      deploymentType: deploymentTypes,
+      infrastructureType: infrastructureTypes ? infrastructureTypes[0] : undefined,
+      services: getMultiSelectFormOptions(serviceNames, 'service'),
+      environments: getMultiSelectFormOptions(environmentNames, 'environment')
+    }
+    const stringKeys: (keyof typeof formValues)[] = [
+      'name',
+      'description',
+      'branch',
+      'tag',
+      'sourceBranch',
+      'targetBranch',
+      'repositoryName'
+    ]
+
+    // When a value changes from a string to undefined the input changes from uncontrolled to controlled, causing input to have stale values.
+    // Using '' as the default value for string fields prevents this.
+    stringKeys.forEach(key => {
+      formValues[key] ??= ''
+    })
+
+    return formValues
+  }, [
+    _pipelineTags,
+    branch,
+    buildType,
+    deploymentTypes,
+    description,
+    environmentNames,
+    infrastructureTypes,
+    pipelineName,
+    repositoryName,
+    serviceNames,
+    sourceBranch,
+    tag,
+    targetBranch
+  ])
+
   return (
     <Layout.Horizontal>
       <FilterSelector<FilterDTO>
@@ -273,21 +322,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
           />
         }
         initialFilter={{
-          formValues: {
-            name: pipelineName,
-            pipelineTags: _pipelineTags?.reduce((obj, item) => Object.assign(obj, { [item.key]: item.value }), {}),
-            description,
-            branch,
-            tag,
-            sourceBranch,
-            targetBranch,
-            buildType,
-            repositoryName: repoName ? repoName[0] : undefined,
-            deploymentType: deploymentTypes,
-            infrastructureType: infrastructureTypes ? infrastructureTypes[0] : undefined,
-            services: getMultiSelectFormOptions(serviceNames, 'service'),
-            environments: getMultiSelectFormOptions(environmentNames, 'environment')
-          },
+          formValues: filterFormValues,
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}
         filters={filterList}

@@ -176,7 +176,7 @@ export const getCIModuleProperties = (buildType: BUILD_TYPE, contextInfo: BuildT
       break
   }
 
-  return repositoryName ? Object.assign(moduleProperties, { repoName: repositoryName }) : moduleProperties
+  return repositoryName ? Object.assign(moduleProperties, { repoNames: repositoryName }) : moduleProperties
 }
 
 export const enum BUILD_TYPE {

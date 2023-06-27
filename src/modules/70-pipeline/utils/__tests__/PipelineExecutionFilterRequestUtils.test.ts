@@ -21,7 +21,7 @@ describe('Test util methods', () => {
         event: 'pullRequest',
         pullRequest: { sourceBranch: 'feature-branch', targetBranch: 'develop' }
       },
-      repoName: 'harness-core-ui'
+      repoNames: 'harness-core-ui'
     })
 
     expect(
@@ -57,7 +57,7 @@ describe('Test util methods', () => {
             event: 'pullRequest',
             pullRequest: { sourceBranch: 'develop', targetBranch: 'master' }
           },
-          repoName: 'harness-core-ui'
+          repoNames: 'harness-core-ui'
         },
         cd: {}
       }
