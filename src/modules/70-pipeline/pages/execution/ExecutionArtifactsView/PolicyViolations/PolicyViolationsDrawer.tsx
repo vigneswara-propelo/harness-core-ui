@@ -16,7 +16,7 @@ import {
   Page,
   Text
 } from '@harness/uicore'
-import { useEnforcementnewGetEnforcementResultsByIdNewQuery } from '@harnessio/react-ssca-service-client'
+import { useEnforcementnewViolationsQuery } from '@harnessio/react-ssca-service-client'
 import React, { ReactElement, useRef } from 'react'
 import { useStrings } from 'framework/strings'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
@@ -47,7 +47,7 @@ export function PolicyViolationsDrawer({
     searchRef.current.clear()
   }
 
-  const { data, isLoading, error, refetch } = useEnforcementnewGetEnforcementResultsByIdNewQuery({
+  const { data, isLoading, error, refetch } = useEnforcementnewViolationsQuery({
     enforcementId,
     queryParams: {
       page,

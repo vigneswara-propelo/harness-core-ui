@@ -8,7 +8,7 @@
 import { RenderResult, render, screen, within } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { useEnforcementnewGetEnforcementResultsByIdNewQuery } from '@harnessio/react-ssca-service-client'
+import { useEnforcementnewViolationsQuery } from '@harnessio/react-ssca-service-client'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -17,12 +17,18 @@ import executionDetails from './mocks/execution-with-artifacts.json'
 import violationList from './mocks/violation-list.json'
 import executionContext from './mocks/execution-context.json'
 import ExecutionArtifactsView from '../ExecutionArtifactsView'
+import { downloadBlob } from '../ArtifactsTable/ArtifactTableCells'
+global.URL.createObjectURL = jest.fn()
+global.URL.revokeObjectURL = jest.fn()
 
 jest.useFakeTimers({ advanceTimers: true })
 
 jest.mock('@harnessio/react-ssca-service-client', () => ({
-  useEnforcementnewGetEnforcementResultsByIdNewQuery: jest.fn().mockImplementation(() => {
+  useEnforcementnewViolationsQuery: jest.fn().mockImplementation(() => {
     return { data: { content: violationList } }
+  }),
+  useArtifactnewSbomQuery: jest.fn().mockImplementation(() => {
+    return { data: { content: { sbom: 'dummytext' } } }
   })
 }))
 
@@ -111,7 +117,7 @@ describe('ExecutionArtifactListView', () => {
 
     await userEvent.type(screen.getByRole('searchbox'), 'my search term')
     jest.runOnlyPendingTimers()
-    expect(useEnforcementnewGetEnforcementResultsByIdNewQuery).toHaveBeenLastCalledWith(
+    expect(useEnforcementnewViolationsQuery).toHaveBeenLastCalledWith(
       expect.objectContaining({
         queryParams: { order: 'ASC', page: 0, pageSize: 20, searchTerm: 'my search term', sort: 'name' }
       })
@@ -120,10 +126,23 @@ describe('ExecutionArtifactListView', () => {
     const supplier = await screen.findByText('pipeline.supplier')
     await userEvent.click(supplier)
     jest.runOnlyPendingTimers()
-    expect(useEnforcementnewGetEnforcementResultsByIdNewQuery).toHaveBeenLastCalledWith(
+    expect(useEnforcementnewViolationsQuery).toHaveBeenLastCalledWith(
       expect.objectContaining({
         queryParams: expect.objectContaining({ order: 'DESC', sort: 'supplier' })
       })
     )
+  })
+
+  test('should trigger the download with the correct URL and filename', () => {
+    const createElementSpy = jest.spyOn(document, 'createElement')
+
+    const mockBlob = new Blob(['Test content'], { type: 'text/plain' })
+    const mockFilename = 'test.json'
+    downloadBlob(mockBlob, mockFilename)
+
+    expect(global.URL.createObjectURL).toHaveBeenCalled()
+    expect(createElementSpy).toHaveBeenCalledWith('a')
+    jest.runOnlyPendingTimers()
+    expect(global.URL.revokeObjectURL).toHaveBeenCalled()
   })
 })

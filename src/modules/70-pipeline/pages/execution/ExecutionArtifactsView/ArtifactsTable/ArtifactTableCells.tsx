@@ -11,9 +11,25 @@ import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text } from '@harnes
 import React from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
 import { defaultTo } from 'lodash-es'
+import { useArtifactnewSbomQuery } from '@harnessio/react-ssca-service-client'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
 import css from './ArtifactsTable.module.scss'
+
+export function downloadBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  setTimeout(() => {
+    URL.revokeObjectURL(url)
+    a.remove()
+  }, 150)
+
+  a.click()
+}
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D> & ArtifactsColumnActions
@@ -86,18 +102,47 @@ export const ViolationsCell: CellType = ({ row, column }) => {
 }
 
 export const SbomCell: CellType = ({ row }) => {
+  const artifact = row.original
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const query = useArtifactnewSbomQuery(
+    {
+      artifactId: defaultTo(artifact.id, ''),
+      stepExecutionId: defaultTo(artifact.stepExecutionId, ''),
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      }
+    },
+    {
+      onSuccess: _data => {
+        const blob = new Blob([_data.content.sbom], { type: 'text/json' })
+        downloadBlob(blob, `${artifact.sbomName}_${artifact.tag}_sbom.json`)
+      },
+      enabled: false,
+      retry: false
+    }
+  )
+
   const { getString } = useStrings()
-  const data = row.original
+
   // sbomUrl is exposed as Content-Type: application/octet-stream so browser will download as file automatically
-  return data.sbomName ? (
-    <a download color={Color.PRIMARY_7} href={data.sbomUrl} target="_blank" rel="noopener noreferrer">
+  return artifact.sbomName ? (
+    <Button
+      className={css.violations}
+      variation={ButtonVariation.LINK}
+      size={ButtonSize.SMALL}
+      onClick={() => query.refetch()}
+      loading={query.isInitialLoading}
+    >
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
         <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-          {data.sbomName}
+          {artifact.sbomName}
         </Text>
         <Icon size={12} name="import" color={Color.PRIMARY_7} />
       </Layout.Horizontal>
-    </a>
+    </Button>
   ) : (
     <Text font={{ variation: FontVariation.SMALL }}>{getString('na')}</Text>
   )

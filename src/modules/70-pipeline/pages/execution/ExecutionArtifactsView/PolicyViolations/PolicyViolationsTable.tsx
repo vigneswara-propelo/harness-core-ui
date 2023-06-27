@@ -8,10 +8,7 @@
 import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
-import type {
-  EnforcementResult,
-  EnforcementnewGetEnforcementResultsByIdNewOkResponse
-} from '@harnessio/react-ssca-service-client'
+import type { EnforcementResult, EnforcementnewViolationsOkResponse } from '@harnessio/react-ssca-service-client'
 import { useStrings } from 'framework/strings'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useUpdateQueryParams, useQueryParams } from '@common/hooks'
@@ -31,7 +28,7 @@ import {
 import css from './PolicyViolations.module.scss'
 
 export interface PolicyViolationsTableProps {
-  data: EnforcementnewGetEnforcementResultsByIdNewOkResponse
+  data: EnforcementnewViolationsOkResponse
 }
 
 export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): React.ReactElement {

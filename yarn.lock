@@ -2012,10 +2012,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/ts-transform-paths/1.0.1/8b6ee76cefebc3d6c04f3609d4df94b5ecb15d71#8b6ee76cefebc3d6c04f3609d4df94b5ecb15d71"
   integrity sha512-ktBF6O8vRCBGjH/D7i5SUOufbUzGq+SFusNqizb1NV3g2777LhWhXu/Qb2voRBZMbL7CxxYTpyG70hh5RBwi0w==
 
-"@harness/uicore@3.141.0":
-  version "3.141.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.141.0/899e551600016fb67b561c073654701ef2857e61#899e551600016fb67b561c073654701ef2857e61"
-  integrity sha512-SRcYjYUkCxS/+yW56+XcIH1uWKieG/KsX663Jcqf3urzjR2XUFH8LNpHPzguS2Wgklzb9+E8KF8kc3I+Mb0btw==
+"@harness/uicore@^3.145.0":
+  version "3.145.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.145.0/c84ca4f9ed07b869114e8944e255d188fb4df9bc#c84ca4f9ed07b869114e8944e255d188fb4df9bc"
+  integrity sha512-r9BG/a4GBrFs7/xYnao3h4DhGhjMAdVzjBtnAJP8456byPTAG4KaJ5st0ydApyH/gLyCrJf27z5FgXQodBrUhg==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
@@ -2100,10 +2100,10 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
-"@harnessio/react-ssca-service-client@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-service-client/-/react-ssca-service-client-0.1.2.tgz#e92bae92647f41c990272b484c680331706c9135"
-  integrity sha512-VNzPA0bmm1wzBzaFWLxkIjpzJGpHHdrX/CWldau57rEL6WfjVfIT56YKTYBhwvzYWnqJC1kX0NP6jsBmGGP1Ag==
+"@harnessio/react-ssca-service-client@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-service-client/-/react-ssca-service-client-0.2.0.tgz#1dd7129508eaeabbf913b0b43c164a87bf030e32"
+  integrity sha512-7btFMyr2QiD48LL6ZXG7d2JRCMteB56V5Ao4vbg/QQgiGsfGUXeLNFL0aKj+oGpGU+a37FUnwuk9gCUkq3QWBw==
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
