@@ -23,6 +23,7 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 
 import produce from 'immer'
+import { useChildPipelineExpressions } from '@pipeline/components/PipelineStudio/PiplineHooks/useChildPipelineExpressions'
 import { String, useStrings } from 'framework/strings'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -48,6 +49,7 @@ export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutput
   } = usePipelineContext()
   const { metadataMap, variablesPipeline } = usePipelineVariables()
   const { getString } = useStrings()
+  const { expressions } = useChildPipelineExpressions()
 
   const tabName = PipelineStageTabs.OUTPUTS
   const { stage } = getStageFromPipeline<PipelineStageElementConfig>(defaultTo(selectedStageId, ''))
@@ -217,6 +219,7 @@ export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutput
                                 type: 'text'
                               },
                               allowableTypes,
+                              expressions,
                               multitypeInputValue: outputTypeRef.current[index]
                             }}
                             onChange={(_value, _valueType, multiType) => {

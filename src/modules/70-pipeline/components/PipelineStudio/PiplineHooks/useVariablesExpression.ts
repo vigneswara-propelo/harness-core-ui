@@ -6,80 +6,11 @@
  */
 
 import { useEffect, useState } from 'react'
-import { defaultTo, flatMapDeep, identity, isEmpty, map, sortBy, sortedUniq } from 'lodash-es'
-import type { VariableMergeServiceResponse, VariableResponseMapValue } from 'services/pipeline-ng'
+import { isEmpty } from 'lodash-es'
 import { useTemplateVariables } from '../../TemplateVariablesContext/TemplateVariablesContext'
 import { usePipelineVariables } from '../../PipelineVariablesContext/PipelineVariablesContext'
 import { usePipelineContext, PipelineContextType } from '../PipelineContext/PipelineContext'
-
-/**
- * Traverse over stage and find out all local fqn
- */
-function traverseStageObject(
-  jsonObj: Record<string, any>,
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-): string[] {
-  const keys: string[] = []
-  if (jsonObj !== null && typeof jsonObj == 'object') {
-    Object.entries(jsonObj).forEach(([_key, value]) => {
-      keys.push(...traverseStageObject(value, metadataMap))
-    })
-  } else if (metadataMap[jsonObj]) {
-    keys.push(jsonObj)
-  }
-  return keys
-}
-
-function pickExpressionsFromMetadataMap(
-  metadataMap: Record<string, VariableResponseMapValue>,
-  localStageKeys: string[],
-  key: 'yamlProperties' | 'yamlOutputProperties'
-): string[] {
-  return sortedUniq(
-    sortBy(
-      map(metadataMap, (item, index) =>
-        localStageKeys.indexOf(index) > -1 ? defaultTo(item[key]?.localName, '') : defaultTo(item[key]?.fqn, '')
-      ).filter(p => p),
-      identity
-    )
-  )
-}
-
-function pickExtraExpressionsFromMetadataMap(
-  metadataMap: Record<string, VariableResponseMapValue>,
-  localStageKeys: string[],
-  key: 'properties' | 'outputproperties'
-): string[] {
-  return sortedUniq(
-    sortBy(
-      flatMapDeep(metadataMap, (item, index) => {
-        const properties = defaultTo(item.yamlExtraProperties?.[key], [])
-
-        return properties.map((p: Record<string, string>) => (localStageKeys.indexOf(index) > -1 ? p.localName : p.fqn))
-      }).filter(p => p),
-      identity
-    )
-  )
-}
-
-interface Params {
-  metadataMap: Record<string, VariableResponseMapValue>
-  localStageKeys: string[]
-}
-
-interface AllExpressionsObj {
-  expressionsList: string[]
-  outputExpressions: string[]
-  extraExpressions: string[]
-  extraOutputExpressions: string[]
-}
-
-const getAllExpressionsFromMetadataMap = ({ metadataMap, localStageKeys }: Params): AllExpressionsObj => ({
-  expressionsList: pickExpressionsFromMetadataMap(metadataMap, localStageKeys, 'yamlProperties'),
-  outputExpressions: pickExpressionsFromMetadataMap(metadataMap, localStageKeys, 'yamlOutputProperties'),
-  extraExpressions: pickExtraExpressionsFromMetadataMap(metadataMap, localStageKeys, 'properties'),
-  extraOutputExpressions: pickExtraExpressionsFromMetadataMap(metadataMap, localStageKeys, 'outputproperties')
-})
+import { getAllExpressionsFromMetadataMap, traverseStageObject } from './utils'
 
 /**
  * Hook to integrate and get expression for local stage and other stage

@@ -18,7 +18,12 @@ import {
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { errorContextProvider, getDummyPipelineContextValue, getModuleParams } from './PipelineStageHelper'
+import {
+  errorContextProvider,
+  getDummyPipelineContextValue,
+  getMockFor_useGetPipeline,
+  getModuleParams
+} from './PipelineStageHelper'
 import { PipelineStageOutputSection } from '../PipelineStageOutputSection/PipelineStageOutputSection'
 import { VariableOutputPanel } from '../PipelineStageOutputSection/VariableOutputPanel'
 
@@ -27,7 +32,8 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
     loading: false,
     cancel: jest.fn()
-  }))
+  })),
+  useGetPipeline: jest.fn(() => getMockFor_useGetPipeline())
 }))
 
 jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
