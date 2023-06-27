@@ -10,6 +10,7 @@ declare const styles: {
   readonly card: string
   readonly cdTag: string
   readonly ceTag: string
+  readonly cetTag: string
   readonly cfTag: string
   readonly chaosTag: string
   readonly ciTag: string

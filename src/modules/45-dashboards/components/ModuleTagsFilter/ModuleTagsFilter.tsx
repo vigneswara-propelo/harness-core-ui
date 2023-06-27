@@ -77,6 +77,12 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
         'common.purpose.cv.serviceReliability',
         modelTags.includes(DashboardTags.SRM)
       )}
+      {renderTagsFilter(
+        DashboardTags.CET,
+        moduleTagCss.cetTag,
+        'common.purpose.errorTracking.title',
+        modelTags.includes(DashboardTags.CET)
+      )}
     </>
   )
 }

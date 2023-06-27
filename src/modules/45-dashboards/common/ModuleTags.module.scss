@@ -72,6 +72,11 @@
   background: var(--idp-background);
   border: 1px solid var(--idp-border);
 }
+.cetTag {
+  color: var(--cet-foreground);
+  background: var(--cet-background);
+  border: 1px solid var(--cet-border);
+}
 
 .predefinedTags {
   margin-top: var(--spacing-4);
