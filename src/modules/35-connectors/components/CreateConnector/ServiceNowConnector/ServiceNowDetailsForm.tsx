@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Layout,
   Button,
@@ -22,11 +22,13 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { setupServiceNowFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
@@ -47,6 +49,10 @@ interface ServiceNowFormData {
   certificateRef: SecretReferenceInterface | void
   privateKeyRef: SecretReferenceInterface | void
   adfsUrl: string
+  tokenUrl: string
+  refreshTokenRef: SecretReferenceInterface | void
+  clientSecretRef: SecretReferenceInterface | void
+  scope: string
 }
 
 interface AuthenticationProps {
@@ -73,8 +79,14 @@ const defaultInitialFormData: ServiceNowFormData = {
   clientIdRef: undefined,
   certificateRef: undefined,
   privateKeyRef: undefined,
-  adfsUrl: ''
+  adfsUrl: '',
+  tokenUrl: '',
+  refreshTokenRef: undefined,
+  clientSecretRef: undefined,
+  scope: ''
 }
+
+const SERVICENOW_OIDC_TOKEN_URL_SUFFIX = 'oauth_token.do'
 
 const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & AuthenticationProps> = props => {
   const { prevStepData, nextStep, accountId } = props
@@ -82,11 +94,17 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const [initialValues, setInitialValues] = React.useState(defaultInitialFormData)
   const [loadConnector] = React.useState(false)
 
+  const formikRef = React.useRef<FormikProps<ServiceNowFormData> | null>(null)
+  const [isRefreshTokenScopeDisabled, setIsRefreshTokenScopeDisabled] = React.useState(false)
+  const [tokenUrl, setTokenUrl] = React.useState('')
+
+  const isServiceNowRefreshTokenAuthEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICENOW_REFRESH_TOKEN_AUTH)
+
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
   const { getString } = useStrings()
 
-  const authOptions: SelectOption[] = React.useMemo(
-    () => [
+  const authOptions: SelectOption[] = React.useMemo(() => {
+    const baseAuthOptions = [
       {
         label: getString('connectors.serviceNow.usernamePasswordAPIKey'),
         value: AuthTypes.USER_PASSWORD
@@ -95,9 +113,37 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
         label: getString('connectors.serviceNow.adfs'),
         value: AuthTypes.ADFS
       }
-    ],
-    []
-  )
+    ]
+
+    if (isServiceNowRefreshTokenAuthEnabled) {
+      return [
+        ...baseAuthOptions,
+        { label: getString('connectors.serviceNow.oidcRefreshToken'), value: AuthTypes.REFRESH_TOKEN }
+      ]
+    }
+
+    return baseAuthOptions
+  }, [isServiceNowRefreshTokenAuthEnabled])
+
+  const savedTokenUrl = (prevStepData as unknown as ServiceNowFormData)?.tokenUrl || initialValues?.tokenUrl
+
+  useEffect(() => {
+    if (savedTokenUrl) {
+      setTokenUrl(savedTokenUrl)
+    }
+  }, [savedTokenUrl])
+
+  // In this scenario, the scope is automatically evaluated from the token url itself
+  useEffect(() => {
+    if (tokenUrl) {
+      if (tokenUrl.includes(SERVICENOW_OIDC_TOKEN_URL_SUFFIX)) {
+        formikRef.current?.setFieldValue('scope', '')
+        setIsRefreshTokenScopeDisabled(true)
+      } else {
+        setIsRefreshTokenScopeDisabled(false)
+      }
+    }
+  }, [tokenUrl])
 
   React.useEffect(() => {
     if (loadingConnectorSecrets) {
@@ -158,7 +204,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
             otherwise: Yup.object().nullable()
           }),
           clientIdRef: Yup.object().when('authType', {
-            is: val => val === AuthTypes.ADFS,
+            is: val => val === AuthTypes.ADFS || val === AuthTypes.REFRESH_TOKEN,
             then: Yup.object().required(getString('connectors.validation.clientID')),
             otherwise: Yup.object().nullable()
           }),
@@ -179,6 +225,19 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
               .required(getString('connectors.validation.adfsUrl'))
               .url(getString('validation.urlIsNotValid')),
             otherwise: Yup.string().nullable()
+          }),
+          tokenUrl: Yup.string().when('authType', {
+            is: val => val === AuthTypes.REFRESH_TOKEN,
+            then: Yup.string()
+              .trim()
+              .required(getString('connectors.validation.tokenUrl'))
+              .url(getString('validation.urlIsNotValid')),
+            otherwise: Yup.string().nullable()
+          }),
+          refreshTokenRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.REFRESH_TOKEN,
+            then: Yup.object().required(getString('connectors.validation.refreshToken')),
+            otherwise: Yup.object().nullable()
           })
         })}
         onSubmit={stepData => {
@@ -190,6 +249,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
         }}
       >
         {formik => {
+          formikRef.current = formik
           return (
             <>
               <ModalErrorHandler bind={setModalErrorHandler} />
@@ -256,6 +316,41 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                       className={css.detailsFormWidth}
                     />
                   </>
+                ) : null}
+                {formik.values.authType === AuthTypes.REFRESH_TOKEN ? (
+                  <Layout.Vertical className={css.detailsFormWidth} margin={{ right: 'xxlarge' }}>
+                    <SecretInput
+                      name={'clientIdRef'}
+                      label={getString('connectors.serviceNow.clientID')}
+                      isMultiTypeSelect
+                    />
+                    <SecretInput
+                      name={'clientSecretRef'}
+                      label={getString('connectors.serviceNow.clientSecretOptional')}
+                      isMultiTypeSelect
+                    />
+                    <SecretInput
+                      name={'refreshTokenRef'}
+                      label={getString('connectors.serviceNow.refreshToken')}
+                      isMultiTypeSelect
+                    />
+                    <FormInput.Text
+                      name="tokenUrl"
+                      placeholder={getString('UrlLabel')}
+                      label={getString('connectors.serviceNow.tokenUrl')}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTokenUrl(event.target.value?.trim())}
+                    />
+                    <FormInput.Text
+                      name="scope"
+                      isOptional={true}
+                      placeholder={getString('connectors.serviceNow.scopePlaceholder')}
+                      label={getString('common.scopeLabel')}
+                      disabled={isRefreshTokenScopeDisabled}
+                      helperText={
+                        isRefreshTokenScopeDisabled ? getString('connectors.serviceNow.scopeHelperText') : undefined
+                      }
+                    />
+                  </Layout.Vertical>
                 ) : null}
               </Layout.Vertical>
 

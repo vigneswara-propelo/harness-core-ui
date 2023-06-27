@@ -3193,10 +3193,16 @@ export interface StringsMap {
   'connectors.serviceNow.adfs': string
   'connectors.serviceNow.adfsUrl': string
   'connectors.serviceNow.clientID': string
+  'connectors.serviceNow.clientSecretOptional': string
+  'connectors.serviceNow.oidcRefreshToken': string
   'connectors.serviceNow.privateKey': string
+  'connectors.serviceNow.refreshToken': string
   'connectors.serviceNow.resourceID': string
+  'connectors.serviceNow.scopeHelperText': string
+  'connectors.serviceNow.scopePlaceholder': string
   'connectors.serviceNow.serviceNowUrl': string
   'connectors.serviceNow.serviceNowViewPermissions': string
+  'connectors.serviceNow.tokenUrl': string
   'connectors.serviceNow.usernamePasswordAPIKey': string
   'connectors.showInstructions': string
   'connectors.signalFXLabel': string
@@ -3325,8 +3331,10 @@ export interface StringsMap {
   'connectors.validation.endpointUrl': string
   'connectors.validation.personalAccessToken': string
   'connectors.validation.privateKey': string
+  'connectors.validation.refreshToken': string
   'connectors.validation.resourceID': string
   'connectors.validation.serviceNowUrl': string
+  'connectors.validation.tokenUrl': string
   'connectors.validationPath': string
   'connectors.verifyConnection': string
   'auditTrail.actions.added_collaborator': string

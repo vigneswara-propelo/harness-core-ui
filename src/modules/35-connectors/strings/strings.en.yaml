@@ -212,6 +212,8 @@ validation:
   connectorIsRequired: Connector is required.
   endpointUrl: Endpoint URL is required
   adfsUrl: ADFS URL is required
+  tokenUrl: Token Url is required
+  refreshToken: Refresh Token is required
   certificate: Certificate is required
   clientID: Client ID is required
   resourceID: Resource ID is required
@@ -228,7 +230,13 @@ serviceNow:
   serviceNowUrl: 'ServiceNow URL'
   usernamePasswordAPIKey: 'Username and Password/API Key'
   adfs: ADFS Client Credentials with Certificate
+  clientSecretOptional: Client Secret (Optional)
+  refreshToken: Refresh Token
+  oidcRefreshToken: OIDC Refresh token
+  scopePlaceholder: Enter Scope
+  scopeHelperText: Scope is not required as it will be fetched from ServiceNow URL
   adfsUrl: ADFS URL
+  tokenUrl: Token Url
   resourceID: Resource ID
   clientID: Client ID
   privateKey: Private Key

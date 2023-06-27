@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { clone } from 'lodash-es'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getSecretV2Promise, GetSecretV2QueryParams } from 'services/cd-ng'
@@ -26,27 +27,28 @@ export const setSecretField = async (
     return undefined
   } else {
     const secretScope = secretString?.indexOf('.') < 0 ? Scope.PROJECT : secretString?.split('.')[0]
+    const clonedScopeQueryParams = clone(scopeQueryParams)
 
     switch (secretScope) {
       case Scope.ACCOUNT:
-        delete scopeQueryParams.orgIdentifier
-        delete scopeQueryParams.projectIdentifier
+        delete clonedScopeQueryParams.orgIdentifier
+        delete clonedScopeQueryParams.projectIdentifier
         break
       case Scope.ORG:
-        delete scopeQueryParams.projectIdentifier
+        delete clonedScopeQueryParams.projectIdentifier
     }
 
     const identifier = secretString.indexOf('.') < 0 ? secretString : secretString.split('.')[1]
     const response = await getSecretV2Promise({
       identifier,
-      queryParams: scopeQueryParams
+      queryParams: clonedScopeQueryParams
     })
 
     return {
       identifier,
       name: response.data?.secret.name || secretString.split('.')[1],
       referenceString: secretString,
-      ...scopeQueryParams
+      ...clonedScopeQueryParams
     }
   }
 }
