@@ -150,6 +150,16 @@ export const StepTypeIconsMap: { [key in StepNodeType]: IconName } = {
   IntegrationStageStepPMS: 'step-group'
 }
 
+export const StepV2TypeIconsMap: {
+  [key in keyof typeof StepType]?: IconName
+} = {
+  TERRAFORM_ROLLBACK_V2: 'terraform-rollback',
+  TERRAFORM_DESTROY_V2: 'terraform-destroy',
+  TERRAFORM_PLAN_V2: 'terraform-plan',
+  TERRAFORM_APPLY_V2: 'terraform-apply',
+  JenkinsBuildV2: 'service-jenkins'
+}
+
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   Success: 'tick-circle',
   Running: 'main-more',
@@ -874,8 +884,9 @@ export function getIconDataBasedOnType(nodeData?: ExecutionNode): {
       return { icon: 'traffic-lights', iconSize: 40 }
     }
     // ticket for reference -> https://harness.atlassian.net/browse/CDS-59308
-    if (nodeData.stepType === StepType.JenkinsBuildV2) {
-      return { icon: 'service-jenkins', iconSize: 40 }
+    if (nodeData?.stepType && nodeData.stepType in StepV2TypeIconsMap) {
+      const icon = StepV2TypeIconsMap[nodeData.stepType as keyof typeof StepType] as IconName
+      return { icon, iconSize: 40 }
     }
     const icon = StepTypeIconsMap[nodeData?.stepType as StepNodeType] || factory.getStepIcon(nodeData?.stepType || '')
     return {
