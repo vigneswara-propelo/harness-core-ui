@@ -34,7 +34,7 @@ import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, TriggerPathProps } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { memoizedParse } from '@common/utils/YamlHelperMethods'
@@ -77,7 +77,7 @@ function ArtifactTriggerInputPanelForm({
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
-  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(inputSetSelected)
   const [hasEverRendered, setHasEverRendered] = useState(
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
@@ -86,32 +86,9 @@ function ArtifactTriggerInputPanelForm({
   const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
   const { setPipeline: updatePipelineInVariablesContext } = usePipelineVariables()
 
-  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-    pipelineIdentifier: string
-    triggerIdentifier: string
-  }>()
+  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } =
+    useParams<TriggerPathProps>()
 
-  const { data: template, loading } = useMutateAsGet(useGetTemplateFromPipeline, {
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      pipelineIdentifier,
-      projectIdentifier,
-      // GitX related query params
-      branch,
-      repoName,
-      repoIdentifier,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
-    },
-    body: {
-      stageIdentifiers: formikProps.values?.stagesToExecute ?? []
-    },
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
-  })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
       gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
@@ -120,21 +97,46 @@ function ArtifactTriggerInputPanelForm({
     })
   }, [isNewGitSyncRemotePipeline, branch, formikProps?.values?.pipelineBranchName])
 
+  const commonQueryParams = useMemo(
+    () => ({
+      accountIdentifier: accountId,
+      orgIdentifier,
+      pipelineIdentifier,
+      projectIdentifier,
+      // GitX related query params
+      branch: inputSetSelectedBranch,
+      repoName,
+      repoIdentifier,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
+    }),
+    [
+      accountId,
+      orgIdentifier,
+      pipelineIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      connectorRef,
+      repoName,
+      inputSetSelectedBranch
+    ]
+  )
+
+  const { data: template, loading } = useMutateAsGet(useGetTemplateFromPipeline, {
+    queryParams: commonQueryParams,
+    body: {
+      stageIdentifiers: formikProps.values?.stagesToExecute ?? []
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+  })
+
   const onReconcile = (inpSetId: string): void => {
     remove(invalidInputSetIds, id => id === inpSetId)
     setInvalidInputSetIds(invalidInputSetIds)
   }
 
   const { mutate: mergeInputSet, error: mergeInputSetError } = useGetMergeInputSetFromPipelineTemplateWithListInput({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      pipelineIdentifier,
-      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
-    },
+    queryParams: commonQueryParams,
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
@@ -180,37 +182,6 @@ function ArtifactTriggerInputPanelForm({
     isNewGitSyncRemotePipeline
   ])
 
-  const inputSetQueryParams = useMemo(
-    () => ({
-      accountIdentifier: accountId,
-      orgIdentifier,
-      pipelineIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      connectorRef,
-      repoName,
-      storeType,
-      branch: getTriggerInputSetsBranchQueryParameter({
-        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
-        pipelineBranchName: formikProps?.values?.pipelineBranchName,
-        branch
-      })
-    }),
-    [
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      repoIdentifier,
-      formikProps?.values?.pipelineBranchName,
-      connectorRef,
-      repoName,
-      storeType,
-      branch,
-      isNewGitSyncRemotePipeline
-    ]
-  )
-
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
   }, [inputSetSelected])
@@ -244,7 +215,7 @@ function ArtifactTriggerInputPanelForm({
           inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
             const data = await getInputSetForPipelinePromise({
               inputSetIdentifier,
-              queryParams: inputSetQueryParams
+              queryParams: commonQueryParams
             })
 
             return data
@@ -289,7 +260,7 @@ function ArtifactTriggerInputPanelForm({
     [
       formikProps?.values?.inputSetRefs,
       inputSetSelected,
-      inputSetQueryParams,
+      commonQueryParams,
       fetchInputSetsInProgress,
       selectedInputSets,
       formikProps
@@ -348,7 +319,7 @@ function ArtifactTriggerInputPanelForm({
       return ciCodebaseBuild.spec.branch
     }
     return getString('common.branchName')
-  }, [formikProps?.values?.triggerType, formikProps?.values?.event, getString])
+  }, [formikProps?.values?.triggerType, getString])
 
   const showPipelineInputSetSelector = useMemo(
     () => !isEmpty(pipeline) && !!template?.data?.inputSetTemplateYaml,

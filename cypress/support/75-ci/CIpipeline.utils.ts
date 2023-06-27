@@ -278,6 +278,7 @@ export const addTrigger = () => {
   cy.contains('section', 'Custom').should('be.visible')
   cy.get('section').contains('Custom').click()
   cy.wait(1000)
+  cy.get('input[name="name"]').clear().type('Custom Webhook Trigger')
   cy.contains('span', 'Pipeline Input').should('be.visible')
   cy.get('span').contains('Pipeline Input').click()
 }

@@ -34,7 +34,7 @@ import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, TriggerPathProps } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { memoizedParse } from '@common/utils/YamlHelperMethods'
@@ -76,7 +76,7 @@ function WebhookPipelineInputPanelForm({
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
-  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(inputSetSelected)
   const [hasEverRendered, setHasEverRendered] = useState(
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
@@ -84,32 +84,9 @@ function WebhookPipelineInputPanelForm({
   const [mergingInputSets, setMergingInputSets] = useState<boolean>(false)
   const { setPipeline: updatePipelineInVariablesContext } = usePipelineVariables()
 
-  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-    pipelineIdentifier: string
-    triggerIdentifier: string
-  }>()
+  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } =
+    useParams<TriggerPathProps>()
 
-  const { data: template, loading } = useMutateAsGet(useGetTemplateFromPipeline, {
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      pipelineIdentifier,
-      projectIdentifier,
-      // GitX related query params
-      branch,
-      repoName,
-      repoIdentifier,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
-    },
-    body: {
-      stageIdentifiers: []
-    },
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
-  })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
       gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
@@ -118,16 +95,41 @@ function WebhookPipelineInputPanelForm({
     })
   }, [isNewGitSyncRemotePipeline, branch, formikProps?.values?.pipelineBranchName])
 
-  const { mutate: mergeInputSet, error: mergeInputSetError } = useGetMergeInputSetFromPipelineTemplateWithListInput({
-    queryParams: {
+  const commonQueryParams = useMemo(
+    () => ({
       accountIdentifier: accountId,
-      projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
+      projectIdentifier,
+      // GitX related query params
+      branch: inputSetSelectedBranch,
+      repoName,
+      repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
+    }),
+    [
+      accountId,
+      orgIdentifier,
+      pipelineIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      connectorRef,
+      repoName,
+      inputSetSelectedBranch
+    ]
+  )
+
+  const { data: template, loading } = useMutateAsGet(useGetTemplateFromPipeline, {
+    queryParams: commonQueryParams,
+    body: {
+      stageIdentifiers: []
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+  })
+
+  const { mutate: mergeInputSet, error: mergeInputSetError } = useGetMergeInputSetFromPipelineTemplateWithListInput({
+    queryParams: commonQueryParams,
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
@@ -167,37 +169,6 @@ function WebhookPipelineInputPanelForm({
     isNewGitSyncRemotePipeline
   ])
 
-  const inputSetQueryParams = useMemo(
-    () => ({
-      accountIdentifier: accountId,
-      orgIdentifier,
-      pipelineIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      connectorRef,
-      repoName,
-      storeType,
-      branch: getTriggerInputSetsBranchQueryParameter({
-        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
-        pipelineBranchName: formikProps?.values?.pipelineBranchName,
-        branch
-      })
-    }),
-    [
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      repoIdentifier,
-      formikProps?.values?.pipelineBranchName,
-      connectorRef,
-      repoName,
-      storeType,
-      branch,
-      isNewGitSyncRemotePipeline
-    ]
-  )
-
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
   }, [inputSetSelected])
@@ -232,7 +203,7 @@ function WebhookPipelineInputPanelForm({
           inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
             const data = await getInputSetForPipelinePromise({
               inputSetIdentifier,
-              queryParams: inputSetQueryParams
+              queryParams: commonQueryParams
             })
 
             return data
@@ -277,7 +248,7 @@ function WebhookPipelineInputPanelForm({
     [
       formikProps?.values?.inputSetRefs,
       inputSetSelected,
-      inputSetQueryParams,
+      commonQueryParams,
       fetchInputSetsInProgress,
       selectedInputSets,
       formikProps
