@@ -195,7 +195,7 @@ export class BackgroundStep extends PipelineStep<BackgroundStepData> {
       allowableTypes
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <BackgroundStepInputSet
           initialValues={initialValues}
