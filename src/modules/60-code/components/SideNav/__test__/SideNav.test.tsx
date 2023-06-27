@@ -12,6 +12,9 @@ import projects from '@projects-orgs/components/ProjectSelector/__test__/project
 import SideNav from '../SideNav'
 
 jest.mock('services/cd-ng', () => ({
+  useGetProject: jest.fn().mockImplementation(() => {
+    return { data: { data: projects.data.content[0].projectResponse }, refetch: jest.fn(), error: null }
+  }),
   useGetProjectAggregateDTOList: jest.fn().mockImplementation(() => {
     return { data: projects, refetch: jest.fn(), error: null }
   }),

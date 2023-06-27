@@ -5,15 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
-import { Layout } from '@harness/uicore'
+import { Layout, useToaster } from '@harness/uicore'
 import cx from 'classnames'
-import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
+import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { SavedProjectDetails, useAppStore } from 'framework/AppStore/AppStoreContext'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useGetProject } from 'services/cd-ng'
 import routes, { CODEPathProps } from '../../RouteDefinitions'
 import css from './SideNav.module.scss'
 
@@ -21,23 +23,55 @@ export default function CODESideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, repoName } = useParams<CODEPathProps>()
   const history = useHistory()
+  const { showError } = useToaster()
   const { path } = useRouteMatch()
   const { updateAppStore } = useAppStore()
-  const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
-    updateAppStore({ selectedProject: data })
-    history.push(
-      routes.toCODERepositories({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
-    )
-  }
+  const { preference: savedProject } = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
+
+  const {
+    data: projectData,
+    loading,
+    error
+  } = useGetProject({
+    identifier: projectIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier
+    },
+    lazy: savedProject && savedProject.projectIdentifier === projectIdentifier
+  })
+
   const isFiles =
     path.endsWith(':repoName') || path.includes(':repoName/files/') || path.endsWith(':gitRef*/~/:resourcePath*')
+
+  useEffect(() => {
+    if (projectData?.data?.project) {
+      updateAppStore({ selectedProject: projectData?.data?.project })
+    }
+  }, [projectData]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (error) {
+      showError(error?.message)
+    }
+  }, [error]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (loading) {
+    return <></>
+  }
 
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
-        moduleFilter={ModuleName.CODE as ProjectSelectorProps['moduleFilter']}
-        onSelect={projectSelectHandler}
+        moduleFilter={ModuleName.CODE}
+        onSelect={data => {
+          updateAppStore({ selectedProject: data })
+          history.push(
+            routes.toCODERepositories({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
+          )
+        }}
       />
+
       {projectIdentifier && orgIdentifier && (
         <>
           <SidebarLink
