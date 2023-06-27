@@ -1033,3 +1033,4 @@ customSequence:
   switchFailedMsg: Failed to switch
 samVersionLabel: SAM Version
 serverlessVersionLabel: Serverless Version
+encryptJsonOutput: Encrypt json output

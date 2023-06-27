@@ -10,6 +10,8 @@ import { get } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { TerraformData, TerraformVariableStepProps, TerraformStoreTypes } from './TerraformInterfaces'
 import { ConfigVariables } from './Variableview/ConfigSection'
 import css from './TerraformStep.module.scss'
@@ -21,6 +23,8 @@ export function TerraformVariableStep(props: TerraformVariableStepProps): React.
   const { getString } = useStrings()
   const initialValuesSpec = get(initialValues?.spec, `${fieldPath}`)
   const variablesDataSpec = get(variablesData?.spec, `${fieldPath}`)
+
+  const { CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
 
   if (initialValuesSpec?.type === 'Inline' || initialValues?.spec?.cloudCliConfiguration) {
     return (
@@ -64,6 +68,15 @@ export function TerraformVariableStep(props: TerraformVariableStepProps): React.
             />
           )
         })}
+
+        {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT && (
+          <VariablesListTable
+            data={variablesDataSpec.encryptOutput}
+            originalData={initialValuesSpec.encryptOutput}
+            metadataMap={metadataMap}
+            className={pipelineVariableCss.variablePaddingL3}
+          />
+        )}
       </>
     )
   } else if (initialValuesSpec?.type !== TerraformStoreTypes.Inline) {
@@ -82,6 +95,14 @@ export function TerraformVariableStep(props: TerraformVariableStepProps): React.
           metadataMap={metadataMap}
           className={pipelineVariableCss.variablePaddingL3}
         />
+        {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT && (
+          <VariablesListTable
+            data={variablesDataSpec.encryptOutput}
+            originalData={initialValuesSpec.encryptOutput}
+            metadataMap={metadataMap}
+            className={pipelineVariableCss.variablePaddingL3}
+          />
+        )}
       </>
     )
   }

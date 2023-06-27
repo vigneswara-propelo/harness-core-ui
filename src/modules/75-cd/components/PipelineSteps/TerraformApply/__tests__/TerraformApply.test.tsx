@@ -8,6 +8,9 @@
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -25,6 +28,10 @@ jest.mock('services/portal', () => ({
 
 jest.mock('react-monaco-editor', () => ({ value, onChange, name }: any) => {
   return <textarea value={value} onChange={e => onChange(e.target.value)} name={name || 'spec.source.spec.script'} />
+})
+
+jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+  CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT: true
 })
 
 describe('Test TerraformApply', () => {

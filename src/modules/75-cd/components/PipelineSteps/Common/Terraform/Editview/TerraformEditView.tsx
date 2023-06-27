@@ -64,6 +64,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+
 import { TFMonaco } from './TFMonacoEditor'
 
 import {
@@ -109,7 +111,8 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { CDS_TERRAFORM_CLI_OPTIONS_NG } = useFeatureFlags()
+  const { CDS_TERRAFORM_CLI_OPTIONS_NG, CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
+
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -509,6 +512,24 @@ export default function TerraformEditView(
         })
   })
 
+  const secretManagerComponent = (fieldName: string): React.ReactElement => (
+    <FormMultiTypeConnectorField
+      label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
+      category={'SECRET_MANAGER'}
+      setRefValue
+      width={280}
+      name={fieldName}
+      placeholder={getString('select')}
+      accountIdentifier={accountId}
+      projectIdentifier={projectIdentifier}
+      orgIdentifier={orgIdentifier}
+      style={{ marginBottom: 10 }}
+      multiTypeProps={{ expressions, allowableTypes }}
+      gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+      disabled={readonly}
+    />
+  )
+
   return (
     <>
       <Formik<TFFormData>
@@ -820,6 +841,15 @@ export default function TerraformEditView(
                               disabled={readonly}
                             />
                           </div>
+                          {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT && stepType === StepType.TerraformApply && (
+                            <div className={cx(stepCss.formGroup, stepCss.md)}>
+                              {secretManagerComponent(
+                                enableCloudCli
+                                  ? 'spec.cloudCliConfiguration.encryptOutput.outputSecretManagerRef'
+                                  : 'spec.configuration.encryptOutput.outputSecretManagerRef'
+                              )}
+                            </div>
+                          )}
                         </div>
                       }
                     />
@@ -828,7 +858,7 @@ export default function TerraformEditView(
                         id="step-2"
                         summary={getString('cd.commandLineOptions')}
                         details={
-                          <div>
+                          <div className={css.optionalConfigDetails}>
                             {!enableCloudCli && skipRefreshCommandComponent(formik as FormikProps<unknown>)}
                             <div>
                               <TerraformCommandFlags
@@ -847,15 +877,26 @@ export default function TerraformEditView(
                 </>
               )}
 
-              {CDS_TERRAFORM_CLI_OPTIONS_NG &&
-                (values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply ||
-                  values?.spec?.configuration?.type === ConfigurationTypes.InheritFromPlan) && (
-                  <Accordion className={stepCss.accordion}>
+              {formik.values?.spec?.configuration?.type === ConfigurationTypes.InheritFromPlan && (
+                <Accordion className={stepCss.accordion}>
+                  {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT && stepType === StepType.TerraformApply && (
                     <Accordion.Panel
                       id="step-1"
+                      summary={getString('common.optionalConfig')}
+                      details={
+                        <div className={css.optionalConfigDetails}>
+                          {secretManagerComponent('spec.configuration.encryptOutput.outputSecretManagerRef')}
+                        </div>
+                      }
+                    />
+                  )}
+
+                  {CDS_TERRAFORM_CLI_OPTIONS_NG && (
+                    <Accordion.Panel
+                      id="step-2"
                       summary={getString('cd.commandLineOptions')}
                       details={
-                        <div>
+                        <div className={css.optionalConfigDetails}>
                           {initialValues?.type === StepType.TerraformDestroy &&
                             values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply &&
                             skipRefreshCommandComponent(formik as FormikProps<unknown>)}
@@ -872,8 +913,36 @@ export default function TerraformEditView(
                         </div>
                       }
                     />
-                  </Accordion>
-                )}
+                  )}
+                </Accordion>
+              )}
+
+              {CDS_TERRAFORM_CLI_OPTIONS_NG &&
+              values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply ? (
+                <Accordion className={stepCss.accordion}>
+                  <Accordion.Panel
+                    id="step-1"
+                    summary={getString('cd.commandLineOptions')}
+                    details={
+                      <div className={css.optionalConfigDetails}>
+                        {initialValues?.type === StepType.TerraformDestroy &&
+                          values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply &&
+                          skipRefreshCommandComponent(formik as FormikProps<unknown>)}
+
+                        <div>
+                          <TerraformCommandFlags
+                            formik={formik}
+                            stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
+                            configType={fieldPath}
+                            allowableTypes={allowableTypes}
+                            path={`spec.${fieldPath}.commandFlags`}
+                          />
+                        </div>
+                      </div>
+                    }
+                  />
+                </Accordion>
+              ) : null}
 
               {showModal && (
                 <Dialog

@@ -11,6 +11,8 @@ import { get, isEmpty } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, Label, FormInput } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
+import { useParams } from 'react-router-dom'
+
 import type {
   TerraformBackendConfigSpec,
   TerraformCliOptionFlag,
@@ -26,6 +28,11 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useQueryParams } from '@common/hooks'
+import { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+
 import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformInterfaces'
 import ConfigInputs from './InputSteps/ConfigSection'
 import TFRemoteSection from './InputSteps/TFRemoteSection'
@@ -49,6 +56,14 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   }
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const inputSetDataSpec = get(inputSetData?.template?.spec, `${fieldPath}`)
+  const { CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
+
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   return (
     <FormikForm className={stepCss.inputWidth}>
       {getMultiTypeFromValue((inputSetData?.template as TerraformData)?.spec?.provisionerIdentifier) ===
@@ -219,6 +234,29 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           )
         }
       })}
+
+      {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT &&
+        isValueRuntimeInput((inputSetDataSpec as any).encryptOutput?.outputSecretManagerRef) && (
+          <FormMultiTypeConnectorField
+            accountIdentifier={accountId}
+            projectIdentifier={projectIdentifier}
+            category={'SECRET_MANAGER'}
+            setRefValue
+            orgIdentifier={orgIdentifier}
+            name={`${
+              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+            }spec.${fieldPath}.encryptOutput.outputSecretManagerRef`}
+            tooltipProps={{
+              dataTooltipId: 'outputSecretManagerRef'
+            }}
+            label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
+            enableConfigureOptions={false}
+            placeholder={getString('select')}
+            disabled={readonly}
+            multiTypeProps={{ allowableTypes, expressions }}
+            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          />
+        )}
     </FormikForm>
   )
 }

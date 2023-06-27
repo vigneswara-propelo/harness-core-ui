@@ -11,6 +11,8 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+
 import { TerraformDestroy } from '../TerraformDestroy'
 
 const mockGetCallFunction = jest.fn()
@@ -24,6 +26,10 @@ jest.mock('services/portal', () => ({
 
 jest.mock('react-monaco-editor', () => ({ value, onChange, name }: any) => {
   return <textarea value={value} onChange={e => onChange(e.target.value)} name={name || 'spec.source.spec.script'} />
+})
+
+jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+  CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT: true
 })
 
 describe('Test TerraformDestroy', () => {

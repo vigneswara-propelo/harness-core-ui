@@ -307,6 +307,16 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
   const targets = get(values.spec, `${fieldPath}.spec.targets`) as MultiTypeInputType
   const cmdFlags = get(values.spec, `${fieldPath}.commandFlags`)
 
+  const secretManagerRef = values?.spec?.cloudCliConfiguration
+    ? get(values.spec, `cloudCliConfiguration.encryptOutput.outputSecretManagerRef`)
+    : get(values.spec, `configuration.encryptOutput.outputSecretManagerRef`)
+  const secretObj = secretManagerRef
+    ? {
+        encryptOutput: {
+          outputSecretManagerRef: secretManagerRef
+        }
+      }
+    : {}
   const processCmdFlags = (): TerraformCliOptionFlag[] | undefined => {
     if (cmdFlags?.length && cmdFlags[0].commandType) {
       return cmdFlags.map((commandFlag: TerraformCliOptionFlag) => ({
@@ -436,6 +446,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
             type: values?.spec?.configuration?.type,
             skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
             commandFlags: processCmdFlags(),
+            ...secretObj,
             spec: {
               ...configObject
             }
@@ -450,6 +461,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
           ...values.spec,
           cloudCliConfiguration: {
             commandFlags: processCmdFlags(),
+            ...secretObj,
             spec: {
               ...configObject
             }
@@ -466,7 +478,8 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
       configuration: {
         type: values?.spec?.configuration?.type,
         skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
-        commandFlags: processCmdFlags()
+        commandFlags: processCmdFlags(),
+        ...secretObj
       }
     }
   }
@@ -702,6 +715,13 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
     : data.spec?.cloudCliConfiguration
     ? 'spec.cloudCliConfiguration'
     : ''
+
+  const secretManagerField = data.spec?.configuration
+    ? get(data.spec, 'configuration.encryptOutput.outputSecretManagerRef')
+    : data.spec?.cloudCliConfiguration
+    ? get(data.spec, 'cloudCliConfiguration.encryptOutput.outputSecretManagerRef')
+    : ''
+
   const envVars = get(data, `${path}.spec.environmentVariables`) as StringNGVariable[]
   const terraformSpec = {
     ...get(data, `${path}.spec`),
@@ -721,6 +741,14 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
       : [{ key: '', value: '', id: uuid() }]
   }
 
+  const secretObj = secretManagerField
+    ? {
+        encryptOutput: {
+          outputSecretManagerRef: secretManagerField
+        }
+      }
+    : {}
+
   return {
     ...data,
     ...(!isEmpty(path) && {
@@ -737,6 +765,7 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
                     flag: commandFlag.flag
                   })
                 ),
+                ...secretObj,
                 spec: { ...terraformSpec }
               }
             }
@@ -748,6 +777,7 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
                     flag: commandFlag.flag
                   })
                 ),
+                ...secretObj,
                 spec: { ...terraformSpec }
               }
             })

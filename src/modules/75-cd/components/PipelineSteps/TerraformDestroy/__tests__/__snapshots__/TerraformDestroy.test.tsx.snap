@@ -3653,6 +3653,9 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
         </div>
       </div>
     </div>
+    <div
+      class="Accordion--accordion accordion"
+    />
   </div>
 </div>
 `;
@@ -4958,6 +4961,9 @@ exports[`Test TerraformDestroy should submit form for inheritfromplan config 1`]
         </div>
       </div>
     </div>
+    <div
+      class="Accordion--accordion accordion"
+    />
   </div>
 </div>
 `;
