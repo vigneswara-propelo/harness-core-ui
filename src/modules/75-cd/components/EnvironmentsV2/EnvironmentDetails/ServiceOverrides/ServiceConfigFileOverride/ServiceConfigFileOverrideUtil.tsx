@@ -27,7 +27,10 @@ export function getAllowedConfigStores({ CDS_GIT_CONFIG_FILES = false }): Config
 }
 
 export const shouldShowGitConfigStores = (deploymentType: ServiceDefinition['type']): boolean => {
-  return [ServiceDeploymentType.WinRm, ServiceDeploymentType.Ssh, ServiceDeploymentType.TAS].includes(
-    deploymentType as ServiceDeploymentType
-  )
+  return [
+    ServiceDeploymentType.WinRm,
+    ServiceDeploymentType.Ssh,
+    ServiceDeploymentType.TAS,
+    ServiceDeploymentType.Kubernetes
+  ].includes(deploymentType as ServiceDeploymentType)
 }

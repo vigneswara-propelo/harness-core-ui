@@ -36,7 +36,13 @@ export const ConfigFileTypeTitle: Record<ConfigFileType, StringKeys> = {
 }
 
 export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<ConfigFileType>> = {
-  Kubernetes: [ConfigFilesMap.Harness],
+  Kubernetes: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
   NativeHelm: [ConfigFilesMap.Harness],
   ServerlessAwsLambda: [ConfigFilesMap.Harness],
   AzureWebApp: [ConfigFilesMap.Harness],
