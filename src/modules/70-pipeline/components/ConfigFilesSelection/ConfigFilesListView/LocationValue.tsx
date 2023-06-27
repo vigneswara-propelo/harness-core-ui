@@ -15,7 +15,6 @@ import css from '../ConfigFilesSelection.module.scss'
 interface ILocationValueItem {
   locations: string[]
   isHarnessStore: boolean
-  fieldName?: string
   onClick: (path: string, scope: string) => void
   isFileStore?: boolean
   isTooltip?: boolean

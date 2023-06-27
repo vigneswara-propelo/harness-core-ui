@@ -761,7 +761,6 @@ function ManifestListView({
                         <span>
                           <Text
                             width={200}
-                            tooltipProps={{ isDark: true }}
                             lineClamp={1}
                             tooltip={
                               <LocationValue
