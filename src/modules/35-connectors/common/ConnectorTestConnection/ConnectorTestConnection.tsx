@@ -514,7 +514,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
               current={stepDetails.step}
               currentStatus={stepDetails.status}
             />
-            {connectorInfo && connectorInfo?.spec?.delegateSelectors?.length > 0 ? (
+            {connectorInfo && connectorInfo?.spec?.executeOnDelegate ? (
               <DelegateTaskLogsButton
                 startTime={(testConnectionResponse?.data?.testedAt || 0) - timePadding}
                 endTime={(testConnectionResponse?.data?.testedAt || 0) + timePadding * 2}
