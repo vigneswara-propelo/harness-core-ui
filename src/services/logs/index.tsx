@@ -150,6 +150,10 @@ interface RcaQueryParams {
    * Account level token to ensure allowed access
    */
   'X-Harness-Token': string
+  /**
+   * Account ID to retrieve logs for
+   */
+  accountID: string
 }
 
 export interface ResponseRemediation {

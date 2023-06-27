@@ -96,7 +96,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     const currentTime = new Date().getTime()
     try {
       rcaPromise({
-        queryParams: { 'X-Harness-Token': logsToken },
+        queryParams: { 'X-Harness-Token': logsToken, accountID: accountId },
         requestOptions: {
           headers: {
             'content-type': 'application/x-www-form-urlencoded'
