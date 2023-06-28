@@ -45,7 +45,6 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { TerraformCliOptionFlag } from 'services/cd-ng'
 import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
 import TerraformCommandFlags from '../Common/TerraformCommandFlags/TerraformCommandFlags'
@@ -97,7 +96,6 @@ function TerraformRollbackWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, isNewStep = true, readonly = false } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_TERRAFORM_CLI_OPTIONS_NG } = useFeatureFlags()
   return (
     <>
       <Formik<TFRollbackData>
@@ -181,52 +179,50 @@ function TerraformRollbackWidget(
                   />
                 )}
               </div>
-              {CDS_TERRAFORM_CLI_OPTIONS_NG && (
-                <Accordion className={stepCss.accordion}>
-                  <Accordion.Panel
-                    id="step-1"
-                    summary={getString('cd.commandLineOptions')}
-                    details={
-                      <>
-                        <div className={cx(stepCss.formGroup, stepCss.md)}>
-                          <FormMultiTypeCheckboxField
-                            formik={formik as FormikProps<unknown>}
-                            name={'spec.skipRefreshCommand'}
-                            label={getString('cd.skipRefreshCommand')}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
-                            disabled={readonly}
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="step-1"
+                  summary={getString('cd.commandLineOptions')}
+                  details={
+                    <>
+                      <div className={cx(stepCss.formGroup, stepCss.md)}>
+                        <FormMultiTypeCheckboxField
+                          formik={formik as FormikProps<unknown>}
+                          name={'spec.skipRefreshCommand'}
+                          label={getString('cd.skipRefreshCommand')}
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          disabled={readonly}
+                        />
+                        {getMultiTypeFromValue(formik.values?.spec?.skipRefreshCommand) ===
+                          MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={(formik.values?.spec?.skipRefreshCommand || '') as string}
+                            type="String"
+                            variableName="spec.skipRefreshCommand"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            onChange={
+                              /* istanul ignore next */
+                              value => formik.setFieldValue('spec.skipRefreshCommand', value)
+                            }
+                            style={{ alignSelf: 'center' }}
+                            isReadonly={readonly}
                           />
-                          {getMultiTypeFromValue(formik.values?.spec?.skipRefreshCommand) ===
-                            MultiTypeInputType.RUNTIME && (
-                            <ConfigureOptions
-                              value={(formik.values?.spec?.skipRefreshCommand || '') as string}
-                              type="String"
-                              variableName="spec.skipRefreshCommand"
-                              showRequiredField={false}
-                              showDefaultField={false}
-                              onChange={
-                                /* istanul ignore next */
-                                value => formik.setFieldValue('spec.skipRefreshCommand', value)
-                              }
-                              style={{ alignSelf: 'center' }}
-                              isReadonly={readonly}
-                            />
-                          )}
-                        </div>
-                        <div>
-                          <TerraformCommandFlags
-                            formik={formik}
-                            stepType="ROLLBACK"
-                            configType={'configuration'}
-                            allowableTypes={allowableTypes}
-                            path={'spec.commandFlags'}
-                          />
-                        </div>
-                      </>
-                    }
-                  />
-                </Accordion>
-              )}
+                        )}
+                      </div>
+                      <div>
+                        <TerraformCommandFlags
+                          formik={formik}
+                          stepType="ROLLBACK"
+                          configType={'configuration'}
+                          allowableTypes={allowableTypes}
+                          path={'spec.commandFlags'}
+                        />
+                      </div>
+                    </>
+                  }
+                />
+              </Accordion>
             </>
           )
         }}

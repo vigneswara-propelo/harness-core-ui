@@ -111,7 +111,7 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { CDS_TERRAFORM_CLI_OPTIONS_NG, CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
+  const { CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
 
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -853,26 +853,24 @@ export default function TerraformEditView(
                         </div>
                       }
                     />
-                    {CDS_TERRAFORM_CLI_OPTIONS_NG && (
-                      <Accordion.Panel
-                        id="step-2"
-                        summary={getString('cd.commandLineOptions')}
-                        details={
-                          <div className={css.optionalConfigDetails}>
-                            {!enableCloudCli && skipRefreshCommandComponent(formik as FormikProps<unknown>)}
-                            <div>
-                              <TerraformCommandFlags
-                                formik={formik}
-                                stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
-                                configType={fieldPath}
-                                allowableTypes={allowableTypes}
-                                path={`spec.${fieldPath}.commandFlags`}
-                              />
-                            </div>
+                    <Accordion.Panel
+                      id="step-2"
+                      summary={getString('cd.commandLineOptions')}
+                      details={
+                        <div className={css.optionalConfigDetails}>
+                          {!enableCloudCli && skipRefreshCommandComponent(formik as FormikProps<unknown>)}
+                          <div>
+                            <TerraformCommandFlags
+                              formik={formik}
+                              stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
+                              configType={fieldPath}
+                              allowableTypes={allowableTypes}
+                              path={`spec.${fieldPath}.commandFlags`}
+                            />
                           </div>
-                        }
-                      />
-                    )}
+                        </div>
+                      }
+                    />
                   </Accordion>
                 </>
               )}
@@ -890,35 +888,31 @@ export default function TerraformEditView(
                       }
                     />
                   )}
+                  <Accordion.Panel
+                    id="step-2"
+                    summary={getString('cd.commandLineOptions')}
+                    details={
+                      <div className={css.optionalConfigDetails}>
+                        {initialValues?.type === StepType.TerraformDestroy &&
+                          values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply &&
+                          skipRefreshCommandComponent(formik as FormikProps<unknown>)}
 
-                  {CDS_TERRAFORM_CLI_OPTIONS_NG && (
-                    <Accordion.Panel
-                      id="step-2"
-                      summary={getString('cd.commandLineOptions')}
-                      details={
-                        <div className={css.optionalConfigDetails}>
-                          {initialValues?.type === StepType.TerraformDestroy &&
-                            values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply &&
-                            skipRefreshCommandComponent(formik as FormikProps<unknown>)}
-
-                          <div>
-                            <TerraformCommandFlags
-                              formik={formik}
-                              stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
-                              configType={fieldPath}
-                              allowableTypes={allowableTypes}
-                              path={`spec.${fieldPath}.commandFlags`}
-                            />
-                          </div>
+                        <div>
+                          <TerraformCommandFlags
+                            formik={formik}
+                            stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
+                            configType={fieldPath}
+                            allowableTypes={allowableTypes}
+                            path={`spec.${fieldPath}.commandFlags`}
+                          />
                         </div>
-                      }
-                    />
-                  )}
+                      </div>
+                    }
+                  />
                 </Accordion>
               )}
 
-              {CDS_TERRAFORM_CLI_OPTIONS_NG &&
-              values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply ? (
+              {values?.spec?.configuration?.type === ConfigurationTypes.InheritFromApply ? (
                 <Accordion className={stepCss.accordion}>
                   <Accordion.Panel
                     id="step-1"

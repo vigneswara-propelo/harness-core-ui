@@ -505,6 +505,34 @@ Object {
               />
             </div>
           </div>
+          <div
+            class="Accordion--panel"
+            data-open="false"
+            data-testid="step-2-panel"
+          >
+            <div
+              class="Accordion--summary"
+              data-testid="step-2-summary"
+            >
+              <div
+                class="Accordion--label"
+              >
+                cd.commandLineOptions
+              </div>
+              <div
+                class="Accordion--chevron"
+              />
+            </div>
+            <div
+              class="bp3-collapse Accordion--collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -994,6 +1022,34 @@ Object {
               class="Accordion--label"
             >
               common.optionalConfig
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="step-2-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="step-2-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              cd.commandLineOptions
             </div>
             <div
               class="Accordion--chevron"
@@ -2575,6 +2631,34 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -3304,6 +3388,34 @@ exports[`Test TerraformPlan should render edit view as edit step 1`] = `
           />
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -3807,6 +3919,34 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
           />
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -4295,6 +4435,34 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
             class="Accordion--label"
           >
             common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
           </div>
           <div
             class="Accordion--chevron"
@@ -5024,6 +5192,34 @@ exports[`Test TerraformPlan should render edit view with command Destroy 1`] = `
             class="Accordion--label"
           >
             common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
           </div>
           <div
             class="Accordion--chevron"
@@ -6149,6 +6345,34 @@ exports[`Test TerraformPlan should submit form for terraform plan 1`] = `
             class="Accordion--label"
           >
             common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
           </div>
           <div
             class="Accordion--chevron"

@@ -1088,6 +1088,34 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2206,6 +2234,34 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -3299,6 +3355,34 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
           </div>
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -3655,7 +3739,36 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
     </div>
     <div
       class="Accordion--accordion accordion"
-    />
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -4006,6 +4119,38 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
               </span>
             </span>
           </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Accordion--accordion accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-1-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-1-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
         </div>
       </div>
     </div>
@@ -4963,7 +5108,36 @@ exports[`Test TerraformDestroy should submit form for inheritfromplan config 1`]
     </div>
     <div
       class="Accordion--accordion accordion"
-    />
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

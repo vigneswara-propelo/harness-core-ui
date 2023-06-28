@@ -522,6 +522,38 @@ exports[`Test TerraformRollback should render edit view as edit step 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="Accordion--accordion accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-1-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-1-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -784,6 +816,38 @@ exports[`Test TerraformRollback should render edit view as new step 1`] = `
               </span>
             </span>
           </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Accordion--accordion accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-1-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-1-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
         </div>
       </div>
     </div>
@@ -1130,6 +1194,38 @@ exports[`Test TerraformRollback should render edit view with runtime input value
           </button>
         </span>
       </span>
+    </div>
+    <div
+      class="Accordion--accordion accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-1-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-1-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>

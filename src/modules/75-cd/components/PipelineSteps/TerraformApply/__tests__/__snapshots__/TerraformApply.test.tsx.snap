@@ -1125,6 +1125,34 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1620,6 +1648,34 @@ exports[`Test TerraformApply should render edit view as edit step - Inheritfromp
           />
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2015,6 +2071,34 @@ exports[`Test TerraformApply should render edit view as inline 1`] = `
             class="Accordion--label"
           >
             common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
           </div>
           <div
             class="Accordion--chevron"
@@ -2798,6 +2882,34 @@ exports[`Test TerraformApply should submit form for inheritfromplan config 1`] =
           />
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -3225,6 +3337,34 @@ exports[`Test TerraformApply should submit form for inline config 1`] = `
             class="Accordion--label"
           >
             common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
           </div>
           <div
             class="Accordion--chevron"
@@ -3735,6 +3875,34 @@ exports[`Test TerraformApply should trigger validation error for expression valu
           />
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -4208,6 +4376,34 @@ exports[`Test TerraformApply should trigger validation error for fixed value 1`]
           />
         </div>
       </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -4666,6 +4862,34 @@ exports[`Test TerraformApply should trigger validation error for invalid fixed v
             class="Accordion--label"
           >
             common.optionalConfig
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(-undefinedpx);"
+          />
+        </div>
+      </div>
+      <div
+        class="Accordion--panel"
+        data-open="false"
+        data-testid="step-2-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="step-2-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            cd.commandLineOptions
           </div>
           <div
             class="Accordion--chevron"
