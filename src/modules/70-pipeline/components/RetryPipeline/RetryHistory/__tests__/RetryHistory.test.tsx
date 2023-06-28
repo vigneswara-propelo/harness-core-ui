@@ -98,7 +98,7 @@ describe('Retry History Button tests', () => {
     expect(retryHistoryButton).toBeDisabled()
   })
 
-  test.skip('retry history button should be enabled when view pipeline permission is truthy', async () => {
+  test('retry history button should be enabled when view pipeline permission is truthy', async () => {
     jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true, true, false])
     const { getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
@@ -113,18 +113,19 @@ describe('Retry History Button tests', () => {
     await userEvent.click(retryHistoryButton)
     const retryHistoryExecutionList = await screen.findByTestId('retryHistoryExecutionList')
     expect(retryHistoryExecutionList).toBeInTheDocument()
-    const executionDetailText = await screen.findByText('pipeline.recentExecutionText 2/2')
-    await userEvent.click(executionDetailText)
+    const latestRetryHistoryExecutionListCard = await screen.findByTestId('retryHistoryExecutionListCard-0')
+    expect(latestRetryHistoryExecutionListCard).toBeInTheDocument()
+    await userEvent.click(latestRetryHistoryExecutionListCard)
     expect(getByTestId('location')).toMatchInlineSnapshot(`
-    <div
-      data-testid="location"
-    >
-      /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline
-    </div>
-  `)
+          <div
+            data-testid="location"
+          >
+            /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline
+          </div>
+      `)
   })
 
-  test.skip('render retry history execution list on loading state', async () => {
+  test('render retry history execution list on loading state', async () => {
     jest.spyOn(pipelineng, 'useRetryHistory').mockImplementation((): any => {
       return { data: {}, refetch: jest.fn(), loading: true }
     })
@@ -142,7 +143,7 @@ describe('Retry History Button tests', () => {
     expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
   })
 
-  test.skip('on viewLatest click', async () => {
+  test('on viewLatest click', async () => {
     jest.spyOn(ExecutionContext, 'useExecutionContext').mockReturnValue({
       pipelineExecutionDetail: {
         pipelineExecutionSummary: {

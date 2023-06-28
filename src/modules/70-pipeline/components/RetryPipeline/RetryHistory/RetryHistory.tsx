@@ -244,6 +244,7 @@ function RetryHistory({ canView, showRetryHistory, canRetry }: RetryHistoryProps
                         key={retryHistory.uuid}
                         onClick={() => gotoExecutionDetails(retryHistory?.uuid as string)}
                         selected={executionIdentifier === retryHistory.uuid}
+                        data-testid={`retryHistoryExecutionListCard-${index}`}
                       >
                         <div className={css.content}>
                           <div className={cx(css.cardSection, css.executionDetail)}>
