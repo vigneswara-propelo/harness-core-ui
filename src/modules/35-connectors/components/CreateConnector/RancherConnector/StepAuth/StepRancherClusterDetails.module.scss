@@ -60,7 +60,7 @@
       width: 42%;
       display: flex;
       justify-content: space-between;
-
+      align-items: baseline;
       .authTitle {
         font-size: var(font-size-normal);
         color: var(--black-600);

@@ -23,7 +23,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
-import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { AuthTypes, getLabelForAuthType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { URLValidationSchema } from '@common/utils/Validation'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
@@ -96,7 +96,7 @@ const StepRancherClusterDetails: React.FC<StepProps<StepRancherClusterDetailsPro
 
     const authOptions: Array<AuthOptionInterface> = [
       {
-        label: getString('connectors.bearerToken'),
+        label: getLabelForAuthType(AuthTypes.BEARER_TOKEN_RANCHER),
         value: AuthTypes.BEARER_TOKEN_RANCHER
       }
     ]
