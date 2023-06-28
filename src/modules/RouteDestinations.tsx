@@ -14,6 +14,7 @@ import commonRoutes from '@common/RouteDestinations'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuthSettingsRoutes from '@auth-settings/RouteDestinations'
 import secretsRoutes from '@secrets/RouteDestinations'
+import discoveryRoutes from '@discovery/RouteDestinations'
 import variableRoutes from '@variables/RouteDestinations'
 import fileStoreRoutes from '@filestore/RouteDestinations'
 import RbacRoutes from '@rbac/RouteDestinations'
@@ -60,7 +61,8 @@ export default function RouteDestinations(): React.ReactElement {
     SSCA_ENABLED,
     IDP_ENABLED,
     CET_ENABLED,
-    CDB_MFE_ENABLED
+    CDB_MFE_ENABLED,
+    PL_DISCOVERY_ENABLE
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -74,6 +76,7 @@ export default function RouteDestinations(): React.ReactElement {
       {commonRoutes.props.children}
       {secretsRoutes.props.children}
       {variableRoutes.props.children}
+      {PL_DISCOVERY_ENABLE && discoveryRoutes.props.children}
       {auditTrailRoutes.props.children}
       {RbacRoutes().props.children}
       {DefaultSettingsRoutes().props.children}

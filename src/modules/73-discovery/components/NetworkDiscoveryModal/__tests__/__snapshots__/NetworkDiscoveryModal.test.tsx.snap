@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetworkDiscoveryModal render component to match snapshot 1`] = `
+<div>
+  <div>
+    <button
+      name="Open dialog"
+    />
+  </div>
+</div>
+`;

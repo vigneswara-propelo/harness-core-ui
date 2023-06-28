@@ -1,0 +1,80 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.tableBody {
+  padding: var(--spacing-medium) !important;
+}
+
+.totalServiceContainer {
+  background: var(--grey-50) !important;
+  border-radius: var(--spacing-small);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--grey-100);
+  padding: var(--spacing-small);
+}
+
+.serviceCountContainer {
+  background: var(--grey-50) !important;
+  border-radius: var(--spacing-xsmall);
+  text-align: center;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  border: 1px solid var(--grey-100);
+  padding: var(--spacing-small);
+  width: 200px !important;
+}
+
+.serviceCountText {
+  margin-left: var(--spacing-xsmall) !important;
+  margin-right: var(--spacing-small) !important;
+}
+
+.menuItem {
+  cursor: pointer;
+  padding: 8px !important;
+  width: 100%;
+  text-decoration: none !important;
+}
+
+.totalServiceContainer {
+  background: var(--grey-50) !important;
+  border-radius: var(--spacing-small);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--grey-100);
+}
+
+.noNetworkMapDiv {
+  margin: 10% auto !important;
+  padding: 60px 0px 60px 60px !important;
+  background: var(--white) !important;
+  border-radius: 4px;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+}
+
+.moduleIcons {
+  svg {
+    path {
+      fill: var(--magenta-900) !important;
+    }
+  }
+}
+
+.iconDiv {
+  width: 28px;
+  height: 28px;
+  background: var(--magenta-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}

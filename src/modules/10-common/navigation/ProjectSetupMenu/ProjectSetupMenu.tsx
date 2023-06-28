@@ -40,7 +40,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME,
     STO_JIRA_INTEGRATION,
-    USE_OLD_GIT_SYNC
+    USE_OLD_GIT_SYNC,
+    PL_DISCOVERY_ENABLE
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -60,6 +61,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const isCD = module === 'cd'
   const isCI = module === 'ci'
   const isCV = module === 'cv'
+  const isCHAOS = module === 'chaos'
   const isSTO = module === 'sto'
   const isCIorCD = isCI || isCD
   const isCIorCDorSTO = isCI || isCD || isSTO
@@ -78,6 +80,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
 
   const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
   const showFileStore = isCIorCD || !module
+  // Add more modules as they keep on supporting service discovery feature
+  const showDiscovery = isCHAOS && PL_DISCOVERY_ENABLE
 
   return (
     <NavExpandable
@@ -93,12 +97,12 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />
         <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
 
-        {isGitSyncSupported ? (
+        {isGitSyncSupported && (
           <SidebarLink
             label={getString('gitManagement')}
             to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module })}
           />
-        ) : null}
+        )}
         {showTemplates && <SidebarLink label={getString('common.templates')} to={routes.toTemplates(params)} />}
         {CVNG_TEMPLATE_MONITORED_SERVICE && isCV && (
           <SidebarLink
@@ -109,12 +113,12 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         {!isNonPolicyEngineModule && canUsePolicyEngine && (
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
         )}
-        {showDeploymentFreeze ? (
+        {showDeploymentFreeze && (
           <SidebarLink
             label={getString('common.freezeWindows')}
             to={routes.toFreezeWindows({ ...params, module: params.module || 'cd' })}
           />
-        ) : null}
+        )}
         {showFileStore && <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />}
         {enabledHostedBuildsForFreeUsers && !isCIGetStartedVisible && module === 'ci' && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
@@ -123,6 +127,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         {module === 'cd' && !isCDGetStartedVisible && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
+        {showDiscovery && <SidebarLink label={getString('common.discovery')} to={routes.toDiscovery({ ...params })} />}
         {SRM_ET_EXPERIMENTAL && module === 'cv' && (
           <SidebarLink
             label={getString('common.codeErrorsSettings')}

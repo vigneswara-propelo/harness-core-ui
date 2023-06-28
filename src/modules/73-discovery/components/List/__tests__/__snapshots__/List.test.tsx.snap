@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`List render component paint lists 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--margin-bottom-xlarge"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey900 StyledProps--margin-bottom-xlarge"
+    >
+      What is a network map?
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--font-weight-light StyledProps--color StyledProps--color-grey600"
+    >
+      A map of services designed to ensure that the different entity types within Kubernetes can communicate
+    </p>
+  </div>
+</div>
+`;

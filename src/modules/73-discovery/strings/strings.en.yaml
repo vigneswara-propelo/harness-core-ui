@@ -1,0 +1,88 @@
+homepage:
+  slogan: Network Map Slogan.
+  learnMore: Learn more about Network Map
+  searchNeworkMap: Search network map
+  newServiceBtn: Discover New Services
+  searchDelegate: Search delegate
+  searchDiscoveryAgent: Search Discovery Agent
+  newDiscoveryAgentBtn: New Discovery Agent
+  noDiscoveryAgent: You don’t have any Discovery Agent yet
+  discoveryAgentDesc:
+    Network Map is a visual representation of services and dependencies that are automatically discovered in your clusters.
+    It provides an at-a-glance view of how services interact with one another and how they contribute to the overall performance and health of the system.
+createDiscoveryAgent: Create Discovery Agent
+dAgentName: Discovery Agent Name
+dAgentCreateError: Invalid configuration, either required fields were not filled or validation has failed
+dAgentValidation:
+  nameStart: Discovery Agent name can not start with -
+  nameEnd: Discovery Agent name can not end with -
+  maxLength: Discovery Agent name can have a max length of 50 characters
+  nameRequired: Discovery Agent name is required!
+  connectConnector: Please select a Connector!
+  selectNamespace: Please select a discovery namespace
+networkMapTable:
+  noOfService: No of service
+testConnector: DA-Test Connector
+createNewDiscoveryAgent: Create New Discovery Agent
+tabs:
+  selectServices: Select services
+  configureRelations: Configure relations
+selectAConnector: Select a Kubernetes Connector of your cluster to discover services
+selectAConnectorDescription: A k8s connector will help to discover the services on your clusters. For the first time discovery, it may take up to 5 minutes.
+whatIsNetworkMap: What is a network map?
+networkMapDescription:
+  Harness has got you covered as we cater you with support of the most popular and widely used cloud service
+  providers out there. Select the cloud provider account in which the workloads you want to manage costs are
+  running to continue managing costs. You can always add your multiple cloud services following the same
+  procedure.
+howToCreateNetworkMap: How to create a network Map?
+howToCreateNetworkMapDesc: There are 3 simple steps to create a network map.
+whatIsServiceDiscovery: What is Service Discovery and how it works?
+whatIsServiceDiscoveryDesc: Service Discovery is the automatic detection and monitoring of services running in your Kubernetes clusters, which will help the team gain insights on their applications, infrastructure, and logs. Simply enable Service Discovery on your existing Kubernetes connector to start using this feature!
+discoverServices: Discovering services in your cluster
+approxTime: Approx time
+serviceDiscoveyTable: Service Discovery Table
+discoveredBy: Discovery by
+agentName: Agent Name
+dataCollectionSettings: Data Collection Settings
+dataCollectionSettingsDesc: Configure the period of detecting services in the connector, network traces and namespaces accessed
+createNetworkMap: Create Network Map
+createNewNetworkMap: Create New Network Map
+allDiscoveredServices: All Discovered Services
+discoveryDetails:
+  id: ID
+  lastDiscovery: Last Discovery
+  tabTitles:
+    resources: Discovered Resources
+    networkMaps: Network Maps
+    history: Discovery History
+  settings:
+    overviewTitle: Discovery Agent Overview
+    agentName: Discovery Agent
+    discovertSettings: Discovery Settings
+    disable: Disable Discovery Agent
+    disableDescription: >
+      Disable Discovery Agent will not stop your existing ongoing discovery. 
+      It will stop the subsequent discoveries. This action is not revertible. Learn More
+    detectNetwork: Detect network trace
+    enableEBPF: Enable EBPF
+  networkMaps:
+    noNetworkMapHeader: Let’s get started with your first network map
+    noNetworkMapDesc: >
+      Network map helps you to group the business related services and their dependencies, perform actions, and
+      observe their performance.
+    noNetworkMapChooseService: Choose Services
+  discoveredService:
+    portNumber: Port Number
+serviceDrawer:
+  ipFamily: IP Families
+  selector: Selector
+  workloads: Workload Information
+detectNetworkTrace: Detect network trace connectivity
+blacklistedNamespaces: Backlisted Namespaces
+newNetworkMap: New Network Map
+searchNetworkMap: Search for a network map
+discoveryNamespacePlaceholder: Enter a discovery namespace
+searchService: Search a service
+networkDetails: Network Details
+relatedService: Related Services

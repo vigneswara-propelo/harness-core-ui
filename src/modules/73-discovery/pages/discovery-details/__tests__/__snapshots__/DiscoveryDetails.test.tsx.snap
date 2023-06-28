@@ -1,0 +1,1060 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              />
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        style="width: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+              style="font-size: 20px; font-weight: 600; margin-bottom: 8px;"
+            >
+              local-1
+            </p>
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--inline StyledProps--font-size-small"
+              style="display: inline-flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green500"
+                icon="full-circle"
+              >
+                <svg
+                  data-icon="full-circle"
+                  height="6"
+                  viewBox="0 0 16 16"
+                  width="6"
+                >
+                  <desc>
+                    full-circle
+                  </desc>
+                  <path
+                    d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              connected
+            </span>
+          </div>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--margin-right-small"
+          >
+            discovery.discoveryDetails.id
+            : 
+            local-1
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+      >
+        discovery.discoveryDetails.lastDiscovery
+        : 
+        Jun 21, 2023 01:17 PM
+      </p>
+      <button
+        aria-label="Edit"
+        class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-icon bp3-icon-edit StyledProps--main StyledProps--padding-right-xsmall"
+          icon="edit"
+        >
+          <svg
+            data-icon="edit"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              edit
+            </desc>
+            <path
+              d="M3.25 10.26l2.47 2.47 6.69-6.69-2.46-2.48-6.7 6.7zM.99 14.99l3.86-1.39-2.46-2.44-1.4 3.83zm12.25-14c-.48 0-.92.2-1.24.51l-1.44 1.44 2.47 2.47 1.44-1.44c.32-.32.51-.75.51-1.24.01-.95-.77-1.74-1.74-1.74z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          Edit
+        </span>
+        <span
+          class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+          icon="chevron-down"
+        >
+          <svg
+            data-icon="chevron-down"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              chevron-down
+            </desc>
+            <path
+              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <div
+        class="StyledProps--font StyledProps--main"
+        style="width: 100%;"
+      >
+        <div
+          class="bp3-tabs Tabs--main Tabs--horizontal"
+        >
+          <div
+            class="bp3-tab-list"
+            role="tablist"
+          >
+            <div
+              class="bp3-tab-indicator-wrapper"
+              style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+            >
+              <div
+                class="bp3-tab-indicator"
+              />
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_discovered services"
+              aria-disabled="false"
+              aria-expanded="true"
+              aria-selected="true"
+              class="bp3-tab"
+              data-tab-id="discovered services"
+              id="bp3-tab-title_DiscoveredServiceTab_discovered services"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.resources
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_network maps"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="network maps"
+              id="bp3-tab-title_DiscoveredServiceTab_network maps"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.networkMaps
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_discovery history"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="discovery history"
+              id="bp3-tab-title_DiscoveredServiceTab_discovery history"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.history
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_settings"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="settings"
+              id="bp3-tab-title_DiscoveredServiceTab_settings"
+              role="tab"
+              tabindex="0"
+            >
+              settingsLabel
+            </div>
+          </div>
+          <div
+            aria-hidden="false"
+            aria-labelledby="bp3-tab-title_DiscoveredServiceTab_discovered services"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_DiscoveredServiceTab_discovered services"
+            role="tabpanel"
+          >
+            <div
+              class="discovered-services"
+            >
+              Discovered Services
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              />
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        style="width: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+              style="font-size: 20px; font-weight: 600; margin-bottom: 8px;"
+            />
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--inline StyledProps--font-size-small"
+              style="display: inline-flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green500"
+                icon="full-circle"
+              >
+                <svg
+                  data-icon="full-circle"
+                  height="6"
+                  viewBox="0 0 16 16"
+                  width="6"
+                >
+                  <desc>
+                    full-circle
+                  </desc>
+                  <path
+                    d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              connected
+            </span>
+          </div>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--margin-right-small"
+          >
+            discovery.discoveryDetails.id
+            : 
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+      >
+        discovery.discoveryDetails.lastDiscovery
+        : 
+        na
+      </p>
+      <button
+        aria-label="Edit"
+        class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-icon bp3-icon-edit StyledProps--main StyledProps--padding-right-xsmall"
+          icon="edit"
+        >
+          <svg
+            data-icon="edit"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              edit
+            </desc>
+            <path
+              d="M3.25 10.26l2.47 2.47 6.69-6.69-2.46-2.48-6.7 6.7zM.99 14.99l3.86-1.39-2.46-2.44-1.4 3.83zm12.25-14c-.48 0-.92.2-1.24.51l-1.44 1.44 2.47 2.47 1.44-1.44c.32-.32.51-.75.51-1.24.01-.95-.77-1.74-1.74-1.74z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          Edit
+        </span>
+        <span
+          class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+          icon="chevron-down"
+        >
+          <svg
+            data-icon="chevron-down"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              chevron-down
+            </desc>
+            <path
+              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <div
+        class="StyledProps--font StyledProps--main"
+        style="width: 100%;"
+      >
+        <div
+          class="bp3-tabs Tabs--main Tabs--horizontal"
+        >
+          <div
+            class="bp3-tab-list"
+            role="tablist"
+          >
+            <div
+              class="bp3-tab-indicator-wrapper"
+              style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+            >
+              <div
+                class="bp3-tab-indicator"
+              />
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_discovered services"
+              aria-disabled="false"
+              aria-expanded="true"
+              aria-selected="true"
+              class="bp3-tab"
+              data-tab-id="discovered services"
+              id="bp3-tab-title_DiscoveredServiceTab_discovered services"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.resources
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_network maps"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="network maps"
+              id="bp3-tab-title_DiscoveredServiceTab_network maps"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.networkMaps
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_discovery history"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="discovery history"
+              id="bp3-tab-title_DiscoveredServiceTab_discovery history"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.history
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_settings"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="settings"
+              id="bp3-tab-title_DiscoveredServiceTab_settings"
+              role="tab"
+              tabindex="0"
+            >
+              settingsLabel
+            </div>
+          </div>
+          <div
+            aria-hidden="false"
+            aria-labelledby="bp3-tab-title_DiscoveredServiceTab_discovered services"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_DiscoveredServiceTab_discovered services"
+            role="tabpanel"
+          >
+            <div
+              class="discovered-services"
+            >
+              Discovered Services
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              />
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        style="width: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+              style="font-size: 20px; font-weight: 600; margin-bottom: 8px;"
+            />
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--inline StyledProps--font-size-small"
+              style="display: inline-flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green500"
+                icon="full-circle"
+              >
+                <svg
+                  data-icon="full-circle"
+                  height="6"
+                  viewBox="0 0 16 16"
+                  width="6"
+                >
+                  <desc>
+                    full-circle
+                  </desc>
+                  <path
+                    d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              connected
+            </span>
+          </div>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--margin-right-small"
+          >
+            discovery.discoveryDetails.id
+            : 
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+      >
+        discovery.discoveryDetails.lastDiscovery
+        : 
+        na
+      </p>
+      <button
+        aria-label="Edit"
+        class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-icon bp3-icon-edit StyledProps--main StyledProps--padding-right-xsmall"
+          icon="edit"
+        >
+          <svg
+            data-icon="edit"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              edit
+            </desc>
+            <path
+              d="M3.25 10.26l2.47 2.47 6.69-6.69-2.46-2.48-6.7 6.7zM.99 14.99l3.86-1.39-2.46-2.44-1.4 3.83zm12.25-14c-.48 0-.92.2-1.24.51l-1.44 1.44 2.47 2.47 1.44-1.44c.32-.32.51-.75.51-1.24.01-.95-.77-1.74-1.74-1.74z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          Edit
+        </span>
+        <span
+          class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+          icon="chevron-down"
+        >
+          <svg
+            data-icon="chevron-down"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              chevron-down
+            </desc>
+            <path
+              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <div
+        class="StyledProps--font StyledProps--main"
+        style="width: 100%;"
+      >
+        <div
+          class="bp3-tabs Tabs--main Tabs--horizontal"
+        >
+          <div
+            class="bp3-tab-list"
+            role="tablist"
+          >
+            <div
+              class="bp3-tab-indicator-wrapper"
+              style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+            >
+              <div
+                class="bp3-tab-indicator"
+              />
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_discovered services"
+              aria-disabled="false"
+              aria-expanded="true"
+              aria-selected="true"
+              class="bp3-tab"
+              data-tab-id="discovered services"
+              id="bp3-tab-title_DiscoveredServiceTab_discovered services"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.resources
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_network maps"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="network maps"
+              id="bp3-tab-title_DiscoveredServiceTab_network maps"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.networkMaps
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_discovery history"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="discovery history"
+              id="bp3-tab-title_DiscoveredServiceTab_discovery history"
+              role="tab"
+              tabindex="0"
+            >
+              discovery.discoveryDetails.tabTitles.history
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_DiscoveredServiceTab_settings"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="settings"
+              id="bp3-tab-title_DiscoveredServiceTab_settings"
+              role="tab"
+              tabindex="0"
+            >
+              settingsLabel
+            </div>
+          </div>
+          <div
+            aria-hidden="false"
+            aria-labelledby="bp3-tab-title_DiscoveredServiceTab_discovered services"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_DiscoveredServiceTab_discovered services"
+            role="tabpanel"
+          >
+            <div
+              class="discovered-services"
+            >
+              Discovered Services
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

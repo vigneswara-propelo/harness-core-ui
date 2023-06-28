@@ -1,0 +1,595 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DiscoveryPage /> tests should match snapshot 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+      data-testid="page-subheader"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        style="width: 100%;"
+      >
+        <button
+          aria-label="discovery.newNetworkMap"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+            icon="plus"
+          >
+            <svg
+              data-icon="plus"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                plus
+              </desc>
+              <path
+                d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            discovery.newNetworkMap
+          </span>
+        </button>
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+          style="width: 232px; max-width: 232px;"
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="discovery.searchNetworkMap"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main PageBody--pageBody"
+      data-name="page-body"
+      data-testid="page-body"
+    >
+      <div
+        class="StyledProps--font StyledProps--main tableBody"
+      >
+        <div
+          class="TableV2--table"
+        >
+          <div
+            class="TableV2--header"
+            role="row"
+          >
+            <div
+              class="TableV2--cell TableV2--sortable"
+              colspan="1"
+              role="columnheader"
+              style="width: 30%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                common.networkMap
+              </p>
+            </div>
+            <div
+              class="TableV2--cell TableV2--sortable"
+              colspan="1"
+              role="columnheader"
+              style="width: 30%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                discovery.networkMapTable.noOfService
+              </p>
+            </div>
+            <div
+              class="TableV2--cell TableV2--sortable"
+              colspan="1"
+              role="columnheader"
+              style="width: 30%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                lastUpdatedBy
+              </p>
+            </div>
+            <div
+              class="TableV2--cell TableV2--sortable"
+              colspan="1"
+              role="columnheader"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                
+              </p>
+            </div>
+          </div>
+          <div
+            class="TableV2--body"
+          >
+            <div
+              class="TableV2--row TableV2--card"
+              role="row"
+            >
+              <div
+                class="TableV2--cells"
+              >
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 30%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-left-medium StyledProps--color StyledProps--color-primary7"
+                  >
+                    test-nw-map
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 30%;"
+                >
+                  <div
+                    class="Layout--vertical StyledProps--main totalServiceContainer"
+                    style="width: 50px; height: 40px;"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
+                    >
+                      3
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 30%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="Avatar--Avatar Avatar--contentStyle"
+                    >
+                      <span
+                        class="bp3-popover-wrapper Avatar--avatarPopOver"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <div
+                            class="Avatar--AvatarInner"
+                            style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                            tabindex="0"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                              data-icon="user"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="10"
+                                viewBox="0 0 61 73"
+                                width="10"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                        </span>
+                      </span>
+                    </div>
+                    <div
+                      class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey900"
+                        style="--text-line-clamp: 1;"
+                      />
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                        style="--text-line-clamp: 1;"
+                      >
+                        6 days ago
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 10%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                    style="justify-content: flex-end; margin-right: 10px;"
+                  >
+                    <span
+                      class="bp3-popover-wrapper bp3-dark"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="Options"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              viewBox="0 0 4 16"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="2"
+                                cy="2"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="8"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="14"
+                                r="1.5"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main TableV2--pagination Pagination--container StyledProps--padding-top-medium StyledProps--padding-bottom-medium StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
+          >
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small-semi"
+            >
+              1
+               of 
+              1
+            </span>
+            <div
+              class="Layout--horizontal StyledProps--main"
+            >
+              <button
+                aria-label="Prev"
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon bp3-icon-arrow-left StyledProps--main StyledProps--padding-right-xsmall"
+                  icon="arrow-left"
+                >
+                  <svg
+                    data-icon="arrow-left"
+                    height="12"
+                    viewBox="0 0 16 16"
+                    width="12"
+                  >
+                    <desc>
+                      arrow-left
+                    </desc>
+                    <path
+                      d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="bp3-button-text"
+                >
+                  Prev
+                </span>
+              </button>
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--selected Button--with-current-color"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  1
+                </span>
+              </button>
+              <button
+                aria-label="Next"
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  Next
+                </span>
+                <span
+                  class="bp3-icon bp3-icon-arrow-right StyledProps--main"
+                  icon="arrow-right"
+                >
+                  <svg
+                    data-icon="arrow-right"
+                    height="12"
+                    viewBox="0 0 16 16"
+                    width="12"
+                  >
+                    <desc>
+                      arrow-right
+                    </desc>
+                    <path
+                      d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                Show
+              </p>
+              <div
+                class="bp3-popover-wrapper DropDown--main Pagination--pageSizeDropdown"
+              >
+                <div
+                  class="bp3-popover-target"
+                >
+                  <div
+                    class=""
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder StyledProps--flex"
+                      data-testid="dropdown-button"
+                      style="width: 60px;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                          data-testid="dropdown-value"
+                          style="--text-line-clamp: 1;"
+                        >
+                          10
+                        </p>
+                      </div>
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                          data-icon="main-chevron-down"
+                        >
+                          <svg
+                            height="8"
+                            viewBox="0 0 14 8"
+                            width="8"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                              fill="#4d5969"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                per page
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<DiscoveryPage /> tests should render loading view correctly 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main noNetworkMapDiv"
+      style="width: 80%;"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main"
+        style="margin: auto; padding-right: 20px; width: 60%;"
+      >
+        <img
+          src="test-file-stub"
+          width="140px"
+        />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
+        >
+          discovery.discoveryDetails.networkMaps.noNetworkMapHeader
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          discovery.discoveryDetails.networkMaps.noNetworkMapDesc
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+          style="width: 350px;"
+        >
+          <div
+            style="display: flex; align-items: center;"
+          >
+            <div
+              class="iconDiv"
+            >
+              <span
+                class="bp3-icon StyledProps--main moduleIcons"
+                data-icon="code-settings"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  viewBox="0 0 13 13"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M5.477 1.705c0-.27.218-.488.487-.488h.975c.27 0 .488.218.488.488v1.138c.31.084.606.206.879.363l.81-.807c.19-.189.498-.189.688 0l.69.688c.192.19.192.5 0 .691l-.807.804c.156.27.278.563.362.87h1.144c.269 0 .487.22.487.488v.975c0 .27-.218.488-.487.488h-1.144a3.687 3.687 0 01-.363.872l.807.803c.191.19.191.5 0 .691l-.69.688a.488.488 0 01-.689 0l-.81-.806a3.715 3.715 0 01-.877.362v1.138c0 .27-.219.487-.488.487h-.975a.488.488 0 01-.487-.487v-1.138a3.715 3.715 0 01-.88-.363l-.808.806a.488.488 0 01-.688 0l-.691-.688a.487.487 0 010-.69l.806-.804a3.685 3.685 0 01-.362-.871H1.71a.488.488 0 01-.487-.488V5.94c0-.269.218-.487.487-.487h1.143c.084-.308.206-.6.362-.87l-.807-.805a.488.488 0 010-.69l.69-.689c.191-.19.499-.19.689 0l.81.807c.272-.157.567-.28.879-.363zm.65.162v1.1a.493.493 0 01-.383.478 3.065 3.065 0 00-.911.377.493.493 0 01-.607-.069l-.782-.779-.46.459.779.776a.493.493 0 01.069.61c-.171.275-.3.58-.376.903a.493.493 0 01-.479.38H1.873v.65h1.104c.237 0 .428.167.479.382.077.324.205.628.376.903.117.188.1.443-.069.61l-.779.776.46.459.783-.78a.493.493 0 01.606-.068c.278.171.585.3.911.376.216.05.383.242.383.479v1.1h.65v-1.1c0-.237.167-.429.382-.479.326-.076.633-.205.91-.375a.493.493 0 01.607.068l.782.78.46-.46-.779-.776a.493.493 0 01-.068-.61c.17-.275.3-.58.376-.903a.493.493 0 01.478-.381h1.105v-.65H9.926a.493.493 0 01-.479-.381 3.036 3.036 0 00-.376-.903.493.493 0 01.07-.61l.78-.776-.461-.459-.783.78a.493.493 0 01-.607.068 3.065 3.065 0 00-.911-.377.493.493 0 01-.382-.478v-1.1zm.385 3.09a1.544 1.544 0 100 3.087 1.544 1.544 0 000-3.088zM4.32 6.5a2.194 2.194 0 114.387 0 2.194 2.194 0 01-4.387 0z"
+                    fill="#fff"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--margin-left-xsmall"
+            >
+              discovery.discoveryDetails.networkMaps.noNetworkMapChooseService
+            </p>
+          </div>
+          <span
+            class="bp3-icon bp3-icon-arrow-right StyledProps--main"
+            icon="arrow-right"
+          >
+            <svg
+              data-icon="arrow-right"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                arrow-right
+              </desc>
+              <path
+                d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            style="display: flex; align-items: center;"
+          >
+            <div
+              class="iconDiv"
+            >
+              <span
+                class="bp3-icon StyledProps--main moduleIcons StyledProps--margin-top-xsmall StyledProps--margin-left-xsmall"
+                data-icon="graph"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.82 6.927c-.437 0-.861.144-1.207.41L9.259 5.033a3.283 3.283 0 10-4.697 1.142l-.986 2.48a2.662 2.662 0 101.078.46l.983-2.472c.247.057.499.087.752.09.782 0 1.538-.28 2.131-.791l3.411 2.345a2.067 2.067 0 00-.102.64 1.994 1.994 0 101.99-1.993v-.007z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--margin-left-xsmall"
+            >
+              discovery.tabs.configureRelations
+            </p>
+          </div>
+        </div>
+        <button
+          aria-label="discovery.createNewNetworkMap"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+          style="width: 220px;"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            discovery.createNewNetworkMap
+          </span>
+        </button>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main"
+        style="width: 40%;"
+      >
+        <img
+          src="test-file-stub"
+          style="margin-top: 50px;"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

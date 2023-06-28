@@ -269,6 +269,7 @@ export interface StringsMap {
   'common.disable': string
   'common.disabled': string
   'common.discard': string
+  'common.discovery': string
   'common.displayName': string
   'common.displayNamePlaceHolder': string
   'common.download': string
@@ -681,6 +682,7 @@ export interface StringsMap {
   'common.nameOnCard': string
   'common.namePlaceholder': string
   'common.namespace': string
+  'common.networkMap': string
   'common.new': string
   'common.newLines': string
   'common.newMonitoredService': string
@@ -5710,6 +5712,74 @@ export interface StringsMap {
   'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
+  'discovery.agentName': string
+  'discovery.allDiscoveredServices': string
+  'discovery.approxTime': string
+  'discovery.blacklistedNamespaces': string
+  'discovery.createDiscoveryAgent': string
+  'discovery.createNetworkMap': string
+  'discovery.createNewDiscoveryAgent': string
+  'discovery.createNewNetworkMap': string
+  'discovery.dAgentCreateError': string
+  'discovery.dAgentName': string
+  'discovery.dAgentValidation.connectConnector': string
+  'discovery.dAgentValidation.maxLength': string
+  'discovery.dAgentValidation.nameEnd': string
+  'discovery.dAgentValidation.nameRequired': string
+  'discovery.dAgentValidation.nameStart': string
+  'discovery.dAgentValidation.selectNamespace': string
+  'discovery.dataCollectionSettings': string
+  'discovery.dataCollectionSettingsDesc': string
+  'discovery.detectNetworkTrace': string
+  'discovery.discoverServices': string
+  'discovery.discoveredBy': string
+  'discovery.discoveryDetails.discoveredService.portNumber': string
+  'discovery.discoveryDetails.id': string
+  'discovery.discoveryDetails.lastDiscovery': string
+  'discovery.discoveryDetails.networkMaps.noNetworkMapChooseService': string
+  'discovery.discoveryDetails.networkMaps.noNetworkMapDesc': string
+  'discovery.discoveryDetails.networkMaps.noNetworkMapHeader': string
+  'discovery.discoveryDetails.settings.agentName': string
+  'discovery.discoveryDetails.settings.detectNetwork': string
+  'discovery.discoveryDetails.settings.disable': string
+  'discovery.discoveryDetails.settings.disableDescription': string
+  'discovery.discoveryDetails.settings.discovertSettings': string
+  'discovery.discoveryDetails.settings.enableEBPF': string
+  'discovery.discoveryDetails.settings.overviewTitle': string
+  'discovery.discoveryDetails.tabTitles.history': string
+  'discovery.discoveryDetails.tabTitles.networkMaps': string
+  'discovery.discoveryDetails.tabTitles.resources': string
+  'discovery.discoveryNamespacePlaceholder': string
+  'discovery.homepage.discoveryAgentDesc': string
+  'discovery.homepage.learnMore': string
+  'discovery.homepage.newDiscoveryAgentBtn': string
+  'discovery.homepage.newServiceBtn': string
+  'discovery.homepage.noDiscoveryAgent': string
+  'discovery.homepage.searchDelegate': string
+  'discovery.homepage.searchDiscoveryAgent': string
+  'discovery.homepage.searchNeworkMap': string
+  'discovery.homepage.slogan': string
+  'discovery.howToCreateNetworkMap': string
+  'discovery.howToCreateNetworkMapDesc': string
+  'discovery.networkDetails': string
+  'discovery.networkMapDescription': string
+  'discovery.networkMapTable.noOfService': string
+  'discovery.newNetworkMap': string
+  'discovery.relatedService': string
+  'discovery.searchNetworkMap': string
+  'discovery.searchService': string
+  'discovery.selectAConnector': string
+  'discovery.selectAConnectorDescription': string
+  'discovery.serviceDiscoveyTable': string
+  'discovery.serviceDrawer.ipFamily': string
+  'discovery.serviceDrawer.selector': string
+  'discovery.serviceDrawer.workloads': string
+  'discovery.tabs.configureRelations': string
+  'discovery.tabs.selectServices': string
+  'discovery.testConnector': string
+  'discovery.whatIsNetworkMap': string
+  'discovery.whatIsServiceDiscovery': string
+  'discovery.whatIsServiceDiscoveryDesc': string
   'cd.ElastigroupBGStageSetup.awsLoadBalancer': string
   'cd.ElastigroupBGStageSetup.awsLoadBalancerConfig': string
   'cd.ElastigroupBGStageSetup.configureProductionListener': string

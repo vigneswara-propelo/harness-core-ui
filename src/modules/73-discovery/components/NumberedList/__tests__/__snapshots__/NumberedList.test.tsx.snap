@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NumberedList render component paint lists 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main body"
+  >
+    <div>
+      <div
+        class="bulletIndex"
+      >
+        0
+      </div>
+    </div>
+    <div
+      class="content"
+    >
+      Content for numbered list at index 0
+    </div>
+  </div>
+</div>
+`;

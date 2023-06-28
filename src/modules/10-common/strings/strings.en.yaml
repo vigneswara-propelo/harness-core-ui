@@ -1118,6 +1118,7 @@ moduleConfig:
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
 configureModuleList: Configure Module List
+discovery: Discovery
 codeErrorsSettings: Code Error Settings
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
@@ -1413,6 +1414,7 @@ selectProject: Select Project
 googleCloudPlatform: Google Cloud Platform
 updated: Updated
 python: Python
+networkMap: Network Map
 successfullyAdded: Successfully added
 successfullyUpdated: Successfully updated
 errorOccured: 'Error occured while {{verb}} {{entity}}'

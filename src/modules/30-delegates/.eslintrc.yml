@@ -28,6 +28,7 @@ rules:
             - modules/72-freeze-windows/*
             - modules/72-templates-library/*
             - modules/72-triggers/*
+            - modules/73-discovery/*
             - modules/75-cd/*
             - modules/75-ce/*
             - modules/75-cet/*
@@ -56,6 +57,7 @@ rules:
             - '@freeze-windows/*'
             - '@templates-library/*'
             - '@triggers/*'
+            - '@discovery/*'
             - '@cd/*'
             - '@ce/*'
             - '@cet/*'

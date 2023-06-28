@@ -54,7 +54,8 @@ import type {
   TemplateType,
   AccountRoutePlacement,
   ExecutionQueryParams,
-  ServiceOverridesQueryParams
+  ServiceOverridesQueryParams,
+  DiscoveryPathProps
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -399,6 +400,49 @@ const routes = {
       })
     }
   ),
+
+  toDiscovery: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/discovery`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
+  toDiscoveryDetails: withAccountId(
+    ({ orgIdentifier, projectIdentifier, dAgentId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
+      const path = `resources/discovery/${dAgentId}`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
+  toCreateNetworkMap: withAccountId(
+    ({ orgIdentifier, projectIdentifier, dAgentId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
+      const path = `resources/discovery/${dAgentId}/create-network-map`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toDelegates: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `resources/delegates`
