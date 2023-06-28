@@ -513,13 +513,13 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
     const successArr = {
       name: `Success (${successCount})`,
       data: successData,
-      color: '#5FB34E',
+      color: 'var(--green-500)',
       custom
     }
     const failureArr = {
       name: `Failed (${failureCount})`,
       data: failureData,
-      color: '#EE5F54',
+      color: 'var(--red-500)',
       custom
     }
     return selectedView === ChartType.BAR ? [failureArr, successArr] : [successArr, failureArr]

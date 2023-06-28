@@ -47,13 +47,13 @@ export default function DeploymentExecutionsChart(props: any) {
         {
           name: `Failed (${failureCount})`,
           data: failureData,
-          color: 'var(--red-400)',
+          color: 'var(--red-500)',
           custom
         },
         {
           name: `Success (${successCount})`,
           data: successData,
-          color: '#5FB34E',
+          color: 'var(--green-500)',
           custom
         }
       ]

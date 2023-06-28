@@ -62,9 +62,9 @@ export interface ServiceCardWithChartProps {
 function mapStatusToColor(status?: string): string {
   const mappedStatus = mapToExecutionStatus(status)
   if (mappedStatus === ExecutionStatusEnum.Success) {
-    return 'var(--green-400)'
+    return 'var(--green-500)'
   } else if (Object.prototype.hasOwnProperty.call(FailedStatus, mappedStatus!)) {
-    return 'var(--red-400)'
+    return 'var(--red-500)'
   } else if (Object.prototype.hasOwnProperty.call(ActiveStatus, mappedStatus!)) {
     return 'var(--orange-400)'
   }
