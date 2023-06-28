@@ -28,6 +28,7 @@ describe('Changing Project Page', () => {
     cy.login('test', 'test')
 
     cy.visitPageAssertion('[class^=SideNav-module_main]')
+    cy.get('[data-icon="grid"]').click()
     cy.contains('span', 'Service Reliability').click()
     cy.get('[data-tab-id="ProjectTab"]').click()
     cy.contains('p', 'Select a Project').click()

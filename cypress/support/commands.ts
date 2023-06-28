@@ -206,7 +206,7 @@ Cypress.Commands.add('visitPipelinesList', () => {
   cy.contains('p', 'Projects').click()
   cy.visitPageAssertion('.PageBody--pageBody')
   cy.contains('p', 'Project 1').click()
-  cy.contains('p', 'Delivery').click()
+  cy.contains('p', 'Deployments').click()
   cy.contains('p', 'Pipelines').click()
 })
 
@@ -240,7 +240,8 @@ Cypress.Commands.add('visitChangeIntelligence', () => {
   cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
 
   cy.visitPageAssertion('[class^=SideNav-module_main]')
-  cy.contains('span', 'Service Reliability').click()
+  cy.get('[data-icon="grid"]').click()
+  cy.contains('span', 'Service Reliability Management').click()
   cy.get('[data-tab-id="ProjectTab"]').click()
   cy.get('[data-testid="project-select-button"]').click()
   cy.contains('p', 'Project 1').click()
@@ -248,7 +249,8 @@ Cypress.Commands.add('visitChangeIntelligence', () => {
 
 Cypress.Commands.add('visitChangeIntelligenceForSLOs', () => {
   cy.visitPageAssertion('[class^=SideNav-module_main]')
-  cy.contains('span', 'Service Reliability').click()
+  cy.get('[data-icon="grid"]').click()
+  cy.contains('span', 'Service Reliability Management').click()
   cy.get('[data-tab-id="ProjectTab"]').click()
   cy.contains('p', 'Select a Project').click()
   cy.contains('p', 'Project 1').click()
@@ -259,6 +261,7 @@ Cypress.Commands.add('visitSRMTemplate', (oldGitEnabled?: boolean) => {
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: 'MANAGER', gitSyncEnabled: true })
   }
   cy.visitPageAssertion('[class^=SideNav-module_main]')
+  cy.get('[data-icon="grid"]').click()
   cy.contains('span', 'Service Reliability').click()
   cy.get('[data-tab-id="ProjectTab"]').click()
   cy.contains('p', 'Select a Project').click()

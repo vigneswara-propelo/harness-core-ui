@@ -199,6 +199,7 @@ describe('Create account level SLO', () => {
   beforeEach(() => {
     cy.login('test', 'test')
     cy.visitPageAssertion('[class^=SideNav-module_main]')
+    cy.get('[data-icon="grid"]').click()
     cy.contains('span', 'Service Reliability').click()
     cy.intercept('GET', getAccountLevelUserJourneysCall, listUserJourneysCallResponse)
   })

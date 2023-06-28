@@ -6,10 +6,9 @@
  */
 
 import React from 'react'
-import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
+import { useParams, useHistory, matchPath, useLocation } from 'react-router-dom'
 import { omit } from 'lodash-es'
 import { Container, Layout, useToaster } from '@harness/uicore'
-import { compile } from 'path-to-regexp'
 import { useGetSettingValue } from 'services/cd-ng'
 
 import { SettingType } from '@common/constants/Utils'
@@ -25,11 +24,10 @@ import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMe
 import css from './ProjectSideNav.module.scss'
 export default function ProjectsSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
-  const routeMatch = useRouteMatch()
   const location = useLocation()
   const history = useHistory()
   const { selectedProject, updateAppStore } = useAppStore()
-  const { NEW_LEFT_NAVBAR_SETTINGS, CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
 
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -66,19 +64,17 @@ export default function ProjectsSideNav(): React.ReactElement {
 
   return (
     <Layout.Vertical spacing="small">
-      {NEW_LEFT_NAVBAR_SETTINGS && (
-        <>
-          <SidebarLink
-            label={getString('rbac.scopeItems.allProjects')}
-            to={routes.toAllProjects({ accountId: params.accountId })}
-            icon="nav-project"
-            style={{ marginTop: 'var(--spacing-medium)', marginBottom: 'var(--spacing-small)' }}
-            className={css.iconColor}
-            exact
-          />
-          <div className={css.divStyle} />
-        </>
-      )}
+      <>
+        <SidebarLink
+          label={getString('rbac.scopeItems.allProjects')}
+          to={routes.toAllProjects({ accountId: params.accountId })}
+          icon="nav-project"
+          style={{ marginTop: 'var(--spacing-medium)', marginBottom: 'var(--spacing-small)' }}
+          className={css.iconColor}
+          exact
+        />
+        <div className={css.divStyle} />
+      </>
       {selectedProject && (
         <Container className={allProjectsPath?.isExact ? css.projectSelectorContainer : undefined}>
           <Container className={css.selector}>
@@ -86,53 +82,41 @@ export default function ProjectsSideNav(): React.ReactElement {
               onSelect={data => {
                 updateAppStore({ selectedProject: data })
                 // changing project
-                if (NEW_LEFT_NAVBAR_SETTINGS) {
-                  history.push(
-                    routes.toProjectDetails({
-                      accountId: params.accountId,
-                      orgIdentifier: data.orgIdentifier || '',
-                      projectIdentifier: data.identifier
-                    })
-                  )
-                } else {
-                  history.push(
-                    compile(routeMatch.path)({
-                      ...routeMatch.params,
-                      projectIdentifier: data.identifier,
-                      orgIdentifier: data.orgIdentifier
-                    })
-                  )
-                }
+                history.push(
+                  routes.toProjectDetails({
+                    accountId: params.accountId,
+                    orgIdentifier: data.orgIdentifier || '',
+                    projectIdentifier: data.identifier
+                  })
+                )
               }}
             />
           </Container>
           <Layout.Vertical spacing="small">
             <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
-            {NEW_LEFT_NAVBAR_SETTINGS && (
-              <>
+            <>
+              <SidebarLink
+                label={getString('common.pipelineExecution')}
+                to={routes.toDeployments(projectDetailsParams)}
+              />
+              <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
+              <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
+              <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
+              {SRM_COMMON_MONITORED_SERVICE ? (
                 <SidebarLink
-                  label={getString('common.pipelineExecution')}
-                  to={routes.toDeployments(projectDetailsParams)}
+                  label={getString('common.monitoredServices')}
+                  to={routes.toMonitoredServices(projectDetailsParams)}
                 />
-                <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
-                <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
-                <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
-                {SRM_COMMON_MONITORED_SERVICE ? (
-                  <SidebarLink
-                    label={getString('common.monitoredServices')}
-                    to={routes.toMonitoredServices(projectDetailsParams)}
-                  />
-                ) : null}
-                {isServiceOverridesEnabled && (
-                  <SidebarLink
-                    label={getString('common.overrides')}
-                    to={routes.toServiceOverrides(projectDetailsParams)}
-                  />
-                )}
-              </>
-            )}
+              ) : null}
+              {isServiceOverridesEnabled && (
+                <SidebarLink
+                  label={getString('common.overrides')}
+                  to={routes.toServiceOverrides(projectDetailsParams)}
+                />
+              )}
+            </>
           </Layout.Vertical>
-          <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
+          <ProjectSetupMenu defaultExpanded={true} />
         </Container>
       )}
     </Layout.Vertical>

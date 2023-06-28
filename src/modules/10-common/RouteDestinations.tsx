@@ -23,17 +23,11 @@ import WelcomePage from './pages/welcome/WelcomePage'
 import HomeSideNav from './components/HomeSideNav/HomeSideNav'
 import AccountSideNav from './components/AccountSideNav/AccountSideNav'
 import AccountResources from './pages/AccountResources/AccountResources'
-import { useFeatureFlags } from './hooks/useFeatureFlag'
 import MainDashboardSideNav from './components/HomeSideNav/MainDashboardSideNav'
 
 const RedirectToHome = (): React.ReactElement => {
   const { selectedProject } = useAppStore()
-  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const { accountId } = useParams<AccountPathProps>()
-
-  if (!NEW_LEFT_NAVBAR_SETTINGS) {
-    return <Redirect to={routes.toLandingDashboard({ accountId })} />
-  }
 
   return (
     <Redirect

@@ -118,6 +118,16 @@ exports[`Project Setup Menu should render correctly expanded 1`] = `
         </a>
         <a
           class="link"
+          href="/account/dummy/settings/resources/templates"
+        >
+          <p
+            class="StyledProps--font StyledProps--main text"
+          >
+            common.templates
+          </p>
+        </a>
+        <a
+          class="link"
           href="/account/dummy/settings/resources/file-store"
         >
           <p

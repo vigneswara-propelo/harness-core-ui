@@ -121,7 +121,7 @@ describe('Verify step', () => {
     cy.visitPageAssertion('[class^=SideNav-module_main]')
     cy.contains('p', 'Projects').click()
     cy.contains('p', 'Project 1').click()
-    cy.contains('p', 'Delivery').click()
+    cy.contains('p', 'Deployments').click()
     cy.contains('p', 'Pipelines').click()
 
     cy.wait('@pipelineList')
