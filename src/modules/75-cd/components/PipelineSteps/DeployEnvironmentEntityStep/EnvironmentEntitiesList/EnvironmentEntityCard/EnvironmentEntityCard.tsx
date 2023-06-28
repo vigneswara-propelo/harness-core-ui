@@ -96,7 +96,7 @@ export function EnvironmentEntityCard({
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { name, identifier, tags } = environment
   const scopedEnvRef = getScopedRefUsingIdentifier(values, environment)
-  const filterPrefix = useMemo(() => `environmentFilters.${identifier}`, [identifier])
+  const filterPrefix = useMemo(() => `environmentFilters.['${scopedEnvRef}']`, [scopedEnvRef])
   const { accountId } = useParams<PipelinePathProps>()
 
   const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
