@@ -360,7 +360,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     const { serviceName = '', environmentIdentifier = '', monitoredServiceIdentifier: identifier = '' } = slo || {}
 
     return identifier ? (
-      <Layout.Vertical padding={{ left: 'small' }}>
+      <Layout.Vertical>
         <Link
           to={routes.toCVAddMonitoringServicesEdit({
             accountId,
@@ -372,7 +372,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         >
           <Text
             color={Color.PRIMARY_7}
-            className={css.titleInSloTable}
+            lineClamp={1}
             title={serviceName}
             font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
           >
@@ -388,13 +388,18 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             module: 'cv'
           })}
         >
-          <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'small' }}>
+          <Text
+            color={Color.PRIMARY_7}
+            title={environmentIdentifier}
+            lineClamp={1}
+            font={{ align: 'left', size: 'small' }}
+          >
             {environmentIdentifier}
           </Text>
         </Link>
       </Layout.Vertical>
     ) : (
-      <Layout.Vertical padding={{ left: 'small' }}>NA</Layout.Vertical>
+      <Layout.Vertical>NA</Layout.Vertical>
     )
   }
 
@@ -403,7 +408,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     const { noOfActiveAlerts = 0 } = slo || {}
     return (
       <Text
-        className={css.titleInSloTable}
+        lineClamp={1}
         title={`${noOfActiveAlerts}`}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
@@ -418,7 +423,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     const { burnRate } = slo || {}
     return (
       <Text
-        className={css.titleInSloTable}
+        lineClamp={1}
         title={`${defaultTo(Number(burnRate), 0).toFixed(2)}%`}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
@@ -433,7 +438,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     const { userJourneyName = '' } = slo || {}
     return (
       <Text
-        className={css.titleInSloTable}
+        lineClamp={1}
         title={userJourneyName}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
@@ -460,7 +465,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
     return (
       <Text
-        className={css.titleInSloTable}
+        lineClamp={1}
         title={evaluationType}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
@@ -474,7 +479,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     const slo = row.original
     return (
       <Text
-        className={css.titleInSloTable}
+        lineClamp={1}
         title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
@@ -510,7 +515,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     return (
       <Layout.Horizontal className={css.errorBudgetParent}>
         <Text
-          className={css.titleInSloTable}
+          lineClamp={1}
           title={` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
           font={{ align: 'left', size: 'normal', weight: 'light' }}
           padding={{ right: 'small' }}

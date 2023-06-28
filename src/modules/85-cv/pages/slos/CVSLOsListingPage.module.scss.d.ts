@@ -39,6 +39,5 @@ declare const styles: {
   readonly sloTags: string
   readonly sloWrapper: string
   readonly timelineSlider: string
-  readonly titleInSloTable: string
 }
 export default styles

@@ -16,7 +16,6 @@ import {
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import type { SLOObjective } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ServiceLevelObjectiveDetailsDTO, SLOConsumptionBreakdown, SLOHealthListView } from 'services/cv'
-import css from './SLOList.module.scss'
 
 export const getUpdatedSLOObjectives = (
   selectedSlos: SLOHealthListView[],
@@ -65,21 +64,13 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
   const { serviceName = '', environmentIdentifier = '' } = slo
 
   return (
-    <Layout.Vertical padding={{ left: 'small' }}>
-      <>
-        <Text
-          className={css.titleInSloTable}
-          title={serviceName}
-          font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-        >
-          {serviceName}
-        </Text>
-      </>
-      <>
-        <Text title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
-          {environmentIdentifier}
-        </Text>
-      </>
+    <Layout.Vertical>
+      <Text lineClamp={1} title={serviceName} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+        {serviceName}
+      </Text>
+      <Text title={environmentIdentifier} lineClamp={1} font={{ align: 'left', size: 'xsmall' }}>
+        {environmentIdentifier}
+      </Text>
     </Layout.Vertical>
   )
 }
@@ -90,12 +81,7 @@ export const RenderUserJourney: Renderer<CellProps<SLOHealthListView>> = ({ row 
   return userJourneys?.map(userJourney => {
     const { name, identifier } = userJourney
     return (
-      <Text
-        key={identifier}
-        className={css.titleInSloTable}
-        title={name}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-      >
+      <Text key={identifier} lineClamp={1} title={name} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
         {name || identifier}
       </Text>
     )
@@ -107,11 +93,7 @@ export const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
   const { tags = {} } = slo
   const tagsString = Object.keys(tags).join(' ')
   return (
-    <Text
-      className={css.titleInSloTable}
-      title={tagsString}
-      font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-    >
+    <Text lineClamp={1} title={tagsString} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
       {tagsString}
     </Text>
   )
@@ -121,7 +103,7 @@ export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) =>
   const slo = row.original
   return (
     <Text
-      className={css.titleInSloTable}
+      lineClamp={1}
       title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
       font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
     >
@@ -133,7 +115,7 @@ export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) =>
 export const RenderSLIType: Renderer<CellProps<SLOHealthListView | SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
   return (
-    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+    <Text lineClamp={1} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
       {slo?.sliType}
     </Text>
   )

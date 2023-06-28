@@ -336,7 +336,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
               style="width: 10%;"
             >
               <p
-                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                style="--text-line-clamp: 1;"
                 title=" 75%"
               >
                  75%
@@ -457,7 +458,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
               style="width: 10%;"
             >
               <p
-                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                style="--text-line-clamp: 1;"
                 title=" 89%"
               >
                  89%
