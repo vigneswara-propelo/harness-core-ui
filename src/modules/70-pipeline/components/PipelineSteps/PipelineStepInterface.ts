@@ -226,7 +226,8 @@ export enum StepType {
   Rancher = 'Rancher',
   KubernetesRancher = 'KubernetesRancher',
   ServerlessAwsLambdaPrepareRollbackV2 = 'ServerlessAwsLambdaPrepareRollbackV2',
-  ServerlessAwsLambdaPackageV2 = 'ServerlessAwsLambdaPackageV2'
+  ServerlessAwsLambdaPackageV2 = 'ServerlessAwsLambdaPackageV2',
+  ServerlessAwsLambdaDeployV2 = 'ServerlessAwsLambdaDeployV2'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

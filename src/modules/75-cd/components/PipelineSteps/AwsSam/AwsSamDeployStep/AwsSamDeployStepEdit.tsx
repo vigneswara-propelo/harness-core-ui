@@ -31,7 +31,6 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { MultiTypeListType } from '@common/components/MultiTypeList/MultiTypeList'
 import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
-import { Connectors } from '@connectors/constants'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -40,6 +39,7 @@ import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
+import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import {
   AwsSamBuildDeployStepFormikVaues,
   AwsSamBuildDeployStepOptionalFields
@@ -162,9 +162,9 @@ const AwsSamDeployStepEdit = (
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   multiTypeProps={{ expressions, allowableTypes }}
-                  type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+                  type={serverlessStepAllowedConnectorTypes}
                   enableConfigureOptions={false}
-                  selected={formik?.values?.spec.connectorRef as string}
+                  selected={formik?.values?.spec.connectorRef}
                   setRefValue
                   disabled={readonly}
                   gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
@@ -172,7 +172,7 @@ const AwsSamDeployStepEdit = (
                 {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
                   <ConnectorConfigureOptions
                     style={{ marginTop: 6 }}
-                    value={formik.values.spec.connectorRef as string}
+                    value={formik.values.spec.connectorRef}
                     type="String"
                     variableName="spec.connectorRef"
                     showRequiredField={false}
@@ -183,7 +183,7 @@ const AwsSamDeployStepEdit = (
                       accountIdentifier: accountId,
                       projectIdentifier,
                       orgIdentifier,
-                      type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
+                      type: serverlessStepAllowedConnectorTypes,
                       label: getString('pipelineSteps.connectorLabel'),
                       disabled: readonly,
                       gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }

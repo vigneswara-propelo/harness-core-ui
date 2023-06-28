@@ -7,60 +7,62 @@
 
 import React from 'react'
 import { isEmpty, set } from 'lodash-es'
+import produce from 'immer'
 import type { FormikErrors } from 'formik'
 import { IconName, AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import type { ListValue } from '@common/components/MultiTypeList/MultiTypeList'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { ServerlessPrepareRollbackStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessAwsLambdaDeployV2StepInitialValues } from '@pipeline/utils/types'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
-import { ServerlessPrepareRollbackStepInputSetMode } from './ServerlessPrepareRollbackStepInputSet'
+import { ServerlessAwsLambdaDeployV2StepInputSetMode } from './ServerlessAwsLambdaDeployV2StepInputSet'
 import {
-  ServerlessPrepareRollbackStepEditRef,
-  ServerlessPrepareRollbackStepFormikValues
-} from './ServerlessPrepareRollbackStepEdit'
+  ServerlessAwsLambdaDeployV2StepEditRef,
+  ServerlessAwsLambdaDeployV2StepFormikValues
+} from './ServerlessAwsLambdaDeployV2StepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-export interface ServerlessPrepareRollbackStepEditProps {
-  initialValues: ServerlessPrepareRollbackStepInitialValues
-  onUpdate?: (data: ServerlessPrepareRollbackStepInitialValues) => void
+export interface ServerlessAwsLambdaDeployV2StepEditProps {
+  initialValues: ServerlessAwsLambdaDeployV2StepInitialValues
+  onUpdate?: (data: ServerlessAwsLambdaDeployV2StepInitialValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: ServerlessPrepareRollbackStepInitialValues) => void
+  onChange?: (data: ServerlessAwsLambdaDeployV2StepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData: {
-    template?: ServerlessPrepareRollbackStepInitialValues
+    template?: ServerlessAwsLambdaDeployV2StepInitialValues
     path?: string
     readonly?: boolean
   }
 }
 
-export interface ServerlessPrepareRollbackVariableStepProps {
-  initialValues: ServerlessPrepareRollbackStepInitialValues
+export interface ServerlessPackageVariableStepProps {
+  initialValues: ServerlessAwsLambdaDeployV2StepInitialValues
   stageIdentifier: string
-  onUpdate?(data: ServerlessPrepareRollbackStepInitialValues): void
+  onUpdate?(data: ServerlessAwsLambdaDeployV2StepInitialValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: ServerlessPrepareRollbackStepInitialValues
+  variablesData: ServerlessAwsLambdaDeployV2StepInitialValues
 }
 
-export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepareRollbackStepInitialValues> {
-  protected type = StepType.ServerlessAwsLambdaPrepareRollbackV2
-  protected stepName = 'Serverless Prepare Rollback Step'
+export class ServerlessAwsLambdaDeployV2Step extends PipelineStep<ServerlessAwsLambdaDeployV2StepInitialValues> {
+  protected type = StepType.ServerlessAwsLambdaDeployV2
+  protected stepName = 'Serverless Deploy Step'
   protected stepIcon: IconName = 'serverless-deploy-step'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessPrepareRollback'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessLambdaDeploy'
   protected isHarnessSpecific = false
-  protected referenceId = 'ServerlessPrepareRollbackStep'
+  protected referenceId = 'ServerlessAwsLambdaDeployV2Step'
 
-  protected defaultValues: ServerlessPrepareRollbackStepInitialValues = {
+  protected defaultValues: ServerlessAwsLambdaDeployV2StepInitialValues = {
     identifier: '',
     name: '',
-    type: StepType.ServerlessAwsLambdaPrepareRollbackV2,
+    type: StepType.ServerlessAwsLambdaDeployV2,
     timeout: '10m',
     spec: {
       connectorRef: ''
@@ -73,7 +75,7 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<ServerlessPrepareRollbackStepInitialValues>): JSX.Element {
+  renderStep(props: StepProps<ServerlessAwsLambdaDeployV2StepInitialValues>): JSX.Element {
     const {
       initialValues,
       stepViewType,
@@ -83,19 +85,20 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
       readonly,
       allowableTypes,
       onUpdate,
+      onChange,
       formikRef
     } = props
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ServerlessPrepareRollbackStepInputSetMode
+        <ServerlessAwsLambdaDeployV2StepInputSetMode
           initialValues={initialValues}
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<ServerlessPrepareRollbackStepInitialValues>}
+          inputSetData={inputSetData as InputSetData<ServerlessAwsLambdaDeployV2StepInitialValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as ServerlessPrepareRollbackVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as ServerlessPackageVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -107,9 +110,10 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
     }
 
     return (
-      <ServerlessPrepareRollbackStepEditRef
+      <ServerlessAwsLambdaDeployV2StepEditRef
         initialValues={initialValues}
-        onUpdate={(formData: ServerlessPrepareRollbackStepFormikValues) => onUpdate?.(this.processFormData(formData))}
+        onUpdate={(formData: ServerlessAwsLambdaDeployV2StepFormikValues) => onUpdate?.(this.processFormData(formData))}
+        onChange={(formData: ServerlessAwsLambdaDeployV2StepFormikValues) => onChange?.(this.processFormData(formData))}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}
@@ -124,7 +128,7 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<ServerlessPrepareRollbackStepInitialValues>): FormikErrors<ServerlessPrepareRollbackStepInitialValues> {
+  }: ValidateInputSetProps<ServerlessAwsLambdaDeployV2StepInitialValues>): FormikErrors<ServerlessAwsLambdaDeployV2StepInitialValues> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
     const errors = validateGenericFields({
@@ -132,14 +136,18 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
       template,
       getString,
       viewType
-    }) as FormikErrors<ServerlessPrepareRollbackStepInitialValues>
+    }) as FormikErrors<ServerlessAwsLambdaDeployV2StepInitialValues>
 
     if (
       isEmpty(data?.spec?.connectorRef) &&
       isRequired &&
       getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, `spec.connectorRef`, getString?.('fieldRequired', { field: getString?.('connector') }))
+      set(
+        errors,
+        `spec.connectorRef`,
+        getString?.('fieldRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+      )
     }
 
     if (isEmpty(errors.spec)) {
@@ -149,13 +157,18 @@ export class ServerlessPrepareRollbackStep extends PipelineStep<ServerlessPrepar
     return errors
   }
 
-  processFormData(formData: ServerlessPrepareRollbackStepFormikValues): ServerlessPrepareRollbackStepInitialValues {
-    return {
-      ...formData,
-      spec: {
-        ...formData.spec,
-        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType)
-      }
-    }
+  processFormData(formData: ServerlessAwsLambdaDeployV2StepFormikValues): ServerlessAwsLambdaDeployV2StepInitialValues {
+    return produce(formData, draft => {
+      set(
+        draft,
+        'spec.deployCommandOptions',
+        typeof formData.spec.deployCommandOptions === 'string'
+          ? formData.spec.deployCommandOptions
+          : (formData.spec.deployCommandOptions as ListValue)?.map(
+              (deployCommandOption: { id: string; value: string }) => deployCommandOption.value
+            )
+      )
+      set(draft, 'spec.connectorRef', getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType))
+    }) as ServerlessAwsLambdaDeployV2StepInitialValues
   }
 }

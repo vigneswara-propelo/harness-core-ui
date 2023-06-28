@@ -21,24 +21,26 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessAwsLambdaPrepareRollbackV2StepInitialValues } from '@pipeline/utils/types'
+import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
 import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
-import { AwsSamBuildDeployStepOptionalFieldsInputSet } from '../AwsSamBuildDeployStepOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-interface AwsSamDeployStepInputSetProps {
-  initialValues: AwsSamDeployStepInitialValues
+interface ServerlessPrepareRollbackStepInputSetProps {
+  initialValues: ServerlessAwsLambdaPrepareRollbackV2StepInitialValues
   allowableTypes: AllowedTypes
   inputSetData: {
-    allValues?: AwsSamDeployStepInitialValues
-    template?: AwsSamDeployStepInitialValues
+    allValues?: ServerlessAwsLambdaPrepareRollbackV2StepInitialValues
+    template?: ServerlessAwsLambdaPrepareRollbackV2StepInitialValues
     path?: string
     readonly?: boolean
   }
   formik?: FormikProps<PipelineInfoConfig>
 }
 
-function AwsSamDeployStepInputSet(props: AwsSamDeployStepInputSetProps): React.ReactElement {
+function ServerlessAwsLambdaPrepareRollbackV2StepInputSet(
+  props: ServerlessPrepareRollbackStepInputSetProps
+): React.ReactElement {
   const { initialValues, inputSetData, allowableTypes } = props
   const { template, path, readonly } = inputSetData
 
@@ -122,43 +124,28 @@ function AwsSamDeployStepInputSet(props: AwsSamDeployStepInputSetProps): React.R
         </div>
       )}
 
-      {isValueRuntimeInput(get(template, `spec.samVersion`)) && (
+      {isValueRuntimeInput(get(template, `spec.serverlessVersion`)) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
-            name={`${prefix}spec.samVersion`}
-            label={getString('optionalField', { name: getString('cd.samVersionLabel') })}
-            placeholder={getString('common.enterPlaceholder', { name: getString('cd.samVersionLabel') })}
+            name={`${prefix}spec.serverlessVersion`}
+            label={getString('optionalField', { name: getString('cd.serverlessVersionLabel') })}
+            placeholder={getString('common.enterPlaceholder', { name: getString('cd.serverlessVersionLabel') })}
             disabled={readonly}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            fieldPath={`spec.samVersion`}
+            fieldPath={`spec.serverlessVersion`}
             template={template}
           />
         </div>
       )}
 
-      {isValueRuntimeInput(get(template, `spec.stackName`)) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${prefix}spec.stackName`}
-            label={getString('optionalField', { name: getString('cd.cloudFormation.stackName') })}
-            placeholder={getString('common.enterPlaceholder', { name: getString('cd.cloudFormation.stackName') })}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.stackName`}
-            template={template}
-          />
-        </div>
-      )}
-
-      <AwsSamBuildDeployStepOptionalFieldsInputSet {...props} />
+      <AwsSamServerlessStepCommonOptionalFieldsInputSet allowableTypes={allowableTypes} inputSetData={inputSetData} />
     </>
   )
 }
 
-export const AwsSamDeployStepInputSetMode = connect(AwsSamDeployStepInputSet)
+export const ServerlessAwsLambdaPrepareRollbackV2StepInputSetMode = connect(
+  ServerlessAwsLambdaPrepareRollbackV2StepInputSet
+)

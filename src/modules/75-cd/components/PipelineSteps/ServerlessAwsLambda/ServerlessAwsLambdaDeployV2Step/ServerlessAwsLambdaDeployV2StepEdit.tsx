@@ -8,7 +8,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { defaultTo, get } from 'lodash-es'
+import produce from 'immer'
+import { defaultTo, get, set } from 'lodash-es'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { FormikProps } from 'formik'
 import {
   Accordion,
@@ -28,24 +30,26 @@ import { useQueryParams } from '@common/hooks'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { Connectors } from '@connectors/constants'
+import type { MultiTypeListType } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { ServerlessPrepareRollbackStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessAwsLambdaDeployV2StepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import { AwsSamServerlessStepCommonOptionalFieldsEdit } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsEdit'
+import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFields.module.scss'
 
-export interface ServerlessPrepareRollbackStepFormikValues extends StepElementConfig {
+export interface ServerlessAwsLambdaDeployV2StepFormikValues extends StepElementConfig {
   spec: {
     connectorRef: ConnectorRef
     image?: string
     serverlessVersion?: string
+    deployCommandOptions?: MultiTypeListType
     privileged?: boolean
     imagePullPolicy?: string
     runAsUser?: string
@@ -57,20 +61,21 @@ export interface ServerlessPrepareRollbackStepFormikValues extends StepElementCo
     }
   }
 }
-export interface ServerlessPrepareRollbackStepProps {
-  initialValues: ServerlessPrepareRollbackStepInitialValues
-  onUpdate?: (data: ServerlessPrepareRollbackStepFormikValues) => void
+export interface ServerlessAwsLambdaDeployV2StepProps {
+  initialValues: ServerlessAwsLambdaDeployV2StepInitialValues
+  onUpdate?: (data: ServerlessAwsLambdaDeployV2StepFormikValues) => void
+  onChange?: (data: ServerlessAwsLambdaDeployV2StepFormikValues) => void
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
 }
 
-const ServerlessPrepareRollbackStepEdit = (
-  props: ServerlessPrepareRollbackStepProps,
-  formikRef: StepFormikFowardRef<ServerlessPrepareRollbackStepFormikValues>
+const ServerlessAwsLambdaDeployV2StepEdit = (
+  props: ServerlessAwsLambdaDeployV2StepProps,
+  formikRef: StepFormikFowardRef<ServerlessAwsLambdaDeployV2StepFormikValues>
 ): React.ReactElement => {
-  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
+  const { initialValues, onUpdate, onChange, isNewStep = true, readonly, allowableTypes, stepViewType } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -86,8 +91,23 @@ const ServerlessPrepareRollbackStepEdit = (
     })
   })
 
+  const modifiedInitialValues = React.useMemo((): ServerlessAwsLambdaDeployV2StepFormikValues => {
+    return produce(initialValues, draft => {
+      set(
+        draft,
+        'spec.deployCommandOptions',
+        typeof initialValues.spec.deployCommandOptions === 'string'
+          ? initialValues.spec.deployCommandOptions
+          : initialValues.spec.deployCommandOptions?.map(deployCommandOption => ({
+              id: uuid('', nameSpace()),
+              value: deployCommandOption
+            }))
+      )
+    })
+  }, [initialValues])
+
   const renderConnectorField = (
-    formik: FormikProps<ServerlessPrepareRollbackStepFormikValues>,
+    formik: FormikProps<ServerlessAwsLambdaDeployV2StepFormikValues>,
     fieldName: string,
     fieldLabel: string
   ): React.ReactElement => {
@@ -102,7 +122,7 @@ const ServerlessPrepareRollbackStepEdit = (
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           multiTypeProps={{ expressions, allowableTypes }}
-          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          type={serverlessStepAllowedConnectorTypes}
           enableConfigureOptions={false}
           selected={get(formik?.values, fieldName) as string}
           setRefValue
@@ -123,7 +143,7 @@ const ServerlessPrepareRollbackStepEdit = (
               accountIdentifier: accountId,
               projectIdentifier,
               orgIdentifier,
-              type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
+              type: serverlessStepAllowedConnectorTypes,
               label: fieldLabel,
               disabled: readonly,
               gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
@@ -136,15 +156,18 @@ const ServerlessPrepareRollbackStepEdit = (
 
   return (
     <>
-      <Formik<ServerlessPrepareRollbackStepFormikValues>
+      <Formik<ServerlessAwsLambdaDeployV2StepFormikValues>
         onSubmit={values => {
           onUpdate?.(values)
         }}
-        formName="ServerlessPrepareRollbackStepEdit"
-        initialValues={initialValues}
+        validate={values => {
+          onChange?.(values)
+        }}
+        formName="ServerlessAwsLambdaDeployV2StepEdit"
+        initialValues={modifiedInitialValues}
         validationSchema={validationSchema}
       >
-        {(formik: FormikProps<ServerlessPrepareRollbackStepFormikValues>) => {
+        {(formik: FormikProps<ServerlessAwsLambdaDeployV2StepFormikValues>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -192,17 +215,19 @@ const ServerlessPrepareRollbackStepEdit = (
 
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
-                  id="aws-sam-deploy-optional-accordion"
-                  data-testid={'aws-sam-deploy-optional-accordion'}
+                  id="serverless-package-optional-accordion"
+                  data-testid={'serverless-package-optional-accordion'}
                   summary={getString('common.optionalConfig')}
                   details={
                     <Container margin={{ top: 'medium' }}>
                       <AwsSamServerlessStepCommonOptionalFieldsEdit
                         readonly={readonly}
                         allowableTypes={allowableTypes}
-                        formik={formik as FormikProps<ServerlessPrepareRollbackStepFormikValues>}
+                        formik={formik}
                         versionFieldName={'spec.serverlessVersion'}
                         versionFieldLabel={getString('cd.serverlessVersionLabel')}
+                        commandOptionsFieldName={'spec.deployCommandOptions'}
+                        commandOptionsFieldLabel={getString('cd.steps.serverlessDeployStepV2.deployCommandOptions')}
                       />
                     </Container>
                   }
@@ -216,4 +241,4 @@ const ServerlessPrepareRollbackStepEdit = (
   )
 }
 
-export const ServerlessPrepareRollbackStepEditRef = React.forwardRef(ServerlessPrepareRollbackStepEdit)
+export const ServerlessAwsLambdaDeployV2StepEditRef = React.forwardRef(ServerlessAwsLambdaDeployV2StepEdit)

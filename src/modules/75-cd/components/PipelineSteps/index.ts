@@ -139,9 +139,10 @@ import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
 import { AwsSamDownloadManifestsStep } from './AwsSam/AwsSamDownloadManifests/AwsSamDownloadManifestsStep'
 import { RancherInfrastructureSpec } from './RancherInfrastructureSpec/RancherInfrastructureSpec'
 import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifestsStep/DownloadServerlessManifestsStep'
-import { ServerlessPrepareRollbackStep } from './ServerlessAwsLambda/ServerlessPrepareRollbackStep/ServerlessPrepareRollbackStep'
+import { ServerlessAwsLambdaPrepareRollbackV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaPrepareRollbackV2Step/ServerlessAwsLambdaPrepareRollbackV2Step'
 import { ServerlessAwsLambdaRollbackV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaRollbackV2/ServerlessAwsLambdaRollbackV2'
-import { ServerlessPackageStep } from './ServerlessAwsLambda/ServerlessPackageStep/ServerlessPackageStep'
+import { ServerlessAwsLambdaPackageV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaPackageV2Step/ServerlessAwsLambdaPackageV2Step'
+import { ServerlessAwsLambdaDeployV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaDeployV2Step/ServerlessAwsLambdaDeployV2Step'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -275,6 +276,7 @@ factory.registerStep(new AwsSamInfraSpec())
 factory.registerStep(new AwsSamDownloadManifestsStep())
 factory.registerStep(new DownloadServerlessManifestsStep())
 factory.registerStep(new RancherInfrastructureSpec())
-factory.registerStep(new ServerlessPrepareRollbackStep())
+factory.registerStep(new ServerlessAwsLambdaPrepareRollbackV2Step())
 factory.registerStep(new ServerlessAwsLambdaRollbackV2Step())
-factory.registerStep(new ServerlessPackageStep())
+factory.registerStep(new ServerlessAwsLambdaPackageV2Step())
+factory.registerStep(new ServerlessAwsLambdaDeployV2Step())

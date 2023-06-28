@@ -18,11 +18,11 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
+import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import { AwsSamBuildDeployStepOptionalFieldsInputSet } from '../AwsSamBuildDeployStepOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -58,7 +58,7 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
           name={fieldName}
           selected={get(initialValues, fieldName, '')}
           label={fieldLabel}
-          placeholder={''}
+          placeholder={getString('select')}
           setRefValue
           multiTypeProps={{
             allowableTypes,
@@ -68,7 +68,7 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          type={serverlessStepAllowedConnectorTypes}
           gitScope={{
             repo: defaultTo(repoIdentifier, ''),
             branch: defaultTo(branch, ''),
@@ -103,7 +103,7 @@ function AwsSamBuildStepInputSet(props: AwsSamBuildStepInputSetProps): React.Rea
       )}
 
       {isValueRuntimeInput(get(template, `spec.connectorRef`)) &&
-        renderConnectorField(`${prefix}spec.connectorRef`, getString('connector'))}
+        renderConnectorField(`${prefix}spec.connectorRef`, getString('pipelineSteps.connectorLabel'))}
 
       {isValueRuntimeInput(get(template, `spec.samBuildDockerRegistryConnectorRef`)) &&
         renderConnectorField(

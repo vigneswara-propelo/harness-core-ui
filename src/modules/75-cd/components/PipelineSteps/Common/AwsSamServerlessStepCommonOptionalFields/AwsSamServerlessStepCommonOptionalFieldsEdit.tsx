@@ -20,19 +20,19 @@ import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamDeployStepFormikValues } from '../../AwsSam/AwsSamDeployStep/AwsSamDeployStepEdit'
 import type { AwsSamBuildStepFormikValues } from '../../AwsSam/AwsSamBuildStep/AwsSamBuildStepEdit'
-import type { ServerlessPrepareRollbackStepFormikValues } from '../../ServerlessAwsLambda/ServerlessPrepareRollbackStep/ServerlessPrepareRollbackStepEdit'
+import type { ServerlessAwsLambdaPrepareRollbackV2StepFormikValues } from '../../ServerlessAwsLambda/ServerlessAwsLambdaPrepareRollbackV2Step/ServerlessAwsLambdaPrepareRollbackV2StepEdit'
+import { serverlessStepAllowedConnectorTypes } from '../utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export type AwsSamServerlessCommonStepFormikVaues =
   | AwsSamDeployStepFormikValues
   | AwsSamBuildStepFormikValues
-  | ServerlessPrepareRollbackStepFormikValues
+  | ServerlessAwsLambdaPrepareRollbackV2StepFormikValues
 
 interface AwsSamServerlessStepCommonOptionalFieldsEditProps {
   allowableTypes: AllowedTypes
@@ -77,7 +77,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           multiTypeProps={{ expressions, allowableTypes }}
-          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          type={serverlessStepAllowedConnectorTypes}
           enableConfigureOptions={false}
           selected={get(formik?.values, fieldName) as string}
           setRefValue
@@ -98,7 +98,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
               accountIdentifier: accountId,
               projectIdentifier,
               orgIdentifier,
-              type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
+              type: serverlessStepAllowedConnectorTypes,
               label: fieldLabel,
               disabled: readonly,
               gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }

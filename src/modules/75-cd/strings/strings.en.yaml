@@ -183,6 +183,8 @@ steps:
     awsSamBuildCommandOptions: AWS SAM Build Command Options
   serverlessPackageStep:
     packageCommandOptions: Package Command Options
+  serverlessDeployStepV2:
+    deployCommandOptions: Deploy Command Options
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

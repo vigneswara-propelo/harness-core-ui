@@ -13,58 +13,58 @@ import { IconName, AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } fro
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { ListValue } from '@common/components/MultiTypeList/MultiTypeList'
-import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessAwsLambdaPackageV2StepInitialValues } from '@pipeline/utils/types'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
-import { AwsSamBuildStepInputSetMode } from './AwsSamBuildStepInputSet'
-import { AwsSamBuildStepEditRef, AwsSamBuildStepFormikValues } from './AwsSamBuildStepEdit'
+import { ServerlessAwsLambdaPackageV2StepInputSetMode } from './ServerlessAwsLambdaPackageV2StepInputSet'
+import {
+  ServerlessAwsLambdaPackageV2StepEditRef,
+  ServerlessAwsLambdaPackageV2StepFormikValues
+} from './ServerlessAwsLambdaPackageV2StepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-export interface AwsSamBuildStepEditProps {
-  initialValues: AwsSamBuildStepInitialValues
-  onUpdate?: (data: AwsSamBuildStepInitialValues) => void
+export interface ServerlessAwsLambdaPackageV2StepEditProps {
+  initialValues: ServerlessAwsLambdaPackageV2StepInitialValues
+  onUpdate?: (data: ServerlessAwsLambdaPackageV2StepInitialValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsSamBuildStepInitialValues) => void
+  onChange?: (data: ServerlessAwsLambdaPackageV2StepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData: {
-    template?: AwsSamBuildStepInitialValues
+    template?: ServerlessAwsLambdaPackageV2StepInitialValues
     path?: string
     readonly?: boolean
   }
 }
 
-export interface AwsSamBuildVariableStepProps {
-  initialValues: AwsSamBuildStepInitialValues
+export interface ServerlessPackageVariableStepProps {
+  initialValues: ServerlessAwsLambdaPackageV2StepInitialValues
   stageIdentifier: string
-  onUpdate?(data: AwsSamBuildStepInitialValues): void
+  onUpdate?(data: ServerlessAwsLambdaPackageV2StepInitialValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: AwsSamBuildStepInitialValues
+  variablesData: ServerlessAwsLambdaPackageV2StepInitialValues
 }
 
-export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> {
-  protected type = StepType.AwsSamBuild
-  protected stepName = 'AWS SAM Build Step'
-  protected stepIcon: IconName = 'aws-sam-build'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsSamBuild'
+export class ServerlessAwsLambdaPackageV2Step extends PipelineStep<ServerlessAwsLambdaPackageV2StepInitialValues> {
+  protected type = StepType.ServerlessAwsLambdaPackageV2
+  protected stepName = 'Serverless Package Step'
+  protected stepIcon: IconName = 'serverless-deploy-step'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessPackage'
   protected isHarnessSpecific = false
-  protected referenceId = 'AwsSamBuildStep'
+  protected referenceId = 'ServerlessAwsLambdaPackageV2Step'
 
-  protected defaultValues: AwsSamBuildStepInitialValues = {
+  protected defaultValues: ServerlessAwsLambdaPackageV2StepInitialValues = {
     identifier: '',
     name: '',
-    type: StepType.AwsSamBuild,
+    type: StepType.ServerlessAwsLambdaPackageV2,
     timeout: '10m',
     spec: {
-      connectorRef: '',
-      samBuildDockerRegistryConnectorRef: '',
-      image: ''
+      connectorRef: ''
     }
   }
 
@@ -74,7 +74,7 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<AwsSamBuildStepInitialValues>): JSX.Element {
+  renderStep(props: StepProps<ServerlessAwsLambdaPackageV2StepInitialValues>): JSX.Element {
     const {
       initialValues,
       stepViewType,
@@ -90,14 +90,14 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <AwsSamBuildStepInputSetMode
+        <ServerlessAwsLambdaPackageV2StepInputSetMode
           initialValues={initialValues}
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<AwsSamBuildStepInitialValues>}
+          inputSetData={inputSetData as InputSetData<ServerlessAwsLambdaPackageV2StepInitialValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as AwsSamBuildVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as ServerlessPackageVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -109,10 +109,14 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
     }
 
     return (
-      <AwsSamBuildStepEditRef
+      <ServerlessAwsLambdaPackageV2StepEditRef
         initialValues={initialValues}
-        onUpdate={(formData: AwsSamBuildStepFormikValues) => onUpdate?.(this.processFormData(formData))}
-        onChange={(formData: AwsSamBuildStepFormikValues) => onChange?.(this.processFormData(formData))}
+        onUpdate={(formData: ServerlessAwsLambdaPackageV2StepFormikValues) =>
+          onUpdate?.(this.processFormData(formData))
+        }
+        onChange={(formData: ServerlessAwsLambdaPackageV2StepFormikValues) =>
+          onChange?.(this.processFormData(formData))
+        }
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}
@@ -127,7 +131,7 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<AwsSamBuildStepInitialValues>): FormikErrors<AwsSamBuildStepInitialValues> {
+  }: ValidateInputSetProps<ServerlessAwsLambdaPackageV2StepInitialValues>): FormikErrors<ServerlessAwsLambdaPackageV2StepInitialValues> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
     const errors = validateGenericFields({
@@ -135,7 +139,7 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
       template,
       getString,
       viewType
-    }) as FormikErrors<AwsSamBuildStepInitialValues>
+    }) as FormikErrors<ServerlessAwsLambdaPackageV2StepInitialValues>
 
     if (
       isEmpty(data?.spec?.connectorRef) &&
@@ -156,28 +160,20 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
     return errors
   }
 
-  processFormData(formData: any): AwsSamBuildStepInitialValues {
+  processFormData(
+    formData: ServerlessAwsLambdaPackageV2StepFormikValues
+  ): ServerlessAwsLambdaPackageV2StepInitialValues {
     return {
       ...formData,
       spec: {
         ...formData.spec,
-        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
-        samBuildDockerRegistryConnectorRef: getConnectorRefValue(
-          formData.spec.samBuildDockerRegistryConnectorRef as ConnectorRefFormValueType
-        ),
-        buildCommandOptions:
-          typeof formData.spec.buildCommandOptions === 'string'
-            ? formData.spec.buildCommandOptions
-            : (formData.spec.buildCommandOptions as ListValue)?.map(
-                (buildCommandOption: { id: string; value: string }) => buildCommandOption.value
+        packageCommandOptions:
+          typeof formData.spec.packageCommandOptions === 'string'
+            ? formData.spec.packageCommandOptions
+            : (formData.spec.packageCommandOptions as ListValue)?.map(
+                (packageCommandOption: { id: string; value: string }) => packageCommandOption.value
               ),
-        envVariables: (formData.spec?.envVariables as MapValue).reduce(
-          (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
-            ...agg,
-            [envVar.key]: envVar.value
-          }),
-          {}
-        )
+        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType)
       }
     }
   }

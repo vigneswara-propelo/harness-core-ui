@@ -141,7 +141,11 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
       isRequired &&
       getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, `spec.connectorRef`, getString?.('fieldRequired', { field: getString?.('connector') }))
+      set(
+        errors,
+        `spec.connectorRef`,
+        getString?.('fieldRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+      )
     }
 
     if (isEmpty(errors.spec)) {

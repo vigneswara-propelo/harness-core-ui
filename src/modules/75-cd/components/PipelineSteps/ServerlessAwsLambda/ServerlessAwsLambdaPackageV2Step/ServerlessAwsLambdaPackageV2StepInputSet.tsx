@@ -10,36 +10,38 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import cx from 'classnames'
-import type { AllowedTypes } from '@harness/uicore'
+import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
 
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import type { StringsMap } from 'framework/strings/StringsContext'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { Connectors } from '@connectors/constants'
+import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ServerlessPrepareRollbackStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessAwsLambdaPackageV2StepInitialValues } from '@pipeline/utils/types'
 import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
+import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-interface ServerlessPrepareRollbackStepInputSetProps {
-  initialValues: ServerlessPrepareRollbackStepInitialValues
+interface ServerlessPackageStepInputSetProps {
+  initialValues: ServerlessAwsLambdaPackageV2StepInitialValues
   allowableTypes: AllowedTypes
   inputSetData: {
-    allValues?: ServerlessPrepareRollbackStepInitialValues
-    template?: ServerlessPrepareRollbackStepInitialValues
+    allValues?: ServerlessAwsLambdaPackageV2StepInitialValues
+    template?: ServerlessAwsLambdaPackageV2StepInitialValues
     path?: string
     readonly?: boolean
   }
   formik?: FormikProps<PipelineInfoConfig>
 }
 
-function ServerlessPrepareRollbackStepInputSet(props: ServerlessPrepareRollbackStepInputSetProps): React.ReactElement {
-  const { initialValues, inputSetData, allowableTypes } = props
+function ServerlessAwsLambdaPackageV2StepInputSet(props: ServerlessPackageStepInputSetProps): React.ReactElement {
+  const { initialValues, inputSetData, allowableTypes, formik } = props
   const { template, path, readonly } = inputSetData
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -58,7 +60,7 @@ function ServerlessPrepareRollbackStepInputSet(props: ServerlessPrepareRollbackS
           name={fieldName}
           selected={get(initialValues, fieldName, '')}
           label={fieldLabel}
-          placeholder={''}
+          placeholder={getString('select')}
           setRefValue
           multiTypeProps={{
             allowableTypes,
@@ -68,7 +70,7 @@ function ServerlessPrepareRollbackStepInputSet(props: ServerlessPrepareRollbackS
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          type={serverlessStepAllowedConnectorTypes}
           gitScope={{
             repo: defaultTo(repoIdentifier, ''),
             branch: defaultTo(branch, ''),
@@ -82,6 +84,30 @@ function ServerlessPrepareRollbackStepInputSet(props: ServerlessPrepareRollbackS
       </div>
     )
   }
+
+  const renderMultiTypeListInputSet = ({
+    fieldName,
+    fieldLabel
+  }: {
+    fieldName: string
+    fieldLabel: keyof StringsMap
+  }): React.ReactElement => (
+    <div className={cx(stepCss.formGroup, stepCss.md)}>
+      <MultiTypeListInputSet
+        name={fieldName}
+        multiTextInputProps={{
+          expressions,
+          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+        }}
+        formik={formik}
+        multiTypeFieldSelectorProps={{
+          label: getString('optionalField', { name: getString(fieldLabel) }),
+          allowedTypes: [MultiTypeInputType.FIXED]
+        }}
+        disabled={readonly}
+      />
+    </div>
+  )
 
   return (
     <>
@@ -103,13 +129,13 @@ function ServerlessPrepareRollbackStepInputSet(props: ServerlessPrepareRollbackS
       )}
 
       {isValueRuntimeInput(get(template, `spec.connectorRef`)) &&
-        renderConnectorField(`${prefix}spec.connectorRef`, getString('connector'))}
+        renderConnectorField(`${prefix}spec.connectorRef`, getString('pipelineSteps.connectorLabel'))}
 
       {isValueRuntimeInput(get(template, `spec.image`)) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             name={`${prefix}spec.image`}
-            label={getString('imageLabel')}
+            label={getString('optionalField', { name: getString('imageLabel') })}
             placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
             disabled={readonly}
             multiTextInputProps={{
@@ -139,9 +165,15 @@ function ServerlessPrepareRollbackStepInputSet(props: ServerlessPrepareRollbackS
         </div>
       )}
 
+      {isValueRuntimeInput(get(template, `spec.packageCommandOptions`)) &&
+        renderMultiTypeListInputSet({
+          fieldName: `${prefix}spec.packageCommandOptions`,
+          fieldLabel: 'cd.steps.serverlessPackageStep.packageCommandOptions'
+        })}
+
       <AwsSamServerlessStepCommonOptionalFieldsInputSet allowableTypes={allowableTypes} inputSetData={inputSetData} />
     </>
   )
 }
 
-export const ServerlessPrepareRollbackStepInputSetMode = connect(ServerlessPrepareRollbackStepInputSet)
+export const ServerlessAwsLambdaPackageV2StepInputSetMode = connect(ServerlessAwsLambdaPackageV2StepInputSet)

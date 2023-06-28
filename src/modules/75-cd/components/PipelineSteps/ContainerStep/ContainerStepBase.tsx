@@ -33,11 +33,11 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
+import { serverlessStepAllowedConnectorTypes } from '../Common/utils/utils'
 import type { ContainerStepData, ContainerStepProps } from './types'
 import { getValidationSchema, processInitialValues } from './helper'
 import OptionalConfiguration from './OptionalConfiguration'
@@ -81,7 +81,7 @@ export const ContainerStepBase = (
               <FormMultiTypeConnectorField
                 name="spec.connectorRef"
                 label={getString('pipelineSteps.connectorLabel')}
-                type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+                type={serverlessStepAllowedConnectorTypes}
                 placeholder={getString('select')}
                 disabled={readonly}
                 accountIdentifier={accountId}

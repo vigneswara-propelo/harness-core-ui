@@ -6675,6 +6675,7 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.serverlessDeployStepV2.deployCommandOptions': string
   'cd.steps.serverlessPackageStep.packageCommandOptions': string
   'cd.steps.shellScriptOutputVariablesLabel': string
   'cd.steps.tas.additionalRoutes': string

@@ -20,14 +20,14 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import type {
   AwsSamBuildStepInitialValues,
   AwsSamDeployStepInitialValues,
-  ServerlessPrepareRollbackStepInitialValues
+  ServerlessAwsLambdaPrepareRollbackV2StepInitialValues
 } from '@pipeline/utils/types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export type AwsSamServerlessStepInitialValues =
   | AwsSamBuildStepInitialValues
   | AwsSamDeployStepInitialValues
-  | ServerlessPrepareRollbackStepInitialValues
+  | ServerlessAwsLambdaPrepareRollbackV2StepInitialValues
 
 interface AwsSamServerlessStepCommonOptionalFieldsInputSetProps {
   allowableTypes: AllowedTypes

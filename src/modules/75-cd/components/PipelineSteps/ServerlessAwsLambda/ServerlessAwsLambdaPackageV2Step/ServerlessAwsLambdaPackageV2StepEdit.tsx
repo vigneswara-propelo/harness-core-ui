@@ -30,20 +30,20 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { MultiTypeListType } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
-import { Connectors } from '@connectors/constants'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { ServerlessPackageStepInitialValues } from '@pipeline/utils/types'
+import type { ServerlessAwsLambdaPackageV2StepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import { AwsSamServerlessStepCommonOptionalFieldsEdit } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsEdit'
+import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFields.module.scss'
 
-export interface ServerlessPackageStepFormikValues extends StepElementConfig {
+export interface ServerlessAwsLambdaPackageV2StepFormikValues extends StepElementConfig {
   spec: {
     connectorRef: ConnectorRef
     image?: string
@@ -60,20 +60,21 @@ export interface ServerlessPackageStepFormikValues extends StepElementConfig {
     }
   }
 }
-export interface ServerlessPackageStepProps {
-  initialValues: ServerlessPackageStepInitialValues
-  onUpdate?: (data: ServerlessPackageStepFormikValues) => void
+export interface ServerlessAwsLambdaPackageV2StepProps {
+  initialValues: ServerlessAwsLambdaPackageV2StepInitialValues
+  onUpdate?: (data: ServerlessAwsLambdaPackageV2StepFormikValues) => void
+  onChange?: (data: ServerlessAwsLambdaPackageV2StepFormikValues) => void
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
 }
 
-const ServerlessPackageStepEdit = (
-  props: ServerlessPackageStepProps,
-  formikRef: StepFormikFowardRef<ServerlessPackageStepFormikValues>
+const ServerlessAwsLambdaPackageV2StepEdit = (
+  props: ServerlessAwsLambdaPackageV2StepProps,
+  formikRef: StepFormikFowardRef<ServerlessAwsLambdaPackageV2StepFormikValues>
 ): React.ReactElement => {
-  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
+  const { initialValues, onUpdate, onChange, isNewStep = true, readonly, allowableTypes, stepViewType } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -89,7 +90,7 @@ const ServerlessPackageStepEdit = (
     })
   })
 
-  const getInitialValues = (): ServerlessPackageStepFormikValues => {
+  const getInitialValues = (): ServerlessAwsLambdaPackageV2StepFormikValues => {
     return {
       ...initialValues,
       spec: {
@@ -106,7 +107,7 @@ const ServerlessPackageStepEdit = (
   }
 
   const renderConnectorField = (
-    formik: FormikProps<ServerlessPackageStepFormikValues>,
+    formik: FormikProps<ServerlessAwsLambdaPackageV2StepFormikValues>,
     fieldName: string,
     fieldLabel: string
   ): React.ReactElement => {
@@ -121,7 +122,7 @@ const ServerlessPackageStepEdit = (
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           multiTypeProps={{ expressions, allowableTypes }}
-          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          type={serverlessStepAllowedConnectorTypes}
           enableConfigureOptions={false}
           selected={get(formik?.values, fieldName) as string}
           setRefValue
@@ -142,7 +143,7 @@ const ServerlessPackageStepEdit = (
               accountIdentifier: accountId,
               projectIdentifier,
               orgIdentifier,
-              type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
+              type: serverlessStepAllowedConnectorTypes,
               label: fieldLabel,
               disabled: readonly,
               gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
@@ -155,15 +156,18 @@ const ServerlessPackageStepEdit = (
 
   return (
     <>
-      <Formik<ServerlessPackageStepFormikValues>
+      <Formik<ServerlessAwsLambdaPackageV2StepFormikValues>
         onSubmit={values => {
           onUpdate?.(values)
         }}
-        formName="ServerlessPackageStepEdit"
+        validate={values => {
+          onChange?.(values)
+        }}
+        formName="ServerlessAwsLambdaPackageV2StepEdit"
         initialValues={getInitialValues()}
         validationSchema={validationSchema}
       >
-        {(formik: FormikProps<ServerlessPackageStepFormikValues>) => {
+        {(formik: FormikProps<ServerlessAwsLambdaPackageV2StepFormikValues>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -219,7 +223,7 @@ const ServerlessPackageStepEdit = (
                       <AwsSamServerlessStepCommonOptionalFieldsEdit
                         readonly={readonly}
                         allowableTypes={allowableTypes}
-                        formik={formik as FormikProps<ServerlessPackageStepFormikValues>}
+                        formik={formik as FormikProps<ServerlessAwsLambdaPackageV2StepFormikValues>}
                         versionFieldName={'spec.serverlessVersion'}
                         versionFieldLabel={getString('cd.serverlessVersionLabel')}
                         commandOptionsFieldName={'spec.packageCommandOptions'}
@@ -237,4 +241,4 @@ const ServerlessPackageStepEdit = (
   )
 }
 
-export const ServerlessPackageStepEditRef = React.forwardRef(ServerlessPackageStepEdit)
+export const ServerlessAwsLambdaPackageV2StepEditRef = React.forwardRef(ServerlessAwsLambdaPackageV2StepEdit)

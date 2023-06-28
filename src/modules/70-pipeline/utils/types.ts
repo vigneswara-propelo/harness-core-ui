@@ -146,7 +146,7 @@ export interface AwsSamBuildStepInitialValues extends StepElementConfig {
   }
 }
 
-export interface ServerlessPrepareRollbackStepInitialValues extends StepElementConfig {
+export interface ServerlessAwsLambdaPrepareRollbackV2StepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
     image?: string
@@ -163,7 +163,7 @@ export interface ServerlessPrepareRollbackStepInitialValues extends StepElementC
   }
 }
 
-export interface ServerlessPackageStepInitialValues extends StepElementConfig {
+export interface ServerlessAwsLambdaPackageV2StepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
     image?: string
@@ -176,6 +176,24 @@ export interface ServerlessPackageStepInitialValues extends StepElementConfig {
       }
     }
     packageCommandOptions?: string | string[]
+    serverlessVersion?: string
+    runAsUser?: string
+  }
+}
+
+export interface ServerlessAwsLambdaDeployV2StepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+    deployCommandOptions?: string | string[]
     serverlessVersion?: string
     runAsUser?: string
   }
