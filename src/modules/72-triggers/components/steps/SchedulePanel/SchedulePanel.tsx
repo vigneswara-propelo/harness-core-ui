@@ -11,7 +11,7 @@ import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 
-import { getDefaultExpressionBreakdownValues, scheduleTabsId } from './components/utils'
+import { ScheduleTabs, getDefaultExpressionBreakdownValues, scheduleTabsId } from './components/utils'
 
 import MinutesTab from './components/MinutesTab/MinutesTab'
 import HourlyTab from './components/HourlyTab/HourlyTab'
@@ -58,7 +58,7 @@ const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
       <Layout.Vertical className={css.formContent}>
         <Tabs
           id="Wizard"
-          onChange={(val: string) => {
+          onChange={(val: ScheduleTabs) => {
             const newDefaultValues = selectedScheduleTab !== val ? getDefaultExpressionBreakdownValues(val) : {}
             formikProps.setValues({ ...values, ...newDefaultValues, selectedScheduleTab: val })
           }}

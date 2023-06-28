@@ -9,6 +9,7 @@ import React from 'react'
 import { HarnessDocTooltip, Layout, Text, PageSpinner } from '@harness/uicore'
 import cx from 'classnames'
 
+import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import { NameIdDescriptionTags } from '@common/components'
@@ -33,7 +34,7 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
   const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
 
   // originalPipeline for new, pipeline for onEdit
-  const hasLoadedPipeline = originalPipeline || pipeline
+  const hasLoadedPipeline = !isEmpty(originalPipeline || pipeline)
   return (
     <Layout.Vertical className={cx(css.triggerOverviewPanelContainer)} spacing="large" padding="xxlarge">
       {!hasLoadedPipeline && (
