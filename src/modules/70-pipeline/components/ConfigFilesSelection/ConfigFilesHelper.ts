@@ -45,7 +45,13 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   ],
   NativeHelm: [ConfigFilesMap.Harness],
   ServerlessAwsLambda: [ConfigFilesMap.Harness],
-  AzureWebApp: [ConfigFilesMap.Harness],
+  AzureWebApp: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
   Ssh: [
     ConfigFilesMap.Harness,
     ConfigFilesMap.Github,

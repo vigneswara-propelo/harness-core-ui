@@ -31,6 +31,7 @@ export const shouldShowGitConfigStores = (deploymentType: ServiceDefinition['typ
     ServiceDeploymentType.WinRm,
     ServiceDeploymentType.Ssh,
     ServiceDeploymentType.TAS,
-    ServiceDeploymentType.Kubernetes
+    ServiceDeploymentType.Kubernetes,
+    ServiceDeploymentType.AzureWebApp
   ].includes(deploymentType as ServiceDeploymentType)
 }
