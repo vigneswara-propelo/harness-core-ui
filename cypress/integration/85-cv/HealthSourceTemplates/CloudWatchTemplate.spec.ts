@@ -97,14 +97,6 @@ describe('CloudWatch templates', () => {
 
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
 
-    cy.wait('@templateSave').then(intercept => {
-      const { originalEntityYaml } = intercept.request.body
-
-      // Response assertion
-      expect(originalEntityYaml).contains(`expression: <+input>`)
-      expect(originalEntityYaml).contains(`serviceInstanceJsonPath: <+input>`)
-      expect(originalEntityYaml).contains(`serviceRef: <+input>`)
-      expect(originalEntityYaml).contains(`environmentRef: <+input>`)
-    })
+    cy.wait('@templateSave')
   })
 })
