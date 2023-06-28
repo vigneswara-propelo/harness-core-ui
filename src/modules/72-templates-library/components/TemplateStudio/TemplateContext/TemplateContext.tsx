@@ -49,10 +49,10 @@ import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 import { isNewTemplate } from '../TemplateStudioUtils'
-
 const logger = loggerFor(ModuleName.TEMPLATES)
 
 const DBInitializationFailed = 'DB Creation retry exceeded.'
@@ -871,6 +871,7 @@ export const TemplateProvider: React.FC<{
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
+  const { IACM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -1005,7 +1006,8 @@ export const TemplateProvider: React.FC<{
       isCDEnabled: shouldVisible,
       isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
       isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
-      isApprovalStageEnabled: true
+      isApprovalStageEnabled: true,
+      isIACMEnabled: IACM_ENABLED
     })
 
   React.useEffect(() => {
