@@ -34,13 +34,13 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
   steps?.forEach(item => {
-    if (item.step?.identifier === stepId) {
+    if (item?.step?.identifier === stepId) {
       responseStep = item
-    } else if (item.stepGroup?.identifier === stepId) {
+    } else if (item?.stepGroup?.identifier === stepId) {
       responseStep = item
-    } else if (item.parallel) {
+    } else if (item?.parallel) {
       return item.parallel.forEach(node => {
-        if (node.step?.identifier === stepId || node.stepGroup?.identifier === stepId) {
+        if (node?.step?.identifier === stepId || node?.stepGroup?.identifier === stepId) {
           responseStep = node
         }
       })
@@ -314,7 +314,10 @@ export function ExecutionWrapperInputSetForm(props: {
                           ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.steps`
                           : `${path}[${index}].parallel[${indexp}].stepGroup.steps`
                       }
-                      allValues={stepGroup?.stepGroup?.steps}
+                      allValues={defaultTo(
+                        stepGroup?.stepGroup?.steps,
+                        stepGroup?.stepGroup?.template?.templateInputs?.steps
+                      )}
                       values={
                         isTemplateStepGroup
                           ? nodep.stepGroup?.template?.templateInputs?.steps
@@ -435,7 +438,10 @@ export function ExecutionWrapperInputSetForm(props: {
                       ? `${path}[${index}].stepGroup.template.templateInputs.steps`
                       : `${path}[${index}].stepGroup.steps`
                   }
-                  allValues={stepGroup?.stepGroup?.steps}
+                  allValues={defaultTo(
+                    stepGroup?.stepGroup?.steps,
+                    stepGroup?.stepGroup?.template?.templateInputs?.steps
+                  )}
                   values={
                     isTemplateStepGroup
                       ? initialValues?.stepGroup?.template?.templateInputs?.steps
