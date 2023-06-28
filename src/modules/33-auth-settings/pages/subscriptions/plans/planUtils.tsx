@@ -182,9 +182,20 @@ export function getBtns({ isPlanDisabled, btnProps, getString }: GetBtnsProps): 
             {buttonText}
           </RbacButton>
         ) : (
-          <Button key={buttonText} onClick={onClick} loading={btnLoading} variation={ButtonVariation.PRIMARY}>
+          <RbacButton
+            permission={{
+              permission: PermissionIdentifier.EDIT_LICENSE,
+              resource: {
+                resourceType: ResourceType.LICENSE
+              }
+            }}
+            key={buttonText}
+            onClick={onClick}
+            loading={btnLoading}
+            variation={ButtonVariation.PRIMARY}
+          >
             {buttonText}
-          </Button>
+          </RbacButton>
         )
       )
   })
