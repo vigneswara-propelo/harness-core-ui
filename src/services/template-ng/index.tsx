@@ -114,6 +114,7 @@ export type ConnectorFilterProperties = FilterProperties & {
   connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
   connectorConnectivityModes?: ('DELEGATE' | 'MANAGER')[]
   connectorIdentifiers?: string[]
+  connectorIds?: string[]
   connectorNames?: string[]
   description?: string
   inheritingCredentialsFromDelegate?: boolean
@@ -391,6 +392,11 @@ export interface EntityDetail {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export interface EntityDetailProtoDTO {
@@ -828,6 +834,7 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1207,6 +1214,7 @@ export interface ErrorMetadata {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   errorMessage?: string
 }
 
@@ -1592,6 +1600,7 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1627,6 +1636,9 @@ export interface FilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+  labels?: {
+    [key: string]: string
+  }
   tags?: {
     [key: string]: string
   }
@@ -1634,6 +1646,7 @@ export interface FilterProperties {
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
   branch?: string
+  repo?: string
 }
 
 export interface GovernanceMetadata {
@@ -1902,6 +1915,8 @@ export interface ResourceDTO {
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
     | 'NETWORK_MAP'
+    | 'CET_AGENT_TOKEN'
+    | 'CET_CRITICAL_EVENT'
 }
 
 export interface ResourceScopeDTO {
@@ -2319,6 +2334,7 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2555,6 +2571,9 @@ export interface TemplateFilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+  labels?: {
+    [key: string]: string
+  }
   listingScope?: TemplateScope
   repoName?: string
   tags?: {
@@ -4346,6 +4365,68 @@ export const moveTemplateConfigsPromise = (
     void,
     MoveTemplateConfigsPathParams
   >('POST', getConfig('template/api'), `/templates/move-config/${templateIdentifier}`, props, signal)
+
+export interface GetStaticSchemaYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  entityType?: string
+  templateEntityType:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
+    | 'StepGroup'
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+  version?: string
+}
+
+export type GetStaticSchemaYamlProps = Omit<
+  GetProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Static Yaml Schema
+ */
+export const GetStaticSchemaYaml = (props: GetStaticSchemaYamlProps) => (
+  <Get<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>
+    path={`/templates/schema/static`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetStaticSchemaYamlProps = Omit<
+  UseGetProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Static Yaml Schema
+ */
+export const useGetStaticSchemaYaml = (props: UseGetStaticSchemaYamlProps) =>
+  useGet<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>(`/templates/schema/static`, {
+    base: getConfig('template/api'),
+    ...props
+  })
+
+/**
+ * Get Static Yaml Schema
+ */
+export const getStaticSchemaYamlPromise = (
+  props: GetUsingFetchProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>(
+    getConfig('template/api'),
+    `/templates/schema/static`,
+    props,
+    signal
+  )
 
 export interface GetTemplateSchemaQueryParams {
   templateEntityType:

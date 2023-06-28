@@ -30,6 +30,7 @@ jest.mock('services/cd-ng-rq', () => ({
 
 jest.mock('services/template-ng', () => ({
   useGetTemplateSchema: jest.fn(() => ({})),
+  useGetStaticSchemaYaml: jest.fn(() => ({})),
   useValidateTemplateInputs: jest.fn(() => getMockFor_Generic_useMutate()),
   useUpdateStableTemplate: jest.fn().mockImplementation(() => {
     return {

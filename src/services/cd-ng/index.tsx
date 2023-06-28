@@ -446,6 +446,7 @@ export interface AccessControlCheckError {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -476,6 +477,7 @@ export interface Account {
     [key: string]: string
   }
   delegateConfiguration?: DelegateConfiguration
+  encryption?: EncryptionInterface
   forImport?: boolean
   globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
@@ -519,6 +521,7 @@ export interface AccountDTO {
   productLed?: boolean
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
+  sessionTimeoutInMinutes?: number
   twoFactorAdminEnforced?: boolean
 }
 
@@ -1204,6 +1207,8 @@ export type AsgConfigurationManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
+export type AsgDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
+
 export type AsgInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
@@ -1476,6 +1481,8 @@ export type AwsLambdaDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
+export type AwsLambdaDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
+
 export type AwsLambdaFunctionAliasDefinitionManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
@@ -1563,7 +1570,6 @@ export type AwsSamBuildStepInfo = StepSpecType & {
   runAsUser?: number
   samBuildDockerRegistryConnectorRef?: string
   samVersion?: string
-  settings: ParameterFieldMapStringJsonNode
 }
 
 export type AwsSamDeployStepInfo = StepSpecType & {
@@ -1576,9 +1582,10 @@ export type AwsSamDeployStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   samVersion?: string
-  settings: ParameterFieldMapStringJsonNode
-  stackName?: string
+  stackName: string
 }
+
+export type AwsSamDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
 
 export type AwsSamDirectoryManifest = ManifestAttributes & {
   metadata?: string
@@ -1821,6 +1828,7 @@ export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   subscription: string
   tenantId?: string
   useManagedIdentity?: boolean
+  vaultConfiguredManually?: boolean
   vaultName: string
 }
 
@@ -1995,6 +2003,8 @@ export type AzureTenantSpec = AzureScopeType & {
 export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
   clientId: string
 }
+
+export type AzureWebAppDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
 
 export type AzureWebAppInfrastructure = Infrastructure & {
   connectorRef: string
@@ -2292,6 +2302,7 @@ export interface BuildDetails {
   revision?: string
   status?: 'FAILURE' | 'UNSTABLE' | 'SUCCESS'
   uiDisplayName?: string
+  updateTime?: number
 }
 
 export interface BuildIdAndInstanceCount {
@@ -2464,6 +2475,7 @@ export interface CardDTO {
   expireYear?: number
   funding?: string
   id?: string
+  isDefaultCard?: boolean
   last4?: string
   name?: string
 }
@@ -2839,6 +2851,7 @@ export type ConnectorFilterProperties = FilterProperties & {
   connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
   connectorConnectivityModes?: ('DELEGATE' | 'MANAGER')[]
   connectorIdentifiers?: string[]
+  connectorIds?: string[]
   connectorNames?: string[]
   description?: string
   inheritingCredentialsFromDelegate?: boolean
@@ -3303,6 +3316,8 @@ export type CustomDeploymentInstanceInfoDTO = InstanceInfoDTO & {
   }
 }
 
+export type CustomDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
+
 export interface CustomDeploymentNGVariable {
   description?: string
   name?: string
@@ -3462,6 +3477,11 @@ export type DatadogConnectorDTO = ConnectorConfigDTO & {
   url: string
 }
 
+export interface DefaultBranchCacheResponse {
+  defaultBranch?: string
+  repo?: string
+}
+
 export interface DelegateConfiguration {
   action?: 'SELF_DESTRUCT'
   delegateVersions?: string[]
@@ -3517,6 +3537,9 @@ export interface DelegateFilterProperties {
     | 'Environment'
     | 'RuleExecution'
   hostName?: string
+  labels?: {
+    [key: string]: string
+  }
   status?: 'CONNECTED' | 'DISCONNECTED' | 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
   tags?: {
     [key: string]: string
@@ -3533,6 +3556,7 @@ export interface DelegateGroup {
   name?: string
   ng?: boolean
   owner?: DelegateEntityOwner
+  runnerTypes?: string[]
   sizeDetails?: DelegateSizeDetails
   status?: 'ENABLED' | 'DELETED'
   tags?: string[]
@@ -3587,10 +3611,6 @@ export interface DelegateGroupListing {
 
 export interface DelegateGroupTags {
   tags?: string[]
-}
-
-export type DelegateInfra = StepGroupInfra & {
-  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface DelegateInner {
@@ -3660,6 +3680,9 @@ export interface DelegateProfileFilterProperties {
     | 'Environment'
     | 'RuleExecution'
   identifier?: string
+  labels?: {
+    [key: string]: string
+  }
   name?: string
   selectors?: string[]
   tags?: {
@@ -3982,6 +4005,10 @@ export type DownloadArtifactCommandUnitSpec = CommandUnitBaseSpec & {
   destinationPath: string
 }
 
+export type DownloadManifestsStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
 export type DurationRestrictionDTO = RestrictionDTO & {
   timeUnit?: TimeUnit
 }
@@ -4124,6 +4151,8 @@ export interface EcsContainer {
   runtimeId?: string
 }
 
+export type EcsDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
+
 export type EcsInfrastructure = Infrastructure & {
   cluster: string
   connectorRef: string
@@ -4207,6 +4236,8 @@ export interface EditionActionDTO {
     | 'DISABLED_BY_ENTERPRISE'
   reason?: string
 }
+
+export type ElastiGroupDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
 
 export type ElastigroupBGStageSetupStepInfo = StepSpecType & {
   connectedCloudProvider: CloudProvider
@@ -4330,6 +4361,10 @@ export type EmptyDirYaml = CIVolume & {
 export interface EmptyDirYamlSpec {
   medium?: string
   size?: string
+}
+
+export interface EncryptionInterface {
+  [key: string]: any
 }
 
 export interface EntityDetail {
@@ -4552,7 +4587,11 @@ export interface EntityDetail {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4690,6 +4729,9 @@ export interface EnvironmentFilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+  labels?: {
+    [key: string]: string
+  }
   tags?: {
     [key: string]: string
   }
@@ -5243,6 +5285,7 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -5628,6 +5671,7 @@ export interface ErrorMetadata {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   errorMessage?: string
 }
 
@@ -6064,6 +6108,7 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -6108,6 +6153,8 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6201,6 +6248,8 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6312,6 +6361,8 @@ export interface FeatureRestrictionDetailsDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6431,6 +6482,8 @@ export interface FeatureRestrictionMetadataDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6637,6 +6690,9 @@ export interface FilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+  labels?: {
+    [key: string]: string
+  }
   tags?: {
     [key: string]: string
   }
@@ -6809,6 +6865,9 @@ export type GCRStepInfo = StepSpecType & {
   buildArgs?: {
     [key: string]: string
   }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
   connectorRef: string
   context?: string
   dockerfile?: string
@@ -7002,6 +7061,7 @@ export type GitCloneStepInfo = StepSpecType & {
   cloneDirectory?: string
   connectorRef: string
   depth?: number
+  outputFilePathsContent?: string[]
   projectName?: string
   repoName?: string
   resources?: ContainerResource
@@ -7018,6 +7078,51 @@ export type GitConfigDTO = ConnectorConfigDTO & {
   type: 'Http' | 'Ssh'
   url: string
   validationRepo?: string
+}
+
+export interface GitDefaultBranchCacheKeyRequestDTO {
+  accountIdentifier: string
+  repo: string
+  repoUrl: string
+}
+
+export interface GitDefaultBranchCacheListRequest {
+  gitDefaultBranchCacheParamsRequestDTO?: GitDefaultBranchCacheParamsRequestDTO
+}
+
+export interface GitDefaultBranchCacheListResponse {
+  defaultBranchCacheResponseList?: DefaultBranchCacheResponse[]
+}
+
+export interface GitDefaultBranchCacheParamsRequestDTO {
+  accountIdentifier?: string
+  repo?: string
+  repoUrl?: string
+}
+
+export interface GitDefaultBranchClearCacheRequest {
+  gitDefaultBranchCacheParamsRequestDTO?: GitDefaultBranchCacheParamsRequestDTO
+}
+
+export interface GitDefaultBranchClearCacheResponse {
+  count?: number
+}
+
+export interface GitDefaultBranchGetCacheRequest {
+  gitDefaultBranchCacheKeyRequestDTO?: GitDefaultBranchCacheKeyRequestDTO
+}
+
+export interface GitDefaultBranchGetCacheResponse {
+  defaultBranchCacheResponse?: DefaultBranchCacheResponse
+}
+
+export interface GitDefaultBranchUpsertCacheRequest {
+  defaultBranch?: string
+  gitDefaultBranchCacheKeyRequestDTO?: GitDefaultBranchCacheKeyRequestDTO
+}
+
+export interface GitDefaultBranchUpsertCacheResponse {
+  defaultBranchCacheResponse?: DefaultBranchCacheResponse
 }
 
 export interface GitEnabledDTO {
@@ -7244,7 +7349,11 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   )[]
   moduleType?:
     | 'CD'
@@ -7483,7 +7592,11 @@ export interface GitEntityFilterProperties {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7509,11 +7622,13 @@ export interface GitEntityFilterProperties {
 export interface GitErrorMetadata {
   branch?: string
   filepath?: string
+  repo?: string
   type?: string
 }
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
   branch?: string
+  repo?: string
 }
 
 export interface GitFileCacheClearCacheRequest {
@@ -7799,7 +7914,11 @@ export interface GitFullSyncEntityInfoDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8030,7 +8149,11 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8382,7 +8505,11 @@ export interface GitSyncEntityDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8607,7 +8734,11 @@ export interface GitSyncEntityListDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8849,7 +8980,11 @@ export interface GitSyncErrorDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10342,8 +10477,8 @@ export type K8sBlueGreenStepInfo = StepSpecType & {
   commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   pruningEnabled?: boolean
-  skipDeploymentIfSameManifest?: boolean
   skipDryRun?: boolean
+  skipUnchangedManifest?: boolean
 }
 
 export type K8sCanaryDeleteStepInfo = StepSpecType & {
@@ -10517,6 +10652,8 @@ export interface KubernetesCredentialDTO {
 export interface KubernetesCredentialSpecDTO {
   [key: string]: any
 }
+
+export type KubernetesDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
 
 export type KubernetesOpenIdConnectDTO = KubernetesAuthCredentialDTO & {
   oidcClientIdRef: string
@@ -11107,6 +11244,16 @@ export interface NamedNodeMap {
   length?: number
 }
 
+export type NativeHelmDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
+
+export type NativeHelmDeploymentReleaseDetails = DeploymentDetails & {
+  helmChartInfo?: HelmChartInfo
+  helmVersion?: string
+  k8sCloudClusterConfig?: KubernetesCloudClusterConfig
+  namespaces?: string[]
+  releaseName?: string
+}
+
 export type NativeHelmInstanceInfoDTO = InstanceInfoDTO & {
   helmChartInfo?: HelmChartInfo
   helmVersion?: 'V2' | 'V3' | 'V380'
@@ -11296,11 +11443,11 @@ export interface NodeList {
 }
 
 export interface NotificationSettingConfig {
-  type: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+  type: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS' | 'WEBHOOK'
 }
 
 export interface NotificationSettingConfigDTO {
-  type?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+  type?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS' | 'WEBHOOK'
 }
 
 export interface NotificationSettings {
@@ -12860,7 +13007,11 @@ export interface ReferencedByDTO {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export interface RefreshResponse {
@@ -12969,6 +13120,8 @@ export interface ResourceDTO {
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
     | 'NETWORK_MAP'
+    | 'CET_AGENT_TOKEN'
+    | 'CET_CRITICAL_EVENT'
 }
 
 export interface ResourceGroup {
@@ -13691,6 +13844,34 @@ export interface ResponseGitBranchesResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseGitDefaultBranchCacheListResponse {
+  correlationId?: string
+  data?: GitDefaultBranchCacheListResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGitDefaultBranchClearCacheResponse {
+  correlationId?: string
+  data?: GitDefaultBranchClearCacheResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGitDefaultBranchGetCacheResponse {
+  correlationId?: string
+  data?: GitDefaultBranchGetCacheResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGitDefaultBranchUpsertCacheResponse {
+  correlationId?: string
+  data?: GitDefaultBranchUpsertCacheResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseGitFileCacheClearCacheResponse {
   correlationId?: string
   data?: GitFileCacheClearCacheResponse
@@ -14266,7 +14447,11 @@ export interface ResponseListEntityType {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -14966,6 +15151,7 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -16979,6 +17165,21 @@ export type ServerlessAwsLambdaDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
+export type ServerlessAwsLambdaDeployV2StepInfo = StepSpecType & {
+  connectorRef?: string
+  delegateSelectors?: string[]
+  deployCommandOptions?: string[]
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  serverlessVersion?: string
+  settings: ParameterFieldMapStringJsonNode
+}
+
+export type ServerlessAwsLambdaDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
+
 export type ServerlessAwsLambdaInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
@@ -17010,7 +17211,7 @@ export type ServerlessAwsLambdaManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type ServerlessAwsLambdaPrepareRollbackContainerStepInfo = StepSpecType & {
+export type ServerlessAwsLambdaPrepareRollbackV2StepInfo = StepSpecType & {
   connectorRef?: string
   delegateSelectors?: string[]
   downloadManifestsFqn?: string
@@ -17024,6 +17225,10 @@ export type ServerlessAwsLambdaPrepareRollbackContainerStepInfo = StepSpecType &
 }
 
 export type ServerlessAwsLambdaRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type ServerlessAwsLambdaRollbackV2StepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
@@ -17261,7 +17466,7 @@ export interface ServiceNowAuthCredentialsDTO {
 
 export interface ServiceNowAuthenticationDTO {
   spec: ServiceNowAuthCredentialsDTO
-  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate'
+  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate' | 'RefreshTokenGrantType'
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
@@ -17299,6 +17504,14 @@ export interface ServiceNowFieldSchemaNG {
 export interface ServiceNowFieldValueNG {
   displayValue?: string
   value?: string
+}
+
+export type ServiceNowRefreshTokenDTO = ServiceNowAuthCredentialsDTO & {
+  clientIdRef: string
+  clientSecretRef?: string
+  refreshTokenRef: string
+  scope?: string
+  tokenUrl: string
 }
 
 export interface ServiceNowStagingTable {
@@ -17805,6 +18018,8 @@ export type SpotPermanentTokenConfigSpec = SpotCredentialSpec & {
   spotAccountIdRef?: string
 }
 
+export type SshDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
+
 export type SshServiceSpec = ServiceSpec & {}
 
 export type SshWinRmAwsInfrastructure = Infrastructure & {
@@ -18018,6 +18233,7 @@ export interface StepData {
     | 'CloudFunctionRollback'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
+    | 'DownloadManifests'
     | 'AwsSamBuild'
     | 'AwsSamRollback'
     | 'AwsLambdaRollback'
@@ -18026,7 +18242,9 @@ export interface StepData {
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
-    | 'ServerlessPrepareRollback'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export interface StepElementConfig {
@@ -18047,11 +18265,12 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
-  sharedPaths?: ParameterFieldListString
+  sharedPaths?: string[]
   stepGroupInfra?: StepGroupInfra
   steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
   template?: TemplateLinkConfig
+  variables?: NGVariable[]
   when?: StepWhenCondition
 }
 
@@ -18278,6 +18497,8 @@ export interface SvcEnvMigrationRequestDto {
   newBranch?: boolean
   orgIdentifier: string
   pipelineIdentifier: string
+  populateInfrastructureInputs?: boolean
+  populateServiceInputs?: boolean
   projectIdentifier: string
   skipInfras?: string[]
   skipServices?: string[]
@@ -18423,6 +18644,8 @@ export interface TasCredential {
 export interface TasCredentialSpec {
   [key: string]: any
 }
+
+export type TasDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
 
 export type TasInfrastructureDetails = InfrastructureDetails & {
   organization?: string
@@ -18660,6 +18883,7 @@ export interface TerraformCloudCliPlanExecutionData {
 
 export interface TerraformCloudCliStepConfiguration {
   commandFlags?: TerraformCliOptionFlag[]
+  encryptOutput?: TerraformEncryptOutput
   spec?: TerraformCloudCliExecutionData
 }
 
@@ -18770,6 +18994,10 @@ export type TerraformDestroyStepInfo = StepSpecType & {
   provisionerIdentifier: string
 }
 
+export interface TerraformEncryptOutput {
+  outputSecretManagerRef: string
+}
+
 export interface TerraformExecutionData {
   backendConfig?: TerraformBackendConfig
   configFiles: TerraformConfigFilesWrapper
@@ -18810,6 +19038,7 @@ export type TerraformRollbackStepInfo = StepSpecType & {
 
 export interface TerraformStepConfiguration {
   commandFlags?: TerraformCliOptionFlag[]
+  encryptOutput?: TerraformEncryptOutput
   skipRefreshCommand?: boolean
   spec?: TerraformExecutionData
   type: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
@@ -19583,6 +19812,10 @@ export interface Void {
   [key: string]: any
 }
 
+export type WebhookConfig = NotificationSettingConfig & {
+  webhookUrl?: string
+}
+
 export interface WinRmAuthDTO {
   spec: BaseWinRmSpecDTO
   type: 'NTLM' | 'Kerberos'
@@ -19609,6 +19842,8 @@ export type WinRmServiceSpec = ServiceSpec & {
   manifestOverrideSets?: ManifestOverrideSetWrapper[]
   variableOverrideSets?: NGVariableOverrideSetWrapper[]
 }
+
+export type WinrmDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
 
 export type WorkflowFilter = Filter & {
   filterTypes?: string[]
@@ -20724,7 +20959,11 @@ export interface ListActivitiesQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -20941,7 +21180,11 @@ export interface ListActivitiesQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -21262,7 +21505,11 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21479,7 +21726,11 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -21522,6 +21773,112 @@ export const getActivitiesSummaryPromise = (
   getUsingFetch<ResponsePageActivitySummary, unknown, GetActivitiesSummaryQueryParams, void>(
     getConfig('ng/api'),
     `/activityHistory/summary`,
+    props,
+    signal
+  )
+
+export interface AdminCreateCreditQueryParams {
+  accountIdentifier: string
+}
+
+export type AdminCreateCreditProps = Omit<
+  MutateProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Admin Level purchase credit for an account
+ */
+export const AdminCreateCredit = (props: AdminCreateCreditProps) => (
+  <Mutate<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>
+    verb="POST"
+    path={`/admin/credits/create`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseAdminCreateCreditProps = Omit<
+  UseMutateProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Admin Level purchase credit for an account
+ */
+export const useAdminCreateCredit = (props: UseAdminCreateCreditProps) =>
+  useMutate<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>(
+    'POST',
+    `/admin/credits/create`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Admin Level purchase credit for an account
+ */
+export const adminCreateCreditPromise = (
+  props: MutateUsingFetchProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/admin/credits/create`,
+    props,
+    signal
+  )
+
+export interface AdminGetCreditsByAccountPathParams {
+  accountIdentifier: string
+}
+
+export type AdminGetCreditsByAccountProps = Omit<
+  GetProps<ResponseListCreditDTO, Failure | Error, void, AdminGetCreditsByAccountPathParams>,
+  'path'
+> &
+  AdminGetCreditsByAccountPathParams
+
+/**
+ * Admin level get purchase history of credits for an Account in an ascending order of the expiry time
+ */
+export const AdminGetCreditsByAccount = ({ accountIdentifier, ...props }: AdminGetCreditsByAccountProps) => (
+  <Get<ResponseListCreditDTO, Failure | Error, void, AdminGetCreditsByAccountPathParams>
+    path={`/admin/credits/${accountIdentifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseAdminGetCreditsByAccountProps = Omit<
+  UseGetProps<ResponseListCreditDTO, Failure | Error, void, AdminGetCreditsByAccountPathParams>,
+  'path'
+> &
+  AdminGetCreditsByAccountPathParams
+
+/**
+ * Admin level get purchase history of credits for an Account in an ascending order of the expiry time
+ */
+export const useAdminGetCreditsByAccount = ({ accountIdentifier, ...props }: UseAdminGetCreditsByAccountProps) =>
+  useGet<ResponseListCreditDTO, Failure | Error, void, AdminGetCreditsByAccountPathParams>(
+    (paramsInPath: AdminGetCreditsByAccountPathParams) => `/admin/credits/${paramsInPath.accountIdentifier}`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Admin level get purchase history of credits for an Account in an ascending order of the expiry time
+ */
+export const adminGetCreditsByAccountPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<ResponseListCreditDTO, Failure | Error, void, AdminGetCreditsByAccountPathParams> & {
+    accountIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListCreditDTO, Failure | Error, void, AdminGetCreditsByAccountPathParams>(
+    getConfig('ng/api'),
+    `/admin/credits/${accountIdentifier}`,
     props,
     signal
   )
@@ -34919,52 +35276,50 @@ export const saveCardPromise = (
     signal
   )
 
-export interface CreateCreditQueryParams {
+export interface HasAValidCardQueryParams {
   accountIdentifier: string
 }
 
-export type CreateCreditProps = Omit<
-  MutateProps<ResponseCreditDTO, Failure | Error, CreateCreditQueryParams, CreditDTO, void>,
-  'path' | 'verb'
+export type HasAValidCardProps = Omit<
+  GetProps<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>,
+  'path'
 >
 
 /**
- * Purchase credit for an account
+ * Checks for a valid credit card
  */
-export const CreateCredit = (props: CreateCreditProps) => (
-  <Mutate<ResponseCreditDTO, Failure | Error, CreateCreditQueryParams, CreditDTO, void>
-    verb="POST"
-    path={`/credits/create`}
+export const HasAValidCard = (props: HasAValidCardProps) => (
+  <Get<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>
+    path={`/credit-cards/has-valid-card`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseCreateCreditProps = Omit<
-  UseMutateProps<ResponseCreditDTO, Failure | Error, CreateCreditQueryParams, CreditDTO, void>,
-  'path' | 'verb'
+export type UseHasAValidCardProps = Omit<
+  UseGetProps<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>,
+  'path'
 >
 
 /**
- * Purchase credit for an account
+ * Checks for a valid credit card
  */
-export const useCreateCredit = (props: UseCreateCreditProps) =>
-  useMutate<ResponseCreditDTO, Failure | Error, CreateCreditQueryParams, CreditDTO, void>('POST', `/credits/create`, {
+export const useHasAValidCard = (props: UseHasAValidCardProps) =>
+  useGet<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>(`/credit-cards/has-valid-card`, {
     base: getConfig('ng/api'),
     ...props
   })
 
 /**
- * Purchase credit for an account
+ * Checks for a valid credit card
  */
-export const createCreditPromise = (
-  props: MutateUsingFetchProps<ResponseCreditDTO, Failure | Error, CreateCreditQueryParams, CreditDTO, void>,
+export const hasAValidCardPromise = (
+  props: GetUsingFetchProps<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseCreditDTO, Failure | Error, CreateCreditQueryParams, CreditDTO, void>(
-    'POST',
+  getUsingFetch<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>(
     getConfig('ng/api'),
-    `/credits/create`,
+    `/credit-cards/has-valid-card`,
     props,
     signal
   )
@@ -39539,6 +39894,8 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -39702,6 +40059,8 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'MULTIPLE_SERVICE_ACCOUNTS'
       | 'MULTIPLE_VARIABLES'
       | 'MULTIPLE_CONNECTORS'
+      | 'MULTIPLE_API_KEYS'
+      | 'MULTIPLE_API_TOKENS'
       | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
       | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
       | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -40006,7 +40365,11 @@ export interface ListReferredByEntitiesQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -40284,7 +40647,11 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   searchTerm?: string
 }
 
@@ -43773,7 +44140,11 @@ export interface GetReferencedByQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   searchTerm?: string
 }
 
@@ -45685,10 +46056,10 @@ export interface ClearCacheQueryParams {
 
 export type ClearCacheProps = Omit<
   MutateProps<
-    ResponseGitFileCacheClearCacheResponse,
+    ResponseGitDefaultBranchClearCacheResponse,
     Failure | Error,
     ClearCacheQueryParams,
-    GitFileCacheClearCacheRequest,
+    GitDefaultBranchClearCacheRequest,
     void
   >,
   'path' | 'verb'
@@ -45696,9 +46067,252 @@ export type ClearCacheProps = Omit<
 
 export const ClearCache = (props: ClearCacheProps) => (
   <Mutate<
-    ResponseGitFileCacheClearCacheResponse,
+    ResponseGitDefaultBranchClearCacheResponse,
     Failure | Error,
     ClearCacheQueryParams,
+    GitDefaultBranchClearCacheRequest,
+    void
+  >
+    verb="DELETE"
+    path={`/git-service/default-branch-cache`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseClearCacheProps = Omit<
+  UseMutateProps<
+    ResponseGitDefaultBranchClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitDefaultBranchClearCacheRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const useClearCache = (props: UseClearCacheProps) =>
+  useMutate<
+    ResponseGitDefaultBranchClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitDefaultBranchClearCacheRequest,
+    void
+  >('DELETE', `/git-service/default-branch-cache`, { base: getConfig('ng/api'), ...props })
+
+export const clearCachePromise = (
+  props: MutateUsingFetchProps<
+    ResponseGitDefaultBranchClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitDefaultBranchClearCacheRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGitDefaultBranchClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitDefaultBranchClearCacheRequest,
+    void
+  >('DELETE', getConfig('ng/api'), `/git-service/default-branch-cache`, props, signal)
+
+export interface FetchFromCacheQueryParams {
+  accountIdentifier?: string
+}
+
+export type FetchFromCacheProps = Omit<
+  GetProps<ResponseGitDefaultBranchGetCacheResponse, Failure | Error, FetchFromCacheQueryParams, void>,
+  'path'
+>
+
+export const FetchFromCache = (props: FetchFromCacheProps) => (
+  <Get<ResponseGitDefaultBranchGetCacheResponse, Failure | Error, FetchFromCacheQueryParams, void>
+    path={`/git-service/default-branch-cache`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseFetchFromCacheProps = Omit<
+  UseGetProps<ResponseGitDefaultBranchGetCacheResponse, Failure | Error, FetchFromCacheQueryParams, void>,
+  'path'
+>
+
+export const useFetchFromCache = (props: UseFetchFromCacheProps) =>
+  useGet<ResponseGitDefaultBranchGetCacheResponse, Failure | Error, FetchFromCacheQueryParams, void>(
+    `/git-service/default-branch-cache`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+export const fetchFromCachePromise = (
+  props: GetUsingFetchProps<ResponseGitDefaultBranchGetCacheResponse, Failure | Error, FetchFromCacheQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGitDefaultBranchGetCacheResponse, Failure | Error, FetchFromCacheQueryParams, void>(
+    getConfig('ng/api'),
+    `/git-service/default-branch-cache`,
+    props,
+    signal
+  )
+
+export interface ListQueryParams {
+  accountIdentifier?: string
+}
+
+export type ListProps = Omit<
+  MutateProps<
+    ResponseGitDefaultBranchCacheListResponse,
+    Failure | Error,
+    ListQueryParams,
+    GitDefaultBranchCacheListRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const List = (props: ListProps) => (
+  <Mutate<
+    ResponseGitDefaultBranchCacheListResponse,
+    Failure | Error,
+    ListQueryParams,
+    GitDefaultBranchCacheListRequest,
+    void
+  >
+    verb="POST"
+    path={`/git-service/default-branch-cache`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListProps = Omit<
+  UseMutateProps<
+    ResponseGitDefaultBranchCacheListResponse,
+    Failure | Error,
+    ListQueryParams,
+    GitDefaultBranchCacheListRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const useList = (props: UseListProps) =>
+  useMutate<
+    ResponseGitDefaultBranchCacheListResponse,
+    Failure | Error,
+    ListQueryParams,
+    GitDefaultBranchCacheListRequest,
+    void
+  >('POST', `/git-service/default-branch-cache`, { base: getConfig('ng/api'), ...props })
+
+export const listPromise = (
+  props: MutateUsingFetchProps<
+    ResponseGitDefaultBranchCacheListResponse,
+    Failure | Error,
+    ListQueryParams,
+    GitDefaultBranchCacheListRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGitDefaultBranchCacheListResponse,
+    Failure | Error,
+    ListQueryParams,
+    GitDefaultBranchCacheListRequest,
+    void
+  >('POST', getConfig('ng/api'), `/git-service/default-branch-cache`, props, signal)
+
+export interface UpsertCacheQueryParams {
+  accountIdentifier?: string
+}
+
+export type UpsertCacheProps = Omit<
+  MutateProps<
+    ResponseGitDefaultBranchUpsertCacheResponse,
+    Failure | Error,
+    UpsertCacheQueryParams,
+    GitDefaultBranchUpsertCacheRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const UpsertCache = (props: UpsertCacheProps) => (
+  <Mutate<
+    ResponseGitDefaultBranchUpsertCacheResponse,
+    Failure | Error,
+    UpsertCacheQueryParams,
+    GitDefaultBranchUpsertCacheRequest,
+    void
+  >
+    verb="PUT"
+    path={`/git-service/default-branch-cache`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpsertCacheProps = Omit<
+  UseMutateProps<
+    ResponseGitDefaultBranchUpsertCacheResponse,
+    Failure | Error,
+    UpsertCacheQueryParams,
+    GitDefaultBranchUpsertCacheRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const useUpsertCache = (props: UseUpsertCacheProps) =>
+  useMutate<
+    ResponseGitDefaultBranchUpsertCacheResponse,
+    Failure | Error,
+    UpsertCacheQueryParams,
+    GitDefaultBranchUpsertCacheRequest,
+    void
+  >('PUT', `/git-service/default-branch-cache`, { base: getConfig('ng/api'), ...props })
+
+export const upsertCachePromise = (
+  props: MutateUsingFetchProps<
+    ResponseGitDefaultBranchUpsertCacheResponse,
+    Failure | Error,
+    UpsertCacheQueryParams,
+    GitDefaultBranchUpsertCacheRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGitDefaultBranchUpsertCacheResponse,
+    Failure | Error,
+    UpsertCacheQueryParams,
+    GitDefaultBranchUpsertCacheRequest,
+    void
+  >('PUT', getConfig('ng/api'), `/git-service/default-branch-cache`, props, signal)
+
+export interface ClearCache1QueryParams {
+  accountIdentifier?: string
+}
+
+export type ClearCache1Props = Omit<
+  MutateProps<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCache1QueryParams,
+    GitFileCacheClearCacheRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const ClearCache1 = (props: ClearCache1Props) => (
+  <Mutate<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCache1QueryParams,
     GitFileCacheClearCacheRequest,
     void
   >
@@ -45709,31 +46323,31 @@ export const ClearCache = (props: ClearCacheProps) => (
   />
 )
 
-export type UseClearCacheProps = Omit<
+export type UseClearCache1Props = Omit<
   UseMutateProps<
     ResponseGitFileCacheClearCacheResponse,
     Failure | Error,
-    ClearCacheQueryParams,
+    ClearCache1QueryParams,
     GitFileCacheClearCacheRequest,
     void
   >,
   'path' | 'verb'
 >
 
-export const useClearCache = (props: UseClearCacheProps) =>
+export const useClearCache1 = (props: UseClearCache1Props) =>
   useMutate<
     ResponseGitFileCacheClearCacheResponse,
     Failure | Error,
-    ClearCacheQueryParams,
+    ClearCache1QueryParams,
     GitFileCacheClearCacheRequest,
     void
   >('DELETE', `/git-service/git-file-cache`, { base: getConfig('ng/api'), ...props })
 
-export const clearCachePromise = (
+export const clearCache1Promise = (
   props: MutateUsingFetchProps<
     ResponseGitFileCacheClearCacheResponse,
     Failure | Error,
-    ClearCacheQueryParams,
+    ClearCache1QueryParams,
     GitFileCacheClearCacheRequest,
     void
   >,
@@ -45742,7 +46356,7 @@ export const clearCachePromise = (
   mutateUsingFetch<
     ResponseGitFileCacheClearCacheResponse,
     Failure | Error,
-    ClearCacheQueryParams,
+    ClearCache1QueryParams,
     GitFileCacheClearCacheRequest,
     void
   >('DELETE', getConfig('ng/api'), `/git-service/git-file-cache`, props, signal)
@@ -46465,7 +47079,11 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -46750,7 +47368,11 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'SscaEnforcement'
       | 'IdpConnector'
       | 'CdSscaEnforcement'
-      | 'ServerlessPrepareRollback'
+      | 'DownloadManifests'
+      | 'ServerlessAwsLambdaPrepareRollbackV2'
+      | 'ServerlessAwsLambdaRollbackV2'
+      | 'Coverity'
+      | 'ServerlessAwsLambdaDeployV2'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -48377,52 +48999,34 @@ export const getGcpRegionsPromise = (
     signal
   )
 
-export type GetNGManagerHealthStatusProps = Omit<GetProps<ResponseString, unknown, void, void>, 'path'>
+export type DoReadinessCheckProps = Omit<GetProps<ResponseString, unknown, void, void>, 'path'>
 
-/**
- * get health for NGManager service
- */
-export const GetNGManagerHealthStatus = (props: GetNGManagerHealthStatusProps) => (
+export const DoReadinessCheck = (props: DoReadinessCheckProps) => (
   <Get<ResponseString, unknown, void, void> path={`/health`} base={getConfig('ng/api')} {...props} />
 )
 
-export type UseGetNGManagerHealthStatusProps = Omit<UseGetProps<ResponseString, unknown, void, void>, 'path'>
+export type UseDoReadinessCheckProps = Omit<UseGetProps<ResponseString, unknown, void, void>, 'path'>
 
-/**
- * get health for NGManager service
- */
-export const useGetNGManagerHealthStatus = (props: UseGetNGManagerHealthStatusProps) =>
+export const useDoReadinessCheck = (props: UseDoReadinessCheckProps) =>
   useGet<ResponseString, unknown, void, void>(`/health`, { base: getConfig('ng/api'), ...props })
 
-/**
- * get health for NGManager service
- */
-export const getNGManagerHealthStatusPromise = (
+export const doReadinessCheckPromise = (
   props: GetUsingFetchProps<ResponseString, unknown, void, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<ResponseString, unknown, void, void>(getConfig('ng/api'), `/health`, props, signal)
 
-export type GetNGManagerLivenessStatusProps = Omit<GetProps<RestResponseString, unknown, void, void>, 'path'>
+export type DoLivenessCheckProps = Omit<GetProps<RestResponseString, unknown, void, void>, 'path'>
 
-/**
- * get liveness status for NGManager service
- */
-export const GetNGManagerLivenessStatus = (props: GetNGManagerLivenessStatusProps) => (
+export const DoLivenessCheck = (props: DoLivenessCheckProps) => (
   <Get<RestResponseString, unknown, void, void> path={`/health/liveness`} base={getConfig('ng/api')} {...props} />
 )
 
-export type UseGetNGManagerLivenessStatusProps = Omit<UseGetProps<RestResponseString, unknown, void, void>, 'path'>
+export type UseDoLivenessCheckProps = Omit<UseGetProps<RestResponseString, unknown, void, void>, 'path'>
 
-/**
- * get liveness status for NGManager service
- */
-export const useGetNGManagerLivenessStatus = (props: UseGetNGManagerLivenessStatusProps) =>
+export const useDoLivenessCheck = (props: UseDoLivenessCheckProps) =>
   useGet<RestResponseString, unknown, void, void>(`/health/liveness`, { base: getConfig('ng/api'), ...props })
 
-/**
- * get liveness status for NGManager service
- */
-export const getNGManagerLivenessStatusPromise = (
+export const doLivenessCheckPromise = (
   props: GetUsingFetchProps<RestResponseString, unknown, void, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseString, unknown, void, void>(getConfig('ng/api'), `/health/liveness`, props, signal)
@@ -53272,7 +53876,11 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   yamlGroup?: string
 }
 
@@ -53617,7 +54225,11 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -54185,7 +54797,7 @@ export interface GetProjectListQueryParams {
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
-  isFavorite?: boolean
+  onlyFavorites?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -54317,7 +54929,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'GOVERNANCE'
     | 'IDP'
   searchTerm?: string
-  isFavorite?: boolean
+  onlyFavorites?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -56603,6 +57215,7 @@ export interface GetListOfReposByRefConnectorQueryParams {
   page?: number
   size?: number
   searchTerm?: string
+  applyGitXRepoAllowListFilter?: boolean
 }
 
 export type GetListOfReposByRefConnectorProps = Omit<
@@ -60157,6 +60770,7 @@ export interface GetServiceAccessListQueryParams {
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   deploymentMetadataYaml?: string
+  includeAllServicesAccessibleAtScope?: boolean
 }
 
 export type GetServiceAccessListProps = Omit<
@@ -60824,6 +61438,7 @@ export interface GetSettingsListQueryParams {
     | 'GIT_EXPERIENCE'
     | 'CONNECTORS'
   group?: string
+  includeParentScopes?: boolean
 }
 
 export type GetSettingsListProps = Omit<
@@ -62075,6 +62690,58 @@ export const updateBillingPromise = (
     'PUT',
     getConfig('ng/api'),
     `/subscriptions/billing`,
+    props,
+    signal
+  )
+
+export interface CreateClientSecretQueryParams {
+  accountIdentifier: string
+  billingEmail: string
+}
+
+export type CreateClientSecretProps = Omit<
+  MutateProps<ResponseString, Failure | Error, CreateClientSecretQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a client secret for the Stripe customer
+ */
+export const CreateClientSecret = (props: CreateClientSecretProps) => (
+  <Mutate<ResponseString, Failure | Error, CreateClientSecretQueryParams, void, void>
+    verb="POST"
+    path={`/subscriptions/client-secret`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateClientSecretProps = Omit<
+  UseMutateProps<ResponseString, Failure | Error, CreateClientSecretQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a client secret for the Stripe customer
+ */
+export const useCreateClientSecret = (props: UseCreateClientSecretProps) =>
+  useMutate<ResponseString, Failure | Error, CreateClientSecretQueryParams, void, void>(
+    'POST',
+    `/subscriptions/client-secret`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Creates a client secret for the Stripe customer
+ */
+export const createClientSecretPromise = (
+  props: MutateUsingFetchProps<ResponseString, Failure | Error, CreateClientSecretQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseString, Failure | Error, CreateClientSecretQueryParams, void, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/subscriptions/client-secret`,
     props,
     signal
   )
@@ -63351,14 +64018,15 @@ export interface ListAggregatedTokensQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   apiKeyType: 'USER' | 'SERVICE_ACCOUNT'
-  parentIdentifier: string
-  apiKeyIdentifier: string
+  parentIdentifier?: string
+  apiKeyIdentifier?: string
   identifiers?: string[]
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
   pageToken?: string
   searchTerm?: string
+  includeOnlyActiveTokens?: boolean
 }
 
 export type ListAggregatedTokensProps = Omit<
@@ -69495,7 +70163,11 @@ export interface GetYamlSchemaQueryParams {
     | 'SscaEnforcement'
     | 'IdpConnector'
     | 'CdSscaEnforcement'
-    | 'ServerlessPrepareRollback'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   subtype?:
     | 'K8sCluster'
     | 'Git'

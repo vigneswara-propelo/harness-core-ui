@@ -1061,6 +1061,7 @@ export type ConnectorFilterProperties = FilterProperties & {
   connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
   connectorConnectivityModes?: ('DELEGATE' | 'MANAGER')[]
   connectorIdentifiers?: string[]
+  connectorIds?: string[]
   connectorNames?: string[]
   description?: string
   inheritingCredentialsFromDelegate?: boolean
@@ -1265,10 +1266,6 @@ export interface DelegateInfo {
   name?: string
   taskId?: string
   taskName?: string
-}
-
-export type DelegateInfra = StepGroupInfra & {
-  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface DestinationPipelineConfig {
@@ -6548,11 +6545,12 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
-  sharedPaths?: ParameterFieldListString
+  sharedPaths?: string[]
   stepGroupInfra?: StepGroupInfra
   steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
   template?: TemplateLinkConfig
+  variables?: NGVariable[]
   when?: StepWhenCondition
 }
 
@@ -6611,7 +6609,7 @@ export interface SuccessHealthInfo {
 }
 
 export type SyftSbomOrchestration = SbomOrchestrationSpec & {
-  format?: 'spdx-json'
+  format?: 'spdx-json' | 'cyclonedx-json'
 }
 
 export type TagBuildSpec = BuildSpec & {
