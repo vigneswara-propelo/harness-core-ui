@@ -34,7 +34,7 @@ exports[`Node Status Indicator Test Should render diagramnodes 1`] = `
           </g>
         </svg>
       </span>
-      1
+      2
     </div>
     <div
       class="stepCount"
@@ -123,7 +123,7 @@ exports[`Node Status Indicator Test Should render diagramnodes 1`] = `
           />
         </svg>
       </span>
-      3
+      2
     </div>
   </div>
 </div>

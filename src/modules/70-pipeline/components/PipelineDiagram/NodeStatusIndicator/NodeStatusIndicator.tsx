@@ -26,11 +26,9 @@ export function NodeStatusIndicator(props: NodeStatusIndicatorProps): JSX.Elemen
   nodeState?.forEach((stateVal: PipelineGraphState & any) => {
     const nodeStatus = defaultTo(stateVal?.status, stateVal?.step?.status)
 
-    if (nodeStatus === ExecutionStatusEnum.Success) {
+    if ([ExecutionStatusEnum.IgnoreFailed, ExecutionStatusEnum.Success].includes(nodeStatus)) {
       successfulStagesCount += 1
-    } else if (
-      [ExecutionStatusEnum.Failed, ExecutionStatusEnum.IgnoreFailed, ExecutionStatusEnum.Aborted].includes(nodeStatus)
-    ) {
+    } else if ([ExecutionStatusEnum.Failed, ExecutionStatusEnum.Aborted].includes(nodeStatus)) {
       failedStagesCount += 1
     } else if (nodeStatus === ExecutionStatusEnum.Running) {
       runningStagesCount += 1
