@@ -38,7 +38,7 @@ export default function CODESideNav(): React.ReactElement {
       accountIdentifier: accountId,
       orgIdentifier
     },
-    lazy: savedProject && savedProject.projectIdentifier === projectIdentifier
+    lazy: !projectIdentifier || (savedProject && savedProject.projectIdentifier === projectIdentifier)
   })
 
   const isFiles =
