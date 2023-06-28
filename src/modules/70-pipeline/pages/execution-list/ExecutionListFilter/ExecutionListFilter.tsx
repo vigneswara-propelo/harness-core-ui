@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import { Layout, SelectOption, useToaster } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, toLower } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
@@ -118,8 +118,8 @@ export function ExecutionListFilter(): React.ReactElement {
       })
 
       const options = content?.map((item: Servicev1Application) => ({
-        label: `${item?.name} (${item.agentIdentifier})`,
-        value: item?.name || ''
+        label: `${item?.name} (${item?.agentIdentifier})`,
+        value: toLower(`${item?.agentIdentifier || ''}:${item?.name || ''}`) // scope.agentId:appName
       }))
 
       setGitOpsAppNameOptions(options)
