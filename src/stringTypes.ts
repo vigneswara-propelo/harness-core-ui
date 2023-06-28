@@ -2790,6 +2790,7 @@ export interface StringsMap {
   'connectors.ceAzure.chooseRequirements.billing.feat5': string
   'connectors.ceAzure.chooseRequirements.billing.footer': string
   'connectors.ceAzure.chooseRequirements.featureDesc': string
+  'connectors.ceAzure.chooseRequirements.governance.feat1': string
   'connectors.ceAzure.chooseRequirements.heading': string
   'connectors.ceAzure.chooseRequirements.info': string
   'connectors.ceAzure.chooseRequirements.optimization.feat1': string
@@ -2803,6 +2804,7 @@ export interface StringsMap {
   'connectors.ceAzure.chooseRequirements.subHeading': string
   'connectors.ceAzure.chooseRequirements.visibility.feat1': string
   'connectors.ceAzure.chooseRequirements.visibility.feat2': string
+  'connectors.ceAzure.chooseRequirements.visibility.feat3': string
   'connectors.ceAzure.chooseRequirements.visibility.heading': string
   'connectors.ceAzure.chooseRequirements.visibilityCardDesc': string
   'connectors.ceAzure.existingExports.createNewExportBtn': string
@@ -2824,6 +2826,8 @@ export interface StringsMap {
   'connectors.ceAzure.overview.trySuggestion': string
   'connectors.ceAzure.servicePrincipal.assignRoleCmd': string
   'connectors.ceAzure.servicePrincipal.costVisibilityCmd': string
+  'connectors.ceAzure.servicePrincipal.govAndOptCmd': string
+  'connectors.ceAzure.servicePrincipal.governanceCmd': string
   'connectors.ceAzure.servicePrincipal.heading': string
   'connectors.ceAzure.servicePrincipal.inventoryMgtCmd': string
   'connectors.ceAzure.servicePrincipal.optimisationCmd': string

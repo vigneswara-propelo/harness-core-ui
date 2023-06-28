@@ -106,7 +106,8 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
   const ENABLED = {
     BILLING: featuresEnabled.includes('BILLING'),
     VISIBILITY: featuresEnabled.includes('VISIBILITY'),
-    OPTIMIZATION: featuresEnabled.includes('OPTIMIZATION')
+    OPTIMIZATION: featuresEnabled.includes('OPTIMIZATION'),
+    GOVERNANCE: featuresEnabled.includes('GOVERNANCE')
   }
 
   const { trackEvent } = useTelemetry()
@@ -162,10 +163,16 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
 
   // If BILLING and OPTIMIZATION are selected, we need to show 1, 2, and 3.
   // 1 & 2 are added from above
-  if (ENABLED.OPTIMIZATION) {
+  if (ENABLED.OPTIMIZATION || ENABLED.GOVERNANCE) {
     commands.push(
       <Commands
-        comment={getString('connectors.ceAzure.servicePrincipal.optimisationCmd')}
+        comment={
+          ENABLED.OPTIMIZATION && ENABLED.GOVERNANCE
+            ? getString('connectors.ceAzure.servicePrincipal.govAndOptCmd')
+            : ENABLED.OPTIMIZATION
+            ? getString('connectors.ceAzure.servicePrincipal.optimisationCmd')
+            : getString('connectors.ceAzure.servicePrincipal.governanceCmd')
+        }
         command={`az role assignment create --assignee ${appId} --role 'Contributor' --scope /subscriptions/${subscriptionId}`}
       />
     )
