@@ -104,7 +104,7 @@ describe('FlagElemBoolean', () => {
     const nextStepMock = jest.fn()
     const nextStepDataMock = {
       defaultOffVariation: 'false',
-      defaultOnVariation: 'true',
+      defaultOnVariation: 'false',
       kind: 'boolean',
       variations: [
         {

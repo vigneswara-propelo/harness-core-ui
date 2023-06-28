@@ -111,7 +111,7 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
           { identifier: TRUE, name: True, value: TRUE },
           { identifier: FALSE, name: False, value: FALSE }
         ],
-        defaultOnVariation: TRUE,
+        defaultOnVariation: FALSE,
         defaultOffVariation: FALSE
       }}
       formName="cfFlagBool"
