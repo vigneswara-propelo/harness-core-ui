@@ -27,7 +27,7 @@ import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
 import mockGetAllEnvironmentsFlags from './mockGetAllEnvironmentsFlags'
 
-const renderComponent = (): RenderResult =>
+const renderComponent = (isArchivingFFOn = false): RenderResult =>
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
@@ -39,7 +39,8 @@ const renderComponent = (): RenderResult =>
       defaultFeatureFlagValues={{
         STALE_FLAGS_FFM_1510: true,
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
-        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true
+        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
+        FFM_7921_ARCHIVING_FEATURE_FLAGS: isArchivingFFOn
       }}
     >
       <FeatureFlagsPage />
@@ -300,6 +301,14 @@ describe('FeatureFlagsPage', () => {
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
+    })
+
+    test('It should render if there are only archived flags', async () => {
+      const isArchivingFFOn = true
+      mockEnvs()
+
+      renderComponent(isArchivingFFOn)
+      expect(screen.getAllByTestId('filter-card')).toHaveLength(7)
     })
   })
 })

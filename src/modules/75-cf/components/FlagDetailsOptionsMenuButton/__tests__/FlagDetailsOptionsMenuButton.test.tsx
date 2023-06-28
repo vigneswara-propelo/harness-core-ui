@@ -120,7 +120,8 @@ describe('FlagDetailsOptionsMenuButton', () => {
           accountIdentifier: 'test_acc',
           commitMsg: '',
           orgIdentifier: 'test_org',
-          projectIdentifier: 'test_project'
+          projectIdentifier: 'test_project',
+          forceDelete: true
         }
       })
     })
@@ -178,7 +179,8 @@ describe('FlagDetailsOptionsMenuButton', () => {
           accountIdentifier: 'test_acc',
           commitMsg: '',
           orgIdentifier: 'test_org',
-          projectIdentifier: 'test_project'
+          projectIdentifier: 'test_project',
+          forceDelete: true
         }
       })
     })
@@ -210,7 +212,8 @@ describe('FlagDetailsOptionsMenuButton', () => {
             accountIdentifier: 'test_acc',
             commitMsg: 'test commit message',
             orgIdentifier: 'test_org',
-            projectIdentifier: 'test_project'
+            projectIdentifier: 'test_project',
+            forceDelete: true
           }
         })
       )
@@ -243,7 +246,8 @@ describe('FlagDetailsOptionsMenuButton', () => {
             accountIdentifier: 'test_acc',
             commitMsg: 'test commit message',
             orgIdentifier: 'test_org',
-            projectIdentifier: 'test_project'
+            projectIdentifier: 'test_project',
+            forceDelete: true
           }
         })
       )

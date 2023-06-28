@@ -5,12 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FC } from 'react'
 import { Color } from '@harness/design-system'
 import { FilterProps, TableFilters } from '@cf/components/TableFilters/TableFilters'
 import type { Features } from 'services/cf'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlagStatus } from '../FlagStatus'
 export interface FlagTableFiltersProps {
   features: Features | null
@@ -21,7 +20,8 @@ export interface FlagTableFiltersProps {
 export enum FlagFilterKeys {
   LIFETIME = 'lifetime',
   STATUS = 'status',
-  ENABLED = 'enabled'
+  ENABLED = 'enabled',
+  ARCHIVED = 'archived'
 }
 
 export const FlagFilterValues = {
@@ -67,16 +67,30 @@ export const featureFlagFilters = (features: Features | null): Array<FilterProps
     total: features?.featureCounts?.totalPotentiallyStale || 0,
     tooltipId: 'ff_flagFilters_potentiallyStaleFlags',
     filterTotalColor: Color.ORANGE_800
+  },
+  {
+    queryProps: { key: FlagFilterKeys.ARCHIVED, value: 'true' },
+    label: 'cf.flagFilters.archivedFlags',
+    total: features?.featureCounts?.totalArchived || 0,
+    filterTotalColor: Color.GREY_700
   }
 ]
 
-export const FlagTableFilters: React.FC<FlagTableFiltersProps> = ({ features, currentFilter, updateTableFilter }) => {
-  const DISPLAY_ACTIVE_FILTER = useFeatureFlag(FeatureFlag.FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW)
+export const FlagTableFilters: FC<FlagTableFiltersProps> = ({ features, currentFilter, updateTableFilter }) => {
+  const {
+    FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: DISPLAY_ACTIVE_FILTER,
+    FFM_7921_ARCHIVING_FEATURE_FLAGS: ARCHIVING_FEATURE_FLAGS
+  } = useFeatureFlags()
   let filters = featureFlagFilters(features)
 
   // remove 'Active Flags' filter card if feature flag FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW is not enabled
   if (!DISPLAY_ACTIVE_FILTER) {
     filters = filters.filter(filter => filter.label !== 'cf.flagFilters.active')
+  }
+
+  // remove 'Archived Flags' filter card if Archiving FF is toggled OFF
+  if (!ARCHIVING_FEATURE_FLAGS) {
+    filters = filters.filter(filter => filter.label !== 'cf.flagFilters.archivedFlags')
   }
 
   return <TableFilters filters={filters} currentFilter={currentFilter} updateTableFilter={updateTableFilter} />

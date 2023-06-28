@@ -70,7 +70,7 @@ const useDeleteFlagModal = (props: UseDeleteFlagModalProps): UseDeleteFlagModalR
     try {
       clear()
 
-      await deleteFeatureFlag(featureFlag.identifier, { queryParams: { ...queryParams, commitMsg } })
+      await deleteFeatureFlag(featureFlag.identifier, { queryParams: { ...queryParams, commitMsg, forceDelete: true } })
 
       if (gitSync.isGitSyncEnabled && gitSyncFormValues?.autoCommit) {
         await gitSync.handleAutoCommit(gitSyncFormValues?.autoCommit)

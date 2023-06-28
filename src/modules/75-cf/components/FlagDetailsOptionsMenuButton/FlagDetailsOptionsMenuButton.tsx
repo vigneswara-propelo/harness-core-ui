@@ -82,7 +82,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
   const { openDialog } = useArchiveFlagDialog({
     flagData: featureFlag,
     queryParams,
-    deleteFeatureFlag,
+    archiveFlag: deleteFeatureFlag,
     backToListingPage: () => history.push(featureFlagListURL)
   })
 

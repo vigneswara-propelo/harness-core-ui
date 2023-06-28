@@ -8,6 +8,7 @@
 import { render, RenderResult, screen, waitFor, fireEvent } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
+import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
@@ -17,10 +18,10 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { FlagOptionsMenuButtonProps } from '../FlagOptionsMenuButton'
 import FlagOptionsMenuButton from '../FlagOptionsMenuButton'
 
-const renderComponent = (isArchivingFfOn = false, props: Partial<FlagOptionsMenuButtonProps> = {}): RenderResult => {
+const renderComponent = (isArchivingFFOn: boolean, props: Partial<FlagOptionsMenuButtonProps> = {}): RenderResult => {
   return render(
     <TestWrapper
-      defaultFeatureFlagValues={{ FFM_7921_ARCHIVING_FEATURE_FLAGS: isArchivingFfOn }}
+      defaultFeatureFlagValues={{ FFM_7921_ARCHIVING_FEATURE_FLAGS: isArchivingFFOn }}
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
@@ -41,11 +42,12 @@ const renderComponent = (isArchivingFfOn = false, props: Partial<FlagOptionsMenu
   )
 }
 
-describe('FlagOptionsButton', () => {
+describe('FlagOptionsMenuButton', () => {
   beforeEach(() => jest.spyOn(useFeaturesMock, 'useGetFirstDisabledFeature').mockReturnValue({ featureEnabled: true }))
 
-  test('it should render a DELETE and EDIT button when FFM_7127_FF_MFE_Onboarding_Detail is toggled OFF', async () => {
-    renderComponent()
+  test('it should render a DELETE and EDIT button when FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled OFF', async () => {
+    const isArchivingFFOn = false
+    renderComponent(isArchivingFFOn)
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     expect(document.querySelector('[data-icon="edit"]')).toBeInTheDocument()
@@ -56,7 +58,8 @@ describe('FlagOptionsButton', () => {
   })
 
   test('it should redirect user to Feature Flags Detail page when user clicks the Edit option', async () => {
-    renderComponent()
+    const isArchivingFFOn = false
+    renderComponent(isArchivingFFOn)
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
 
@@ -70,7 +73,8 @@ describe('FlagOptionsButton', () => {
   })
 
   test('it should render confirm modal correctly when delete option clicked', async () => {
-    renderComponent()
+    const isArchivingFFOn = false
+    renderComponent(isArchivingFFOn)
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -84,7 +88,8 @@ describe('FlagOptionsButton', () => {
   })
 
   test('it should close confirm modal when cancel option clicked', async () => {
-    renderComponent()
+    const isArchivingFFOn = false
+    renderComponent(isArchivingFFOn)
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -102,7 +107,8 @@ describe('FlagOptionsButton', () => {
       .spyOn(useFeaturesMock, 'useGetFirstDisabledFeature')
       .mockReturnValue({ featureEnabled: false, disabledFeatureName: FeatureIdentifier.MAUS })
 
-    renderComponent()
+    const isArchivingFFOn = false
+    renderComponent(isArchivingFFOn)
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
 
@@ -114,9 +120,9 @@ describe('FlagOptionsButton', () => {
   test('it should call callback when confirm delete button clicked', async () => {
     const deleteFlagMock = jest.fn()
     const refetchFlagMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, { deleteFlag: deleteFlagMock, refetchFlags: refetchFlagMock })
+    renderComponent(isArchivingFFOn, { deleteFlag: deleteFlagMock, refetchFlags: refetchFlagMock })
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -130,7 +136,8 @@ describe('FlagOptionsButton', () => {
         accountIdentifier: 'test_acc',
         commitMsg: '',
         orgIdentifier: 'test_org',
-        projectIdentifier: 'test_project'
+        projectIdentifier: 'test_project',
+        forceDelete: true
       }
     })
 
@@ -145,9 +152,9 @@ describe('FlagOptionsButton', () => {
   test('it should show error toaster when callback fails', async () => {
     const deleteFlagMock = jest.fn().mockRejectedValueOnce({ message: 'Failed to Fetch' })
     const refetchFlagMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, { deleteFlag: deleteFlagMock, refetchFlags: refetchFlagMock })
+    renderComponent(isArchivingFFOn, { deleteFlag: deleteFlagMock, refetchFlags: refetchFlagMock })
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -167,9 +174,9 @@ describe('FlagOptionsButton', () => {
   test('it should open Git Modal when confirm delete button clicked and Git Sync enabled', async () => {
     jest.spyOn(gitSync, 'useGitSync').mockReturnValue(mockGitSync)
     const deleteFlagMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
+    renderComponent(isArchivingFFOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -183,9 +190,9 @@ describe('FlagOptionsButton', () => {
   test('it should close Git Modal when cancel button clicked', async () => {
     jest.spyOn(gitSync, 'useGitSync').mockReturnValue(mockGitSync)
     const deleteFlagMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
+    renderComponent(isArchivingFFOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -202,9 +209,9 @@ describe('FlagOptionsButton', () => {
 
   test('it should call callback when confirm delete button clicked and Git Sync autocommit enabled', async () => {
     const deleteFlagMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, {
+    renderComponent(isArchivingFFOn, {
       deleteFlag: deleteFlagMock,
       gitSync: { ...mockGitSync, isAutoCommitEnabled: true }
     })
@@ -221,7 +228,8 @@ describe('FlagOptionsButton', () => {
         accountIdentifier: 'test_acc',
         commitMsg: '',
         orgIdentifier: 'test_org',
-        projectIdentifier: 'test_project'
+        projectIdentifier: 'test_project',
+        forceDelete: true
       }
     })
   })
@@ -229,9 +237,9 @@ describe('FlagOptionsButton', () => {
   test('it should call callback when Git Modal confirm button clicked', async () => {
     jest.spyOn(gitSync, 'useGitSync').mockReturnValue(mockGitSync)
     const deleteFlagMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
+    renderComponent(isArchivingFFOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -254,7 +262,8 @@ describe('FlagOptionsButton', () => {
           accountIdentifier: 'test_acc',
           commitMsg: 'test commit message',
           orgIdentifier: 'test_org',
-          projectIdentifier: 'test_project'
+          projectIdentifier: 'test_project',
+          forceDelete: true
         }
       })
     )
@@ -263,9 +272,9 @@ describe('FlagOptionsButton', () => {
   test('it should call callback when Git Modal confirm button clicked', async () => {
     jest.spyOn(gitSync, 'useGitSync').mockReturnValue(mockGitSync)
     const deleteFlagMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
+    renderComponent(isArchivingFFOn, { deleteFlag: deleteFlagMock, gitSync: mockGitSync })
 
     await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
@@ -288,7 +297,8 @@ describe('FlagOptionsButton', () => {
           accountIdentifier: 'test_acc',
           commitMsg: 'test commit message',
           orgIdentifier: 'test_org',
-          projectIdentifier: 'test_project'
+          projectIdentifier: 'test_project',
+          forceDelete: true
         }
       })
     )
@@ -298,9 +308,9 @@ describe('FlagOptionsButton', () => {
     jest.spyOn(gitSync, 'useGitSync').mockReturnValue(mockGitSync)
     const deleteFlagMock = jest.fn()
     const handleAutoCommitMock = jest.fn()
-    const isArchivingFfOn = false
+    const isArchivingFFOn = false
 
-    renderComponent(isArchivingFfOn, {
+    renderComponent(isArchivingFFOn, {
       deleteFlag: deleteFlagMock,
       gitSync: { ...mockGitSync, handleAutoCommit: handleAutoCommitMock }
     })
@@ -329,10 +339,10 @@ describe('FlagOptionsButton', () => {
   })
 
   describe('Archiving instead of Delete', () => {
-    const isArchivingFfOn = true
+    const isArchivingFFOn = true
 
-    test('it should render an ARCHIVE and EDIT button when FFM_7127_FF_MFE_Onboarding_Detail is toggled ON', async () => {
-      renderComponent(isArchivingFfOn)
+    test('it should render an ARCHIVE and EDIT button when FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled ON', async () => {
+      renderComponent(isArchivingFFOn)
 
       await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
 
@@ -344,13 +354,28 @@ describe('FlagOptionsButton', () => {
     })
 
     test('it should render archive modal when user clicks archive menu button', async () => {
-      renderComponent(isArchivingFfOn)
+      renderComponent(isArchivingFFOn)
 
       await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
       await userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
 
       expect(screen.getByText('cf.featureFlags.archiving.archiveFlag')).toBeInTheDocument()
       expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+
+    test('it should render a RESTORE button when FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled ON and the selected flag is an ARCHIVED flag', async () => {
+      const archivedFlagMock = cloneDeep(mockFeature)
+      archivedFlagMock.archived = true
+
+      renderComponent(isArchivingFFOn, { flagData: archivedFlagMock })
+
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+
+      expect(document.querySelector('[data-icon="redo"]')).toBeInTheDocument()
+      expect(document.querySelector('[data-icon="trash"]')).toBeInTheDocument()
+
+      expect(screen.getByText('cf.featureFlags.archiving.restore')).toBeInTheDocument()
+      expect(screen.getByText('trash')).toBeInTheDocument()
     })
   })
 })

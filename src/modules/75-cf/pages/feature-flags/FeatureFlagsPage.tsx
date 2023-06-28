@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useCallback, useEffect } from 'react'
+import React, { FC, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Pagination } from '@harness/uicore'
 import { defer } from 'lodash-es'
@@ -39,11 +39,11 @@ import AllEnvironmentsFlagsListing from './components/AllEnvironmentsFlagsListin
 import FeatureFlagsListing from './components/FeatureFlagsListing'
 import css from './FeatureFlagsPage.module.scss'
 
-const FeatureFlagsPage: React.FC = () => {
+const FeatureFlagsPage: FC = () => {
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier, withActiveEnvironment } = useActiveEnvironment()
   const history = useHistory()
-  const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
+  const searchRef = useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
 
   const [pageNumber, setPageNumber] = useQueryParamsState('page', 0)
   const [searchTerm, setSearchTerm] = useQueryParamsState('search', '')
@@ -142,7 +142,9 @@ const FeatureFlagsPage: React.FC = () => {
 
   const emptyFeatureFlags = !features?.features?.length
   // use emptyFeatureFlags below as temp fallback to ensure FilterCards still display in case featureCounts is unavailable or flag STALE_FLAGS_FFM_1510 is toggled off on backend only
-  const hasFeatureFlags = !!features?.featureCounts?.totalFeatures || !emptyFeatureFlags
+  const hasFeatureFlags =
+    !!features?.featureCounts?.totalFeatures || !emptyFeatureFlags || !!features?.featureCounts?.totalArchived
+
   const title = getString('featureFlagsText')
   const FILTER_FEATURE_FLAGS = useFeatureFlag(FeatureFlag.STALE_FLAGS_FFM_1510)
   const showFilterCards = FILTER_FEATURE_FLAGS && hasFeatureFlags && environmentIdentifier
@@ -253,7 +255,10 @@ const FeatureFlagsPage: React.FC = () => {
         <NoFeatureFlags
           hasFeatureFlags={hasFeatureFlags}
           hasSearchTerm={searchTerm.length > 0}
-          hasFlagFilter={flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0}
+          hasFlagFilter={
+            (flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0) ||
+            !!features?.featureCounts?.totalArchived
+          }
           environmentIdentifier={environmentIdentifier}
           clearFilter={onClearFilter}
           clearSearch={onClearSearch}

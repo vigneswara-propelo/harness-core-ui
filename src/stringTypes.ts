@@ -8051,6 +8051,10 @@ export interface StringsMap {
   'cf.featureFlags.archiving.confirmFlag': string
   'cf.featureFlags.archiving.mismatchIdentifierError': string
   'cf.featureFlags.archiving.removeFlag': string
+  'cf.featureFlags.archiving.restore': string
+  'cf.featureFlags.archiving.restoreDescription': string
+  'cf.featureFlags.archiving.restoreFlag': string
+  'cf.featureFlags.archiving.restoreSuccess': string
   'cf.featureFlags.archiving.warningDescription': string
   'cf.featureFlags.booleanBtnText': string
   'cf.featureFlags.bucketBy': string
@@ -8171,6 +8175,7 @@ export interface StringsMap {
   'cf.featureFlags.typeOfFlag': string
   'cf.flagFilters.active': string
   'cf.flagFilters.allFlags': string
+  'cf.flagFilters.archivedFlags': string
   'cf.flagFilters.enabled': string
   'cf.flagFilters.permanent': string
   'cf.flagFilters.potentiallyStale': string

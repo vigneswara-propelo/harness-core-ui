@@ -12,20 +12,24 @@ import { TestWrapper } from '@common/utils/testUtils'
 import mockFeatureFlags from '../../__tests__/mockFeatureFlags'
 import { FlagTableFilters, FlagTableFiltersProps } from '../FlagTableFilters'
 
-const updateTableFilter = jest.fn()
-let flagEnabled = true
-
-const renderComponent = (props?: Partial<FlagTableFiltersProps>): RenderResult =>
+const renderComponent = (
+  flagEnabled: boolean,
+  archivingFFEnabled: boolean,
+  props?: Partial<FlagTableFiltersProps>
+): RenderResult =>
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      defaultFeatureFlagValues={{ FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: flagEnabled }}
+      defaultFeatureFlagValues={{
+        FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: flagEnabled,
+        FFM_7921_ARCHIVING_FEATURE_FLAGS: archivingFFEnabled
+      }}
     >
       <FlagTableFilters
         features={mockFeatureFlags as any}
         currentFilter={{}}
-        updateTableFilter={updateTableFilter}
+        updateTableFilter={jest.fn()}
         {...props}
       />
     </TestWrapper>
@@ -39,12 +43,11 @@ const permanentFlagsFilter = {
 }
 
 describe('FlagTableFilters', () => {
-  beforeEach(() => {
-    flagEnabled = true
-  })
+  test('It should render correctly the filters for feature flags', async () => {
+    const flagEnabled = true
+    const archivingFFEnabled = false
 
-  test('FlagTableFilters should render correctly the filters for feature flags', async () => {
-    renderComponent()
+    renderComponent(flagEnabled, archivingFFEnabled)
 
     const { featureCounts } = mockFeatureFlags
 
@@ -78,7 +81,10 @@ describe('FlagTableFilters', () => {
   })
 
   test('It should apply selected style to the filter card that matches currentFilter', async () => {
-    renderComponent({ currentFilter: permanentFlagsFilter })
+    const flagEnabled = true
+    const archivingFFEnabled = false
+
+    renderComponent(flagEnabled, archivingFFEnabled, { currentFilter: permanentFlagsFilter })
 
     expect(screen.getByText('cf.flagFilters.allFlags')).toBeVisible()
     expect(screen.getByText('cf.flagFilters.enabled')).toBeVisible()
@@ -92,7 +98,12 @@ describe('FlagTableFilters', () => {
   })
 
   test('It should call update filter method on click of a filter card', async () => {
-    renderComponent()
+    const flagEnabled = true
+    const archivingFFEnabled = false
+
+    const updateTableFilter = jest.fn()
+
+    renderComponent(flagEnabled, archivingFFEnabled, { updateTableFilter })
 
     expect(screen.getByText('cf.flagFilters.allFlags')).toBeVisible()
     expect(screen.getByText('cf.flagFilters.enabled')).toBeVisible()
@@ -109,7 +120,10 @@ describe('FlagTableFilters', () => {
   })
 
   test('It should display totals as 0 when there are no feature flags', async () => {
-    renderComponent({ features: null })
+    const flagEnabled = true
+    const archivingFFEnabled = false
+
+    renderComponent(flagEnabled, archivingFFEnabled, { features: null })
 
     const filterCards = screen.getAllByTestId('filter-card')
     expect(filterCards).toHaveLength(6)
@@ -126,9 +140,11 @@ describe('FlagTableFilters', () => {
     expect(getByTestId(filterCards[5], 'filter-total')).toHaveTextContent('0')
   })
 
-  test('It should not show Active Flags card if feature flag is disabled', async () => {
-    flagEnabled = false
-    renderComponent()
+  test('It should not show Active Flags card if FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW is disabled', async () => {
+    const flagEnabled = false
+    const archivingFFEnabled = false
+
+    renderComponent(flagEnabled, archivingFFEnabled)
 
     const filterCards = screen.getAllByTestId('filter-card')
     expect(filterCards).toHaveLength(5)
@@ -142,5 +158,64 @@ describe('FlagTableFilters', () => {
 
     // Check 'Active Flags' filter does not exist
     expect(screen.queryByText('cf.flagFilters.active')).not.toBeInTheDocument()
+  })
+
+  test('It should show Archived card if FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled ON', async () => {
+    const flagEnabled = false
+    const archivingFFEnabled = true
+
+    renderComponent(flagEnabled, archivingFFEnabled)
+
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(6)
+
+    // All Flags
+    expect(getByTestId(filterCards[0], 'filter-label')).toHaveTextContent('cf.flagFilters.allFlags')
+    expect(getByTestId(filterCards[1], 'filter-label')).toHaveTextContent('cf.flagFilters.enabled')
+    expect(getByTestId(filterCards[2], 'filter-label')).toHaveTextContent('cf.flagFilters.permanent')
+    expect(getByTestId(filterCards[3], 'filter-label')).toHaveTextContent('cf.flagFilters.recentlyAccessed')
+    expect(getByTestId(filterCards[4], 'filter-label')).toHaveTextContent('cf.flagFilters.potentiallyStale')
+    expect(getByTestId(filterCards[5], 'filter-label')).toHaveTextContent('cf.flagFilters.archivedFlags')
+  })
+
+  test('It should not show Archived card if FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled OFF', async () => {
+    const flagEnabled = false
+    const archivingFFEnabled = false
+
+    renderComponent(flagEnabled, archivingFFEnabled)
+
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(5)
+
+    expect(getByTestId(filterCards[0], 'filter-label')).toHaveTextContent('cf.flagFilters.allFlags')
+    expect(getByTestId(filterCards[1], 'filter-label')).toHaveTextContent('cf.flagFilters.enabled')
+    expect(getByTestId(filterCards[2], 'filter-label')).toHaveTextContent('cf.flagFilters.permanent')
+    expect(getByTestId(filterCards[3], 'filter-label')).toHaveTextContent('cf.flagFilters.recentlyAccessed')
+    expect(getByTestId(filterCards[4], 'filter-label')).toHaveTextContent('cf.flagFilters.potentiallyStale')
+
+    expect(screen.queryByText('cf.flagFilters.archivedFlags')).not.toBeInTheDocument()
+  })
+
+  test('It should still show Archived card if there are no archived flags', async () => {
+    const mockFeaturesFlagWithNoArchivedFlags = Object.assign(
+      { ...mockFeatureFlags.featureCounts },
+      { totalArchived: 0 }
+    ) as any
+
+    mockFeaturesFlagWithNoArchivedFlags.features = [...mockFeatureFlags.features]
+
+    const flagEnabled = false
+    const archivingFFEnabled = true
+    renderComponent(flagEnabled, archivingFFEnabled, { features: mockFeaturesFlagWithNoArchivedFlags })
+
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(6)
+
+    expect(getByTestId(filterCards[0], 'filter-label')).toHaveTextContent('cf.flagFilters.allFlags')
+    expect(getByTestId(filterCards[1], 'filter-label')).toHaveTextContent('cf.flagFilters.enabled')
+    expect(getByTestId(filterCards[2], 'filter-label')).toHaveTextContent('cf.flagFilters.permanent')
+    expect(getByTestId(filterCards[3], 'filter-label')).toHaveTextContent('cf.flagFilters.recentlyAccessed')
+    expect(getByTestId(filterCards[4], 'filter-label')).toHaveTextContent('cf.flagFilters.potentiallyStale')
+    expect(getByTestId(filterCards[5], 'filter-label')).toHaveTextContent('cf.flagFilters.archivedFlags')
   })
 })

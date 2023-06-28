@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
+import React, { FC } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
-import type { IconName } from '@blueprintjs/core'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
@@ -20,8 +19,10 @@ import type { DeleteFeatureFlagQueryParams, Feature } from 'services/cf'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
+import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 import useArchiveFlagDialog from '../FlagArchiving/useArchiveFlagDialog'
+import useRestoreFlagDialog from '../FlagArchiving/useRestoreFlagDialog'
 
 export interface FlagOptionsMenuButtonProps {
   environment?: string
@@ -70,11 +71,17 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     onSuccess: () => refetchFlags?.()
   })
 
-  const { openDialog } = useArchiveFlagDialog({
+  const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
     flagData,
     queryParams,
-    refetchFlags,
-    deleteFeatureFlag: deleteFlag
+    onArchive: () => refetchFlags(),
+    archiveFlag: deleteFlag
+  })
+
+  const openRestoreFlagDialog = useRestoreFlagDialog({
+    flagData,
+    queryParams,
+    onRestore: () => refetchFlags()
   })
 
   const gotoDetailPage = (): void => {
@@ -91,39 +98,68 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     )
   }
 
-  const menuItems = useMemo(() => {
-    const opts = [
-      {
-        icon: 'edit' as IconName,
-        text: getString('edit'),
-        onClick: gotoDetailPage,
-        permission: {
-          resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: environment },
-          permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
-        },
-        ...planEnforcementProps
+  const options: Record<string, RbacMenuItemProps> = {
+    archive: {
+      icon: 'archive',
+      text: getString('archive'),
+      onClick: openArchiveDialog,
+      permission: {
+        resource: { resourceType: ResourceType.FEATUREFLAG },
+        permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
       },
-      {
-        icon: (FFM_7921_ARCHIVING_FEATURE_FLAGS ? 'archive' : 'trash') as IconName,
-        text: FFM_7921_ARCHIVING_FEATURE_FLAGS ? getString('archive') : getString('delete'),
-        onClick: FFM_7921_ARCHIVING_FEATURE_FLAGS ? openDialog : confirmDeleteFlag,
-        permission: {
-          resource: { resourceType: ResourceType.FEATUREFLAG },
-          permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
-        },
-        ...planEnforcementProps
-      }
-    ]
-
-    if (noEdit) {
-      opts.shift()
+      ...planEnforcementProps
+    },
+    delete: {
+      icon: 'trash',
+      text: getString('delete'),
+      onClick: confirmDeleteFlag,
+      permission: {
+        resource: { resourceType: ResourceType.FEATUREFLAG },
+        permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
+      },
+      ...planEnforcementProps
+    },
+    restore: {
+      icon: 'redo',
+      text: getString('cf.featureFlags.archiving.restore'),
+      onClick: openRestoreFlagDialog,
+      permission: {
+        resource: { resourceType: ResourceType.FEATUREFLAG },
+        permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
+      },
+      ...planEnforcementProps
+    },
+    edit: {
+      icon: 'edit',
+      text: getString('edit'),
+      onClick: gotoDetailPage,
+      permission: {
+        resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: environment },
+        permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
+      },
+      ...planEnforcementProps
     }
+  }
 
-    return opts
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noEdit])
+  const getMenuItems = (
+    archivingFlags: boolean,
+    flag: Feature,
+    menuOptions: Record<string, RbacMenuItemProps>
+  ): RbacMenuItemProps[] => {
+    if (archivingFlags) {
+      if (flag.archived) {
+        return [menuOptions.restore, menuOptions.delete]
+      } else {
+        return [menuOptions.edit, menuOptions.archive]
+      }
+    } else if (noEdit) {
+      return [menuOptions.delete]
+    } else {
+      return [menuOptions.edit, menuOptions.delete]
+    }
+  }
 
-  return <RbacOptionsMenuButton items={menuItems} />
+  return <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, flagData, options)} />
 }
 
 export default FlagOptionsMenuButton

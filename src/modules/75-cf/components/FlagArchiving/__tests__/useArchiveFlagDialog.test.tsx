@@ -6,37 +6,33 @@ import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
 import type { Feature } from 'services/cf'
 import useArchiveFlagDialog, { ArchiveDialogProps } from '../useArchiveFlagDialog'
 
-const deleteFeatureFlagMock = jest.fn()
-const refetchFlagsMock = jest.fn()
-
 const queryParamsMock = {
   accountIdentifier: 'mockAccountIdentifier',
   orgIdentifier: 'mockOrgIdentifier',
-  projectIdentifier: 'mockProjectIdentifier'
+  projectIdentifier: 'mockProjectIdentifier',
+  forceDelete: false
 }
 
 const openArchiveDialogBtn = 'Open Archive dialog'
 
-const WrapperComponent: FC<ArchiveDialogProps> = ({ flagData, deleteFeatureFlag, refetchFlags, queryParams }) => {
-  const { openDialog } = useArchiveFlagDialog({ flagData, deleteFeatureFlag, refetchFlags, queryParams })
+const WrapperComponent: FC<ArchiveDialogProps> = ({ flagData, archiveFlag, onArchive, queryParams }) => {
+  const { openDialog } = useArchiveFlagDialog({ flagData, archiveFlag, onArchive, queryParams })
 
   return <button onClick={() => openDialog()}>{openArchiveDialogBtn}</button>
 }
 
 const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult => {
-  const result = render(
+  return render(
     <TestWrapper>
       <WrapperComponent
         flagData={mockFeature as Feature}
-        deleteFeatureFlag={deleteFeatureFlagMock}
-        refetchFlags={refetchFlagsMock}
+        archiveFlag={jest.fn()}
+        onArchive={jest.fn()}
         queryParams={queryParamsMock}
         {...props}
       />
     </TestWrapper>
   )
-
-  return result
 }
 
 describe('useArchiveDialog', () => {
@@ -70,30 +66,41 @@ describe('useArchiveDialog', () => {
   })
 
   test('it should allow user to archive a flag', async () => {
-    renderComponent()
+    const archiveFeatureFlagMock = jest.fn()
+    const onArchiveMock = jest.fn()
+
+    renderComponent({ archiveFlag: archiveFeatureFlagMock, onArchive: onArchiveMock })
     await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
     await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
 
     await userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
-    await waitFor(() =>
-      expect(deleteFeatureFlagMock).toHaveBeenCalledWith(mockFeature.identifier, {
+    await waitFor(() => {
+      expect(archiveFeatureFlagMock).toHaveBeenCalledWith(mockFeature.identifier, {
         queryParams: { ...queryParamsMock }
       })
-    )
+      expect(onArchiveMock).toHaveBeenCalled()
+    })
   })
 
   test('it should handle errors if it fails to archive a flag', async () => {
+    const archiveFeatureFlagMock = jest.fn()
+    const onArchiveMock = jest.fn()
+
     const error = 'FAIL TO ARCHIVE'
 
-    deleteFeatureFlagMock.mockRejectedValue({ message: error })
-    renderComponent()
+    archiveFeatureFlagMock.mockRejectedValue({ message: error })
+    renderComponent({ archiveFlag: archiveFeatureFlagMock, onArchive: onArchiveMock })
+
     await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
 
     await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
 
     await userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
-    await waitFor(() => expect(screen.getByText(error)).toBeInTheDocument())
+    await waitFor(() => {
+      expect(screen.getByText(error)).toBeInTheDocument()
+      expect(onArchiveMock).not.toHaveBeenCalled()
+    })
   })
 })

@@ -16,7 +16,8 @@ export default {
     totalFeatures: 17,
     totalPermanent: 2,
     totalPotentiallyStale: 0,
-    totalRecentlyAccessed: 0
+    totalRecentlyAccessed: 0,
+    totalArchived: 2
   },
   features: [
     {

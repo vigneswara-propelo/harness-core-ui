@@ -15,7 +15,8 @@ export enum FeatureFlagStatus {
   INACTIVE = 'inactive',
   NEVER_REQUESTED = 'never-requested',
   POTENTIALLY_STALE = 'potentially-stale',
-  RECENTLY_ACCESSED = 'recently-accessed'
+  RECENTLY_ACCESSED = 'recently-accessed',
+  ARCHIVED = 'archived'
 }
 export interface FlagStatusProps {
   status?: FeatureFlagStatus
