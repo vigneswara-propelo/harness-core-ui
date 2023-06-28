@@ -94,7 +94,12 @@ export const DelegateListing: React.FC = () => {
     })
   }
 
-  const { openRevokeTokenModal } = useRevokeTokenModal({ onSuccess: getTokens })
+  const { openRevokeTokenModal } = useRevokeTokenModal({
+    onSuccess: () => {
+      setPage(0)
+      getTokens()
+    }
+  })
   const { openMoreTokenInfoModal } = useMoreTokenInfoModalModal({})
 
   const { openCreateTokenModal } = useCreateTokenModal({ onSuccess: getTokens })
