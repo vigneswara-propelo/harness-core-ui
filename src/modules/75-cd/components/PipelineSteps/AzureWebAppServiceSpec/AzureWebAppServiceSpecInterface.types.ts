@@ -33,7 +33,7 @@ export interface AzureWebAppServiceSpecFormProps {
   template?: AzureWebAppServiceSpec
   allValues?: AzureWebAppServiceSpec
   readonly?: boolean
-  factory?: AbstractStepFactory
+  factory: AbstractStepFactory
   path?: string
   stageIdentifier: string
   formik?: any

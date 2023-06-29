@@ -190,7 +190,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}
-            factory={factory as any}
+            factory={factory}
             isPropagating={isPropagating}
             readonly={!!readonly}
           />

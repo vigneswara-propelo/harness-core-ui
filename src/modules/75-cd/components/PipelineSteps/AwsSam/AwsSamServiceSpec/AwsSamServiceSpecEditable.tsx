@@ -45,7 +45,7 @@ export interface AwsSamServiceSpecEditableProps {
   initialValues: AwsSamServiceSpecInitialValues
   onUpdate?: (data: ServiceSpec) => void
   readonly?: boolean
-  factory?: AbstractStepFactory
+  factory: AbstractStepFactory
 }
 
 export const AwsSamServiceSpecEditable: React.FC<AwsSamServiceSpecEditableProps> = ({
@@ -134,7 +134,7 @@ export const AwsSamServiceSpecEditable: React.FC<AwsSamServiceSpecEditableProps>
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}
-            factory={factory as AbstractStepFactory}
+            factory={factory}
             isPropagating={isPropagating}
             readonly={!!readonly}
           />

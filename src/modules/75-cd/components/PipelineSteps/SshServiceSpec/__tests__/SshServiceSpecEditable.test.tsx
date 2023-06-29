@@ -10,8 +10,8 @@ import { render } from '@testing-library/react'
 import { MultiTypeInputType } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
-
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import SshServiceSpecEditable from '../SshServiceSpecForm/SshServiceSpecEditable'
 
 describe('<SshServiceSpecEditable /> tests', () => {
@@ -19,6 +19,7 @@ describe('<SshServiceSpecEditable /> tests', () => {
     const { container } = render(
       <TestWrapper>
         <SshServiceSpecEditable
+          factory={factory}
           stageIdentifier="a1"
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
           initialValues={{

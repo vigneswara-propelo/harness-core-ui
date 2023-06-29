@@ -31,6 +31,7 @@ import {
   pipelineContextAwsLambdaManifests
 } from '@pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { AwsLambdaServiceSpecEditable } from '../AwsLambdaServiceSpecEditable'
 import { setupMode } from '../../../PipelineStepsUtil'
 import {
@@ -70,7 +71,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   await userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)
   expect(connnectorRefInput).toBeTruthy()
-  await userEvent.click(connnectorRefInput!)
+  await userEvent.click(connnectorRefInput)
 
   await act(async () => {
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
@@ -135,6 +136,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambda}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -169,6 +171,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambda}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -206,6 +209,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -239,6 +243,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -277,6 +282,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -311,6 +317,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -343,6 +350,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               setupModeType: setupMode.PROPAGATE,
@@ -384,6 +392,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               setupModeType: setupMode.PROPAGATE,
@@ -412,6 +421,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               deploymentType: ServiceDeploymentType.AwsLambda

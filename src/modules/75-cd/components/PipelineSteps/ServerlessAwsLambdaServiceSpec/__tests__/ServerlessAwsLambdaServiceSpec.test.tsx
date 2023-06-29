@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
 
@@ -16,14 +16,16 @@ import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/Rou
 import routes from '@common/RouteDefinitions'
 import { useMutateAsGet } from '@common/hooks'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
+import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { pipelineContextServerlessAwsLambda } from '@pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { ServerlessAwsLambdaServiceSpec } from '../ServerlessAwsLambdaServiceSpec'
-import { mockConnectorResponse, mockCreateConnectorResponse } from '../../Common/mocks/connector'
+import { mockCreateConnectorResponse } from '../../Common/mocks/connector'
 import { bucketNameList } from '../../ECSServiceSpec/ManifestSource/__tests__/helpers/mock'
 import {
   getDummyPipelineCanvasContextValue,
@@ -36,16 +38,24 @@ import {
   initialValues,
   getParams
 } from './ServerlessAwsLambdaServiceSpecHelper'
-import { awsRegionsData, bucketListData, mockBuildList, mockManifestConnector } from './helpers/mocks'
+import { awsRegionsData, bucketListData, mockBuildList } from './helpers/mocks'
 import { serverlessLambdaManifestTemplateS3Store, initialValuesServerlessLambdaManifestS3Store } from './helpers/helper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
+const connectorData = { data: connectorsData.data.content[1] }
+const fetchConnector = jest.fn().mockReturnValue(connectorData)
+const fetchConnectorList = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuildDetails = jest.fn().mockResolvedValue(mockBuildList)
 const fetchBuckets = jest.fn().mockReturnValue(bucketNameList)
 
 jest.mock('services/cd-ng', () => ({
+  getConnectorListV2: () => Promise.resolve(connectorsData),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectorList })),
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return { data: connectorData, refetch: fetchConnector, loading: false }
+  }),
   useGetImagePathsForArtifactoryV2: jest.fn().mockImplementation(() => {
     return {
       data: {},
@@ -68,11 +78,8 @@ jest.mock('services/cd-ng', () => ({
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
-  useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
-  getConnectorListV2Promise: () => Promise.resolve(mockManifestConnector),
   getBuildDetailsForArtifactoryArtifactWithYamlPromise: () => Promise.resolve(mockBuildList),
   useGetBuildDetailsForArtifactoryArtifactWithYaml: jest.fn().mockImplementation(() => ({ mutate: fetchBuildDetails })),
-  useGetConnector: jest.fn(() => mockConnectorResponse),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useCreateConnector: jest.fn(() => Promise.resolve(mockCreateConnectorResponse)),
   useGetService: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
@@ -158,6 +165,36 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
       )
 
       expect(container).toMatchSnapshot()
+    })
+
+    test('for ServerlessAwsLambda V2 deployment type, ServerlessAwsLambda and Values manifest types should be allowed', async () => {
+      const { container } = render(
+        <TestWrapper
+          path={TEST_PATH}
+          pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
+          defaultFeatureFlagValues={{ CDS_SERVERLESS_V2: true }}
+        >
+          <PipelineContext.Provider value={pipelineContextServerlessAwsLambda}>
+            <StepWidget<K8SDirectServiceStep>
+              factory={factory}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              initialValues={{ deploymentType: 'ServerlessAwsLambda' }}
+              type={StepType.ServerlessAwsLambda}
+              stepViewType={StepViewType.Edit}
+            />
+          </PipelineContext.Provider>
+        </TestWrapper>
+      )
+
+      const addManifestButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
+      await userEvent.click(addManifestButton)
+      const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+
+      const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
+
+      await waitFor(() => expect(queryByValueAttribute('ServerlessAwsLambda')).not.toBeNull())
+      const ValuesYAML = queryByValueAttribute('Values')
+      expect(ValuesYAML).not.toBeNull()
     })
   })
 
@@ -330,8 +367,8 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
 
       // When path and yaml both are valid
       list = await step.getManifestConnectorsListForYaml(manifestConnectorRefPath, getYaml(), getParams())
-      expect(list).toHaveLength(1)
-      expect(list[0].insertText).toBe('account.git9march')
+      expect(list).toHaveLength(7)
+      expect(list[0].insertText).toBe('account.AWSX')
       // When path is invalid
       list = await step.getManifestConnectorsListForYaml('invalid path', getYaml(), getParams())
       expect(list).toHaveLength(0)
@@ -350,8 +387,8 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
         getYaml(),
         getParams()
       )
-      expect(list).toHaveLength(1)
-      expect(list[0].insertText).toBe('account.git9march')
+      expect(list).toHaveLength(7)
+      expect(list[0].insertText).toBe('account.AWSX')
       // When path is invalid
       list = await step.getArtifactsPrimaryConnectorsListForYaml('invalid path', getYaml(), getParams())
       expect(list).toHaveLength(0)

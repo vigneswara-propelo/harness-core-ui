@@ -54,7 +54,7 @@ export interface AwsLambdaServiceSpecEditableProps {
   initialValues: AwsLambdaServiceSpecInitialValues
   onUpdate?: (data: ServiceSpec) => void
   readonly?: boolean
-  factory?: AbstractStepFactory
+  factory: AbstractStepFactory
 }
 
 const suggestedFunctionDefinition = {
@@ -192,7 +192,7 @@ export const AwsLambdaServiceSpecEditable: React.FC<AwsLambdaServiceSpecEditable
       const manifestListToUpdate = getFinalListOfManifest(manifestListForManifestType, manifestType)
       updateStageData(manifestListToUpdate)
     },
-    [isPropagating, updateStageData, getFinalListOfManifest, getListOfManifestForManifestType]
+    [updateStageData, getFinalListOfManifest, getListOfManifestForManifestType]
   )
 
   const deleteFunctionDefinition = React.useCallback(
@@ -366,7 +366,7 @@ export const AwsLambdaServiceSpecEditable: React.FC<AwsLambdaServiceSpecEditable
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}
-            factory={factory as AbstractStepFactory}
+            factory={factory}
             isPropagating={isPropagating}
             readonly={!!readonly}
           />

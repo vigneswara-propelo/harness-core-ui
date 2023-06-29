@@ -42,7 +42,7 @@ export interface SshWinRmServiceInputFormProps {
   template?: ServiceSpec
   allValues?: ServiceSpec
   readonly?: boolean
-  factory?: AbstractStepFactory
+  factory: AbstractStepFactory
   path?: string
   stageIdentifier: string
   formik?: any

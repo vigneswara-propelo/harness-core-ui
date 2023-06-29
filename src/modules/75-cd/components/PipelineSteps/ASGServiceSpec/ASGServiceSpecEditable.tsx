@@ -53,7 +53,7 @@ export interface ASGServiceSpecEditableProps {
   initialValues: ASGServiceSpecInitialValues
   onUpdate?: (data: ServiceSpec) => void
   readonly?: boolean
-  factory?: AbstractStepFactory
+  factory: AbstractStepFactory
 }
 
 export const ASGServiceSpecEditable: React.FC<ASGServiceSpecEditableProps> = ({
@@ -443,7 +443,7 @@ export const ASGServiceSpecEditable: React.FC<ASGServiceSpecEditableProps> = ({
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}
-            factory={factory as any}
+            factory={factory}
             isPropagating={isPropagating}
             readonly={!!readonly}
           />

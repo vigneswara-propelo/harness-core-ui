@@ -61,7 +61,7 @@ export interface GoogleCloudFunctionServiceSpecEditableProps {
   initialValues: GoogleCloudFunctionServiceSpecInitialValues
   onUpdate?: (data: ServiceSpec) => void
   readonly?: boolean
-  factory?: AbstractStepFactory
+  factory: AbstractStepFactory
 }
 
 const suggestedManifestGenOne = {
@@ -226,7 +226,7 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}
-            factory={factory as AbstractStepFactory}
+            factory={factory}
             isPropagating={isPropagating}
             readonly={!!readonly}
           />

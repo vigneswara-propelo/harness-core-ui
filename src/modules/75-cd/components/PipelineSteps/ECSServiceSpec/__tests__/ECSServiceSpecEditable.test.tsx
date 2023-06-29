@@ -25,6 +25,7 @@ import routes from '@common/RouteDefinitions'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import {
   pipelineContextECS,
   pipelineContextECSManifests
@@ -138,6 +139,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECS}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -172,6 +174,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECS}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -203,6 +206,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECS}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -237,6 +241,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECS}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -274,6 +279,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECS}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -311,6 +317,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -355,6 +362,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -405,6 +413,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -443,6 +452,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -474,6 +484,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -505,6 +516,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -537,6 +549,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               setupModeType: setupMode.PROPAGATE,
@@ -582,6 +595,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               setupModeType: setupMode.PROPAGATE,
@@ -614,6 +628,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               deploymentType: 'ECS'
@@ -643,6 +658,7 @@ describe('ECSServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: true
             }}

@@ -27,7 +27,7 @@ export interface ElastigroupServiceSpecFormProps {
   template?: ElastigroupServiceSpec
   allValues?: ElastigroupServiceSpec
   readonly?: boolean
-  factory?: AbstractStepFactory
+  factory: AbstractStepFactory
   path?: string
   stageIdentifier: string
   formik?: any

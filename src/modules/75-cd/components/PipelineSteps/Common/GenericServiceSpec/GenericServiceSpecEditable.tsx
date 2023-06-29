@@ -26,6 +26,7 @@ import {
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import {
+  ManifestDataType,
   allowedManifestTypes,
   getManifestsHeaderTooltipId
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
@@ -37,6 +38,7 @@ import { useServiceContext } from '@cd/context/ServiceContext'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { getServiceHooksHeaderTooltipId } from '@pipeline/components/ServiceHooks/ServiceHooksHelper'
 import ServiceHooksSelection from '@pipeline/components/ServiceHooks/ServiceHooks'
+import { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type { KubernetesServiceInputFormProps } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { setupMode, isMultiArtifactSourceEnabled } from '../../PipelineStepsUtil'
 import css from './GenericServiceSpec.module.scss'
@@ -57,7 +59,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_SVC_ENV_REDESIGN, CDS_K8S_SERVICE_HOOKS_NG } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CDS_K8S_SERVICE_HOOKS_NG, CDS_SERVERLESS_V2 } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
@@ -68,6 +70,13 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )
+
+  const getAllowedManifestTypes = (): ManifestTypes[] => {
+    if (CDS_SERVERLESS_V2) {
+      return [...allowedManifestTypes[selectedDeploymentType], ManifestDataType.Values]
+    }
+    return allowedManifestTypes[selectedDeploymentType]
+  }
 
   return (
     <div className={css.serviceDefinition}>
@@ -90,8 +99,11 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
-              allowOnlyOneManifest={isOnlyOneManifestAllowedForDeploymentType(selectedDeploymentType)}
-              availableManifestTypes={allowedManifestTypes[selectedDeploymentType]}
+              allowOnlyOneManifest={isOnlyOneManifestAllowedForDeploymentType(
+                selectedDeploymentType,
+                CDS_SERVERLESS_V2
+              )}
+              availableManifestTypes={getAllowedManifestTypes()}
             />
           </Card>
           <Card
@@ -181,7 +193,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}
-            factory={factory as any}
+            factory={factory}
             isPropagating={isPropagating}
             readonly={!!readonly}
           />

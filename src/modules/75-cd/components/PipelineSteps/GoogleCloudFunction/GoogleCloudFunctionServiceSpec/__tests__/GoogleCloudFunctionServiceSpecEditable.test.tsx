@@ -29,6 +29,7 @@ import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { setupMode } from '../../../PipelineStepsUtil'
 import {
   updateStageArgGcfFunctionDefinition,
@@ -142,6 +143,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcf}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -175,6 +177,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfGen1}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -211,6 +214,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfManifests}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -248,6 +252,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfGen1Manifest}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -287,6 +292,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfManifests}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -321,6 +327,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfGen1Manifest}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}
@@ -357,6 +364,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfManifests}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               setupModeType: setupMode.PROPAGATE,
@@ -398,6 +406,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfManifests}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               setupModeType: setupMode.PROPAGATE,
@@ -424,6 +433,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcfManifests}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false,
               deploymentType: ServiceDeploymentType.GoogleCloudFunctions
@@ -447,6 +457,7 @@ describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextGcf}>
           <GoogleCloudFunctionServiceSpecEditable
+            factory={factory}
             initialValues={{
               isReadonlyServiceMode: false
             }}

@@ -579,7 +579,13 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
   )
 }
 
-export const isOnlyOneManifestAllowedForDeploymentType = (deploymentType: ServiceDefinition['type']) => {
+export const isOnlyOneManifestAllowedForDeploymentType = (
+  deploymentType: ServiceDefinition['type'],
+  isServerlessV2?: boolean
+): boolean => {
+  if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda && isServerlessV2) {
+    return false
+  }
   return isServerlessDeploymentType(deploymentType) || deploymentType === ServiceDeploymentType.AwsLambda
 }
 

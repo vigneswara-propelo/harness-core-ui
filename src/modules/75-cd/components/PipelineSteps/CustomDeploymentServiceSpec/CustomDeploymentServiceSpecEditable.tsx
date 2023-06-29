@@ -123,7 +123,7 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}
-            factory={factory as any}
+            factory={factory}
             isPropagating={isPropagating}
             readonly={!!readonly}
           />
