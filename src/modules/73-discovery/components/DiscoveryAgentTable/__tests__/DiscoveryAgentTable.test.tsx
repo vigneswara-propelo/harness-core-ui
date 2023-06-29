@@ -82,6 +82,9 @@ const PATH_PARAMS = {
 }
 
 describe('Discovery Agent Status ', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-06-28'))
+  })
   test('render', async () => {
     const props = {
       listData: mockDiscoveryAgent,

@@ -118,6 +118,9 @@ jest.mock('services/servicediscovery', () => ({
 }))
 
 describe('<DiscoveryPage /> tests', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-06-28'))
+  })
   test('should match snapshot', async () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
