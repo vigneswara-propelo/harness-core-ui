@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { TemplateDetailsDrawer } from '../TemplateDetailDrawer'
@@ -18,7 +19,8 @@ jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', ()
 
 jest.mock('services/template-ng', () => ({
   ...jest.requireActual('services/template-ng'),
-  useGetTemplate: jest.fn().mockImplementation(() => ({}))
+  useGetTemplate: jest.fn().mockImplementation(() => ({})),
+  useGetTemplateInputSetYaml: jest.fn().mockImplementation(() => ({ data: {}, refetch: noop }))
 }))
 
 describe('<TemplateDetailDrawer /> tests', () => {

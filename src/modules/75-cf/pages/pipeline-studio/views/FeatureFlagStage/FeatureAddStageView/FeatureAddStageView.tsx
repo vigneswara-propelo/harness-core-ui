@@ -10,6 +10,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Text, Container, Formik, FormikForm, Button } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikConfig, FormikErrors } from 'formik'
+import { defaultTo } from 'lodash-es'
 import type { FeatureFlagStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import {
   PipelineContextType,
@@ -19,13 +20,14 @@ import { useStrings } from 'framework/strings'
 import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
-import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import { TemplateDetailsResponseWrapper, createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import { useQueryParams } from '@common/hooks/useQueryParams'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import css from './FeatureAddStageView.module.scss'
 
 export interface FeatureAddEditStageViewProps {
   data?: StageElementWrapper<FeatureFlagStageElementConfig>
-  template?: TemplateSummaryResponse
+  template?: TemplateDetailsResponseWrapper
   onSubmit?: (values: StageElementWrapper<FeatureFlagStageElementConfig>, identifier: string) => void
   onChange?: (values: Values) => void
 }
@@ -44,9 +46,13 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
 }): JSX.Element => {
   const { getString } = useStrings()
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails },
     contextType
   } = usePipelineContext()
+
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  const parentTemplateRepo = defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), repoName)
 
   const isTemplate = contextType === PipelineContextType.StageTemplate
 
@@ -86,7 +92,10 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
   const handleSubmit = (values: Values): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template) }, values.identifier)
+        onSubmit?.(
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

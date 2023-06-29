@@ -14,7 +14,10 @@ import { removeNodeFromPipeline } from '@pipeline/components/PipelineStudio/Stag
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate, getStageType } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import {
+  PreSelectedTemplate,
+  useTemplateSelector
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 interface TemplateActionsReturnType {
   addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
@@ -42,12 +45,16 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
   const [isTemplateUpdated, setIsTemplateUpdated] = useState(false)
 
   const addOrUpdateTemplate = useCallback(
-    async (selectedTemplate?: TemplateSummaryResponse) => {
+    async (selectedTemplate?: PreSelectedTemplate) => {
       try {
         const { template, isCopied } = await getTemplate({
           templateType: 'Stage',
           filterProperties: {
-            childTypes: [getStageType(stage?.stage, templateTypes)]
+            childTypes: [
+              selectedTemplate?.remoteFetchError
+                ? (selectedTemplate?.childType as string)
+                : getStageType(stage?.stage, templateTypes)
+            ]
           },
           selectedTemplate,
           gitDetails,

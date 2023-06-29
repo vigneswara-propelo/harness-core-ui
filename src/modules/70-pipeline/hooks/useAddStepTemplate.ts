@@ -121,7 +121,9 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         storeMetadata
       })
       const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
-      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied) }
+      const newStepData = {
+        [stepType]: createStepNodeFromTemplate(template, isCopied, gitDetails?.branch, gitDetails?.repoName)
+      }
 
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
       if (pipelineStage && !pipelineStage.stage?.spec) {

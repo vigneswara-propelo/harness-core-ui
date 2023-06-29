@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
+import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { StepPaletteProps } from '@pipeline/components/PipelineStudio/StepPalette/StepPalette'
@@ -19,6 +20,12 @@ jest.mock('framework/Templates/TemplateSelectorContext/useTemplateSelector', () 
   useTemplateSelector: jest.fn().mockReturnValue({
     getTemplate: jest.fn().mockImplementation(() => ({ template: {}, isCopied: false }))
   })
+}))
+
+jest.mock('services/template-ng', () => ({
+  ...jest.requireActual('services/template-ng'),
+  useGetTemplate: jest.fn().mockImplementation(() => ({})),
+  useGetTemplateInputSetYaml: jest.fn().mockImplementation(() => ({ data: {}, refetch: noop }))
 }))
 
 jest.mock('@pipeline/components/PipelineStudio/StepPalette/StepPalette', () => ({

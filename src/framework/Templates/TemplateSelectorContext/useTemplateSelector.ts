@@ -9,12 +9,18 @@ import React from 'react'
 import type { EntityGitDetails, TemplateSummaryResponse } from 'services/template-ng'
 import { TemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import type { TemplateType } from '@common/interfaces/RouteInterfaces'
-import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { TemplateUsage } from '@templates-library/utils/templatesUtils'
+import type { TemplateDetailsResponseWrapper } from '@pipeline/utils/templateUtils'
 
 export interface GetTemplateResponse {
-  template: TemplateSummaryResponse
+  template: TemplateDetailsResponseWrapper
   isCopied: boolean
+}
+
+export interface PreSelectedTemplate extends TemplateSummaryResponse {
+  remoteFetchError?: boolean
+  storeType?: StoreType
 }
 
 export interface GetTemplateProps {
@@ -31,7 +37,7 @@ export interface GetTemplateProps {
    */
   disableUseTemplateIfUnchanged?: boolean
   allowedUsages?: TemplateUsage[]
-  selectedTemplate?: TemplateSummaryResponse
+  selectedTemplate?: PreSelectedTemplate
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
 }

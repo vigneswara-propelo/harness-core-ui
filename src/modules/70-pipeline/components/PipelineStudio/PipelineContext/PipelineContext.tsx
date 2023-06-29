@@ -52,6 +52,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useDeleteStage, useDeleteStageReturnType } from '@pipeline/hooks/useDeleteStage'
 import {
+  extractGitBranchUsingTemplateRef,
   getResolvedCustomDeploymentDetailsByRef,
   getTemplateTypesByRef,
   TemplateServiceDataType
@@ -397,6 +398,7 @@ const getTemplateType = (
   loadFromCache?: boolean
 ): ReturnType<typeof getTemplateTypesByRef> => {
   const templateRefs = uniq(findAllByKey('templateRef', pipeline))
+  const templateGitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
   return getTemplateTypesByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -410,7 +412,8 @@ const getTemplateType = (
     templateRefs,
     storeMetadata,
     supportingTemplatesGitx,
-    loadFromCache
+    loadFromCache,
+    templateGitBranches
   )
 }
 
@@ -1238,21 +1241,29 @@ export function PipelineProvider({
       return
     }
 
+    const templateGitBranch = getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage
+      ?.template?.gitBranch
+    const getBranchForSelectedStage = () => {
+      return templateGitBranch ? templateGitBranch : state?.gitDetails?.branch
+    }
+
     const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
       isEmpty(get(state.templateTypes, templateRef))
     )
+    const templateGitBranches = extractGitBranchUsingTemplateRef(state.pipeline, '')
     getTemplateTypesByRef(
       {
         ...queryParams,
         templateListType: 'Stable',
         repoIdentifier: state.gitDetails.repoIdentifier,
-        branch: state.gitDetails.branch,
+        branch: getBranchForSelectedStage(),
         getDefaultFromOtherRepo: true
       },
       templateRefs,
       state.storeMetadata,
       supportingTemplatesGitx,
-      true
+      true,
+      templateGitBranches
     ).then(({ templateTypes, templateServiceData, templateIcons }) => {
       setTemplateTypes(merge(state.templateTypes, templateTypes))
       setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })

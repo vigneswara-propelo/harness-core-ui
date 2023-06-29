@@ -11,7 +11,7 @@ import type { CellProps, Column, Renderer } from 'react-table'
 import { Container, Icon, Layout, TableV2, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
-import { defaultTo, isEmpty, isEqual } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { TemplateListCardContextMenu } from '@templates-library/pages/TemplatesPage/views/TemplateListCardContextMenu/TemplateListCardContextMenu'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -26,6 +26,7 @@ import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { areTemplatesSame } from '@pipeline/utils/templateUtils'
 import { getIconForTemplate, TEMPLATES_PAGE_SIZE } from '../../TemplatesPageUtils'
 import css from './TemplatesListView.module.scss'
 
@@ -334,7 +335,7 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
       data={defaultTo(data.content, [])}
       onRowClick={item => onSelect(item)}
       pagination={paginationProps}
-      getRowClassName={row => (isEqual(row.original, selectedTemplate) ? css.selected : '')}
+      getRowClassName={row => (areTemplatesSame(row.original, selectedTemplate) ? css.selected : '')}
     />
   )
 }

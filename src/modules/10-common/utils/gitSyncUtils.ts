@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, isEmpty } from 'lodash-es'
+import { isEmpty, isUndefined } from 'lodash-es'
 import type { GitSyncConfig } from 'services/cd-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -33,20 +33,22 @@ export const getGitQueryParamsWithParentScope = ({
   params,
   repoIdentifier,
   branch,
-  loadFromFallbackBranch = false
+  loadFromFallbackBranch = false,
+  sendParentEntityDetails = true
 }: {
   storeMetadata: StoreMetadata | undefined
   params: ProjectPathProps
   repoIdentifier?: string
   branch?: string
   loadFromFallbackBranch?: boolean
+  sendParentEntityDetails?: boolean
 }): Partial<GetTemplateQueryParams> => {
   const parentEntityIds = {
     parentEntityAccountIdentifier: params.accountId,
     parentEntityOrgIdentifier: params.orgIdentifier,
     parentEntityProjectIdentifier: params.projectIdentifier
   }
-  const branchParam = defaultTo(storeMetadata?.branch, branch)
+  const branchParam = isUndefined(branch) ? storeMetadata?.branch : branch
   return {
     getDefaultFromOtherRepo: true,
 
@@ -55,9 +57,10 @@ export const getGitQueryParamsWithParentScope = ({
     branch: branchParam,
 
     // Git experience uses storeMetadata
-    parentEntityConnectorRef: storeMetadata?.connectorRef,
-    parentEntityRepoName: storeMetadata?.repoName,
-    ...(!isEmpty(storeMetadata?.connectorRef) ? parentEntityIds : {}),
+    ...(sendParentEntityDetails
+      ? { parentEntityConnectorRef: storeMetadata?.connectorRef, parentEntityRepoName: storeMetadata?.repoName }
+      : {}),
+    ...(!isEmpty(storeMetadata?.connectorRef) && sendParentEntityDetails ? parentEntityIds : {}),
     ...(!branchParam && loadFromFallbackBranch && { loadFromFallbackBranch })
   }
 }

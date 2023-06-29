@@ -31,6 +31,8 @@ interface GitPopoverV2Props {
   forceFetch?: boolean
   customIcon?: React.ReactNode
   btnClassName?: string
+  setDefaultBranch?: React.Dispatch<React.SetStateAction<string | undefined>>
+  selectedBranch?: string
 }
 
 const createSelectOption = (value?: string): SelectOption => {
@@ -99,7 +101,9 @@ export const GitPopoverV2 = ({
   forceFetch = false,
   onGitBranchChange,
   customIcon,
-  btnClassName
+  btnClassName,
+  setDefaultBranch,
+  selectedBranch: selectedBranchInPopover
 }: GitPopoverV2Props): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -131,6 +135,13 @@ export const GitPopoverV2 = ({
     }
   }, [forceFetch, branchChangeDisabled, refetch])
 
+  useEffect(() => {
+    //here, default branch is set which is getting consumed in template details for setting it in selected template gitdetails object
+    if (response?.data?.defaultBranch?.name) {
+      setDefaultBranch?.(response.data.defaultBranch.name)
+    }
+  }, [response?.data?.defaultBranch?.name])
+
   const branchOptions = useMemo(() => {
     if (response?.status === 'SUCCESS' && !isEmpty(response?.data)) {
       return getBranchSelectOptions(response?.data?.branches)
@@ -138,8 +149,9 @@ export const GitPopoverV2 = ({
     return []
   }, [response?.data, response?.status])
 
-  const selectedBranch = createSelectOption(defaultTo(branch, response?.data?.defaultBranch?.name))
-
+  const selectedBranch = createSelectOption(
+    defaultTo(selectedBranchInPopover, defaultTo(branch, response?.data?.defaultBranch?.name))
+  )
   const branchUI = (
     <FormInput.Select
       name="branch"

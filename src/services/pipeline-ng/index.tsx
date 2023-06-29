@@ -2849,6 +2849,9 @@ export interface FilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+  labels?: {
+    [key: string]: string
+  }
   tags?: {
     [key: string]: string
   }
@@ -2933,6 +2936,7 @@ export type GitCloneStepInfo = StepSpecType & {
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
   branch?: string
+  repo?: string
 }
 
 export interface GithubEventSpec {
@@ -3622,6 +3626,11 @@ export type MultiRegionArtifactTriggerConfig = NGTriggerSpecV2 & {
     | 'Bamboo'
 }
 
+export interface NGLabel {
+  key?: string
+  value?: string
+}
+
 export interface NGProcessWebhookResponse {
   apiUrl?: string
   eventCorrelationId?: string
@@ -4236,6 +4245,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
   moduleProperties?: {
     [key: string]: { [key: string]: any }
   }
+  pipelineLabels?: NGLabel[]
   pipelineName?: string
   pipelineTags?: NGTag[]
   status?: (
@@ -4809,6 +4819,8 @@ export interface ResourceDTO {
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
     | 'NETWORK_MAP'
+    | 'CET_AGENT_TOKEN'
+    | 'CET_CRITICAL_EVENT'
 }
 
 export interface ResourceScope {
@@ -18197,6 +18209,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaPrepareRollbackV2'
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18517,6 +18530,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaPrepareRollbackV2'
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -18835,6 +18849,7 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaPrepareRollbackV2'
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

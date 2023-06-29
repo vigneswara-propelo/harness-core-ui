@@ -7,12 +7,12 @@
 
 import React from 'react'
 import { Container, Layout, Pagination } from '@harness/uicore'
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import { TemplateCard } from '@templates-library/components/TemplateCard/TemplateCard'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
-import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
+import { areTemplatesSame, getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
@@ -60,7 +60,7 @@ export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Elem
             <TemplateCard
               template={template}
               onSelect={onSelect}
-              isSelected={isEqual(template, selectedTemplate)}
+              isSelected={areTemplatesSame(template, selectedTemplate)}
               onPreview={onPreview}
               onOpenEdit={onOpenEdit}
               onOpenSettings={onOpenSettings}

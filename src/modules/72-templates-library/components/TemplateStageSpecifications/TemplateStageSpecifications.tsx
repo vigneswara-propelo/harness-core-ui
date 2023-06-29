@@ -60,9 +60,12 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
+  const templateGitBranch = stage?.stage?.template?.gitBranch
+    ? getIdentifierFromValue(defaultTo(stage?.stage?.template?.gitBranch, ''))
+    : branch
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(
     defaultTo(stage?.stage, stage?.stage?.template?.templateInputs as StageElementConfig)
@@ -94,7 +97,13 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier,
+        branch: templateGitBranch,
+        sendParentEntityDetails: stage?.stage?.template?.gitBranch ? false : true
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -117,7 +126,13 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier,
+        branch: templateGitBranch,
+        sendParentEntityDetails: stage?.stage?.template?.gitBranch ? false : true
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -288,7 +303,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                 <Container className={css.inputsContainer}>
                   {isLoading && <PageSpinner />}
                   {!isLoading && error && (
-                    <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                    <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 500}>
                       <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                     </Container>
                   )}

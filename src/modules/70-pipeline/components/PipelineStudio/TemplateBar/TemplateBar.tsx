@@ -19,7 +19,7 @@ import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { TemplateSummaryResponse, useGetTemplate } from 'services/template-ng'
+import { TemplateSummaryResponse, useGetTemplate, Error, GitErrorMetadataDTO } from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
@@ -32,6 +32,7 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { PreSelectedTemplate } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -43,7 +44,7 @@ interface TemplateMenuItem {
 
 export interface TemplateBarProps {
   templateLinkConfig: TemplateLinkConfig
-  onOpenTemplateSelector?: (selectedTemplate: TemplateSummaryResponse) => void
+  onOpenTemplateSelector?: (selectedTemplate: PreSelectedTemplate) => void
   onRemoveTemplate?: () => Promise<void>
   className?: string
   isReadonly?: boolean
@@ -62,8 +63,9 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const scope = getScopeFromValue(templateLinkConfig.templateRef)
+  const templateGitBranch = defaultTo(templateLinkConfig?.gitBranch, branch)
   const { enabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -72,27 +74,63 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
 
   const readyOnly = isReadonly || !enabled
 
-  const { data, loading } = useGetTemplate({
+  const { data, loading, error } = useGetTemplate({
     templateIdentifier: getIdentifierFromValue(templateLinkConfig.templateRef),
     queryParams: {
       ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params,
+        repoIdentifier,
+        branch: templateGitBranch,
+        sendParentEntityDetails: templateLinkConfig?.gitBranch ? false : true
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)
   })
 
+  const errorMetaData = (error?.data as Error)?.metadata as GitErrorMetadataDTO
+  const remoteFetchError = React.useMemo(() => {
+    return errorMetaData ? error : undefined
+  }, [errorMetaData, error])
+
   const selectedTemplate = React.useMemo(
-    () => (data?.data ? { ...data.data, versionLabel: templateLinkConfig.versionLabel } : undefined),
+    () =>
+      data?.data
+        ? {
+            ...data.data,
+            versionLabel: templateLinkConfig.versionLabel,
+            gitDetails: {
+              ...data.data?.gitDetails,
+              branch: templateLinkConfig.gitBranch ? templateLinkConfig.gitBranch : data.data?.gitDetails?.branch
+            }
+          }
+        : undefined,
     [data?.data]
   )
 
-  const onChangeTemplate = () => {
-    if (selectedTemplate) {
-      onOpenTemplateSelector?.(selectedTemplate)
+  const onChangeTemplate = (): void => {
+    if (selectedTemplate || remoteFetchError) {
+      onOpenTemplateSelector?.(
+        remoteFetchError
+          ? {
+              identifier: getIdentifierFromValue(templateLinkConfig.templateRef),
+              ...getScopeBasedProjectPathParams(params, scope),
+              childType: templateLinkConfig?.templateInputs?.type,
+              gitDetails: { branch: templateLinkConfig.gitBranch },
+              storeType: StoreType.REMOTE,
+              remoteFetchError: true
+            }
+          : (selectedTemplate as TemplateSummaryResponse)
+      )
     }
   }
+
+  const selectedTemplateDataWithRemoteFetchFailHandled = remoteFetchError
+    ? { name: templateLinkConfig?.templateRef, versionLabel: templateLinkConfig?.versionLabel }
+    : selectedTemplate
 
   const { openDialog: openRemoveTemplateDialog } = useConfirmationDialog({
     intent: Intent.DANGER,
@@ -102,7 +140,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
       <String
         stringID="pipeline.removeTemplate"
         vars={{
-          name: getTemplateNameWithLabel(selectedTemplate),
+          name: getTemplateNameWithLabel(selectedTemplateDataWithRemoteFetchFailHandled),
           entity: selectedTemplate?.templateEntityType?.toLowerCase()
         }}
         useRichText={true}
@@ -191,16 +229,20 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   const getItems = (): TemplateMenuItem[] => {
     return [
       ...(!readyOnly ? (menuItems as TemplateMenuItem[]) : []),
-      {
-        icon: 'main-share',
-        label: getString('pipeline.openTemplateInNewTabLabel'),
-        onClick: openTemplateInNewTab
-      },
-      {
-        icon: 'main-view',
-        label: getString('pipeline.previewTemplateLabel'),
-        onClick: showTemplateYAMLPreviewModal
-      }
+      ...(remoteFetchError
+        ? []
+        : ([
+            {
+              icon: 'main-share',
+              label: getString('pipeline.openTemplateInNewTabLabel'),
+              onClick: openTemplateInNewTab
+            },
+            {
+              icon: 'main-view',
+              label: getString('pipeline.previewTemplateLabel'),
+              onClick: showTemplateYAMLPreviewModal
+            }
+          ] as TemplateMenuItem[]))
     ]
   }
 
@@ -218,35 +260,35 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
             {getString('loading')}
           </Text>
         )}
-        {!loading && !isEmpty(selectedTemplate) && (
+        {!loading && (!isEmpty(selectedTemplate) || remoteFetchError) && (
           <Text
             font={{ size: 'small' }}
             color={Color.WHITE}
             lineClamp={1}
             className={selectedTemplate?.storeType === StoreType.INLINE ? css.inlineText : ''}
           >
-            {`Using Template: ${getTemplateNameWithLabel(selectedTemplate)}`}
+            {`Using Template: ${getTemplateNameWithLabel(selectedTemplateDataWithRemoteFetchFailHandled)}`}
           </Text>
         )}
-        {selectedTemplate?.storeType === StoreType.REMOTE && (
+        {(selectedTemplate?.storeType === StoreType.REMOTE || remoteFetchError) && (
           <div className={css.gitRemoteDetailsWrapper}>
             <GitRemoteDetails
-              repoName={selectedTemplate?.gitDetails?.repoName}
-              branch={selectedTemplate?.gitDetails?.branch}
+              repoName={remoteFetchError ? errorMetaData?.repo : selectedTemplate?.gitDetails?.repoName}
+              branch={remoteFetchError ? errorMetaData?.branch : selectedTemplate?.gitDetails?.branch}
               flags={{ readOnly: true, normalInputStyle: true }}
               branchCustomClassName={css.gitRemoteDetails}
               customClassName={css.gitRemoteDetails}
             />
           </div>
         )}
-        <Popover
+        <Popover // Disabling popover menu if selectedTemplate is not present without remoteFetchError
           isOpen={menuOpen}
           onInteraction={nextOpenState => {
             setMenuOpen(nextOpenState)
           }}
           position={Position.BOTTOM_RIGHT}
           className={css.main}
-          disabled={isEmpty(selectedTemplate)}
+          disabled={!remoteFetchError && isEmpty(selectedTemplate)}
           portalClassName={css.popover}
         >
           <Icon

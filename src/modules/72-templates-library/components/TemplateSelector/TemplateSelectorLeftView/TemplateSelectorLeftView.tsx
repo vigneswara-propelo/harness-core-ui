@@ -61,7 +61,9 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   } = useTemplateSelectorContext()
   const { templateType = '', filterProperties, selectedTemplate: defaultTemplate, gitDetails = {} } = selectorData || {}
   const { childTypes = [], templateIdentifiers } = filterProperties || {}
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>(
+    selectorData?.selectedTemplate
+  )
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
@@ -236,21 +238,18 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     } else {
       setTemplate(selectedTemplate)
     }
-  }, [selectedTemplate])
+  }, [selectedTemplate, defaultTemplate])
 
   useEffect(() => {
-    const findTemplate = templateData?.data?.content?.find(template => {
-      const areSame = areTemplatesSame(template, defaultTemplate)
-      return areSame
-    })
-    setSelectedTemplate(findTemplate)
-  }, [templateData?.data?.content])
-
-  useEffect(() => {
-    if (loading) {
-      setSelectedTemplate(undefined)
+    if (templateData?.data?.content) {
+      let findTemplate = templateData.data.content.find(template => areTemplatesSame(template, defaultTemplate))
+      if (defaultTemplate?.remoteFetchError) {
+        const updatedGitDetails = { ...findTemplate?.gitDetails, branch: defaultTemplate?.gitDetails?.branch }
+        findTemplate = { ...findTemplate, gitDetails: updatedGitDetails }
+      }
+      setSelectedTemplate(findTemplate)
     }
-  }, [loading])
+  }, [templateData?.data?.content])
 
   return (
     <Container width={762} background={Color.FORM_BG} className={css.container}>

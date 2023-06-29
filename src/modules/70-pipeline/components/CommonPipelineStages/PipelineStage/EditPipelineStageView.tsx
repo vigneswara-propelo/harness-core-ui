@@ -8,7 +8,7 @@
 import React from 'react'
 import { Text, Container, Formik, FormikForm, Button, IconName } from '@harness/uicore'
 import * as Yup from 'yup'
-import { get, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -22,6 +22,8 @@ import { createTemplate } from '@pipeline/utils/templateUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { useQueryParams } from '@common/hooks/useQueryParams'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import css from './PipelineStageMinimalMode.module.scss'
 
 interface EditPipelineStageViewProps {
@@ -62,10 +64,17 @@ export function EditPipelineStageView({
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails },
     contextType,
     isReadonly
   } = usePipelineContext()
+
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  const parentTemplateRepo = defaultTo(
+    defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), gitDetails?.repoIdentifier),
+    repoName
+  )
 
   const initialValues: Values = {
     identifier: get(data, 'stage.identifier', ''),
@@ -103,7 +112,10 @@ export function EditPipelineStageView({
     /* istanbul ignore else */
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template) }, values.identifier)
+        onSubmit?.(
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

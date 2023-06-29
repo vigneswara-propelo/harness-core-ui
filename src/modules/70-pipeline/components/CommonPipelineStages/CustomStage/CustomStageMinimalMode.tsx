@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import { Button, Container, FormikForm, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
@@ -19,6 +19,8 @@ import type { CustomStageElementConfig, StageElementWrapper } from '@pipeline/ut
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { createTemplate } from '@pipeline/utils/templateUtils'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks/useQueryParams'
 import type { CustomStageMinimalValues, CustomStageMinimalModeProps } from './types'
 import css from './CustomStage.module.scss'
 
@@ -36,9 +38,14 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
   const { onChange, onSubmit = noop, data, template } = props
 
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails },
     contextType
   } = usePipelineContext()
+
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  //repoName is for pipelines and repoIdentifier for templates
+  const parentTemplateRepo = defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), repoName)
 
   const handleValidate = (values: CustomStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}
@@ -59,7 +66,10 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
     if (data?.stage) {
       /* istanbul ignore next */
       if (template) {
-        onSubmit({ stage: createTemplate(values, template) }, values.identifier)
+        onSubmit(
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name
