@@ -5,7 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import type {
+  CommonHealthSourceConfigurations,
+  HealthSourceConfig
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { healthSourceConfigMock } from '../components/RiskProfile/tests/RiskProfile.mock'
 
 export const metricPackResponse = {
@@ -275,3 +278,23 @@ export const assignSectionConfig = {
     }
   }
 } as HealthSourceConfig
+
+export const parentFormikValuesMock: CommonHealthSourceConfigurations = {
+  ignoreThresholds: [
+    {
+      metricType: 'Custom',
+      metricName: 'a',
+      type: 'IgnoreThreshold',
+      spec: {
+        action: 'Ignore'
+      },
+      criteria: {
+        type: 'Absolute',
+        spec: {}
+      }
+    }
+  ],
+  failFastThresholds: [],
+  selectedMetric: 'a',
+  queryMetricsMap: new Map()
+}

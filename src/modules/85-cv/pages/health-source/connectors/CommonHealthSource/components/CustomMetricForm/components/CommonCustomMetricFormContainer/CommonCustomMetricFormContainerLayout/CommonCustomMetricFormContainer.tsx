@@ -41,7 +41,8 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { sourceData } = useContext(SetupSourceTabsContext)
   const { product, sourceType } = sourceData || {}
-  const { connectorIdentifier, isConnectorRuntimeOrExpression, healthSourceConfig } = props
+  const { connectorIdentifier, isConnectorRuntimeOrExpression, healthSourceConfig, filterRemovedMetricNameThresholds } =
+    props
   const { getString } = useStrings()
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState<boolean>(false)
@@ -198,6 +199,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           riskProfileResponse={riskProfileResponse}
           healthSourceConfig={healthSourceConfig}
           recordProps={recordProps}
+          filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
         />
       )}
     </Container>

@@ -13,6 +13,7 @@ export interface CommonCustomMetricFormContainerProps {
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
   healthSourceConfig: HealthSourceConfig
+  filterRemovedMetricNameThresholds: (metricName: string) => void
 }
 
 export interface RecordProps {

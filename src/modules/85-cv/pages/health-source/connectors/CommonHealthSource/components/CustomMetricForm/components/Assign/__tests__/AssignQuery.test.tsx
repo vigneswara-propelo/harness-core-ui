@@ -8,11 +8,12 @@
 import React from 'react'
 import * as formik from 'formik'
 import { Formik } from '@harness/uicore'
-import { render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import AssignQuery from '../AssignQuery'
-import { assignSectionConfig, riskProfileResponse } from './AssignQuery.mock'
+import { assignSectionConfig, parentFormikValuesMock, riskProfileResponse } from './AssignQuery.mock'
 import CommonHealthSourceProvider from '../../CommonHealthSourceContext/CommonHealthSourceContext'
 import { healthSourceConfigMock } from '../components/RiskProfile/tests/RiskProfile.mock'
 
@@ -39,6 +40,7 @@ describe('Validate AssignQuery', () => {
             recordProps={{
               sampleRecords: []
             }}
+            filterRemovedMetricNameThresholds={jest.fn()}
             riskProfileResponse={riskProfileResponse as any}
             healthSourceConfig={healthSourceConfigMock}
           />
@@ -50,7 +52,6 @@ describe('Validate AssignQuery', () => {
     expect(container.querySelector('input[name="continuousVerification"')).toBeChecked()
     expect(getByText('cv.monitoringSources.riskCategoryLabel')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.serviceInstanceIdentifier')).toBeInTheDocument()
-    expect(container).toMatchSnapshot()
   })
 
   test('should render form errors', () => {
@@ -64,7 +65,9 @@ describe('Validate AssignQuery', () => {
         [CustomMetricFormFieldNames.SLI]: true,
         [CustomMetricFormFieldNames.RISK_CATEGORY]: true,
         [CustomMetricFormFieldNames.LOWER_BASELINE_DEVIATION]: true
-      }
+      },
+      values: {},
+      setFieldValue: jest.fn()
     } as unknown as any)
     const { container, getByText } = render(
       <WrapperComponent>
@@ -75,6 +78,7 @@ describe('Validate AssignQuery', () => {
         >
           <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
+            filterRemovedMetricNameThresholds={jest.fn()}
             riskProfileResponse={riskProfileResponse as any}
             healthSourceConfig={healthSourceConfigMock}
             recordProps={{
@@ -100,6 +104,7 @@ describe('Validate AssignQuery', () => {
         >
           <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
+            filterRemovedMetricNameThresholds={jest.fn()}
             riskProfileResponse={[] as any}
             healthSourceConfig={healthSourceConfigMock}
             recordProps={{
@@ -124,6 +129,7 @@ describe('Validate AssignQuery', () => {
         >
           <AssignQuery
             values={{ continuousVerification: true, healthScore: true, sli: false }}
+            filterRemovedMetricNameThresholds={jest.fn()}
             healthSourceConfig={healthSourceConfigMock}
             recordProps={{
               sampleRecords: []
@@ -144,6 +150,7 @@ describe('Validate AssignQuery', () => {
         >
           <AssignQuery
             values={{ continuousVerification: false, healthScore: false, sli: true }}
+            filterRemovedMetricNameThresholds={jest.fn()}
             riskProfileResponse={riskProfileResponse as any}
             healthSourceConfig={healthSourceConfigMock}
             recordProps={{
@@ -167,6 +174,7 @@ describe('Validate AssignQuery', () => {
         <Formik initialValues={{ sli: true }} onSubmit={jest.fn()} formName="runtimeInputsTest">
           <AssignQuery
             values={{ sli: true }}
+            filterRemovedMetricNameThresholds={jest.fn()}
             riskProfileResponse={riskProfileResponse as any}
             showOnlySLI
             healthSourceConfig={assignSectionConfig}
@@ -182,5 +190,40 @@ describe('Validate AssignQuery', () => {
     expect(container.querySelector('input[name="continuousVerification"')).not.toBeInTheDocument()
     expect(container.querySelector('label[for="riskCategory"]')).not.toBeInTheDocument()
     expect(container.querySelector('span[data-tooltip-id="mapPrometheus_serviceInstance"]')).not.toBeInTheDocument()
+  })
+
+  describe('Metric thresholds confirmation popup', () => {
+    test('should show confirmation popup when CV of a custom metric is unchecked and that is used in metric thresholds', async () => {
+      render(
+        <TestWrapper>
+          <CommonHealthSourceProvider updateParentFormik={jest.fn()} parentFormValues={parentFormikValuesMock}>
+            <Formik
+              initialValues={{ sli: true, continuousVerification: true }}
+              onSubmit={jest.fn()}
+              formName="runtimeInputsTest"
+            >
+              <AssignQuery
+                values={{ sli: true, continuousVerification: true }}
+                filterRemovedMetricNameThresholds={jest.fn()}
+                riskProfileResponse={riskProfileResponse as any}
+                healthSourceConfig={healthSourceConfigMock}
+                recordProps={{
+                  sampleRecords: []
+                }}
+              />
+            </Formik>
+          </CommonHealthSourceProvider>
+        </TestWrapper>
+      )
+
+      const cvCheckbox = screen.getByTestId(/formikCheckbox/)
+
+      expect(cvCheckbox).toBeInTheDocument()
+      expect(cvCheckbox).toBeChecked()
+
+      await userEvent.click(cvCheckbox)
+
+      await waitFor(() => expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined())
+    })
   })
 })

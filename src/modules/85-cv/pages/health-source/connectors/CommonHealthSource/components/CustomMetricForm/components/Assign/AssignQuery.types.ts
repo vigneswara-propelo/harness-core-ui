@@ -24,4 +24,5 @@ export type AssignQueryProps = {
   defaultServiceInstance?: string
   healthSourceConfig: HealthSourceConfig
   recordProps: RecordProps
+  filterRemovedMetricNameThresholds: (metricName: string) => void
 }

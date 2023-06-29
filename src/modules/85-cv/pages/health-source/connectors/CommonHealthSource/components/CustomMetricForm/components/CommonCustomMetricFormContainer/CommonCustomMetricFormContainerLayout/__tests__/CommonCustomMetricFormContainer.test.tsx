@@ -104,7 +104,8 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
       metricPacks: {
         enabled: false
       }
-    }
+    },
+    filterRemovedMetricNameThresholds: jest.fn()
   }
   test('Verify that records are fetched when fetch records button is clicked', async () => {
     const { getAllByText, container, getByText } = render(<WrapperComponent {...initialProps} />)
@@ -188,7 +189,8 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
         metricPacks: {
           enabled: false
         }
-      }
+      },
+      filterRemovedMetricNameThresholds: jest.fn()
     }
     const { getByText, container } = render(<WrapperComponent {...propsWhenQueryIsPresent} />)
 

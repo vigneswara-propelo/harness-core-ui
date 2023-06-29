@@ -9072,6 +9072,7 @@ export interface StringsMap {
   'cv.metricForGoodAndValidRequestsShouldBeDifferent': string
   'cv.metricIsRequired': string
   'cv.metricThresholds.customMetricsDeletePromptContent': string
+  'cv.metricThresholds.cvUncheckPromptContent': string
   'cv.metricThresholds.deletePromptTitle': string
   'cv.metricThresholds.metricPacksDeletePromptContent': string
   'cv.metricThresholds.noThresholdsMessage': string

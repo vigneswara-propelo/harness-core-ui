@@ -21,7 +21,8 @@ export default function AssignQuery({
   showOnlySLI = false,
   riskProfileResponse,
   healthSourceConfig,
-  recordProps
+  recordProps,
+  filterRemovedMetricNameThresholds
 }: AssignQueryProps): JSX.Element {
   const { continuousVerification, healthScore, serviceInstanceField, riskCategory } = values
 
@@ -33,7 +34,12 @@ export default function AssignQuery({
 
   return (
     <Container className={css.main}>
-      <AssignSection hideCV={hideCV} showOnlySLI={showOnlySLI} hideSLIAndHealthScore={hideSLIAndHealthScore} />
+      <AssignSection
+        hideCV={hideCV}
+        showOnlySLI={showOnlySLI}
+        hideSLIAndHealthScore={hideSLIAndHealthScore}
+        filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
+      />
       {(continuousVerification || healthScore) && (
         <Card className={css.riskProfile}>
           <RiskProfile

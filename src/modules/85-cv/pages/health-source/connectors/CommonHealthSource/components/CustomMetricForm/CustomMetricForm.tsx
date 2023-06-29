@@ -20,6 +20,7 @@ interface CustomMetricFormProps {
   isConnectorRuntimeOrExpression?: boolean
   enabledRecordsAndQuery?: boolean
   healthSourceConfig: HealthSourceConfig
+  filterRemovedMetricNameThresholds: (metricName: string) => void
 }
 
 export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Element {
@@ -29,7 +30,8 @@ export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Elem
     connectorIdentifier,
     isConnectorRuntimeOrExpression,
     enabledRecordsAndQuery,
-    healthSourceConfig
+    healthSourceConfig,
+    filterRemovedMetricNameThresholds
   } = props
   const { getString } = useStrings()
 
@@ -51,6 +53,7 @@ export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Elem
           expressions={expressions}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
           healthSourceConfig={healthSourceConfig}
+          filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
         />
       )}
     </Layout.Vertical>

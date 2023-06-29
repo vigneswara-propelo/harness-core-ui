@@ -230,6 +230,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
                 isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 enabledRecordsAndQuery={enabledRecordsAndQuery}
                 healthSourceConfig={healthSourceConfig}
+                filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
               />
             </Container>
           </CommonCustomMetric>

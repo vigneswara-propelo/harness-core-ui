@@ -11,4 +11,6 @@ export interface CheckboxWithPromptProps {
   cancelButtonText?: string
   contentText?: string
   showPromptOnUnCheck?: boolean
+  isFormikCheckbox?: boolean
+  helperText?: string
 }

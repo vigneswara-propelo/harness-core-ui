@@ -1278,6 +1278,7 @@ metricThresholds:
   noThresholdsMessage: No thresholds created yet
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
+  cvUncheckPromptContent: Unchecking the Continuous Verification will also remove the corresponding metric thresholds settings. This action cannot be undone.
 codeErrors:
   title: Code Errors
   agents: '{{ $.common.agents }}'

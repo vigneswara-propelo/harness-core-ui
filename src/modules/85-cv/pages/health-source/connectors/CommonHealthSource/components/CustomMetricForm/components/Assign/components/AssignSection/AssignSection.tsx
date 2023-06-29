@@ -10,6 +10,8 @@ import { useFormikContext } from 'formik'
 import { Container, FormInput, FormError } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import CVPromptCheckbox from '@cv/pages/health-source/common/CVPromptCheckbox/CVPromptCheckbox'
+import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CustomMetricsSectionHeader from '../../../CustomMetricsSectionHeader'
 import css from './AssignSection.module.scss'
@@ -18,11 +20,20 @@ interface AssignSectionProps {
   hideCV?: boolean
   showOnlySLI?: boolean
   hideSLIAndHealthScore?: boolean
+  filterRemovedMetricNameThresholds: (metricName: string) => void
 }
-export default function AssignSection({ hideCV, showOnlySLI, hideSLIAndHealthScore }: AssignSectionProps): JSX.Element {
+export default function AssignSection({
+  hideCV,
+  showOnlySLI,
+  hideSLIAndHealthScore,
+  filterRemovedMetricNameThresholds
+}: AssignSectionProps): JSX.Element {
   const { getString } = useStrings()
-  const { errors, touched } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const { errors, touched, values } = useFormikContext<CommonCustomMetricFormikInterface>()
   const showFieldError = Boolean(Object.keys(touched).length)
+
+  const { parentFormValues } = useCommonHealthSource()
+
   return (
     <Container className={css.assignSection}>
       <CustomMetricsSectionHeader
@@ -31,10 +42,15 @@ export default function AssignSection({ hideCV, showOnlySLI, hideSLIAndHealthSco
       />
       {!hideCV ? (
         <Container margin={{ top: 'large', bottom: 'large' }}>
-          <FormInput.CheckBox
-            name={CustomMetricFormFieldNames.CONTINUOUS_VERIFICATION}
-            label={getString('cv.monitoringSources.commonHealthSource.assign.continuousVerification.title')}
+          <CVPromptCheckbox
+            isFormikCheckbox
+            checkboxLabel={getString('cv.monitoringSources.commonHealthSource.assign.continuousVerification.title')}
             helperText={getString('cv.monitoringSources.commonHealthSource.assign.continuousVerification.helptext')}
+            checkboxName={CustomMetricFormFieldNames.CONTINUOUS_VERIFICATION}
+            checked={values[CustomMetricFormFieldNames.CONTINUOUS_VERIFICATION] as boolean}
+            filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
+            formikValues={parentFormValues}
+            selectedMetric={parentFormValues.selectedMetric}
           />
         </Container>
       ) : null}

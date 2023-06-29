@@ -94,6 +94,35 @@ describe('Create empty monitored service', () => {
     cy.findByRole('checkbox', { name: 'Higher counts = higher risk' }).scrollIntoView()
     cy.findByRole('checkbox', { name: 'Higher counts = higher risk' }).click({ force: true })
 
+    cy.findByTestId('AddThresholdButton').should('exist').scrollIntoView().should('be.visible')
+
+    cy.findByTestId('AddThresholdButton').should('exist').scrollIntoView().click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'metricName1')
+
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    cy.contains('span', 'Continuous Verification (Applied to the pipelines in the Continuous Deployment)')
+      .scrollIntoView()
+      .click()
+
+    cy.contains(
+      'p',
+      'Unchecking the Continuous Verification will also remove the corresponding metric thresholds settings. This action cannot be undone.'
+    ).should('exist')
+
+    cy.findByRole('button', { name: 'Confirm' }).should('exist').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('not.exist')
+
+    cy.contains('span', 'Continuous Verification (Applied to the pipelines in the Continuous Deployment)')
+      .scrollIntoView()
+      .click()
+
     cy.contains('span', 'Submit').should('exist')
     cy.contains('span', 'Submit').click()
 

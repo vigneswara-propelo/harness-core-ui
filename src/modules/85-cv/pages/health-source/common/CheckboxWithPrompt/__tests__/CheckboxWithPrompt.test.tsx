@@ -75,4 +75,22 @@ describe('CheckboxWithPrompt', () => {
 
     expect(onChange).toHaveBeenCalledWith(false, 'test checkbox name')
   })
+
+  test('should render formik checkbox, if isFormikCheckbox prop is true', async () => {
+    const onChange = jest.fn()
+    render(
+      <TestWrapper>
+        <CheckboxWithPrompt
+          checkboxLabel="test"
+          checkboxName="test checkbox name"
+          onChange={onChange}
+          checked
+          popupTitleText="Test popup title"
+          isFormikCheckbox
+        />
+      </TestWrapper>
+    )
+
+    expect(screen.getByTestId(/formikCheckbox/)).toBeInTheDocument()
+  })
 })
