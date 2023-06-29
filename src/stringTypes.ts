@@ -9857,6 +9857,7 @@ export interface StringsMap {
   'sto.stepDescription.Burp': string
   'sto.stepDescription.Checkmarx': string
   'sto.stepDescription.CodeQL': string
+  'sto.stepDescription.Coverity': string
   'sto.stepDescription.CustomIngestion': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string

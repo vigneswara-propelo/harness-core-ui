@@ -32,6 +32,7 @@ import { BrakemanStep } from './BrakemanStep/BrakemanStep'
 import { BurpStep } from './BurpStep/BurpStep'
 import { FossaStep } from './FossaStep/FossaStep'
 import { SemgrepStep } from './SemgrepStep/SemgrepStep'
+import { CoverityStep } from './CoverityStep/CoverityStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -59,3 +60,4 @@ factory.registerStep(new OWASPStep())
 factory.registerStep(new ProwlerStep())
 factory.registerStep(new MetasploitStep())
 factory.registerStep(new BrakemanStep())
+factory.registerStep(new CoverityStep())
