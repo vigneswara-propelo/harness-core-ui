@@ -1710,6 +1710,8 @@ export interface StringsMap {
   'defaultSettings.allowDifferentRepoForInputSets': string
   'defaultSettings.allowOverrides': string
   'defaultSettings.allowUserToMarkStepAsFailedExplicitly': string
+  'defaultSettings.allowedRepositories': string
+  'defaultSettings.allowedRepositoriesPlaceholder': string
   'defaultSettings.awsIncludeCredit': string
   'defaultSettings.awsIncludeDiscounts': string
   'defaultSettings.awsIncludeRefunds': string

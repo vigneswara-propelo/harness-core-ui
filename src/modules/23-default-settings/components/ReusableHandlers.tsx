@@ -7,6 +7,7 @@
 
 import React, { FormEvent } from 'react'
 import { Checkbox, FormInput, FormError, Layout, MultiTypeInputType, Toggle } from '@harness/uicore'
+import { KVTagInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
@@ -190,4 +191,12 @@ export const DefaultSettingsToggle: React.FC<SettingRendererProps> = ({
       {errorMessage ? <FormError name={identifier} errorMessage={errorMessage} /> : undefined}
     </Layout.Vertical>
   )
+}
+
+export interface DefaultSettingsTagInputProps extends SettingRendererProps {
+  tagInputProps?: Omit<KVTagInputProps, 'name'>
+}
+
+export const DefaultSettingsTagInput = ({ identifier, tagInputProps }: DefaultSettingsTagInputProps): JSX.Element => {
+  return <FormInput.KVTagInput className={css.defaultSettingRenderer} name={identifier} {...tagInputProps} />
 }

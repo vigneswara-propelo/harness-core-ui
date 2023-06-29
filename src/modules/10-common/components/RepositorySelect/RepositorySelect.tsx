@@ -54,7 +54,8 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
       orgIdentifier,
       projectIdentifier,
       page: 0,
-      size: 100
+      size: 100,
+      applyGitXRepoAllowListFilter: true
     },
     lazy: true
   })

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { noop } from 'lodash-es'
+import { identity, noop } from 'lodash-es'
 import { fireEvent, render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import {
@@ -47,7 +47,8 @@ describe('Reusable Components', () => {
     onRestore: jest.fn(),
     onSettingSelectionChange: jest.fn(),
     settingValue: settingValue,
-    errorMessage: ''
+    errorMessage: '',
+    getString: identity
   }
 
   test('text box', () => {

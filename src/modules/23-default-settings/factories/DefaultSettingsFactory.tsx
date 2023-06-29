@@ -12,6 +12,7 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import type { SettingDTO } from 'services/cd-ng'
 import type { Module } from 'framework/types/ModuleName'
 import type { SettingType } from '@common/constants/Utils'
+import { UseStringsReturn } from 'framework/strings'
 
 export interface SettingRendererProps {
   identifier: string
@@ -21,6 +22,7 @@ export interface SettingRendererProps {
   categoryAllSettings: Map<SettingType, SettingDTO>
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
   errorMessage: string
+  getString: UseStringsReturn['getString']
 }
 export interface SettingHandler {
   label: keyof StringsMap

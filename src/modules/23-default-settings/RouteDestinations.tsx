@@ -35,6 +35,7 @@ import {
   DefaultSettingNumberTextbox,
   DefaultSettingRadioBtnWithTrueAndFalse,
   DefaultSettingStringDropDown,
+  DefaultSettingsTagInput,
   DefaultSettingsToggle
 } from './components/ReusableHandlers'
 
@@ -261,6 +262,31 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENFORCE_GIT_EXPERIENCE
   label: 'defaultSettings.enforceGitExperience',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
   yupValidation: Yup.boolean(),
+  settingCategory: 'GIT_EXPERIENCE'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.GIT_EXPERIENCE_REPO_ALLOWLIST, {
+  label: 'defaultSettings.allowedRepositories',
+  settingRenderer: props => {
+    const separator = ','
+    const { onSettingSelectionChange, settingValue, getString } = props
+
+    return (
+      <DefaultSettingsTagInput
+        {...props}
+        tagInputProps={{
+          tagsProps: {
+            separator,
+            onChange: values => onSettingSelectionChange(values.filter(Boolean).join(',')),
+            values: settingValue?.value?.split(separator) ?? [],
+            placeholder: getString('defaultSettings.allowedRepositoriesPlaceholder'),
+            disabled: !settingValue?.isSettingEditable
+          }
+        }}
+      />
+    )
+  },
+  yupValidation: Yup.string().nullable().optional(),
   settingCategory: 'GIT_EXPERIENCE'
 })
 
