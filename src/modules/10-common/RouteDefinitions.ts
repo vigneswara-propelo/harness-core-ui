@@ -1764,16 +1764,16 @@ const routes = {
   ),
   toCVCreateSLOs: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
-      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create`
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slo/create`
     }
   ),
   toCVCreateCompositeSLOs: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
-      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/composite`
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slo/create/composite`
     }
   ),
   toAccountCVCreateCompositeSLOs: withAccountId(({ module = 'cv' }: { module?: string }) => {
-    return `/${module}/slos/create/composite`
+    return `/${module}/slo/create/composite`
   }),
   toCVSLODowntime: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {

@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { NameIdDescriptionTags } from '@common/components'
+import type { NameIdDescriptionTags, TimeSeriesAreaChart } from '@common/components'
 import type { Stepper } from '@common/components/Stepper/Stepper'
 import type { useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
 import type { ALL_TIME_ZONES, formatDatetoLocale, getReadableDateTime } from '@common/utils/dateUtils'
 import type {
   useGetHarnessServices,
@@ -16,6 +17,8 @@ import type {
   HarnessServiceAsFormField,
   HarnessEnvironmentAsFormField
 } from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
+import HealthSourceDrawerHeader from '@cv/pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
+import HealthSourceDrawerContent from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
 import type {
   updatedMonitoredServiceNameForEnv,
   updateMonitoredServiceNameForService
@@ -29,6 +32,9 @@ export interface SRMCustomMicroFrontendProps {
     NameIdDescriptionTags: typeof NameIdDescriptionTags
     SLOTargetNotifications: typeof SLOTargetNotifications
     HarnessServiceAsFormField: typeof HarnessServiceAsFormField
+    HealthSourceDrawerHeader: typeof HealthSourceDrawerHeader
+    HealthSourceDrawerContent: typeof HealthSourceDrawerContent
+    TimeSeriesAreaChart: typeof TimeSeriesAreaChart
     HarnessEnvironmentAsFormField: typeof HarnessEnvironmentAsFormField
     OrgAccountLevelServiceEnvField: typeof OrgAccountLevelServiceEnvField
   }
@@ -40,6 +46,7 @@ export interface SRMCustomMicroFrontendProps {
     useDeepCompareEffect: typeof useDeepCompareEffect
     useGetHarnessServices: typeof useGetHarnessServices
     useGetHarnessEnvironments: typeof useGetHarnessEnvironments
+    useHarnessServicetModal: typeof useHarnessServicetModal
   }
   customFunctions: {
     formatDatetoLocale: typeof formatDatetoLocale

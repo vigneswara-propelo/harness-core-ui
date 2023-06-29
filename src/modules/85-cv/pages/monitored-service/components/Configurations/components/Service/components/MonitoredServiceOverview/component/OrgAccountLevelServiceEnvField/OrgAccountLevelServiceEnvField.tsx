@@ -7,12 +7,16 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { SelectOption, useToggleOpen } from '@harness/uicore'
+import { Formik, SelectOption, useToggleOpen } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
-import type { OrgAccountLevelServiceEnvFieldProps } from './OrgAccountLevelServiceEnvField.types'
+import type {
+  FormValues,
+  OrgAccountLevelServiceEnvFieldProps,
+  WrapperOrgAccountLevelServiceEnvFieldProps
+} from './OrgAccountLevelServiceEnvField.types'
 import { onValueChange, shouldShowServiceEnvironmentField } from './OrgAccountLevelServiceEnvField.utils'
 import { COMMON_FIELDS_PROPS } from './OrgAccountLevelServiceEnvField.constants'
 import { ServiceEnvModal } from './ServiceEnvModal'
@@ -79,4 +83,20 @@ export default function OrgAccountLevelServiceEnvField({
       />
     </>
   )
+}
+
+export const WrapperOrgAccountLevelServiceEnvField = (props: WrapperOrgAccountLevelServiceEnvFieldProps) => {
+  const { formikProps } = props
+  if (formikProps) {
+    return (
+      <Formik<FormValues>
+        formName="WrapperOrgAccountLevelServiceEnvField"
+        initialValues={formikProps.values}
+        onSubmit={formikProps.submitForm}
+      >
+        <OrgAccountLevelServiceEnvField {...props} />
+      </Formik>
+    )
+  }
+  return <OrgAccountLevelServiceEnvField {...props} />
 }

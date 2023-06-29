@@ -55,7 +55,8 @@ import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common
 import { Stepper } from '@common/components/Stepper/Stepper'
 import { CDSideNavProps } from '@cd/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
-import { NameIdDescriptionTags } from '@common/components'
+import { NameIdDescriptionTags, TimeSeriesAreaChart } from '@common/components'
+import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -88,8 +89,10 @@ import {
   updatedMonitoredServiceNameForEnv,
   updateMonitoredServiceNameForService
 } from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/MonitoredServiceOverview.utils'
-import OrgAccountLevelServiceEnvField from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
+import { WrapperOrgAccountLevelServiceEnvField } from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
 import SLOTargetNotifications from './pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
+import HealthSourceDrawerHeader from './pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
+import HealthSourceDrawerContent from './pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -674,8 +677,7 @@ export const SRMMFERoutes: React.FC = () => {
   const mfePaths = enableMicroFrontend
     ? [
         routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routes.toAccountCVSLOs({ ...accountPathProps }),
-        routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })
+        routes.toAccountCVSLOs({ ...accountPathProps })
       ]
     : []
 
@@ -692,7 +694,8 @@ export const SRMMFERoutes: React.FC = () => {
               useFeatureFlags,
               useDeepCompareEffect,
               useGetHarnessServices,
-              useGetHarnessEnvironments
+              useGetHarnessEnvironments,
+              useHarnessServicetModal
             }}
             customFunctions={{
               formatDatetoLocale,
@@ -707,7 +710,10 @@ export const SRMMFERoutes: React.FC = () => {
               SLOTargetNotifications,
               HarnessServiceAsFormField,
               HarnessEnvironmentAsFormField,
-              OrgAccountLevelServiceEnvField
+              HealthSourceDrawerHeader,
+              HealthSourceDrawerContent,
+              TimeSeriesAreaChart,
+              OrgAccountLevelServiceEnvField: WrapperOrgAccountLevelServiceEnvField
             }}
           />
         </RouteWithLayout>

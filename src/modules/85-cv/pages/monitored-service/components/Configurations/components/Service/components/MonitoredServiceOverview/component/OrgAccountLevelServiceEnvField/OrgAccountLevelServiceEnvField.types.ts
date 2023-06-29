@@ -6,12 +6,27 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
+import { FormikContextType } from 'formik'
+import { MonitoredServiceType } from '../../MonitoredServiceOverview.constants'
 
 export interface OrgAccountLevelServiceEnvFieldProps {
   isTemplate: boolean
   isInputSet?: boolean
   serviceOnSelect: (service: SelectOption) => void
   environmentOnSelect: (environment: SelectOption) => void
+}
+
+export interface FormValues {
+  type: ValueOf<typeof MonitoredServiceType>
+  serviceRef?: string
+  environmentRef?: string
+}
+export interface WrapperOrgAccountLevelServiceEnvFieldProps {
+  isTemplate: boolean
+  isInputSet?: boolean
+  serviceOnSelect: (service: SelectOption) => void
+  environmentOnSelect: (environment: SelectOption) => void
+  formikProps?: FormikContextType<FormValues>
 }
 
 export interface onChangeProps {
