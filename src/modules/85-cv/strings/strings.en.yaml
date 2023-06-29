@@ -416,6 +416,7 @@ monitoringSources:
       gcoMetrics: Google Cloud Operation metrics
   datadog:
     noQueryAdded: 'Please add query manually or pick from dashboard'
+    multiQueryValidationRule: 'Query should not end with Semicolon ";"'
     noMetricsWidgets: 'No metrics'
     manualInputQueryModal:
       modalTitle: 'Add your Datadog query'

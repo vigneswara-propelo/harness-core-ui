@@ -12,7 +12,8 @@ import {
   mapDatadogMetricHealthSourceToDatadogMetricSetupSource,
   mapDatadogMetricSetupSourceToDatadogHealthSource,
   mapSelectedWidgetDataToDatadogMetricInfo,
-  validate
+  validate,
+  validateFormMappings
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import {
   DatadogMetricsHealthSourceMock,
@@ -111,5 +112,47 @@ describe('Validate DatadogMetricsHealthSource Utils', () => {
       metric: 'metric not valid',
       groupName: 'groupName not valid'
     })
+  })
+
+  test('should validate datadog multiquery validation if it is a manual query', () => {
+    const metricToCheck: DatadogMetricInfo = {
+      ...DatadogMetricsSetupSource.metricDefinition.get('mock_metric_path'),
+      identifier: 'unique_identifier',
+      metricPath: 'mock_metric_path_changed',
+      query: 'test;', // pass empty query for validation
+      metricName: 'sdss',
+      metric: 'ss',
+      groupName: { label: 'aa', value: 'aa' },
+      ignoreThresholds: [],
+      failFastThresholds: [],
+      sli: true,
+      isManualQuery: true
+    }
+
+    const allSelectedMetrics = DatadogMetricsSetupSource.metricDefinition
+    allSelectedMetrics.set('mock_metric_path_changed', metricToCheck)
+    expect(validateFormMappings(metricToCheck, allSelectedMetrics, key => key)).toEqual({
+      query: 'cv.monitoringSources.datadog.multiQueryValidationRule'
+    })
+  })
+
+  test('should not show multi query error validation if it is not a manual query', () => {
+    const metricToCheck: DatadogMetricInfo = {
+      ...DatadogMetricsSetupSource.metricDefinition.get('mock_metric_path'),
+      identifier: 'unique_identifier',
+      metricPath: 'mock_metric_path_changed',
+      query: 'test;', // pass empty query for validation
+      metricName: 'sdss',
+      metric: 'ss',
+      groupName: { label: 'aa', value: 'aa' },
+      ignoreThresholds: [],
+      failFastThresholds: [],
+      sli: true,
+      isManualQuery: false
+    }
+
+    const allSelectedMetrics = DatadogMetricsSetupSource.metricDefinition
+    allSelectedMetrics.set('mock_metric_path_changed', metricToCheck)
+    expect(validateFormMappings(metricToCheck, allSelectedMetrics, key => key)).toEqual({})
   })
 })

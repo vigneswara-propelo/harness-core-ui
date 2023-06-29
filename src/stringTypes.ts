@@ -9292,6 +9292,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.searchMetric': string
   'cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords': string
   'cv.monitoringSources.datadog.manualInputQueryModal.modalTitle': string
+  'cv.monitoringSources.datadog.multiQueryValidationRule': string
   'cv.monitoringSources.datadog.newDatadogGroupName': string
   'cv.monitoringSources.datadog.noMetricsWidgets': string
   'cv.monitoringSources.datadog.noQueryAdded': string

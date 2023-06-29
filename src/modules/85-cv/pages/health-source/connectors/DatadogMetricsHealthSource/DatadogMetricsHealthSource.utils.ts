@@ -31,8 +31,7 @@ import {
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/components/DatadogMetricsDetailsContent/DatadogMetricsDetailsContent.utils'
 import {
   DatadogMetricsHealthSourceFieldNames,
-  defaultServiceInstaceValue,
-  QUERY_CONTAINS_VALIDATION_PARAM
+  defaultServiceInstaceValue
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.constants'
 import type {
   DatadogAggregationType,
@@ -236,6 +235,10 @@ export function getIsAllIDsUnique(
   )
 }
 
+function isManualQueryEndingWithSemiColon(isManualQuery?: boolean, query?: string): boolean {
+  return Boolean(isManualQuery && query?.slice(-1) === ';')
+}
+
 export function validateFormMappings(
   values: DatadogMetricInfo,
   selectedMetrics: Map<string, DatadogMetricInfo>,
@@ -245,13 +248,8 @@ export function validateFormMappings(
 
   if (!values?.query?.length) {
     errors.query = getString('cv.monitoringSources.gco.manualInputQueryModal.validation.query')
-  } else if (
-    getMultiTypeFromValue(values?.query) === MultiTypeInputType.FIXED &&
-    !values?.query?.includes(QUERY_CONTAINS_VALIDATION_PARAM)
-  ) {
-    errors.query = `${getString(
-      'cv.monitoringSources.datadog.validation.queryContains'
-    )}${QUERY_CONTAINS_VALIDATION_PARAM}`
+  } else if (isManualQueryEndingWithSemiColon(values.isManualQuery, values.query)) {
+    errors.query = getString('cv.monitoringSources.datadog.multiQueryValidationRule')
   }
 
   if (![values.sli, values.continuousVerification, values.healthScore].some(i => i)) {
