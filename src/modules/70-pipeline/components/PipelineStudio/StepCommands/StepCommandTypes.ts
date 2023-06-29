@@ -16,9 +16,9 @@ import type {
 } from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails, PolicyConfig } from 'services/pipeline-ng'
-import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import { PreSelectedTemplate } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { SaveTemplateButtonProps } from '../SaveTemplateButton/SaveTemplateButton'
 
 export enum AdvancedPanels {
@@ -42,7 +42,7 @@ export interface StepCommandsProps {
   step: StepOrStepGroupOrTemplateStepData
   onChange?: (step: Partial<Values>) => void
   onUpdate: (step: Partial<Values>) => void
-  onUseTemplate?: (selectedTemplate: TemplateSummaryResponse) => void
+  onUseTemplate?: (selectedTemplate: PreSelectedTemplate) => void
   onRemoveTemplate?: () => Promise<void>
   stepsFactory: AbstractStepFactory
   isStepGroup: boolean

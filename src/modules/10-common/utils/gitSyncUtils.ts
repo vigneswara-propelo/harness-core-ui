@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty, isUndefined } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import type { GitSyncConfig } from 'services/cd-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -48,7 +48,7 @@ export const getGitQueryParamsWithParentScope = ({
     parentEntityOrgIdentifier: params.orgIdentifier,
     parentEntityProjectIdentifier: params.projectIdentifier
   }
-  const branchParam = isUndefined(branch) ? storeMetadata?.branch : branch
+  const branchParam = branch || storeMetadata?.branch
   return {
     getDefaultFromOtherRepo: true,
 

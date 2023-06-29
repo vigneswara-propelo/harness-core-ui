@@ -35,7 +35,10 @@ import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import {
+  PreSelectedTemplate,
+  useTemplateSelector
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -884,7 +887,7 @@ export function RightDrawer(): React.ReactElement {
   }
 
   const addOrUpdateTemplate = async (
-    selectedTemplate: TemplateSummaryResponse,
+    selectedTemplate: PreSelectedTemplate,
     drawerType: DrawerTypes,
     isRollback: boolean
   ): Promise<void> => {
@@ -894,7 +897,7 @@ export function RightDrawer(): React.ReactElement {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         filterProperties: {
-          childTypes: [childType]
+          childTypes: selectedTemplate.remoteFetchError ? [] : [childType]
         },
         selectedTemplate,
         gitDetails,
@@ -1006,7 +1009,7 @@ export function RightDrawer(): React.ReactElement {
           onUpdate={noop}
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
-          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
+          onUseTemplate={(selectedTemplate: PreSelectedTemplate) =>
             addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
           }
           onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
