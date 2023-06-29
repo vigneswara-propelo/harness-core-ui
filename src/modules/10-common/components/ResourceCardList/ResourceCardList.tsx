@@ -24,7 +24,6 @@ import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { isOnPrem } from '@common/utils/utils'
 import { SettingType } from '@common/constants/Utils'
 import { useGetSettingValue, useGetSmtpConfig } from 'services/cd-ng'
 import css from './ResourceCardList.module.scss'
@@ -50,9 +49,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { GITOPS_ONPREM_ENABLED, CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
-  const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
-  const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
 
   const { showError } = useToaster()
   const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
@@ -78,10 +75,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data } = useGetSmtpConfig({ queryParams: { accountId } })
-  const showGitOpsCard = useMemo(
-    () => history?.location?.pathname.includes('resources') && !hideGitopsOnPrem,
-    [history?.location?.pathname]
-  )
+  const showGitOpsCard = useMemo(() => history?.location?.pathname.includes('resources'), [history?.location?.pathname])
 
   const smtpResource: ResourceOption[] = [
     {

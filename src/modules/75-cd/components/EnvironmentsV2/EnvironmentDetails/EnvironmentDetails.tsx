@@ -47,7 +47,6 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { isOnPrem } from '@common/utils/utils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
@@ -76,8 +75,7 @@ export default function EnvironmentDetails(): React.ReactElement {
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
-  const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
+  const { CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
   const environmentSummaryEnabled = projectIdentifier
 
   const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
@@ -184,7 +182,6 @@ export default function EnvironmentDetails(): React.ReactElement {
   const { name, identifier, description, tags, type } = defaultTo(parsedYamlEnvironment, {}) as NGEnvironmentInfoConfig
   const variables = defaultTo(parsedYamlEnvironment?.variables, [])
   const overrides = parsedYamlEnvironment?.overrides
-  const hideGitopsCluster = !gitopsOnPremEnabled && isOnPrem()
   const validate = (values: NGEnvironmentInfoConfig): void => {
     const {
       name: newName,
@@ -303,8 +300,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                       {
                         id: EnvironmentDetailsTab.GITOPS,
                         title: getString('cd.gitOpsCluster'),
-                        panel: <GitOpsCluster envRef={identifier} />,
-                        hidden: hideGitopsCluster
+                        panel: <GitOpsCluster envRef={identifier} />
                       },
                       {
                         id: EnvironmentDetailsTab.REFERENCED_BY,

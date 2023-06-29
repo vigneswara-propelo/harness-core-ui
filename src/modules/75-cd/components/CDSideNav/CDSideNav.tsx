@@ -30,7 +30,7 @@ import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { isOnPrem, useGetCommunity } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import type { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -69,7 +69,7 @@ export default function CDSideNav(): React.ReactElement {
   const { updateAppStore, selectedProject } = useAppStore()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { GITOPS_ONPREM_ENABLED, CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
 
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
@@ -79,7 +79,6 @@ export default function CDSideNav(): React.ReactElement {
   // Get and set the visibility of the "cd" getStarted link
   const isCDGetStartedVisible = showGetStartedTabInMainMenu['cd']
   const setCDGetStartedVisible = (shouldShow: boolean): void => setShowGetStartedTabInMainMenu('cd', shouldShow)
-  const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const isOverviewPage = !!matchPath(location.pathname, {
     path: routes.toProjectOverview({ ...params, module })
   })
@@ -134,7 +133,6 @@ export default function CDSideNav(): React.ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchPipelinesData])
 
-  const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
   const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
 
   return (
@@ -272,7 +270,7 @@ export default function CDSideNav(): React.ReactElement {
           {isServiceOverridesEnabled && (
             <SidebarLink label={getString('common.overrides')} to={routes.toServiceOverrides({ ...params, module })} />
           )}
-          {!isCommunity && !hideGitopsOnPrem ? (
+          {!isCommunity ? (
             <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />
           ) : null}
           <ProjectSetupMenu module={module} />
