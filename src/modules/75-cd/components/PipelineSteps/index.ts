@@ -56,7 +56,6 @@ import { CFDeleteStack } from './CloudFormation/DeleteStack/DeleteStack'
 import { CFCreateStack } from './CloudFormation/CreateStack/CreateStack'
 import { SshServiceSpec } from './SshServiceSpec/SshServiceSpec'
 import { WinRmServiceSpec } from './WinRmServiceSpec/WinRmServiceSpec'
-import { CreatePr } from './CreatePrStep/CreatePrStep'
 import { MergePR } from './MergePrStep/MergePrStep'
 import { FetchInstanceScript } from './FetchInstanceScriptStep/FetchInstanceScriptStep'
 import { AzureWebAppRollback } from './AzureWebAppRollback/AzureWebAppRollback'
@@ -201,7 +200,6 @@ factory.registerStep(new CFDeleteStack())
 factory.registerStep(new CFCreateStack())
 factory.registerStep(new SshServiceSpec())
 factory.registerStep(new WinRmServiceSpec())
-factory.registerStep(new CreatePr())
 factory.registerStep(new UpdateReleaseRepo())
 factory.registerStep(new GitOpsFetchLinkedApps())
 factory.registerStep(new MergePR())
