@@ -276,9 +276,11 @@ const SAMLProviderV2: React.FC<Props> = ({
                     }}
                     checked={samlSetting.authenticationEnabled}
                   />
-                  <Text color={Color.GREY_800} font={{ weight: 'bold' }} lineClamp={1} padding={{ right: 'medium' }}>
-                    {samlSetting.displayName}
-                  </Text>
+                  <Container width="25%">
+                    <Text color={Color.GREY_800} font={{ weight: 'bold' }} lineClamp={1} padding={{ right: 'medium' }}>
+                      {samlSetting.displayName}
+                    </Text>
+                  </Container>
                   <Layout.Horizontal width="25%" padding={{ right: 'large' }}>
                     <Text
                       className={css.displayNamePlaceholder}
