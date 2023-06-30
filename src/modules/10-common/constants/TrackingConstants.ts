@@ -41,6 +41,12 @@ export enum StageActions {
   SelectConnectorType = 'Select Connector Type'
 }
 
+export enum AIChatActions {
+  ChatStarted = 'CS Bot chat started',
+  BotHelpful = 'CS Bot is helpful',
+  BotNotHelpful = 'CS Bot is not helpful'
+}
+
 export enum SecretActions {
   StartCreateSecret = 'Start Create Secret',
   SaveCreateSecret = 'Save Create Secret'

@@ -8,15 +8,21 @@
 import React, { useEffect } from 'react'
 
 import cx from 'classnames'
+import { Icon } from '@harness/icons'
+import { Popover } from '@harness/uicore'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import MainNav from '@common/navigation/MainNav'
 import SideNav from '@common/navigation/SideNav'
-
 import { useSidebar } from '@common/navigation/SidebarProvider'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { TrialLicenseBanner } from '@common/layouts/TrialLicenseBanner'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import DocsChat from '@common/components/DocsChat/DocsChat'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { String } from 'framework/strings'
 import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
@@ -28,6 +34,7 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   const { module } = useModuleInfo()
   const { trackPage, identifyUser } = useTelemetry()
   const { currentUserInfo } = useAppStore()
+  const chatEnabled = useFeatureFlag(FeatureFlag.PL_AI_SUPPORT_CHATBOT)
 
   useEffect(() => {
     if (pageName) {
@@ -58,6 +65,17 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
         {module && <FeatureBanner />}
         <div className={css.children}>{props.children}</div>
       </div>
+
+      {chatEnabled ? (
+        <div className={css.chatWrapper}>
+          <Popover interactionKind={PopoverInteractionKind.CLICK}>
+            <div className={css.chatButton}>
+              <Icon name="code-chat" size={24} /> <String stringID="common.csBot.askAIDA" />
+            </div>
+            <DocsChat />
+          </Popover>
+        </div>
+      ) : null}
     </div>
   )
 }

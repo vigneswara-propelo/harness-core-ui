@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -383,6 +383,7 @@ export interface AccessControlCheckError {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -565,6 +566,15 @@ export interface AuthenticationInfoDTO {
     [key: string]: string
   }
   principal: Principal
+}
+
+export interface BotQuestion {
+  model?: string
+  question?: string
+}
+
+export interface BotResponse {
+  response?: string
 }
 
 export type ChaosAuditEventData = AuditEventData & {
@@ -975,6 +985,7 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1358,6 +1369,7 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1738,6 +1750,13 @@ export interface ResponseAuditSettingsDTO {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseBotResponse {
+  correlationId?: string
+  data?: BotResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2134,6 +2153,7 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2371,7 +2391,7 @@ export type ResourceGroupRequestRequestBody = ResourceGroupRequest
 
 export type ResourceGroupV2RequestRequestBody = ResourceGroupV2Request
 
-export type PutTemplateRequestBody = void
+export type InsertOrUpdateTemplateRequestBody = void
 
 export type TestNotificationSettingProps = Omit<
   MutateProps<ResponseBoolean, Failure | Error, void, NotificationSettingDTO, void>,
@@ -2467,6 +2487,52 @@ export const listNotificationsPromise = (
   getUsingFetch<ResponsePageNotificationDTO, Failure | Error, ListNotificationsQueryParams, void>(
     getConfig('notifications/api'),
     `/notifications`,
+    props,
+    signal
+  )
+
+export type HarnessSupportBotProps = Omit<
+  MutateProps<ResponseBotResponse, Failure | Error, void, BotQuestion, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get response from Harness Support Bot
+ */
+export const HarnessSupportBot = (props: HarnessSupportBotProps) => (
+  <Mutate<ResponseBotResponse, Failure | Error, void, BotQuestion, void>
+    verb="POST"
+    path={`/notifications/harness-bot`}
+    base={getConfig('notifications/api')}
+    {...props}
+  />
+)
+
+export type UseHarnessSupportBotProps = Omit<
+  UseMutateProps<ResponseBotResponse, Failure | Error, void, BotQuestion, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get response from Harness Support Bot
+ */
+export const useHarnessSupportBot = (props: UseHarnessSupportBotProps) =>
+  useMutate<ResponseBotResponse, Failure | Error, void, BotQuestion, void>('POST', `/notifications/harness-bot`, {
+    base: getConfig('notifications/api'),
+    ...props
+  })
+
+/**
+ * Get response from Harness Support Bot
+ */
+export const harnessSupportBotPromise = (
+  props: MutateUsingFetchProps<ResponseBotResponse, Failure | Error, void, BotQuestion, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBotResponse, Failure | Error, void, BotQuestion, void>(
+    'POST',
+    getConfig('notifications/api'),
+    `/notifications/harness-bot`,
     props,
     signal
   )

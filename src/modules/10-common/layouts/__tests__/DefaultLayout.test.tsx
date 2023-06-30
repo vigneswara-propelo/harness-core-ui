@@ -85,13 +85,6 @@ useSaveFeedbackMock.mockImplementation(() => {
   }
 })
 
-jest.mock('@common/hooks/useFeatureFlag', () => ({
-  useFeatureFlag: jest.fn(() => true),
-  useFeatureFlags: jest.fn(() => {
-    return { FEATURE_ENFORCEMENT_ENABLED: true, FREE_PLAN_ENFORCEMENT_ENABLED: false }
-  })
-}))
-
 const BANNER_TEXT = 'This is a feature banner'
 const DISMISS_TEST_ID = 'feature-banner-dismiss'
 const TEST_PATH = '/account/my_account/:module'
@@ -113,7 +106,11 @@ describe('<DefaultLayout /> tests', () => {
     test('features banner is rendered', () => {
       featuresFactory.registerFeaturesByModule('cd', { features: [], renderMessage })
       const { container, getByText } = render(
-        <TestWrapper path={TEST_PATH} pathParams={{ module: 'cd' }}>
+        <TestWrapper
+          path={TEST_PATH}
+          pathParams={{ module: 'cd' }}
+          defaultFeatureFlagValues={{ FEATURE_ENFORCEMENT_ENABLED: true, FREE_PLAN_ENFORCEMENT_ENABLED: false }}
+        >
           <DefaultLayout />
         </TestWrapper>
       )
@@ -128,7 +125,11 @@ describe('<DefaultLayout /> tests', () => {
       featuresFactory.registerFeaturesByModule('cd', { features: [], renderMessage })
 
       const { getByTestId, getByText } = render(
-        <TestWrapper path={TEST_PATH} pathParams={{ module: 'cd' }}>
+        <TestWrapper
+          path={TEST_PATH}
+          pathParams={{ module: 'cd' }}
+          defaultFeatureFlagValues={{ FEATURE_ENFORCEMENT_ENABLED: true, FREE_PLAN_ENFORCEMENT_ENABLED: false }}
+        >
           <DefaultLayout />
         </TestWrapper>
       )
@@ -145,7 +146,11 @@ describe('<DefaultLayout /> tests', () => {
       featuresFactory.registerFeaturesByModule('ci', { features: [], renderMessage })
 
       const { getByText } = render(
-        <TestWrapper path={TEST_PATH} pathParams={{ module: 'cd' }}>
+        <TestWrapper
+          path={TEST_PATH}
+          pathParams={{ module: 'cd' }}
+          defaultFeatureFlagValues={{ FEATURE_ENFORCEMENT_ENABLED: true, FREE_PLAN_ENFORCEMENT_ENABLED: false }}
+        >
           <DefaultLayout />
           <Link to="/account/my_account/ci">To CI</Link>
           <Link to="/account/my_account/cd">To CD</Link>
@@ -181,7 +186,11 @@ describe('<DefaultLayout /> tests', () => {
         }
       })
       const { container, getByText } = render(
-        <TestWrapper path={TEST_PATH} pathParams={{ module: 'cd' }}>
+        <TestWrapper
+          path={TEST_PATH}
+          pathParams={{ module: 'cd' }}
+          defaultFeatureFlagValues={{ FEATURE_ENFORCEMENT_ENABLED: true, FREE_PLAN_ENFORCEMENT_ENABLED: false }}
+        >
           <DefaultLayout />
         </TestWrapper>
       )
@@ -201,7 +210,11 @@ describe('<DefaultLayout /> tests', () => {
         }
       })
       const { container, getByText } = render(
-        <TestWrapper path={TEST_PATH} pathParams={{ module: 'cd' }}>
+        <TestWrapper
+          path={TEST_PATH}
+          pathParams={{ module: 'cd' }}
+          defaultFeatureFlagValues={{ FEATURE_ENFORCEMENT_ENABLED: true, FREE_PLAN_ENFORCEMENT_ENABLED: false }}
+        >
           <DefaultLayout />
         </TestWrapper>
       )

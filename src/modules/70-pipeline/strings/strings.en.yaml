@@ -1884,7 +1884,7 @@ violationDetails: Violation details
 supplier: Supplier
 copilot:
   analyzeFailure: Unsure how to analyze failure?
-  askAIDA: Ask AIDA
+  askAIDA: '{{ $.common.csBot.askAIDA }}'
   label: Harness AIDA
   aidaFullText: Harness AI Development Assistant
   assist: I can assist you with debugging the issue and suggest solutions.

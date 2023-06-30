@@ -4,3 +4,4 @@ allowpaths:
   - /notifications
   - /settings
   - /templates
+  - /notifications/harness-bot

@@ -1556,3 +1556,7 @@ category: Category
 favorite:
   add: Add to Favorites
   remove: Remove from Favorites
+csBot:
+  askAIDA: Ask AIDA
+  title: Harness AIDA Chat
+  feedback: Was this answer helpful?

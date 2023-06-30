@@ -227,6 +227,9 @@ export interface StringsMap {
   'common.createFlag': string
   'common.createPipeline': string
   'common.creating': string
+  'common.csBot.askAIDA': string
+  'common.csBot.feedback': string
+  'common.csBot.title': string
   'common.current': string
   'common.currentUTCTime': string
   'common.currentlyAvailable': string
