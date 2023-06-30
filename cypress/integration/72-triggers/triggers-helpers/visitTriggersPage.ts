@@ -3,11 +3,16 @@ import {
   pipelineDetails,
   pipelineDetailsWithRoutingIdCall,
   pipelineInputSetTemplate,
-  TriggersRoute,
+  triggersRoute,
+  triggerRoute,
   pipelineSummaryCallAPI,
-  featureFlagsCall
+  featureFlagsCall,
+  accountId,
+  orgIdentifier,
+  projectId,
+  pipelineIdentifier
 } from '../../../support/70-pipeline/constants'
-import { getTriggerListAPI } from '../constansts'
+import { getTriggerAPI, getTriggerListAPI, updateTriggerAPI } from '../constansts'
 
 export const visitTriggersPage = (
   getTriggerListAPIFixture = 'pipeline/api/triggers/Cypress_Test_Trigger_Get_Empty_Trigger_List.json'
@@ -24,7 +29,9 @@ export const visitTriggersPage = (
         ]
       })
 
-      cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline.json' })
+      cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline.json' }).as(
+        'pipelineDetails'
+      )
 
       cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
         fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline.json'
@@ -48,7 +55,7 @@ export const visitTriggersPage = (
         })
 
         cy.initializeRoute()
-        cy.visit(TriggersRoute, {
+        cy.visit(triggersRoute, {
           timeout: 30000
         })
 
@@ -61,3 +68,90 @@ export const visitTriggersPage = (
     })
   })
 }
+
+export const visitTriggerPage = ({
+  name,
+  identifier,
+  enabled = true,
+  type,
+  yaml
+}: {
+  name?: string
+  identifier: string
+  enabled?: boolean
+  type: string
+  yaml: string
+}): void => {
+  beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          { uuid: null, name: 'NG_SVC_ENV_REDESIGN', enabled: true, lastUpdatedAt: 0 },
+          { uuid: null, name: 'CD_TRIGGER_V2', enabled: true, lastUpdatedAt: 0 },
+          { uuid: null, name: 'BAMBOO_ARTIFACT_NG', enabled: true, lastUpdatedAt: 0 }
+        ]
+      })
+
+      cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline.json' }).as(
+        'pipelineDetails'
+      )
+
+      cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
+        fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline.json'
+      })
+
+      cy.intercept('POST', inputSetsTemplateCall, {
+        fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Pipeline_Input_Sets_Template.json'
+      })
+
+      cy.intercept('GET', pipelineInputSetTemplate, {
+        fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Templates_Apply_Templates.json'
+      })
+
+      cy.intercept('GET', getTriggerAPI(identifier), {
+        body: getGetTriggerAPIResponse({ name, identifier, type, yaml, enabled })
+      }).as('getTrigger')
+
+      cy.intercept('PUT', updateTriggerAPI(identifier)).as('updateTriggerAPI')
+
+      cy.initializeRoute()
+      cy.visit(triggerRoute(identifier), {
+        timeout: 30000
+      })
+
+      cy.wait('@getTrigger')
+    })
+  })
+}
+
+const getGetTriggerAPIResponse = ({
+  name,
+  identifier,
+  enabled = true,
+  type,
+  yaml
+}: {
+  name?: string
+  identifier: string
+  enabled?: boolean
+  type: string
+  yaml: string
+}): Record<string, any> => ({
+  status: 'SUCCESS',
+  data: {
+    name: name ?? identifier,
+    identifier: identifier,
+    description: '',
+    type,
+    accountIdentifier: accountId,
+    orgIdentifier: orgIdentifier,
+    projectIdentifier: projectId,
+    targetIdentifier: pipelineIdentifier,
+    yaml,
+    enabled,
+    errorResponse: false,
+    stagesToExecute: []
+  }
+})

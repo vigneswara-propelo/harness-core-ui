@@ -7,16 +7,17 @@
 
 import { getArtifactsGithubPackages } from '../constansts'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
+import { getGithubPackageRegistryArtifactData } from './ArtifactTriggerConfig'
+import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'
 import { fillArtifactTriggerData } from './artifact-trigger-helpers/fillArtifactTriggerData'
+import { visitArtifactTriggerPage } from './artifact-trigger-helpers/visitArtifactTriggerPage'
 
 describe('Github Package Registry Artifact Trigger', () => {
-  visitTriggersPage()
+  const { identifier, connectorId, org, packageName, yaml } = getGithubPackageRegistryArtifactData()
   describe('Create new trigger', () => {
+    visitTriggersPage()
     const artifactTypeCy = 'Artifact_Github Package Registry'
-    const connectorId = 'testAWS'
-    const triggerName = 'Github Package Registry Trigger'
-    const org = 'test-org'
-    const packageName = 'nginx'
+
     const fillArtifactData = (): void => {
       cy.get('input[name="org"]').clear().type(org)
       cy.get('input[name="packageName"]').focus()
@@ -34,21 +35,24 @@ describe('Github Package Registry Artifact Trigger', () => {
     it('1: Pipeline Input', () => {
       fillArtifactTriggerData({
         artifactTypeCy,
-        triggerName,
+        triggerName: identifier,
         connectorId,
         fillArtifactData,
-        triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Github_Package_Registry_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: GithubPackageRegistry\n      spec:\n        packageName: ${packageName}\n        connectorRef: ${connectorId}\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n        packageType: container\n        org: ${org}\n        version: <+trigger.artifact.build>\n        versionRegex: <+trigger.artifact.build>\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n  inputYaml: |\n    pipeline:\n      identifier: GCR_Trigger\n      stages:\n        - stage:\n            identifier: S1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: ShellScript_1\n                      type: ShellScript\n                      timeout: 10m\n`
+        triggerYAML: yaml
       })
     })
-    it('2: InputSetRefs', () => {
-      fillArtifactTriggerData({
-        artifactTypeCy,
-        triggerName,
-        connectorId,
-        fillArtifactData,
-        inputSetRefs: ['inputset1', 'inputset2'],
-        triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Github_Package_Registry_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: GithubPackageRegistry\n      spec:\n        packageName: ${packageName}\n        connectorRef: ${connectorId}\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n        packageType: container\n        org: ${org}\n        version: <+trigger.artifact.build>\n        versionRegex: <+trigger.artifact.build>\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
-      })
+  })
+
+  describe('Edit trigger', () => {
+    const checkArtifactData = (): void => {
+      cy.get('input[name="org"]').should('have.value', org)
+      cy.get('input[name="packageName"]').should('have.value', packageName)
+    }
+
+    visitArtifactTriggerPage({ identifier, yaml })
+
+    it('1: Pipeline Input', () => {
+      editArtifactTriggerHelper({ connectorId, checkArtifactData, yaml })
     })
   })
 })
