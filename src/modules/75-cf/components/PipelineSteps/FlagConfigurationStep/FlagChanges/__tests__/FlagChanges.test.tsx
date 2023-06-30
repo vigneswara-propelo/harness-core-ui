@@ -27,7 +27,10 @@ jest.mock('../FlagChangesForm', () => ({
 
 const renderComponent = (props: Partial<FlagChangesProps> = {}): RenderResult =>
   render(
-    <TestWrapper>
+    <TestWrapper
+      path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/flag-changes"
+      pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+    >
       <FlagChanges
         fieldValues={{} as FlagChangesProps['fieldValues']}
         clearField={jest.fn()}
@@ -69,9 +72,10 @@ describe('FlagChanges', () => {
     renderComponent({ showRuntimeFixedSelector: true, setField: setFieldMock })
 
     await userEvent.click(screen.getByTestId('runtime-fixed-selector-button'))
-    await waitFor(() => expect(screen.getByText('Runtime input')).toBeInTheDocument())
 
+    await waitFor(() => expect(screen.getByText('Runtime input')).toBeInTheDocument())
     await userEvent.click(screen.getByText('Runtime input'))
+
     await waitFor(() =>
       expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining('spec.instructions'), RUNTIME_INPUT_VALUE)
     )

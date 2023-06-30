@@ -6,6 +6,7 @@
  */
 
 import { cloneDeep, omit } from 'lodash-es'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import preProcessFormValues from '../preProcessFormValues'
 import {
   mockCompleteInstruction,
@@ -17,17 +18,23 @@ import {
 
 describe('preProcessFormValues', () => {
   describe('percentage rollout', () => {
+    const projectIdentifier = 'projId'
+    const orgIdentifier = 'orgId'
     describe('noop', () => {
       test('it should preform no actions when there are no instructions', async () => {
         const initialValues = omit(mockInitialValues, 'spec.instructions')
 
-        expect(preProcessFormValues(cloneDeep(initialValues), mockFeatures)).toEqual(initialValues)
+        expect(preProcessFormValues(cloneDeep(initialValues), mockFeatures, projectIdentifier, orgIdentifier)).toEqual(
+          initialValues
+        )
       })
 
       test('it should preform no actions when there are no features', async () => {
         const initialValues = mockInitialValues
 
-        expect(preProcessFormValues(cloneDeep(initialValues), null)).toEqual(initialValues)
+        expect(preProcessFormValues(cloneDeep(initialValues), null, projectIdentifier, orgIdentifier)).toEqual(
+          initialValues
+        )
       })
 
       test('it should preform no actions when there is no matching feature', async () => {
@@ -35,20 +42,26 @@ describe('preProcessFormValues', () => {
         const features = cloneDeep(mockFeatures)
         features.features?.shift()
 
-        expect(preProcessFormValues(cloneDeep(initialValues), features)).toEqual(initialValues)
+        expect(preProcessFormValues(cloneDeep(initialValues), features, projectIdentifier, orgIdentifier)).toEqual(
+          initialValues
+        )
       })
 
       test('it should preform no actions when the instruction contains all variations in the correct order', async () => {
         const initialValues = mockInitialValues
 
-        expect(preProcessFormValues(cloneDeep(initialValues), mockFeatures)).toEqual(initialValues)
+        expect(preProcessFormValues(cloneDeep(initialValues), mockFeatures, projectIdentifier, orgIdentifier)).toEqual(
+          initialValues
+        )
       })
 
       test("it should preform no action when the instruction isn't a percentage rollout instruction", async () => {
         const initialValues = omit(mockInitialValues, 'spec.instructions')
         initialValues.spec.instructions = [mockNonPercentageRolloutInstruction]
 
-        expect(preProcessFormValues(cloneDeep(initialValues), mockFeatures)).toEqual(initialValues)
+        expect(preProcessFormValues(cloneDeep(initialValues), mockFeatures, projectIdentifier, orgIdentifier)).toEqual(
+          initialValues
+        )
       })
     })
 
@@ -56,7 +69,7 @@ describe('preProcessFormValues', () => {
       const initialValues = omit(mockInitialValues, 'spec.instructions')
       initialValues.spec.instructions = [mockIncompleteInstruction]
 
-      const response = preProcessFormValues(cloneDeep(initialValues), mockFeatures)
+      const response = preProcessFormValues(cloneDeep(initialValues), mockFeatures, projectIdentifier, orgIdentifier)
 
       expect(response).not.toEqual(initialValues)
       expect(response.spec.instructions).toEqual(
@@ -86,10 +99,18 @@ describe('preProcessFormValues', () => {
 
       initialValues.spec.instructions = [instruction]
 
-      const response = preProcessFormValues(cloneDeep(initialValues), mockFeatures)
+      const response = preProcessFormValues(cloneDeep(initialValues), mockFeatures, projectIdentifier, orgIdentifier)
 
       expect(response).not.toEqual(initialValues)
       expect(response.spec.instructions).toEqual(expect.arrayContaining([mockCompleteInstruction]))
+    })
+
+    test('it should display the instructions as runtime input value if there is no project or org id', async () => {
+      const initialValues = omit(mockInitialValues, 'spec.instructions')
+
+      const response = preProcessFormValues(cloneDeep(initialValues), mockFeatures)
+      expect(response.spec.instructions).not.toEqual(expect.arrayContaining([mockCompleteInstruction]))
+      expect(response.spec.instructions).toEqual(RUNTIME_INPUT_VALUE)
     })
   })
 })

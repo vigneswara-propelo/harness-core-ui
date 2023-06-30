@@ -18,13 +18,13 @@ import {
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { FeatureFlagConfigurationInstruction, FlagConfigurationStepFormDataValues } from '../types'
 import FlagChangesForm, { FlagChangesFormProps } from './FlagChangesForm'
-
 import subSectionCSS from './SubSection.module.scss'
 import css from './FlagChanges.module.scss'
 
@@ -56,7 +56,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
   flagType = MultiTypeInputType.FIXED
 }) => {
   const { getString } = useStrings()
-
+  const { orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const prefix = useCallback<(path: string) => string>(
     path => (pathPrefix ? `${pathPrefix}.${path}` : path),
     [pathPrefix]
@@ -69,6 +69,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
     if (flagOrEnvNotFixed) {
       setField(instructionsPath, RUNTIME_INPUT_VALUE)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flagOrEnvNotFixed, instructionsPath])
 
   const subsectionsDisabled = showRuntimeFixedSelector && get(fieldValues, instructionsPath) === RUNTIME_INPUT_VALUE
@@ -104,7 +105,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
             allowedTypes={allowedTypes}
             onChange={type => setField(instructionsPath, isMultiTypeRuntime(type) ? RUNTIME_INPUT_VALUE : undefined)}
             data-testid="runtime-fixed-selector-button"
-            disabled={flagOrEnvNotFixed}
+            disabled={!projectIdentifier || !orgIdentifier ? true : flagOrEnvNotFixed}
           />
         )}
       </Layout.Horizontal>

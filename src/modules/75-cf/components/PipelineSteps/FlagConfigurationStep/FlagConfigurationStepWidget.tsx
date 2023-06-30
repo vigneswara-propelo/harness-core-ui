@@ -67,7 +67,8 @@ const FlagConfigurationStepWidget = forwardRef(
       refetch: refetchEnvironments
     } = useGetEnvironmentList({
       queryParams: envQueryParams,
-      debounce: 250
+      debounce: 250,
+      lazy: true
     })
 
     const featureQueryParams: GetAllFeaturesQueryParams = {
@@ -83,15 +84,18 @@ const FlagConfigurationStepWidget = forwardRef(
       loading: loadingFeatures,
       error: errorFeatures,
       refetch: refetchFeatures
-    } = useGetAllFeatures({ queryParams: featureQueryParams, debounce: 250 })
+    } = useGetAllFeatures({ queryParams: featureQueryParams, debounce: 250, lazy: true })
 
     const loading = loadingEnvironments || loadingFeatures
     const error = errorEnvironments || errorFeatures
 
     const initialFormValues = useMemo(
-      () => preProcessFormValues(initialValues, featuresData),
-      [initialValues, featuresData]
+      () => preProcessFormValues(initialValues, featuresData, projectIdentifier, orgIdentifier),
+      [initialValues, featuresData, projectIdentifier, orgIdentifier]
     )
+
+    const allowedTypes =
+      !orgIdentifier || !projectIdentifier ? ([MultiTypeInputType.RUNTIME] as AllowedTypes) : allowableTypes
 
     const showLoading = useMemo<boolean>(() => {
       if (isInitialRender) {
@@ -240,7 +244,7 @@ const FlagConfigurationStepWidget = forwardRef(
                 disabled={readonly}
                 multiTypeInputProps={{
                   disabled: readonly,
-                  allowableTypes,
+                  allowableTypes: allowedTypes,
                   onTypeChange: setEnvType,
                   onInput: event => {
                     if (envType === MultiTypeInputType.FIXED) {
@@ -259,7 +263,7 @@ const FlagConfigurationStepWidget = forwardRef(
                 disabled={readonly}
                 multiTypeInputProps={{
                   disabled: readonly,
-                  allowableTypes,
+                  allowableTypes: allowedTypes,
                   onTypeChange: setFlagType,
                   onInput: event => {
                     if (flagType === MultiTypeInputType.FIXED) {

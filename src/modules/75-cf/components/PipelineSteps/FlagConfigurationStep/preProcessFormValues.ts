@@ -5,12 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { Features } from 'services/cf'
 import type { FlagConfigurationStepData } from './types'
 
 export default function preProcessFormValues(
   initialValues: FlagConfigurationStepData,
-  featuresData: Features | null
+  featuresData: Features | null,
+  projectIdentifier?: string,
+  orgIdentifier?: string
 ): FlagConfigurationStepData {
   if (Array.isArray(initialValues.spec.instructions) && featuresData?.features) {
     const feature = featuresData.features.find(({ identifier }) => identifier === initialValues.spec.feature)
@@ -29,5 +32,10 @@ export default function preProcessFormValues(
     }
   }
 
+  if (!projectIdentifier || !orgIdentifier) {
+    initialValues.spec.environment = RUNTIME_INPUT_VALUE
+    initialValues.spec.feature = RUNTIME_INPUT_VALUE
+    initialValues.spec.instructions = RUNTIME_INPUT_VALUE
+  }
   return initialValues
 }
