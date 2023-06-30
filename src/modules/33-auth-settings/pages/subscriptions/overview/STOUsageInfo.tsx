@@ -100,7 +100,7 @@ const STOUsageInfo: React.FC = () => {
       />
       <SecurityScans
         rightHeader={usage?.sto?.activeScans?.displayName || ''}
-        subscribedScans={limit?.sto?.totalScans || 0}
+        subscribedScans={limit?.sto?.totalDevelopers !== undefined ? limit?.sto?.totalDevelopers * 100 : 0}
         activeScans={usage?.sto?.activeScans?.count || 0}
       />
     </Layout.Horizontal>
