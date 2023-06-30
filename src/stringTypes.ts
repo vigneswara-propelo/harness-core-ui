@@ -9827,11 +9827,13 @@ export interface StringsMap {
   'cv.yourExistingErrorBudgetIs': string
   'cv.zoom': string
   'iacm.ansible': string
+  'iacm.betaMaxTimeoutMessage': string
   'iacm.cdk': string
   'iacm.cloudformation': string
   'iacm.navTitle': string
   'iacm.permissions.iacmWorkspace': string
   'iacm.permissions.iacmWorkspaces': string
+  'iacm.pipelineSteps.approvalDescription': string
   'iacm.pipelineSteps.description': string
   'iacm.pipelineSteps.required': string
   'iacm.pulumi': string

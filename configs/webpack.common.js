@@ -299,6 +299,8 @@ if (!enableIACM) {
   config.resolve.alias['iacm/IACMStage'] = ChildAppError
   config.resolve.alias['iacm/IACMStageInputSet'] = ChildAppError
   config.resolve.alias['iacm/IACMPipelineResources'] = ChildAppError
+  config.resolve.alias['iacm/IACMApproval'] = ChildAppError
+  config.resolve.alias['iacm/IACMApprovalConsoleView'] = ChildAppError
 }
 
 if (!enableSSCA) {

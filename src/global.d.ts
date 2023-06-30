@@ -237,6 +237,14 @@ declare module 'iacm/IACMPipelineResources' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
+declare module 'iacm/IACMApproval' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+declare module 'iacm/IACMApprovalConsoleView' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
 
 declare module 'ssca/MicroFrontendApp' {
   const ChildApp: ChildAppComponent

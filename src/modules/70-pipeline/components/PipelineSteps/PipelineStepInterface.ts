@@ -219,7 +219,6 @@ export enum StepType {
   AwsSamService = 'AwsSamService',
   AwsSamInfra = 'AwsSamInfra',
   DownloadManifests = 'DownloadManifests',
-  IACMTerraformPlugin = 'IACMTerraformPlugin',
   DownloadServerlessManifests = 'DownloadServerlessManifests',
   ServerlessAwsLambdaRollbackV2 = 'ServerlessAwsLambdaRollbackV2',
   Rancher = 'Rancher',
@@ -227,7 +226,9 @@ export enum StepType {
   ServerlessAwsLambdaPrepareRollbackV2 = 'ServerlessAwsLambdaPrepareRollbackV2',
   ServerlessAwsLambdaPackageV2 = 'ServerlessAwsLambdaPackageV2',
   ServerlessAwsLambdaDeployV2 = 'ServerlessAwsLambdaDeployV2',
-  Coverity = 'Coverity'
+  Coverity = 'Coverity',
+  IACMTerraformPlugin = 'IACMTerraformPlugin',
+  IACMApproval = 'IACMApproval'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

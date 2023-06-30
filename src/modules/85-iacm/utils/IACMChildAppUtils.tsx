@@ -30,6 +30,8 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { useGetConnector, useGetListOfBranchesByRefConnectorV2, useGetListOfReposByRefConnector } from 'services/cd-ng'
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { Duration } from '@common/exports'
+import { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/components/LogsContent/LogsContent'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -39,14 +41,17 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   MultiTypeConnectorField,
   MultiTypeFieldSelector,
   ConnectorReferenceField,
-  MultiTypeSecretInput
+  MultiTypeSecretInput,
+  Duration,
+  DefaultConsoleViewStepDetails
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
   createTemplate,
   getStyles,
   isDuplicateStageId,
-  getNameAndIdentifierSchema
+  getNameAndIdentifierSchema,
+  logsRenderer
 }
 
 const customHooks: IACMCustomMicroFrontendProps['customHooks'] = {

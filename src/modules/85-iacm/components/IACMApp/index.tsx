@@ -23,7 +23,9 @@ export const IACMApp = (): React.ReactElement => (
 )
 
 export const IACMComponentMap = {
-  IACMStage: lazy(() => import('iacm/IACMStage'))
+  IACMStage: lazy(() => import('iacm/IACMStage')),
+  RemoteIACMApproval: lazy(() => import('iacm/IACMApproval')),
+  RemoteIACMApprovalConsoleView: lazy(() => import('iacm/IACMApprovalConsoleView'))
 }
 
 export const IACMComponentMounter = <T,>(props: {

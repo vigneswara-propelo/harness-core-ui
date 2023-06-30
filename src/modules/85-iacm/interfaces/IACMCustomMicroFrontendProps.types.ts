@@ -26,6 +26,8 @@ import type {
 } from 'services/cd-ng'
 import type { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import type { Duration } from '@common/exports'
+import type { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/components/LogsContent/LogsContent'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -42,6 +44,7 @@ export interface IACMCustomMicroFrontendProps {
     isDuplicateStageId: typeof isDuplicateStageId
     getNameAndIdentifierSchema: typeof getNameAndIdentifierSchema
     getStyles: typeof getStyles
+    logsRenderer: typeof logsRenderer
   }
   customComponents: {
     ApprovalStageOverview: typeof ApprovalStageOverview
@@ -52,5 +55,7 @@ export interface IACMCustomMicroFrontendProps {
     MultiTypeFieldSelector: typeof MultiTypeFieldSelector
     ConnectorReferenceField: typeof ConnectorReferenceField
     MultiTypeSecretInput: typeof MultiTypeSecretInput
+    Duration: typeof Duration
+    DefaultConsoleViewStepDetails: typeof DefaultConsoleViewStepDetails
   }
 }
