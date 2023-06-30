@@ -97,26 +97,33 @@ export default function EditableRow({
     }
   }
 
+  const getInitialValues = (): ServiceOverrideRowFormState => {
+    if (isNil(overrideDetails)) {
+      return {}
+    }
+    const variableValue = (overrideDetails as VariableOverrideDetails).variableValue
+    const manifestValue = (overrideDetails as ManifestOverrideDetails).manifestValue
+    const configFileValue = (overrideDetails as ConfigFileOverrideDetails).configFileValue
+    const applicationSettingsValue = (overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue
+    const connectionStringsValue = (overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue
+
+    return {
+      environmentRef,
+      infraIdentifier,
+      serviceRef,
+      overrideType,
+      ...(!isNil(variableValue) && { variables: [{ ...variableValue }] }),
+      ...(!isNil(manifestValue) && { manifests: [{ ...manifestValue }] }),
+      ...(!isNil(configFileValue) && { configFiles: [{ ...configFileValue }] }),
+      ...(!isNil(applicationSettingsValue) && { applicationSettings: { ...applicationSettingsValue } }),
+      ...(!isNil(connectionStringsValue) && { connectionStrings: { ...connectionStringsValue } })
+    }
+  }
+
   return (
     <Formik<ServiceOverrideRowFormState>
       formName="editableServiceOverride"
-      initialValues={
-        isNil(overrideDetails)
-          ? {}
-          : {
-              environmentRef,
-              infraIdentifier,
-              serviceRef,
-              overrideType,
-              variables: [{ ...(overrideDetails as VariableOverrideDetails).variableValue }],
-              manifests: [{ ...(overrideDetails as ManifestOverrideDetails).manifestValue }],
-              configFiles: [{ ...(overrideDetails as ConfigFileOverrideDetails).configFileValue }],
-              applicationSettings: {
-                ...(overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue
-              },
-              connectionStrings: { ...(overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue }
-            }
-      }
+      initialValues={getInitialValues()}
       onSubmit={handleSubmit}
     >
       <FormikForm>

@@ -9,6 +9,7 @@ import type {
 import type { StringKeys } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { RequiredField } from '@common/interfaces/RouteInterfaces'
+import { isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
 export enum ServiceOverridesTab {
   ENV_GLOBAL_OVERRIDE = 'ENV_GLOBAL_OVERRIDE',
@@ -163,15 +164,33 @@ export const validateServiceOverrideRow = (
     validationArray.push('common.serviceOverrides.overrideType', 'common.serviceOverrides.overrideSpec')
   }
 
-  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(values.variables?.[0]?.name)) {
+  const variableName = values.variables?.[0]?.name
+  const variableType = values.variables?.[0]?.type
+  const variableValue = values.variables?.[0]?.value
+
+  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(variableName)) {
     validationArray.push('variableNameLabel')
   }
 
-  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(values.variables?.[0]?.type)) {
+  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(variableType)) {
     validationArray.push('common.variableType')
   }
 
-  if (values.overrideType === OverrideTypes.VARIABLE && isEmpty(values.variables?.[0]?.value)) {
+  const numberVariableValidation =
+    (isValueFixed(variableValue) && isNaN(variableValue as number)) ||
+    (typeof variableValue === 'string' && isEmpty(variableValue))
+
+  if (
+    values.overrideType === OverrideTypes.VARIABLE &&
+    (isValueRuntimeInput(variableValue)
+      ? false
+      : isValueExpression(variableValue)
+      ? !isEmpty(variableValue)
+        ? false
+        : true
+      : (variableType !== 'Number' && isEmpty(variableValue)) ||
+        (variableType === 'Number' && numberVariableValidation))
+  ) {
     validationArray.push('cd.overrideValue')
   }
 

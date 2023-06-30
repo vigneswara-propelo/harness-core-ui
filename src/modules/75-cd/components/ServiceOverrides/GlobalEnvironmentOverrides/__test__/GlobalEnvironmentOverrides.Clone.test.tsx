@@ -165,11 +165,7 @@ describe('EnvironmentServiceSpecificOverrides Edit test', () => {
       orgIdentifier: 'dummyOrg',
       projectIdentifier: 'dummyProject',
       spec: {
-        variables: [{ name: 'var2', type: 'String', value: 'varValue2' }],
-        manifests: [{}],
-        configFiles: [{}],
-        applicationSettings: {},
-        connectionStrings: {}
+        variables: [{ name: 'var2', type: 'String', value: 'varValue2' }]
       },
       type: 'ENV_GLOBAL_OVERRIDE'
     })
