@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
@@ -80,7 +81,8 @@ describe('artifactory test cases', () => {
         repository: '<+input>',
         repositoryUrl: 'test',
         repositoryFormat: 'docker',
-        tagType: TagTypes.Value
+        tagType: TagTypes.Value,
+        digest: RUNTIME_INPUT_VALUE
       }
     } as any
     const { container } = render(
@@ -101,7 +103,8 @@ describe('artifactory test cases', () => {
           artifactPath: '<+input>',
           tag: '<+input>',
           repositoryFormat: 'docker',
-          repositoryUrl: 'test'
+          repositoryUrl: 'test',
+          digest: RUNTIME_INPUT_VALUE
         }
       })
     })

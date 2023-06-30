@@ -22,7 +22,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { merge, defaultTo, memoize } from 'lodash-es'
+import { merge, defaultTo, memoize, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 
@@ -43,6 +43,7 @@ import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,
   getConnectorIdValue,
+  resetFieldValue,
   shouldFetchFieldOptions,
   shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -63,6 +64,7 @@ import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } fr
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
 import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { Nexus3ArtifactDigestField } from './Nexus3DigestField'
 import { getRequestOptions } from '../helper'
 
 import css from '../../ArtifactConnector.module.scss'
@@ -104,7 +106,7 @@ export function Nexus3Artifact({
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN } = useFeatureFlags()
+  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({ repositoryFormat: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
@@ -490,7 +492,9 @@ export function Nexus3Artifact({
       false
     ) as Nexus2InitialValuesType
   }
-  const submitFormData = (formData: Nexus2InitialValuesType & { connectorId?: string }): void => {
+  const submitFormData = (
+    formData: Nexus2InitialValuesType & { connectorId?: string; digest?: SelectOption | string }
+  ): void => {
     let specData: specInterface =
       formData.repositoryFormat === RepositoryFormatTypes.Maven
         ? {
@@ -525,10 +529,12 @@ export function Nexus3Artifact({
     const tagData =
       formData.tagType === 'value'
         ? {
-            tag: defaultTo(formData.tag?.value, formData.tag)
+            tag: defaultTo(formData.tag?.value, formData.tag),
+            digest: defaultTo(get(formData?.digest, 'value'), formData?.digest)
           }
         : {
-            tagRegex: formData.tagRegex
+            tagRegex: formData.tagRegex,
+            digest: defaultTo(formData?.digest, '')
           }
     const formatedFormData = {
       spec: {
@@ -993,6 +999,10 @@ export function Nexus3Artifact({
                       radioGroup={{ inline: true }}
                       items={repositoryPortOrServer}
                       className={css.radioGroup}
+                      onChange={() => {
+                        resetFieldValue(formik, 'spec.repositoryUrl')
+                        resetFieldValue(formik, 'spec.repositoryPort')
+                      }}
                     />
                   </div>
 
@@ -1127,6 +1137,16 @@ export function Nexus3Artifact({
                 isImagePath={false}
                 tooltipId="nexus3-tag"
               />
+              {CD_NG_DOCKER_ARTIFACT_DIGEST && formik.values?.repositoryFormat === RepositoryFormatTypes.Docker && (
+                <Nexus3ArtifactDigestField
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  isReadonly={isReadonly}
+                  connectorRefValue={getConnectorRefQueryData()}
+                  isTagDetailsLoading={nexusBuildDetailsLoading}
+                />
+              )}
             </div>
             {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">

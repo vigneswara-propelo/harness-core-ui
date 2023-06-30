@@ -61,6 +61,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -76,6 +77,8 @@ import {
   getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
+import { useGetDigestDetailsForArtifactoryArtifact } from './useGetDigestDetailsForArtifactoryArtifact'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface ArtifactoryRenderContent extends ArtifactSourceRenderProps {
@@ -231,6 +234,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       get(initialValues, `artifacts.${artifactPath}.spec.repositoryFormat`, '')
     )
   )
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
 
   const selectedDeploymentType: ServiceDeploymentType = useMemo(() => {
     let selectedStageSpec: DeploymentStageConfig = getStageFromPipeline(
@@ -292,6 +296,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const repositoryValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repository`, ''), artifact?.spec?.repository),
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+  )
+  const tagValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
+    get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
+  )
+  const repositoryUrlValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repositoryUrl`, ''), artifact?.spec?.repositoryUrl),
+    get(initialValues?.artifacts, `${artifactPath}.spec.repositoryUrl`, '')
   )
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
@@ -495,6 +507,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     isMultiService
   ])
 
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
@@ -560,6 +573,35 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
         fetchTagsError: fetchTagsV2Error
       }
 
+  const {
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    artifactoryDigestData: digestData
+  } = useGetDigestDetailsForArtifactoryArtifact({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    repositoryFormat: repoFormat,
+    repositoryUrl: getFinalQueryParamValue(repositoryUrlValue),
+    artifactPathValue: getFinalQueryParamValue(artifactPathValue),
+    repository: getFinalQueryParamValue(repositoryValue),
+    tag: getFinalQueryParamValue(tagValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
+  })
   const canFetchTags = (): boolean => {
     return (
       (!artifactoryTagsData?.data && !fetchTagsError) ||
@@ -773,6 +815,22 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             selectedDeploymentType={selectedDeploymentType}
             isGenericArtifactory={isGenericArtifactory}
           />
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                  disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                />
+              </div>
+            )}
         </Layout.Vertical>
       )}
     </>

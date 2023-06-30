@@ -32,6 +32,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -42,6 +43,8 @@ import {
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
 } from '../artifactSourceUtils'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
+import { useGetDigestDetailsForGithubPackageRegistryArtifact } from './useGetDigestDetailsForGithubPackageRegistryArtifact'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
@@ -84,6 +87,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     branch
   }
 
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
+
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`)
@@ -99,6 +105,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const packageTypeValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageType`, ''), artifact?.spec?.packageType),
     get(initialValues?.artifacts, `${artifactPath}.spec.packageType`)
+  )
+
+  const versionValue = getDefaultQueryParam(
+    get(initialValues?.artifacts, `${artifactPath}.spec.version`),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.version`, ''), artifact?.spec?.version)
   )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -242,6 +253,35 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         errorFetchingVersion: errorFetchingV2Version,
         versionDetails: versionV2Details
       }
+
+  const {
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    gprDigestData: digestData
+  } = useGetDigestDetailsForGithubPackageRegistryArtifact({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    org: getFinalQueryParamValue(orgValue),
+    packageName: getFinalQueryParamValue(packageNameValue),
+    packageType: getFinalQueryParamValue(packageTypeValue),
+    version: getFinalQueryParamValue(versionValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
+  })
 
   const selectPackageItems = useMemo(() => {
     return packageDetails?.data?.githubPackageResponse?.map((packageInfo: GithubPackageDTO) => ({
@@ -463,6 +503,22 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               }}
             />
           )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                  disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                />
+              </div>
+            )}
         </Layout.Vertical>
       )}
     </>

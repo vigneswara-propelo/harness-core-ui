@@ -9,7 +9,7 @@ import React from 'react'
 
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   ArtifactType,
@@ -77,6 +77,7 @@ const initialValues: Nexus2InitialValuesType = {
   tagType: TagTypes.Value,
   tag: '<+input>',
   tagRegex: '',
+  digest: RUNTIME_INPUT_VALUE,
   repository: 'repository',
   spec: {
     artifactPath: '',
@@ -206,6 +207,7 @@ describe('Nexus Artifact tests', () => {
           repository: 'cdp-test-group2',
           tag: '<+input>',
           repositoryFormat: 'docker',
+          digest: RUNTIME_INPUT_VALUE,
           spec: {
             artifactPath: 'artifact-path',
             repositoryUrl: 'repositoryUrl'
@@ -249,6 +251,7 @@ describe('Nexus Artifact tests', () => {
       tag: '',
       tagType: TagTypes.Value,
       tagRegex: '',
+      digest: RUNTIME_INPUT_VALUE,
       repository: '',
       spec: {
         artifactPath: '',
@@ -304,6 +307,7 @@ describe('Nexus Artifact tests', () => {
           repository: 'cdp-test-group2',
           tag: '<+input>',
           repositoryFormat: 'docker',
+          digest: RUNTIME_INPUT_VALUE,
           spec: {
             artifactPath: 'artifact-path',
             repositoryPort: 'repositoryPort'
@@ -322,6 +326,7 @@ describe('Nexus Artifact tests', () => {
       tagType: TagTypes.Value,
       tagRegex: '',
       repository: '',
+      digest: RUNTIME_INPUT_VALUE,
       spec: {
         artifactPath: '',
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryPort,
@@ -376,6 +381,7 @@ describe('Nexus Artifact tests', () => {
           connectorRef: '',
           repository: 'cdp-test-group2',
           tagRegex: '<+input>',
+          digest: RUNTIME_INPUT_VALUE,
           repositoryFormat: 'docker',
           spec: {
             artifactPath: 'artifact-path',

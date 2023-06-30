@@ -148,7 +148,8 @@ function ArtifactImagePathTagView({
     if (
       selectedArtifact === ENABLED_ARTIFACT_TYPES.DockerRegistry ||
       selectedArtifact === ENABLED_ARTIFACT_TYPES.Gcr ||
-      selectedArtifact === ENABLED_ARTIFACT_TYPES.Ecr
+      selectedArtifact === ENABLED_ARTIFACT_TYPES.Ecr ||
+      selectedArtifact === ENABLED_ARTIFACT_TYPES.Nexus3Registry
     ) {
       resetFieldValue(formik, 'digest')
     }

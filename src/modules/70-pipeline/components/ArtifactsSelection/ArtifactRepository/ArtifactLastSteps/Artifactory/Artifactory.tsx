@@ -53,7 +53,8 @@ import {
   getConnectorRefQueryData,
   shouldHideHeaderAndNavBtns,
   isTemplateView,
-  resetFieldValue
+  resetFieldValue,
+  getLabelValueObject
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getHelpeTextForTags,
@@ -76,12 +77,12 @@ import type {
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults, selectItemsMapper } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import ServerlessArtifactoryRepository from './ServerlessArtifactoryRepository'
+import { ArtifactoryArtifactDigestField } from './ArtifactoryDigestField'
 import css from '../../ArtifactConnector.module.scss'
 
 const getRepositoryValue = (
@@ -133,7 +134,7 @@ function Artifactory({
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
   const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
   const isAWSLambdaDeploymentTypeSelected = isAWSLambdaDeploymentType(selectedDeploymentType)
-  const CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = useFeatureFlag(FeatureFlag.CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY)
+  const { CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const showRepositoryFormatForAllowedTypes =
     isSSHWinRmDeploymentType ||
@@ -371,11 +372,13 @@ function Artifactory({
       getMultiTypeFromValue(artifactFormDataValues.artifactPath) === MultiTypeInputType.FIXED &&
       (artifactFormDataValues.artifactPath as string)?.length
     ) {
-      artifactFormDataValues.artifactPath = {
-        label: artifactFormDataValues?.artifactPath,
-        value: artifactFormDataValues?.artifactPath
-      } as SelectOption
+      artifactFormDataValues.artifactPath = getLabelValueObject(artifactFormDataValues?.artifactPath as string)
     }
+
+    artifactFormDataValues.digest =
+      getMultiTypeFromValue(artifactFormDataValues.digest) === MultiTypeInputType.FIXED
+        ? getLabelValueObject(artifactFormDataValues.digest)
+        : artifactFormDataValues.digest
     return artifactFormDataValues
   }, [initialValues, selectedArtifact, isIdentifierAllowed, isGenericArtifactory])
 
@@ -384,13 +387,16 @@ function Artifactory({
     merge(artifactObj.spec, {
       repository: getRepositoryValue(formData, isGenericArtifactory),
       repositoryUrl: formData?.repositoryUrl,
-      repositoryFormat: isArtifactTemplate ? defaultTo(formData.repositoryFormat, repositoryFormat) : repositoryFormat
+      repositoryFormat: isArtifactTemplate ? defaultTo(formData.repositoryFormat, repositoryFormat) : repositoryFormat,
+      digest: defaultTo(formData?.digest?.value, formData?.digest)
     })
 
     if (isAzureWebAppGeneric) {
       delete artifactObj?.spec?.repositoryUrl
     }
-
+    if (isGenericArtifactory) {
+      delete artifactObj?.spec?.digest
+    }
     handleSubmit(artifactObj)
   }
 
@@ -527,6 +533,7 @@ function Artifactory({
                           showRepositoryFormatForAllowedTypes &&
                             selectedRepoFormatValue?.value === RepositoryFormatTypes.Generic
                         )
+                        resetFieldValue(formik, 'digest')
                       }}
                     />
                   </div>
@@ -735,6 +742,7 @@ function Artifactory({
                     onChange={() => {
                       resetFieldValue(formik, 'tagRegex')
                       resetFieldValue(formik, 'tag')
+                      resetFieldValue(formik, 'digest')
                     }}
                   />
                 </div>
@@ -815,6 +823,16 @@ function Artifactory({
                     )}
                   </div>
                 ) : null}
+                {CD_NG_DOCKER_ARTIFACT_DIGEST && !isGenericArtifactory && (
+                  <ArtifactoryArtifactDigestField
+                    formik={formik}
+                    expressions={expressions}
+                    allowableTypes={allowableTypes}
+                    isReadonly={isReadonly}
+                    connectorRefValue={connectorRef}
+                    isTagDetailsLoading={artifactoryBuildDetailsLoading}
+                  />
+                )}
               </div>
               {!hideHeaderAndNavBtns && (
                 <Layout.Horizontal spacing="medium">

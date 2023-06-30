@@ -17,6 +17,7 @@ import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServi
 import { GithubPackageRegistrySource } from '../GithubPackageRegistrySource'
 import {
   commonFormikInitialValues,
+  digestData,
   packagesData,
   templateGithubPackageRegistry,
   templateGithubPackageRegistryWithVersionRegex,
@@ -27,6 +28,7 @@ import {
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchPackages = jest.fn().mockReturnValue(packagesData)
 const fetchVersions = jest.fn().mockReturnValue(versionsData)
+const fetchDigest = jest.fn().mockReturnValue(digestData)
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
@@ -44,6 +46,12 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetVersionsFromPackages: jest.fn().mockImplementation(() => {
     return { data: versionsData, refetch: fetchVersions, error: null, loading: false }
+  }),
+  useGetLastSuccessfulVersionWithServiceV2: jest.fn().mockImplementation(() => {
+    return { data: digestData, refetch: fetchDigest, error: null, loading: false }
+  }),
+  useGetLastSuccessfulVersion: jest.fn().mockImplementation(() => {
+    return { data: digestData, refetch: fetchDigest, error: null, loading: false }
   })
 }))
 

@@ -23,7 +23,7 @@ import {
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { defaultTo, isNil, memoize } from 'lodash-es'
+import { defaultTo, get, isNil, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import type { IItemRendererProps } from '@blueprintjs/select'
@@ -53,9 +53,11 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { GithubPackageRegistryArtifactDigestField } from './GithubPackageRegistryDigestField'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -141,6 +143,8 @@ function FormComponent({
       org: orgValue
     }
   })
+
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const selectPackageItems = useMemo(() => {
     return packageDetails?.data?.githubPackageResponse?.map((packageInfo: GithubPackageDTO) => ({
@@ -341,6 +345,7 @@ function FormComponent({
               // to clearValues when version is changed
               resetFieldValue(formik, 'spec.version')
               resetFieldValue(formik, 'spec.versionRegex')
+              resetFieldValue(formik, 'spec.digest')
             }}
           />
         </div>
@@ -421,6 +426,16 @@ function FormComponent({
             )}
           </div>
         )}
+        {CD_NG_DOCKER_ARTIFACT_DIGEST && (
+          <GithubPackageRegistryArtifactDigestField
+            formik={formik}
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            isReadonly={isReadonly}
+            connectorRefValue={connectorRefValue as string}
+            isVersionDetailsLoading={fetchingVersion}
+          />
+        )}
       </div>
       {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
@@ -472,16 +487,19 @@ export function GithubPackageRegistry(
     const versionData =
       (formData as any).versionType === TagTypes.Value
         ? {
-            version: defaultTo(formData.spec?.version, '')
+            version: defaultTo(formData.spec?.version, ''),
+            digest: defaultTo(get(formData.spec?.digest, 'value'), formData.spec?.digest)
           }
         : {
-            versionRegex: defaultTo(formData.spec?.versionRegex, '')
+            versionRegex: defaultTo(formData.spec?.versionRegex, ''),
+            digest: formData.spec?.digest
           }
     const identifierData = isIdentifierAllowed
       ? {
           identifier: formData.identifier
         }
       : {}
+
     handleSubmit({
       ...identifierData,
       spec: {

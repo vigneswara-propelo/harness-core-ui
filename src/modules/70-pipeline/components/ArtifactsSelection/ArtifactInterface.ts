@@ -191,6 +191,7 @@ export interface GithubPackageRegistryInitialValuesType {
     packageName: string
     version: string
     versionRegex: string
+    digest?: string
   }
 }
 
@@ -344,6 +345,7 @@ export interface Nexus2InitialValuesType {
   repository: string
   repositoryFormat: string
   spec: NexusSpecType
+  digest?: SelectOption | string // mainly used in Nexus3
 }
 
 export interface JenkinsArtifactType {
@@ -397,6 +399,9 @@ export interface ArtifactTagHelperText {
   feed?: string
   tag?: string
   version?: string
+  org?: string
+  packageType?: string
+  repositoryUrl?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType

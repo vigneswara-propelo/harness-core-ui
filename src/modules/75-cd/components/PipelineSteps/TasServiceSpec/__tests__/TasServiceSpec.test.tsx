@@ -19,7 +19,7 @@ import {
 } from './TasServiceSpecHelper'
 import { mockBuildList, mockManifestConnector } from './mocks'
 import { mockConnectorResponse, mockCreateConnectorResponse } from '../../Common/mocks/connector'
-import { mockDockerTagsCallResponse } from '../../K8sServiceSpec/__tests__/mocks'
+import { mockDockerDigestCallResponse, mockDockerTagsCallResponse } from '../../K8sServiceSpec/__tests__/mocks'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -35,7 +35,9 @@ jest.mock('services/cd-ng', () => ({
     }
   }),
   useGetBuildDetailsForDockerWithYaml: () => mockDockerTagsCallResponse,
-  useGetLastSuccessfulBuildForDocker: () => mockDockerTagsCallResponse,
+  useGetLastSuccessfulBuildForDocker: () => mockDockerDigestCallResponse,
+  useGetLastSuccessfulBuildForArtifactoryArtifact: () => mockDockerDigestCallResponse,
+  useGetLastSuccessfulBuildArtifactoryArtifactWithYaml: () => mockDockerDigestCallResponse,
   useGetBuildDetailsForDocker: jest.fn().mockImplementation(() => {
     return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
   }),

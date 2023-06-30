@@ -64,6 +64,31 @@ export const versionsData = {
   correlationId: '8b6291b9-3b68-4b0b-bde2-ca25147d100e'
 }
 
+export const digestData = {
+  status: 'SUCCESS',
+  data: {
+    number: 'pr-13',
+    revision: null,
+    description: null,
+    artifactPath: 'ghcr.io/docker/docker-index:pr-13',
+    buildUrl: null,
+    buildDisplayName: 'docker-index: pr-13',
+    buildFullDisplayName: 'sha256:e598aa88997d5148a285e937c0ba21290660c3f26a97b51b6c4f2635f0935fbf',
+    artifactFileSize: null,
+    uiDisplayName: 'Tag# pr-13',
+    status: 'SUCCESS',
+    buildParameters: {},
+    metadata: {
+      SHAV2: 'sha256:e598aa88997d5148a285e937c0ba21290660c3f26a97b51b6c4f2635f0935fbf',
+      SHA: 'sha256:e598aa88997d5148a285e937c0ba21290660c3f26a97b51b6c4f2635f0935fbf'
+    },
+    labels: {},
+    artifactFileMetadataList: []
+  },
+  metaData: null,
+  correlationId: '41a35cf7-7f51-4f55-9068-5879b95c0e19'
+}
+
 export const templateGithubPackageRegistryWithVersionRegex: ServiceSpec = {
   artifacts: {
     primary: {

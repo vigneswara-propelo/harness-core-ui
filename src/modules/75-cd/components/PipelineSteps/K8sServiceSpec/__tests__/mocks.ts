@@ -8,6 +8,7 @@
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import type { ResponsePMSPipelineResponseDTO } from 'services/pipeline-ng'
 import type { UseGetReturnData } from '@common/utils/testUtils'
+import { digestData } from '../ArtifactSource/GithubPackageRegistrySource/__tests__/mock'
 
 export const mockConnectorResponse: UseGetReturnData<ResponseConnectorResponse> = {
   loading: false,
@@ -229,7 +230,12 @@ export const mockDockerTagsCallResponse = {
   error: null,
   cancel: jest.fn()
 }
-
+export const mockDockerDigestCallResponse = {
+  data: digestData,
+  refetch: jest.fn(),
+  error: null,
+  cancel: jest.fn()
+}
 export const getYaml = () => `
 pipeline:
     name: testK8s

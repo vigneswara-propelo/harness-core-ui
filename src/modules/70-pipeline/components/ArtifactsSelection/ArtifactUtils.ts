@@ -213,6 +213,30 @@ export const helperTextDataForDigest = (
         connectorRef: connectorIdValue,
         tag: formik.values?.tag
       }
+    case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
+      return {
+        repository: formik.values?.repository,
+        repositoryFormat: formik.values?.repositoryFormat,
+        artifactPath: formik.values?.spec?.artifactPath,
+        connectorRef: connectorIdValue,
+        tag: formik.values?.tag
+      }
+    case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+      return {
+        connectorRef: connectorIdValue,
+        org: formik?.values?.spec?.org,
+        packageName: formik?.values?.spec?.packageName,
+        packageType: formik?.values?.spec?.packageType,
+        version: formik?.values?.spec?.version
+      }
+    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
+      return {
+        connectorRef: connectorIdValue,
+        repository: formik.values?.repository,
+        repositoryFormat: formik.values?.repositoryFormat,
+        repositoryUrl: formik.values?.repositoryUrl,
+        artifactPath: formik.values?.spec?.artifactPath
+      }
     default:
       return {} as ArtifactTagHelperText
   }
@@ -352,7 +376,11 @@ const getDigestValues = (specValues: any): ImagePathTypes => {
   }
   return values
 }
-const getGarDigestValues = (specValues: GoogleArtifactRegistryInitialValuesType & { [key: string]: any }) => {
+const getGarDigestValues = (
+  specValues:
+    | GoogleArtifactRegistryInitialValuesType
+    | (GithubPackageRegistryInitialValuesType & { [key: string]: any })
+) => {
   const values = produce(specValues, draft => {
     if (specValues?.spec?.digest && getMultiTypeFromValue(specValues?.spec?.digest) === MultiTypeInputType.FIXED) {
       if (
@@ -452,6 +480,7 @@ export const getArtifactFormData = (
       break
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       values = getRepoValues(specValues)
+      values = getGcrDigestValues(values as ImagePathTypes) // also works for nexus 3
       break
     case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
       values = getRepoValuesForNexus2(specValues)
@@ -472,11 +501,22 @@ export const getArtifactFormData = (
   if (selectedArtifact === ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry) {
     values = getGarDigestValues(values as GoogleArtifactRegistryInitialValuesType)
   }
+  if (selectedArtifact === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry) {
+    values = getGarDigestValues(values as GithubPackageRegistryInitialValuesType) // also works for Github Package Registry
+  }
 
   if (isIdentifierAllowed && initialValues?.identifier) {
     merge(values, { identifier: initialValues?.identifier })
   }
   return values
+}
+
+// Artifactory artifactPath & digest values are handled with this
+export const getLabelValueObject = (formValue: string): SelectOption => {
+  return {
+    label: formValue,
+    value: formValue
+  }
 }
 
 const getVersionValues = (
@@ -624,6 +664,7 @@ export const defaultArtifactInitialValues = (
         tagType: TagTypes.Value,
         tag: RUNTIME_INPUT_VALUE,
         tagRegex: RUNTIME_INPUT_VALUE,
+        digest: RUNTIME_INPUT_VALUE,
         repository: '',
         repositoryFormat: selectedDeploymentType === ServiceDeploymentType.AwsLambda ? 'maven' : 'docker',
         spec: {
@@ -675,7 +716,8 @@ export const defaultArtifactInitialValues = (
           org: '',
           packageName: '',
           version: '',
-          versionRegex: ''
+          versionRegex: '',
+          digest: RUNTIME_INPUT_VALUE
         }
       }
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:

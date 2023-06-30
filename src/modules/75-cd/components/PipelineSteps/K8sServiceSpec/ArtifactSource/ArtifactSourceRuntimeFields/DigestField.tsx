@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { memoize } from 'lodash-es'
-import { SelectOption, Text, useToaster } from '@harness/uicore'
+import { SelectOption, useToaster } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -16,6 +16,7 @@ import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactor
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { Failure } from 'services/cd-ng'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { NoDigestResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/BaseArtifactDigestField'
 import { BuildDetailsDTO, getTagError } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
@@ -114,7 +115,12 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
             : digestList,
           usePortal: true,
           addClearBtn: !readonly,
-          noResults: <Text lineClamp={1}>{getTagError(fetchDigestError)}</Text>,
+          noResults: (
+            <NoDigestResults
+              digestError={fetchDigestError}
+              noDigestText={getString('pipeline.artifactsSelection.errors.nodigest')}
+            />
+          ),
           itemRenderer,
           allowCreatingNewItems: true,
           popoverClassName: css.selectPopover,

@@ -55,6 +55,8 @@ import {
   DefaultParam
 } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
+import { useGetDigestDetailsForNexus3Artifact } from './useGetDigestDetailsForNexus3Artifact'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
@@ -84,9 +86,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     artifactPath,
     serviceIdentifier,
     stepViewType,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
-  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN } = useFeatureFlags()
+  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const [groupIds, setGroupIds] = useState<SelectOption[]>([])
   const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
@@ -123,6 +126,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       artifact?.spec?.repositoryFormat
     ),
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryFormat`, '')
+  )
+  const tagValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
+    get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
@@ -362,6 +369,37 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: artifactQueryParams,
     lazy: true,
     debounce: 300
+  })
+
+  const {
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    nexus3DigestData: digestData
+  } = useGetDigestDetailsForNexus3Artifact({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    repositoryFormat: getFinalQueryParamValue(repositoryFormatValue),
+    repositoryUrl: getFinalQueryParamValue(repositoryUrlValue),
+    repositoryPort: getFinalQueryParamValue(repositoryPortValue),
+    artifactPathValue: getFinalQueryParamValue(artifactPathValue),
+    repository: getFinalQueryParamValue(repositoryValue),
+    tag: getFinalQueryParamValue(tagValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
   })
 
   const selectRepositoryItems = useMemo(() => {
@@ -908,6 +946,22 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               template={template}
             />
           )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                  disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                />
+              </div>
+            )}
         </Layout.Vertical>
       )}
     </>
