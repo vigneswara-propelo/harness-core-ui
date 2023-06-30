@@ -55,7 +55,7 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
         }
         return (
           <Container key={`${locationValue}${i}`} onClick={() => handleClick(locationValue)}>
-            {isHarnessFileStore && <Icon name="edit" margin={{ right: 'xsmall' }} />}
+            {isHarnessFileStore && <Icon name="main-view" margin={{ right: 'xsmall' }} />}
             <Text color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''} lineClamp={1}>
               {locationValue}
               {!isTooltip && locations.length !== i + 1 ? ` ,` : null}
