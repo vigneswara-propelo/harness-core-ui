@@ -45,6 +45,7 @@ import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -131,72 +132,20 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GAMEDAY, {
     name: 'chaos-main'
   },
   moduleLabel: 'chaos.chaosGameday',
-  resourceLabel: 'chaos.chaosGameday'
-})
+  resourceLabel: 'chaos.chaosGameday',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-// RBAC registrations
-RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
-  icon: 'chaos-main',
-  label: 'common.purpose.chaos.chaos'
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
-  icon: 'chaos-main',
-  label: 'chaos.chaosHub',
-  category: ResourceCategory.CHAOS,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    return routes.toChaosGameDay({
+      accountId: accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      identifier: resource.identifier
+    })
   }
 })
 
-RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_EXPERIMENT, {
-  icon: 'chaos-main',
-  label: 'chaos.chaosExperiment',
-  category: ResourceCategory.CHAOS,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.delete" />,
-    [PermissionIdentifier.EXECUTE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.execute" />
-  }
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
-  icon: 'chaos-main',
-  label: 'chaos.chaosInfrastructure',
-  category: ResourceCategory.CHAOS,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.delete" />
-  }
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
-  icon: 'chaos-main',
-  label: 'chaos.chaosGameday',
-  category: ResourceCategory.CHAOS,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
-  }
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SECURITY_GOVERNANCE, {
-  icon: 'chaos-main',
-  label: 'chaos.navLabels.security',
-  category: ResourceCategory.CHAOS,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_CHAOS_SECURITY_GOVERNANCE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_CHAOS_SECURITY_GOVERNANCE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_CHAOS_SECURITY_GOVERNANCE]: <LocaleString stringID="rbac.permissionLabels.delete" />
-  }
-})
-
-// RedirectToChaosProject: if project is selected redirects to project dashboard, else to module homepage
+// if project is selected redirects to project dashboard, else to module homepage
 const RedirectToChaosProject = (): React.ReactElement => {
   const { accountId } = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
@@ -216,30 +165,102 @@ const RedirectToChaosProject = (): React.ReactElement => {
   }
 }
 
+// redirect to trial page, to be used by license redirect
+const RedirectToModuleTrialHome = (): React.ReactElement => {
+  const { accountId } = useParams<{
+    accountId: string
+  }>()
+
+  return (
+    <Redirect
+      to={routes.toModuleTrialHome({
+        accountId,
+        module: 'chaos'
+      })}
+    />
+  )
+}
+
+const licenseRedirectData: LicenseRedirectProps = {
+  licenseStateName: LICENSE_STATE_NAMES.CHAOS_LICENSE_STATE,
+  startTrialRedirect: RedirectToModuleTrialHome,
+  expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CHAOS)
+}
+
 export default function ChaosRoutes(): React.ReactElement {
+  // feature flags to control RBAC registrations
+  const { CHAOS_GAMEDAY_ENABLED, CHAOS_SECURITY_GOVERNANCE, PL_DISCOVERY_ENABLE } = useFeatureFlags()
+
   // Pipeline registrations
   PipelineStudioFactory.registerStep(new ChaosExperimentStep())
 
-  const RedirectToModuleTrialHome = (): React.ReactElement => {
-    const { accountId } = useParams<{
-      accountId: string
-    }>()
+  // RBAC registrations
+  RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
+    icon: 'chaos-main',
+    label: 'common.purpose.chaos.chaos'
+  })
 
-    return (
-      <Redirect
-        to={routes.toModuleTrialHome({
-          accountId,
-          module: 'chaos'
-        })}
-      />
-    )
-  }
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosHub',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    }
+  })
 
-  const licenseRedirectData: LicenseRedirectProps = {
-    licenseStateName: LICENSE_STATE_NAMES.CHAOS_LICENSE_STATE,
-    startTrialRedirect: RedirectToModuleTrialHome,
-    expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CHAOS)
-  }
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_EXPERIMENT, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosExperiment',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.delete" />,
+      [PermissionIdentifier.EXECUTE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.execute" />
+    }
+  })
+
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosInfrastructure',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    }
+  })
+
+  if (CHAOS_GAMEDAY_ENABLED)
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
+      icon: 'chaos-main',
+      label: 'chaos.chaosGameday',
+      category: ResourceCategory.CHAOS,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
+      }
+    })
+
+  if (CHAOS_SECURITY_GOVERNANCE)
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SECURITY_GOVERNANCE, {
+      icon: 'chaos-main',
+      label: 'chaos.navLabels.security',
+      category: ResourceCategory.CHAOS,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_CHAOS_SECURITY_GOVERNANCE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_SECURITY_GOVERNANCE]: (
+          <LocaleString stringID="rbac.permissionLabels.createEdit" />
+        ),
+        [PermissionIdentifier.DELETE_CHAOS_SECURITY_GOVERNANCE]: (
+          <LocaleString stringID="rbac.permissionLabels.delete" />
+        )
+      }
+    })
 
   return (
     <>
@@ -283,12 +304,11 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       {/* Common platform routes */}
-      {
+      {PL_DISCOVERY_ENABLE &&
         DiscoveryRouteDestinations({
           moduleParams: chaosModuleParams,
           sidebarProps: ChaosSideNavProps
-        })?.props.children
-      }
+        })?.props.children}
 
       {
         SecretRouteDestinations({
@@ -299,13 +319,6 @@ export default function ChaosRoutes(): React.ReactElement {
 
       {
         VariableRouteDestinations({
-          moduleParams: chaosModuleParams,
-          sidebarProps: ChaosSideNavProps
-        })?.props.children
-      }
-
-      {
-        DiscoveryRouteDestinations({
           moduleParams: chaosModuleParams,
           sidebarProps: ChaosSideNavProps
         })?.props.children

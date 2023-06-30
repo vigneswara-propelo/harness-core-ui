@@ -166,9 +166,9 @@ export enum PermissionIdentifier {
   VIEW_CHAOS_GAMEDAY = 'chaos_chaosgameday_view',
   EDIT_CHAOS_GAMEDAY = 'chaos_chaosgameday_edit',
   DELETE_CHAOS_GAMEDAY = 'chaos_chaosgameday_delete',
-  VIEW_CHAOS_SECURITY_GOVERNANCE = 'chaos_securitygovernance_view',
-  EDIT_CHAOS_SECURITY_GOVERNANCE = 'chaos_securitygovernance_edit',
-  DELETE_CHAOS_SECURITY_GOVERNANCE = 'chaos_securitygovernance_delete',
+  VIEW_CHAOS_SECURITY_GOVERNANCE = 'chaos_chaossecuritygovernance_view',
+  EDIT_CHAOS_SECURITY_GOVERNANCE = 'chaos_chaossecuritygovernance_edit',
+  DELETE_CHAOS_SECURITY_GOVERNANCE = 'chaos_chaossecuritygovernance_delete',
 
   // STO Permissions
   VIEW_STO_ISSUE = 'sto_issue_view',
