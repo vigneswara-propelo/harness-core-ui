@@ -72,6 +72,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isErrorTrackingEnabled = licenseInformation['CET']?.status === 'ACTIVE'
   const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
   const isSSCAEnabled = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
+  const isCetCdIntegrationEnabled = useFeatureFlag(FeatureFlag.CET_CD_INTEGRATION)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
@@ -277,7 +278,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if ((isCI || isCIInPipeline) && isErrorTrackingEnabled) {
+  if ((isCI || isCIInPipeline || ((isCD || isCDInPipeline) && isCetCdIntegrationEnabled)) && isErrorTrackingEnabled) {
     tabList.push({
       id: TAB_ID_MAP.ERROR_TRACKING,
       title: (
