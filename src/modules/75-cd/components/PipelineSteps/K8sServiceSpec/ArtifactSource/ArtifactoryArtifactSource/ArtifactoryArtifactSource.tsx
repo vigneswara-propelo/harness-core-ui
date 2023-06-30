@@ -275,9 +275,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     /* istanbul ignore else */
     if (parsedService) {
       const artifactsList = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
-      const artifactDetailsFromServiceYaml = artifactsList?.primary?.sources?.find(
-        artifactInfo => artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier
-      )
+      // The below check handles backward compatibility and ensures that repo format gets correctly evaluated
+      // for a single artifact service (deprecated)
+      const artifactDetailsFromServiceYaml = artifactsList?.primary?.sources
+        ? artifactsList.primary.sources.find(
+            artifactInfo => artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier
+          )
+        : get(artifactsList, `${artifactPath}`)
+
       const serviceRepoFormat = artifactDetailsFromServiceYaml?.spec?.repositoryFormat
       if (serviceRepoFormat) {
         setRepoFormat(serviceRepoFormat)
