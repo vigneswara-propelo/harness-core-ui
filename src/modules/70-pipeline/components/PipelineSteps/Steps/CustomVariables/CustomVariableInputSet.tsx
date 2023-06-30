@@ -129,7 +129,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
           </Text>
         </section>
       )}
-      {template?.variables?.map?.(variable => {
+      {template?.variables?.map?.((variable, templateIndex) => {
         // find Index from values, not from template variables
         // because the order of the variables might not be the same
         const index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
@@ -220,7 +220,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                   label=""
                   disabled={inputSetData?.readonly}
                   template={template}
-                  fieldPath={`variables[${index}].value`}
+                  fieldPath={`${basePath}[${templateIndex}].value`}
                   variableNamePath={`${basePath}[${index}].name`}
                 />
               )}
