@@ -54,7 +54,7 @@ export interface ServerlessPackageVariableStepProps {
 export class ServerlessAwsLambdaDeployV2Step extends PipelineStep<ServerlessAwsLambdaDeployV2StepInitialValues> {
   protected type = StepType.ServerlessAwsLambdaDeployV2
   protected stepName = 'Serverless Deploy Step'
-  protected stepIcon: IconName = 'serverless-deploy-step'
+  protected stepIcon: IconName = 'serverless-aws-lambda-deploy-v2'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessLambdaDeploy'
   protected isHarnessSpecific = false
   protected referenceId = 'ServerlessAwsLambdaDeployV2Step'

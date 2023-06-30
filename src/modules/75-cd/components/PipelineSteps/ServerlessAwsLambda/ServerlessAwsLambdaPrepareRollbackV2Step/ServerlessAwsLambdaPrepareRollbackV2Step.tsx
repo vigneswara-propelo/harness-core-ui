@@ -52,7 +52,7 @@ export interface ServerlessPrepareRollbackVariableStepProps {
 export class ServerlessAwsLambdaPrepareRollbackV2Step extends PipelineStep<ServerlessAwsLambdaPrepareRollbackV2StepInitialValues> {
   protected type = StepType.ServerlessAwsLambdaPrepareRollbackV2
   protected stepName = 'Serverless Prepare Rollback Step'
-  protected stepIcon: IconName = 'serverless-deploy-step'
+  protected stepIcon: IconName = 'serverless-aws-lambda-prepare-rollback'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessPrepareRollback'
   protected isHarnessSpecific = false
   protected referenceId = 'ServerlessPrepareRollbackStep'

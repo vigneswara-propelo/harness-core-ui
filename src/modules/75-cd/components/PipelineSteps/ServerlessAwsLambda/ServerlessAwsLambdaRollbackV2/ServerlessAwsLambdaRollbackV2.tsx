@@ -33,7 +33,7 @@ interface ServerlessAwsLambdaRollbackV2VariableStepProps {
 export class ServerlessAwsLambdaRollbackV2Step extends PipelineStep<StepElementConfig> {
   protected type = StepType.ServerlessAwsLambdaRollbackV2
   protected stepName = 'Serverless Aws Lambda Rollback'
-  protected stepIcon: IconName = 'undo'
+  protected stepIcon: IconName = 'serverless-aws-lambda-rollback-v2'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessLambdaRollback'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {

@@ -33,7 +33,7 @@ interface DownloadServerlessManifestsVariableStepProps {
 export class DownloadServerlessManifestsStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.DownloadServerlessManifests
   protected stepName = 'Download Serverless Manifests'
-  protected stepIcon: IconName = 'aws-sam-download-manifests'
+  protected stepIcon: IconName = 'serverless-aws-lambda-download'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DownloadManifests'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
