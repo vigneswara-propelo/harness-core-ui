@@ -504,7 +504,7 @@ export const validateStage = ({
             getStepTypeByDeploymentType(serviceInput?.serviceInputs?.serviceDefinition?.type)
           )
           const serviceStepErrorResponse = serviceStep?.validateInputSet({
-            data: serviceInput.serviceInputs?.serviceDefinition.spec,
+            data: serviceInput?.serviceInputs?.serviceDefinition?.spec,
             template: templateStageConfig?.services?.values?.[index]?.serviceInputs?.serviceDefinition?.spec,
             getString,
             viewType
