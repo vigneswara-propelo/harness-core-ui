@@ -101,12 +101,7 @@ export default function DeployEnvSpecifications(
         if (specObject) {
           // istanbul ignore else
           if (value.environment) {
-            specObject.environment = {
-              ...value.environment,
-              provisioner:
-                (value.environment.provisioner && stage?.stage?.spec?.environment?.provisioner) ||
-                value.environment.provisioner
-            }
+            specObject.environment = value.environment
             delete specObject.environments
             delete specObject.environmentGroup
           } else if (value.environments) {

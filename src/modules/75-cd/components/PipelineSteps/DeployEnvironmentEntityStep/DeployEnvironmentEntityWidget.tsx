@@ -38,6 +38,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
@@ -80,6 +81,7 @@ export default function DeployEnvironmentEntityWidget({
   const { getString } = useStrings()
   const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
   const { scope } = usePipelineContext()
+  const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2 } = useFeatureFlags()
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
   const environmentsTypeRef = useRef<MultiTypeInputType | null>(null)
@@ -317,11 +319,15 @@ export default function DeployEnvironmentEntityWidget({
     }
   }
 
+  const isSingleEnvEnabled = React.useMemo(() => {
+    return CD_NG_DYNAMIC_PROVISIONING_ENV_V2 && formikRef.current?.values.category === 'single'
+  }, [formikRef.current?.values.category])
+
   return (
     <>
       <Formik<DeployEnvironmentEntityFormState>
         // ! Do not set enableReinitialize to true.
-        // enableReinitialize
+        enableReinitialize={!!isSingleEnvEnabled}
         formName="deployEnvironmentEntityWidgetForm"
         onSubmit={noop}
         validate={(values: DeployEnvironmentEntityFormState) => {
@@ -337,7 +343,6 @@ export default function DeployEnvironmentEntityWidget({
 
           const isMultiEnvironment = values.category === 'multi'
           const isEnvironmentGroup = values.category === 'group'
-
           const toggleLabel = getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
             name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
           })
