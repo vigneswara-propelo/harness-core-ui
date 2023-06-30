@@ -93,11 +93,15 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
 
   let offset = 0
   const tokens: AnserJsonWithLink[] = ansiToJson(txt, { use_classes: true }).flatMap(row => {
-    const linkTokens = tokenize(row.content)
+    /** We have to parse deparse this due to issue with linkifyjs
+     * https://github.com/Hypercontext/linkifyjs/issues/442
+     * */
+    const htmlDeparsedToken = row.content.replace(/&lt;/g, '<').replace(/&amp;/g, '&')
+    const linkTokens = tokenize(htmlDeparsedToken)
 
     return linkTokens.map(token => ({
       ...row,
-      content: token.toString(),
+      content: sanitizeHTML(token.toString()),
       isLink: token.isLink
     }))
   })
