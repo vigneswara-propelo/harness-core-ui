@@ -17,7 +17,12 @@ import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/type
 import factory from '@pipeline/factories/ExecutionFactory'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { Duration } from '@common/components/Duration/Duration'
-import { ExecutionStatus, isExecutionFailed, isExecutionComplete } from '@pipeline/utils/statusHelpers'
+import {
+  ExecutionStatus,
+  isExecutionFailed,
+  isExecutionComplete,
+  isExecutionExpired
+} from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -131,14 +136,16 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
           />
         </>
       ) : (
-        <Text
-          font={{
-            variation: FontVariation.H6
-          }}
-          color={Color.GREY_500}
-        >
-          {getString('pipeline.stageExpired')}
-        </Text>
+        isExecutionExpired(stage?.status) && (
+          <Text
+            font={{
+              variation: FontVariation.H6
+            }}
+            color={Color.GREY_500}
+          >
+            {getString('pipeline.stageExpired')}
+          </Text>
+        )
       )}
     </div>
   )
