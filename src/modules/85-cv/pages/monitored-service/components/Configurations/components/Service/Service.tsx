@@ -254,6 +254,18 @@ function Service(
                   {getString('cv.healthSource.defineYourSource')}
                 </Text>
               ) : null}
+              {isChangeSrcSectionHidden ? null : (
+                <ChangeSourceTableContainer
+                  onEdit={values => {
+                    showDrawer({ ...values, hideDrawer })
+                  }}
+                  onAddNewChangeSource={() => {
+                    openChangeSourceDrawer({ formik, onSuccessChangeSource })
+                  }}
+                  value={formik.values?.sources?.changeSources}
+                  onSuccess={onSuccessChangeSource}
+                />
+              )}
               {isHealthSrcSectionHidden ? null : (
                 <HealthSourceTableContainer
                   healthSourceListFromAPI={initialValues.sources?.healthSources}
@@ -272,18 +284,6 @@ function Service(
                       onSuccess
                     })
                   }}
-                />
-              )}
-              {isChangeSrcSectionHidden ? null : (
-                <ChangeSourceTableContainer
-                  onEdit={values => {
-                    showDrawer({ ...values, hideDrawer })
-                  }}
-                  onAddNewChangeSource={() => {
-                    openChangeSourceDrawer({ formik, onSuccessChangeSource })
-                  }}
-                  value={formik.values?.sources?.changeSources}
-                  onSuccess={onSuccessChangeSource}
                 />
               )}
               {isNotificationsSectionHidden ? null : (
