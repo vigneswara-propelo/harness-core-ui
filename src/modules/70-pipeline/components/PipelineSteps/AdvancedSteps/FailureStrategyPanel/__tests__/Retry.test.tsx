@@ -113,6 +113,16 @@ describe('Failure Strategy: Retry', () => {
       return Promise.resolve()
     })
 
+    expect(
+      queryFieldAndStrategy('failureStrategies[0].onFailure.action.spec.onRetryFailure.action.type', Strategy.Retry)
+    ).toBeNull()
+    expect(
+      queryFieldAndStrategy(
+        'failureStrategies[0].onFailure.action.spec.onRetryFailure.action.type',
+        Strategy.ProceedWithDefaultValues
+      )
+    ).toBeNull()
+
     const selection2 = queryFieldAndStrategy(
       'failureStrategies[0].onFailure.action.spec.onRetryFailure.action.type',
       Strategy.ManualIntervention

@@ -62,7 +62,8 @@ export function ManualInterventionStep(props: BaseStepProps): React.ReactElement
           Strategy.ManualIntervention,
           parentStrategy || Strategy.ManualIntervention,
           Strategy.Retry,
-          Strategy.PipelineRollback
+          Strategy.PipelineRollback,
+          Strategy.ProceedWithDefaultValues
         ])}
         disabled={disabled}
       />
@@ -196,7 +197,8 @@ export function RetryStep(props: BaseStepProps): React.ReactElement {
         allowedStrategies={difference(allowedStrategies, [
           Strategy.Retry,
           Strategy.RetryStepGroup,
-          parentStrategy || Strategy.Retry
+          parentStrategy || Strategy.Retry,
+          Strategy.ProceedWithDefaultValues
         ])}
       />
     </div>

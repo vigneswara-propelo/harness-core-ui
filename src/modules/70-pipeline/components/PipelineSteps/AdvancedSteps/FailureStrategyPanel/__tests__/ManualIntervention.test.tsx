@@ -69,8 +69,7 @@ describe('Failure Strategy: ManualIntervention', () => {
     `)
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('"ManualIntervention" is not shown in "Retry" fallback step', async () => {
+  test('"Retry" and "ProceedWithDefaultValues" strategy should not be shown under post MI failure action', async () => {
     const { container } = render(
       <Basic data={{ failureStrategies: [{ onFailure: { errors: [], action: {} as any } }] }} mode={Modes.STEP} />
     )
@@ -85,20 +84,17 @@ describe('Failure Strategy: ManualIntervention', () => {
       return Promise.resolve()
     })
 
-    const selection2 = queryFieldAndStrategy(
-      'failureStrategies[0].onFailure.action.spec.onTimeout.action.type',
-      Strategy.ManualIntervention
-    )!
-
-    await act(() => {
-      fireEvent.click(selection2)
-      return Promise.resolve()
-    })
+    expect(
+      queryFieldAndStrategy(
+        'failureStrategies[0].onFailure.action.spec.onTimeout.action.spec.onRetryFailure.action.type',
+        Strategy.Retry
+      )
+    ).toBeNull()
 
     expect(
       queryFieldAndStrategy(
         'failureStrategies[0].onFailure.action.spec.onTimeout.action.spec.onRetryFailure.action.type',
-        Strategy.ManualIntervention
+        Strategy.ProceedWithDefaultValues
       )
     ).toBeNull()
 
