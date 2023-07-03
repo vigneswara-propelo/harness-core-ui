@@ -34,6 +34,8 @@ export interface FlagOptionsMenuButtonProps {
   ) => void
   queryParams: DeleteFeatureFlagQueryParams
   refetchFlags: () => void
+  clearFilter?: () => void
+  isLastArchivedFlag?: boolean
   noEdit?: boolean
 }
 
@@ -44,7 +46,9 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   deleteFlag,
   queryParams,
   refetchFlags,
-  noEdit = false
+  noEdit = false,
+  clearFilter,
+  isLastArchivedFlag
 }) => {
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
@@ -68,7 +72,12 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     gitSync,
     queryParams,
     deleteFeatureFlag: deleteFlag,
-    onSuccess: () => refetchFlags?.()
+    onSuccess: () => {
+      refetchFlags?.()
+      if (isLastArchivedFlag) {
+        clearFilter?.()
+      }
+    }
   })
 
   const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
@@ -81,7 +90,12 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   const openRestoreFlagDialog = useRestoreFlagDialog({
     flagData,
     queryParams,
-    onRestore: () => refetchFlags()
+    onRestore: () => {
+      refetchFlags()
+      if (isLastArchivedFlag) {
+        clearFilter?.()
+      }
+    }
   })
 
   const gotoDetailPage = (): void => {

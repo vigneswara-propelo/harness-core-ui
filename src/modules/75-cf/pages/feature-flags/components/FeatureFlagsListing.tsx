@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import type { Cell, CellProps, Column, Renderer } from 'react-table'
 import { Container, Layout, TableV2, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -30,6 +30,7 @@ import { FlagResult } from '../FlagResult'
 import { RenderFeatureFlag } from './RenderFeatureFlag'
 
 export interface FeatureFlagsListingProps {
+  clearFilter: () => void
   features?: Features | null
   toggleFeatureFlag: UseToggleFeatureFlag
   featureMetrics?: FeatureMetric[]
@@ -45,7 +46,7 @@ export interface FeatureFlagsListingProps {
   onRowClick: (flagId: string) => void
 }
 
-const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
+const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
   features,
   toggleFeatureFlag,
   featureMetrics,
@@ -55,10 +56,13 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
   refetchFlags,
   deleteFlag,
   queryParams,
-  onRowClick
+  onRowClick,
+  clearFilter
 }) => {
   const gitSync = useFFGitSyncContext()
   const { getString } = useStrings()
+
+  const isLastArchivedFlag = features?.features?.filter(flag => flag.archived === true).length === 1
 
   const RenderColumnDetails: Renderer<CellProps<Feature>> = ({ row }) => {
     const data = row.original
@@ -170,6 +174,8 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
               deleteFlag={deleteFlag}
               gitSync={gitSync}
               refetchFlags={refetchFlags}
+              clearFilter={clearFilter}
+              isLastArchivedFlag={isLastArchivedFlag}
             />
           </Container>
         ),

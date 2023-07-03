@@ -165,15 +165,15 @@ featureFlags:
   archiving:
     archiveFlag: Archive Flag
     archiveSuccess: Flag successfully archived
-    cannotArchive: '{{ flagIdentifier }} cannot be archived because it is still being used by the following flags as a prerequisite'
+    cannotArchive: '<strong>{{ flagIdentifier }}</strong> cannot be archived because it is still being used by the following flags as a prerequisite'
     confirmFlag: Type the flag identifier to confirm
     mismatchIdentifierError: The flag identifier does not match
     removeFlag: You must remove the flag as a prerequisite before you can archive it.
     restore: Restore
     restoreFlag: Restore Flag
-    restoreDescription: 'Restoring makes {{ flagName }} available for evaluation if there are references in your code.'
+    restoreDescription: 'Restoring makes <strong>{{ flagName }}</strong> available for evaluation if there are references in your code.'
     restoreSuccess: Flag successfully restored
-    warningDescription: '{{ flagIdentifier }} is being served in at least one environment.<br/><br/>
+    warningDescription: '<strong>{{ flagIdentifier }}</strong> is being served in at least one environment.<br/><br/>
       Archiving a flag removes it from all environments, but you can restore it within 30 days.<br/><br/>
       Please ensure all references to this flag are removed prior to archiving. <br/><br/>'
   rules:

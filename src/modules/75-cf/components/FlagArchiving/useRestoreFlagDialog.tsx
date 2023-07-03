@@ -8,7 +8,7 @@
 import React from 'react'
 import { Intent } from '@harness/design-system'
 import { UseConfirmationDialogReturn, useToaster } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import { useRestoreFeatureFlag, RestoreFeatureFlagQueryParams, Feature } from 'services/cf'
 import useResponseError from '@cf/hooks/useResponseError'
 import { useConfirmAction } from '@common/hooks'
@@ -55,9 +55,12 @@ const useRestoreFlagDialog = ({
     intent: Intent.DANGER,
     confirmText: getString('cf.featureFlags.archiving.restore'),
     message: (
-      <span className={css.restoreMessage}>
-        {getString('cf.featureFlags.archiving.restoreDescription', { flagName: flagData.name })}
-      </span>
+      <String
+        className={css.restoreMessage}
+        useRichText
+        stringID="cf.featureFlags.archiving.restoreDescription"
+        vars={{ flagName: flagData.name }}
+      />
     ),
     action: handleRestore
   })

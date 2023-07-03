@@ -246,7 +246,7 @@ export default {
       ]
     },
     {
-      archived: false,
+      archived: true,
       createdAt: 1619219254421,
       defaultOffVariation: 'false',
       defaultOnVariation: 'true',
@@ -261,10 +261,10 @@ export default {
         version: 1
       },
       evaluation: '',
-      identifier: 'fdsg',
+      identifier: 'my_archived_flag',
       kind: 'boolean',
       modifiedAt: 1619219254421,
-      name: 'fdsg',
+      name: 'MY ARCHIVED FLAG',
       owner: ['current auth user?'],
       permanent: false,
       prerequisites: [],
@@ -278,7 +278,7 @@ export default {
       ]
     },
     {
-      archived: false,
+      archived: true,
       createdAt: 1619219113160,
       defaultOffVariation: 'false',
       defaultOnVariation: 'true',
@@ -293,10 +293,10 @@ export default {
         version: 1
       },
       evaluation: '',
-      identifier: 'dfsg',
+      identifier: 'my_archived_flag_1',
       kind: 'boolean',
       modifiedAt: 1619219113160,
-      name: 'dfsg',
+      name: 'MY ARCHIVED FLAG 1',
       owner: ['current auth user?'],
       permanent: false,
       prerequisites: [],

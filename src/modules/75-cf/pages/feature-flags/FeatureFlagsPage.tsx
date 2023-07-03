@@ -248,6 +248,7 @@ const FeatureFlagsPage: FC = () => {
               numberOfEnvs={environments?.length}
               governance={governance}
               onRowClick={onRowClick}
+              clearFilter={onClearFilter}
             />
           )}
         </Container>
