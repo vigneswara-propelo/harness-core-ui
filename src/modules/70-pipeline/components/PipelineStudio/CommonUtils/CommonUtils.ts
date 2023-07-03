@@ -5,10 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, flatMap } from 'lodash-es'
+import { defaultTo, flatMap, get, isEmpty } from 'lodash-es'
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
-import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import type {
+  ExecutionElementConfig,
+  PipelineInfoConfig,
+  StageElementWrapperConfig,
+  StepGroupElementConfig,
+  TemplateStepNode
+} from 'services/pipeline-ng'
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { EmptyStageName } from '../PipelineConstants'
 import type { SelectedStageData, StageSelectionData } from '../../../utils/runPipelineUtils'
 
@@ -78,4 +85,66 @@ export const getFlattenedSteps = (allSteps?: ExecutionWrapperConfig[]): StepElem
     return steps
   })
   return allFlattenedSteps
+}
+
+export const updateStepWithinStage = (
+  execution: ExecutionElementConfig | StepGroupElementConfig,
+  processingNodeIdentifier: string,
+  processedNode: StepElementConfig | TemplateStepNode,
+  isRollback: boolean
+): void => {
+  // Finds the step in the stage, and updates with the processed node
+  const executionSteps = get(execution, isRollback ? 'rollbackSteps' : 'steps') as ExecutionWrapperConfig[]
+  executionSteps?.forEach((stepWithinStage: ExecutionWrapperConfig) => {
+    if (stepWithinStage.stepGroup) {
+      // If stage has a step group, loop over the step group steps and update the matching identifier with node
+      if (stepWithinStage.stepGroup?.identifier === processingNodeIdentifier) {
+        stepWithinStage.stepGroup = processedNode as any
+      } else {
+        // For current Step Group, go through all steps and find out if all steps are of Command type
+        // If yes, and new step is also of Command type then add repeat looping strategy to Step Group
+        const allSteps = stepWithinStage.stepGroup.steps
+        const allFlattenedSteps = getFlattenedSteps(allSteps)
+        if (!isEmpty(allFlattenedSteps)) {
+          const commandSteps = allFlattenedSteps.filter(
+            (currStep: StepElementConfig) => currStep.type === StepType.Command
+          )
+          if (
+            (commandSteps.length === allFlattenedSteps.length &&
+              (processedNode as StepElementConfig)?.type === StepType.Command &&
+              !isEmpty(stepWithinStage.stepGroup.strategy) &&
+              !stepWithinStage.stepGroup.strategy?.repeat) ||
+            (commandSteps.length === allFlattenedSteps.length &&
+              (processedNode as StepElementConfig)?.type === StepType.Command &&
+              isEmpty(stepWithinStage.stepGroup.strategy))
+          ) {
+            stepWithinStage.stepGroup['strategy'] = {
+              repeat: {
+                items: '<+stage.output.hosts>' as any, // used any because BE needs string variable while they can not change type
+                maxConcurrency: 1,
+                start: 0,
+                end: 1,
+                unit: 'Count'
+              }
+            }
+          }
+        }
+        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, false)
+      }
+    } else if (stepWithinStage.parallel) {
+      // If stage has a parallel steps, loop over and update the matching identifier with node
+      stepWithinStage.parallel.forEach(parallelStep => {
+        if (parallelStep?.stepGroup?.identifier === processingNodeIdentifier) {
+          parallelStep.stepGroup = processedNode as any
+        } else if (parallelStep.step?.identifier === processingNodeIdentifier) {
+          parallelStep.step = processedNode as any
+        } else if (parallelStep?.stepGroup) {
+          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, false)
+        }
+      })
+    } else if (stepWithinStage.step?.identifier === processingNodeIdentifier) {
+      // Else simply find the matching step ad update the node
+      stepWithinStage.step = processedNode as any
+    }
+  })
 }
