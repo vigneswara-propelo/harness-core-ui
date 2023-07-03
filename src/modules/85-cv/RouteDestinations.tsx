@@ -57,6 +57,8 @@ import { CDSideNavProps } from '@cd/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import { NameIdDescriptionTags, TimeSeriesAreaChart } from '@common/components'
 import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
+import { Ticker } from '@common/components/Ticker/Ticker'
+import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
 import { RedirectToCETEventSummaryDetail, etModuleParams } from '@cet/RouteDestinations'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
@@ -94,6 +96,11 @@ import { WrapperOrgAccountLevelServiceEnvField } from './pages/monitored-service
 import SLOTargetNotifications from './pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
 import HealthSourceDrawerHeader from './pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
 import HealthSourceDrawerContent from './pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
+import { useLogContentHook } from './hooks/useLogContentHook/useLogContentHook'
+import ChangesTable from './pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
+import ChangeTimeline from './components/ChangeTimeline/ChangeTimeline'
+import TimelineSlider from './components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
+import AnomaliesCard from './pages/monitored-service/components/ServiceHealth/components/AnomaliesCard/AnomaliesCard'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -535,27 +542,6 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVCreateSLOV2 />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVSLODetailsPage({
-        ...accountPathProps,
-        ...projectPathProps,
-        ...editParams,
-        ...cvModuleParams
-      })}
-    >
-      <CVSLODetailsPage />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
       path={routes.toAccountCVSLODetailsPage({
         ...accountPathProps,
         ...editParams,
@@ -563,14 +549,6 @@ export const SRMRoutes = (
       })}
     >
       <CVSLODetailsPage />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVCreateSLOV2 isComposite />
     </RouteWithLayout>
 
     <RouteWithLayout
@@ -689,7 +667,15 @@ export const SRMMFERoutes: React.FC = () => {
   const mfePaths = enableMicroFrontend
     ? [
         routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routes.toAccountCVSLOs({ ...accountPathProps })
+        routes.toAccountCVSLOs({ ...accountPathProps }),
+        routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routes.toCVSLODetailsPage({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...editParams,
+          ...cvModuleParams
+        })
       ]
     : []
 
@@ -704,6 +690,7 @@ export const SRMMFERoutes: React.FC = () => {
               useQueryParams,
               useFeatureFlag,
               useFeatureFlags,
+              useLogContentHook,
               useDeepCompareEffect,
               useGetHarnessServices,
               useGetHarnessEnvironments,
@@ -718,6 +705,12 @@ export const SRMMFERoutes: React.FC = () => {
             customConstants={{ ALL_TIME_ZONES }}
             customComponents={{
               Stepper,
+              Ticker,
+              ChangeTimeline,
+              TimelineSlider,
+              AnomaliesCard,
+              ChangesTable,
+              DateTimePicker,
               NameIdDescriptionTags,
               SLOTargetNotifications,
               HarnessServiceAsFormField,
@@ -740,6 +733,32 @@ export const SRMMFERoutes: React.FC = () => {
           </RouteWithLayout>
           <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
             <CVSLOsListingPage />
+          </RouteWithLayout>
+          <RouteWithLayout
+            exact
+            sidebarProps={CVSideNavProps}
+            path={routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+          >
+            <CVCreateSLOV2 />
+          </RouteWithLayout>
+          <RouteWithLayout
+            exact
+            sidebarProps={CVSideNavProps}
+            path={routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+          >
+            <CVCreateSLOV2 isComposite />
+          </RouteWithLayout>
+          <RouteWithLayout
+            exact
+            sidebarProps={CVSideNavProps}
+            path={routes.toCVSLODetailsPage({
+              ...accountPathProps,
+              ...projectPathProps,
+              ...editParams,
+              ...cvModuleParams
+            })}
+          >
+            <CVSLODetailsPage />
           </RouteWithLayout>
         </>
       )}
