@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly artifactFilterTextArea: string
   readonly separator: string
   readonly subfilter: string
 }

@@ -194,7 +194,14 @@ export function ExecutionListFilter(): React.ReactElement {
     pipelineTags: _pipelineTags
   } = (filterProperties as PipelineExecutionFilterProperties) || {}
   const { ci, cd } = moduleProperties || {}
-  const { serviceDefinitionTypes, infrastructureType, serviceIdentifiers, envIdentifiers, gitOpsAppNames } = cd || {}
+  const {
+    serviceDefinitionTypes,
+    infrastructureType,
+    serviceIdentifiers,
+    envIdentifiers,
+    gitOpsAppNames,
+    artifactDisplayNames
+  } = cd || {}
   const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
   const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
   const buildType = getBuildType(moduleProperties || {})
@@ -322,6 +329,7 @@ export function ExecutionListFilter(): React.ReactElement {
             infrastructureType,
             services: getMultiSelectFormOptions(serviceIdentifiers, 'service'),
             environments: getMultiSelectFormOptions(envIdentifiers, 'environment'),
+            artifacts: artifactDisplayNames?.join(', '),
             gitOpsAppNames: getMultiSelectFormOptions(gitOpsAppNames, 'gitOpsAppName')
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }

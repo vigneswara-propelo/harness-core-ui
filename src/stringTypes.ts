@@ -4395,6 +4395,7 @@ export interface StringsMap {
   'pipeline.fileDetails': string
   'pipeline.filePathHelperText': string
   'pipeline.fileSource': string
+  'pipeline.filters.artifactPlaceholder': string
   'pipeline.filters.builtTypePlaceholder': string
   'pipeline.filters.deploymentTypePlaceholder': string
   'pipeline.filters.environmentPlaceholder': string

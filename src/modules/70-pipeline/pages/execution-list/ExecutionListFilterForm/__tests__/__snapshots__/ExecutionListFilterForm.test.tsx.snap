@@ -377,8 +377,40 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
           </div>
         </div>
         <div
+          class="bp3-form-group artifactFilterTextArea"
+          data-id="artifacts-7"
+        >
+          <label
+            class="bp3-label"
+            for="artifacts"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="pipelineFilterFormTest_artifacts"
+            >
+              artifacts
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <textarea
+              autocomplete="off"
+              class="bp3-input bp3-fill"
+              maxlength="1024"
+              name="artifacts"
+              placeholder="pipeline.filters.artifactPlaceholder"
+              style="height: 0px;"
+            />
+          </div>
+        </div>
+        <div
           class="bp3-form-group"
-          data-id="gitOpsAppNames-7"
+          data-id="gitOpsAppNames-8"
         >
           <label
             class="bp3-label"
@@ -438,7 +470,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </span>
         <div
           class="bp3-form-group"
-          data-id="buildType-8"
+          data-id="buildType-9"
         >
           <label
             class="bp3-label"

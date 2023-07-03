@@ -29,3 +29,13 @@
   padding-left: var(--spacing-large);
   margin-left: var(--spacing-large);
 }
+
+.artifactFilterTextArea {
+  :global {
+    textarea {
+      min-height: 38px !important;
+      max-height: 74px !important;
+      resize: vertical;
+    }
+  }
+}

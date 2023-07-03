@@ -195,6 +195,17 @@ export function ExecutionListFilterForm<
           }}
         />
 
+        <FormInput.TextArea
+          name="artifacts"
+          label={getString('artifacts')}
+          placeholder={getString('pipeline.filters.artifactPlaceholder')}
+          className={css.artifactFilterTextArea}
+          key="artifacts"
+          textArea={{
+            growVertically: true
+          }}
+        />
+
         <FormInput.MultiSelect
           items={gitOpsAppNames || []}
           name="gitOpsAppNames"
