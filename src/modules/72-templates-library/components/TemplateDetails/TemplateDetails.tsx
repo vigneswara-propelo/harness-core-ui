@@ -283,6 +283,9 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         if (!isEmpty(draft?.yaml)) {
           set(draft, 'yaml', '')
         }
+        if (!isEmpty(draft?.gitDetails)) {
+          set(draft, 'gitDetails.fileUrl', undefined)
+        }
         if (
           (selectedTemplate as TemplateResponse).storeType === 'REMOTE' &&
           !isEmpty((selectedTemplate as TemplateResponse).cacheResponseMetadata)
