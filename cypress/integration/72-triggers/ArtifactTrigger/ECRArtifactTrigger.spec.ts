@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getAWSRegions, getArtifactsECRGetImages } from '../constansts'
+import { getAWSRegions, getArtifactsECRGetImages } from '../constants'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
 import { getECRArtifactData } from './ArtifactTriggerConfig'
 import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'

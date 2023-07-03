@@ -7,7 +7,7 @@ import {
   pipelineDetailsWithRoutingIdCall,
   pipelineStudioRoute
 } from '../../support/70-pipeline/constants'
-import { getTriggerListAPI } from './constansts'
+import { getTriggerListAPI } from './constants'
 
 describe.skip('Jenkins Trigger', () => {
   const visitTriggersPageWithAssertion = (): void => {

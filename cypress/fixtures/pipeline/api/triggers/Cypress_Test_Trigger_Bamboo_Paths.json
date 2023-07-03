@@ -1,0 +1,6 @@
+{
+  "status": "SUCCESS",
+  "data": ["store/helloworld.war", "store/test-path.war", "store/test.war"],
+  "metaData": null,
+  "correlationId": "7b50d30e-f2e4-40bb-9853-78124306321c"
+}

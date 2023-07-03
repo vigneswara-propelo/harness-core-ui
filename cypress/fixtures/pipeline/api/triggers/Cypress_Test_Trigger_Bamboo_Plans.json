@@ -1,0 +1,21 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "planKeys": [
+      {
+        "name": "TES-HIN",
+        "value": "hinger-test"
+      },
+      {
+        "name": "PFP-PT",
+        "value": "ppt test"
+      },
+      {
+        "name": "TES-NOD",
+        "value": "node-artifact"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "90839eac-0c2d-4bef-8179-4d456d3af56a"
+}

@@ -15,7 +15,7 @@ import {
   templatesListRoute
 } from '../70-pipeline/constants'
 
-import { getTriggerListAPI } from '../../integration/72-triggers/constansts'
+import { getTriggerListAPI } from '../../integration/72-triggers/constants'
 
 import {
   pipelineStudioRoute,

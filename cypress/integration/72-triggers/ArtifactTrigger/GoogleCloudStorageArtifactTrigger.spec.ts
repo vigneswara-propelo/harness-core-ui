@@ -5,38 +5,41 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getGARRegions } from '../constants'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
-import { getGoogleArtifactRegistryTriggerArtifactData } from './ArtifactTriggerConfig'
-import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'
 import { fillArtifactTriggerData } from './artifact-trigger-helpers/fillArtifactTriggerData'
+import { getGoogleCloudStorageArtifactData } from './ArtifactTriggerConfig'
+import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'
 import { visitArtifactTriggerPage } from './artifact-trigger-helpers/visitArtifactTriggerPage'
+import { getGCPProjects, getGCPbuckets } from '../constants'
 
-describe('Google Artifact Registry Artifact Trigger', () => {
-  const { identifier, connectorId, project, region, repositoryName, pkg, yaml } =
-    getGoogleArtifactRegistryTriggerArtifactData()
+describe('Google Cloud Storage Trigger', () => {
+  const { identifier, connectorId, project, bucket, yaml } = getGoogleCloudStorageArtifactData()
 
   beforeEach(() => {
-    cy.intercept('GET', getGARRegions, {
-      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_GAR_Regions.json'
-    }).as('getGARRegions')
+    cy.intercept('POST', getGCPProjects({ connectorId }), {
+      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_GCP_Projects.json'
+    }).as('getGCPProjects')
+    cy.intercept('POST', getGCPbuckets({ connectorId, project }), {
+      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_GCP_Buckets.json'
+    }).as('getGCPbuckets')
   })
 
-  describe('1: Create new trigger', () => {
+  describe('Create new trigger', () => {
     visitTriggersPage()
-
-    const artifactTypeCy = 'Artifact_Google Artifact Registry'
+    const artifactTypeCy = 'Artifact_Google Cloud Storage'
 
     const fillArtifactData = (): void => {
-      cy.wait('@getGARRegions')
+      cy.get('input[name="project"]').focus()
+      cy.wait(`@getGCPProjects`)
       cy.get('input[name="project"]').clear().type(project)
-      cy.get('input[name="region"]').clear().type(region)
-      cy.contains('p', region).click()
-      cy.get('input[name="repositoryName"]').clear().type(repositoryName)
-      cy.get('input[name="package"]').clear().type(pkg)
+      cy.contains('p', project).click()
+      cy.get('input[name="bucket"]').focus()
+      cy.wait(`@getGCPbuckets`)
+      cy.get('input[name="bucket"]').clear().type(bucket)
+      cy.contains('p', bucket).click()
     }
 
-    it('1.1: Pipeline Input', () => {
+    it('1: Pipeline Input', () => {
       fillArtifactTriggerData({
         artifactTypeCy,
         triggerName: identifier,
@@ -49,11 +52,8 @@ describe('Google Artifact Registry Artifact Trigger', () => {
 
   describe('2: Edit trigger', () => {
     const checkArtifactData = (): void => {
-      cy.wait('@getGARRegions')
       cy.get('input[name="project"]').should('have.value', project)
-      cy.get('input[name="region"]').should('have.value', region)
-      cy.get('input[name="repositoryName"]').should('have.value', repositoryName)
-      cy.get('input[name="package"]').should('have.value', pkg)
+      cy.get('input[name="bucket"]').should('have.value', bucket)
     }
 
     visitArtifactTriggerPage({ identifier, yaml })

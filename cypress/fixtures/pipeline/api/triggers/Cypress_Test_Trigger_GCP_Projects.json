@@ -1,0 +1,25 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "projects": [
+      {
+        "id": "platform-205701",
+        "name": "Platform"
+      },
+      {
+        "id": "onprem-play",
+        "name": "onprem-play"
+      },
+      {
+        "id": "secret-play-383419",
+        "name": "secret-play"
+      },
+      {
+        "id": "sre-play",
+        "name": "SRE-Play"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "361eeae8-5f7e-41d8-8112-23f6d85d9978"
+}

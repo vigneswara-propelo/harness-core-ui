@@ -5,23 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getAzureArtifactsFeeds, getAzureArtifactsPackages, getAzureArtifactsProjects } from '../constansts'
+import { getAzureArtifactsFeeds, getAzureArtifactsPackages, getAzureArtifactsProjects } from '../constants'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
+import { getAzureArtifactData } from './ArtifactTriggerConfig'
+import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'
 import { fillArtifactTriggerData } from './artifact-trigger-helpers/fillArtifactTriggerData'
+import { visitArtifactTriggerPage } from './artifact-trigger-helpers/visitArtifactTriggerPage'
 
 describe('Azure Artifacts Artifact Trigger', () => {
-  visitTriggersPage()
+  const { identifier, connectorId, feed, pkg, projectScope, orgScope } = getAzureArtifactData()
+
   describe('Create new trigger', () => {
+    visitTriggersPage()
     const artifactTypeCy = 'Artifact_Azure Artifacts'
-    const connectorId = 'testAWS'
-    const triggerName = 'Azure Trigger'
-    const feed = 'feedproject'
-    const pkg = 'com.bugsnag:bugsnag'
 
     describe('1: Project Scope', () => {
-      const project = 'automation-cdc'
+      const { project, maven, nuget } = projectScope
+
       describe('1.1: Maven Package Type', () => {
         const packageType = 'maven'
+        const { yaml } = maven
         const fillArtifactData = (): void => {
           cy.get('input[name="project"]').focus()
           cy.wait('@getAzureArtifactsProjects')
@@ -51,25 +54,17 @@ describe('Azure Artifacts Artifact Trigger', () => {
         it('1.1.1: Pipeline Input', () => {
           fillArtifactTriggerData({
             artifactTypeCy,
-            triggerName,
+            triggerName: identifier,
             connectorId,
             fillArtifactData,
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: project\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        project: ${project}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputYaml: |\n    pipeline:\n      identifier: GCR_Trigger\n      stages:\n        - stage:\n            identifier: S1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: ShellScript_1\n                      type: ShellScript\n                      timeout: 10m\n`
-          })
-        })
-        it('1.1.2: InputSetRefs', () => {
-          fillArtifactTriggerData({
-            artifactTypeCy,
-            triggerName,
-            connectorId,
-            fillArtifactData,
-            inputSetRefs: ['inputset1', 'inputset2'],
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: project\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        project: ${project}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
+            triggerYAML: yaml
           })
         })
       })
       describe('1.2: NuGet Package Type', () => {
         const packageType = 'nuget'
+        const { yaml } = nuget
+
         const fillArtifactData = (): void => {
           cy.get('input[name="project"]').focus()
           cy.wait('@getAzureArtifactsProjects')
@@ -101,32 +96,24 @@ describe('Azure Artifacts Artifact Trigger', () => {
         it('1.2.1: Pipeline Input', () => {
           fillArtifactTriggerData({
             artifactTypeCy,
-            triggerName,
+            triggerName: identifier,
             connectorId,
             fillArtifactData,
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: project\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        project: ${project}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputYaml: |\n    pipeline:\n      identifier: GCR_Trigger\n      stages:\n        - stage:\n            identifier: S1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: ShellScript_1\n                      type: ShellScript\n                      timeout: 10m\n`
-          })
-        })
-        it('1.2.2: InputSetRefs', () => {
-          fillArtifactTriggerData({
-            artifactTypeCy,
-            triggerName,
-            connectorId,
-            fillArtifactData,
-            inputSetRefs: ['inputset1', 'inputset2'],
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: project\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        project: ${project}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
+            triggerYAML: yaml
           })
         })
       })
     })
     describe('2: Org Scope', () => {
-      const scope = 'org'
+      const { scope, maven, nuget } = orgScope
       const project = ''
       describe('2.1: Maven Package Type', () => {
         const packageType = 'maven'
+        const { yaml } = maven
+
         const fillArtifactData = (): void => {
           cy.get('input[name="scope"]').clear().type(scope)
-          cy.contains('p', 'Org').click()
+          cy.contains('p', scope).click()
           cy.get('input[name="feed"]').focus()
           cy.wait('@getAzureArtifactsFeeds')
           cy.get('input[name="feed"]').clear().type(feed)
@@ -148,25 +135,17 @@ describe('Azure Artifacts Artifact Trigger', () => {
         it('2.1.1: Pipeline Input', () => {
           fillArtifactTriggerData({
             artifactTypeCy,
-            triggerName,
+            triggerName: identifier,
             connectorId,
             fillArtifactData,
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: ${scope}\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputYaml: |\n    pipeline:\n      identifier: GCR_Trigger\n      stages:\n        - stage:\n            identifier: S1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: ShellScript_1\n                      type: ShellScript\n                      timeout: 10m\n`
-          })
-        })
-        it('2.1.2: InputSetRefs', () => {
-          fillArtifactTriggerData({
-            artifactTypeCy,
-            triggerName,
-            connectorId,
-            fillArtifactData,
-            inputSetRefs: ['inputset1', 'inputset2'],
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: ${scope}\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
+            triggerYAML: yaml
           })
         })
       })
       describe('2.2: NuGet Package Type', () => {
         const packageType = 'nuget'
+        const { yaml } = nuget
+
         const fillArtifactData = (): void => {
           cy.get('input[name="scope"]').clear().type(scope)
           cy.contains('p', 'Org').click()
@@ -193,21 +172,92 @@ describe('Azure Artifacts Artifact Trigger', () => {
         it('2.2.1: Pipeline Input', () => {
           fillArtifactTriggerData({
             artifactTypeCy,
-            triggerName,
+            triggerName: identifier,
             connectorId,
             fillArtifactData,
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: ${scope}\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputYaml: |\n    pipeline:\n      identifier: GCR_Trigger\n      stages:\n        - stage:\n            identifier: S1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: ShellScript_1\n                      type: ShellScript\n                      timeout: 10m\n`
+            triggerYAML: yaml
           })
         })
-        it('2.2.2: InputSetRefs', () => {
-          fillArtifactTriggerData({
-            artifactTypeCy,
-            triggerName,
-            connectorId,
-            fillArtifactData,
-            inputSetRefs: ['inputset1', 'inputset2'],
-            triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Azure_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: AzureArtifacts\n      spec:\n        connectorRef: ${connectorId}\n        scope: ${scope}\n        feed: ${feed}\n        packageType: ${packageType}\n        package: ${pkg}\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
-          })
+      })
+    })
+  })
+
+  describe('2: Edit trigger', () => {
+    describe('1: Project Scope', () => {
+      const scope = 'Project'
+      const { project, maven, nuget } = projectScope
+
+      describe('1.1: Maven Package Type', () => {
+        const packageType = 'Maven'
+        const { yaml } = maven
+
+        const checkArtifactData = (): void => {
+          cy.get('input[name="scope"]').should('have.value', scope)
+          cy.get('input[name="project"]').should('have.value', project)
+          cy.get('input[name="feed"]').should('have.value', feed)
+          cy.get('input[name="packageType"]').should('have.value', packageType)
+          cy.get('input[name="package"]').should('have.value', pkg)
+        }
+
+        visitArtifactTriggerPage({ identifier, yaml })
+
+        it('1.1.1: Pipeline Input', () => {
+          editArtifactTriggerHelper({ connectorId, checkArtifactData, yaml })
+        })
+      })
+      describe('1.2: NuGet Package Type', () => {
+        const packageType = 'NuGet'
+        const { yaml } = nuget
+
+        const checkArtifactData = (): void => {
+          cy.get('input[name="scope"]').should('have.value', scope)
+          cy.get('input[name="project"]').should('have.value', project)
+          cy.get('input[name="feed"]').should('have.value', feed)
+          cy.get('input[name="packageType"]').should('have.value', packageType)
+          cy.get('input[name="package"]').should('have.value', pkg)
+        }
+
+        visitArtifactTriggerPage({ identifier, yaml })
+
+        it('1.2.1: Pipeline Input', () => {
+          editArtifactTriggerHelper({ connectorId, checkArtifactData, yaml })
+        })
+      })
+    })
+    describe('2: Org Scope', () => {
+      const { scope, maven, nuget } = orgScope
+      describe('2.1: Maven Package Type', () => {
+        const packageType = 'Maven'
+        const { yaml } = maven
+
+        const checkArtifactData = (): void => {
+          cy.get('input[name="scope"]').should('have.value', scope)
+          cy.get('input[name="feed"]').should('have.value', feed)
+          cy.get('input[name="packageType"]').should('have.value', packageType)
+          cy.get('input[name="package"]').should('have.value', pkg)
+        }
+
+        visitArtifactTriggerPage({ identifier, yaml })
+
+        it('2.1.1: Pipeline Input', () => {
+          editArtifactTriggerHelper({ connectorId, checkArtifactData, yaml })
+        })
+      })
+      describe('2.2: NuGet Package Type', () => {
+        const packageType = 'NuGet'
+        const { yaml } = nuget
+
+        const checkArtifactData = (): void => {
+          cy.get('input[name="scope"]').should('have.value', scope)
+          cy.get('input[name="feed"]').should('have.value', feed)
+          cy.get('input[name="packageType"]').should('have.value', packageType)
+          cy.get('input[name="package"]').should('have.value', pkg)
+        }
+
+        visitArtifactTriggerPage({ identifier, yaml })
+
+        it('2.2.1: Pipeline Input', () => {
+          editArtifactTriggerHelper({ connectorId, checkArtifactData, yaml })
         })
       })
     })

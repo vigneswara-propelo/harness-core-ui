@@ -21,7 +21,7 @@ import {
 } from '../../support/70-pipeline/constants'
 import { getRuntimeInputKeys } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
-import { getTriggerListAPI } from '../72-triggers/constansts'
+import { getTriggerListAPI } from '../72-triggers/constants'
 import { addTemplate, selectStepInStepLibrary } from '../../support/75-ci/CIpipeline.utils'
 // Data from QA, CI Automation Account
 // https://qa.harness.io/ng/#/account/h61p38AZSV6MzEkpWWBtew/ci/orgs/default/projects/mtran/pipelines/CI_Pipeline1/pipeline-studio/

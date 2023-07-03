@@ -1,6 +1,6 @@
 import { parse } from 'yaml'
 import { inputSetListAPIWithoutSort } from '../../../support/70-pipeline/constants'
-import { createTriggerAPIV2 } from '../constansts'
+import { createTriggerAPIV2 } from '../constants'
 
 export const fillPipelineInputTabDataAndSubmitForm = ({ inputSetRefs = [], timeout = '10m', triggerYAML }): void => {
   if (inputSetRefs.length) {

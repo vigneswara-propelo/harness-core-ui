@@ -9,7 +9,7 @@ import {
   getArtifactsACRContainerRegistries,
   getArtifactsACRContainerRegistryRepositories,
   getAzureSubscriptions
-} from '../constansts'
+} from '../constants'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
 import { getACRArtifactData } from './ArtifactTriggerConfig'
 import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'
@@ -34,6 +34,7 @@ describe('ACR Artifact Trigger', () => {
   describe('1: Create new trigger', () => {
     visitTriggersPage()
     const artifactTypeCy = 'Artifact_ACR'
+
     const fillArtifactData = (): void => {
       cy.wait(`@getAzureSubscriptions`)
       cy.get('input[name="subscriptionId"]').clear().type(subscriptionId)

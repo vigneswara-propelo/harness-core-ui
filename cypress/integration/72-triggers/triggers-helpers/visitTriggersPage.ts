@@ -12,7 +12,7 @@ import {
   projectId,
   pipelineIdentifier
 } from '../../../support/70-pipeline/constants'
-import { getTriggerAPI, getTriggerListAPI, updateTriggerAPI } from '../constansts'
+import { getTriggerAPI, getTriggerListAPI, updateTriggerAPI } from '../constants'
 
 export const visitTriggersPage = (
   getTriggerListAPIFixture = 'pipeline/api/triggers/Cypress_Test_Trigger_Get_Empty_Trigger_List.json'
@@ -25,7 +25,8 @@ export const visitTriggersPage = (
           ...featureFlagsData.resource,
           { uuid: null, name: 'NG_SVC_ENV_REDESIGN', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'CD_TRIGGER_V2', enabled: true, lastUpdatedAt: 0 },
-          { uuid: null, name: 'BAMBOO_ARTIFACT_NG', enabled: true, lastUpdatedAt: 0 }
+          { uuid: null, name: 'BAMBOO_ARTIFACT_NG', enabled: true, lastUpdatedAt: 0 },
+          { uuid: null, name: 'CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN', enabled: true, lastUpdatedAt: 0 }
         ]
       })
 

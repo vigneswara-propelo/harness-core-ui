@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getArtifactsGithubPackages } from '../constansts'
+import { getArtifactsGithubPackages } from '../constants'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
 import { getGithubPackageRegistryArtifactData } from './ArtifactTriggerConfig'
 import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'

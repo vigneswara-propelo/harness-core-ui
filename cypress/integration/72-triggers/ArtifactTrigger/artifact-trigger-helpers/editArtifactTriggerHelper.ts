@@ -1,5 +1,5 @@
 import { parse } from 'yaml'
-import { awsConnectorCall } from '../../constansts'
+import { awsConnectorCall } from '../../constants'
 
 export const editArtifactTriggerHelper = ({
   connectorId,

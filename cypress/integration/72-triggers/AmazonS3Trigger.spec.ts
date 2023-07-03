@@ -5,7 +5,7 @@ import {
   pipelineStudioRoute,
   s3bucketData
 } from '../../support/70-pipeline/constants'
-import { createTriggerAPI, getTriggerListAPI } from './constansts'
+import { createTriggerAPI, getTriggerListAPI } from './constants'
 
 describe('AmazonS3 Trigger', () => {
   const visitTriggersPageWithAssertion = (): void => {

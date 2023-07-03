@@ -6,20 +6,17 @@
  */
 
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
+import { getCustomArtifactData } from './ArtifactTriggerConfig'
+import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'
 import { fillArtifactTriggerData } from './artifact-trigger-helpers/fillArtifactTriggerData'
+import { visitArtifactTriggerPage } from './artifact-trigger-helpers/visitArtifactTriggerPage'
 
 describe('Custom Artifact Trigger', () => {
-  visitTriggersPage()
+  const { identifier, script, artifactsArrayPath, versionPath, scriptInputVariables, yaml } = getCustomArtifactData()
   describe('Create new trigger', () => {
+    visitTriggersPage()
     const artifactTypeCy = 'Artifact_Custom'
-    const triggerName = 'Custom Trigger'
-    const script = 'echo "Hello World"'
-    const artifactsArrayPath = 'test-artifacts-Array-Path'
-    const versionPath = 'test-version-Path'
-    const scriptInputVariables = [
-      { name: 'Var_A', type: 'String', value: 'A' },
-      { name: 'Var_b', type: 'Number', value: '1' }
-    ]
+
     const fillArtifactData = (): void => {
       cy.get('.react-monaco-editor-container').click().focused().type(script)
       cy.get('input[name="artifactsArrayPath"]').clear().type(artifactsArrayPath)
@@ -37,19 +34,34 @@ describe('Custom Artifact Trigger', () => {
     it('1: Pipeline Input', () => {
       fillArtifactTriggerData({
         artifactTypeCy,
-        triggerName,
+        triggerName: identifier,
         fillArtifactData,
-        triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Custom_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: CustomArtifact\n      spec:\n        artifactsArrayPath: test-artifacts-Array-Path\n        inputs:\n          - name: Var_A\n            type: String\n            value: A\n          - name: Var_b\n            type: Number\n            value: "1"\n        script: echo "Hello World"\n        version: <+trigger.artifact.build>\n        versionPath: test-version-Path\n        connectorRef: ""\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputYaml: |\n    pipeline:\n      identifier: GCR_Trigger\n      stages:\n        - stage:\n            identifier: S1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: ShellScript_1\n                      type: ShellScript\n                      timeout: 10m\n`
+        triggerYAML: yaml
       })
     })
-    it('2: InputSetRefs', () => {
-      fillArtifactTriggerData({
-        artifactTypeCy,
-        triggerName,
-        fillArtifactData,
-        inputSetRefs: ['inputset1', 'inputset2'],
-        triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: Custom_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: CustomArtifact\n      spec:\n        artifactsArrayPath: test-artifacts-Array-Path\n        inputs:\n          - name: Var_A\n            type: String\n            value: A\n          - name: Var_b\n            type: Number\n            value: "1"\n        script: echo "Hello World"\n        version: <+trigger.artifact.build>\n        versionPath: test-version-Path\n        connectorRef: ""\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
+  })
+
+  describe('2: Edit trigger', () => {
+    const checkArtifactData = (): void => {
+      cy.get('.react-monaco-editor-container').within(() => {
+        cy.contains('span', 'echo').should('be.visible')
+        cy.contains('span', 'Hello').should('be.visible')
+        cy.contains('span', 'World').should('be.visible')
       })
+      cy.get('input[name="artifactsArrayPath"]').should('have.value', artifactsArrayPath)
+      cy.get('input[name="versionPath"]').should('have.value', versionPath)
+      scriptInputVariables.forEach((scriptInputVariable, index) => {
+        const { name, type, value } = scriptInputVariable
+        cy.get(`input[name="inputs.[${index}].name"]`).should('have.value', name)
+        cy.get(`input[name="inputs.[${index}].type"]`).should('have.value', type)
+        cy.get(`input[name="inputs.[${index}].value"]`).should('have.value', value)
+      })
+    }
+
+    visitArtifactTriggerPage({ identifier, yaml })
+
+    it('2.1: Pipeline Input', () => {
+      editArtifactTriggerHelper({ checkArtifactData, yaml })
     })
   })
 })

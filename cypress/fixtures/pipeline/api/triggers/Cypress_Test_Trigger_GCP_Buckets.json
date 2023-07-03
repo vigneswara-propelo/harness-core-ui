@@ -1,0 +1,21 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "buckets": [
+      {
+        "id": "smp-airgap",
+        "name": "smp-airgap"
+      },
+      {
+        "id": "qa-charts",
+        "name": "qa-charts"
+      },
+      {
+        "id": "velerobackup2-smp-harness",
+        "name": "velerobackup2-smp-harness"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "22eef35d-aacf-4fe2-aca9-61a6f15844c2"
+}
