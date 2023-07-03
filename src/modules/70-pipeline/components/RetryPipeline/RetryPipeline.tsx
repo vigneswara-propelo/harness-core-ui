@@ -211,7 +211,8 @@ function RetryPipeline({
       getTemplatesResolvedPipeline: true,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const {
@@ -340,7 +341,8 @@ function RetryPipeline({
       getDefaultFromOtherRepo: true,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   /*------------------------------------------------API Calls------------------------------*/
 
