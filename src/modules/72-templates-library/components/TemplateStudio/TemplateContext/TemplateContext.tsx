@@ -405,7 +405,8 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
         if (
           (error as Error).code === 'INVALID_REQUEST' ||
           (error as Error).code === 'HINT' ||
-          (error as Error).code === 'EXPLANATION'
+          (error as Error).code === 'EXPLANATION' ||
+          (error as Error).code === 'SCM_BAD_REQUEST'
         ) {
           const template = templateMetadata.find(item => item.versionLabel === versionLabel)
           const versions: string[] = templateMetadata.map(item => defaultTo(item.versionLabel, ''))

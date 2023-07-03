@@ -56,6 +56,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
 import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO } from 'services/cd-ng'
+import { DefaultNewVersionLabel } from 'framework/Templates/templates'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType, isNewTemplate } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -319,10 +320,15 @@ export function TemplateStudioInternal(): React.ReactElement {
   }
 
   React.useEffect(() => {
-    if (isInitialized && !isEmpty(template) && !isNewTemplate(templateIdentifier)) {
+    if (
+      isInitialized &&
+      templateYamlError?.status !== 'ERROR' &&
+      !isNewTemplate(templateIdentifier) &&
+      template?.versionLabel !== DefaultNewVersionLabel
+    ) {
       handleReconcile()
     }
-  }, [isInitialized])
+  }, [isInitialized, templateIdentifier, template?.versionLabel, templateYamlError])
 
   React.useEffect(() => {
     if (isNewTemplate(templateIdentifier)) {
