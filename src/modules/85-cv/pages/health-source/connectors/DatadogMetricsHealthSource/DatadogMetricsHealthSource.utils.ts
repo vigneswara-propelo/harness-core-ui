@@ -49,7 +49,7 @@ import {
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
-import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2, getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 
 export const DatadogProduct = {
   CLOUD_METRICS: 'Datadog Cloud Metrics',
@@ -57,9 +57,7 @@ export const DatadogProduct = {
 }
 
 export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceData: any): DatadogMetricSetupSource {
-  const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
-  )
+  const healthSource = getSelectedHealthSource(sourceData)
 
   const setupSource: DatadogMetricSetupSource = {
     selectedDashboards: sourceData.selectedDashboards || [],

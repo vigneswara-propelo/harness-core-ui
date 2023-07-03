@@ -16,6 +16,7 @@ import type {
   CommonSetupHealthSourceListType,
   RiskThresholdTypes
 } from '@cv/pages/health-source/common/utils/HealthSource.types'
+import { SourceDataInterface, UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export const convertMetricPackToMetricData = (value?: MetricPackDTO[]): { [key: string]: boolean } => {
   const dataObject: { [key: string]: boolean } = {}
@@ -283,4 +284,8 @@ export const getConnectorRef = (connectorRef?: string | { value: string }): stri
   }
 
   return connectorRef?.value
+}
+
+export const getSelectedHealthSource = (sourceData: SourceDataInterface): UpdatedHealthSource | undefined => {
+  return sourceData?.healthSourceList?.find(source => source.identifier === sourceData.healthSourceIdentifier)
 }

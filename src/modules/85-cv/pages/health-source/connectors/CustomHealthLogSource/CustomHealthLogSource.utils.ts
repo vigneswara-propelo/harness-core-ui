@@ -18,7 +18,7 @@ import type {
 } from './CustomHealthLogSource.types'
 import { validateMappingInfo } from '../CustomHealthSource/CustomHealthSource.utils'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
-import { getConnectorRef } from '../../common/utils/HealthSource.utils'
+import { getConnectorRef, getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 
 export function validateSetupSource(
   data: CustomHealthLogSetupSource,
@@ -54,11 +54,9 @@ export function validateSetupSource(
 }
 
 export function initializeSelectedQueryMap(data: any): SelectedAndMappedQueries {
-  const healthSource: UpdatedHealthSource = data?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.name === data.healthSourceName
-  )
+  const healthSource = getSelectedHealthSource(data)
 
-  const customLogSpec: CustomHealthSourceLogSpec = healthSource?.spec
+  const customLogSpec: CustomHealthSourceLogSpec = healthSource?.spec as UpdatedHealthSource['spec']
 
   if (!customLogSpec?.logDefinitions?.length) {
     const selectedQuery = `Custom Log Query_${Utils.randomId()}`

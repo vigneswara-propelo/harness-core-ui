@@ -41,7 +41,7 @@ import {
   getMetricPacksForPayload,
   validateCommonFieldsForMetricThreshold
 } from '../../common/MetricThresholds/MetricThresholds.utils'
-import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2, getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 
 export const convertStringBasePathToObject = (baseFolder: string | BasePathData): BasePathData => {
   let basePathObj = {} as any
@@ -81,9 +81,7 @@ export const convertStringMetricPathToObject = (metricPath: string | MetricPathD
 }
 
 export const createAppDynamicsData = (sourceData: any): AppDynamicsData => {
-  const payload: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
-  )
+  const payload = getSelectedHealthSource(sourceData)
 
   const { applicationName = '', tierName = '', metricPacks } = (payload?.spec as AppDynamicsHealthSourceSpec) || {}
 

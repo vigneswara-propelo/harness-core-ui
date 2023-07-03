@@ -166,11 +166,19 @@ describe('Health Source - Prometheus', () => {
 
     cy.contains('div', 'Prometheus').click()
 
+    cy.get('input[name="healthSourceName"]')
+      .should('be.visible')
+      .should('have.value', 'Prometheus')
+      .type('Prometheus123')
+
     cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
     cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.get('input[name="metricName"]').should('be.visible').should('have.value', 'Prometheus Metric')
+
     cy.findByRole('button', { name: /Submit/i }).click()
     cy.findByRole('button', { name: /Save/i }).click()
     cy.contains('span', 'Monitored Service updated').should('be.visible')

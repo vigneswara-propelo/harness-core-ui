@@ -9,7 +9,6 @@ import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type {
-  RowData,
   SourceDataInterface,
   UpdatedHealthSource
 } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
@@ -32,7 +31,8 @@ import {
   convertMetricPackToMetricData,
   mapCommonMetricInfoToCommonMetricDefinition,
   mapCommonMetricDefinitionToCommonMetricInfo,
-  validateMetricPackData
+  validateMetricPackData,
+  getSelectedHealthSource
 } from '@cv/pages/health-source/common/utils/HealthSource.utils'
 import { validateCommonCustomMetricFields } from '@cv/pages/health-source/common/CustomMetric/CustomMetric.utils'
 import {
@@ -80,9 +80,7 @@ export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: Dynatr
   }
 }
 export const mapHealthSourceToDynatraceMetricData = (sourceData: SourceDataInterface): DynatraceMetricData => {
-  const healthSource: UpdatedHealthSource = (sourceData.healthSourceList as RowData[]).find(
-    (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
-  ) as UpdatedHealthSource
+  const healthSource = getSelectedHealthSource(sourceData)
   const dynatraceHealthSourceSpec = (healthSource?.spec as DynatraceHealthSourceSpec) || {}
   const { serviceName = '', serviceId = '', serviceMethodIds, metricPacks } = dynatraceHealthSourceSpec
   const isServiceNameFixed = getMultiTypeFromValue(serviceName) === MultiTypeInputType.FIXED

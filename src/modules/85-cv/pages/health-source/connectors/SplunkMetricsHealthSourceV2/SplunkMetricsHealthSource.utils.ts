@@ -21,6 +21,7 @@ import {
 import { HealthSourceTypes } from '../../types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import { getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 
 type UpdateSelectedMetricsMap = {
   updatedMetric: string
@@ -204,9 +205,7 @@ export function transformPrometheusHealthSourceToSetupSource(
   sourceData: any,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 ): PrometheusSetupSource {
-  const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
-  )
+  const healthSource = getSelectedHealthSource(sourceData)
 
   if (!healthSource) {
     return {

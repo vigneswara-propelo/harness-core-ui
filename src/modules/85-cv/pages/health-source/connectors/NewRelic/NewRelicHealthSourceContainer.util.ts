@@ -11,7 +11,7 @@ import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceD
 import { HealthSourceTypes } from '../../types'
 import type { NewRelicData } from './NewRelicHealthSource.types'
 import { getMetricPacksForPayload } from '../../common/MetricThresholds/MetricThresholds.utils'
-import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2, getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 
 export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null => {
   const specPayload = {
@@ -82,9 +82,7 @@ export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null
 }
 
 export const createNewRelicData = (sourceData: any): NewRelicData => {
-  const payload: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
-  )
+  const payload = getSelectedHealthSource(sourceData)
 
   const {
     applicationName = '',

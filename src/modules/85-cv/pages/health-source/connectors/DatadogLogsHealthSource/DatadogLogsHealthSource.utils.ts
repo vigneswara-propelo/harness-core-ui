@@ -22,6 +22,7 @@ import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import type { UseStringsReturn } from 'framework/strings'
 import { MapDatadogLogsFieldNames } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/DatadogLogsMapToService.constants'
+import { getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 
 export function initializeSelectedMetricsMap(
   defaultSelectedMetricName: string,
@@ -81,9 +82,7 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(
   sourceData: SourceDataInterface & DatadogLogsSetupSource,
   isTemplate?: boolean
 ): DatadogLogsSetupSource {
-  const existingHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
-  )
+  const existingHealthSource = getSelectedHealthSource(sourceData)
 
   if (!existingHealthSource) {
     return {

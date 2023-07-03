@@ -26,7 +26,7 @@ import { HealthSourceTypes } from '../../types'
 import { chartsConfig } from './GCOWidgetChartConfig'
 import { OVERALL } from './GCOMetricsHealthSource.constants'
 import { MANUAL_INPUT_QUERY } from './components/ManualInputQueryModal/ManualInputQueryModal'
-import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2, getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 import {
   getFilteredMetricThresholdValues,
   validateCommonFieldsForMetricThreshold
@@ -70,9 +70,7 @@ export function formatJSON(val?: string | Record<string, unknown>): string | und
 export const getSelectedDashboards = (sourceData: any) => {
   const selectedDashboards = []
 
-  const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
-  )
+  const healthSource = getSelectedHealthSource(sourceData)
 
   const gcoMetricSpec: StackdriverMetricHealthSourceSpec = healthSource?.spec || {}
   for (const metricDefinition of gcoMetricSpec.metricDefinitions || []) {
@@ -87,9 +85,7 @@ export const getSelectedDashboards = (sourceData: any) => {
 }
 
 export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData: any): GCOMetricSetupSource {
-  const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
-  )
+  const healthSource = getSelectedHealthSource(sourceData)
 
   const setupSource: GCOMetricSetupSource = {
     selectedDashboards: sourceData.selectedDashboards || [],

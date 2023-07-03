@@ -42,7 +42,7 @@ import {
   validateCommonFieldsForMetricThreshold
 } from '../../common/MetricThresholds/MetricThresholds.utils'
 import type { PersistMappedMetricsType, PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
-import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2, getSelectedHealthSource } from '../../common/utils/HealthSource.utils'
 import { AWSDataSourceType } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 
 type UpdateSelectedMetricsMap = {
@@ -329,9 +329,8 @@ export function transformPrometheusHealthSourceToSetupSource(
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   isTemplate?: boolean
 ): PrometheusSetupSource {
-  const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
-  )
+  const healthSource = getSelectedHealthSource(sourceData)
+
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(sourceData.connectorRef) !== MultiTypeInputType.FIXED
   if (!healthSource) {
     return {

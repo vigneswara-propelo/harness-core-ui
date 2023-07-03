@@ -32,7 +32,11 @@ import {
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
-import { createPayloadForAssignComponentV2, getConnectorRef } from '../../common/utils/HealthSource.utils'
+import {
+  createPayloadForAssignComponentV2,
+  getConnectorRef,
+  getSelectedHealthSource
+} from '../../common/utils/HealthSource.utils'
 
 const validateMetricThresholds = (
   errors: Record<string, string>,
@@ -206,9 +210,7 @@ const validateAssignComponent = (
 }
 
 export function transformCustomHealthSourceToSetupSource(sourceData: any): CustomHealthSourceSetupSource {
-  const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
-    (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
-  )
+  const healthSource = getSelectedHealthSource(sourceData)
 
   if (!healthSource) {
     return {
