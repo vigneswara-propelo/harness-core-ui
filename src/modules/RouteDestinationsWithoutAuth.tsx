@@ -15,7 +15,6 @@ import SignupPage from '@common/pages/signup/SignupPage'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import RedirectPage from '@common/pages/redirect/Redirect'
 import { returnUrlParams } from '@common/utils/routeUtils'
-import AssessmentsHome from '@assessments/AssessmentsHome'
 
 const RedirectToHome: React.FC = () => {
   const history = useHistory()
@@ -33,9 +32,6 @@ const RouteDestinationsWithoutAuth: React.FC = () => {
     <Switch>
       <Route exact path="/">
         <RedirectToHome />
-      </Route>
-      <Route path="/assessment">
-        <AssessmentsHome />
       </Route>
       {__DEV__ ? (
         <Route path={routes.toLogin()}>

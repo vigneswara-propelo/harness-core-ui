@@ -175,16 +175,6 @@ module.exports = {
     },
     customGenerator: arg => customGenerator(arg, "getConfig('cv/api')")
   },
-  assessments: {
-    output: 'src/services/assessments/index.tsx',
-    url: 'http://localhost:12050/assessments/api/swagger.json',
-    transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
-    customProps: {
-      base: `{getConfig("assessments/api")}`
-    },
-    customGenerator: arg => customGenerator(arg, "getConfig('assessments/api')")
-  },
   chaos: {
     output: 'src/services/chaos/index.tsx',
     file: 'src/services/chaos/swagger.json',
