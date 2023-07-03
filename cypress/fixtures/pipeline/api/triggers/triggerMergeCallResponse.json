@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "pipelineYaml": "pipeline:\n  identifier: testPipeline_Cypress\n  stages:\n    - stage:\n        identifier: deploy\n        type: Deployment\n        spec:\n          service:\n            serviceInputs:\n              serviceDefinition:\n                type: Kubernetes\n                spec:\n                  manifests:\n                    - manifest:\n                        identifier: manifest\n                        type: K8sManifest\n                        spec:\n                          store:\n                            type: Git\n                            spec:\n                              connectorRef: \"\"\n                              paths: \"\"\n                  artifacts:\n                    primary:\n                      sources:\n                        - identifier: MyArtifactDocker\n                          type: DockerRegistry\n                          spec:\n                            digest: \"\"\n                            tag: \"\"\n",
+    "completePipelineYaml": "",
+    "errorResponse": false
+  },
+  "metaData": null,
+  "correlationId": "9f643459-ef10-4151-ac35-909695eebfcc"
+}

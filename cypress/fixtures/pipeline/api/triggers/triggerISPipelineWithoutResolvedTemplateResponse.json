@@ -1,0 +1,38 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "name": "testPipeline_Cypress",
+    "identifier": "testPipeline_Cypress",
+    "tags": {},
+    "version": 0,
+    "numOfStages": 1,
+    "createdAt": 1688198197691,
+    "lastUpdatedAt": 1688198197691,
+    "modules": ["cd", "pms"],
+    "executionSummaryInfo": {
+      "numOfErrors": [],
+      "deployments": []
+    },
+    "filters": {
+      "cd": {
+        "deploymentTypes": ["Kubernetes"],
+        "environmentNames": ["e1"],
+        "serviceNames": ["service"],
+        "infrastructureTypes": []
+      },
+      "pms": {
+        "stageTypes": ["Deployment"],
+        "featureFlagStepCount": 0
+      }
+    },
+    "stageNames": ["deploy"],
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "storeType": "INLINE",
+    "isDraft": false
+  },
+  "metaData": null,
+  "correlationId": "837d453f-8200-48cf-8026-399de974132e"
+}

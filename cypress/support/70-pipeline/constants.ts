@@ -131,8 +131,11 @@ export const pipelinesRoute = `${addHashInCypressURLBasedOnBrowserRouter()}accou
 export const triggersRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
 export const triggerRoute = (triggerIdentifier: string): string =>
   `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}`
+export const newTriggerRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/home/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers/new?storeType=INLINE&triggerType=Webhook&sourceRepo=Custom`
 export const templatesListRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
 export const testParallelNodesPipelineRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
+export const triggersMergeCall =
+  '/pipeline/api/inputSets/merge?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&pipelineIdentifier=testPipeline_Cypress'
 
 export const resolvedPipelineDetailsCall =
   '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&pipelineIdentifier=testPipeline_Cypress&projectIdentifier=project1&getDefaultFromOtherRepo=true'
