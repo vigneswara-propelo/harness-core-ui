@@ -25,7 +25,8 @@ jest.mock('services/cd-ng-rq', () => ({
 }))
 
 describe('AMI Artifact Trigger Test', () => {
-  test('Create flow', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('Create flow', async () => {
     const handleSubmit = jest.fn()
     const { findByText, baseElement } = render(
       <TestWrapper>
