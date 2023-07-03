@@ -229,7 +229,6 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
 
       includeVersionInfo: isCdsV1EOLEnabled
     },
-    debounce: 500,
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
