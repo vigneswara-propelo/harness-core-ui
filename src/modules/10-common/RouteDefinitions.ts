@@ -2261,6 +2261,15 @@ const routes = {
       `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/eventsummary`
   ),
 
+  toCETEventsSummaryDetail: withAccountId(({ projectIdentifier, orgIdentifier, ...rest }: ProjectPathProps) => {
+    const queryString = qs.stringify(rest, { skipNulls: true })
+    if (queryString.length) {
+      return `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/eventsummary/events?${queryString}`
+    } else {
+      return `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/eventsummary/events`
+    }
+  }),
+
   toCETMonitoredServices: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/etmonitoredservices`
@@ -2320,6 +2329,11 @@ const routes = {
   toCETEventSummaryOldNotifLink: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
+  ),
+
+  toCETEventSummaryDetailOldNotifLink: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary/events`
   )
 }
 

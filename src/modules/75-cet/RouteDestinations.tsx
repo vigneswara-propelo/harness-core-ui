@@ -119,6 +119,19 @@ const RedirectToCETProject = (): React.ReactElement => {
   }
 }
 
+export const RedirectToCETEventSummaryDetail = (): React.ReactElement => {
+  const params = useParams<ProjectPathProps & { identifier: string }>()
+  return (
+    <Redirect
+      to={routes.toCETEventsSummaryDetail({
+        accountId: params.accountId,
+        orgIdentifier: params.orgIdentifier || '',
+        projectIdentifier: params.projectIdentifier
+      })}
+    />
+  )
+}
+
 const RedirectToModuleTrialHome = (): React.ReactElement => {
   const { accountId } = useParams<{
     accountId: string
@@ -127,7 +140,7 @@ const RedirectToModuleTrialHome = (): React.ReactElement => {
   return <Redirect to={routes.toCETHomeTrial({ accountId })} />
 }
 
-const licenseRedirectData: LicenseRedirectProps = {
+export const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CET_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHome,
   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CET)

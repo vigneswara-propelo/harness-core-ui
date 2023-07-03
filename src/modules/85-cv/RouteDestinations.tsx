@@ -57,6 +57,7 @@ import { CDSideNavProps } from '@cd/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import { NameIdDescriptionTags, TimeSeriesAreaChart } from '@common/components'
 import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
+import { RedirectToCETEventSummaryDetail, etModuleParams } from '@cet/RouteDestinations'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -588,6 +589,17 @@ export const SRMRoutes = (
       <MonitoredServiceProvider isTemplate={false}>
         <MonitoredServicePage />
       </MonitoredServiceProvider>
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      sidebarProps={CVSideNavProps}
+      path={routes.toCETEventSummaryDetailOldNotifLink({
+        ...accountPathProps,
+        ...projectPathProps,
+        ...etModuleParams
+      })}
+    >
+      <RedirectToCETEventSummaryDetail />
     </RouteWithLayout>
 
     <RouteWithLayout
