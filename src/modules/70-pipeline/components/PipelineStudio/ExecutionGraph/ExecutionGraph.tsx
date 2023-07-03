@@ -671,7 +671,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         'isNestedGroup',
         'nodeType',
         'type',
-        'fqnPath'
+        'fqnPath',
+        'isContainerStepGroup'
       ])
       const isRemove = removeStepOrGroup({
         state,

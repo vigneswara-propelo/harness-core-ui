@@ -62,9 +62,7 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
     type: StepType.AwsSamBuild,
     timeout: '10m',
     spec: {
-      connectorRef: '',
-      samBuildDockerRegistryConnectorRef: '',
-      image: ''
+      connectorRef: ''
     }
   }
 
@@ -157,6 +155,27 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
   }
 
   processFormData(formData: any): AwsSamBuildStepInitialValues {
+    let buildCommandOptions
+    if (formData.spec?.buildCommandOptions && !isEmpty(formData.spec?.buildCommandOptions)) {
+      buildCommandOptions =
+        typeof formData.spec.buildCommandOptions === 'string'
+          ? formData.spec.buildCommandOptions
+          : (formData.spec.buildCommandOptions as ListValue)?.map(
+              (buildCommandOption: { id: string; value: string }) => buildCommandOption.value
+            )
+    }
+
+    let envVariables
+    if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = (formData.spec?.envVariables as MapValue).reduce(
+        (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
+          ...agg,
+          [envVar.key]: envVar.value
+        }),
+        {}
+      )
+    }
+
     return {
       ...formData,
       spec: {
@@ -165,19 +184,12 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
         samBuildDockerRegistryConnectorRef: getConnectorRefValue(
           formData.spec.samBuildDockerRegistryConnectorRef as ConnectorRefFormValueType
         ),
-        buildCommandOptions:
-          typeof formData.spec.buildCommandOptions === 'string'
-            ? formData.spec.buildCommandOptions
-            : (formData.spec.buildCommandOptions as ListValue)?.map(
-                (buildCommandOption: { id: string; value: string }) => buildCommandOption.value
-              ),
-        envVariables: (formData.spec?.envVariables as MapValue).reduce(
-          (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
-            ...agg,
-            [envVar.key]: envVar.value
-          }),
-          {}
-        )
+        buildCommandOptions,
+        imagePullPolicy:
+          formData.spec.imagePullPolicy && formData.spec.imagePullPolicy.length > 0
+            ? formData.spec.imagePullPolicy
+            : undefined,
+        envVariables
       }
     }
   }

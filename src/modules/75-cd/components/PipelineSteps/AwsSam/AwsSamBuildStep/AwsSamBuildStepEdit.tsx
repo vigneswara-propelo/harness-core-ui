@@ -50,7 +50,7 @@ import css from '../AwsSamBuildDeployStep.module.scss'
 export interface AwsSamBuildStepFormikValues extends StepElementConfig {
   spec: {
     connectorRef: ConnectorRef
-    samBuildDockerRegistryConnectorRef: ConnectorRef
+    samBuildDockerRegistryConnectorRef?: ConnectorRef
     image?: string
     samVersion?: string
     buildCommandOptions?: MultiTypeListType

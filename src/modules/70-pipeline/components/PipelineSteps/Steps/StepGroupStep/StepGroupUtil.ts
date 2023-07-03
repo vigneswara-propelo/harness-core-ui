@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 
 import type {
   CIVolume,
@@ -70,21 +70,32 @@ export const getModifiedFormikValues = (
   isContainerBasedExecutionEnabled: boolean
 ): K8sDirectInfraStepGroupElementConfig => {
   if (isContainerBasedExecutionEnabled) {
+    let addCapabilities
+    if (values.addCapabilities && !isEmpty(values.addCapabilities)) {
+      addCapabilities =
+        typeof values.addCapabilities === 'string'
+          ? (values.addCapabilities as any)
+          : (values.addCapabilities as ListUIType)?.map((capability: { id: string; value: string }) => capability.value)
+    }
+
+    let dropCapabilities
+    if (values.dropCapabilities && !isEmpty(values.dropCapabilities)) {
+      dropCapabilities =
+        typeof values.dropCapabilities === 'string'
+          ? (values.dropCapabilities as any)
+          : (values.dropCapabilities as ListUIType)?.map(
+              (capability: { id: string; value: string }) => capability.value
+            )
+    }
+
     const containerSecurityContext: SecurityContext = {
-      capabilities: {
-        add:
-          typeof values.addCapabilities === 'string'
-            ? (values.addCapabilities as any)
-            : (values.addCapabilities as ListUIType)?.map(
-                (capability: { id: string; value: string }) => capability.value
-              ),
-        drop:
-          typeof values.dropCapabilities === 'string'
-            ? (values.dropCapabilities as any)
-            : (values.dropCapabilities as ListUIType)?.map(
-                (capability: { id: string; value: string }) => capability.value
-              )
-      },
+      capabilities:
+        addCapabilities || dropCapabilities
+          ? {
+              add: addCapabilities,
+              drop: dropCapabilities
+            }
+          : undefined,
       privileged: values.privileged,
       allowPrivilegeEscalation: values.allowPrivilegeEscalation,
       runAsNonRoot: values.runAsNonRoot,
@@ -92,16 +103,23 @@ export const getModifiedFormikValues = (
       runAsUser: values.runAsUser
     }
 
-    let sharedPaths: string[] | string = []
-    if (values.sharedPaths) {
+    const isContainerSecurityContextDefined =
+      containerSecurityContext &&
+      !isEmpty(containerSecurityContext) &&
+      Object.keys(containerSecurityContext).filter(
+        currKey => !!containerSecurityContext[currKey as keyof SecurityContext]
+      ).length
+
+    let sharedPaths
+    if (values.sharedPaths && !isEmpty(values.sharedPaths)) {
       sharedPaths =
         typeof values.sharedPaths === 'string'
           ? values.sharedPaths
           : values.sharedPaths.map((listValue: { id: string; value: string }) => listValue.value)
     }
 
-    let labels: { [key: string]: string } = {}
-    if (values.labels && values.labels.length > 0) {
+    let labels
+    if (values.labels && !isEmpty(values.labels)) {
       labels = values.labels.reduce(
         (agg: { [key: string]: string }, listValue: { key: string; value: string }) => ({
           ...agg,
@@ -111,8 +129,8 @@ export const getModifiedFormikValues = (
       )
     }
 
-    let annotations: { [key: string]: string } = {}
-    if (values.annotations && values.annotations.length > 0) {
+    let annotations
+    if (values.annotations && !isEmpty(values.annotations)) {
       annotations = values.annotations.reduce(
         (agg: { [key: string]: string }, listValue: { key: string; value: string }) => ({
           ...agg,
@@ -122,8 +140,8 @@ export const getModifiedFormikValues = (
       )
     }
 
-    let nodeSelector: { [key: string]: string } = {}
-    if (values.nodeSelector && values.nodeSelector.length > 0) {
+    let nodeSelector
+    if (values.nodeSelector && !isEmpty(values.nodeSelector)) {
       nodeSelector = values.nodeSelector.reduce(
         (agg: { [key: string]: string }, listValue: { key: string; value: string }) => ({
           ...agg,
@@ -133,15 +151,22 @@ export const getModifiedFormikValues = (
       )
     }
 
-    let tolerations: string | Toleration[] = []
-    if (values.tolerations) {
-      if (typeof values.tolerations === 'string') {
-        tolerations = values.tolerations
-      } else {
-        tolerations = values.tolerations.map(({ id, ...rest }) => ({
-          ...rest
-        }))
-      }
+    let tolerations
+    if (values.tolerations && !isEmpty(values.tolerations)) {
+      tolerations =
+        typeof values.tolerations === 'string'
+          ? values.tolerations
+          : values.tolerations.map(({ id, ...rest }) => ({
+              ...rest
+            }))
+    }
+
+    let hostNames
+    if (values.hostNames && !isEmpty(values.hostNames)) {
+      hostNames =
+        typeof values.hostNames === 'string'
+          ? (values.hostNames as any)
+          : values.hostNames?.map((hostName: { id: string; value: string }) => hostName.value)
     }
 
     return {
@@ -161,14 +186,10 @@ export const getModifiedFormikValues = (
           automountServiceAccountToken: values.automountServiceAccountToken,
           priorityClassName: values.priorityClassName,
           tolerations,
-          containerSecurityContext: containerSecurityContext,
+          containerSecurityContext: isContainerSecurityContextDefined ? containerSecurityContext : undefined,
           harnessImageConnectorRef: ((values.harnessImageConnectorRef as ConnectorSelectedValue)?.value ||
             values?.harnessImageConnectorRef) as string,
-          os: values.os,
-          hostNames:
-            typeof values.hostNames === 'string'
-              ? (values.hostNames as any)
-              : values.hostNames?.map((hostName: { id: string; value: string }) => hostName.value)
+          hostNames: hostNames
         }
       }
     }

@@ -129,7 +129,7 @@ export interface AwsSamDeployStepInitialValues extends StepElementConfig {
 export interface AwsSamBuildStepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
-    samBuildDockerRegistryConnectorRef: string
+    samBuildDockerRegistryConnectorRef?: string
     image?: string
     samVersion?: string
     buildCommandOptions?: string | string[]

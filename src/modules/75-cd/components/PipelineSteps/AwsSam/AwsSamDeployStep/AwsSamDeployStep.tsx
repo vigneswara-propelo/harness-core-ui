@@ -62,8 +62,7 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     type: StepType.AwsSamDeploy,
     timeout: '10m',
     spec: {
-      connectorRef: '',
-      image: ''
+      connectorRef: ''
     }
   }
 
@@ -156,24 +155,38 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
   }
 
   processFormData(formData: any): AwsSamDeployStepInitialValues {
+    let deployCommandOptions
+    if (formData.spec?.deployCommandOptions && !isEmpty(formData.spec?.deployCommandOptions)) {
+      deployCommandOptions =
+        typeof formData.spec.deployCommandOptions === 'string'
+          ? formData.spec.deployCommandOptions
+          : (formData.spec.deployCommandOptions as ListValue)?.map(
+              (deployCommandOption: { id: string; value: string }) => deployCommandOption.value
+            )
+    }
+
+    let envVariables
+    if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = (formData.spec?.envVariables as MapValue).reduce(
+        (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
+          ...agg,
+          [envVar.key]: envVar.value
+        }),
+        {}
+      )
+    }
+
     return {
       ...formData,
       spec: {
         ...formData.spec,
         connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
-        deployCommandOptions:
-          typeof formData.spec.deployCommandOptions === 'string'
-            ? formData.spec.deployCommandOptions
-            : (formData.spec.deployCommandOptions as ListValue)?.map(
-                (deployCommandOption: { id: string; value: string }) => deployCommandOption.value
-              ),
-        envVariables: (formData.spec?.envVariables as MapValue).reduce(
-          (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
-            ...agg,
-            [envVar.key]: envVar.value
-          }),
-          {}
-        )
+        deployCommandOptions,
+        imagePullPolicy:
+          formData.spec.imagePullPolicy && formData.spec.imagePullPolicy.length > 0
+            ? formData.spec.imagePullPolicy
+            : undefined,
+        envVariables
       }
     }
   }

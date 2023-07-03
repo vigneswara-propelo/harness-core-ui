@@ -229,7 +229,6 @@ function StepGroupStepEdit(
       tolerations: Yup.lazy(value =>
         validateUniqueList({ value, getString, uniqueKey: 'key', stringKey: 'pipeline.ci.validations.keyUnique' })
       ),
-      os: Yup.string().required(getString('fieldRequired', { field: getString('pipeline.infraSpecifications.os') })),
       hostNames: Yup.lazy(value => validateUniqueList({ value, getString }))
     }
   }
@@ -251,8 +250,6 @@ function StepGroupStepEdit(
   })
 
   const getKubernetesInfraPayload = (): Omit<StepGroupFormikValues, 'identifier' | 'name'> => {
-    const autoServiceAccountToken = initialValues.stepGroupInfra?.spec?.automountServiceAccountToken
-
     const labels = Object.keys(defaultTo(initialValues.stepGroupInfra?.spec?.labels, {}))?.map(key => {
       const value = initialValues.stepGroupInfra?.spec?.labels?.[key]
       return {
@@ -291,7 +288,7 @@ function StepGroupStepEdit(
       labels: labels,
       annotations: annotations,
       priorityClassName: initialValues.stepGroupInfra?.spec?.priorityClassName as unknown as string,
-      automountServiceAccountToken: typeof autoServiceAccountToken === 'undefined' ? true : autoServiceAccountToken,
+      automountServiceAccountToken: initialValues.stepGroupInfra?.spec?.automountServiceAccountToken,
       privileged: initialValues.stepGroupInfra?.spec?.containerSecurityContext?.privileged,
       allowPrivilegeEscalation: initialValues.stepGroupInfra?.spec?.containerSecurityContext?.allowPrivilegeEscalation,
       addCapabilities: getInitialListValues(
@@ -305,7 +302,6 @@ function StepGroupStepEdit(
       tolerations: getInitialComplexMapValues(initialValues.stepGroupInfra?.spec?.tolerations),
       nodeSelector: nodeSelectors,
       harnessImageConnectorRef: initialValues.stepGroupInfra?.spec?.harnessImageConnectorRef,
-      os: initialValues.stepGroupInfra?.spec?.os || OsTypes.Linux,
       hostNames: getInitialListValues(initialValues.stepGroupInfra?.spec?.hostNames || [])
     }
   }
