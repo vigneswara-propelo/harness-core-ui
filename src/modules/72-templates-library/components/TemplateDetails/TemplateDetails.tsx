@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, isUndefined, noop, set, unset } from 'lodash-es'
+import { defaultTo, isEmpty, noop, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { parse } from 'yaml'
 import { useStrings } from 'framework/strings'
@@ -139,7 +139,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     (selectedTemplate as NGTemplateInfoConfigWithGitDetails)?.branch
 
   const parentEntityDetails =
-    isUndefined(selectedBranch) ||
+    !selectedBranch ||
     (selectedTemplate?.gitDetails?.repoName !== storeMetadata?.repoName &&
       selectedTemplate?.gitDetails?.defaultBranch === selectedBranch)
   const {
@@ -319,7 +319,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         refetchTemplateYaml()
       }
     }
-  }, [selectedTemplate?.yaml, defaultBranch])
+  }, [selectedTemplate])
 
   React.useEffect(() => {
     if (templateYamlData?.data) {
@@ -362,6 +362,11 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
 
   const onGitBranchChange = ({ branch }: GitFilterScope, defaultSelected?: boolean): void => {
     setSelectedBranch(branch)
+    const newGitDetails = {
+      ...selectedTemplate?.gitDetails,
+      branch
+    }
+    setSelectedTemplate({ ...selectedTemplate, gitDetails: newGitDetails })
     if (!defaultSelected) {
       refetchTemplateYaml({
         queryParams: {
