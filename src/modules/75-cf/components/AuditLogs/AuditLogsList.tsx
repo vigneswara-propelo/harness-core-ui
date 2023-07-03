@@ -51,6 +51,12 @@ const RenderCellAction: Renderer<CellProps<AuditTrail>> = ({ row }) => {
     case AuditLogAction.FeatureActivationCreated:
       text = getString('cf.auditLogs.flagCreated')
       break
+    case AuditLogAction.FeatureActivationArchived:
+      text = getString('cf.auditLogs.flagArchived')
+      break
+    case AuditLogAction.FeatureActivationRestored:
+      text = getString('cf.auditLogs.flagRestored')
+      break
     case AuditLogAction.SegmentCreated:
       text = getString('cf.auditLogs.segmentCreated')
       break

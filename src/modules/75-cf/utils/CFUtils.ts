@@ -82,7 +82,9 @@ export const AuditLogAction = {
   FeatureActivationCreated: 'FeatureActivationCreated',
   SegmentCreated: 'SegmentCreated',
   FeatureActivationPatched: 'FeatureActivationPatched',
-  SegmentPatched: 'SegmentPatched'
+  SegmentPatched: 'SegmentPatched',
+  FeatureActivationRestored: 'FeatureActivationRestored',
+  FeatureActivationArchived: 'FeatureActivationArchived'
 }
 
 export const isFeatureFlagOn = (featureFlag: Feature): boolean => {

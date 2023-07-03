@@ -13,6 +13,7 @@ import mockFeature from '@cf/utils/testData/data/mockFeature'
 import * as cfServices from 'services/cf'
 import { AuditLogsList } from '../AuditLogsList'
 import { mockAuditData, mockNoAuditData } from './__data__/mockAuditData'
+import { mockAuditEventActions } from './__data__/mockAuditEventActions'
 
 const startDate = new Date()
 const endDate = new Date()
@@ -71,6 +72,7 @@ describe('AuditLogsList', () => {
 
     await waitFor(() => expect(refetch).toHaveBeenCalled())
   })
+
   test('it should render table and rows', async () => {
     renderComponent()
 
@@ -84,7 +86,35 @@ describe('AuditLogsList', () => {
     })
   })
 
-  test('it should render correct user-friendly messages', async () => {
+  test('it should render the correct user-friendly message for each audit action', async () => {
+    useGetAuditByParamsMock.mockReturnValue({
+      loading: false,
+      data: mockAuditEventActions,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
+    renderComponent()
+
+    mockAuditEventActions.data.auditTrails.forEach(auditTrail => {
+      switch (auditTrail.action) {
+        case 'FeatureActivationCreated':
+          expect(screen.getByText('cf.auditLogs.flagCreated')).toBeInTheDocument()
+          break
+        case 'SegmentCreated':
+          expect(screen.getByText('cf.auditLogs.segmentCreated')).toBeInTheDocument()
+          break
+        case 'FeatureActivationRestored':
+          expect(screen.getByText('cf.auditLogs.flagRestored')).toBeInTheDocument()
+          break
+        case 'FeatureActivationArchived':
+          expect(screen.getByText('cf.auditLogs.flagArchived')).toBeInTheDocument()
+          break
+      }
+    })
+  })
+
+  test('it should render the correct user-friendly message for each audit instruction set', async () => {
     renderComponent()
 
     mockAuditData.data.auditTrails.forEach(trail => {

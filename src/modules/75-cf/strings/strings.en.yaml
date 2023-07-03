@@ -399,6 +399,8 @@ auditLogs:
   flagCreated: Feature activation created
   segmentCreated: Target Group created
   flagUpdated: Feature activation updated
+  flagArchived: Flag archived
+  flagRestored: Flag restored
   unknown: Unknown activity
   empty: No activity found during this time.
   createdMessageFF: 'created feature flag'

@@ -7936,7 +7936,9 @@ export interface StringsMap {
   'cf.auditLogs.events.updatePrerequisite': string
   'cf.auditLogs.events.updateRule': string
   'cf.auditLogs.events.updateVariation': string
+  'cf.auditLogs.flagArchived': string
   'cf.auditLogs.flagCreated': string
+  'cf.auditLogs.flagRestored': string
   'cf.auditLogs.flagUpdated': string
   'cf.auditLogs.searchPlaceholder': string
   'cf.auditLogs.segmentCreated': string
