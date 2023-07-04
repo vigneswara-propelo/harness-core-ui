@@ -19,7 +19,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for App Dynam
             class="StepWizard--header"
           >
             <span
-              class="bp3-icon StyledProps--main"
+              class="bp3-icon StyledProps--main StyledProps--margin-bottom-xlarge"
               data-icon="service-appdynamics"
             >
               <svg
@@ -4494,7 +4494,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Prometheu
             class="StepWizard--header"
           >
             <span
-              class="bp3-icon StyledProps--main"
+              class="bp3-icon StyledProps--main StyledProps--margin-bottom-xlarge"
               data-icon="service-prometheus"
             >
               <svg
@@ -4867,7 +4867,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Splunk 1`
             class="StepWizard--header"
           >
             <span
-              class="bp3-icon StyledProps--main"
+              class="bp3-icon StyledProps--main StyledProps--margin-bottom-xlarge"
               data-icon="service-splunk"
             >
               <svg
@@ -5662,7 +5662,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for custom 1`
             class="StepWizard--header"
           >
             <span
-              class="bp3-icon StyledProps--main StyledProps--background-white"
+              class="bp3-icon StyledProps--main StyledProps--background-white StyledProps--margin-bottom-xlarge"
               data-icon="service-custom-connector"
             >
               <svg

@@ -9,7 +9,7 @@ exports[`Create PagerDuty Connector Wizard Ensure create flow works 1`] = `
       class="StyledProps--font StyledProps--main titleContent"
     >
       <p
-        class="StyledProps--font StyledProps--main title"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-small"
       >
         connectors.connectorDetailsHeader
       </p>

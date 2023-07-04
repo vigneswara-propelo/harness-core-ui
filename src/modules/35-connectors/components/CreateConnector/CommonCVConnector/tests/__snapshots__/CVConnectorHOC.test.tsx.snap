@@ -12,7 +12,7 @@ exports[`Unit tests for cv connector hoc should render form 1`] = `
         class="StepWizard--header"
       >
         <span
-          class="bp3-icon StyledProps--main"
+          class="bp3-icon StyledProps--main StyledProps--margin-bottom-xlarge"
           data-icon="service-prometheus"
         >
           <svg

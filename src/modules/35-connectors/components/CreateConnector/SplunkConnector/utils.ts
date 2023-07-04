@@ -6,6 +6,7 @@
  */
 
 import type { FormData } from '@connectors/interfaces/ConnectorInterface'
+import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 
 type InitializeSplunkConnectorArgs = {
@@ -23,8 +24,10 @@ export function initializeSplunkConnector({
 }: InitializeSplunkConnectorArgs): FormData {
   const defaultObj = {
     url: '',
+    authType: AuthTypes.USER_PASSWORD,
     username: '',
     passwordRef: undefined,
+    tokenRef: undefined,
     accountId: accountId,
     projectIdentifier,
     orgIdentifier
@@ -39,6 +42,8 @@ export function initializeSplunkConnector({
     ...defaultObj,
     url: prevData?.url || spec?.splunkUrl || '',
     username: prevData?.username || spec?.username,
-    passwordRef: prevData?.passwordRef || spec?.passwordRef
+    passwordRef: prevData?.passwordRef || spec?.passwordRef,
+    authType: prevData?.authType || spec?.type || defaultObj.authType,
+    tokenRef: prevData?.tokenRef || spec?.tokenRef
   }
 }

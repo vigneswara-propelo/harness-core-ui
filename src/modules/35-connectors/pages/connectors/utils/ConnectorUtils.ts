@@ -2402,11 +2402,13 @@ export const buildSplunkPayload = (formData: FormData) => ({
     type: Connectors.SPLUNK,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
-      username: formData.username,
       accountname: formData.accountName,
-      passwordRef: formData.passwordRef.referenceString,
+      username: formData.authType === AuthTypes.USER_PASSWORD ? formData.username : undefined,
+      passwordRef: formData.authType === AuthTypes.USER_PASSWORD ? formData.passwordRef?.referenceString : undefined,
       splunkUrl: formData.url,
-      accountId: formData.accountId
+      accountId: formData.accountId,
+      type: formData.authType,
+      tokenRef: formData.authType === AuthTypes.BEARER_TOKEN ? formData.tokenRef?.referenceString : undefined
     }
   }
 })

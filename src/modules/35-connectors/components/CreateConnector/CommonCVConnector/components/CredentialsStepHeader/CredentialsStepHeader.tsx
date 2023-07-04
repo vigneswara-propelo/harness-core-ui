@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Container, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './CredentialsStepHeader.module.scss'
 
@@ -21,7 +22,9 @@ export function StepDetailsHeader(props: StepDetailsHeader): JSX.Element {
   const stringsTitleObject = { type: connectorTypeLabel }
   return (
     <Container className={css.titleContent}>
-      <Text className={css.title}>{getString('connectors.connectorDetailsHeader', stringsTitleObject)}</Text>
+      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
+        {getString('connectors.connectorDetailsHeader', stringsTitleObject)}
+      </Text>
       <Text className={css.heading}>{getString('connectors.addConnectorDetails', stringsTitleObject)}</Text>
       {subheading && <Text className={css.subHeading}>{subheading}</Text>}
     </Container>

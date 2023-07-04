@@ -313,9 +313,9 @@ export enum ConnectorDetailsView {
 export const getConnectorIconPropsByType = (type: string): Omit<IconProps, 'name'> => {
   switch (type) {
     case Connectors.CUSTOM_HEALTH:
-      return { size: 37, background: 'white' }
+      return { size: 37, background: 'white', margin: { bottom: 'xlarge' } }
     default:
-      return { size: 37 }
+      return { size: 37, margin: { bottom: 'xlarge' } }
   }
 }
 

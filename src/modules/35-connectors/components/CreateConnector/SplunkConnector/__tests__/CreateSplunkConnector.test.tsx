@@ -5,17 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+// tells jest we intent to mock CVConnectorHOC and use mock in __mocks__
+jest.mock('../../CommonCVConnector/CVConnectorHOC')
+
+import React, { useEffect } from 'react'
 import { noop } from 'lodash-es'
-import { render, fireEvent, waitFor } from '@testing-library/react'
-import { Container, FormInput } from '@harness/uicore'
+import { useFormikContext } from 'formik'
+import { render, fireEvent, waitFor, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { onNextMock } from '../../CommonCVConnector/__mocks__/CommonCVConnectorMocks'
 
-// tells jest we intent to mock CVConnectorHOC and use mock in __mocks__
-jest.mock('../../CommonCVConnector/CVConnectorHOC')
+jest.mock('@secrets/utils/SecretField', () => ({
+  setSecretField: async () => ({
+    identifier: 'secretIdentifier',
+    name: 'secretName',
+    referenceString: 'testReferenceString'
+  })
+}))
+
 // file that imports mocked component must be placed after jest.mock
 import CreateSplunkConnector from '../CreateSplunkConnector'
 
@@ -24,11 +35,33 @@ const SplunkURL = 'https://splunk.com/api/v1/'
 jest.mock('../../CommonCVConnector/components/ConnectorSecretField/ConnectorSecretField', () => ({
   ...(jest.requireActual('../../CommonCVConnector/components/ConnectorSecretField/ConnectorSecretField') as any),
   ConnectorSecretField: function MockComponent(b: any) {
-    return (
-      <Container className="secret-mock">
-        <FormInput.Text name={b.secretInputProps.name} />
-      </Container>
-    )
+    const { setFieldValue: formikSetValue } = useFormikContext()
+    useEffect(() => {
+      formikSetValue(b.secretInputProps.name, {
+        identifier: 'abc',
+        name: 'abc',
+        referenceString: 'account.abc',
+        accountIdentifier: 'acc123'
+      })
+    }, [])
+    return <Container data-testid="passwordRefField" className="secret-mock"></Container>
+  }
+}))
+
+jest.mock('@secrets/components/SecretInput/SecretInput', () => ({
+  ...(jest.requireActual('@secrets/components/SecretInput/SecretInput') as any),
+  default: function MockComponent() {
+    const { setFieldValue: formikSetValue } = useFormikContext()
+    useEffect(() => {
+      formikSetValue('tokenRef', {
+        identifier: 'abc',
+        name: 'abc',
+        referenceString: 'account.secretToken',
+        accountIdentifier: 'acc123'
+      })
+    }, [])
+
+    return <Container data-testid="SecretInput" className="secret-mock"></Container>
   }
 }))
 
@@ -58,7 +91,7 @@ describe('Unit tests for createAppdConnector', () => {
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => expect(getByText('common.validation.urlIsRequired')).not.toBeNull())
     expect(getByText('validation.username')).not.toBeNull()
-    expect(getByText('validation.password')).not.toBeNull()
+    expect(screen.getByTestId(/passwordRefField/)).not.toBeNull()
 
     expect(onNextMock).not.toHaveBeenCalled()
   })
@@ -94,21 +127,23 @@ describe('Unit tests for createAppdConnector', () => {
       fieldId: 'username',
       value: 'splunkUsername'
     })
-    await setFieldValue({
-      container: document.body,
-      type: InputTypes.TEXTFIELD,
-      fieldId: 'passwordRef',
-      value: 'somePassword'
-    })
 
     // click submit and verify submitted data
-    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    await userEvent.click(container.querySelector('button[type="submit"]')!)
+
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
+        authType: 'UsernamePassword',
         orgIdentifier: 'dummyOrgId',
-        passwordRef: 'somePassword',
+        passwordRef: {
+          accountIdentifier: 'acc123',
+          identifier: 'abc',
+          name: 'abc',
+          referenceString: 'account.abc'
+        },
         projectIdentifier: 'dummyProjectId',
+        tokenRef: undefined,
         url: 'https://sdfs.com',
         username: 'splunkUsername'
       })
@@ -133,7 +168,12 @@ describe('Unit tests for createAppdConnector', () => {
               description: '',
               accountId: 'dummyAccountId',
               orgIdentifier: 'dummyOrgId',
-              passwordRef: 'somePassword',
+              passwordRef: {
+                accountIdentifier: 'acc123',
+                identifier: 'abc',
+                name: 'abc',
+                referenceString: 'account.abc'
+              },
               projectIdentifier: 'dummyProjectId',
               url: SplunkURL,
               username: 'splunkUsername',
@@ -148,9 +188,10 @@ describe('Unit tests for createAppdConnector', () => {
 
     await waitFor(() => expect(getByText('UrlLabel')).not.toBeNull())
 
+    screen.debug(container, 30000)
+
     // expect recieved value to be there
     expect(document.body.querySelector(`input[value="${SplunkURL}"]`)).not.toBeNull()
-    expect(document.body.querySelector(`input[value="somePassword"]`)).not.toBeNull()
     expect(document.body.querySelector(`input[value="splunkUsername"]`)).not.toBeNull()
 
     // update it with new value
@@ -161,27 +202,27 @@ describe('Unit tests for createAppdConnector', () => {
       fieldId: 'username',
       value: 'updated_userename'
     })
-    // fill out APP Secret
-    await setFieldValue({
-      container,
-      type: InputTypes.TEXTFIELD,
-      fieldId: 'passwordRef',
-      value: 'newSplunkPassword'
-    })
 
     // click submit and verify submitted data
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
+        authType: 'UsernamePassword',
         delegateSelectors: [],
         description: '',
         identifier: 'accountSplunkConnector',
         name: 'splunkConnector',
         orgIdentifier: 'dummyOrgId',
-        passwordRef: 'newSplunkPassword',
+        passwordRef: {
+          accountIdentifier: 'acc123',
+          identifier: 'abc',
+          name: 'abc',
+          referenceString: 'account.abc'
+        },
         projectIdentifier: 'dummyProjectId',
         tags: {},
+        tokenRef: undefined,
         type: 'Splunk',
         url: 'http://sfsfsf.com',
         username: 'updated_userename'
@@ -210,7 +251,12 @@ describe('Unit tests for createAppdConnector', () => {
               tags: {},
               type: 'AppDynamics',
               spec: {
-                passwordRef: 'somePassword',
+                passwordRef: {
+                  identifier: 'abc',
+                  name: 'abc',
+                  referenceString: 'account.abc',
+                  accountIdentifier: 'acc123'
+                },
                 splunkUrl: 'https://sdfs.com',
                 username: 'splunkUsername',
                 delegateSelectors: []
@@ -239,19 +285,31 @@ describe('Unit tests for createAppdConnector', () => {
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
+        authType: 'UsernamePassword',
         description: '',
         identifier: 'dasdadasdasda',
         name: 'dasdadasdasda',
         orgIdentifier: 'dummyOrgId',
-        passwordRef: 'somePassword',
+        passwordRef: {
+          accountIdentifier: 'acc123',
+          identifier: 'abc',
+          name: 'abc',
+          referenceString: 'account.abc'
+        },
         projectIdentifier: 'dummyProjectId',
         spec: {
           delegateSelectors: [],
-          passwordRef: 'somePassword',
+          passwordRef: {
+            accountIdentifier: 'acc123',
+            identifier: 'abc',
+            name: 'abc',
+            referenceString: 'account.abc'
+          },
           splunkUrl: 'https://sdfs.com',
           username: 'splunkUsername'
         },
         tags: {},
+        tokenRef: undefined,
         type: 'AppDynamics',
         url: 'http://dgdgtrty.com',
         username: 'new_and_updateduser'
