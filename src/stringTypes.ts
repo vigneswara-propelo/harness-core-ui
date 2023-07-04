@@ -3897,14 +3897,18 @@ export interface StringsMap {
   'pipeline.artifactsSelection.loadingRepository': string
   'pipeline.artifactsSelection.loadingTags': string
   'pipeline.artifactsSelection.orgNamePlaceholder': string
+  'pipeline.artifactsSelection.organizationPlaceholder': string
   'pipeline.artifactsSelection.packageName': string
   'pipeline.artifactsSelection.packageNamePlaceholder': string
+  'pipeline.artifactsSelection.packageSource': string
+  'pipeline.artifactsSelection.packageSourcePlaceholder': string
   'pipeline.artifactsSelection.projectIDPlaceholder': string
   'pipeline.artifactsSelection.projectPlaceholder': string
   'pipeline.artifactsSelection.repositoryPlaceholder': string
   'pipeline.artifactsSelection.repositoryPort': string
   'pipeline.artifactsSelection.repositoryPortPlaceholder': string
   'pipeline.artifactsSelection.repositoryTypePlaceholder': string
+  'pipeline.artifactsSelection.userPlaceholder': string
   'pipeline.artifactsSelection.validation.artifactDirectory': string
   'pipeline.artifactsSelection.validation.artifactId': string
   'pipeline.artifactsSelection.validation.artifactPath': string

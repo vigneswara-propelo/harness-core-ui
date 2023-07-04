@@ -19,18 +19,19 @@ import type {
 } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
 import {
+  AmazonMachineImageInitialValuesType,
   ArtifactTagHelperText,
   ArtifactType,
-  GoogleArtifactRegistryInitialValuesType,
+  AzureArtifactsInitialValues,
   CustomArtifactSource,
   GithubPackageRegistryInitialValuesType,
+  GoogleArtifactRegistryInitialValuesType,
   ImagePathTypes,
   JenkinsArtifactType,
   Nexus2InitialValuesType,
+  PackageSourceTypes,
   RepositoryPortOrServer,
-  TagTypes,
-  AmazonMachineImageInitialValuesType,
-  AzureArtifactsInitialValues
+  TagTypes
 } from './ArtifactInterface'
 import type { AcceptableValue } from '../PipelineInputSetForm/CICodebaseInputSetForm'
 
@@ -526,6 +527,12 @@ const getVersionValues = (
   AmazonMachineImageInitialValuesType => {
   const formikInitialValues = {
     versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
+    packageSource:
+      specValues?.packageType === 'maven'
+        ? specValues?.user
+          ? PackageSourceTypes.User
+          : PackageSourceTypes.Org
+        : undefined,
     spec: {
       ...specValues,
       version: specValues?.version,

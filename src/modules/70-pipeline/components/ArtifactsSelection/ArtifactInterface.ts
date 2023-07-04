@@ -65,6 +65,12 @@ export enum TagTypes {
   Value = 'value',
   Regex = 'regex'
 }
+
+export enum PackageSourceTypes {
+  Org = 'org',
+  User = 'user'
+}
+
 export enum RepositoryPortOrServer {
   RepositoryPort = 'repositoryPort',
   RepositoryUrl = 'repositoryUrl'
@@ -184,6 +190,7 @@ export interface AmazonS3ArtifactProps {
 export interface GithubPackageRegistryInitialValuesType {
   identifier?: string
   versionType?: TagTypes
+  packageSource?: 'org' | 'user'
   spec: {
     connectorRef: string
     packageType: string
@@ -192,6 +199,10 @@ export interface GithubPackageRegistryInitialValuesType {
     version: string
     versionRegex: string
     digest?: string
+    user?: string
+    artifactId?: string
+    groupId?: string
+    extension?: string
   }
 }
 

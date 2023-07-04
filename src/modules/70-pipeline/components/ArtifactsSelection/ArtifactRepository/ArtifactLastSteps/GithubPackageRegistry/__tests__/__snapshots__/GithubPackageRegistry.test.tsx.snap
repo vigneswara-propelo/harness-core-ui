@@ -22,7 +22,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
             class="artifactForm"
           >
             <div
-              class="imagePathContainer"
+              class="imagePathContainer selectInputContainer"
             >
               <div
                 class="formGroup xxlg"
@@ -541,7 +541,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
             class="artifactForm"
           >
             <div
-              class="imagePathContainer"
+              class="imagePathContainer selectInputContainer"
             >
               <div
                 class="formGroup xxlg"
@@ -1028,7 +1028,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
             class="artifactForm"
           >
             <div
-              class="imagePathContainer"
+              class="imagePathContainer selectInputContainer"
             >
               <div
                 class="formGroup xxlg"

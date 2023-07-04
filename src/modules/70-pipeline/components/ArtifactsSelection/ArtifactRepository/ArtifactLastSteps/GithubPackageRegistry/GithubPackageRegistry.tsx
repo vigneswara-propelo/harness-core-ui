@@ -7,37 +7,38 @@
 
 import React, { useEffect, useMemo } from 'react'
 import {
-  Formik,
-  Layout,
   Button,
-  StepProps,
-  Text,
   ButtonVariation,
-  MultiTypeInputType,
-  SelectOption,
-  getMultiTypeFromValue,
-  FormInput,
+  Formik,
   FormikForm,
-  RUNTIME_INPUT_VALUE
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
+  SelectOption,
+  StepProps,
+  Text
 } from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { defaultTo, get, isNil, memoize } from 'lodash-es'
+import { defaultTo, isNil, memoize, omit, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import {
-  getConnectorIdValue,
   getArtifactFormData,
   shouldHideHeaderAndNavBtns,
-  resetFieldValue
+  resetFieldValue,
+  getConnectorIdValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
-  GithubPackageRegistryProps,
   GithubPackageRegistryInitialValuesType,
+  GithubPackageRegistryProps,
+  PackageSourceTypes,
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -61,12 +62,23 @@ import { GithubPackageRegistryArtifactDigestField } from './GithubPackageRegistr
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const packageTypes: SelectOption[] = [
-  { label: 'npm', value: 'npm' },
-  { label: 'maven', value: 'maven' },
-  { label: 'rubygems', value: 'rubygems' },
-  { label: 'nuget', value: 'nuget' },
-  { label: 'container', value: 'container' }
+export enum PACKAGE_TYPES {
+  CONTAINER = 'container',
+  MAVEN = 'maven',
+  NPM = 'npm',
+  NUGET = 'nuget'
+}
+
+const packageTypesList: SelectOption[] = [
+  { label: 'Container', value: PACKAGE_TYPES.CONTAINER },
+  { label: 'Maven', value: PACKAGE_TYPES.MAVEN },
+  { label: 'Npm', value: PACKAGE_TYPES.NPM },
+  { label: 'Nuget', value: PACKAGE_TYPES.NUGET }
+]
+
+const packageSourcesList: SelectOption[] = [
+  { label: 'Organization', value: PackageSourceTypes.Org },
+  { label: 'User', value: PackageSourceTypes.User }
 ]
 
 function FormComponent({
@@ -205,69 +217,143 @@ function FormComponent({
       <div className={css.artifactForm}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-        <div className={css.imagePathContainer}>
+        <div className={cx(css.imagePathContainer, css.selectInputContainer)}>
           <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
             <FormInput.Select
-              items={packageTypes}
+              items={packageTypesList}
+              name="spec.packageType"
               // Fixing the default value to container since the input is disabled, this ensures value doesn't get cleared in case of artifact source template
               value={defaultPackageType}
-              name="spec.packageType"
               disabled
-              onChange={
-                /* istanbul ignore next */ value => {
-                  formik.setValues({
-                    ...formik.values,
-                    spec: {
-                      ...formik.values?.spec,
-                      packageType: value.value,
-                      packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
-                      version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
-                    }
-                  })
-                }
-              }
+              onChange={value => {
+                formik.setValues({
+                  ...omit(formik.values, ['packageSource']),
+                  packageSource: value.value === PACKAGE_TYPES.MAVEN ? PackageSourceTypes.Org : undefined,
+                  spec: {
+                    ...formik.values?.spec,
+                    packageType: value.value,
+                    packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
+                    version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
+                  }
+                })
+              }}
               label={getString('pipeline.packageType')}
               placeholder={getString('pipeline.packageTypePlaceholder')}
             />
           </div>
         </div>
-        <div className={css.imagePathContainer}>
-          <FormInput.MultiTextInput
-            name="spec.org"
-            label={getString('projectsOrgs.orgName')}
-            placeholder={getString('pipeline.artifactsSelection.orgNamePlaceholder')}
-            disabled={isReadonly}
-            isOptional={true}
-            onChange={value => {
-              formik.setValues({
-                ...formik.values,
-                spec: {
-                  ...formik.values?.spec,
-                  org: value,
-                  packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
-                  version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
-                }
-              })
-            }}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-          {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
-              style={{ marginTop: 22 }}
-              value={formik.values?.spec?.org || ''}
-              type="String"
-              variableName="org"
-              showRequiredField={false}
-              showDefaultField={false}
-              onChange={value => formik.setFieldValue('spec.org', value)}
-              isReadonly={isReadonly}
-              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+        {formik.values?.spec?.packageType !== PACKAGE_TYPES.MAVEN && (
+          <div className={css.imagePathContainer}>
+            <FormInput.MultiTextInput
+              name="spec.org"
+              label={getString('projectsOrgs.orgName')}
+              placeholder={getString('pipeline.artifactsSelection.orgNamePlaceholder')}
+              disabled={isReadonly}
+              isOptional={true}
+              onChange={value => {
+                formik.setValues({
+                  ...formik.values,
+                  spec: {
+                    ...formik.values?.spec,
+                    org: value,
+                    packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
+                    version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
+                  }
+                })
+              }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
             />
-          )}
-        </div>
+            {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                style={{ marginTop: 22 }}
+                value={formik.values?.spec?.org || ''}
+                type="String"
+                variableName="org"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => formik.setFieldValue('spec.org', value)}
+                isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+              />
+            )}
+          </div>
+        )}
+        {formik.values?.spec?.packageType === PACKAGE_TYPES.MAVEN && (
+          <>
+            <div className={cx(css.imagePathContainer, css.selectInputContainer)}>
+              <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
+                <FormInput.Select
+                  items={packageSourcesList}
+                  name="packageSource"
+                  onChange={value => {
+                    formik.setFieldValue('packageSource', value.value)
+                    if (value.value === PackageSourceTypes.User) {
+                      formik.setFieldValue('spec.org', '')
+                    } else {
+                      formik.setFieldValue('spec.user', '')
+                    }
+                  }}
+                  label={getString('pipeline.artifactsSelection.packageSource')}
+                  placeholder={getString('pipeline.artifactsSelection.packageSourcePlaceholder')}
+                />
+              </div>
+            </div>
+            <div className={css.imagePathContainer} key={formik.values?.packageSource}>
+              {formik.values?.packageSource === PackageSourceTypes.Org ? (
+                <>
+                  <FormInput.MultiTextInput
+                    label={getString('orgLabel')}
+                    name="spec.org"
+                    placeholder={getString('pipeline.artifactsSelection.organizationPlaceholder')}
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                  />
+                  {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        value={formik.values?.spec?.org || ''}
+                        type="String"
+                        variableName="spec.org"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => {
+                          formik.setFieldValue('spec.org', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <FormInput.MultiTextInput
+                    label={getString('common.userLabel')}
+                    name="spec.user"
+                    placeholder={getString('pipeline.artifactsSelection.userPlaceholder')}
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                  />
+                  {getMultiTypeFromValue(formik.values?.spec?.user) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        value={formik.values?.spec?.user || ''}
+                        type="String"
+                        variableName="spec.user"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => {
+                          formik.setFieldValue('spec.user', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </>
+        )}
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             selectItems={getPackages()}
@@ -334,6 +420,84 @@ function FormComponent({
             />
           )}
         </div>
+        {formik.values?.spec?.packageType === PACKAGE_TYPES.MAVEN && (
+          <>
+            <div className={css.imagePathContainer}>
+              <>
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.artifactsSelection.groupId')}
+                  name="spec.groupId"
+                  placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
+                  multiTextInputProps={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      value={formik.values?.spec?.groupId || ''}
+                      type="String"
+                      variableName="spec.groupId"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('spec.groupId', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </>
+            </div>
+            <div className={css.imagePathContainer}>
+              <>
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.artifactsSelection.artifactId')}
+                  name="spec.artifactId"
+                  placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+                  multiTextInputProps={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      value={formik.values?.spec?.artifactId || ''}
+                      type="String"
+                      variableName="spec.artifactId"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('spec.artifactId', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </>
+            </div>
+            <div className={css.imagePathContainer}>
+              <FormInput.MultiTextInput
+                label={getString('pipeline.artifactsSelection.extension')}
+                name="spec.extension"
+                isOptional={true}
+                placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
+                multiTextInputProps={{ expressions, allowableTypes }}
+              />
+              {getMultiTypeFromValue(formik.values?.spec?.extension) === MultiTypeInputType.RUNTIME && (
+                <div className={css.configureOptions}>
+                  <ConfigureOptions
+                    value={formik.values?.spec?.extension || ''}
+                    type="String"
+                    variableName="spec.extension"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => {
+                      formik.setFieldValue('spec.extension', value)
+                    }}
+                    isReadonly={isReadonly}
+                  />
+                </div>
+              )}
+            </div>
+          </>
+        )}
         <div className={css.tagGroup}>
           <FormInput.RadioGroup
             label={getString('pipeline.artifactsSelection.versionDetails')}
@@ -457,6 +621,26 @@ function FormComponent({
   )
 }
 
+const getExtraDataForMavenIfApplicable = (formData: GithubPackageRegistryInitialValuesType) => {
+  const packageSourceData =
+    formData.spec?.packageType === PACKAGE_TYPES.MAVEN && formData.packageSource === 'user'
+      ? {
+          user: defaultTo(formData.spec?.user, '')
+        }
+      : {
+          org: formData.spec.org
+        }
+
+  return formData.spec?.packageType === PACKAGE_TYPES.MAVEN
+    ? {
+        groupId: formData.spec?.groupId,
+        artifactId: formData.spec?.artifactId,
+        extension: formData.spec?.extension,
+        ...packageSourceData
+      }
+    : packageSourceData
+}
+
 export function GithubPackageRegistry(
   props: StepProps<ConnectorConfigDTO> & GithubPackageRegistryProps
 ): React.ReactElement {
@@ -504,10 +688,10 @@ export function GithubPackageRegistry(
       ...identifierData,
       spec: {
         connectorRef: connectorId,
-        org: formData.spec.org,
         packageName: formData.spec.packageName,
         packageType: formData.spec.packageType,
-        ...versionData
+        ...versionData,
+        ...getExtraDataForMavenIfApplicable(formData)
       }
     })
   }
@@ -529,27 +713,60 @@ export function GithubPackageRegistry(
       .required(getString('fieldRequired', { field: getString('pipeline.packageType') })),
     packageName: Yup.string()
       .trim()
-      .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.packageName') }))
+      .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.packageName') })),
+    artifactId: Yup.string().when('packageType', {
+      is: val => val === PACKAGE_TYPES.MAVEN,
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.artifactId') })),
+      otherwise: Yup.string().notRequired()
+    }),
+    groupId: Yup.string().when('packageType', {
+      is: val => val === PACKAGE_TYPES.MAVEN,
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.groupId') })),
+      otherwise: Yup.string().notRequired()
+    })
   }
   const schemaObject = {
     versionType: Yup.string().required(
       getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionDetails') })
     ),
-    spec: Yup.object().when('versionType', {
-      is: 'regex',
-      then: Yup.object().shape({
-        ...commonSpecSchemaObject,
-        versionRegex: Yup.string()
-          .trim()
-          .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionRegex') }))
-      }),
-      otherwise: Yup.object().shape({
-        ...commonSpecSchemaObject,
-        version: Yup.string()
-          .trim()
-          .required(getString('fieldRequired', { field: getString('version') }))
+    spec: Yup.object()
+      .when('versionType', {
+        is: 'regex',
+        then: Yup.object().shape({
+          ...commonSpecSchemaObject,
+          versionRegex: Yup.string()
+            .trim()
+            .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionRegex') }))
+        }),
+        otherwise: Yup.object().shape({
+          ...commonSpecSchemaObject,
+          version: Yup.string()
+            .trim()
+            .required(getString('fieldRequired', { field: getString('version') }))
+        })
       })
-    })
+      .when(['packageSource'], {
+        is: 'user',
+        then: Yup.object().shape({
+          ...commonSpecSchemaObject,
+          user: Yup.string()
+            .trim()
+            .required(getString('fieldRequired', { field: getString('common.userLabel') }))
+        })
+      })
+      .when(['packageSource'], {
+        is: 'org',
+        then: Yup.object().shape({
+          ...commonSpecSchemaObject,
+          org: Yup.string()
+            .trim()
+            .required(getString('fieldRequired', { field: getString('orgLabel') }))
+        })
+      })
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
