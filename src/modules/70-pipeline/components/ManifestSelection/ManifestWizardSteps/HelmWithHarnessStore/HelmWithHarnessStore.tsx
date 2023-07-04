@@ -91,6 +91,7 @@ function HelmWithHarnessStore({
           typeof valuesPaths === 'string' ? valuesPaths : removeEmptyFieldsFromStringArray(valuesPaths, true),
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
         enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback'),
+        fetchHelmChartMetadata: get(initialValues, 'spec.fetchHelmChartMetadata'),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -104,7 +105,8 @@ function HelmWithHarnessStore({
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
       helmVersion: 'V3',
-      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
+      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
+      fetchHelmChartMetadata: false
     }
   }
 
@@ -132,7 +134,8 @@ function HelmWithHarnessStore({
               formData?.skipResourceVersioning,
               formData?.enableDeclarativeRollback
             ),
-            enableDeclarativeRollback: formData?.enableDeclarativeRollback
+            enableDeclarativeRollback: formData?.enableDeclarativeRollback,
+            fetchHelmChartMetadata: formData?.fetchHelmChartMetadata
           }
         }
       }

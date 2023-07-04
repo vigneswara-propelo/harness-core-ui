@@ -612,6 +612,10 @@ exports[`helm with http tests expand advanced section 1`] = `
                           </div>
                         </div>
                         <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-top-medium"
+                          style="width: 90%;"
+                        />
+                        <div
                           class="commandFlags"
                         >
                           <div

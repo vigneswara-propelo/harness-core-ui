@@ -104,6 +104,7 @@ function HelmWithHttp({
         subChartPath: initialValues.spec?.subChartPath,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
+        fetchHelmChartMetadata: initialValues?.spec?.fetchHelmChartMetadata,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -125,7 +126,8 @@ function HelmWithHttp({
       subChartPath: '',
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
-      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
+      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
+      fetchHelmChartMetadata: false
     }
   }
   const submitFormData = (formData: HelmWithHTTPDataType & { store?: string; connectorRef?: string }): void => {
@@ -152,7 +154,8 @@ function HelmWithHttp({
             formData?.skipResourceVersioning,
             formData?.enableDeclarativeRollback
           ),
-          enableDeclarativeRollback: formData?.enableDeclarativeRollback
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback,
+          fetchHelmChartMetadata: formData?.fetchHelmChartMetadata
         }
       }
     }

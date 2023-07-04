@@ -27,6 +27,7 @@ import type { CommandFlags } from '@pipeline/components/ManifestSelection/Manife
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useMutateAsGet } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { FileUsage } from '@filestore/interfaces/FileStore'
@@ -75,6 +76,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
+  const { CDS_HELM_FETCH_CHART_METADATA_NG } = useFeatureFlags()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
 
   const connectorRefPath =
@@ -812,6 +814,42 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         )}
       </div>
+
+      {CDS_HELM_FETCH_CHART_METADATA_NG ? (
+        <div className={css.inputFieldLayout}>
+          {isFieldRuntime(`${manifestPath}.spec.fetchHelmChartMetadata`, template) && (
+            <div className={css.verticalSpacingInput}>
+              <FormMultiTypeCheckboxField
+                disabled={isFieldDisabled(`${manifestPath}.spec.fetchHelmChartMetadata`)}
+                name={`${path}.${manifestPath}.spec.fetchHelmChartMetadata`}
+                label={getString('pipeline.manifestType.fetchHelmChartMetadata')}
+                setToFalseWhenEmpty={true}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes
+                }}
+              />
+            </div>
+          )}
+          {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.fetchHelmChartMetadata`)) ===
+            MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              className={css.configureOptions}
+              style={{ alignSelf: 'center' }}
+              value={get(formik?.values, `${path}.${manifestPath}.spec.fetchHelmChartMetadata`)}
+              type="String"
+              variableName="fetchHelmChartMetadata"
+              showRequiredField={false}
+              showDefaultField={true}
+              isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+              onChange={value => {
+                formik.setFieldValue(`${path}.${manifestPath}.spec.fetchHelmChartMetadata`, value)
+              }}
+              isReadonly={isFieldDisabled(`${manifestPath}.spec.fetchHelmChartMetadata`)}
+            />
+          )}
+        </div>
+      ) : null}
 
       {renderCommandFlags(`${manifestPath}.spec.commandFlags`)}
     </Layout.Vertical>

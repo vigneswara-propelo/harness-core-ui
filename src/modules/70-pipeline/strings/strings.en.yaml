@@ -465,6 +465,7 @@ manifestType:
   kustomizeYamlFolderPath: Kustomize YAML Folder Path
   kustomizeYamlFolderPathRequired: Kustomize YAML Folder Path is required
   enableDeclarativeRollback: Enable Declarative Rollback
+  fetchHelmChartMetadata: Fetch Helm Chart Metadata
   awsSamDirectory:
     samTemplateFile: SAM Template File
 manifestTypeLabels:

@@ -146,6 +146,7 @@ function HelmWithGcs({
         subChartPath: initialValues.spec?.subChartPath,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
+        fetchHelmChartMetadata: initialValues?.spec?.fetchHelmChartMetadata,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -170,7 +171,8 @@ function HelmWithGcs({
       enableDeclarativeRollback: false,
       bucketName: '',
       folderPath: '/',
-      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
+      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
+      fetchHelmChartMetadata: false
     }
   }
   const submitFormData = (formData: HelmWithGcsDataType & { store?: string; connectorRef?: string }): void => {
@@ -199,7 +201,8 @@ function HelmWithGcs({
             formData?.skipResourceVersioning,
             formData?.enableDeclarativeRollback
           ),
-          enableDeclarativeRollback: formData?.enableDeclarativeRollback
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback,
+          fetchHelmChartMetadata: formData?.fetchHelmChartMetadata
         }
       }
     }

@@ -211,6 +211,7 @@ function HelmWithS3({
         subChartPath: initialValues.spec?.subChartPath,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
+        fetchHelmChartMetadata: initialValues?.spec?.fetchHelmChartMetadata,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -241,6 +242,7 @@ function HelmWithS3({
       subChartPath: '',
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
+      fetchHelmChartMetadata: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -274,7 +276,8 @@ function HelmWithS3({
             formData?.skipResourceVersioning,
             formData?.enableDeclarativeRollback
           ),
-          enableDeclarativeRollback: formData?.enableDeclarativeRollback
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback,
+          fetchHelmChartMetadata: formData?.fetchHelmChartMetadata
         }
       }
     }

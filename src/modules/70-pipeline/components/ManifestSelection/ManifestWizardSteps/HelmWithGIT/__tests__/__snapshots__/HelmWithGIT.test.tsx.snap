@@ -725,6 +725,10 @@ exports[`helm with GIT tests expand advanced section 1`] = `
                           </div>
                         </div>
                         <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-top-medium"
+                          style="width: 90%;"
+                        />
+                        <div
                           class="commandFlags"
                         >
                           <div
@@ -2497,6 +2501,10 @@ exports[`helm with GIT tests renders while adding step first time 1`] = `
                             </div>
                           </div>
                         </div>
+                        <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-top-medium"
+                          style="width: 90%;"
+                        />
                         <div
                           class="commandFlags"
                         >

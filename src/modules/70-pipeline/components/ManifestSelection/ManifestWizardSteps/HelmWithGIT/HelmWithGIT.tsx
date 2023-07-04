@@ -114,6 +114,7 @@ function HelmWithGIT({
         subChartPath: initialValues.spec?.subChartPath,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
+        fetchHelmChartMetadata: initialValues?.spec?.fetchHelmChartMetadata,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -139,7 +140,8 @@ function HelmWithGIT({
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
-      repoName: getRepositoryName(modifiedPrevStepData, initialValues)
+      repoName: getRepositoryName(modifiedPrevStepData, initialValues),
+      fetchHelmChartMetadata: false
     }
   }
 
@@ -167,7 +169,8 @@ function HelmWithGIT({
             formData?.enableDeclarativeRollback
           ),
           enableDeclarativeRollback: formData?.enableDeclarativeRollback,
-          helmVersion: formData?.helmVersion
+          helmVersion: formData?.helmVersion,
+          fetchHelmChartMetadata: formData?.fetchHelmChartMetadata
         }
       }
     }

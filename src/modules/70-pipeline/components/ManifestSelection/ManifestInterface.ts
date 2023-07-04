@@ -158,6 +158,7 @@ export interface HelmWithGITDataType {
   skipResourceVersioning: boolean
   enableDeclarativeRollback?: boolean
   commandFlags: Array<CommandFlags>
+  fetchHelmChartMetadata?: boolean
 }
 export interface HelmWithHTTPDataType {
   identifier: string
@@ -169,6 +170,7 @@ export interface HelmWithHTTPDataType {
   subChartPath?: string
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
+  fetchHelmChartMetadata?: boolean
 }
 
 export interface HelmWithOCIDataType {
@@ -182,6 +184,7 @@ export interface HelmWithOCIDataType {
   subChartPath?: string
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
+  fetchHelmChartMetadata?: boolean
 }
 export interface TASManifestDataType {
   identifier: string
@@ -210,6 +213,7 @@ export interface HelmWithHarnessStoreDataType {
   enableDeclarativeRollback?: boolean
   helmVersion: HelmVersionOptions
   commandFlags: Array<CommandFlags>
+  fetchHelmChartMetadata?: boolean
 }
 export interface OpenShiftTemplateGITDataType {
   identifier: string
@@ -286,6 +290,7 @@ export interface HarnessFileStoreFormData {
   enableDeclarativeRollback?: boolean
   valuesPaths?: string | string[]
   paramsPaths?: string | string[]
+  fetchHelmChartMetadata?: boolean
 }
 export interface HelmHarnessFileStoreFormData extends HarnessFileStoreFormData {
   helmVersion: HelmVersionOptions

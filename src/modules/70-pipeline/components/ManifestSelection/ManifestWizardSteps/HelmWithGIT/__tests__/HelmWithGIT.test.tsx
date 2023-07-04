@@ -184,7 +184,8 @@ describe('helm with GIT tests', () => {
             valuesPaths: undefined,
             helmVersion: 'V3',
             skipResourceVersioning: false,
-            enableDeclarativeRollback: false
+            enableDeclarativeRollback: false,
+            fetchHelmChartMetadata: false
           }
         }
       })

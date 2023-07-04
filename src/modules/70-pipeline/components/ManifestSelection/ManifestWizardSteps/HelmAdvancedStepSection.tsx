@@ -26,6 +26,7 @@ import { String, useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { useHelmCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -59,6 +60,8 @@ function HelmAdvancedStepSection({
   const [commandFlagOptions, setCommandFlagOptions] = useState<Record<string, SelectOption[]>>({ V2: [], V3: [] })
   const isSkipVersioningDisabled =
     isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
+
+  const { CDS_HELM_FETCH_CHART_METADATA_NG } = useFeatureFlags()
 
   const { data: commandFlags, refetch: refetchCommandFlags } = useHelmCmdFlags({
     queryParams: {
@@ -144,6 +147,37 @@ function HelmAdvancedStepSection({
           />
         )}
       </Layout.Horizontal>
+      <Layout.Horizontal
+        width={'90%'}
+        flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+        margin={{ top: 'medium' }}
+      >
+        {CDS_HELM_FETCH_CHART_METADATA_NG && deploymentType === ServiceDeploymentType.NativeHelm ? (
+          <>
+            <FormMultiTypeCheckboxField
+              name="fetchHelmChartMetadata"
+              label={getString('pipeline.manifestType.fetchHelmChartMetadata')}
+              className={cx(helmcss.checkbox, helmcss.halfWidth)}
+              multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+              disabled={isSkipVersioningDisabled}
+            />
+            {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                value={(formik.values?.skipResourceVersioning || '') as string}
+                type="String"
+                variableName="fetchHelmChartMetadata"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => formik.setFieldValue('fetchHelmChartMetadata', value)}
+                style={{ alignSelf: 'center', marginTop: 11 }}
+                className={cx(css.addmarginTop)}
+                isReadonly={isReadonly}
+              />
+            )}
+          </>
+        ) : null}
+      </Layout.Horizontal>
+
       {commandFlagOptions[helmVersion]?.length > 0 && (
         <div className={helmcss.commandFlags}>
           <MultiTypeFieldSelector

@@ -60,6 +60,7 @@ describe('helm with http tests', () => {
       bucketName: '',
       folderPath: '',
       subChartPath: '',
+      fetchHelmChartMetadata: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: 'id1' }]
     }
     const { container } = render(
@@ -79,6 +80,7 @@ describe('helm with http tests', () => {
       chartName: '',
       chartVersion: '',
       skipResourceVersioning: false,
+      fetchHelmChartMetadata: false,
       bucketName: '',
       folderPath: '',
       subChartPath: '',
@@ -103,6 +105,7 @@ describe('helm with http tests', () => {
       chartName: '',
       chartVersion: '',
       skipResourceVersioning: false,
+      fetchHelmChartMetadata: false,
       store: {
         type: 'Gcs',
         spec: {
@@ -132,6 +135,7 @@ describe('helm with http tests', () => {
       chartName: '',
       chartVersion: '',
       skipResourceVersioning: false,
+      fetchHelmChartMetadata: false,
       store: {
         type: 'Gcs',
         spec: {
@@ -162,6 +166,7 @@ describe('helm with http tests', () => {
       spec: {
         helmVersion: 'V2',
         skipResourceVersioning: false,
+        fetchHelmChartMetadata: false,
         store: {
           type: 'Gcs',
           spec: {
@@ -220,7 +225,8 @@ describe('helm with http tests', () => {
             chartName: 'testchart',
             chartVersion: 'test',
             helmVersion: 'V2',
-            skipResourceVersioning: false
+            skipResourceVersioning: false,
+            fetchHelmChartMetadata: false
           }
         }
       })
@@ -240,6 +246,7 @@ describe('helm with http tests', () => {
       spec: {
         helmVersion: 'V2',
         skipResourceVersioning: false,
+        fetchHelmChartMetadata: false,
         store: {
           type: 'Gcs',
           spec: {

@@ -103,6 +103,7 @@ function HelmWithOCI({
         subChartPath: initialValues.spec?.subChartPath,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
+        fetchHelmChartMetadata: initialValues?.spec?.fetchHelmChartMetadata,
         valuesPaths:
           /* istanbul ignore next */
           typeof initialValues?.spec?.valuesPaths === 'string'
@@ -126,6 +127,7 @@ function HelmWithOCI({
       subChartPath: '',
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
+      fetchHelmChartMetadata: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -157,6 +159,7 @@ function HelmWithOCI({
             formData?.enableDeclarativeRollback
           ),
           enableDeclarativeRollback: formData?.enableDeclarativeRollback,
+          fetchHelmChartMetadata: formData?.fetchHelmChartMetadata,
           valuesPaths:
             /* istanbul ignore next */
             typeof formData?.valuesPaths === 'string'
