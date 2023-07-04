@@ -12,6 +12,8 @@ import cx from 'classnames'
 import { Text, TableV2, Layout, Card, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
+import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
+import { ModuleName } from 'framework/types/ModuleName'
 import { String, useStrings, StringKeys } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -112,6 +114,22 @@ export function ServiceLicenseTable({
     size = DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
+  function getLabel(value: number | undefined): string | number | undefined {
+    if (value && value >= 1000000) {
+      let roundValue = Math.round(value / 10000)
+      roundValue = Math.trunc(roundValue) / 100
+      return `${roundValue}M`
+    }
+    if (value && value >= 1000) {
+      let roundValue = Math.round(value / 10)
+      roundValue = Math.trunc(roundValue) / 100
+      return `${roundValue}K`
+    }
+    if (value === -1) {
+      return getString('common.unlimited')
+    }
+    return value
+  }
 
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
@@ -180,11 +198,17 @@ export function ServiceLicenseTable({
         : [])
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
+  const { usageData } = useGetUsageAndLimit(ModuleName.CD)
+  const { usage } = usageData
   const { accountId } = useParams<AccountPathProps>()
   const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
   const [selectedProj, setSelectedProj] = useState<SelectOption | undefined>()
   const [selectedService, setSelectedService] = useState<SelectOption | undefined>()
   const activeServiceText = `${totalElements}`
+
+  const licenseText = `${getLabel(
+    licenseType === 'SERVICES' ? usage?.cd?.serviceLicenses?.count : usage?.cd?.activeServiceInstances?.count || 0
+  )}`
   const [initialContent, setInitialContent] = useState<string>('')
 
   const { data: dataInCsv, refetch } = useDownloadActiveServiceCSVReport({
@@ -212,6 +236,20 @@ export function ServiceLicenseTable({
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+          {licenseType === 'SERVICES' ? (
+            <Layout.Vertical className={pageCss.badgesContainer}>
+              <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
+                <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
+                <String stringID={'common.subscriptions.usage.servicesConsumed'} />
+                <Text className={pageCss.badgeText}>{licenseText}&nbsp;</Text>
+                <String stringID={'common.subscriptions.usage.serviceLicenses'} />
+                <Text>(</Text>
+                <Text>{getString('common.lastUpdatedAt')} -</Text>
+                <Text className={pageCss.badgeText}>{formattedTime}</Text>
+                <Text>)</Text>
+              </div>
+            </Layout.Vertical>
+          ) : null}
           <div className={pageCss.exportButtonAlign}>
             {' '}
             <a
@@ -224,18 +262,6 @@ export function ServiceLicenseTable({
           </div>
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-end' }} width={'100%'}>
-          {licenseType === 'SERVICES' ? (
-            <Layout.Vertical className={pageCss.badgesContainer}>
-              <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
-                <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
-                <String stringID={'common.subscriptions.usage.services'} />
-                <Text>(</Text>
-                <Text>{getString('common.lastUpdatedAt')} -</Text>
-                <Text className={pageCss.badgeText}>{formattedTime}</Text>
-                <Text>)</Text>
-              </div>
-            </Layout.Vertical>
-          ) : null}
           <Layout.Vertical>
             <OrgDropdown
               value={selectedOrg}

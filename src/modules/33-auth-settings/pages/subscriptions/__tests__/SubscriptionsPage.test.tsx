@@ -10,6 +10,7 @@ import moment from 'moment'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
 import {
   useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
@@ -39,6 +40,7 @@ const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType a
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
+
 const orgListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     data: {
@@ -137,6 +139,30 @@ const featureFlags = {
   CET_ENABLED: true
 }
 
+const useGetUsageAndLimitReturnMock = {
+  limitData: {
+    limit: {
+      cd: {
+        totalServiceInstances: 100,
+        totalWorkload: 200
+      }
+    }
+  },
+  usageData: {
+    usage: {
+      cd: {
+        activeServiceInstances: {
+          count: 20,
+          displayName: 'Last 30 Days'
+        },
+        activeServices: {
+          count: 45,
+          displayName: 'Last 30 Days'
+        }
+      }
+    }
+  }
+}
 describe('Subscriptions Page', () => {
   useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
     return {
@@ -144,6 +170,7 @@ describe('Subscriptions Page', () => {
       refetch: jest.fn()
     }
   })
+  jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
   jest.useFakeTimers({ advanceTimers: true })
   jest.setSystemTime(new Date('2020-01-19'))
 
