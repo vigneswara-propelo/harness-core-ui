@@ -62,6 +62,12 @@ export default {
       commitRef ? '/' + commitRef : ''
     }`
   },
+  toCODECommit: ({ repoPath, commitRef }: RequiredField<Pick<CODEProps, 'repoPath' | 'commitRef'>, 'repoPath'>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commit${
+      commitRef ? '/' + commitRef : ''
+    }`
+  },
   toCODEBranches: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches`

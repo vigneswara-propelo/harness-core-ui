@@ -39,6 +39,9 @@ const RemoteFileEdit = lazy(() => import('code/FileEdit'))
 const RemoteCommits = lazy(() => import('code/Commits'))
 
 // eslint-disable-next-line import/no-unresolved
+const RemoteCommit = lazy(() => import('code/Commit'))
+
+// eslint-disable-next-line import/no-unresolved
 const RemoteBranches = lazy(() => import('code/Branches'))
 
 // eslint-disable-next-line import/no-unresolved
@@ -100,7 +103,7 @@ const CODERemoteComponentMounter: React.FC<{
   )
 }
 
-function useGenerateToken(hash?: string, parentId?: string, deps?: any[]): ResponseString | undefined {
+export function useGenerateToken(hash?: string, parentId?: string, deps?: any[]): ResponseString | undefined {
   const { params } = useRouteMatch<ProjectPathProps>()
   const { mutate: createToken } = useCreateToken({
     queryParams: { accountIdentifier: params.accountId }
@@ -133,7 +136,7 @@ function useGenerateToken(hash?: string, parentId?: string, deps?: any[]): Respo
 }
 
 // return tooltip from here and can be more specific or generic
-function usePermissionTranslate(
+export function usePermissionTranslate(
   usePermissionResult?: PermissionsRequest | undefined,
   deps?: any[],
   tooltip?: JSX.Element | string
@@ -160,6 +163,10 @@ export const FileEdit: React.FC<RemoteViewProps> = props => (
 
 export const Commits: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemoteCommits {...props} />} />
+)
+
+export const Commit: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteCommit {...props} />} />
 )
 
 export const Branches: React.FC<RemoteViewProps> = props => (

@@ -5,23 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { render } from '@testing-library/react'
-import {
-  Repository,
-  Repositories,
-  Commits,
-  Commit,
-  Branches,
-  FileEdit,
-  Settings,
-  PullRequests,
-  PullRequest,
-  Compare,
-  Webhooks,
-  WebhookNew,
-  WebhookDetails,
-  Tags
-} from '../CodeApp'
+import { renderHook } from '@testing-library/react-hooks'
+import routes from '@common/RouteDefinitions'
+import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
+import { TestWrapper } from '@common/utils/testUtils'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { usePermissionTranslate, useGenerateToken } from '../CodeApp'
+import mocks from './permissionMocks.json'
 
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
@@ -41,16 +32,12 @@ jest.mock(
   { virtual: true }
 )
 
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (id: string) => id
-  })
-}))
-
 jest.mock(
   'code/App',
   () => ({
-    default: ({ children }: { children: JSX.Element }) => <div>code/App {children}</div>
+    default: ({ children }: { children: JSX.Element }) => {
+      return <div>code/App {children}</div>
+    }
   }),
   { virtual: true }
 )
@@ -81,7 +68,7 @@ jest.mock(
 jest.mock(
   'code/Commit',
   () => ({
-    default: () => <div>code/Commit</div>
+    default: () => <div>code/Commits</div>
   }),
   { virtual: true }
 )
@@ -166,27 +153,71 @@ jest.mock(
   { virtual: true }
 )
 
-describe('CodeApp', () => {
-  test('Exports should work properly', async () => {
-    const { container } = render(
-      <div>
-        <Repository />
-        <Repositories />
-        <Commit />
-        <Commits />
-        <Branches />
-        <Tags />
-        <FileEdit />
-        <Settings />
-        <PullRequests />
-        <PullRequest />
-        <Compare />
-        <Webhooks />
-        <WebhookNew />
-        <WebhookDetails />
-      </div>
-    )
+const getPermissions = jest.fn(() => mocks.one)
 
-    expect(container).toMatchSnapshot()
+jest.mock('services/rbac', () => {
+  return {
+    useGetAccessControlList: jest.fn(() => {
+      return {
+        mutate: getPermissions
+      }
+    })
+  }
+})
+jest.mock('services/cd-ng', () => {
+  return {
+    useCreateToken: jest.fn(() => {
+      return {
+        mutate: jest.fn()
+      }
+    })
+  }
+})
+
+describe('CodeApp hooks', () => {
+  test('should mock usePermissionTranslate', () => {
+    const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
+      <TestWrapper
+        path={routes.toCODE({
+          accountId: ':accountId'
+        })}
+        pathParams={{ accountId: 'account123', orgIdentifier: 'org123', projectIdentifier: 'project123' }}
+      >
+        <PermissionsProvider debounceWait={0}>{children}</PermissionsProvider>
+      </TestWrapper>
+    )
+    renderHook(
+      () => {
+        return usePermissionTranslate({
+          resource: {
+            resourceType: ResourceType.CODE_REPOSITORY
+          },
+          permissions: [PermissionIdentifier.CODE_REPO_PUSH]
+        })
+      },
+      { wrapper }
+    )
+    expect(getPermissions).toHaveBeenCalledTimes(1)
+    expect(getPermissions).toHaveBeenCalledWith({
+      permissions: [
+        {
+          permission: 'code_repo_push',
+          resourceScope: {
+            accountIdentifier: 'account123'
+          },
+          resourceType: 'CODE_REPOSITORY'
+        }
+      ]
+    })
+  })
+
+  test('should mock usegeneratetoken', () => {
+    renderHook(() => {
+      const data = useGenerateToken('hash', 'user', true as any)
+      expect(data).toBe(undefined)
+    }, {})
+  })
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 })

@@ -1,0 +1,33 @@
+{
+  "one": {
+    "status": "SUCCESS",
+    "data": {
+      "principal": null,
+      "accessControlList": [
+        {
+          "permission": "core_project_edit",
+          "resourceScope": { "accountIdentifier": "dummy", "orgIdentifier": "default" },
+          "resourceType": "PROJECT",
+          "resourceIdentifier": "nextgenui",
+          "permitted": false
+        },
+        {
+          "permission": "core_project_delete",
+          "resourceScope": { "accountIdentifier": "dummy", "orgIdentifier": "default" },
+          "resourceType": "PROJECT",
+          "resourceIdentifier": "nextgenui",
+          "permitted": false
+        },
+        {
+          "permission": "code_repo_push",
+          "resourceScope": { "accountIdentifier": "dummy", "orgIdentifier": "default" },
+          "resourceType": "PROJECT",
+          "resourceIdentifier": "nextgenui",
+          "permitted": false
+        }
+      ]
+    },
+    "metaData": null,
+    "correlationId": "937b7ee5-3dd3-4ff1-a797-efb8270482a8"
+  }
+}

@@ -22,6 +22,7 @@ import {
   Repository,
   Repositories,
   Commits,
+  Commit,
   Branches,
   FileEdit,
   Settings,
@@ -212,6 +213,16 @@ export default function CODERouteDestinations(): React.ReactElement {
         pageName={PAGE_NAME.CODECommits}
       >
         <Commits />
+      </RouteWithLayout>
+      <RouteWithLayout
+        path={routes.toCODECommit({
+          repoPath,
+          commitRef: codePathProps.commitRef
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODECommits}
+      >
+        <Commit />
       </RouteWithLayout>
       <RouteWithLayout
         path={routes.toCODEBranches({ repoPath })}

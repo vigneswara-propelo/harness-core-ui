@@ -30,6 +30,11 @@ declare module 'code/Commits' {
   export default ChildApp
 }
 
+declare module 'code/Commit' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'code/Branches' {
   const ChildApp: ChildAppComponent
   export default ChildApp

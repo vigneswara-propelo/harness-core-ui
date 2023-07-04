@@ -11,6 +11,7 @@ module.exports = [
   'code/Repository',
   'code/FileEdit',
   'code/Commits',
+  'code/Commit',
   'code/Branches',
   'code/Tags',
   'code/PullRequests',
