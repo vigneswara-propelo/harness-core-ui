@@ -1111,6 +1111,7 @@ verification:
     failed: The verification failed due to anomalies in the metric threshold. Threshold Analysis verification was performed. Change the verification type if you wish to apply Harness machine learning to the analysis.
   baselineTest: Baseline test
   pinBaseline: Pin baseline
+  baselineExpiryLabel: Baseline expires on
   unpinBaseline: Unpin baseline
   metricsInViolation: Metrics in violation
   logClustersInViolation: Log Clusters in violation

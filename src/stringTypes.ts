@@ -5314,6 +5314,7 @@ export interface StringsMap {
   'pipeline.verification.anomalousMetrics': string
   'pipeline.verification.anomalousMetricsFilterLabel': string
   'pipeline.verification.anomalousMetricsFilterWithoutNodesLabel': string
+  'pipeline.verification.baselineExpiryLabel': string
   'pipeline.verification.baselineMessages.expired': string
   'pipeline.verification.baselineMessages.failed': string
   'pipeline.verification.baselineMessages.passed': string

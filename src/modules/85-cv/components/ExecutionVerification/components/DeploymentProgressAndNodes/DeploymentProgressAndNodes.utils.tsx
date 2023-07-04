@@ -1,9 +1,9 @@
 import { VerificationJobType } from '@cv/constants'
 import { VerificationStatus } from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeEventCard/ChangeEventCard.constant'
 import type { UseStringsReturn } from 'framework/strings'
-import type { VerificationOverview, VerificationSpec } from 'services/cv'
+import type { BaselineOverview, VerificationOverview, VerificationSpec } from 'services/cv'
 
-export const canShowPinBaselineButton = ({
+export const canShowBaselineElements = ({
   applicableForBaseline,
   isBaselineEnabled,
   isConsoleView
@@ -35,4 +35,13 @@ export const getStatusMessage = ({
   }
 
   return null
+}
+
+export const canShowExpiryDateDetails = (baselineData?: BaselineOverview): boolean => {
+  if (!baselineData) {
+    return false
+  }
+
+  const { baselineExpired, baselineVerificationJobInstanceId } = baselineData
+  return Boolean(!baselineExpired && baselineVerificationJobInstanceId)
 }

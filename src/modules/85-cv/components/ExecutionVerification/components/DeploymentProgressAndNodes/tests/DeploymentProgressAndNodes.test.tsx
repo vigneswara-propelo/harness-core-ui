@@ -502,7 +502,7 @@ describe('Deployment progress and nodes unit tests', () => {
       )
     })
 
-    test('Should show baseline expited message when baseline verification is expired', async () => {
+    test('Should show baseline expired message when baseline verification is expired', async () => {
       const baselinePropsWithData: DeploymentProgressAndNodesProps = {
         ...BaselineDeploymentMockData,
         data: {
@@ -522,9 +522,36 @@ describe('Deployment progress and nodes unit tests', () => {
         </TestWrapper>
       )
 
+      expect(screen.queryByTestId(/expiredBaselineTime/)).not.toBeInTheDocument()
+
       expect(screen.getByTestId(/baselineStatusMessage/)).toHaveTextContent(
         'pipeline.verification.baselineMessages.expired'
       )
+    })
+
+    test('Should show baseline expiry date details when baseline verification is not expired', async () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: true,
+            baselineExpired: false,
+            baselineExpiryTimestamp: 1676545440000,
+            baselineVerificationJobInstanceId: 'abc'
+          }
+        }
+      }
+
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/expiredBaselineTime/)).toBeInTheDocument()
+      expect(screen.getByTestId(/expiredBaselineTime/)).toHaveTextContent('Feb 16, 2023 11:04 AM')
     })
 
     test('Should show verification failed message when verification is failed', () => {

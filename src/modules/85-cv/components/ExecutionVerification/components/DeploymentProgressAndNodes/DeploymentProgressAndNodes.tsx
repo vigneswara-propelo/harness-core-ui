@@ -7,6 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Container, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import moment from 'moment'
 import cx from 'classnames'
 import type { AnalysedNodeOverview, VerificationOverview } from 'services/cv'
@@ -20,7 +21,7 @@ import VerificationStatusCard from './components/VerificationStatusCard/Verifica
 import { DurationView } from './components/DurationView/DurationView'
 import TestsSummaryView from './components/TestSummaryView/TestsSummaryView'
 import PinBaslineButton from './components/PinBaslineButton/PinBaslineButton'
-import { canShowPinBaselineButton, getStatusMessage } from './DeploymentProgressAndNodes.utils'
+import { canShowBaselineElements, canShowExpiryDateDetails, getStatusMessage } from './DeploymentProgressAndNodes.utils'
 import { StatusMessageDisplay } from './components/StatusMessageDisplay/StatusMessageDisplay'
 import css from './DeploymentProgressAndNodes.module.scss'
 
@@ -37,9 +38,14 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
 
   const isBaselineEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_BASELINE_BASED_VERIFICATION)
 
-  const baselineData = data?.baselineOverview
+  const {
+    metricsAnalysis,
+    verificationStartTimestamp,
+    spec,
+    verificationStatus,
+    baselineOverview: baselineData
+  } = data || {}
 
-  const { metricsAnalysis, verificationStartTimestamp, spec, verificationStatus } = data || {}
   const { getString } = useStrings()
 
   const deploymentNodesData = useMemo(() => {
@@ -116,16 +122,37 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
           })}
         >
           <Container>
+            {canShowBaselineElements({
+              applicableForBaseline: baselineData?.applicableForBaseline,
+              isConsoleView,
+              isBaselineEnabled
+            }) && (
+              <>
+                <PinBaslineButton data={data} activityId={activityId} />
+
+                {canShowExpiryDateDetails(baselineData) && (
+                  <>
+                    <Text font={{ size: 'small' }} margin={{ top: 'small', bottom: 'xsmall' }}>
+                      {getString('pipeline.verification.baselineExpiryLabel')}
+                    </Text>
+                    <Text
+                      data-testid="expiredBaselineTime"
+                      font={{ size: 'small' }}
+                      color={Color.BLACK}
+                      margin={{ top: 'xsmall', bottom: 'xlarge' }}
+                    >
+                      {moment(baselineData?.baselineExpiryTimestamp).format('MMM D, YYYY h:mm A')}
+                    </Text>
+                  </>
+                )}
+              </>
+            )}
+
             <Text
               font={{ size: 'small' }}
               data-name={getString('pipeline.startedOn')}
               margin={{ top: 'xsmall', bottom: 'xsmall' }}
             >
-              {canShowPinBaselineButton({
-                applicableForBaseline: baselineData?.applicableForBaseline,
-                isConsoleView,
-                isBaselineEnabled
-              }) && <PinBaslineButton data={data} activityId={activityId} />}
               {getString('pipeline.startedOn')}: {moment(verificationStartTimestamp).format('MMM D, YYYY h:mm A')}
             </Text>
             <DurationView durationMs={(data?.spec?.durationInMinutes ? data?.spec?.durationInMinutes : 0) * 60000} />
