@@ -8,29 +8,35 @@
 import type { AllowedTypes, SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import type { ArtifactConfig, PrimaryArtifact, PageConnectorResponse, ServiceDefinition } from 'services/cd-ng'
+import type { ArtifactConfig, ServiceDefinition } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type {
   AcrSpec,
   AmazonS3RegistrySpec,
+  AMIRegistrySpec,
   ArtifactoryRegistrySpec,
   ArtifactTriggerConfig,
+  AzureArtifactsRegistrySpec,
   BambooRegistrySpec,
   CustomArtifactSpec,
   DockerRegistrySpec,
   EcrSpec,
+  GarSpec,
   GcrSpec,
+  GithubPackagesSpec,
+  GoolgeCloudStorageRegistrySpec,
   JenkinsRegistrySpec,
-  NexusRegistrySpec
+  Nexus2RegistrySpec,
+  NexusRegistrySpec,
+  TriggerEventDataCondition
 } from 'services/pipeline-ng'
 
 export interface ArtifactListViewProps {
-  primaryArtifact?: PrimaryArtifact
+  artifactSpecSources: ArtifactTriggerSpecWrapper[]
+  artifactType: ArtifactType
   addNewArtifact: () => void
-  editArtifact: () => void
-  fetchedConnectorResponse?: PageConnectorResponse
-  accountId: string
-  deleteArtifact: () => void
+  editArtifact: (currentArtifactIndex: number) => void
+  deleteArtifact: (currentArtifactIndex: number) => void
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -39,21 +45,8 @@ export interface ArtifactsSelectionProps {
   readonly: boolean
 }
 
-export type ArtifactType =
-  | 'DockerRegistry'
-  | 'Gcr'
-  | 'Ecr'
-  | 'Nexus3Registry'
-  | 'ArtifactoryRegistry'
-  | 'CustomArtifact'
-  | 'Acr'
-  | 'Jenkins'
-  | 'AmazonS3'
-  | 'GoogleArtifactRegistry'
-  | 'GithubPackageRegistry'
-  | 'AzureArtifacts'
-  | 'GoogleCloudStorage'
-  | 'AmazonMachineImage'
+export type ArtifactType = Required<ArtifactTriggerConfig>['type']
+
 export interface OrganizationCreationType {
   type: ArtifactType
 }
@@ -66,7 +59,7 @@ export enum RepositoryPortOrServer {
   RepositoryUrl = 'repositoryUrl'
 }
 export interface InitialArtifactDataType {
-  submittedArtifact?: ArtifactTriggerConfig['type']
+  submittedArtifact?: ArtifactType
   connectorId: string | undefined | ConnectorSelectedValue
 }
 export interface ImagePathTypes {
@@ -255,7 +248,7 @@ export interface JenkinsArtifactTriggerSpec extends Omit<JenkinsRegistrySpec, 'j
   childJobName?: SelectWithSubmenuOption | string
 }
 
-export type ArtifactTriggerSpec =
+export type ArtifactTriggerSpec = (
   | AcrSpec
   | AmazonS3RegistrySpec
   | ArtifactoryRegistrySpec
@@ -263,6 +256,18 @@ export type ArtifactTriggerSpec =
   | EcrSpec
   | GcrSpec
   | JenkinsArtifactTriggerSpec
+  | Nexus2RegistrySpec
   | NexusRegistrySpec
   | CustomArtifactSpec
   | BambooRegistrySpec
+  | GithubPackagesSpec
+  | AMIRegistrySpec
+  | GoolgeCloudStorageRegistrySpec
+  | AzureArtifactsRegistrySpec
+  | GarSpec
+  // Added metaDataConditions here as BE has not updated the interfaces and we have added metaDataConditions for artifact trigger
+) & { metaDataConditions?: TriggerEventDataCondition[] }
+
+export type ArtifactTriggerSpecWrapper = {
+  spec: ArtifactTriggerSpec
+}

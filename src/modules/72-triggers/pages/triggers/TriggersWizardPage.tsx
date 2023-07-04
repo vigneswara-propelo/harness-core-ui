@@ -39,7 +39,6 @@ import {
   useGetTrigger,
   useUpdateTrigger,
   NGTriggerConfigV2,
-  NGTriggerSourceV2,
   useGetSchemaYaml,
   ResponseNGTriggerResponse,
   useGetMergeInputSetFromPipelineTemplateWithListInput
@@ -77,6 +76,7 @@ import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChild
 import { isNewTrigger } from '@triggers/components/Triggers/utils'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
+import type { TriggerType } from '@triggers/components/Triggers/TriggerInterface'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -398,7 +398,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   const [onEditInitialValues, setOnEditInitialValues] = useState<
     | FlatOnEditValuesInterface
     | {
-        triggerType: NGTriggerSourceV2['type']
+        triggerType: TriggerType
         pipeline?: PipelineInfoConfig | Record<string, never>
         originalPipeline?: PipelineInfoConfig
         resolvedPipeline?: PipelineInfoConfig
@@ -700,7 +700,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         projectIdentifier,
         pipelineIdentifier,
         source: {
-          type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+          type: formikValueTriggerType,
           pollInterval,
           webhookId,
           spec: {
@@ -756,7 +756,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         projectIdentifier,
         pipelineIdentifier,
         source: {
-          type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+          type: formikValueTriggerType,
           spec: {
             type: formikValueSourceRepo, // Custom
             spec: {
@@ -895,7 +895,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
           sourceRepo,
-          triggerType: TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
+          triggerType: 'Webhook',
           event,
           pollInterval,
           webhookId,
@@ -1011,7 +1011,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           tags,
           pipeline: pipelineJson,
           sourceRepo,
-          triggerType: TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
+          triggerType: 'Webhook',
           headerConditions,
           payloadConditions,
           jexlCondition,
@@ -1088,7 +1088,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         stagesToExecute,
         tags,
         pipeline: pipelineJson,
-        triggerType: TriggerTypes.SCHEDULE as unknown as NGTriggerSourceV2['type'],
+        triggerType: 'Scheduled',
         expression,
         pipelineBranchName,
         inputSetRefs,
@@ -1128,14 +1128,14 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       } = triggerResponseJson
 
       let selectedArtifact
-      let triggerType
+      let triggerType: TriggerType
 
       if (type === TriggerTypes.MANIFEST) {
         const { manifestRef, type: _manifestType, spec } = source?.spec || {}
         if (_manifestType) {
           setArtifactManifestType(_manifestType)
         }
-        triggerType = TriggerTypes.MANIFEST
+        triggerType = 'Manifest'
         selectedArtifact = {
           identifier: manifestRef,
           type: artifactManifestType || _manifestType,
@@ -1146,7 +1146,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         if (_artifactType) {
           setArtifactManifestType(_artifactType)
         }
-        triggerType = TriggerTypes.ARTIFACT
+        triggerType = 'Artifact'
         selectedArtifact = {
           identifier: artifactRef,
           type: artifactManifestType || _artifactType,
@@ -1191,7 +1191,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         description,
         tags,
         pipeline: pipelineJson,
-        triggerType: triggerType as unknown as NGTriggerSourceV2['type'],
+        triggerType: triggerType,
         manifestType: selectedArtifact?.type,
         stageId: source?.spec?.stageIdentifier,
         inputSetTemplateYamlObj: parse(template?.data?.inputSetTemplateYaml || ''),
@@ -1259,7 +1259,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       projectIdentifier,
       pipelineIdentifier,
       source: {
-        type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+        type: formikValueTriggerType,
         spec: {
           type: scheduledTypes.CRON,
           spec: {
@@ -1492,7 +1492,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     submitTrigger(triggerYaml)
   }
 
-  const getInitialValues = (triggerType: NGTriggerSourceV2['type']): FlatInitialValuesInterface | any => {
+  const getInitialValues = (triggerType: TriggerType): FlatInitialValuesInterface | any => {
     let newPipeline: any = { ...(currentPipeline?.pipeline || {}) }
     // only applied for CI, Not cloned codebase
     if (
@@ -1998,7 +1998,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
           initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidWebhookFormikValuesInterface) => handleWebhookSubmit(val),
           validationSchema: getValidationSchema(
-            TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
+            'Webhook',
             getString,
             isGitWebhookPollingEnabled &&
               (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
@@ -2061,10 +2061,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         formikInitialProps={{
           initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidArtifactFormikValuesInterface) => handleArtifactSubmit(val),
-          validationSchema: getValidationSchema(
-            initialValues.triggerType as unknown as NGTriggerSourceV2['type'],
-            getString
-          ),
+          validationSchema: getValidationSchema(initialValues.triggerType, getString),
           validate: validateTriggerPipeline,
           validateOnChange: true,
           enableReinitialize: true
@@ -2115,10 +2112,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         formikInitialProps={{
           initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidScheduleFormikValuesInterface) => handleScheduleSubmit(val),
-          validationSchema: getValidationSchema(
-            TriggerTypes.SCHEDULE as unknown as NGTriggerSourceV2['type'],
-            getString
-          ),
+          validationSchema: getValidationSchema('Scheduled', getString),
           validate: validateTriggerPipeline,
           validateOnChange: true,
           enableReinitialize: true

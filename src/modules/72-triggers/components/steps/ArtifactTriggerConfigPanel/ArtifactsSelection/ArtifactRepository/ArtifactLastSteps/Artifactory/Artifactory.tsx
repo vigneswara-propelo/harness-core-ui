@@ -58,32 +58,27 @@ function Artifactory({
     })
   })
 
-  const defaultTag = '<+trigger.artifact.build>'
-
   const getInitialValues = (repositoryFormat = ''): any => {
     const {
       artifactDirectory = '',
       repositoryUrl = '',
       artifactPath = '',
       repository = '',
-      eventConditions = '',
-      tag = defaultTag
+      eventConditions = []
     } = initialValues
-    const artifactCommonValue = { repository, repositoryFormat, eventConditions }
+    const artifactCommonValue = { repositoryFormat, repository, eventConditions }
 
     if (repositoryFormat === RepositoryFormatTypes.Docker) {
       return {
-        artifactPath: initialValues.repositoryFormat === RepositoryFormatTypes.Generic ? '' : artifactPath,
-        tag,
-        repositoryUrl,
-        ...artifactCommonValue
+        ...artifactCommonValue,
+        artifactPath,
+        repositoryUrl
       }
     }
 
     return {
-      artifactPath: defaultTag,
-      artifactDirectory,
-      ...artifactCommonValue
+      ...artifactCommonValue,
+      artifactDirectory
     }
   }
 
@@ -102,13 +97,11 @@ function Artifactory({
             repositoryFormat,
             repository,
             ...(repositoryFormat === RepositoryFormatTypes.Generic && {
-              artifactPath: defaultTag,
               artifactDirectory: formData.artifactDirectory
             }),
             ...(repositoryFormat === RepositoryFormatTypes.Docker && {
               artifactPath,
-              repositoryUrl: formData.repositoryUrl,
-              tag: defaultTag
+              repositoryUrl: formData.repositoryUrl
             }),
             connectorRef: getConnectorIdValue(prevStepData),
             eventConditions

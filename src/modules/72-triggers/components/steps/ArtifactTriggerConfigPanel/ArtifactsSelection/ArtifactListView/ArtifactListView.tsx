@@ -8,29 +8,63 @@
 import React from 'react'
 import { Layout, Text, Button, ButtonSize, ButtonVariation, Label, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
-import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { PrimaryArtifact } from 'services/cd-ng'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { ArtifactListViewProps } from '../ArtifactInterface'
 import PrimaryArtifactView from './PrimaryArtifact/PrimaryArtifactView'
 import css from '../ArtifactsSelection.module.scss'
 
-function ArtifactListView({
-  accountId,
-  fetchedConnectorResponse,
-  primaryArtifact,
+const ArtifactTable = ({
+  artifactSpecSources,
+  artifactType,
   editArtifact,
-  deleteArtifact,
-  addNewArtifact
-}: ArtifactListViewProps): React.ReactElement {
+  deleteArtifact
+}: ArtifactListViewProps): React.ReactElement => {
   const { getString } = useStrings()
-  let isArtifactSelected = false
-  if (primaryArtifact?.type === 'CustomArtifact') {
-    isArtifactSelected = primaryArtifact?.spec?.script
-  } else {
-    isArtifactSelected = !isEmpty(primaryArtifact?.spec?.connectorRef)
-  }
+
+  return (
+    <>
+      <div className={cx(css.artifactList, css.listHeader)}>
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+          {getString('pipeline.artifactsSelection.artifactType')}
+        </Text>
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+      </div>
+      {artifactSpecSources.map((artifactSpecSource, index) => (
+        <PrimaryArtifactView
+          key={index}
+          artifact={artifactSpecSource.spec}
+          artifactType={artifactType}
+          deleteArtifact={() => {
+            deleteArtifact(index)
+          }}
+          editArtifact={() => {
+            editArtifact(index)
+          }}
+        />
+      ))}
+    </>
+  )
+}
+
+function ArtifactListView(props: ArtifactListViewProps): React.ReactElement {
+  const { artifactSpecSources, artifactType, addNewArtifact } = props
+  const { getString } = useStrings()
+  const isArtifactSelected = artifactSpecSources.length !== 0
+  const isMultiRegionArtifact =
+    useFeatureFlag(FeatureFlag.CDS_NG_TRIGGER_MULTI_ARTIFACTS) && artifactType !== 'CustomArtifact'
+  const artifactLabel =
+    artifactSpecSources.length > 1
+      ? getString('pipeline.artifactTriggerConfigPanel.artifacts')
+      : getString('pipeline.artifactTriggerConfigPanel.artifact')
+  const buttonText =
+    isArtifactSelected && isMultiRegionArtifact
+      ? getString('pipeline.artifactTriggerConfigPanel.defineMultiRegionArtifactSource')
+      : getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')
+
   return (
     <Layout.Vertical
       style={{ flexShrink: 'initial', width: '100%' }}
@@ -38,45 +72,65 @@ function ArtifactListView({
       spacing="medium"
     >
       <div>
-        {!isArtifactSelected ? (
+        {isMultiRegionArtifact ? (
           <>
-            <Label
-              style={{
-                fontSize: 13,
-                color: 'var(--form-label)',
-                fontWeight: 'normal',
-                marginBottom: 'var(--spacing-small)'
-              }}
-              data-tooltip-id={'selectArtifactManifestLabel'}
+            <div
+              style={
+                isArtifactSelected ? { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' } : {}
+              }
             >
-              {getString('pipeline.artifactTriggerConfigPanel.artifact')}
-              <HarnessDocTooltip tooltipId="selectArtifactManifestLabel" useStandAlone={true} />
-            </Label>
-            <Button
-              className={css.addArtifact}
-              id="add-artifact"
-              size={ButtonSize.SMALL}
-              variation={ButtonVariation.LINK}
-              onClick={() => addNewArtifact()}
-              text={getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')}
-            />
+              <Label
+                style={{
+                  fontSize: 13,
+                  color: 'var(--form-label)',
+                  fontWeight: 'normal',
+                  marginBottom: 'var(--spacing-small)'
+                }}
+                data-tooltip-id={'selectArtifactManifestLabel'}
+              >
+                {artifactLabel}
+                <HarnessDocTooltip tooltipId="selectArtifactManifestLabel" useStandAlone={true} />
+              </Label>
+              <Button
+                className={css.addArtifact}
+                id="add-artifact"
+                size={ButtonSize.SMALL}
+                variation={ButtonVariation.LINK}
+                onClick={() => addNewArtifact()}
+                text={buttonText}
+                margin={isArtifactSelected ? { bottom: 'large' } : {}}
+              />
+            </div>
+            {isArtifactSelected && <ArtifactTable {...props} />}
           </>
         ) : (
           <>
-            <div className={cx(css.artifactList, css.listHeader)}>
-              <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                {getString('pipeline.artifactsSelection.artifactType')}
-              </Text>
-              <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
-              <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
-            </div>
-            <PrimaryArtifactView
-              primaryArtifact={primaryArtifact as PrimaryArtifact}
-              deleteArtifact={deleteArtifact}
-              accountId={accountId}
-              fetchedConnectorResponse={fetchedConnectorResponse}
-              editArtifact={editArtifact}
-            />
+            {!isArtifactSelected ? (
+              <>
+                <Label
+                  style={{
+                    fontSize: 13,
+                    color: 'var(--form-label)',
+                    fontWeight: 'normal',
+                    marginBottom: 'var(--spacing-small)'
+                  }}
+                  data-tooltip-id={'selectArtifactManifestLabel'}
+                >
+                  {artifactLabel}
+                  <HarnessDocTooltip tooltipId="selectArtifactManifestLabel" useStandAlone={true} />
+                </Label>
+                <Button
+                  className={css.addArtifact}
+                  id="add-artifact"
+                  size={ButtonSize.SMALL}
+                  variation={ButtonVariation.LINK}
+                  onClick={() => addNewArtifact()}
+                  text={buttonText}
+                />
+              </>
+            ) : (
+              <ArtifactTable {...props} />
+            )}
           </>
         )}
       </div>

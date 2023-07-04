@@ -37,7 +37,6 @@ import {
   useGetTrigger,
   useUpdateTrigger,
   NGTriggerConfigV2,
-  NGTriggerSourceV2,
   useGetSchemaYaml,
   ResponseNGTriggerResponse,
   CreateTriggerQueryParams,
@@ -84,7 +83,6 @@ import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import {
   getConnectorName,
   getConnectorValue,
-  isArtifactOrManifestTrigger,
   clearNullUndefined,
   getArtifactWizardMap,
   ResponseStatus,
@@ -99,11 +97,13 @@ import {
   flattenKeys,
   getDefaultPipelineReferenceBranch,
   EventConditionTypes,
-  getTriggerArtifactInitialSource
+  getTriggerArtifactInitialSource,
+  transformArtifactTriggerSourceSpecToMultiRegionArtifactTriggerSourceSpec
 } from './TriggersWizardPageUtils'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import { isNewTrigger } from '../utils'
 import { useIsTriggerCreatePermission } from '../useIsTriggerCreatePermission'
+import type { ArtifactTriggerType, TriggerType } from '../TriggerInterface'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -294,14 +294,13 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
   const [enabledStatus, setEnabledStatus] = useState<boolean>(true)
   const [currentPipeline, setCurrentPipeline] = useState<{ pipeline?: PipelineInfoConfig } | undefined>(undefined)
   const [wizardKey, setWizardKey] = useState<number>(0)
-  const [artifactManifestType, setArtifactManifestType] = useState<string | undefined>(undefined)
   const [isMergedPipelineReady, setIsMergedPipelineReady] = useState<boolean>(false)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const [onEditInitialValues, setOnEditInitialValues] = useState<
     | FlatOnEditValuesInterface
     | {
-        triggerType: NGTriggerSourceV2['type']
+        triggerType: TriggerType
         pipeline?: PipelineInfoConfig | Record<string, never>
         originalPipeline?: PipelineInfoConfig
         resolvedPipeline?: PipelineInfoConfig
@@ -455,10 +454,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
   }, [mergeInputSetResponse?.data?.pipelineYaml])
 
   useEffect(() => {
-    if (
-      triggerResponse?.data?.yaml &&
-      (triggerResponse.data.type === TriggerTypes.MANIFEST || triggerResponse.data.type === TriggerTypes.ARTIFACT)
-    ) {
+    if (triggerResponse?.data?.yaml) {
       const newOnEditInitialValues = getArtifactTriggerValues({
         triggerResponseYaml: triggerResponse?.data?.yaml
       })
@@ -506,28 +502,21 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
           inputYaml,
           pipelineBranchName = getDefaultPipelineReferenceBranch(),
           inputSetRefs,
-          source: { type },
+          source: { type, spec },
           source,
           stagesToExecute
         }
       } = triggerResponseJson
 
-      let selectedArtifact
-      let triggerType
-
-      if (type === TriggerTypes.ARTIFACT) {
-        const { artifactRef, type: _artifactType, spec } = source?.spec || {}
-        if (_artifactType) {
-          setArtifactManifestType(_artifactType)
-        }
-        triggerType = TriggerTypes.ARTIFACT
-        selectedArtifact = {
-          identifier: artifactRef,
-          type: artifactManifestType || _artifactType,
-          spec,
-          stagesToExecute
-        }
-      }
+      const triggerSourceType = type as ArtifactTriggerType
+      const isMultiRegionArtifact = triggerSourceType === 'MultiRegionArtifact'
+      const artifactSpec = isMultiRegionArtifact ? spec : spec?.spec
+      const triggerSource = isMultiRegionArtifact
+        ? source
+        : {
+            type: triggerSourceType,
+            spec: transformArtifactTriggerSourceSpecToMultiRegionArtifactTriggerSourceSpec(spec?.type, artifactSpec)
+          }
 
       let pipelineJson = undefined
 
@@ -548,9 +537,9 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       } else {
         pipelineJson = clearRuntimeInput(yamlTemplate)
       }
-      const eventConditions = source?.spec?.spec?.eventConditions || []
-      const metaDataConditions = source?.spec?.spec?.metaDataConditions || []
-      const jexlCondition = source?.spec?.spec?.jexlCondition
+      const eventConditions = artifactSpec?.eventConditions || []
+      const metaDataConditions = artifactSpec?.metaDataConditions || []
+      const jexlCondition = artifactSpec?.jexlCondition
       const { value: versionValue, operator: versionOperator } =
         eventConditions?.find(
           (eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.VERSION
@@ -566,15 +555,13 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         description,
         stagesToExecute,
         tags,
-        source,
+        source: triggerSource,
         pipeline: pipelineJson,
-        triggerType: triggerType as unknown as NGTriggerSourceV2['type'],
-        manifestType: selectedArtifact?.type,
+        triggerType: triggerSourceType,
         stageId: source?.spec?.stageIdentifier,
         inputSetTemplateYamlObj: parse(template?.data?.inputSetTemplateYaml || ''),
         pipelineBranchName,
         inputSetRefs,
-        selectedArtifact,
         versionValue,
         versionOperator,
         buildValue,
@@ -583,13 +570,10 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
           (eventCondition: AddConditionInterface) =>
             eventCondition.key !== EventConditionTypes.BUILD && eventCondition.key !== EventConditionTypes.VERSION
         ),
-        metaDataConditions: metaDataConditions,
+        metaDataConditions,
         jexlCondition
       }
-      if (type === TriggerTypes.ARTIFACT) {
-        delete newOnEditInitialValues['manifestType']
-        newOnEditInitialValues.artifactType = selectedArtifact?.type
-      }
+
       return newOnEditInitialValues
     } catch (e) {
       // set error
@@ -779,7 +763,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     submitTrigger(triggerYaml)
   }
 
-  const getInitialValues = (triggerType: NGTriggerSourceV2['type']): FlatInitialValuesInterface | any => {
+  const getInitialValues = (): FlatInitialValuesInterface | any => {
     let newPipeline: any = { ...(currentPipeline?.pipeline || {}) }
     // only applied for CI, Not cloned codebase
     if (
@@ -791,33 +775,30 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline)
     }
 
-    if (isArtifactOrManifestTrigger(triggerType)) {
-      const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
-      return {
-        triggerType: triggerTypeOnNew,
-        identifier: '',
-        tags: {},
-        artifactType,
-        manifestType,
-        source: getTriggerArtifactInitialSource(triggerTypeOnNew!, artifactType!),
-        pipeline: newPipeline,
-        originalPipeline,
-        resolvedPipeline: resolvedMergedPipeline,
-        inputSetTemplateYamlObj,
-        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
-        selectedArtifact: {},
-        stagesToExecute: newPipeline?.stagesToExecute
-      }
+    const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
+    return {
+      triggerType: triggerTypeOnNew,
+      identifier: '',
+      tags: {},
+      artifactType,
+      manifestType,
+      source: getTriggerArtifactInitialSource(artifactType!),
+      pipeline: newPipeline,
+      originalPipeline,
+      resolvedPipeline: resolvedMergedPipeline,
+      inputSetTemplateYamlObj,
+      pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
+      selectedArtifact: {},
+      stagesToExecute: newPipeline?.stagesToExecute
     }
-    return {}
   }
 
   const [initialValues, setInitialValues] = useState<FlatInitialValuesInterface>(
-    Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues)
+    Object.assign(getInitialValues(), onEditInitialValues)
   )
 
   useEffect(() => {
-    let newInitialValues = Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues)
+    let newInitialValues = Object.assign(getInitialValues(), onEditInitialValues)
     if (onEditInitialValues?.identifier) {
       newInitialValues = newInitialValues?.pipeline?.template
         ? getModifiedTemplateValues(newInitialValues)
@@ -859,10 +840,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
           }
         } = {}
 
-        if (isArtifactOrManifestTrigger(initialValues?.triggerType)) {
-          const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
-          additionalValues.inputSetTemplateYamlObj = inputSetTemplateYamlObj
-        }
+        const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
+        additionalValues.inputSetTemplateYamlObj = inputSetTemplateYamlObj
 
         if (onEditInitialValues?.identifier) {
           const newPipeline = currentPipeline?.pipeline ? currentPipeline.pipeline : onEditInitialValues.pipeline || {}
@@ -977,10 +956,11 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       setErrorToasterMessage('')
       try {
         const triggerYaml = parse(yaml)
-        setInitialValues({
+        const updatedInitialValues = {
           ...initialValues,
           ...getArtifactTriggerValues({ triggerYaml })
-        })
+        }
+        setInitialValues(updatedInitialValues)
         setWizardKey(() => wizardKey + 1)
       } catch (e) {
         setErrorToasterMessage(getString('triggers.cannotParseInputValues'))

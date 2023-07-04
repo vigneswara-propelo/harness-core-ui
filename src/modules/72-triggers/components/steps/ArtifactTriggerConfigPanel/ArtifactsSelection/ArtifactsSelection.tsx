@@ -5,35 +5,31 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import type { FormikProps } from 'formik'
-import { MultiTypeInputType, shouldShowError, useToaster } from '@harness/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { merge, noop } from 'lodash-es'
-import { PageConnectorResponse, PrimaryArtifact, useGetConnectorListV2 } from 'services/cd-ng'
+import { noop } from 'lodash-es'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 
 import { useQueryParams } from '@common/hooks'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { ArtifactActions } from '@common/constants/TrackingConstants'
-import type { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { getTriggerArtifactInitialSpec } from '@triggers/components/Triggers/ArtifactTrigger/TriggersWizardPageUtils'
-import type { ArtifactTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
+import {
+  getArtifactTriggerSpecSource,
+  isArtifactAdded
+} from '@triggers/components/Triggers/ArtifactTrigger/TriggersWizardPageUtils'
+import type { NGTriggerSourceV2 } from 'services/pipeline-ng'
 import ArtifactWizard from '@pipeline/components/ArtifactsSelection/ArtifactWizard/ArtifactWizard'
 import { showConnectorStep } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 
@@ -47,6 +43,7 @@ import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/D
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
   ArtifactTriggerSpec,
+  ArtifactTriggerSpecWrapper,
   ArtifactType,
   ConnectorRefLabelType,
   ImagePathProps,
@@ -69,25 +66,22 @@ interface ArtifactsSelectionProps {
 
 export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionProps): React.ReactElement | null {
   const { spec: triggerSpec } = (formikProps.values?.source ?? {}) as Omit<Required<NGTriggerSourceV2>, 'pollInterval'>
-  const { type: artifactType, spec } = triggerSpec
-  const artifactSpec = spec as ArtifactTriggerSpec
-  const selectedArtifactType = artifactType as Required<ArtifactTriggerConfig>['type']
+  const { type: artifactType, sources = [] } = triggerSpec
+  const filteredArtifactSpecSources = sources.filter((artifactSpecSource: ArtifactTriggerSpecWrapper) =>
+    isArtifactAdded(artifactType, artifactSpecSource.spec)
+  )
+  const selectedArtifactType = artifactType as Required<ArtifactType>
   const [isEditMode, setIsEditMode] = useState(false)
   const [connectorView, setConnectorView] = useState(false)
-  const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
-  const [primaryArtifact, setPrimaryArtifact] = useState<PrimaryArtifact>(triggerSpec as PrimaryArtifact)
+  const [artifactSpecSources, setArtifactSpecSources] = useState<ArtifactTriggerSpecWrapper[]>(
+    filteredArtifactSpecSources as ArtifactTriggerSpecWrapper[]
+  )
+  const [isNewArtifact, setIsNewArtifact] = useState(false)
+  const [currentEditArtifactIndex, setCurrentEditArtifactIndex] = useState(0)
 
   const { getString } = useStrings()
-  const { trackEvent } = useTelemetry()
-  const { expressions } = useVariablesExpression()
 
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<
-    PipelineType<{
-      orgIdentifier: string
-      projectIdentifier: string
-      accountId: string
-    }>
-  >()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const DIALOG_PROPS: IDialogProps = {
@@ -100,45 +94,6 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     title: '',
     style: { width: 1100, height: 550, borderLeft: 'none', paddingBottom: 0, position: 'relative' }
   }
-
-  const defaultQueryParams = {
-    pageIndex: 0,
-    pageSize: 10,
-    searchTerm: '',
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier,
-    includeAllConnectorsAvailableAtScope: true
-  }
-  const { mutate: fetchConnectors } = useGetConnectorListV2({
-    queryParams: defaultQueryParams
-  })
-
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-
-  const refetchConnectorList = async (): Promise<void> => {
-    try {
-      const response = await fetchConnectors({
-        filterType: 'Connector',
-        connectorIdentifiers: [getIdentifierFromValue(artifactSpec.connectorRef as string)]
-      })
-      /* istanbul ignore else */
-      if (response.data) {
-        const { data: connectorResponse } = response
-        setFetchedConnectorResponse(connectorResponse)
-      }
-    } catch (e) {
-      /* istanbul ignore else */
-      if (shouldShowError(e)) {
-        showError(getRBACErrorMessage(e as RBACError))
-      }
-    }
-  }
-
-  useEffect(() => {
-    refetchConnectorList()
-  }, [artifactSpec?.connectorRef])
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(
     () => (
@@ -177,62 +132,66 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         />
       </Dialog>
     ),
-    [selectedArtifactType, connectorView, formikProps]
+    [selectedArtifactType, connectorView, formikProps, isNewArtifact, currentEditArtifactIndex]
   )
 
-  const setTelemetryEvent = useCallback((): void => {
-    trackEvent(ArtifactActions.SavePrimaryArtifactOnPipelinePage, {})
-  }, [trackEvent])
-
-  const addArtifact = async (artifactObj: ArtifactTriggerSpec): Promise<void> => {
-    const { type, spec: _triggerSpec } = formikProps.values.source ?? {}
-    const { type: _artifactType } = _triggerSpec ?? {}
-
+  const setFormikValues = (updatedArtifacts: ArtifactTriggerSpecWrapper[]): void => {
+    const { type, spec } = formikProps.values.source ?? {}
     const values = {
       ...formikProps.values,
       source: {
         type,
         spec: {
-          type: _artifactType,
-          spec: artifactObj
+          ...spec,
+          sources: updatedArtifacts
         }
       }
     }
 
-    await formikProps.setValues(values)
+    formikProps.setValues(values)
 
-    setPrimaryArtifact(values?.source?.spec)
+    setArtifactSpecSources(updatedArtifacts)
+  }
 
-    setTelemetryEvent()
+  const addArtifact = (artifactObj: ArtifactTriggerSpec): void => {
+    const updatedArtifacts = isNewArtifact
+      ? [...artifactSpecSources, { spec: artifactObj }]
+      : artifactSpecSources.map((artifact, index) =>
+          index === currentEditArtifactIndex ? { spec: artifactObj } : artifact
+        )
+
+    setFormikValues(updatedArtifacts)
+
     hideConnectorModal()
   }
 
   const getArtifactInitialValues = useCallback((): InitialArtifactDataType => {
     return {
       submittedArtifact: selectedArtifactType,
-      connectorId: artifactSpec?.connectorRef
+      connectorId: isNewArtifact ? undefined : artifactSpecSources[currentEditArtifactIndex].spec?.connectorRef
     }
-  }, [selectedArtifactType, artifactSpec])
+  }, [selectedArtifactType, isNewArtifact, artifactSpecSources, currentEditArtifactIndex])
 
   const addNewArtifact = (): void => {
+    setIsNewArtifact(true)
     setConnectorView(false)
     showConnectorModal()
   }
 
-  const editArtifact = (): void => {
+  const editArtifact = (currentArtifactIndex: number): void => {
+    setCurrentEditArtifactIndex(currentArtifactIndex)
+    setIsNewArtifact(false)
     setConnectorView(false)
     showConnectorModal()
   }
 
-  const deleteArtifact = async (): Promise<void> => {
-    const initialSpec = getTriggerArtifactInitialSpec(selectedArtifactType)
-    const { source: artifactSource } = formikProps.values
-    const { spec: _artifactSpec } = artifactSource ?? {}
+  const deleteArtifact = (currentArtifactIndex: number): void => {
+    const updatedArtifacts = [
+      ...artifactSpecSources.slice(0, currentArtifactIndex),
+      ...artifactSpecSources.slice(currentArtifactIndex + 1)
+    ]
 
-    merge(_artifactSpec?.spec, initialSpec)
-
-    await formikProps.setValues(merge(formikProps.values, artifactSource))
-    setPrimaryArtifact({} as PrimaryArtifact)
+    setFormikValues(updatedArtifacts)
   }
 
   const getIconProps = useCallback((): IconProps => {
@@ -249,23 +208,21 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     return iconProps
   }, [selectedArtifactType])
 
-  const getLastStepName = (): { key: string; name: string } => {
+  const getArtifactLastStepProps = useCallback((): ImagePathProps<ArtifactTriggerSpec> => {
+    const initialValues = isNewArtifact
+      ? getArtifactTriggerSpecSource(selectedArtifactType) ?? artifactSpecSources[currentEditArtifactIndex].spec
+      : artifactSpecSources[currentEditArtifactIndex].spec
+
     return {
       key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName')
-    }
-  }
-
-  const artifactLastStepProps = useCallback((): ImagePathProps<ArtifactTriggerSpec> => {
-    return {
-      ...getLastStepName(),
-      initialValues: artifactSpec,
+      name: getString('connectors.stepFourName'),
+      initialValues,
       handleSubmit: (data: ArtifactTriggerSpec) => {
         addArtifact(data)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addArtifact, expressions, selectedArtifactType, getString])
+  }, [addArtifact, selectedArtifactType, isNewArtifact, artifactSpecSources, currentEditArtifactIndex])
 
   const getLabels = useCallback((): ConnectorRefLabelType => {
     return {
@@ -313,39 +270,39 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
   const getLastSteps = useCallback((): JSX.Element => {
     switch (selectedArtifactType) {
       case 'Gcr':
-        return <GCRImagePath {...artifactLastStepProps()} />
+        return <GCRImagePath {...getArtifactLastStepProps()} />
       case 'Ecr':
-        return <ECRArtifact {...artifactLastStepProps()} />
+        return <ECRArtifact {...getArtifactLastStepProps()} />
       case 'Nexus3Registry':
-        return <NexusArtifact {...artifactLastStepProps()} />
+        return <NexusArtifact {...getArtifactLastStepProps()} />
       case 'ArtifactoryRegistry':
-        return <Artifactory {...artifactLastStepProps()} />
+        return <Artifactory {...getArtifactLastStepProps()} />
       case 'AmazonS3':
-        return <AmazonS3 {...artifactLastStepProps()} />
+        return <AmazonS3 {...getArtifactLastStepProps()} />
       case 'GithubPackageRegistry':
-        return <GithubPackageRegistry {...artifactLastStepProps()} />
+        return <GithubPackageRegistry {...getArtifactLastStepProps()} />
       case 'GoogleArtifactRegistry':
-        return <GoogleArtifactRegistry {...artifactLastStepProps()} />
+        return <GoogleArtifactRegistry {...getArtifactLastStepProps()} />
       case 'Acr':
-        return <ACRArtifact {...artifactLastStepProps()} />
+        return <ACRArtifact {...getArtifactLastStepProps()} />
       case 'AzureArtifacts':
-        return <AzureArtifacts {...artifactLastStepProps()} />
+        return <AzureArtifacts {...getArtifactLastStepProps()} />
       case 'CustomArtifact':
-        return <CustomArtifact {...artifactLastStepProps()} />
+        return <CustomArtifact {...getArtifactLastStepProps()} />
       case 'Jenkins':
-        return <JenkinsArtifact {...artifactLastStepProps()} />
+        return <JenkinsArtifact {...getArtifactLastStepProps()} />
       case 'DockerRegistry':
-        return <DockerRegistryArtifact {...artifactLastStepProps()} />
+        return <DockerRegistryArtifact {...getArtifactLastStepProps()} />
       case 'AmazonMachineImage':
-        return <AmazonMachineImage {...artifactLastStepProps()} />
+        return <AmazonMachineImage {...getArtifactLastStepProps()} />
       case 'GoogleCloudStorage':
-        return <GoogleCloudStorage {...artifactLastStepProps()} />
+        return <GoogleCloudStorage {...getArtifactLastStepProps()} />
       case 'Bamboo':
-        return <BambooArtifact {...artifactLastStepProps()} />
+        return <BambooArtifact {...getArtifactLastStepProps()} />
       default:
         return <></>
     }
-  }, [artifactLastStepProps, selectedArtifactType])
+  }, [getArtifactLastStepProps, selectedArtifactType])
 
   const handleConnectorViewChange = useCallback((isConnectorView: boolean): void => {
     setConnectorView(isConnectorView)
@@ -354,12 +311,11 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
 
   return (
     <ArtifactListView
-      primaryArtifact={primaryArtifact}
+      artifactSpecSources={artifactSpecSources}
+      artifactType={artifactType}
       addNewArtifact={addNewArtifact}
       editArtifact={editArtifact}
       deleteArtifact={deleteArtifact}
-      fetchedConnectorResponse={fetchedConnectorResponse}
-      accountId={accountId}
     />
   )
 }

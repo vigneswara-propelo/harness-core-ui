@@ -18,10 +18,9 @@ import { parse } from '@common/utils/YamlHelperMethods'
 
 import factory from '@triggers/factory/TriggerFactory'
 import { TriggerWidget } from '@triggers/components/Triggers/TriggerWidget'
-import {
+import type {
   ScheduleType,
   SourceRepo,
-  TriggerBaseType,
   TriggerArtifactType,
   ManifestType,
   TriggerSubType
@@ -29,6 +28,7 @@ import {
 import TriggerDetailsV1 from '@triggers/pages/trigger-details/TriggerDetails'
 import TriggersWizardPageV1 from '@triggers/pages/triggers/TriggersWizardPage'
 import { isNewTrigger } from '@triggers/components/Triggers/utils'
+import { getTriggerBaseType } from '@triggers/pages/triggers/utils/TriggersListUtils'
 
 export default function TriggersWizardPage(): JSX.Element {
   const {
@@ -46,7 +46,7 @@ export default function TriggersWizardPage(): JSX.Element {
       (artifactType as TriggerArtifactType) ||
       (manifestType as ManifestType)
   )
-  const [baseType, setBaseType] = useState<TriggerBaseType>(triggerType as TriggerBaseType)
+  const [baseType, setBaseType] = useState(triggerType)
   const [isV1ArtifactManifestTrigger, setIsV1ArtifactManifestTrigger] = useState(false)
 
   const { data: triggerResponse, loading: loadingTriggerData } = useGetTrigger({
@@ -68,7 +68,7 @@ export default function TriggersWizardPage(): JSX.Element {
       const triggerBaseType = parsedTriggerYaml?.trigger?.source?.type
       // istanbul ignore else
       if (triggerBaseType) {
-        setBaseType(triggerBaseType as TriggerBaseType)
+        setBaseType(getTriggerBaseType(triggerBaseType))
       }
 
       // istanbul ignore else
@@ -78,7 +78,7 @@ export default function TriggersWizardPage(): JSX.Element {
 
       // istanbul ignore else
       if (
-        (triggerBaseType === TriggerBaseType.ARTIFACT || triggerBaseType === TriggerBaseType.MANIFEST) &&
+        (triggerBaseType === 'Artifact' || triggerBaseType === 'Manifest') &&
         parsedTriggerYaml?.trigger?.source?.spec?.stageIdentifier
       ) {
         setIsV1ArtifactManifestTrigger(true)

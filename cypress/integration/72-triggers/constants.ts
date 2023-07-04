@@ -11,6 +11,7 @@ export const createTriggerAPI = `/pipeline/api/triggers?routingId=${accountId}&a
 export const createTriggerAPIV2 = `/pipeline/api/triggers?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&targetIdentifier=${pipelineIdentifier}&ignoreError=false&withServiceV2=true`
 export const getTriggerListAPI = `/pipeline/api/triggers?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&targetIdentifier=${pipelineIdentifier}&size=20&page=0&sort=createdAt%2CDESC`
 export const getTriggerAPI = (triggerIdentifier: string): string => `/pipeline/api/triggers/${triggerIdentifier}*`
+export const mergeInputSets = 'pipeline/api/inputSets/merge*'
 export const updateTriggerAPI = (triggerIdentifier: string): string => `/pipeline/api/triggers/${triggerIdentifier}*`
 export const getAWSRegions = `api/awshelper/aws-regions?routingId=${accountId}&accountId=${accountId}`
 export const getGARRegions = `ng/api/artifacts/gar/getRegions?routingId=${accountId}`
