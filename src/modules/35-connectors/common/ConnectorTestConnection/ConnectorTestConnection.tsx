@@ -198,6 +198,9 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
       intent: Intent.WARNING,
       status: 'PROCESS'
     })
+    const [testStartTime, setTestStartTime] = useState<number>()
+    const [testEndTime, setTestEndTime] = useState<number>()
+
     useConnectorWizard({
       helpPanel: props.helpPanelReferenceId
         ? { referenceId: props.helpPanelReferenceId, contentWidth: 1020 }
@@ -453,7 +456,9 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
       if (stepDetails.step === StepIndex.get(STEP.TEST_CONNECTION)) {
         if (stepDetails.status === 'PROCESS') {
           try {
+            setTestStartTime(Date.now())
             const result = await reloadTestConnection()
+            setTestEndTime(Date.now())
 
             setTestConnectionResponse(result)
             if (result?.data?.status === 'SUCCESS') {
@@ -492,6 +497,8 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
     }, [testConnectionResponse?.data?.delegateId])
 
     const timePadding = 60 * 5 // 5 minutes
+    const testStartTimeForApi = Math.floor((testStartTime || 0) / 1000) - timePadding
+    const testEndTimeForApi = Math.floor((testEndTime || 0) / 1000) + timePadding * 2
 
     return (
       <Layout.Vertical>
@@ -516,8 +523,8 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
             />
             {connectorInfo && connectorInfo?.spec?.executeOnDelegate ? (
               <DelegateTaskLogsButton
-                startTime={(testConnectionResponse?.data?.testedAt || 0) - timePadding}
-                endTime={(testConnectionResponse?.data?.testedAt || 0) + timePadding * 2}
+                startTime={testStartTimeForApi}
+                endTime={testEndTimeForApi}
                 taskIds={[testConnectionResponse?.data?.taskId || '']}
                 telemetry={{
                   taskContext: TaskContext.ConnectorValidation,
