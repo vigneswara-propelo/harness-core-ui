@@ -21,6 +21,7 @@ navLabels:
   probes: Resilience Probes
   dashboards: Chaos Dashboards
   security: Security Governance
+  imageRegistry: Image Registry
 environments:
   pageTitle: '[{{projectName}}] Environments'
   create:
