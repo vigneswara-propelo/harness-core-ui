@@ -575,7 +575,7 @@ const getRepoValuesForNexus2 = (specValues: Nexus2InitialValuesType): Nexus2Init
 }
 
 export const isFieldFixedAndNonEmpty = (field: string): boolean => {
-  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
+  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : false
 }
 
 export const formFillingMethod = {

@@ -169,11 +169,22 @@ function FormComponent(
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingProjects} />
   ))
 
-  const isFeedDisabled = (): boolean => {
+  const isFeedEnabled = (): boolean => {
     if (formik.values?.scope === 'org') {
-      return false
+      return isFieldFixedAndNonEmpty(connectorRefValue)
     }
-    return !isFieldFixedAndNonEmpty(formik.values?.project || '')
+    return isFieldFixedAndNonEmpty(formik.values?.project || '') && isFieldFixedAndNonEmpty(connectorRefValue)
+  }
+
+  const isPackageEnabled = (): boolean => {
+    if (formik.values?.scope === 'org') {
+      return isFieldFixedAndNonEmpty(connectorRefValue) && isFieldFixedAndNonEmpty(formik.values?.feed || '')
+    }
+    return (
+      isFieldFixedAndNonEmpty(formik.values?.project || '') &&
+      isFieldFixedAndNonEmpty(connectorRefValue) &&
+      isFieldFixedAndNonEmpty(formik.values?.feed || '')
+    )
   }
 
   return (
@@ -211,12 +222,14 @@ function FormComponent(
                   ) {
                     return
                   }
-                  refetchProjects({
-                    queryParams: {
-                      ...commonParams,
-                      connectorRef: connectorRefValue?.toString()
-                    }
-                  })
+                  if (isFieldFixedAndNonEmpty(connectorRefValue)) {
+                    refetchProjects({
+                      queryParams: {
+                        ...commonParams,
+                        connectorRef: connectorRefValue?.toString()
+                      }
+                    })
+                  }
                 }
               }}
             />
@@ -225,7 +238,6 @@ function FormComponent(
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             selectItems={getItems(fetchingFeeds, getString('pipeline.feedsText'), feedItems)}
-            disabled={isFeedDisabled()}
             label={getString('pipeline.artifactsSelection.feed')}
             placeholder={getString('pipeline.artifactsSelection.feedPlaceholder')}
             name="feed"
@@ -251,13 +263,15 @@ function FormComponent(
                 ) {
                   return
                 }
-                refetchFeeds({
-                  queryParams: {
-                    ...commonParams,
-                    connectorRef: connectorRefValue?.toString(),
-                    project: projectValue
-                  }
-                })
+                if (isFeedEnabled()) {
+                  refetchFeeds({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefValue?.toString(),
+                      project: projectValue
+                    }
+                  })
+                }
               }
             }}
           />
@@ -294,15 +308,17 @@ function FormComponent(
                 ) {
                   return
                 }
-                refetchPackages({
-                  queryParams: {
-                    ...commonParams,
-                    connectorRef: connectorRefValue?.toString(),
-                    project: projectValue,
-                    packageType: packageTypeValue || 'maven',
-                    feed: feedValue || ''
-                  }
-                })
+                if (isPackageEnabled()) {
+                  refetchPackages({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefValue?.toString(),
+                      project: projectValue,
+                      packageType: packageTypeValue || 'maven',
+                      feed: feedValue || ''
+                    }
+                  })
+                }
               }
             }}
           />

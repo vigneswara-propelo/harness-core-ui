@@ -173,7 +173,8 @@ function FormComponent(
       isFieldFixedAndNonEmpty(formik.values.spec.project) &&
       isFieldFixedAndNonEmpty(formik.values.spec.region) &&
       isFieldFixedAndNonEmpty(formik.values.spec.repositoryName) &&
-      isFieldFixedAndNonEmpty(formik.values.spec.package)
+      isFieldFixedAndNonEmpty(formik.values.spec.package) &&
+      isFieldFixedAndNonEmpty(connectorRefValue)
     )
   }
 
@@ -341,7 +342,6 @@ function FormComponent(
           <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
               selectItems={getBuilds()}
-              disabled={!isAllFieldsAreFixed()}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="spec.version"
