@@ -73,7 +73,7 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
   const launchButtonRedirectUrl = props.launchButtonRedirectUrl
     ? props.launchButtonRedirectUrl?.replace('{replaceAccountId}', params.accountId)
     : ''
-  const { data } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
+  const { data } = useGetAccountNG({ accountIdentifier: accountId })
   const account = data?.data
   let newNavFlag = true
   if (PLG_ENABLE_CROSS_GENERATION_ACCESS) {

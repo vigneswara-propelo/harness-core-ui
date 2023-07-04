@@ -3192,27 +3192,6 @@ export interface CreatePRResponse {
   prNumber?: number
 }
 
-export type CreatePRStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  overrideConfig: boolean
-  shell: 'Bash'
-  source?: CreatePRStepUpdateConfigScriptWrapper
-  stringMap?: ParameterFieldMapStringString
-}
-
-export interface CreatePRStepUpdateConfigScriptBaseSource {
-  type?: string
-}
-
-export type CreatePRStepUpdateConfigScriptInlineSource = CreatePRStepUpdateConfigScriptBaseSource & {
-  updateConfigScript?: string
-}
-
-export interface CreatePRStepUpdateConfigScriptWrapper {
-  spec: CreatePRStepUpdateConfigScriptBaseSource
-  type: string
-}
-
 export interface CreditCardDTO {
   accountIdentifier: string
   creditCardIdentifier: string
@@ -4592,6 +4571,7 @@ export interface EntityDetail {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
 }
 
 export interface EntityDetailProtoDTO {
@@ -7354,6 +7334,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   )[]
   moduleType?:
     | 'CD'
@@ -7597,6 +7578,7 @@ export interface GitEntityFilterProperties {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7919,6 +7901,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8154,6 +8137,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8510,6 +8494,7 @@ export interface GitSyncEntityDTO {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8739,6 +8724,7 @@ export interface GitSyncEntityListDTO {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8985,6 +8971,7 @@ export interface GitSyncErrorDTO {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9107,7 +9094,6 @@ export type GithubPackagesArtifactConfig = ArtifactConfig & {
   org?: string
   packageName: string
   packageType: 'npm' | 'maven' | 'rubygems' | 'nuget' | 'container'
-  repository?: string
   user?: string
   version?: string
   versionRegex?: string
@@ -10672,6 +10658,7 @@ export type KubernetesServiceAccountDTO = KubernetesAuthCredentialDTO & {
 
 export type KubernetesServiceSpec = ServiceSpec & {
   hooks?: ServiceHookWrapper[]
+  manifestConfigurations?: ManifestConfigurations
 }
 
 export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
@@ -11042,6 +11029,10 @@ export interface ManifestConfigWrapper {
   manifest?: ManifestConfig
 }
 
+export interface ManifestConfigurations {
+  primaryManifestRef?: string
+}
+
 export interface ManifestOverrideSetWrapper {
   overrideSet?: ManifestOverrideSets
 }
@@ -11265,6 +11256,7 @@ export type NativeHelmInstanceInfoDTO = InstanceInfoDTO & {
 
 export type NativeHelmServiceSpec = ServiceSpec & {
   hooks?: ServiceHookWrapper[]
+  manifestConfigurations?: ManifestConfigurations
 }
 
 export type NewRelicConnectorDTO = ConnectorConfigDTO & {
@@ -13012,6 +13004,7 @@ export interface ReferencedByDTO {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
 }
 
 export interface RefreshResponse {
@@ -14452,6 +14445,7 @@ export interface ResponseListEntityType {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -17563,7 +17557,6 @@ export interface ServiceOverrideRequestDTO {
 export interface ServiceOverrideRequestDTOV2 {
   clusterIdentifier?: string
   environmentRef: string
-  identifier?: string
   infraIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -17981,8 +17974,10 @@ export interface Splitting {
 export type SplunkConnectorDTO = ConnectorConfigDTO & {
   accountId: string
   delegateSelectors?: string[]
-  passwordRef: string
+  passwordRef?: string
   splunkUrl: string
+  tokenRef?: string
+  type?: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
   username?: string
 }
 
@@ -18154,7 +18149,6 @@ export interface StepCategory {
 export interface StepData {
   name?: string
   type?:
-    | 'CreatePR'
     | 'MergePR'
     | 'GitOpsSync'
     | 'APPLY'
@@ -20376,16 +20370,12 @@ export const listAccountSettingPromise = (
     signal
   )
 
-export interface GetAccountNGQueryParams {
-  accountIdentifier: string
-}
-
 export interface GetAccountNGPathParams {
   accountIdentifier: string
 }
 
 export type GetAccountNGProps = Omit<
-  GetProps<ResponseAccountDTO, Failure | Error, GetAccountNGQueryParams, GetAccountNGPathParams>,
+  GetProps<ResponseAccountDTO, Failure | Error, void, GetAccountNGPathParams>,
   'path'
 > &
   GetAccountNGPathParams
@@ -20394,7 +20384,7 @@ export type GetAccountNGProps = Omit<
  * Get Account
  */
 export const GetAccountNG = ({ accountIdentifier, ...props }: GetAccountNGProps) => (
-  <Get<ResponseAccountDTO, Failure | Error, GetAccountNGQueryParams, GetAccountNGPathParams>
+  <Get<ResponseAccountDTO, Failure | Error, void, GetAccountNGPathParams>
     path={`/accounts/${accountIdentifier}`}
     base={getConfig('ng/api')}
     {...props}
@@ -20402,7 +20392,7 @@ export const GetAccountNG = ({ accountIdentifier, ...props }: GetAccountNGProps)
 )
 
 export type UseGetAccountNGProps = Omit<
-  UseGetProps<ResponseAccountDTO, Failure | Error, GetAccountNGQueryParams, GetAccountNGPathParams>,
+  UseGetProps<ResponseAccountDTO, Failure | Error, void, GetAccountNGPathParams>,
   'path'
 > &
   GetAccountNGPathParams
@@ -20411,7 +20401,7 @@ export type UseGetAccountNGProps = Omit<
  * Get Account
  */
 export const useGetAccountNG = ({ accountIdentifier, ...props }: UseGetAccountNGProps) =>
-  useGet<ResponseAccountDTO, Failure | Error, GetAccountNGQueryParams, GetAccountNGPathParams>(
+  useGet<ResponseAccountDTO, Failure | Error, void, GetAccountNGPathParams>(
     (paramsInPath: GetAccountNGPathParams) => `/accounts/${paramsInPath.accountIdentifier}`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
   )
@@ -20423,12 +20413,12 @@ export const getAccountNGPromise = (
   {
     accountIdentifier,
     ...props
-  }: GetUsingFetchProps<ResponseAccountDTO, Failure | Error, GetAccountNGQueryParams, GetAccountNGPathParams> & {
+  }: GetUsingFetchProps<ResponseAccountDTO, Failure | Error, void, GetAccountNGPathParams> & {
     accountIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseAccountDTO, Failure | Error, GetAccountNGQueryParams, GetAccountNGPathParams>(
+  getUsingFetch<ResponseAccountDTO, Failure | Error, void, GetAccountNGPathParams>(
     getConfig('ng/api'),
     `/accounts/${accountIdentifier}`,
     props,
@@ -20964,6 +20954,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21185,6 +21176,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -21510,6 +21502,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21731,6 +21724,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -40370,6 +40364,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -40652,6 +40647,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   searchTerm?: string
 }
 
@@ -44145,6 +44141,7 @@ export interface GetReferencedByQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   searchTerm?: string
 }
 
@@ -47084,6 +47081,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -47373,6 +47371,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServerlessAwsLambdaRollbackV2'
       | 'Coverity'
       | 'ServerlessAwsLambdaDeployV2'
+      | 'AnalyzeDeploymentImpact'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -51946,6 +51945,80 @@ export const validateLdapUserSettingsPromise = (
     void
   >('POST', getConfig('ng/api'), `/ldap/settings/test/user`, props, signal)
 
+export interface SyncUserGroupLinkedToLDAPQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface SyncUserGroupLinkedToLDAPPathParams {
+  userGroupId: string
+}
+
+export type SyncUserGroupLinkedToLDAPProps = Omit<
+  GetProps<
+    RestResponseVoid,
+    Failure | Error,
+    SyncUserGroupLinkedToLDAPQueryParams,
+    SyncUserGroupLinkedToLDAPPathParams
+  >,
+  'path'
+> &
+  SyncUserGroupLinkedToLDAPPathParams
+
+/**
+ * Trigger sync for a harness user group linked to an LDAP user group in an account
+ */
+export const SyncUserGroupLinkedToLDAP = ({ userGroupId, ...props }: SyncUserGroupLinkedToLDAPProps) => (
+  <Get<RestResponseVoid, Failure | Error, SyncUserGroupLinkedToLDAPQueryParams, SyncUserGroupLinkedToLDAPPathParams>
+    path={`/ldap/sync-group/${userGroupId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSyncUserGroupLinkedToLDAPProps = Omit<
+  UseGetProps<
+    RestResponseVoid,
+    Failure | Error,
+    SyncUserGroupLinkedToLDAPQueryParams,
+    SyncUserGroupLinkedToLDAPPathParams
+  >,
+  'path'
+> &
+  SyncUserGroupLinkedToLDAPPathParams
+
+/**
+ * Trigger sync for a harness user group linked to an LDAP user group in an account
+ */
+export const useSyncUserGroupLinkedToLDAP = ({ userGroupId, ...props }: UseSyncUserGroupLinkedToLDAPProps) =>
+  useGet<RestResponseVoid, Failure | Error, SyncUserGroupLinkedToLDAPQueryParams, SyncUserGroupLinkedToLDAPPathParams>(
+    (paramsInPath: SyncUserGroupLinkedToLDAPPathParams) => `/ldap/sync-group/${paramsInPath.userGroupId}`,
+    { base: getConfig('ng/api'), pathParams: { userGroupId }, ...props }
+  )
+
+/**
+ * Trigger sync for a harness user group linked to an LDAP user group in an account
+ */
+export const syncUserGroupLinkedToLDAPPromise = (
+  {
+    userGroupId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseVoid,
+    Failure | Error,
+    SyncUserGroupLinkedToLDAPQueryParams,
+    SyncUserGroupLinkedToLDAPPathParams
+  > & { userGroupId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseVoid,
+    Failure | Error,
+    SyncUserGroupLinkedToLDAPQueryParams,
+    SyncUserGroupLinkedToLDAPPathParams
+  >(getConfig('ng/api'), `/ldap/sync-group/${userGroupId}`, props, signal)
+
 export interface SyncLdapGroupsQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -53881,6 +53954,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   yamlGroup?: string
 }
 
@@ -54230,6 +54304,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -70168,6 +70243,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
   subtype?:
     | 'K8sCluster'
     | 'Git'

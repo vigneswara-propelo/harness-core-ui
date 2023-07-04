@@ -24,8 +24,7 @@ interface ModalReturn {
 export const useReleaseNotesModal = (): ModalReturn => {
   const { accountId } = useParams<AccountPathProps>()
   const { data } = useGetAccountNG({
-    accountIdentifier: accountId,
-    queryParams: { accountIdentifier: accountId }
+    accountIdentifier: accountId
   })
 
   const clusterName = data?.data?.cluster

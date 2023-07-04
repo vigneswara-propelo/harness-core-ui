@@ -137,7 +137,7 @@ const SubscriptionsPage: React.FC = () => {
     error: accountError,
     loading: isGetAccountLoading,
     refetch: refetchGetAccount
-  } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
+  } = useGetAccountNG({ accountIdentifier: accountId })
 
   const getModuleLicenseQueryParams: GetModuleLicensesByAccountAndModuleTypeQueryParams = {
     moduleType: selectedModuleCard?.module as GetModuleLicensesByAccountAndModuleTypeQueryParams['moduleType']

@@ -28,8 +28,7 @@ export default function AccountSideNav(): React.ReactElement {
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
   const showDeploymentFreeze = isEnterpriseEdition
   const { data: accountData } = useGetAccountNG({
-    accountIdentifier: accountId,
-    queryParams: { accountIdentifier: accountId }
+    accountIdentifier: accountId
   })
   return (
     <Layout.Vertical spacing="small" margin={{ top: 'xxxlarge' }}>
