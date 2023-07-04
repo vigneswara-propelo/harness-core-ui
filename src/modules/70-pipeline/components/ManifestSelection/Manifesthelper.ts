@@ -12,6 +12,7 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import { FeatureFlag } from '@common/featureFlags'
 import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
@@ -227,11 +228,15 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
 
 export const getManifestStoresByDeploymentType = (
   selectedDeploymentType: ServiceDefinition['type'],
-  selectedManifest: ManifestTypes | null
+  selectedManifest: ManifestTypes | null,
+  featureFlagMap: Partial<Record<FeatureFlag, boolean>>
 ): ManifestStores[] => {
-  if (selectedDeploymentType === ServiceDeploymentType.AwsSam && selectedManifest === ManifestDataType.Values) {
+  if (
+    selectedDeploymentType === ServiceDeploymentType.AwsSam ||
+    (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda && featureFlagMap.CDS_SERVERLESS_V2)
+  ) {
     const valuesManifestStores = ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
-    return valuesManifestStores.filter(manifestStore => manifestStore !== ManifestStoreMap.Harness)
+    return valuesManifestStores?.filter(manifestStore => isGitTypeManifestStore(manifestStore))
   }
   return ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
 }

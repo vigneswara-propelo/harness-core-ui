@@ -435,6 +435,9 @@ export const pipelineContextAwsLambdaManifests = {
   updateStage: jest.fn()
 } as any
 
+/**
+ * Serverless AWS Lambda related
+ */
 const stateWithServerlessAwsLambdaDeploymentType = {
   state: {
     pipeline: {
@@ -473,6 +476,178 @@ export const pipelineContextServerlessAwsLambda = {
   ...stateWithServerlessAwsLambdaDeploymentType,
   getStageFromPipeline: jest.fn(() => {
     return { stage: stateWithServerlessAwsLambdaDeploymentType.state.pipeline.stages[0], parent: undefined }
+  }),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  updateStage: jest.fn()
+} as any
+
+/**
+ * AwS SAM related
+ */
+
+const stateWithAwsSamDeploymentType = {
+  state: {
+    pipeline: {
+      name: 'Pipeline 1',
+      identifier: 'Pipeline_1',
+      description: '',
+      tags: {},
+      stages: [
+        {
+          stage: {
+            name: 'Stage 1',
+            identifier: 'Stage_1',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              serviceConfig: {
+                serviceRef: 'Service_1',
+                serviceDefinition: {
+                  type: ServiceDeploymentType.AwsSam,
+                  spec: {
+                    artifacts: { sidecars: [], primary: null },
+                    manifests: []
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    selectionState: { selectedStageId: 'Stage_1' }
+  }
+}
+
+export const pipelineContextAwsSam = {
+  ...stateWithAwsSamDeploymentType,
+  getStageFromPipeline: jest.fn(() => {
+    return { stage: stateWithAwsSamDeploymentType.state.pipeline.stages[0], parent: undefined }
+  }),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  updateStage: jest.fn()
+} as any
+
+const stateWithAwsSamManifests = {
+  state: {
+    pipeline: {
+      name: 'Pipeline 1',
+      identifier: 'Pipeline_1',
+      description: '',
+      tags: {},
+      stages: [
+        {
+          stage: {
+            name: 'Stage 1',
+            identifier: 'Stage_1',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              serviceConfig: {
+                serviceRef: 'Service_1',
+                serviceDefinition: {
+                  type: ServiceDeploymentType.AwsSam,
+                  spec: {
+                    artifacts: { sidecars: [], primary: null },
+                    manifests: [
+                      {
+                        manifest: {
+                          identifier: 'AwsSamDirectory_Manifest',
+                          type: ManifestDataType.AwsSamDirectory,
+                          spec: {
+                            store: {
+                              type: 'Git',
+                              spec: {
+                                connectorRef: 'Git_CTR',
+                                gitFetchType: 'Branch',
+                                paths: ['awsSam/manifest.json'],
+                                branch: 'aws_sam_directory'
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        manifest: {
+                          identifier: 'Values_Manifest',
+                          type: ManifestDataType.Values,
+                          spec: {
+                            store: {
+                              type: 'Git',
+                              spec: {
+                                connectorRef: 'account.Git_CTR',
+                                gitFetchType: 'Branch',
+                                paths: ['awsSam/values.json'],
+                                branch: 'values_manifest'
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          stage: {
+            name: 'Stage 2',
+            identifier: 'Stage_2',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              serviceConfig: {
+                useFromStage: {
+                  stage: 'Stage_1'
+                },
+                stageOverrides: {
+                  artifacts: { sidecars: [], primary: null },
+                  manifests: [
+                    {
+                      manifest: {
+                        identifier: 'Stage2_AwsSamDirectory_Manifest',
+                        type: ManifestDataType.AwsSamDirectory,
+                        spec: {
+                          store: {
+                            type: 'Git',
+                            spec: {
+                              connectorRef: 'Git_CTR',
+                              gitFetchType: 'Branch',
+                              paths: ['awsSam/stage2_manifest.json'],
+                              branch: 'stage2_manifest'
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    selectionState: { selectedStageId: 'Stage_1' }
+  }
+}
+
+export const pipelineContextAwsSamManifests = {
+  ...stateWithAwsSamManifests,
+  getStageFromPipeline: jest.fn((stageId: string) => {
+    const stage = stateWithAwsSamManifests.state.pipeline.stages.find(
+      currStage => currStage.stage.identifier === stageId
+    )
+    const parentStageId = stage?.stage.spec.serviceConfig.useFromStage?.stage
+    const parentStage = stateWithAwsSamManifests.state.pipeline.stages.find(
+      currStage => currStage.stage.identifier === parentStageId
+    )
+    return {
+      stage: stage,
+      parent: parentStage
+    }
   }),
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
   updateStage: jest.fn()

@@ -31,6 +31,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
@@ -179,6 +180,8 @@ function ManifestListView({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+
+  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < listOfManifests.length)
@@ -651,7 +654,9 @@ function ManifestListView({
         <div className={css.createConnectorWizard}>
           <ManifestWizard
             types={availableManifestTypes}
-            manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest)}
+            manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest, {
+              CDS_SERVERLESS_V2
+            })}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}
@@ -681,7 +686,8 @@ function ManifestListView({
     expressions,
     allowableTypes,
     isManifestEditMode,
-    lastSteps
+    lastSteps,
+    CDS_SERVERLESS_V2
   ])
 
   const renderConnectorField = useCallback(

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, set, get, isEmpty } from 'lodash-es'
+import { set, get, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -18,9 +18,7 @@ import {
   ServiceSpec,
   getConnectorListV2Promise,
   ResponsePageConnectorResponse,
-  ConnectorResponse,
-  ResponseArtifactoryResponseDTO,
-  ArtifactoryBuildDetailsDTO
+  ConnectorResponse
 } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
@@ -104,15 +102,6 @@ export class AwsSamServiceSpec extends Step<ServiceSpec> {
     return Promise.resolve([])
   }
 
-  trasformTagData(response: ResponseArtifactoryResponseDTO): CompletionItemInterface[] {
-    const data = response?.data?.buildDetailsList?.map((buildDetails: ArtifactoryBuildDetailsDTO) => ({
-      label: defaultTo(buildDetails.tag, ''),
-      insertText: defaultTo(buildDetails.tag, ''),
-      kind: CompletionItemKind.Field
-    }))
-    return defaultTo(data, [])
-  }
-
   validateManifestInputSetFields({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
     data?.manifests?.forEach((manifest, index) => {
       const currentManifestTemplate = get(template, `manifests[${index}].manifest.spec.store.spec`, '')
@@ -160,19 +149,6 @@ export class AwsSamServiceSpec extends Step<ServiceSpec> {
           errors,
           `manifests[${index}].manifest.spec.store.spec.paths`,
           getString?.('fieldRequired', { field: 'File or Folder Path' })
-        )
-      }
-
-      // Harness manifest store spcific fields
-      if (
-        isEmpty(manifest?.manifest?.spec?.store?.spec?.files?.[0]) &&
-        isRequired &&
-        getMultiTypeFromValue(currentManifestTemplate?.files) === MultiTypeInputType.RUNTIME
-      ) {
-        set(
-          errors,
-          `manifests[${index}].manifest.spec.store.spec.files[0]`,
-          getString?.('fieldRequired', { field: 'File Store' })
         )
       }
     })
