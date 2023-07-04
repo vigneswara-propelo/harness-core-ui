@@ -577,6 +577,7 @@ monitoredServices:
   heading: Monitored Service
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
+  youDontHaveAnyMonitoredServicesYet: You don’t have any Monitored Services created yet
   nameValidation: Monitored Service Name is required
   environmentValidation: '{{ $.common.validation.environmentIsRequired }}'
   serviceValidation: '{{$.cd.pipelineSteps.serviceTab.serviceIsRequired}}'
@@ -653,6 +654,7 @@ commonMonitoredServices:
   monitoredService: monitored service
   notConfigured: not configured
   configured: configured
+  definition: A Monitored Service is a Service and Environment combination. Apply the health source and agent configurations and use in the respective modules.
 dependenciesHealthWithCount: Dependencies Health ({{ count }})
 notifications:
   deleteNotificationWarning: Are you sure you want to delete notification ‘{{ name }}’ ?

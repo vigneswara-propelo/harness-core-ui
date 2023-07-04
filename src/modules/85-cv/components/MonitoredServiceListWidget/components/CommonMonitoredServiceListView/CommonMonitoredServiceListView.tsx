@@ -12,7 +12,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
+import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import type { MonitoredServicePlatformResponse } from 'services/cv'
 import { ServiceDeleteContext } from '@cv/pages/monitored-service/CVMonitoredService/CVMonitoredService.utils'
 import { getListTitle } from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceListView/MonitoredServiceListView.utils'
@@ -28,7 +28,7 @@ import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import type { CommonMonitoredServiceListViewProps } from './CommonMonitoredServiceListView.types'
 import ServiceName from './components/ServiceName/ServiceName'
 import ConfiguredLabel from './components/ConfiguredLabel/ConfiguredLabel'
-import { getIfModuleIsCD } from '../../MonitoredServiceListWidget.utils'
+import { getIfModuleIsCD, getListingNoDataCardMessage } from '../../MonitoredServiceListWidget.utils'
 import css from '@cv/pages/monitored-service/CVMonitoredService/CVMonitoredService.module.scss'
 
 const CategoryProps: Renderer<CellProps<MonitoredServicePlatformResponse>> = ({ row }) => (
@@ -107,7 +107,9 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
   onEditService,
   onDeleteService,
   setPage,
-  config
+  config,
+  appliedSearchAndFilter,
+  createButton
 }) => {
   const { getString } = useStrings()
   const { content, pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = monitoredServiceListData || {}
@@ -230,14 +232,17 @@ const CommonMonitoredServiceListView: React.FC<CommonMonitoredServiceListViewPro
             }}
           />
         </>
-      ) : content && !content.length ? (
+      ) : (
         <NoDataCard
           image={noServiceAvailableImage}
-          message={getString('cv.monitoredServices.youHaveNoMonitoredServices')}
+          messageTitle={
+            !appliedSearchAndFilter ? getString('cv.monitoredServices.youDontHaveAnyMonitoredServicesYet') : undefined
+          }
+          message={getListingNoDataCardMessage(getString, appliedSearchAndFilter, config?.module)}
           imageClassName={css.noServiceAvailableImage}
-          containerClassName={css.noDataContainer}
+          button={!appliedSearchAndFilter ? createButton : undefined}
         />
-      ) : null}
+      )}
     </Container>
   )
 }

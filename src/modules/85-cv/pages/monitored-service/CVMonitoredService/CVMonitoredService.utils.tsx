@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement } from 'react'
-import { isNull, isNumber } from 'lodash-es'
+import { isEmpty, isNull, isNumber } from 'lodash-es'
 import Highcharts, { PointOptionsObject } from 'highcharts'
 import { Text, Layout, Tag, SelectOption, IconName } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -28,6 +28,15 @@ export const getEnvironmentIdentifier = (environment?: SelectOption): string | u
     return environment?.value as string
   }
 }
+
+export const areFiltersApplied = (search: string, environment?: SelectOption): boolean =>
+  !isEmpty(getEnvironmentIdentifier(environment)) || !isEmpty(search)
+
+export const shouldShowFiltersAndAddButton = (
+  serviceCountData: CountServiceDTO | null,
+  appliedSearchAndFilter: boolean
+): boolean =>
+  Boolean(serviceCountData?.allServicesCount || (!serviceCountData?.allServicesCount && appliedSearchAndFilter))
 
 export const createTrendDataWithZone = (trendData: RiskData[]): Highcharts.SeriesLineOptions => {
   const highchartsLineData: PointOptionsObject[] = []

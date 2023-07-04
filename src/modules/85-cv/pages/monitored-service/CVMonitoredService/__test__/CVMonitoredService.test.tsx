@@ -16,6 +16,7 @@ import * as useLicenseStore from 'framework/LicenseStore/LicenseStoreContext'
 import * as cvServices from 'services/cv'
 import { RiskValues, getRiskLabelStringId, getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
+import { PROJECT_MONITORED_SERVICE_CONFIG } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
 import CVMonitoredService from '../CVMonitoredService'
 import {
   serviceCountData,
@@ -252,6 +253,54 @@ describe('Monitored Service list', () => {
     await waitFor(() => expect(screen.queryByText('Something went wrong')).toBeInTheDocument())
   })
 
+  test('empty MS list with MS template feature flag on', async () => {
+    jest
+      .spyOn(cvServices, 'useGetCountOfServices')
+      .mockImplementationOnce(
+        () => ({ data: { allServicesCount: 0, servicesAtRiskCount: 0 }, refetch: refetchServiceCountData } as any)
+      )
+    jest.spyOn(cvServices, 'useListMonitoredService').mockImplementationOnce(() => ({ refetch: jest.fn() } as any))
+    const { getByText } = render(
+      <TestWrapper {...testWrapperProps} defaultFeatureFlagValues={{ CVNG_TEMPLATE_MONITORED_SERVICE: true }}>
+        <CVMonitoredService />
+      </TestWrapper>
+    )
+
+    expect(getByText('cv.monitoredServices.youDontHaveAnyMonitoredServicesYet')).toBeInTheDocument()
+    expect(getByText('connectors.cdng.monitoredService.monitoredServiceDef')).toBeInTheDocument()
+    expect(getByText('common.useTemplate')).toBeInTheDocument()
+  })
+
+  test('empty MS list with applied filters', async () => {
+    jest.spyOn(cvServices, 'useListMonitoredService').mockImplementationOnce(() => ({ refetch: jest.fn() } as any))
+    const { getByText } = render(
+      <TestWrapper {...testWrapperProps}>
+        <CVMonitoredService />
+      </TestWrapper>
+    )
+
+    expect(getByText('cv.monitoredServices.youHaveNoMonitoredServices')).toBeInTheDocument()
+  })
+
+  test('empty MS platform list', async () => {
+    jest
+      .spyOn(cvServices, 'useGetCountOfServices')
+      .mockImplementationOnce(
+        () => ({ data: { allServicesCount: 0, servicesAtRiskCount: 0 }, refetch: refetchServiceCountData } as any)
+      )
+    jest
+      .spyOn(cvServices, 'useGetMonitoredServicePlatformList')
+      .mockImplementationOnce(() => ({ refetch: jest.fn() } as any))
+    const { getByText } = render(
+      <TestWrapper {...testWrapperProps}>
+        <CVMonitoredService config={PROJECT_MONITORED_SERVICE_CONFIG} />
+      </TestWrapper>
+    )
+
+    expect(getByText('cv.monitoredServices.youDontHaveAnyMonitoredServicesYet')).toBeInTheDocument()
+    expect(getByText('cv.commonMonitoredServices.definition')).toBeInTheDocument()
+  })
+
   test('Risk filter with data', async () => {
     const { container } = render(
       <TestWrapper {...testWrapperProps}>
@@ -288,7 +337,8 @@ describe('Monitored Service list', () => {
 
     expect(refetchServiceCountData).toBeCalledTimes(3)
     expect(screen.queryByText(`cv.monitoredServices.showingServiceAtRisk`)).not.toBeInTheDocument()
-    expect(screen.queryByText('cv.monitoredServices.youHaveNoMonitoredServices')).not.toBeInTheDocument()
+    expect(screen.queryByText('connectors.cdng.monitoredService.monitoredServiceDef')).not.toBeInTheDocument()
+    expect(screen.queryByText('cv.monitoredServices.youHaveNoMonitoredServices')).toBeInTheDocument()
   })
 
   test('should confirm that searching the expandable search input calls the api', async () => {
@@ -316,7 +366,6 @@ describe('Monitored Service list', () => {
     const expectedResponse = {
       queryParams: {
         accountId: '1234_accountId',
-        hideNotConfiguredServices: false,
         projectIdentifier: '1234_project',
         orgIdentifier: '1234_org',
         filter: '',

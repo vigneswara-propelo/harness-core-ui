@@ -20,7 +20,7 @@ import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
 import ToggleOnOff from '@cv/pages/monitored-service/CVMonitoredService/components/ToggleOnOff/ToggleOnOff'
-import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
+import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import FilterCard from '@cv/components/FilterCard/FilterCard'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
 import type { MonitoredServiceListItemDTO } from 'services/cv'
@@ -42,7 +42,7 @@ import {
   ServiceDeleteContext,
   getMonitoredServiceFilterOptions
 } from '../../CVMonitoredService.utils'
-import type { MonitoredServiceListViewProps } from '../../CVMonitoredService.types'
+import { MonitoredServiceListViewProps } from '../../CVMonitoredService.types'
 import MonitoredServiceCategory from '../../../components/Configurations/components/Dependency/component/components/MonitoredServiceCategory/MonitoredServiceCategory'
 import { getChangeSummaryInfo, getIsSwitchEnabled, getListTitle } from './MonitoredServiceListView.utils'
 import SLOsIconGrid from '../SLOsIconGrid/SLOsIconGrid'
@@ -330,12 +330,14 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
   return (
     <Container padding={{ top: 'medium', left: 'xlarge', right: 'xlarge' }} height="inherit">
       <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
-      <FilterCard
-        data={filterOptions}
-        cardClassName={css.filterCard}
-        selected={filterOptions.find(card => card.type === selectedFilter)}
-        onChange={item => onFilter(item.type)}
-      />
+      {serviceCountData?.allServicesCount ? (
+        <FilterCard
+          data={filterOptions}
+          cardClassName={css.filterCard}
+          selected={filterOptions.find(card => card.type === selectedFilter)}
+          onChange={item => onFilter(item.type)}
+        />
+      ) : null}
       {content?.length ? (
         <>
           <Heading
@@ -407,14 +409,13 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
             }}
           />
         </>
-      ) : content && !content.length ? (
+      ) : (
         <NoDataCard
           image={noServiceAvailableImage}
           message={getString('cv.monitoredServices.youHaveNoMonitoredServices')}
           imageClassName={css.noServiceAvailableImage}
-          containerClassName={css.noDataContainer}
         />
-      ) : null}
+      )}
     </Container>
   )
 }

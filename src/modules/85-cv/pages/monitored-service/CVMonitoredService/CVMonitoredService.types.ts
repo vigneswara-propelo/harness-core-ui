@@ -62,6 +62,7 @@ export interface MonitoredServiceListProps {
   serviceCountErrorMessage?: string
   refetchServiceCountData: (query?: ServiceCountQueryParamType) => Promise<void>
   search?: string
+  appliedSearchAndFilter: boolean
   config?: MonitoredServiceConfig
 }
 

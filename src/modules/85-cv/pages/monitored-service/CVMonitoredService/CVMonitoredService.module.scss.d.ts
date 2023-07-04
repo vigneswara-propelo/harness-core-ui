@@ -16,7 +16,6 @@ declare const styles: {
   readonly infrastructureIconPadding: string
   readonly monitoredServiceLink: string
   readonly monitoredServiceName: string
-  readonly noDataContainer: string
   readonly noServiceAvailableImage: string
   readonly pageBody: string
   readonly pageContainer: string

@@ -41,6 +41,7 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
   serviceCountErrorMessage,
   refetchServiceCountData,
   search,
+  appliedSearchAndFilter,
   config
 }) => {
   const history = useHistory()
@@ -64,7 +65,6 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
       pageSize: 10,
       ...pathParams,
       filter: search,
-      hideNotConfiguredServices: false,
       servicesAtRiskFilter: false
     }
   }, [page, pathParams, search])
@@ -80,7 +80,6 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
   const platformListMonitoredServicesQueryParams = useMemo(() => {
     return {
       ...commonQueryParams,
-      hideNotConfiguredServices: false,
       ...(isCDModule && {
         monitoredServiceType: 'Application' as GetMonitoredServicePlatformListQueryParams['monitoredServiceType']
       }),
@@ -239,10 +238,11 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
         }
       }}
       noData={{
-        when: () => !serviceCountData?.allServicesCount,
+        when: () => !config && !serviceCountData?.allServicesCount && !appliedSearchAndFilter,
         image: noServiceAvailableImage,
         imageClassName: css.noServiceAvailableImage,
-        message: getString('cv.monitoredServices.youHaveNoMonitoredServices'),
+        messageTitle: getString('cv.monitoredServices.youDontHaveAnyMonitoredServicesYet'),
+        message: getString('connectors.cdng.monitoredService.monitoredServiceDef'),
         button: createButton
       }}
       className={css.pageBody}
@@ -255,6 +255,8 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
           onDeleteService={onDeleteService}
           setPage={setPage}
           config={config}
+          appliedSearchAndFilter={appliedSearchAndFilter}
+          createButton={createButton}
         />
       ) : (
         <MonitoredServiceListView

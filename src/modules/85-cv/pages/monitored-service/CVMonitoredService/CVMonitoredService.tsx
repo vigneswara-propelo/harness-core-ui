@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import {
@@ -39,7 +39,12 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import { getCVMonitoringServicesSearchParam, getErrorMessage, getEnvironmentOptions } from '@cv/utils/CommonUtils'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
-import { getEnvironmentIdentifier, getPathNameOnCreateMonitoredService } from './CVMonitoredService.utils'
+import {
+  areFiltersApplied,
+  getEnvironmentIdentifier,
+  getPathNameOnCreateMonitoredService,
+  shouldShowFiltersAndAddButton
+} from './CVMonitoredService.utils'
 import { FilterTypes } from './CVMonitoredService.types'
 import MonitoredServiceList from './components/MonitoredServiceListView/MonitoredServiceList'
 import css from './CVMonitoredService.module.scss'
@@ -120,6 +125,8 @@ const MonitoredService = (props: MonitoredServiceProps) => {
 
   const { getTemplate } = useTemplateSelector()
 
+  const appliedSearchAndFilter = useMemo(() => areFiltersApplied(search, environment), [environment, search])
+
   const onUseTemplate = async () => {
     const { template } = await getTemplate({ templateType: 'MonitoredService', allowedUsages: [TemplateUsage.USE] })
     const { identifier, versionLabel, templateScope } = template
@@ -193,54 +200,57 @@ const MonitoredService = (props: MonitoredServiceProps) => {
           </Heading>
         }
       />
-      <Page.Header
-        title={createButton(Boolean(serviceCountData?.allServicesCount), config)}
-        toolbar={
-          <Layout.Horizontal spacing="medium">
-            <Container data-name="monitoredServiceSeachContainer">
-              <ExpandingSearchInput
-                width={250}
-                alwaysExpanded
-                throttle={500}
-                key={search}
-                defaultValue={search}
-                onChange={setSearch}
-                placeholder={getString('cv.monitoredServices.searchMonitoredServices')}
+      {shouldShowFiltersAndAddButton(serviceCountData, appliedSearchAndFilter) && (
+        <Page.Header
+          title={createButton(Boolean(serviceCountData?.allServicesCount), config)}
+          toolbar={
+            <Layout.Horizontal spacing="medium">
+              <Container data-name="monitoredServiceSeachContainer">
+                <ExpandingSearchInput
+                  width={250}
+                  alwaysExpanded
+                  throttle={500}
+                  key={search}
+                  defaultValue={search}
+                  onChange={setSearch}
+                  placeholder={getString('cv.monitoredServices.searchMonitoredServices')}
+                />
+              </Container>
+              <Select
+                value={{
+                  label: `${getString('environment')}: ${defaultTo(environment?.label, getString('all'))}`,
+                  value: defaultTo(environment?.value, getString('all'))
+                }}
+                defaultSelectedItem={{ label: getString('all'), value: getString('all') }}
+                items={getEnvironmentOptions({
+                  environmentList: environmentDataList,
+                  loading: loadingEnvironments,
+                  getString,
+                  returnAll: true
+                })}
+                onChange={item => {
+                  setPage(0)
+                  setEnvironment(item)
+                }}
+                className={css.filterSelect}
               />
-            </Container>
-            <Select
-              value={{
-                label: `${getString('environment')}: ${defaultTo(environment?.label, getString('all'))}`,
-                value: defaultTo(environment?.value, getString('all'))
-              }}
-              defaultSelectedItem={{ label: getString('all'), value: getString('all') }}
-              items={getEnvironmentOptions({
-                environmentList: environmentDataList,
-                loading: loadingEnvironments,
-                getString,
-                returnAll: true
-              })}
-              onChange={item => {
-                setPage(0)
-                setEnvironment(item)
-              }}
-              className={css.filterSelect}
-            />
-            {!config ? (
-              <GridListToggle
-                initialSelectedView={selectedView}
-                onViewToggle={setSelectedView}
-                icons={{ left: 'graph' }}
-              />
-            ) : null}
-          </Layout.Horizontal>
-        }
-      />
+              {!config && (
+                <GridListToggle
+                  initialSelectedView={selectedView}
+                  onViewToggle={setSelectedView}
+                  icons={{ left: 'graph' }}
+                />
+              )}
+            </Layout.Horizontal>
+          }
+        />
+      )}
 
       {selectedView === Views.LIST ? (
         <MonitoredServiceList
           page={page}
           search={search}
+          appliedSearchAndFilter={appliedSearchAndFilter}
           setPage={setPage}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
           createButton={createButton(Boolean(!serviceCountData?.allServicesCount), config)}

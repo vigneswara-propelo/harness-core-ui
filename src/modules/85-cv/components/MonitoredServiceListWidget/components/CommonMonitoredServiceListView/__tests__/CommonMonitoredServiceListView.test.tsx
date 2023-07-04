@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
@@ -54,6 +61,7 @@ describe('CommonMonitoredServiceListView', () => {
   const mockedOnEditService = jest.fn()
   const mockedOnDeleteService = jest.fn()
   const mockedSetPage = jest.fn()
+  const createButton = <div />
 
   test('should render the list title correctly', () => {
     render(
@@ -65,6 +73,8 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={PROJECT_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )
@@ -82,10 +92,13 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={PROJECT_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )
-    expect(getByText('cv.monitoredServices.youHaveNoMonitoredServices')).toBeInTheDocument()
+    expect(getByText('cv.monitoredServices.youDontHaveAnyMonitoredServicesYet')).toBeInTheDocument()
+    expect(getByText('cv.commonMonitoredServices.definition')).toBeInTheDocument()
   })
 
   test('should render the empty state when listing api returns empty response', () => {
@@ -98,10 +111,30 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={PROJECT_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )
     expect(getByText('Help Panel')).toBeInTheDocument()
+  })
+
+  test('should render the empty state when api with filters applied returns empty response', () => {
+    const { getByText } = render(
+      <MemoryRouter>
+        <CommonMonitoredServiceListView
+          monitoredServiceListData={{ content: [] }}
+          selectedFilter={mockedSelectedFilter}
+          onEditService={mockedOnEditService}
+          onDeleteService={mockedOnDeleteService}
+          setPage={mockedSetPage}
+          config={PROJECT_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={true}
+          createButton={createButton}
+        />
+      </MemoryRouter>
+    )
+    expect(getByText('cv.monitoredServices.youHaveNoMonitoredServices')).toBeInTheDocument()
   })
 
   test('should render the table columns correctly for Project level monitored service config', () => {
@@ -114,6 +147,8 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={PROJECT_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )
@@ -139,6 +174,8 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={PROJECT_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )
@@ -158,6 +195,8 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={CD_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )
@@ -177,6 +216,8 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={CD_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )
@@ -196,6 +237,8 @@ describe('CommonMonitoredServiceListView', () => {
           onDeleteService={mockedOnDeleteService}
           setPage={mockedSetPage}
           config={CD_MONITORED_SERVICE_CONFIG}
+          appliedSearchAndFilter={false}
+          createButton={createButton}
         />
       </MemoryRouter>
     )

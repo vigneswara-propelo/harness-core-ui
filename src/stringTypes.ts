@@ -8784,6 +8784,7 @@ export interface StringsMap {
   'cv.commonMonitoredServices.agentConfiguration': string
   'cv.commonMonitoredServices.changeSource': string
   'cv.commonMonitoredServices.configured': string
+  'cv.commonMonitoredServices.definition': string
   'cv.commonMonitoredServices.goTo': string
   'cv.commonMonitoredServices.healthSource': string
   'cv.commonMonitoredServices.monitoredService': string
@@ -9106,6 +9107,7 @@ export interface StringsMap {
   'cv.monitoredServices.table.lastestHealthTrend': string
   'cv.monitoredServices.table.serviceHealthScore': string
   'cv.monitoredServices.title': string
+  'cv.monitoredServices.youDontHaveAnyMonitoredServicesYet': string
   'cv.monitoredServices.youHaveNoMonitoredServices': string
   'cv.monitoringSources.addMetric': string
   'cv.monitoringSources.addQuery': string

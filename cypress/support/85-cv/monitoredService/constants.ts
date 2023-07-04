@@ -73,7 +73,7 @@ export const environmentistCall =
   '/cv/api/monitored-service/environments?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
 
 export const monitoredServiceListCall =
-  '/cv/api/monitored-service?routingId=accountId&offset=0&pageSize=10&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&filter=&hideNotConfiguredServices=false&servicesAtRiskFilter=false'
+  '/cv/api/monitored-service?routingId=accountId&offset=0&pageSize=10&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&filter=&servicesAtRiskFilter=false*'
 
 export const monitoredServiceListResponse = {
   status: 'SUCCESS',
