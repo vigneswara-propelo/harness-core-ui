@@ -168,6 +168,9 @@ export function GCRImagePath({
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
 
     merge(artifactObj.spec, { registryHostname: formData?.registryHostname, digest: formData?.digest })
+    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
+      delete artifactObj?.spec?.digest
+    }
     handleSubmit(artifactObj)
   }
 

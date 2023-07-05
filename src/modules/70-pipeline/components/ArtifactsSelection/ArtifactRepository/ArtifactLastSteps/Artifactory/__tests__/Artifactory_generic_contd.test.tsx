@@ -103,8 +103,7 @@ describe('artifactory test cases', () => {
           artifactPath: '<+input>',
           tag: '<+input>',
           repositoryFormat: 'docker',
-          repositoryUrl: 'test',
-          digest: RUNTIME_INPUT_VALUE
+          repositoryUrl: 'test'
         }
       })
     })

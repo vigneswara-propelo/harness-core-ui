@@ -454,6 +454,9 @@ export function ACRArtifact({
       repository: formData?.repository,
       digest: formData?.digest
     })
+    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
+      delete artifactObj?.spec?.digest
+    }
     handleSubmit(artifactObj)
   }
 

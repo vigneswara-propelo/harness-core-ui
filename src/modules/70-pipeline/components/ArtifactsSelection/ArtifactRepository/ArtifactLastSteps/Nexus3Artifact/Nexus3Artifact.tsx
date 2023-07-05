@@ -551,6 +551,9 @@ export function Nexus3Artifact({
     if (isIdentifierAllowed) {
       merge(formatedFormData, { identifier: formData?.identifier })
     }
+    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
+      delete formatedFormData.spec.digest
+    }
     handleSubmit(formatedFormData)
   }
 

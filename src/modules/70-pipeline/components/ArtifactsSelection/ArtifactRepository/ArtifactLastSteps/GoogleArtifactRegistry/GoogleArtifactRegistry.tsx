@@ -477,7 +477,7 @@ export function GoogleArtifactRegistry(
   } = props
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
-
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -505,6 +505,9 @@ export function GoogleArtifactRegistry(
           identifier: formData.identifier
         }
       : {}
+    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
+      delete versionData.digest
+    }
     handleSubmit({
       ...identifierData,
       spec: {

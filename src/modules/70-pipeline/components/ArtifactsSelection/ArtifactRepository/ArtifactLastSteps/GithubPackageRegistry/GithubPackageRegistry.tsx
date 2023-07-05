@@ -656,7 +656,7 @@ export function GithubPackageRegistry(
   } = props
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
-
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
@@ -683,7 +683,9 @@ export function GithubPackageRegistry(
           identifier: formData.identifier
         }
       : {}
-
+    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
+      delete versionData.digest
+    }
     handleSubmit({
       ...identifierData,
       spec: {

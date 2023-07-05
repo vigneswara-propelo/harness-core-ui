@@ -269,6 +269,9 @@ export function ECRArtifact({
 
     merge(artifactObj.spec, { region: formData?.region, digest: formData?.digest })
     handleSubmit(artifactObj)
+    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
+      delete artifactObj?.spec?.digest
+    }
   }
 
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {

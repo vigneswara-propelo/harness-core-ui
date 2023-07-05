@@ -153,6 +153,9 @@ export function DockerRegistryArtifact({
   }
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
+    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
+      delete artifactObj?.spec?.digest
+    }
     handleSubmit(artifactObj)
   }
 

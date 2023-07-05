@@ -394,7 +394,7 @@ function Artifactory({
     if (isAzureWebAppGeneric) {
       delete artifactObj?.spec?.repositoryUrl
     }
-    if (isGenericArtifactory) {
+    if (isGenericArtifactory || !CD_NG_DOCKER_ARTIFACT_DIGEST) {
       delete artifactObj?.spec?.digest
     }
     handleSubmit(artifactObj)
