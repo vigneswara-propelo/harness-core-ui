@@ -34,7 +34,8 @@ import {
   getArtifactFormData,
   amiFilters,
   shouldHideHeaderAndNavBtns,
-  resetFieldValue
+  resetFieldValue,
+  isFieldFixedAndNonEmpty
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   AmazonMachineImageInitialValuesType,
@@ -45,7 +46,6 @@ import {
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeArrayTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeArrayTagSelector'
-import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { useMutateAsGet } from '@common/hooks'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
@@ -82,9 +82,7 @@ function FormComponent({
     }
   })
 
-  const connectorRefValue = getGenuineValue(
-    modifiedPrevStepData?.connectorId?.value || modifiedPrevStepData?.identifier
-  )
+  const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
 
   const {
     data: tagsData,
@@ -196,8 +194,9 @@ function FormComponent({
     </div>
   ))
 
-  const canFetchVersion =
-    getMultiTypeFromValue(formik.values?.spec?.region) === MultiTypeInputType.RUNTIME || !formik.values?.spec?.region
+  const isAllFieldsAreFixed = (): boolean => {
+    return isFieldFixedAndNonEmpty(formik.values.spec.region) && isFieldFixedAndNonEmpty(connectorRefValue)
+  }
 
   return (
     <FormikForm>
@@ -328,12 +327,12 @@ function FormComponent({
                       defaultErrorText={
                         isVersionLoading
                           ? getString('loading')
-                          : canFetchVersion
-                          ? getString('pipeline.requiredToFetch', {
-                              requiredField: 'Region',
+                          : isAllFieldsAreFixed()
+                          ? getString('pipeline.artifactsSelection.validation.noVersion')
+                          : getString('pipeline.multiRequiredToFetch', {
+                              requiredField: 'Region and connector',
                               dependentField: 'version'
                             })
-                          : getString('pipeline.artifactsSelection.validation.noVersion')
                       }
                     />
                   ),
@@ -344,12 +343,13 @@ function FormComponent({
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
                     e?.target?.type !== 'text' ||
-                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
-                    canFetchVersion
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
                   ) {
                     return
                   }
-                  refetchVersion()
+                  if (isAllFieldsAreFixed()) {
+                    refetchVersion()
+                  }
                 }
               }}
             />
