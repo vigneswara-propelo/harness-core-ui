@@ -237,6 +237,7 @@ export const InfraProvisioningBase = (
                   {(_props: any) => {
                     return (
                       <ExecutionGraph
+                        isProvisioner={true}
                         rollBackPropsStyle={{ top: '10px' }}
                         rollBackBannerStyle={{ top: '10px', backgroundColor: 'rgba(0,0,0,0)' }}
                         canvasButtonsLayout={'horizontal'}

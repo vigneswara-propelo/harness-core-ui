@@ -91,6 +91,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   }, 300)
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
   const isTemplateNode = props?.data?.isTemplateNode
+  const isToggleAllowed = props?.data?.isInComplete || stageStatus || isTemplateNode
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
@@ -269,7 +270,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               name={CODE_ICON}
             />
           )}
-          {!props?.data?.isInComplete && !stageStatus && (
+          {!isToggleAllowed && (
             <div
               className={cx(defaultCss.switch, { [defaultCss.stageSelectedSwitch]: isSelectedNode() })}
               data-testid={`toggle-${props?.identifier}`}
@@ -279,7 +280,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                 if (pipelineStage && pipelineStage?.stage) {
                   const stageData = produce(pipelineStage, draft => {
                     if (whenCondition) {
-                      unset(draft, 'stage.when.condition')
+                      unset(draft, 'stage.when')
                     } else {
                       set(draft, 'stage.when.condition', 'false')
                       if (!pipelineStage?.stage?.when?.pipelineStatus) {

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { cloneDeep, debounce, defaultTo, set, unset } from 'lodash-es'
+import { cloneDeep, debounce, defaultTo, get, set, unset } from 'lodash-es'
 import { HarnessIcons, Icon, Text, Button, ButtonVariation, IconName, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Switch } from '@blueprintjs/core'
@@ -21,6 +21,7 @@ import { useStrings } from 'framework/strings'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/CommonUtils/CommonUtils'
+import { getParentPath } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
@@ -115,6 +116,8 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   }, 300)
   // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
   const isTemplateNode = props?.data?.isTemplateNode || props?.data?.step?.template || props?.data?.stepGroup?.template
+  const isToggleAllowed = props?.data?.isInComplete || stepStatus || isTemplateNode
+
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
@@ -240,7 +243,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             </>
           )
         )}
-        {!props?.data?.isInComplete && !stepStatus && (
+        {!isToggleAllowed && (
           <div
             className={cx(defaultCss.switch, { [defaultCss.stageSelectedSwitch]: isSelectedNode() })}
             onClick={e => {
@@ -259,9 +262,10 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 const processingNodeIdentifier = props.identifier
                 if (processingNodeIdentifier) {
                   const stageData = produce(selectedStage, draft => {
-                    if (draft?.stage?.spec?.execution) {
+                    const isProvisioner = props?.data?.fqnPath?.includes('provisioner')
+                    if (get(draft, getParentPath(isProvisioner))) {
                       updateStepWithinStage(
-                        draft.stage.spec.execution,
+                        get(draft, getParentPath(isProvisioner)),
                         processingNodeIdentifier,
                         originalStepData,
                         !!isRollbackToggled
@@ -337,6 +341,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
               <Icon
                 size={16}
                 name={'looping'}
+                background={Color.PURPLE_300}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
                 {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
               />
@@ -354,10 +359,10 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         )}
         {CODE_ICON && (
           <Icon
-            className={defaultCss.codeIcon}
             color={isSelectedNode() ? Color.WHITE : undefined}
             size={8}
             name={CODE_ICON}
+            {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.codeIcon })}
           />
         )}
         {!isStepNonDeletable && (

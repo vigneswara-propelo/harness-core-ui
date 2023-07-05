@@ -16,3 +16,10 @@ export const isContextTypeStageOrStepGroupTemplate = (contextType?: string) =>
 
 export const isContextTypeTemplateType = (contextType?: string) =>
   contextType === PipelineContextType.PipelineTemplate || contextType === PipelineContextType.StageTemplate
+
+export const getParentPath = (isProvisioner?: boolean): string => {
+  if (isProvisioner) {
+    return 'stage.spec.environment.provisioner'
+  }
+  return 'stage.spec.execution'
+}

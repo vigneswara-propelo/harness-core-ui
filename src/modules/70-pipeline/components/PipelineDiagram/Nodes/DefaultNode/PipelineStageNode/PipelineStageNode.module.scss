@@ -7,14 +7,14 @@
 
 .loopingStrategy {
   position: absolute;
-  top: 1px;
-  right: 44px;
+  top: 0;
+  left: 5px;
 }
 
 .conditional {
   position: absolute;
-  top: 0;
-  left: 5px;
+  top: -1px;
+  right: 44px;
   color: var(--white) !important;
 }
 

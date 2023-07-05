@@ -76,6 +76,7 @@ import { EmptyStageName } from '../PipelineConstants'
 
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
+import { getParentPath } from '../PipelineUtils'
 import css from './ExecutionGraph.module.scss'
 
 const diagram = new DiagramFactory('graph')
@@ -243,6 +244,7 @@ export interface ExecutionGraphProp<T extends StageElementConfig> {
   templateTypes: { [key: string]: string }
   templateIcons?: TemplateIcons
   addLinkedTemplatesLabel?: string
+  isProvisioner?: boolean
 }
 
 function ExecutionGraphRef<T extends StageElementConfig>(
@@ -266,7 +268,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     canvasButtonsLayout,
     templateTypes,
     templateIcons,
-    addLinkedTemplatesLabel
+    addLinkedTemplatesLabel,
+    isProvisioner
   } = props
   const {
     state: { pipelineView },
@@ -826,7 +829,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
-          parentPath: `${stagePath}.stage.spec.execution.rollbackSteps`
+          parentPath: `${stagePath}.${getParentPath(isProvisioner)}.rollbackSteps`
         })
       : getPipelineGraphData({
           data: stage?.stage?.spec?.execution?.steps as ExecutionWrapperConfig[],
@@ -834,7 +837,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           templateIcons,
           serviceDependencies: serviceDependencies,
           errorMap: errorMap,
-          parentPath: `${stagePath}.stage.spec.execution.steps`
+          parentPath: `${stagePath}.${getParentPath(isProvisioner)}.steps`
         })
   }, [stage, state?.isRollback, templateTypes, templateIcons, errorMap])
 
