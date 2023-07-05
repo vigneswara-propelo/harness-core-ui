@@ -28,6 +28,7 @@ import UsersPage from '@rbac/pages/Users/UsersPage'
 import SettingsList from '@default-settings/pages/SettingsList'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import { useQueryParams } from '@common/hooks'
 import { CETMonitoredServices } from './pages/CETMonitoredServices'
 import SideNav from './components/SideNav/SideNav'
 import CETHomePage from './pages/CETHomePage'
@@ -121,12 +122,14 @@ const RedirectToCETProject = (): React.ReactElement => {
 
 export const RedirectToCETEventSummaryDetail = (): React.ReactElement => {
   const params = useParams<ProjectPathProps & { identifier: string }>()
+  const query = useQueryParams<any>()
   return (
     <Redirect
       to={routes.toCETEventsSummaryDetail({
         accountId: params.accountId,
         orgIdentifier: params.orgIdentifier || '',
-        projectIdentifier: params.projectIdentifier
+        projectIdentifier: params.projectIdentifier,
+        ...query
       })}
     />
   )

@@ -573,6 +573,7 @@ export const SRMRoutes = (
       sidebarProps={CVSideNavProps}
       path={routes.toCETEventSummaryDetailOldNotifLink({
         ...accountPathProps,
+        ...orgPathProps,
         ...projectPathProps,
         ...etModuleParams
       })}
