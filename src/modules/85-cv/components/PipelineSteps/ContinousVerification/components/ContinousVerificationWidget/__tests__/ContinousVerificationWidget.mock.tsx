@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { FormikProps } from 'formik'
+import React from 'react'
+import { FormikProps, useFormikContext } from 'formik'
 import { ContinousVerificationData } from '../../../types'
 
 export const mockedTemplateInputsToValidate = {
@@ -183,4 +184,15 @@ export const formikMockValuesWithSimpleVerification: FormikProps<ContinousVerifi
       type: 'SimpleVerification'
     }
   }
+}
+
+export function MockSensitivityComponent(): JSX.Element {
+  const { values } = useFormikContext<ContinousVerificationData>()
+
+  return (
+    <>
+      {values.spec.spec?.sensitivity !== undefined && <div data-testid="sensitivity"></div>}
+      {values.spec.spec?.failOnNoAnalysis !== undefined && <div data-testid="failOnNoAnalysis"></div>}
+    </>
+  )
 }

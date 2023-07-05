@@ -14,6 +14,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { validateMonitoredService } from '../ContinousVerificationWidget.utils'
 import {
+  MockSensitivityComponent,
   expectedErrorsForEmptyTemplateInputs,
   formikMockValues,
   formikMockValuesWithSimpleVerification,
@@ -216,7 +217,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
       await userEvent.click(simpleVerificationOption)
     })
 
-    test('Should should render the form based on the deployment type selected', async () => {
+    test('Should render the form based on the deployment type selected', async () => {
       render(
         <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_SIMPLE_VERIFICATION: true }}>
           <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
@@ -243,6 +244,41 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
       await userEvent.click(simpleVerificationOption)
 
       await waitFor(() => expect(screen.getByTestId(/simpleVerification_form/)).toBeInTheDocument())
+    })
+
+    test('Should remove sensitivity and failOnNoAnalysis values when the analysis type is Simple verification', async () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_SIMPLE_VERIFICATION: true }}>
+          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType
+                allowableTypes={[MultiTypeInputType.FIXED]}
+                formik={formikMockValuesWithSimpleVerification}
+              />
+              <MockSensitivityComponent />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      await waitFor(() => expect(screen.queryByTestId(/sensitivity/)).not.toBeInTheDocument())
+      await waitFor(() => expect(screen.queryByTestId(/failOnNoAnalysis/)).not.toBeInTheDocument())
+    })
+
+    test('Should not remove sensitivity and failOnNoAnalysis values when the analysis type is not Simple verification', async () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_SIMPLE_VERIFICATION: true }}>
+          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+              <MockSensitivityComponent />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      await waitFor(() => expect(screen.getByTestId(/sensitivity/)).toBeInTheDocument())
+      await waitFor(() => expect(screen.getByTestId(/failOnNoAnalysis/)).toBeInTheDocument())
     })
   })
 })

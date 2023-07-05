@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { FormInput, AllowedTypes, SelectOption, Text, Layout } from '@harness/uicore'
 import cx from 'classnames'
+import { useFormikContext } from 'formik'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -26,7 +27,16 @@ interface SelectVerificationTypeProps {
 export default function SelectVerificationType(props: SelectVerificationTypeProps): React.ReactElement {
   const { formik, allowableTypes } = props
 
+  const { setFieldValue } = useFormikContext()
+
   const { getString } = useStrings()
+
+  useEffect(() => {
+    if (formik.values?.spec.type === VerificationTypes.SimpleVerification) {
+      setFieldValue('spec.spec.sensitivity', undefined)
+      setFieldValue('spec.spec.failOnNoAnalysis', undefined)
+    }
+  }, [formik.values?.spec.type])
 
   const isSimpleVerificationEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_SIMPLE_VERIFICATION)
 
