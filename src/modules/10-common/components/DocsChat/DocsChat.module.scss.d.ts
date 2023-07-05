@@ -10,12 +10,12 @@ declare const styles: {
   readonly aidaIcon: string
   readonly container: string
   readonly dotflashing: string
+  readonly errorLink: string
   readonly harness: string
   readonly header: string
   readonly input: string
   readonly inputContainer: string
   readonly left: string
-  readonly link: string
   readonly loader: string
   readonly message: string
   readonly messageContainer: string
@@ -23,5 +23,7 @@ declare const styles: {
   readonly right: string
   readonly submitButton: string
   readonly user: string
+  readonly votedDown: string
+  readonly votedUp: string
 }
 export default styles

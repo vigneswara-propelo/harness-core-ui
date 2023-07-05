@@ -1561,3 +1561,4 @@ csBot:
   askAIDA: Ask AIDA
   title: Harness AIDA Chat
   feedback: Was this answer helpful?
+  errorMessage: Something went wrong. Click here to submit a ticket instead.

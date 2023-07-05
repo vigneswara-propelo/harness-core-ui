@@ -228,6 +228,7 @@ export interface StringsMap {
   'common.createPipeline': string
   'common.creating': string
   'common.csBot.askAIDA': string
+  'common.csBot.errorMessage': string
   'common.csBot.feedback': string
   'common.csBot.title': string
   'common.current': string

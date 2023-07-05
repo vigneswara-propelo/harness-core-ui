@@ -20,6 +20,18 @@
     text-align: center;
   }
 
+  .errorLink {
+    color: var(--ai-purple-900);
+  }
+
+  .votedUp svg {
+    color: var(--green-800);
+  }
+
+  .votedDown svg {
+    color: var(--red-800);
+  }
+
   .messagesContainer {
     overflow-y: auto;
     overflow-x: hidden;
@@ -42,11 +54,7 @@
         border-radius: 25px;
         position: relative;
         line-height: 21px;
-
-        .link {
-          color: var(--white);
-          text-decoration: underline;
-        }
+        word-wrap: break-word;
 
         &:before,
         &:after {

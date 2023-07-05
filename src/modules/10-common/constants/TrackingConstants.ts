@@ -43,6 +43,7 @@ export enum StageActions {
 
 export enum AIChatActions {
   ChatStarted = 'CS Bot chat started',
+  AnswerReceived = 'CS Bot answer',
   BotHelpful = 'CS Bot is helpful',
   BotNotHelpful = 'CS Bot is not helpful'
 }

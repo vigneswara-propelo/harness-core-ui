@@ -7,12 +7,13 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { Avatar, Button, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Avatar, Button, ButtonVariation, Icon, Layout, Text, useToggleOpen } from '@harness/uicore'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { SubmitTicketModal } from '@common/components/ResourceCenter/SubmitTicketModal/SubmitTicketModal'
 import css from './DocsChat.module.scss'
 
 interface Message {
@@ -35,8 +36,16 @@ interface UsefulOrNotProps {
   answer: string
 }
 
+enum Vote {
+  None,
+  Up,
+  Down
+}
+
 function UsefulOrNot({ query, answer }: UsefulOrNotProps): JSX.Element {
   const { trackEvent } = useTelemetry()
+  const [voted, setVoted] = useState<Vote>(Vote.None)
+
   return (
     <Layout.Horizontal spacing={'small'} flex={{ align: 'center-center' }}>
       <Text>
@@ -44,18 +53,22 @@ function UsefulOrNot({ query, answer }: UsefulOrNotProps): JSX.Element {
       </Text>
       <Button
         icon="main-thumbsup"
+        disabled={voted !== Vote.None}
         variation={ButtonVariation.ICON}
-        intent="success"
+        className={cx({ [css.votedUp]: voted === Vote.Up })}
         onClick={() => {
           trackEvent(AIChatActions.BotHelpful, { query, answer })
+          setVoted(Vote.Up)
         }}
       />
       <Button
         icon="main-thumbsdown"
+        disabled={voted !== Vote.None}
         variation={ButtonVariation.ICON}
-        intent="danger"
+        className={cx({ [css.votedDown]: voted === Vote.Down })}
         onClick={() => {
           trackEvent(AIChatActions.BotNotHelpful, { query, answer })
+          setVoted(Vote.Down)
         }}
       />
     </Layout.Horizontal>
@@ -69,11 +82,19 @@ function DocsChat(): JSX.Element {
   const { getString } = useStrings()
   const messageList = useRef<HTMLDivElement>(null)
   const { mutate: askQuestion, loading } = useHarnessSupportBot({})
+  const { trackEvent } = useTelemetry()
+  const { isOpen, close: closeSubmitTicketModal, open: openSubmitTicketModal } = useToggleOpen()
   useTrackEvent(AIChatActions.ChatStarted, {})
 
   const getAnswer = async (oldMessages: Array<Message>, query: string): Promise<void> => {
     try {
       const answer = await askQuestion({ question: query, model: 'chat-bison' })
+      if (answer?.data?.response) {
+        trackEvent(AIChatActions.AnswerReceived, {
+          query,
+          answer: answer?.data?.response
+        })
+      }
       setMessages([
         ...oldMessages,
         {
@@ -86,7 +107,7 @@ function DocsChat(): JSX.Element {
         ...oldMessages,
         {
           author: 'harness',
-          text: e?.message || 'Something went wrong'
+          text: 'error'
         } as Message
       ])
     }
@@ -108,7 +129,7 @@ function DocsChat(): JSX.Element {
     handleSubmit()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     const userMessage = userInput.trim()
 
     if (!userMessage) return
@@ -161,7 +182,13 @@ function DocsChat(): JSX.Element {
                     [css.user]: message.author === 'user'
                   })}
                 >
-                  {message.text.replace(/\\n/g, '\n')}
+                  {message.text === 'error' ? (
+                    <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
+                      {getString('common.csBot.errorMessage')}
+                    </a>
+                  ) : (
+                    message.text.replace(/\\n/g, '\n')
+                  )}
                 </div>
                 {message.author === 'user' ? (
                   <Avatar size={'small'} name={currentUserInfo.name} email={currentUserInfo.email} />
@@ -191,6 +218,7 @@ function DocsChat(): JSX.Element {
           </button>
         </Layout.Horizontal>
       </div>
+      <SubmitTicketModal isOpen={isOpen} close={closeSubmitTicketModal} />
     </div>
   )
 }
