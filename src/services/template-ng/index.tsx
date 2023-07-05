@@ -397,6 +397,8 @@ export interface EntityDetail {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
+    | 'ServerlessAwsLambdaPackageV2'
 }
 
 export interface EntityDetailProtoDTO {
@@ -1917,6 +1919,7 @@ export interface ResourceDTO {
     | 'NETWORK_MAP'
     | 'CET_AGENT_TOKEN'
     | 'CET_CRITICAL_EVENT'
+    | 'CHAOS_SECURITY_GOVERNANCE'
 }
 
 export interface ResourceScopeDTO {
