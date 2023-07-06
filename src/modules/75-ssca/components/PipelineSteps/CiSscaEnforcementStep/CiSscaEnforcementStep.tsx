@@ -7,7 +7,6 @@
 
 import { Color } from '@harness/design-system'
 import type { IconName } from '@harness/icons'
-import type { AllowedTypes } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { defaultTo } from 'lodash-es'
 import React from 'react'
@@ -18,74 +17,17 @@ import { flatObject } from '@pipeline/components/PipelineSteps/Steps/Common/Appr
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { VariableListTableProps, VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import type { SbomSource } from 'services/ci'
 import type { StringsMap } from 'stringTypes'
-import { SscaEnforcementStepEditWithRef } from './SscaEnforcementStepEdit'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaEnforcementStepFunctionConfigs'
-import SscaEnforcementStepInputSet from './SscaEnforcementStepInputSet'
-import { commonDefaultEnforcementSpecValues } from '../utils'
+import { SscaCiEnforcementStepData } from '../common/types'
+import { SscaEnforcementStepEditWithRef } from '../common/SscaEnforcementStepEdit'
+import {
+  transformValuesFieldsConfig,
+  getInputSetViewValidateFieldsConfig
+} from '../common/SscaEnforcementStepFunctionConfigs'
+import SscaEnforcementStepInputSet from '../common/SscaEnforcementStepInputSet'
+import { commonDefaultEnforcementSpecValues, ciSpecValues } from '../common/utils'
 
-export interface SscaEnforcementStepSpec {
-  source: {
-    type: SbomSource['type']
-    spec: {
-      connector: string
-      image: string
-    }
-  }
-  verifyAttestation: {
-    type: 'cosign' //TODO: update once BE changes are available in type definition
-    spec: {
-      publicKey: string
-    }
-  }
-  policy: {
-    store: {
-      type: 'Harness'
-      spec: {
-        file: string
-      }
-    }
-  }
-  infrastructure?: {
-    type: string
-    spec: {
-      connectorRef: string
-      namespace: string
-      resources: {
-        limits: {
-          memory?: string
-          cpu?: string
-        }
-      }
-    }
-  }
-}
-
-export interface SscaEnforcementStepData {
-  name?: string
-  identifier: string
-  type: string
-  spec: SscaEnforcementStepSpec
-  timeout?: string
-}
-export type SscaEnforcementStepDataUI = SscaEnforcementStepSpec
-
-export interface SscaEnforcementStepProps {
-  initialValues: SscaEnforcementStepData
-  template?: SscaEnforcementStepData
-  path?: string
-  isNewStep?: boolean
-  readonly?: boolean
-  stepViewType: StepViewType
-  onUpdate?: (data: SscaEnforcementStepData) => void
-  onChange?: (data: SscaEnforcementStepData) => void
-  allowableTypes: AllowedTypes
-  formik?: any
-  stepType: StepType
-}
-
-export class SscaEnforcementStep extends PipelineStep<SscaEnforcementStepData> {
+export class CiSscaEnforcementStep extends PipelineStep<SscaCiEnforcementStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -98,14 +40,17 @@ export class SscaEnforcementStep extends PipelineStep<SscaEnforcementStepData> {
   protected stepIconColor = Color.GREY_600
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SscaEnforcement'
   protected stepPaletteVisible = false
-  protected defaultValues: SscaEnforcementStepData = {
+  protected defaultValues: SscaCiEnforcementStepData = {
     type: StepType.SscaEnforcement,
     identifier: '',
-    spec: commonDefaultEnforcementSpecValues
+    spec: {
+      ...commonDefaultEnforcementSpecValues,
+      ...ciSpecValues
+    }
   }
 
-  processFormData<T>(data: T): SscaEnforcementStepData {
-    return getFormValuesInCorrectFormat<T, SscaEnforcementStepData>(data, transformValuesFieldsConfig(this?.type))
+  processFormData<T>(data: T): SscaCiEnforcementStepData {
+    return getFormValuesInCorrectFormat<T, SscaCiEnforcementStepData>(data, transformValuesFieldsConfig(this?.type))
   }
 
   validateInputSet({
@@ -113,7 +58,7 @@ export class SscaEnforcementStep extends PipelineStep<SscaEnforcementStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SscaEnforcementStepData>): FormikErrors<SscaEnforcementStepData> {
+  }: ValidateInputSetProps<SscaCiEnforcementStepData>): FormikErrors<SscaCiEnforcementStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
       return validateInputSet(
@@ -129,7 +74,7 @@ export class SscaEnforcementStep extends PipelineStep<SscaEnforcementStepData> {
     return {}
   }
 
-  renderStep(props: StepProps<SscaEnforcementStepData>): JSX.Element {
+  renderStep(props: StepProps<SscaCiEnforcementStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,

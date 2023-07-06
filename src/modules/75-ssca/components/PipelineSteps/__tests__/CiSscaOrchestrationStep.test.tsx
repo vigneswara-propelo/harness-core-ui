@@ -11,7 +11,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { SscaOrchestrationStep } from '../SscaOrchestrationStep/SscaOrchestrationStep'
+import { CiSscaOrchestrationStep } from '../CiSscaOrchestrationStep/CiSscaOrchestrationStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -39,6 +39,12 @@ const runtimeValues = {
         privateKey: RUNTIME_INPUT_VALUE,
         password: RUNTIME_INPUT_VALUE
       }
+    },
+    resources: {
+      limits: {
+        cpu: RUNTIME_INPUT_VALUE,
+        memory: RUNTIME_INPUT_VALUE
+      }
     }
   }
 }
@@ -63,13 +69,19 @@ const fixedValues = {
         privateKey: 'testKey',
         password: 'testPassword'
       }
+    },
+    resources: {
+      limits: {
+        cpu: '0.5',
+        memory: '500Mi'
+      }
     }
   }
 }
 
-describe('Ssca Orchestration Step', () => {
+describe('CI Ssca Orchestration Step', () => {
   beforeAll(() => {
-    factory.registerStep(new SscaOrchestrationStep())
+    factory.registerStep(new CiSscaOrchestrationStep())
   })
 
   test('edit view as new step', () => {

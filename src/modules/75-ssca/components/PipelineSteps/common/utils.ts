@@ -6,8 +6,12 @@
  */
 
 import { AllowedTypesWithExecutionTime, AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
-import type { SscaOrchestrationStepData } from './SscaOrchestrationStep/SscaOrchestrationStep'
-import type { SscaEnforcementStepData } from './SscaEnforcementStep/SscaEnforcementStep'
+import {
+  CdResourcesSpec,
+  CiResourcesSpec,
+  CommonSscaEnforcementStepSpec,
+  CommonSscaOrchestrationStepSpec
+} from './types'
 
 export const AllMultiTypeInputTypesForStep: AllowedTypesWithRunTime[] = [
   MultiTypeInputType.FIXED,
@@ -20,7 +24,7 @@ export const AllMultiTypeInputTypesForInputSet: AllowedTypesWithExecutionTime[] 
   MultiTypeInputType.EXPRESSION
 ]
 
-export const commonDefaultOrchestrationSpecValues: SscaOrchestrationStepData['spec'] = {
+export const commonDefaultOrchestrationSpecValues: CommonSscaOrchestrationStepSpec = {
   tool: {
     type: 'Syft',
     spec: {
@@ -43,7 +47,7 @@ export const commonDefaultOrchestrationSpecValues: SscaOrchestrationStepData['sp
   }
 }
 
-export const commonDefaultEnforcementSpecValues: SscaEnforcementStepData['spec'] = {
+export const commonDefaultEnforcementSpecValues: CommonSscaEnforcementStepSpec = {
   source: {
     type: 'image',
     spec: {
@@ -62,6 +66,31 @@ export const commonDefaultEnforcementSpecValues: SscaEnforcementStepData['spec']
       type: 'Harness',
       spec: {
         file: ''
+      }
+    }
+  }
+}
+
+export const ciSpecValues: CiResourcesSpec = {
+  resources: {
+    limits: {
+      cpu: '0.5',
+      memory: '500Mi'
+    }
+  }
+}
+
+export const cdSpecValues: CdResourcesSpec = {
+  infrastructure: {
+    type: 'KubernetesDirect',
+    spec: {
+      connectorRef: '',
+      namespace: '',
+      resources: {
+        limits: {
+          cpu: '0.5',
+          memory: '500Mi'
+        }
       }
     }
   }

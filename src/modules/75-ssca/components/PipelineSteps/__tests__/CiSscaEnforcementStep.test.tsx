@@ -11,7 +11,8 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { SscaEnforcementStep, SscaEnforcementStepData } from '../SscaEnforcementStep/SscaEnforcementStep'
+import { CiSscaEnforcementStep } from '../CiSscaEnforcementStep/CiSscaEnforcementStep'
+import { SscaCiEnforcementStepData } from '../common/types'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -39,6 +40,12 @@ const runtimeValues = {
         spec: {
           file: 'testFilePath'
         }
+      }
+    },
+    resources: {
+      limits: {
+        cpu: RUNTIME_INPUT_VALUE,
+        memory: RUNTIME_INPUT_VALUE
       }
     }
   }
@@ -69,13 +76,19 @@ const fixedValues = {
           file: 'testFilePath'
         }
       }
+    },
+    resources: {
+      limits: {
+        cpu: '0.5',
+        memory: '500Mi'
+      }
     }
   }
 }
 
-describe('Ssca Enforcement Step', () => {
+describe('CI Ssca Enforcement Step', () => {
   beforeAll(() => {
-    factory.registerStep(new SscaEnforcementStep())
+    factory.registerStep(new CiSscaEnforcementStep())
   })
 
   test('edit view as new step', () => {
@@ -136,8 +149,10 @@ describe('Ssca Enforcement Step', () => {
       viewType: StepViewType.DeploymentForm,
       getString: jest.fn().mockImplementation(val => val)
     }
-    const response = new SscaEnforcementStep().validateInputSet(data as ValidateInputSetProps<SscaEnforcementStepData>)
+    const response = new CiSscaEnforcementStep().validateInputSet(
+      data as ValidateInputSetProps<SscaCiEnforcementStepData>
+    )
     expect(response).toEqual({})
-    expect(new SscaEnforcementStep().processFormData(runtimeValues)).toEqual(runtimeValues)
+    expect(new CiSscaEnforcementStep().processFormData(runtimeValues)).toEqual(runtimeValues)
   })
 })

@@ -19,15 +19,15 @@ import { VariableListTableProps, VariablesListTable } from '@pipeline/components
 import { flatObject } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import {
-  getInputSetViewValidateFieldsConfig,
-  transformValuesFieldsConfig
-} from '../SscaOrchestrationStep/SscaOrchestrationStepFunctionConfigs'
-import { SscaOrchestrationStepEditWithRef } from '../SscaOrchestrationStep/SscaOrchestrationStepEdit'
-import type { SscaOrchestrationStepData } from '../SscaOrchestrationStep/SscaOrchestrationStep'
-import { commonDefaultOrchestrationSpecValues } from '../utils'
-import SscaOrchestrationStepInputSet from '../SscaOrchestrationStep/SscaOrchestrationStepInputSet'
+  transformValuesFieldsConfig,
+  getInputSetViewValidateFieldsConfig
+} from '../common/SscaOrchestrationStepFunctionConfigs'
+import { SscaOrchestrationStepEditWithRef } from '../common/SscaOrchestrationStepEdit'
+import SscaOrchestrationStepInputSet from '../common/SscaOrchestrationStepInputSet'
+import { SscaCdOrchestrationStepData } from '../common/types'
+import { commonDefaultOrchestrationSpecValues, cdSpecValues } from '../common/utils'
 
-export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepData> {
+export class CdSscaOrchestrationStep extends PipelineStep<SscaCdOrchestrationStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -40,30 +40,18 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
   protected stepIconColor = Color.GREY_600
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SscaOrchestration'
   protected stepPaletteVisible = false
-  protected defaultValues: SscaOrchestrationStepData = {
+  protected defaultValues: SscaCdOrchestrationStepData = {
     type: StepType.SscaOrchestration,
     identifier: '',
     spec: {
       ...commonDefaultOrchestrationSpecValues,
-      infrastructure: {
-        type: 'KubernetesDirect',
-        spec: {
-          connectorRef: '',
-          namespace: '',
-          resources: {
-            limits: {
-              cpu: '0.5',
-              memory: '500Mi'
-            }
-          }
-        }
-      }
+      ...cdSpecValues
     }
   }
 
   /* istanbul ignore next */
-  processFormData<T>(data: T): SscaOrchestrationStepData {
-    return getFormValuesInCorrectFormat<T, SscaOrchestrationStepData>(data, transformValuesFieldsConfig(this?.type))
+  processFormData<T>(data: T): SscaCdOrchestrationStepData {
+    return getFormValuesInCorrectFormat<T, SscaCdOrchestrationStepData>(data, transformValuesFieldsConfig(this?.type))
   }
 
   validateInputSet({
@@ -71,7 +59,7 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SscaOrchestrationStepData>): FormikErrors<SscaOrchestrationStepData> {
+  }: ValidateInputSetProps<SscaCdOrchestrationStepData>): FormikErrors<SscaCdOrchestrationStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
       return validateInputSet(
@@ -86,7 +74,7 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
     return {}
   }
 
-  renderStep(props: StepProps<SscaOrchestrationStepData>): JSX.Element {
+  renderStep(props: StepProps<SscaCdOrchestrationStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,

@@ -21,10 +21,12 @@ import { Connectors } from '@connectors/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import type { SscaEnforcementStepProps } from './SscaEnforcementStep'
+import { SscaStepProps, SscaCdEnforcementStepData, SscaCiEnforcementStepData } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export default function SscaEnforcementStepInputSet(props: SscaEnforcementStepProps): React.ReactElement {
+export default function SscaEnforcementStepInputSet(
+  props: SscaStepProps<SscaCdEnforcementStepData | SscaCiEnforcementStepData>
+): React.ReactElement {
   const { template, path, readonly, stepViewType, allowableTypes, stepType } = props
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -67,7 +69,7 @@ export default function SscaEnforcementStepInputSet(props: SscaEnforcementStepPr
       )}
       {stepType === StepType.CdSscaEnforcement ? (
         <>
-          {isValueRuntimeInput(template?.spec?.infrastructure?.spec?.connectorRef) && (
+          {isValueRuntimeInput(get(template, 'spec.infrastructure.spec.connectorRef')) && (
             <div className={cx(stepCss.formGroup, stepCss.md)}>
               <FormMultiTypeConnectorField
                 accountIdentifier={accountId}
@@ -83,14 +85,14 @@ export default function SscaEnforcementStepInputSet(props: SscaEnforcementStepPr
                 gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
                 templateProps={{
                   isTemplatizedView: true,
-                  templateValue: template?.spec?.infrastructure?.spec?.connectorRef
+                  templateValue: get(template, 'spec.infrastructure.spec.connectorRef')
                 }}
                 width={388}
               />
             </div>
           )}
 
-          {isValueRuntimeInput(template?.spec?.infrastructure?.spec?.namespace) && (
+          {isValueRuntimeInput(get(template, 'spec.infrastructure.spec.namespace')) && (
             <TextFieldInputSetView
               name={`${path}.spec.infrastructure.spec.namespace`}
               label={getString('common.namespace')}
@@ -109,7 +111,7 @@ export default function SscaEnforcementStepInputSet(props: SscaEnforcementStepPr
             />
           )}
 
-          {isValueRuntimeInput(template?.spec?.infrastructure?.spec?.resources?.limits?.cpu) && (
+          {isValueRuntimeInput(get(template, 'spec.infrastructure.spec.resources.limits.cpu')) && (
             <TextFieldInputSetView
               name={`${path}spec.infrastructure.spec.resources.limits.cpu`}
               placeholder={getString('imagePlaceholder')}
@@ -128,7 +130,7 @@ export default function SscaEnforcementStepInputSet(props: SscaEnforcementStepPr
             />
           )}
 
-          {isValueRuntimeInput(template?.spec?.infrastructure?.spec?.resources?.limits?.memory) && (
+          {isValueRuntimeInput(get(template, 'spec.infrastructure.spec.resources.limits.memory')) && (
             <TextFieldInputSetView
               name={`${path}spec.infrastructure.spec.resources.limits.memory`}
               placeholder={getString('imagePlaceholder')}
@@ -147,7 +149,47 @@ export default function SscaEnforcementStepInputSet(props: SscaEnforcementStepPr
             />
           )}
         </>
-      ) : null}
+      ) : (
+        <>
+          {isValueRuntimeInput(get(template, 'spec.resources.limits.cpu')) && (
+            <TextFieldInputSetView
+              name={`${path}spec.resources.limits.cpu`}
+              placeholder={getString('imagePlaceholder')}
+              label={getString('pipelineSteps.limitCPULabel')}
+              disabled={readonly}
+              fieldPath={'spec.resources.limits.cpu'}
+              template={template}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
+              className={cx(stepCss.formGroup, stepCss.md)}
+            />
+          )}
+
+          {isValueRuntimeInput(get(template, 'spec.resources.limits.memory')) && (
+            <TextFieldInputSetView
+              name={`${path}spec.resources.limits.memory`}
+              placeholder={getString('imagePlaceholder')}
+              label={getString('pipelineSteps.limitMemoryLabel')}
+              disabled={readonly}
+              fieldPath={'spec.resources.limits.memory'}
+              template={template}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
+              className={cx(stepCss.formGroup, stepCss.md)}
+            />
+          )}
+        </>
+      )}
     </>
   )
 }

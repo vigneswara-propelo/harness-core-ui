@@ -7,11 +7,11 @@
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { CdSscaOrchestrationStep } from './CdSscaOrchestrationStep/CdSscaOrchestrationStep'
-import { SscaOrchestrationStep } from './SscaOrchestrationStep/SscaOrchestrationStep'
-import { SscaEnforcementStep } from './SscaEnforcementStep/SscaEnforcementStep'
+import { CiSscaOrchestrationStep } from './CiSscaOrchestrationStep/CiSscaOrchestrationStep'
+import { CiSscaEnforcementStep } from './CiSscaEnforcementStep/CiSscaEnforcementStep'
 import { CdSscaEnforcementStep } from './CdSscaEnforcementStep/CdSscaEnforcementStep'
 
-factory.registerStep(new SscaOrchestrationStep())
+factory.registerStep(new CiSscaOrchestrationStep())
 factory.registerStep(new CdSscaOrchestrationStep())
-factory.registerStep(new SscaEnforcementStep())
+factory.registerStep(new CiSscaEnforcementStep())
 factory.registerStep(new CdSscaEnforcementStep())

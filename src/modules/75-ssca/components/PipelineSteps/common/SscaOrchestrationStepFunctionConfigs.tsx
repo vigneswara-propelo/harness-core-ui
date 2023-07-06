@@ -73,7 +73,16 @@ export const transformValuesFieldsConfig = (stepType?: StepType) => [
           type: TransformValuesTypes.Text
         }
       ]
-    : []),
+    : [
+        {
+          name: 'spec.resources.limits.memory',
+          type: TransformValuesTypes.Text
+        },
+        {
+          name: 'spec.resources.limits.cpu',
+          type: TransformValuesTypes.Text
+        }
+      ]),
   {
     name: 'timeout',
     type: TransformValuesTypes.Text
@@ -94,21 +103,21 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
     isRequired: true
   },
   {
-    name: 'spec.sbom.tool',
+    name: 'spec.tool.type',
     type: ValidationFieldTypes.List,
     label: 'ssca.orchestrationStep.sbomTool',
     isRequired: true
   },
   {
-    name: 'spec.sbom.format',
+    name: 'spec.tool.spec.format',
     type: ValidationFieldTypes.List,
     label: 'ssca.orchestrationStep.sbomFormat',
     isRequired: true
   },
   {
-    name: 'spec.source.type',
-    type: ValidationFieldTypes.List,
-    label: 'pipeline.artifactsSelection.artifactType',
+    name: 'spec.attestation.type',
+    type: ValidationFieldTypes.Text,
+    label: 'connectors.serviceNow.privateKey',
     isRequired: true
   },
   {
@@ -124,8 +133,10 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
     isRequired: true
   },
   {
-    name: 'timeout',
-    type: ValidationFieldTypes.Timeout
+    name: 'spec.source.type',
+    type: ValidationFieldTypes.List,
+    label: 'pipeline.artifactsSelection.artifactType',
+    isRequired: true
   },
   {
     name: 'spec.source.spec.connector',
@@ -170,7 +181,23 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
           isRequired: true
         }
       ]
-    : [])
+    : [
+        {
+          name: 'spec.resources.limits.memory',
+          type: ValidationFieldTypes.LimitMemory,
+          label: 'pipelineSteps.limitMemoryLabel'
+        },
+        {
+          name: 'spec.resources.limits.cpu',
+          type: ValidationFieldTypes.LimitCPU,
+          label: 'pipelineSteps.limitCPULabel'
+        }
+      ]),
+  {
+    name: 'timeout',
+    type: ValidationFieldTypes.Timeout,
+    label: 'pipelineSteps.timeoutLabel'
+  }
 ]
 
 export const getInputSetViewValidateFieldsConfig =
@@ -178,21 +205,15 @@ export const getInputSetViewValidateFieldsConfig =
   (isRequired = true): Array<{ name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }> => {
     return [
       {
-        name: 'spec.sbom.tool',
-        type: ValidationFieldTypes.List,
-        label: 'ssca.orchestrationStep.sbomTool',
+        name: 'spec.source.spec.connector',
+        type: ValidationFieldTypes.Text,
+        label: 'pipelineSteps.connectorLabel',
         isRequired
       },
       {
-        name: 'spec.sbom.format',
-        type: ValidationFieldTypes.List,
-        label: 'ssca.orchestrationStep.sbomFormat',
-        isRequired
-      },
-      {
-        name: 'spec.source.type',
-        type: ValidationFieldTypes.List,
-        label: 'pipeline.artifactsSelection.artifactType',
+        name: 'spec.source.spec.image',
+        type: ValidationFieldTypes.Text,
+        label: 'imageLabel',
         isRequired
       },
       {
@@ -207,53 +228,49 @@ export const getInputSetViewValidateFieldsConfig =
         label: 'password',
         isRequired
       },
-      {
-        name: 'timeout',
-        type: ValidationFieldTypes.Timeout
-      },
-      {
-        name: 'spec.source.spec.connector',
-        type: ValidationFieldTypes.Text,
-        label: 'pipelineSteps.connectorLabel',
-        isRequired
-      },
-      {
-        name: 'spec.source.spec.image',
-        type: ValidationFieldTypes.Text,
-        label: 'imageLabel',
-        isRequired
-      },
       ...(stepType === StepType.CdSscaOrchestration
         ? [
-            {
-              name: 'spec.infrastructure.type',
-              type: ValidationFieldTypes.Text
-            },
             {
               name: 'spec.infrastructure.spec.connectorRef',
               type: ValidationFieldTypes.Text,
               label: 'connector',
-              isRequired: true
+              isRequired
             },
             {
               name: 'spec.infrastructure.spec.namespace',
               type: ValidationFieldTypes.Namespace,
               label: 'common.namespace',
-              isRequired: true
+              isRequired
             },
             {
               name: 'spec.infrastructure.spec.resources.limits.memory',
               type: ValidationFieldTypes.LimitMemory,
               label: 'pipelineSteps.limitMemoryLabel',
-              isRequired: true
+              isRequired
             },
             {
               name: 'spec.infrastructure.spec.resources.limits.cpu',
               type: ValidationFieldTypes.LimitCPU,
               label: 'pipelineSteps.limitCPULabel',
-              isRequired: true
+              isRequired
             }
           ]
-        : [])
+        : [
+            {
+              name: 'spec.resources.limits.memory',
+              type: ValidationFieldTypes.LimitMemory,
+              label: 'pipelineSteps.limitMemoryLabel'
+            },
+            {
+              name: 'spec.resources.limits.cpu',
+              type: ValidationFieldTypes.LimitCPU,
+              label: 'pipelineSteps.limitCPULabel'
+            }
+          ]),
+      {
+        name: 'timeout',
+        type: ValidationFieldTypes.Timeout,
+        label: 'pipelineSteps.timeoutLabel'
+      }
     ]
   }
