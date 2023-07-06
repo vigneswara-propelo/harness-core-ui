@@ -617,3 +617,36 @@ export const getTriggerConfigDefaultProps = ({
     }
   }
 })
+
+export const stageResponse = {
+  status: 'SUCCESS',
+  data: {
+    data: [
+      {
+        stageIdentifier: 'S1',
+        stageName: 'S1',
+        stagesRequired: [],
+        toBeBlocked: false
+      },
+      {
+        stageIdentifier: 'S2',
+        stageName: 'S2',
+        stagesRequired: [],
+        toBeBlocked: false
+      },
+      {
+        stageIdentifier: 'S3',
+        stageName: 'S3',
+        stagesRequired: [],
+        toBeBlocked: false
+      },
+      {
+        stageIdentifier: 'S4',
+        stageName: 'S4',
+        stagesRequired: [],
+        toBeBlocked: false
+      }
+    ]
+  },
+  loading: false
+}

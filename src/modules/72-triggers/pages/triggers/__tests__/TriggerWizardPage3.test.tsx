@@ -30,7 +30,9 @@ import {
   GetParseableParallelStageArtifactTriggerResponse,
   clearedArtifactIdentifierResponse,
   GithubWebhookAuthenticationEnabledFalse,
-  triggerYamlWithoutPipelineInput
+  triggerYamlWithoutPipelineInput,
+  response,
+  mergeResponse
 } from './webhookMockResponses'
 
 import {
@@ -144,6 +146,8 @@ describe('Artifact Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -200,6 +204,8 @@ describe('Artifact Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -261,6 +267,8 @@ describe('Artifact Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 

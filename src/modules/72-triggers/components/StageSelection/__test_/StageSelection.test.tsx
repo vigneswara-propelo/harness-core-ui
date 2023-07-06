@@ -14,6 +14,8 @@ import routes from '@common/RouteDefinitions'
 import { triggerPathProps } from '@common/utils/routeUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { response } from '@triggers/pages/triggers/__tests__/webhookMockResponses'
+
 import StageSelection from '../StageSelection'
 
 const PATH = routes.toTriggersWizardPage(triggerPathProps)
@@ -57,62 +59,12 @@ const TestComponent: React.FC<{
 }
 
 const testId = 'stage-select'
-const getStagesExecutionListData = [
-  {
-    stageIdentifier: 'S1',
-    stageName: 'S1',
-    stagesRequired: [],
-    toBeBlocked: false
-  },
-  {
-    stageIdentifier: 'S2',
-    stageName: 'S2',
-    stagesRequired: [],
-    toBeBlocked: false
-  },
-  {
-    stageIdentifier: 'S3',
-    stageName: 'S3',
-    stagesRequired: [],
-    toBeBlocked: false
-  },
-  {
-    stageIdentifier: 'S4',
-    stageName: 'S4',
-    stagesRequired: [],
-    toBeBlocked: false
-  }
-]
+const getStagesExecutionListData = response.data.data
 
 jest.mock('services/pipeline-ng', () => ({
   useGetStagesExecutionList: jest.fn().mockReturnValue({
     data: {
-      data: [
-        {
-          stageIdentifier: 'S1',
-          stageName: 'S1',
-          stagesRequired: [],
-          toBeBlocked: false
-        },
-        {
-          stageIdentifier: 'S2',
-          stageName: 'S2',
-          stagesRequired: [],
-          toBeBlocked: false
-        },
-        {
-          stageIdentifier: 'S3',
-          stageName: 'S3',
-          stagesRequired: [],
-          toBeBlocked: false
-        },
-        {
-          stageIdentifier: 'S4',
-          stageName: 'S4',
-          stagesRequired: [],
-          toBeBlocked: false
-        }
-      ]
+      data: response.data.data
     }
   }),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn().mockReturnValue({

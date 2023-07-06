@@ -12,7 +12,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { useGetGitTriggerEventDetails } from 'services/pipeline-ng'
 import { NameIdDescriptionTags } from '@common/components'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 import { useStrings } from 'framework/strings'
 import { getSourceRepoOptions, GitSourceProviders } from '@triggers/components/Triggers/utils'
@@ -42,8 +42,6 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   } = useGetGitTriggerEventDetails({
     lazy: true
   })
-
-  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
 
   const [eventOptions, setEventOptions] = useState<SelectOption[]>([])
   const [actionsOptions, setActionsOptions] = useState<SelectOption[]>([])
@@ -156,7 +154,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
         </section>
       </div>
 
-      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
+      <StageSelection formikProps={formikProps} />
     </Layout.Vertical>
   )
 }

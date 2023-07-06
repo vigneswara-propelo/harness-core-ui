@@ -133,7 +133,6 @@ const getDetailsContent = ({
   jexlCondition,
   cronExpression,
   pipelineInputSet,
-  selectiveStageFF,
   stagesToExecute
 }: {
   getString: UseStringsReturn['getString']
@@ -142,7 +141,6 @@ const getDetailsContent = ({
   jexlCondition?: string
   cronExpression?: string
   pipelineInputSet?: string
-  selectiveStageFF?: boolean
   stagesToExecute?: string[]
 }): Content[] => {
   const arr: Content[] = [
@@ -156,14 +154,13 @@ const getDetailsContent = ({
       label: getString('triggers.pipelineExecutionInput'),
       value: !isEmpty(pipelineInputSet) ? <pre>{pipelineInputSet}</pre> : undefined,
       type: ContentType.CUSTOM
-    }
-  ]
-  if (selectiveStageFF) {
-    arr.push({
+    },
+    {
       label: getString('triggers.selectPipelineStages'),
       value: stagesToExecute?.length ? <p>{stagesToExecute}</p> : <p>{getString('pipeline.allStages')}</p>
-    })
-  }
+    }
+  ]
+
   return arr
 }
 
@@ -178,7 +175,7 @@ export default function TriggerDetailPage(): JSX.Element {
     >
   >()
 
-  const { CI_YAML_VERSIONING, CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const { data: triggerResponse, loading: loadingTrigger } = useGetTriggerDetails({
     triggerIdentifier,
@@ -349,7 +346,6 @@ export default function TriggerDetailPage(): JSX.Element {
                     cronExpression,
 
                     pipelineInputSet,
-                    selectiveStageFF: CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION,
                     stagesToExecute
                   })}
                 />

@@ -35,7 +35,9 @@ import {
   GetParseableManifestTriggerResponse,
   GetTriggerWithEventConditionsResponse,
   GetParseableArtifactTriggerResponse,
-  GithubWebhookAuthenticationEnabledFalse
+  GithubWebhookAuthenticationEnabledFalse,
+  response,
+  mergeResponse
 } from './webhookMockResponses'
 
 import {
@@ -165,6 +167,9 @@ describe('Manifest Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
+
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
     await waitFor(() =>
@@ -223,6 +228,8 @@ describe('Manifest Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -277,6 +284,8 @@ describe('Manifest Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -333,6 +342,8 @@ describe('Manifest Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -411,6 +422,8 @@ describe('Manifest Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -496,6 +509,9 @@ describe('Manifest Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
+
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -543,6 +559,9 @@ describe('Manifest Trigger Tests', () => {
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
     jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+    jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+    jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue(mergeResponse as any)
+
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 

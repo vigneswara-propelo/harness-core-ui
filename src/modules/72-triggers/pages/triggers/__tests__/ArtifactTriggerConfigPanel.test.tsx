@@ -31,6 +31,49 @@ jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', ()
   getLanguageService: jest.fn()
 }))
 
+jest.mock('services/pipeline-ng', () => ({
+  useGetStagesExecutionList: jest.fn().mockReturnValue({
+    data: {
+      data: [
+        {
+          stageIdentifier: 'S1',
+          stageName: 'S1',
+          stagesRequired: [],
+          toBeBlocked: false
+        },
+        {
+          stageIdentifier: 'S2',
+          stageName: 'S2',
+          stagesRequired: [],
+          toBeBlocked: false
+        },
+        {
+          stageIdentifier: 'S3',
+          stageName: 'S3',
+          stagesRequired: [],
+          toBeBlocked: false
+        },
+        {
+          stageIdentifier: 'S4',
+          stageName: 'S4',
+          stagesRequired: [],
+          toBeBlocked: false
+        }
+      ]
+    }
+  }),
+  useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn().mockReturnValue({
+    data: {
+      data: {
+        pipelineYaml:
+          'pipeline:\n  identifier: Remote\n  stages:\n    - stage:\n        identifier: S1\n        type: Custom\n        spec:\n          execution:\n            steps:\n              - step:\n                  identifier: ShellScript_1\n                  type: ShellScript\n                  timeout: ""\n',
+        completePipelineYaml: '',
+        errorResponse: false
+      }
+    }
+  })
+}))
+
 const params = {
   accountId: 'testAcc',
   orgIdentifier: 'testOrg',

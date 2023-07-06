@@ -22,7 +22,9 @@ import {
   GetGitTriggerEventDetailsResponse,
   GetSecretV2PromiseResponse,
   GithubWebhookAuthenticationEnabledFalse,
-  GithubWebhookAuthenticationEnabledTrue
+  GithubWebhookAuthenticationEnabledTrue,
+  mergeResponse,
+  response
 } from './webhookMockResponses'
 import WebhookTriggerConfigPanel from '../views/WebhookTriggerConfigPanel'
 
@@ -65,6 +67,10 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledTrue as any)
+      jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+      jest
+        .spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput')
+        .mockReturnValue(mergeResponse as any)
 
       const { container } = render(
         <WrapperComponent
@@ -82,6 +88,10 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+      jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+      jest
+        .spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput')
+        .mockReturnValue(mergeResponse as any)
 
       const { container } = render(
         <WrapperComponent
@@ -99,6 +109,11 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
       expect(container).toMatchSnapshot()
     })
     test('Initial Render - Custom Trigger Configuration Panel', async () => {
+      jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+      jest
+        .spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput')
+        .mockReturnValue(mergeResponse as any)
+
       const { container } = render(
         <WrapperComponent initialValues={getTriggerConfigInitialValues({ sourceRepo: 'Custom' })} />
       )
@@ -110,6 +125,11 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
   })
   describe('Interactivity: Non-Custom Source Repo/Payload Type', () => {
     test('Selecting Any Actions checkbox disables Actions Select box', async () => {
+      jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockReturnValue(response as any)
+      jest
+        .spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput')
+        .mockReturnValue(mergeResponse as any)
+
       const getGitTriggerEventDetails = jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails')
       getGitTriggerEventDetails.mockReturnValue(GetGitTriggerEventDetailsResponse as any)
 

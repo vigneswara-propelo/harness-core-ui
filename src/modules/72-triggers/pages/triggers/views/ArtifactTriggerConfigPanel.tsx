@@ -9,7 +9,6 @@ import React, { useState, useEffect } from 'react'
 import { Layout, Text, Label, Container, HarnessDocTooltip, PageSpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { useStrings } from 'framework/strings'
 import StageSelection from '@triggers/components/StageSelection/StageSelection'
@@ -220,7 +219,6 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
     formikProps.values
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
-  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
 
   const [parsedArtifactsManifests, setParsedArtifactsManifests] = useState<{
     appliedArtifact?: artifactManifestData
@@ -381,7 +379,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
           </Text>
         )}
       </div>
-      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
+      <StageSelection formikProps={formikProps} />
     </Layout.Vertical>
   )
 }

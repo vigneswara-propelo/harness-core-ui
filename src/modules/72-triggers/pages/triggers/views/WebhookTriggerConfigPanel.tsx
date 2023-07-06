@@ -50,7 +50,6 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   const [actionsOptionsMap, setActionsOptionsMap] = useState<{ [key: string]: string[] }>({})
   const { getString } = useStrings()
   const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
-  const isSelectiveStageExecEnabled = useFeatureFlag(FeatureFlag.CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION)
 
   const loading = false
 
@@ -156,7 +155,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
           {sourceRepo === GitSourceProviders.GITHUB.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
         </section>
       </div>
-      {isSelectiveStageExecEnabled ? <StageSelection formikProps={formikProps} /> : null}
+      <StageSelection formikProps={formikProps} />
     </Layout.Vertical>
   )
 }

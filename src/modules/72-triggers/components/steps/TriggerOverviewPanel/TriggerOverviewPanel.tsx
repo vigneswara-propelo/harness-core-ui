@@ -13,7 +13,6 @@ import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import { NameIdDescriptionTags } from '@common/components'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import StageSelection from '../../StageSelection/StageSelection'
 
 import css from './TriggerOverviewPanel.module.scss'
@@ -31,7 +30,6 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
     values: { originalPipeline, pipeline }
   } = formikProps
   const { getString } = useStrings()
-  const { CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION } = useFeatureFlags()
 
   // originalPipeline for new, pipeline for onEdit
   const hasLoadedPipeline = !isEmpty(originalPipeline || pipeline)
@@ -60,8 +58,7 @@ const TriggerOverviewPanel: React.FC<TriggerOverviewPanelPropsInterface> = ({
           }}
         />
       </Layout.Vertical>
-
-      {CDS_NG_TRIGGER_SELECTIVE_STAGE_EXECUTION ? <StageSelection formikProps={formikProps} /> : null}
+      <StageSelection formikProps={formikProps} />
     </Layout.Vertical>
   )
 }
