@@ -21,7 +21,7 @@ import {
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { PrismaCloudStepData } from './PrismaCloudStep'
 
-const toolFieldsTransformConfig = (data: PrismaCloudStepData) =>
+const toolFieldsTransformConfig = (data: PrismaCloudStepData): Field[] =>
   data.spec.mode === 'extraction'
     ? [
         {
@@ -46,8 +46,8 @@ const toolFieldsValidationConfig = (
       ]
     : []
 
-const extraAuthFieldsTransformConfig = (data: PrismaCloudStepData) =>
-  data.spec.mode === 'orchestration'
+const extraAuthFieldsTransformConfig = (data: PrismaCloudStepData): Field[] =>
+  data.spec.mode === 'orchestration' || data.spec.mode === 'extraction'
     ? [
         {
           name: 'spec.auth.access_id',
@@ -64,7 +64,7 @@ const extraAuthFieldsValidationConfig = (
   data: PrismaCloudStepData,
   stepViewType?: StepViewType
 ): InputSetViewValidateFieldsConfig[] =>
-  data.spec.mode === 'orchestration' || stepViewType === StepViewType.InputSet
+  data.spec.mode === 'orchestration' || data.spec.mode === 'extraction' || stepViewType === StepViewType.InputSet
     ? [
         {
           name: 'spec.auth.access_id',
@@ -92,7 +92,7 @@ export const transformValuesFieldsConfig = (data: PrismaCloudStepData): Field[] 
   return transformValuesFieldsConfigValues
 }
 
-export const editViewValidateFieldsConfig = (data: PrismaCloudStepData) => {
+export const editViewValidateFieldsConfig = (data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] => {
   const editViewValidationConfig = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),
