@@ -9770,6 +9770,13 @@ export interface StringsMap {
   'cv.verificationStatus': string
   'cv.verifications': string
   'cv.verifyStep.baselineInputInfo': string
+  'cv.verifyStep.controlNodeLabel': string
+  'cv.verifyStep.controlNodePlaceholder': string
+  'cv.verifyStep.nodeFilteringDescription': string
+  'cv.verifyStep.nodeFilteringTitle': string
+  'cv.verifyStep.shouldUseNodesFromCD': string
+  'cv.verifyStep.testNodeLabel': string
+  'cv.verifyStep.testNodePlaceholder': string
   'cv.wednesday': string
   'cv.week': string
   'cv.weeks': string

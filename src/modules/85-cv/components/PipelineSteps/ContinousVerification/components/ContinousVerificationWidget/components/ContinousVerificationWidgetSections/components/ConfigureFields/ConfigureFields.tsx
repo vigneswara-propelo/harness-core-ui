@@ -9,10 +9,13 @@ import React, { useEffect } from 'react'
 import { FormInput, AllowedTypes } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { defaultDeploymentTag, VerificationTypes } from './constants'
 import { BaselineSelect, Duration, VerificationSensitivity } from '../VerificationJobFields/VerificationJobFields'
+import NodeFilteringFields from './components/NodeFilteringFields/NodeFilteringFields'
+import { isValidNodeFilteringType } from './ConfigureFields.utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function ConfigureFields(props: {
@@ -26,6 +29,15 @@ export default function ConfigureFields(props: {
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+
+  const { CV_UI_DISPLAY_NODE_REGEX_FILTER: isNodeFilterFFEnabled } = useFeatureFlags()
+
+  useEffect(() => {
+    if (!isValidNodeFilteringType(formValues?.spec?.type)) {
+      setFieldValue('spec.spec.controlNodeRegExPattern', undefined)
+      setFieldValue('spec.spec.testNodeRegExPattern', undefined)
+    }
+  }, [formValues?.spec?.type])
 
   const renderConfigOptions = (): JSX.Element => {
     switch (formValues?.spec?.type) {
@@ -143,6 +155,10 @@ export default function ConfigureFields(props: {
         <div className={stepCss.formGroup}>
           <FormInput.CheckBox name="spec.spec.failOnNoAnalysis" label={getString('connectors.cdng.failOnNoAnalysis')} />
         </div>
+      )}
+
+      {isNodeFilterFFEnabled && isValidNodeFilteringType(formValues?.spec?.type) && (
+        <NodeFilteringFields allowableTypes={allowableTypes} />
       )}
     </>
   )

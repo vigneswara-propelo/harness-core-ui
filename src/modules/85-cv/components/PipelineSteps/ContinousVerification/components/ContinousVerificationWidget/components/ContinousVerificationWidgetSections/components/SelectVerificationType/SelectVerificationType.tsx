@@ -32,11 +32,11 @@ export default function SelectVerificationType(props: SelectVerificationTypeProp
   const { getString } = useStrings()
 
   useEffect(() => {
-    if (formik.values?.spec.type === VerificationTypes.SimpleVerification) {
+    if (formik.values?.spec?.type === VerificationTypes.SimpleVerification) {
       setFieldValue('spec.spec.sensitivity', undefined)
       setFieldValue('spec.spec.failOnNoAnalysis', undefined)
     }
-  }, [formik.values?.spec.type])
+  }, [formik.values?.spec?.type])
 
   const isSimpleVerificationEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_SIMPLE_VERIFICATION)
 

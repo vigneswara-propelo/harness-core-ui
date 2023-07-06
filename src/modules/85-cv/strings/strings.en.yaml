@@ -1293,3 +1293,12 @@ licenseBanner:
   limitExceedMessage: You have reached your service subscription limit. Consider increasing your limits to keep using services
 verifyStep:
   baselineInputInfo: If there's no record of the previous verification, analysis will not be carried out.
+  shouldUseNodesFromCD: Should use node details from CD
+  controlNodeLabel: Control Node
+  testNodeLabel: Test Node
+  nodeFilteringTitle: Node Filtering
+  nodeFilteringDescription:
+    Node filtering helps to reduce the number of nodes analyzed in continuous verification by specifying criteria
+    for inclusion. It improves performance, reduces costs, and increases accuracy by focusing on relevant nodes.
+  controlNodePlaceholder: Enter * for default  or specify Regex [canary-1 | canary-2]
+  testNodePlaceholder: Enter * for default  or specify Regex [test-1 | test-2]

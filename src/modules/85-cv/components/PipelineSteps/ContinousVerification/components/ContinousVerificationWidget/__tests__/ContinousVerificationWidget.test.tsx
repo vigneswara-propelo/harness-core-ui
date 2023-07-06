@@ -281,4 +281,57 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
       await waitFor(() => expect(screen.getByTestId(/failOnNoAnalysis/)).toBeInTheDocument())
     })
   })
+
+  describe('Node filtering', () => {
+    test('Should not render node filtering if feature flag is disabled', () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ CV_UI_DISPLAY_NODE_REGEX_FILTER: false }}>
+          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
+    })
+    test('Should render node filtering if feature flag is enabled', async () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ CV_UI_DISPLAY_NODE_REGEX_FILTER: true }}>
+          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument()
+
+      await userEvent.click(screen.getByText(/projectsOrgs.optional/))
+
+      await waitFor(() =>
+        expect(screen.getByPlaceholderText(/cv.verifyStep.controlNodePlaceholder/)).toBeInTheDocument()
+      )
+      await waitFor(() => expect(screen.getByPlaceholderText(/cv.verifyStep.testNodePlaceholder/)).toBeInTheDocument())
+    })
+
+    test('Should not render node filtering if unsupported deployment type is chosen', () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ CV_UI_DISPLAY_NODE_REGEX_FILTER: true }}>
+          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType
+                allowableTypes={[MultiTypeInputType.FIXED]}
+                formik={formikMockValuesWithSimpleVerification}
+              />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
+    })
+  })
 })
