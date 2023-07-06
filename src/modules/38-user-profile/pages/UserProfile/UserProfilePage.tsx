@@ -119,9 +119,7 @@ const UserProfilePage: React.FC = () => {
             )}
           </Layout.Vertical>
           <Layout.Horizontal spacing="huge" padding="large" className={css.authentication} flex>
-            <TwoFactorAuthentication
-              twoFactorAuthenticationDisabled={!!loginSettingsData?.resource?.twoFactorEnabled || fetchingAuthSettings}
-            />
+            <TwoFactorAuthentication twoFactorAuthenticationDisabled={fetchingAuthSettings} />
           </Layout.Horizontal>
         </Layout.Vertical>
         <div className={css.overview}>
