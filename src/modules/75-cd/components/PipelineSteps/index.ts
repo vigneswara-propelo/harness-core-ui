@@ -84,6 +84,7 @@ import { CustomDeploymentServiceSpec } from './CustomDeploymentServiceSpec/Custo
 import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 import { UpdateReleaseRepo } from '../UpdateReleaseRepo/UpdateReleaseRepo'
 import { GitOpsFetchLinkedApps } from '../GitOpsFetchLinkedApps/GitOpsFetchLinkedApps'
+import { GitOpsRevertPR } from '../GitOpsRevertPR/GitOpsRevertPR'
 import { ShellScriptProvisionStep } from './ShellScriptProvision/ShellScriptProvisionStep'
 import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/ElastigroupInfraSpec'
 import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
@@ -202,6 +203,7 @@ factory.registerStep(new SshServiceSpec())
 factory.registerStep(new WinRmServiceSpec())
 factory.registerStep(new UpdateReleaseRepo())
 factory.registerStep(new GitOpsFetchLinkedApps())
+factory.registerStep(new GitOpsRevertPR())
 factory.registerStep(new MergePR())
 factory.registerStep(new FetchInstanceScript())
 factory.registerStep(new AzureWebAppRollback())

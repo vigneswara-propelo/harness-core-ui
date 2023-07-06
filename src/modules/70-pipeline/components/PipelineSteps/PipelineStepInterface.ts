@@ -10,6 +10,7 @@ import type { PipelineInfrastructure } from 'services/cd-ng'
 
 export enum StepType {
   GitOpsSync = 'GitOpsSync',
+  RevertPR = 'RevertPR',
   StageRuntimeInput = 'StageRuntimeInput',
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',

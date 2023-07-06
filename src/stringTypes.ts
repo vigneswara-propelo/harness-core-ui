@@ -5156,6 +5156,7 @@ export interface StringsMap {
   'pipeline.stepDescription.fetchInstanceScript': string
   'pipeline.stepDescription.fetchLinkedApps': string
   'pipeline.stepDescription.mergePR': string
+  'pipeline.stepDescription.revertPR': string
   'pipeline.stepDescription.updateReleaseRepo': string
   'pipeline.stepDetails': string
   'pipeline.stepLabel': string

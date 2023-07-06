@@ -1261,6 +1261,7 @@ stepDescription:
   Jenkins: Jenkins Description.
   Bamboo: Bamboo Description.
   GitOpsSync: Gitops Sync
+  revertPR: GitOps Revert PR
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.
