@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
+import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   AllowedTypes,
   Container,
@@ -97,6 +97,35 @@ const FlagConfigurationStepWidget = forwardRef(
     const allowedTypes =
       !orgIdentifier || !projectIdentifier ? ([MultiTypeInputType.RUNTIME] as AllowedTypes) : allowableTypes
 
+    useEffect(() => {
+      if (initialValues.spec.feature !== RUNTIME_INPUT_VALUE) {
+        refetchFeatures()
+      }
+      if (initialValues.spec.environment !== RUNTIME_INPUT_VALUE) {
+        refetchEnvironments()
+      }
+    }, [initialValues.spec.environment, initialValues.spec.feature, refetchEnvironments, refetchFeatures])
+
+    const onFlagTypeChange = useCallback(
+      (type: MultiTypeInputType) => {
+        setFlagType(type)
+        if (type === MultiTypeInputType.FIXED) {
+          refetchFeatures()
+        }
+      },
+      [refetchFeatures]
+    )
+
+    const onEnvTypeChange = useCallback(
+      (type: MultiTypeInputType) => {
+        setEnvType(type)
+        if (type === MultiTypeInputType.FIXED) {
+          refetchEnvironments()
+        }
+      },
+      [refetchEnvironments]
+    )
+
     const showLoading = useMemo<boolean>(() => {
       if (isInitialRender) {
         if (!error) {
@@ -163,6 +192,7 @@ const FlagConfigurationStepWidget = forwardRef(
       if (
         flagType === MultiTypeInputType.FIXED &&
         savedFlagId &&
+        savedFlagId !== RUNTIME_INPUT_VALUE &&
         !featuresData?.features?.some(flag => flag.identifier === savedFlagId) &&
         !savedFlagData &&
         !getFlagLoading
@@ -216,7 +246,10 @@ const FlagConfigurationStepWidget = forwardRef(
         })}
       >
         {formik => {
-          setFormikRef(formikRef, formik)
+          if (formikRef && 'current' in formikRef) {
+            setFormikRef(formikRef, formik)
+          }
+
           const { values: formValues, setFieldValue } = formik
           formValuesRef.current = formValues
 
@@ -245,7 +278,7 @@ const FlagConfigurationStepWidget = forwardRef(
                 multiTypeInputProps={{
                   disabled: readonly,
                   allowableTypes: allowedTypes,
-                  onTypeChange: setEnvType,
+                  onTypeChange: onEnvTypeChange,
                   onInput: event => {
                     if (envType === MultiTypeInputType.FIXED) {
                       refetchEnvironments({
@@ -264,7 +297,7 @@ const FlagConfigurationStepWidget = forwardRef(
                 multiTypeInputProps={{
                   disabled: readonly,
                   allowableTypes: allowedTypes,
-                  onTypeChange: setFlagType,
+                  onTypeChange: onFlagTypeChange,
                   onInput: event => {
                     if (flagType === MultiTypeInputType.FIXED) {
                       refetchFeatures({
