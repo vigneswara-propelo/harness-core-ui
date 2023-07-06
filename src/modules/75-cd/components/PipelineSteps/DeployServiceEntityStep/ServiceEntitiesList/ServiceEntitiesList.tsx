@@ -7,8 +7,11 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
-import { useToggleOpen, ConfirmationDialog, AllowedTypes, ModalDialog } from '@harness/uicore'
+import { useFormikContext } from 'formik'
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
+import cx from 'classnames'
+import { cloneDeep, defaultTo } from 'lodash-es'
+import { useToggleOpen, ConfirmationDialog, AllowedTypes, ModalDialog, SelectOption } from '@harness/uicore'
 import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
 import { Intent } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'
@@ -20,7 +23,7 @@ import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentMetaData, ServiceYaml } from 'services/cd-ng'
 
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
-import type { ServiceData } from '../DeployServiceEntityUtils'
+import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import { ServiceEntityCard } from './ServiceEntityCard'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -65,6 +68,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
     isPropogateFromStage
   } = props
   const { getString } = useStrings()
+  const { values, setFieldValue } = useFormikContext<FormState>()
   const { accountId } = useParams<PipelinePathProps>()
 
   const [serviceToEdit, setServiceToEdit] = React.useState<ServiceData | null>(null)
@@ -99,30 +103,58 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
     onServiceEntityUpdate(val)
   }
 
+  function onDragEnd(result: DropResult): void {
+    if (!result.destination) return
+
+    const sourceIndex = result.source.index
+    const destinationIndex = result.destination.index
+    if (sourceIndex === destinationIndex) return
+
+    const servicesList = cloneDeep(values.services) as SelectOption[]
+    const itemToMove = servicesList.splice(sourceIndex, 1)
+    servicesList.splice(destinationIndex, 0, itemToMove[0])
+
+    setFieldValue('services', servicesList)
+  }
+
   if (loading) {
     return <Spinner />
   }
+
   return (
     <>
-      <div className={css.cardsContainer}>
-        {servicesData.map((row, index: number) => {
-          return (
-            <ServiceEntityCard
-              key={row.service.identifier}
-              service={row.service}
-              serviceInputs={row.serviceInputs}
-              onDeleteClick={setServiceToDelete}
-              onEditClick={setServiceToEdit}
-              stageIdentifier={stageIdentifier}
-              allowableTypes={allowableTypes}
-              readonly={readonly}
-              deploymentType={selectedDeploymentType}
-              isPropogateFromStage={isPropogateFromStage}
-              cardClassName={servicesData.length - 1 !== index ? css.marginBottom : ''}
-            />
-          )
-        })}
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId={'serviceDropper'}>
+          {(provided, snapshot) => {
+            return (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={cx(css.cardsContainer, { [css.draggingOver]: snapshot.isDraggingOver })}
+              >
+                {servicesData.map((row, index: number) => {
+                  return (
+                    <ServiceEntityCard
+                      key={row.service.identifier}
+                      service={row.service}
+                      serviceInputs={row.serviceInputs}
+                      onDeleteClick={setServiceToDelete}
+                      onEditClick={setServiceToEdit}
+                      stageIdentifier={stageIdentifier}
+                      allowableTypes={allowableTypes}
+                      readonly={readonly}
+                      deploymentType={selectedDeploymentType}
+                      isPropogateFromStage={isPropogateFromStage}
+                      cardClassName={servicesData.length - 1 !== index ? css.marginBottom : ''}
+                      serviceIndex={index}
+                    />
+                  )
+                })}
+              </div>
+            )
+          }}
+        </Droppable>
+      </DragDropContext>
       <ModalDialog
         isOpen={!!serviceToEdit}
         onClose={onCloseEditModal}

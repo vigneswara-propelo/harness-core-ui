@@ -9,6 +9,10 @@
   width: 1000px;
 }
 
+.dragging-over {
+  background-color: var(--grey-200);
+}
+
 .card {
   display: block;
   width: 100%;
@@ -16,6 +20,12 @@
   .toggleWrapper {
     display: flex;
     justify-content: center;
+  }
+
+  .drag-handle {
+    position: relative;
+    width: 20px;
+    margin: -14px auto 0 auto;
   }
 
   .serviceInputs {

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { defaultTo, isEqual, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
@@ -82,6 +82,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     }
   )
 
+  const sortedServiceIdentifiers = useMemo(() => [...serviceIdentifiers].sort(), [serviceIdentifiers])
+
   const {
     data: servicesDataResponse,
     isInitialLoading: loadingServicesData,
@@ -94,10 +96,10 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         orgIdentifier,
         projectIdentifier
       },
-      body: { serviceIdentifiers }
+      body: { serviceIdentifiers: sortedServiceIdentifiers }
     },
     {
-      enabled: !lazyService && serviceIdentifiers.length > 0,
+      enabled: !lazyService && sortedServiceIdentifiers.length > 0,
       staleTime: STALE_TIME
     }
   )
@@ -148,8 +150,22 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         })
       }
 
-      setServicesList(_servicesList)
-      setServicesData(_servicesData)
+      if (!isEqual(_servicesList, servicesList)) {
+        setServicesList(_servicesList)
+      }
+
+      _servicesData.sort((serviceData1, serviceData2) => {
+        const id1 = serviceData1.service.identifier
+        const id2 = serviceData2.service.identifier
+
+        const index1 = serviceIdentifiers.indexOf(id1)
+        const index2 = serviceIdentifiers.indexOf(id2)
+
+        return index1 - index2
+      })
+      if (!isEqual(_servicesData, servicesData)) {
+        setServicesData(_servicesData)
+      }
 
       const serviceListIdentifiers = _servicesData.map(svcInList => getScopedValueFromDTO(svcInList.service))
       const _nonExistingServiceIdentifiers = serviceIdentifiers.filter(
@@ -159,7 +175,13 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         setNonExistingServiceIdentifiers(_nonExistingServiceIdentifiers)
       }
     }
-  }, [loading, servicesListResponse?.data, servicesDataResponse?.data?.serviceV2YamlMetadataList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    loading,
+    servicesListResponse?.data,
+    servicesDataResponse?.data?.serviceV2YamlMetadataList,
+    sortedServiceIdentifiers
+  ])
 
   useEffect(() => {
     /* istanbul ignore else */
