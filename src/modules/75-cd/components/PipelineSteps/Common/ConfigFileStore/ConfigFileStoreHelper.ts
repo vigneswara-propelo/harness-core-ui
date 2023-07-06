@@ -23,6 +23,7 @@ export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactor
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory' | 'Harness' | 'S3'
 
 export const TerragruntAllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket']
+export const TerraformAllowedTypes = [...AllowedTypes, 'S3']
 
 export const tfVarIcons: any = {
   Git: 'service-github',

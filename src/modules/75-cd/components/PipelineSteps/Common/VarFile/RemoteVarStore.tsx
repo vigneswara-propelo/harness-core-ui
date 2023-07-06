@@ -31,12 +31,11 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConnectorRefSchema } from '@common/utils/Validation'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
-  AllowedTypes,
   ConnectorLabelMap,
   ConnectorMap,
   ConnectorTypes,
+  TerraformAllowedTypes,
   TerragruntAllowedTypes,
   tfVarIcons
 } from '../ConfigFileStore/ConfigFileStoreHelper'
@@ -67,7 +66,6 @@ export const RemoteVarStore: React.FC<StepProps<any> & RemoteVarStoreProps> = ({
 }) => {
   const [selectedType, setSelectedType] = React.useState('')
   const { getString } = useStrings()
-  const { CDS_TERRAFORM_S3_NG } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -96,8 +94,7 @@ export const RemoteVarStore: React.FC<StepProps<any> & RemoteVarStoreProps> = ({
     !!selectedType && getString(ConnectorLabelMap[selectedType as ConnectorTypes])
   } ${getString('connector')}`
 
-  const S3Support = CDS_TERRAFORM_S3_NG ? [...AllowedTypes, 'S3'] : AllowedTypes
-  const remoteStoreAllowedTypes = isTerragrunt ? TerragruntAllowedTypes : S3Support
+  const remoteStoreAllowedTypes = isTerragrunt ? TerragruntAllowedTypes : TerraformAllowedTypes
 
   return (
     <Layout.Vertical padding="small" className={css.tfVarStore}>
