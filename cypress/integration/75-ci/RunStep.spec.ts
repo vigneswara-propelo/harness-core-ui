@@ -23,6 +23,7 @@ import { getRuntimeInputKeys } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
 import { getTriggerListAPI } from '../72-triggers/constants'
 import { addTemplate, selectStepInStepLibrary } from '../../support/75-ci/CIpipeline.utils'
+import { enterNameDescriptionAndTags } from '../72-triggers/triggers-helpers/enterNameDescriptionAndTags'
 // Data from QA, CI Automation Account
 // https://qa.harness.io/ng/#/account/h61p38AZSV6MzEkpWWBtew/ci/orgs/default/projects/mtran/pipelines/CI_Pipeline1/pipeline-studio/
 
@@ -203,16 +204,10 @@ describe('Triggers', () => {
   })
 
   it('TRIGGERS: Show all runtime inputs in Visual view with correct full-page styling', () => {
-    cy.visitPageAssertion()
-    cy.wait('@emptyTriggersList')
-    cy.wait(1000)
-    cy.contains('span', 'Add New Trigger').should('be.visible')
-    cy.get('.NoDataCard--buttonContainer').contains('span', 'Add New Trigger').click()
-    cy.contains('section', 'Custom').should('be.visible')
-    cy.get('section').contains('Custom').click()
-    cy.wait(1000)
-    cy.contains('span', 'Pipeline Input').should('be.visible')
-    cy.get('span').contains('Pipeline Input').click()
+    cy.contains('span', '+ New Trigger').click()
+    cy.get(`section[data-cy="Webhook_Custom"]`).click()
+    enterNameDescriptionAndTags({ triggerName: 'Custom Webhook Trigger' })
+    cy.contains('span', 'Pipeline Input').should('be.visible').click()
 
     runtimeInputLabels.forEach(fieldName => {
       cy.get('[class*="PipelineInputSetForm"] label').contains(fieldName)
