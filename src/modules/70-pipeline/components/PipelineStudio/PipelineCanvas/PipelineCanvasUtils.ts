@@ -120,12 +120,12 @@ const getStepIdPaths = (
     .reduce<string[]>((paths, stepData) => {
       if ((stepData as ExecutionWrapperConfig)?.step?.identifier) {
         const stepId = (stepData as ExecutionWrapperConfig)?.step?.identifier as string
-        paths.push(stepId)
+        paths.push(`step.${stepId}`)
       } else if ((stepData as ExecutionWrapperConfig)?.parallel) {
         paths.push(...getStepIdPaths((stepData as ExecutionWrapperConfig)?.parallel, ''))
       } else if ((stepData as ExecutionWrapperConfig)?.stepGroup) {
         const stepGroupIdentifier = (stepData as ExecutionWrapperConfig)?.stepGroup?.identifier as string
-        paths.push(stepGroupIdentifier)
+        paths.push(`stepGroup.${stepGroupIdentifier}`)
         paths.push(
           ...getStepIdPaths((stepData as ExecutionWrapperConfig)?.stepGroup?.steps, `${stepGroupIdentifier}.steps`)
         )
