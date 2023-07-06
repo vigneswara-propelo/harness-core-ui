@@ -125,6 +125,28 @@ describe('TargetingRulesTab', () => {
       expect(onVariationDropdown).toHaveValue('False')
     })
 
+    test('it should show the confirm modal when trying to save an altered default rule, that affects the current flag state', async () => {
+      renderComponent()
+
+      const onVariationDropdown = document.querySelector('input[name="onVariation"]') as HTMLSelectElement
+      expect(onVariationDropdown).toHaveValue('True')
+      await userEvent.click(onVariationDropdown)
+
+      const onVariationDropdownOptions = screen.getAllByRole('listitem')
+      expect(onVariationDropdownOptions).toHaveLength(2)
+
+      await userEvent.click(onVariationDropdownOptions[1])
+      expect(onVariationDropdown).toHaveValue('False')
+
+      // click save
+      const saveButton = screen.getByRole('button', { name: 'save' })
+      expect(saveButton).toBeInTheDocument()
+      await userEvent.click(saveButton)
+
+      expect(screen.getByText('cf.featureFlags.rules.ruleChangeModalTitle')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.rules.ruleChangeModalDescriptionEnabled')).toBeInTheDocument()
+    })
+
     test('it should use default onVariation if environment variation does not exist', async () => {
       renderComponent({
         featureFlagData: {

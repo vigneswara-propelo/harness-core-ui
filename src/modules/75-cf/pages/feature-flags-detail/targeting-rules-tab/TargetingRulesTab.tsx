@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Container, Formik, FormikForm, Layout } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import { Card, Container, Formik, FormikForm, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { FieldArray, FieldArrayRenderProps } from 'formik'
@@ -21,12 +22,17 @@ import {
 } from 'services/cf'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-
+import { String, useStrings } from 'framework/strings'
 import usePatchFeatureFlag from './hooks/usePatchFeatureFlag'
 import TargetingRulesTabFooter from './components/tab-targeting-footer/TargetingRulesTabFooter'
-
 import FlagEnabledRulesCard from './components/flag-enabled-rules-card/FlagEnabledRulesCard'
-import { FormVariationMap, VariationPercentageRollout, TargetingRuleItemType, TargetingRuleItemStatus } from './types'
+import {
+  FormVariationMap,
+  VariationPercentageRollout,
+  TargetingRuleItemType,
+  TargetingRuleItemStatus,
+  TargetingRulesFormValues
+} from './types'
 import useFeatureEnabled from './hooks/useFeatureEnabled'
 import DefaultRules from './components/default-rules/DefaultRules'
 import useTargetingRulesFormValidation from './hooks/useTargetingRulesFormValidation'
@@ -46,6 +52,9 @@ const TargetingRulesTab = ({
 }: TargetingRulesTabProps): ReactElement => {
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
+  const { getString } = useStrings()
+  const [newValues, setNewValues] = useState<TargetingRulesFormValues>()
+  const [variationValue, setVariationValue] = useState<string>()
 
   const debounce = 500
 
@@ -170,6 +179,59 @@ const TargetingRulesTab = ({
     arrayHelpers.replace(removedPercentageRolloutIndex, variation)
   }
 
+  const capitalizeFirstChar = (str: string): string => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+  }
+
+  const valStateOn = initialValues.state === 'on'
+
+  const { openDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: (
+      <String
+        className={css.modalDescription}
+        stringID={
+          valStateOn
+            ? 'cf.featureFlags.rules.ruleChangeModalDescriptionEnabled'
+            : 'cf.featureFlags.rules.ruleChangeModalDescriptionDisabled'
+        }
+        vars={{ variationValue: variationValue ? capitalizeFirstChar(variationValue) : '' }}
+        useRichText
+      />
+    ),
+    titleText: getString('cf.featureFlags.rules.ruleChangeModalTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: isConfirmed => {
+      if (isConfirmed && newValues) {
+        saveChanges(newValues)
+      }
+    }
+  })
+
+  const onSubmit = useCallback(
+    async (values: TargetingRulesFormValues) => {
+      if (valStateOn) {
+        if (initialValues.onVariation !== values.onVariation) {
+          setNewValues(values)
+          setVariationValue(values.onVariation)
+          openDialog()
+        } else {
+          saveChanges(values)
+        }
+      } else {
+        if (initialValues.offVariation !== values.offVariation) {
+          setNewValues(values)
+          setVariationValue(values.offVariation)
+          openDialog()
+        } else {
+          saveChanges(values)
+        }
+      }
+    },
+    [initialValues.offVariation, initialValues.onVariation, initialValues.state, openDialog, saveChanges]
+  )
+
   return (
     <Formik
       enableReinitialize={true}
@@ -178,9 +240,7 @@ const TargetingRulesTab = ({
       formName="targeting-rules-form"
       initialValues={initialValues}
       validate={values => validate(values)}
-      onSubmit={values => {
-        saveChanges(values)
-      }}
+      onSubmit={onSubmit}
     >
       {formikProps => (
         <FormikForm data-testid="targeting-rules-tab-form" disabled={disabled}>

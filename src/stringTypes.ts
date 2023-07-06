@@ -8097,6 +8097,9 @@ export interface StringsMap {
   'cf.featureFlags.rules.defaultRules': string
   'cf.featureFlags.rules.editRules': string
   'cf.featureFlags.rules.onRequest': string
+  'cf.featureFlags.rules.ruleChangeModalDescriptionDisabled': string
+  'cf.featureFlags.rules.ruleChangeModalDescriptionEnabled': string
+  'cf.featureFlags.rules.ruleChangeModalTitle': string
   'cf.featureFlags.rules.searchTargetGroups': string
   'cf.featureFlags.rules.searchTargets': string
   'cf.featureFlags.rules.specificTargeting': string

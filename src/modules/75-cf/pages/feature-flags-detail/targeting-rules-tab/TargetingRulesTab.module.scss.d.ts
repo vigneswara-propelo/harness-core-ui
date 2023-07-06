@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly flagRulesSection: string
+  readonly modalDescription: string
   readonly tabContainer: string
 }
 export default styles

@@ -186,6 +186,9 @@ featureFlags:
     onRequest: On Request
     addTargeting: Add Targeting
     specificTargeting: Specific Targeting
+    ruleChangeModalTitle: Changing default rule?
+    ruleChangeModalDescriptionEnabled: 'Changing the default rule will result in the value of <strong>{{ variationValue }}</strong> being served to all SDK clients unless there are specific rules in place. <br/><br/> Are you sure you want to make this change?'
+    ruleChangeModalDescriptionDisabled: 'Changing the default rule will result in the value of <strong>{{ variationValue }}</strong> being served to all SDK clients. <br/><br/> Are you sure you want to make this change?'
     toTargetGroups: To Target Groups
     toTargets: To Targets
     searchTargetGroups: 'Search Target Groups'
