@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import type { InterruptEffectDTO, GraphLayoutNode } from 'services/pipeline-ng'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import * as utils from '../executionUtils'
 
 import stageGraph from './stage-graph.json'
@@ -381,7 +382,7 @@ describe('ExecutionUtils tests', () => {
     })
   })
 
-  describe('Utils for copilot integration', () => {
+  describe('Utils for Harness AIDA integration', () => {
     test('Test showHarnessCoPilot method', () => {
       const args = {
         pipelineStagesMap: new Map<string, GraphLayoutNode>([['', {}]]),
@@ -487,6 +488,14 @@ describe('ExecutionUtils tests', () => {
     test('Test getInfraTypeFromStageForCurrentStep method', () => {
       expect(
         utils.getInfraTypeFromStageForCurrentStep({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage', {}]]),
+          selectedStageId: 'CD_stage',
+          pipelineExecutionDetail: {}
+        })
+      ).toBeUndefined()
+
+      expect(
+        utils.getInfraTypeFromStageForCurrentStep({
           pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage', nodeLayoutForCDStage]]),
           selectedStageId: 'CD_stage',
           pipelineExecutionDetail: {}
@@ -512,6 +521,99 @@ describe('ExecutionUtils tests', () => {
           pipelineExecutionDetail: ciStagePipelineExecutionDetails
         })
       ).toBe('HostedVm')
+    })
+
+    test('Test getOSTypeAndArchFromStageForCurrentStep method', () => {
+      let osTypeAndArch = utils.getOSTypeAndArchFromStageForCurrentStep({
+        pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage', nodeLayoutForCIStage]]),
+        selectedStageId: 'CI_stage',
+        pipelineExecutionDetail: ciStagePipelineExecutionDetails
+      })
+      expect(osTypeAndArch?.arch).toBe('Amd64')
+      expect(osTypeAndArch?.os).toBe('Linux')
+
+      osTypeAndArch = utils.getOSTypeAndArchFromStageForCurrentStep({
+        pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage', nodeLayoutForCDStage]]),
+        selectedStageId: 'CD_stage',
+        pipelineExecutionDetail: {}
+      })
+      expect(osTypeAndArch?.arch).toBeUndefined()
+      expect(osTypeAndArch?.os).toBeUndefined()
+    })
+
+    test('Test getCurrentModuleInfo method', () => {
+      expect(
+        utils.getCurrentModuleInfo({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage', nodeLayoutForCIStage]]),
+          selectedStageId: 'CI_stage',
+          pipelineExecutionDetail: ciStagePipelineExecutionDetails
+        })
+      ).not.toBeUndefined()
+      expect(
+        utils.getCurrentModuleInfo({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage', nodeLayoutForCIStage]]),
+          selectedStageId: 'CD_stage',
+          pipelineExecutionDetail: cdStagePipelineExecutionDetails
+        })
+      ).not.toBeUndefined()
+      expect(
+        utils.getCurrentModuleInfo({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage', {}]]),
+          selectedStageId: 'CD_stage',
+          pipelineExecutionDetail: {}
+        })
+      ).toBeNull()
+    })
+
+    test('Test getPluginUsedFromStepParams method', () => {
+      expect(utils.getPluginUsedFromStepParams({}, StepType.Run)).toBe('')
+      expect(
+        utils.getPluginUsedFromStepParams(
+          {
+            stepParameters: {
+              identifier: 'bitriseStep',
+              name: 'Bitrise Step',
+              type: 'Bitrise',
+              spec: {
+                uses: 'plugins/download'
+              }
+            } as any
+          },
+          StepType.BitrisePlugin
+        )
+      ).toBe('plugins/download')
+
+      expect(
+        utils.getPluginUsedFromStepParams(
+          {
+            stepParameters: {
+              identifier: 'ghaStep',
+              name: 'Github Action Step',
+              type: 'Action',
+              spec: {
+                uses: 'actions/checkout@v3'
+              }
+            } as any
+          },
+          StepType.GHAPlugin
+        )
+      ).toBe('actions/checkout@v3')
+
+      expect(
+        utils.getPluginUsedFromStepParams(
+          {
+            stepParameters: {
+              identifier: 'pluginStep',
+              name: 'Plugin Step',
+              type: 'Plugin',
+              spec: {
+                image: 'node'
+              }
+            } as any
+          },
+          StepType.Plugin
+        )
+      ).toBe('node')
     })
   })
 })

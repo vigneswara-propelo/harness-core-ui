@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { Button, ButtonVariation, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
-import { Infrastructure, RcaRequestBody, ResponseRemediation, rcaPromise, Error } from 'services/logs'
+import { RcaRequestBody, ResponseRemediation, rcaPromise, Error } from 'services/logs'
 import { useStrings } from 'framework/strings'
 import { pluralize } from '@common/utils/StringUtils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -25,10 +25,14 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import {
   getCommandFromCurrentStep,
   getInfraTypeFromStageForCurrentStep,
-  resolveCurrentStep
+  resolveCurrentStep,
+  getOSTypeAndArchFromStageForCurrentStep,
+  getSelectedStageModule,
+  getPluginUsedFromStepParams
 } from '@pipeline/utils/executionUtils'
 import type { LogsContentProps } from '@pipeline/factories/ExecutionFactory/types'
 import { getTaskFromExecutableResponse } from '../LogsContent/LogsState/createSections'
+import { StepType } from '../PipelineSteps/PipelineStepInterface'
 
 import css from './HarnessCopilot.module.scss'
 
@@ -126,14 +130,21 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   }, [logsToken, pipelineStagesMap, selectedStageId, pipelineExecutionDetail, selectedStepId, selectedStep, accountId])
 
   const getPostAPIBodyPayload = useCallback((): RcaRequestBody => {
+    const commonArgs = {
+      pipelineStagesMap,
+      selectedStageId,
+      pipelineExecutionDetail
+    }
+    const step_type = get(selectedStep, 'stepType', '') as StepType
+    const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId)
     return {
-      infra: getInfraTypeFromStageForCurrentStep({
-        pipelineStagesMap,
-        selectedStageId,
-        pipelineExecutionDetail
-      }) as Infrastructure['type'],
-      command: getCommandFromCurrentStep({ step: selectedStep, pipelineStagesMap, selectedStageId }),
-      step_type: get(selectedStep, 'stepType', ''),
+      infra: getInfraTypeFromStageForCurrentStep(commonArgs),
+      ...(currentModule === 'ci' && {
+        ...getOSTypeAndArchFromStageForCurrentStep(commonArgs),
+        plugin: getPluginUsedFromStepParams(selectedStep, step_type),
+        command: getCommandFromCurrentStep({ step: selectedStep, pipelineStagesMap, selectedStageId })
+      }),
+      step_type,
       accountID: accountId,
       err_summary:
         get(selectedStep, 'failureInfo.message', '') ||

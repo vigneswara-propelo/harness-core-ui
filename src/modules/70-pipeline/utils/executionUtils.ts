@@ -34,6 +34,7 @@ import type {
 } from 'services/pipeline-ng'
 import type { CDStageModuleInfo } from 'services/cd-ng'
 import type { CIPipelineStageModuleInfo } from 'services/ci'
+import { Infrastructure, Platform } from 'services/logs'
 import {
   ExecutionPipelineNode,
   ExecutionPipelineNodeType,
@@ -1515,6 +1516,12 @@ export const getFavIconDetailsFromPipelineExecutionStatus = (pipelineStatus: Pip
   return undefined
 }
 
+interface RCAUtilsInterface {
+  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
+  selectedStageId: ExecutionContextParams['selectedStageId']
+  pipelineExecutionDetail: ExecutionContextParams['pipelineExecutionDetail']
+}
+
 export const getSelectedStageModule = (
   pipelineStagesMap: ExecutionContextParams['pipelineStagesMap'],
   selectedStageId: ExecutionContextParams['selectedStageId']
@@ -1526,15 +1533,11 @@ export const getSelectedStageModule = (
   return currentStage.module as Module
 }
 
-const getCurrentModuleInfo = ({
+export const getCurrentModuleInfo = ({
   pipelineStagesMap,
   selectedStageId,
   pipelineExecutionDetail
-}: {
-  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
-  selectedStageId: ExecutionContextParams['selectedStageId']
-  pipelineExecutionDetail: ExecutionContextParams['pipelineExecutionDetail']
-}): CDStageModuleInfo | CIPipelineStageModuleInfo => {
+}: RCAUtilsInterface): CDStageModuleInfo | CIPipelineStageModuleInfo | null => {
   const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId)
   switch (currentModule) {
     case 'cd':
@@ -1542,7 +1545,7 @@ const getCurrentModuleInfo = ({
     case 'ci':
       return get(pipelineExecutionDetail, 'pipelineExecutionSummary.moduleInfo.ci.ciPipelineStageModuleInfo', {})
     default:
-      return {}
+      return null
   }
 }
 
@@ -1550,11 +1553,7 @@ export const getInfraTypeFromStageForCurrentStep = ({
   pipelineStagesMap,
   selectedStageId,
   pipelineExecutionDetail
-}: {
-  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
-  selectedStageId: ExecutionContextParams['selectedStageId']
-  pipelineExecutionDetail: ExecutionContextParams['pipelineExecutionDetail']
-}): unknown => {
+}: RCAUtilsInterface): Infrastructure['type'] => {
   const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module
   const currentModuleInfo = getCurrentModuleInfo({
     pipelineStagesMap,
@@ -1575,10 +1574,7 @@ export const showHarnessCoPilot = ({
   pipelineExecutionDetail,
   enableForCI = false,
   enableForCD = false
-}: {
-  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
-  selectedStageId: ExecutionContextParams['selectedStageId']
-  pipelineExecutionDetail: ExecutionContextParams['pipelineExecutionDetail']
+}: RCAUtilsInterface & {
   enableForCI?: boolean
   enableForCD?: boolean
 }): boolean => {
@@ -1612,6 +1608,37 @@ export const getCommandFromCurrentStep = ({
       return get(step, 'stepParameters.spec.source.spec.script', '') as string
     case 'ci':
       return get(step, 'stepParameters.spec.command', '') as string
+    default:
+      return ''
+  }
+}
+
+export const getOSTypeAndArchFromStageForCurrentStep = ({
+  pipelineStagesMap,
+  selectedStageId,
+  pipelineExecutionDetail
+}: RCAUtilsInterface): { os: Platform['os']; arch: Platform['arch'] } | null => {
+  const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module
+  const currentModuleInfo = getCurrentModuleInfo({
+    pipelineStagesMap,
+    selectedStageId,
+    pipelineExecutionDetail
+  })
+  switch (currentModule) {
+    case 'ci':
+      return { os: get(currentModuleInfo, 'osType', ''), arch: get(currentModuleInfo, 'osArch', '') }
+    default:
+      return null
+  }
+}
+
+export const getPluginUsedFromStepParams = (selectedStep: ExecutionNode, stepType: StepType): string => {
+  switch (stepType) {
+    case StepType.BitrisePlugin:
+    case StepType.GHAPlugin:
+      return get(selectedStep, 'stepParameters.spec.uses', '')
+    case StepType.Plugin:
+      return get(selectedStep, 'stepParameters.spec.image', '')
     default:
       return ''
   }

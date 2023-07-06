@@ -12,6 +12,11 @@ import { Get, GetProps, useGet, UseGetProps } from 'restful-react'
 
 import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from '../config'
 
+export interface Platform {
+  arch?: 'Amd64' | 'Arm64'
+  os?: 'Linux' | 'MacOS' | 'Windows'
+}
+
 export interface Error {
   /**
    * Details about the error encountered
@@ -172,6 +177,9 @@ export interface RcaRequestBody {
   command?: string
   step_type?: string
   keys?: string[]
+  os?: Platform['os']
+  arch?: Platform['arch']
+  plugin?: string
 }
 
 export type LogBlobProps = Omit<GetProps<void, void, LogBlobQueryParams, void>, 'path'>
