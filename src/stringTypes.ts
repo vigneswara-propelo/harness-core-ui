@@ -4447,6 +4447,7 @@ export interface StringsMap {
   'pipeline.infraSpecifications.serviceAccountName': string
   'pipeline.infraSpecifications.serviceAccountNamePlaceholder': string
   'pipeline.infraSpecifications.validation.requiredExistingStage': string
+  'pipeline.inputSetDiffTitle': string
   'pipeline.inputSetErrorStrip.errorInfo': string
   'pipeline.inputSetErrorStrip.existingYaml': string
   'pipeline.inputSetErrorStrip.goToInpSetBtn': string

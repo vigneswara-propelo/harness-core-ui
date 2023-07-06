@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, omit, isUndefined, get, omitBy } from 'lodash-es'
+import { defaultTo, isEmpty, omit, isUndefined, get, omitBy, isEqual } from 'lodash-es'
 import {
   Button,
   Container,
@@ -58,7 +58,6 @@ import {
   getInputSetGitDetails,
   shouldDisableGitDetailsFields
 } from '@pipeline/utils/inputSetUtils'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { SettingType } from '@common/constants/Utils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
@@ -122,6 +121,8 @@ interface FormikInputSetFormProps {
   className?: string
   onCancel?: () => void
   filePath?: string
+  handleFormDirty: (dirty: boolean) => void
+  setIsSaveEnabled: (enabled: boolean) => void
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -192,41 +193,7 @@ function useValidateValues({
     }
   }
 }
-
-const onSubmitClick = (
-  formikProps: FormikProps<InputSetDTO & GitContextProps & StoreMetadata>,
-  setFormErrors: React.Dispatch<React.SetStateAction<Record<string, unknown>>>,
-  handleSubmit: (
-    inputSetObjWithGitInfo: InputSetDTO,
-    gitDetails?: EntityGitDetails,
-    storeMetadata?: StoreMetadata
-  ) => Promise<void>
-): void => {
-  formikProps.validateForm().then(errors => {
-    setFormErrors(errors)
-    if (formikProps?.values.name?.length && formikProps?.values.identifier?.length && isEmpty(formikProps.errors)) {
-      handleSubmit(
-        formikProps.values,
-        {
-          repoIdentifier: formikProps.values.repo,
-          branch: formikProps.values.branch,
-          repoName: formikProps.values.repo
-        },
-        {
-          connectorRef:
-            (formikProps.values.connectorRef as unknown as ConnectorSelectedValue)?.value ||
-            formikProps.values.connectorRef,
-          repoName: formikProps.values.repo,
-          branch: formikProps.values.branch,
-          filePath: formikProps.values.filePath,
-          storeType: formikProps.values.storeType
-        }
-      )
-    }
-  })
-}
-
-export default function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactElement {
+function FormikInputSetForm(props: FormikInputSetFormProps, childRef: any): React.ReactElement {
   const {
     inputSet,
     template,
@@ -245,7 +212,9 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     setYamlHandler,
     className,
     onCancel,
-    filePath
+    filePath,
+    handleFormDirty,
+    setIsSaveEnabled
   } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -278,6 +247,32 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     queryParams: { accountIdentifier: accountId },
     lazy: false
   })
+
+  const formikRef1 = React.useRef<FormikProps<InputSetDTO & GitContextProps & StoreMetadata>>(null)
+
+  React.useImperativeHandle(childRef, () => ({
+    isFormDirty: () => {
+      const test = isEqual(formikRef1?.current?.values, inputSet)
+      return test
+    },
+    submitForm() {
+      if (formikRef1.current) {
+        return formikRef1.current.submitForm()
+      }
+      return Promise.resolve()
+    },
+    validateForm() {
+      if (formikRef1.current) {
+        return formikRef1.current.validateForm()
+      }
+      return Promise.resolve()
+    },
+    isValidForm() {
+      if (formikRef1.current) {
+        return formikRef1.current.isValid
+      }
+    }
+  }))
 
   React.useEffect(() => {
     if (allowDifferentRepoSettingsError) {
@@ -400,16 +395,26 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
               }
             )
           }}
+          innerRef={formikRef1}
         >
           {formikProps => {
             formikRef.current = formikProps
+            const handleChange = (): void => {
+              // form dirty is determined on formvalues.pipeline
+              // This is used to determine to show the unsaved changes button
+              const isIpSetPipelineChanged = isEqual(formikRef?.current?.values?.pipeline, inputSet?.pipeline)
+              // Save is enabled on the whole form
+              const isIpSetFormDirty = isEqual(formikRef?.current?.values, inputSet)
+              handleFormDirty(!isIpSetPipelineChanged)
+              setIsSaveEnabled(!isIpSetFormDirty)
+            }
             return (
               <>
                 {selectedView === SelectedView.VISUAL ? (
                   <div className={css.inputsetGrid}>
                     <div>
                       <ErrorsStrip formErrors={formErrors} domRef={formRefDom} />
-                      <FormikForm>
+                      <FormikForm onChange={handleChange}>
                         {executionView ? null : (
                           <Layout.Vertical className={css.content} padding="xlarge">
                             <NameIdDescriptionTags
@@ -471,24 +476,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                             )}
                           </Layout.Vertical>
                         )}
-                        <Layout.Horizontal className={css.footer} padding="xlarge">
-                          <Button
-                            variation={ButtonVariation.PRIMARY}
-                            type="submit"
-                            onClick={e => {
-                              e.preventDefault()
-                              onSubmitClick(formikProps, setFormErrors, handleSubmit)
-                            }}
-                            text={getString('save')}
-                            disabled={!isEditable}
-                          />
-                          &nbsp; &nbsp;
-                          <Button
-                            variation={ButtonVariation.TERTIARY}
-                            onClick={onCancel || history.goBack}
-                            text={getString('cancel')}
-                          />
-                        </Layout.Horizontal>
                       </FormikForm>
                     </div>
                   </div>
@@ -566,3 +553,5 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     </Container>
   )
 }
+
+export const FormikInputSetFormWithRef = React.forwardRef(FormikInputSetForm)

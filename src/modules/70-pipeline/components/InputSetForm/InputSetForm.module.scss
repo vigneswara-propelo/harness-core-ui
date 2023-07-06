@@ -29,7 +29,7 @@
 .reconcileMenu {
   display: inline-block;
   position: absolute;
-  right: 5%;
+  right: 12%;
   transform: translate(50%, 0);
 }
 
@@ -176,5 +176,25 @@
         background-color: var(--white);
       }
     }
+  }
+}
+
+.unsavedChanges {
+  & > :global(.bp3-button-text) {
+    color: var(--orange-600) !important;
+    text-decoration: underline;
+    text-decoration-color: var(--orange-600);
+    font-size: var(--font-size-small) !important;
+  }
+  line-height: 15px;
+
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: var(--orange-600);
+    display: inline-block;
+    margin: 0 4px;
   }
 }

@@ -42,7 +42,7 @@ import {
   GetOverlayInputSetEdit,
   MergedPipelineResponse
 } from './InputSetMocks'
-import FormikInputSetForm, { isYamlPresent, showPipelineInputSetForm } from '../FormikInputSetForm'
+import { FormikInputSetFormWithRef, isYamlPresent, showPipelineInputSetForm } from '../FormikInputSetForm'
 import NewInputSetModal from '../NewInputSetModal'
 
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS' })
@@ -414,7 +414,7 @@ describe.skip('Render Forms - Snapshot Testing', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <FormikInputSetForm
+        <FormikInputSetFormWithRef
           template={templateData as ResponseInputSetTemplateWithReplacedExpressionsResponse}
           pipeline={PipelineResponse.data}
           inputSet={{
@@ -448,6 +448,8 @@ describe.skip('Render Forms - Snapshot Testing', () => {
             getYAMLValidationErrorMap: () => new Map(),
             setLatestYaml: () => ''
           }}
+          handleFormDirty={jest.fn()}
+          setIsSaveEnabled={jest.fn()}
         />
       </TestWrapper>
     )
@@ -478,7 +480,7 @@ describe.skip('Render Forms - Snapshot Testing', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <FormikInputSetForm
+        <FormikInputSetFormWithRef
           template={templateData as ResponseInputSetTemplateWithReplacedExpressionsResponse}
           pipeline={PipelineResponse.data}
           inputSet={{
@@ -503,6 +505,8 @@ describe.skip('Render Forms - Snapshot Testing', () => {
             getYAMLValidationErrorMap: () => new Map(),
             setLatestYaml: () => ''
           }}
+          handleFormDirty={jest.fn()}
+          setIsSaveEnabled={jest.fn()}
         />
       </TestWrapper>
     )

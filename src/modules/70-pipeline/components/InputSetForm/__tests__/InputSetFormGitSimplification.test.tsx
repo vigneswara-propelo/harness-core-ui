@@ -12,11 +12,12 @@ import {
   fireEvent,
   getByText as getElementByText,
   findByRole,
-  getByRole
+  getByRole,
+  act
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
@@ -159,68 +160,79 @@ describe('InputSetFrom testing - When Git Simplification is enabled', () => {
   describe('Edit InputSet', () => {
     test('render Input Set Form view in edit mode', async () => {
       const { container } = renderExistingInputSet()
+      const nameInpt = queryByNameAttribute('name', container)
 
-      const saveBtn = await findByRole(container, 'button', { name: 'save' })
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(saveBtn!)
-      let saveToGitSaveBtn: HTMLElement
-      await waitFor(() => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
-        expect(savePipelinesToGitHeader).toBeInTheDocument()
+      act(async () => {
+        fireEvent.change(nameInpt!, { target: { value: 'asd2' } })
 
-        saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
-        expect(saveToGitSaveBtn).toBeInTheDocument()
-      })
-      await userEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => {
-        expect(updateInputSet).toHaveBeenCalled()
-        expect(updateInputSet).toHaveBeenCalledWith(
-          gitSimpplificationMockData.createInputSetCallFirstArg,
-          gitSimpplificationMockData.updateInputSetCallSecondArg
-        )
-      })
-      await waitFor(async () => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        expect(getElementByText(portalDiv, 'success')).toBeInTheDocument()
+        const saveBtn = await findByRole(container, 'button', { name: 'save' })
+
+        expect(saveBtn).toBeInTheDocument()
+        fireEvent.click(saveBtn!)
+        let saveToGitSaveBtn: HTMLElement
+        await waitFor(() => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
+          expect(savePipelinesToGitHeader).toBeInTheDocument()
+
+          saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
+          expect(saveToGitSaveBtn).toBeInTheDocument()
+        })
+        await userEvent.click(saveToGitSaveBtn!)
+        await waitFor(() => {
+          expect(updateInputSet).toHaveBeenCalled()
+          expect(updateInputSet).toHaveBeenCalledWith(
+            gitSimpplificationMockData.createInputSetCallFirstArg,
+            gitSimpplificationMockData.updateInputSetCallSecondArg
+          )
+        })
+        await waitFor(async () => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          expect(getElementByText(portalDiv, 'success')).toBeInTheDocument()
+        })
       })
     })
 
     test('save an existing input set to a new branch', async () => {
       const { container } = renderExistingInputSet()
+      const nameInpt = queryByNameAttribute('name', container)
 
-      const saveBtn = await findByRole(container, 'button', { name: 'save' })
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(saveBtn!)
-      let saveToGitSaveBtn: HTMLElement
-      await waitFor(() => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
-        expect(savePipelinesToGitHeader).toBeInTheDocument()
+      act(async () => {
+        fireEvent.change(nameInpt!, { target: { value: 'asd2' } })
 
-        const commitToANewBranch = getElementByText(portalDiv, 'common.git.newBranchCommitLabel')
-        fireEvent.click(commitToANewBranch)
+        const saveBtn = await findByRole(container, 'button', { name: 'save' })
+        expect(saveBtn).toBeInTheDocument()
+        fireEvent.click(saveBtn!)
+        let saveToGitSaveBtn: HTMLElement
+        await waitFor(() => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
+          expect(savePipelinesToGitHeader).toBeInTheDocument()
 
-        const branchInput = portalDiv.querySelector('input[name="branch"]')
-        expect(branchInput).not.toBeDisabled()
-        expect(branchInput?.getAttribute('value')).toBe('feature-patch')
+          const commitToANewBranch = getElementByText(portalDiv, 'common.git.newBranchCommitLabel')
+          fireEvent.click(commitToANewBranch)
 
-        fireEvent.change(branchInput!, { target: { value: 'feature1' } })
+          const branchInput = portalDiv.querySelector('input[name="branch"]')
+          expect(branchInput).not.toBeDisabled()
+          expect(branchInput?.getAttribute('value')).toBe('feature-patch')
 
-        saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
-        expect(saveToGitSaveBtn).toBeInTheDocument()
-      })
-      await userEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => {
-        expect(updateInputSet).toHaveBeenCalled()
-        expect(updateInputSet).toHaveBeenCalledWith(
-          gitSimpplificationMockData.createInputSetCallFirstArg,
-          gitSimpplificationMockData.updateInputSetCallSecondArgNewBranch
-        )
-      })
-      await waitFor(async () => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        expect(getElementByText(portalDiv, 'success')).toBeInTheDocument()
+          fireEvent.change(branchInput!, { target: { value: 'feature1' } })
+
+          saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
+          expect(saveToGitSaveBtn).toBeInTheDocument()
+        })
+        await userEvent.click(saveToGitSaveBtn!)
+        await waitFor(() => {
+          expect(updateInputSet).toHaveBeenCalled()
+          expect(updateInputSet).toHaveBeenCalledWith(
+            gitSimpplificationMockData.createInputSetCallFirstArg,
+            gitSimpplificationMockData.updateInputSetCallSecondArgNewBranch
+          )
+        })
+        await waitFor(async () => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          expect(getElementByText(portalDiv, 'success')).toBeInTheDocument()
+        })
       })
     })
   })
@@ -261,30 +273,33 @@ describe('InputSetFrom testing - When Git Simplification is enabled', () => {
           <EnhancedInputSetForm />
         </TestWrapper>
       )
+      const nameInpt = queryByNameAttribute('name', container)
+      act(async () => {
+        fireEvent.change(nameInpt!, { target: { value: 'asd2' } })
+        const saveBtn = await findByRole(container, 'button', { name: 'save' })
+        expect(saveBtn).toBeInTheDocument()
+        fireEvent.click(saveBtn!)
+        let saveToGitSaveBtn: HTMLElement
+        await waitFor(() => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
+          expect(savePipelinesToGitHeader).toBeInTheDocument()
 
-      const saveBtn = await findByRole(container, 'button', { name: 'save' })
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(saveBtn!)
-      let saveToGitSaveBtn: HTMLElement
-      await waitFor(() => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
-        expect(savePipelinesToGitHeader).toBeInTheDocument()
-
-        saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
-        expect(saveToGitSaveBtn).toBeInTheDocument()
-      })
-      fireEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => {
-        expect(createInputSet).toHaveBeenCalled()
-        expect(createInputSet).toHaveBeenCalledWith(
-          gitSimpplificationMockData.createInputSetCallFirstArg,
-          gitSimpplificationMockData.createInputSetCallSecondArg
-        )
-      })
-      await waitFor(async () => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        expect(getElementByText(portalDiv, 'success')).toBeInTheDocument()
+          saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
+          expect(saveToGitSaveBtn).toBeInTheDocument()
+        })
+        fireEvent.click(saveToGitSaveBtn!)
+        await waitFor(() => {
+          expect(createInputSet).toHaveBeenCalled()
+          expect(createInputSet).toHaveBeenCalledWith(
+            gitSimpplificationMockData.createInputSetCallFirstArg,
+            gitSimpplificationMockData.createInputSetCallSecondArg
+          )
+        })
+        await waitFor(async () => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          expect(getElementByText(portalDiv, 'success')).toBeInTheDocument()
+        })
       })
     })
   })

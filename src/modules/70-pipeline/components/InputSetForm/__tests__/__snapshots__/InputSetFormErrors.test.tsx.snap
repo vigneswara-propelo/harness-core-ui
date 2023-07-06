@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Input Set - error scenarios if API errors are displayed in yellow accordion 1`] = `
+exports[`Input Set - error scenarios By default save button should be disabled 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
@@ -181,15 +181,28 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
           class="reconcileMenu"
         >
           <button
-            aria-label="View Diff"
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
-            style="margin-left: 15px;"
+            aria-label="save"
+            class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+            disabled=""
+            tabindex="-1"
+            type="submit"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              save
+            </span>
+          </button>
+          <button
+            aria-label="cancel"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
+            style="margin-left: 10px;"
             type="button"
           >
             <span
               class="bp3-button-text"
             >
-              View Diff
+              cancel
             </span>
           </button>
           <span
@@ -787,33 +800,6 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="Layout--horizontal StyledProps--main footer StyledProps--padding-xlarge"
-                  >
-                    <button
-                      aria-label="save"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
-                      type="submit"
-                    >
-                      <span
-                        class="bp3-button-text"
-                      >
-                        save
-                      </span>
-                    </button>
-                       
-                    <button
-                      aria-label="cancel"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-button-text"
-                      >
-                        cancel
-                      </span>
-                    </button>
                   </div>
                 </div>
               </form>

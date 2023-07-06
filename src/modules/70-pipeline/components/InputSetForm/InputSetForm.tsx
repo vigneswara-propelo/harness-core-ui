@@ -21,7 +21,7 @@ import {
   Container
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -71,7 +71,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 
 import GitPopover from '../GitPopover/GitPopover'
-import FormikInputSetForm from './FormikInputSetForm'
+import { FormikInputSetFormWithRef } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
 import { OutOfSyncErrorStrip } from '../InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
@@ -392,7 +392,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     originalYaml: stringify(parsedInputSetObj?.inputSet?.pipeline),
     updatedYaml:
       selectedView === SelectedView.VISUAL ? stringify(formikRef?.current?.values?.pipeline) : latestYamlPipeline ?? '',
-    title: getString('pipeline.piplineDiffTitle')
+    title: getString('pipeline.inputSetDiffTitle')
   })
 
   React.useEffect(() => {
@@ -518,6 +518,15 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     [yamlHandler?.getLatestYaml, inputSet]
   )
 
+  const [isFormDirty, setIsFormDirty] = React.useState(false)
+  // Form dirty and isSaveEnabled are different
+  // form dirty is determined on formvalues.pipeline and save is enabled on ipset identifier
+  const [isSaveEnabled, setIsSaveEnabled] = React.useState(false)
+  const childRef = React.useRef(null)
+
+  const handleFormDirty = (dirty: boolean): void => {
+    setIsFormDirty(dirty)
+  }
   const child = React.useCallback(
     () => (
       <PipelineVariablesContextProvider
@@ -525,7 +534,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
         enablePipelineTemplatesResolution={false}
         storeMetadata={{ storeType, connectorRef, repoName, branch, filePath }}
       >
-        <FormikInputSetForm
+        <FormikInputSetFormWithRef
           inputSet={isNewInModal && inputSetInitialValue ? merge(inputSet, inputSetInitialValue) : inputSet}
           template={template}
           pipeline={pipeline}
@@ -544,6 +553,9 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
           className={className}
           onCancel={onCancel}
           filePath={filePath}
+          handleFormDirty={handleFormDirty}
+          setIsSaveEnabled={setIsSaveEnabled}
+          ref={childRef}
         />
       </PipelineVariablesContextProvider>
     ),
@@ -635,6 +647,11 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       onBranchChange={branchChangeHandler}
       handleReloadFromCache={handleReloadFromCache}
       openDiffModal={openDiffModal}
+      isFormDirty={isFormDirty}
+      onCancel={onCancel}
+      childRef={childRef}
+      isSaveEnabled={isSaveEnabled}
+      setFormErrors={setFormErrors}
     >
       {child()}
     </InputSetFormWrapper>
@@ -657,6 +674,11 @@ export interface InputSetFormWrapperProps {
   onBranchChange?: (branch?: string) => void
   handleReloadFromCache?: (loadFromCache?: boolean) => void
   openDiffModal: any
+  isFormDirty: boolean
+  onCancel?: () => void
+  isSaveEnabled?: boolean
+  childRef: any
+  setFormErrors?: any
 }
 
 export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.ReactElement {
@@ -674,8 +696,15 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     menuOpen,
     handleMenu,
     onBranchChange,
-    handleReloadFromCache = noop
+    handleReloadFromCache = noop,
+    onCancel,
+    isFormDirty = false,
+    childRef,
+    isSaveEnabled = false,
+    setFormErrors
   } = props
+
+  const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
@@ -751,13 +780,43 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSet?.storeType, isEdit)}
                 />
               </div>
+
               <div className={css.reconcileMenu}>
+                {isFormDirty ? (
+                  <>
+                    <Button
+                      variation={ButtonVariation.LINK}
+                      padding={'small'}
+                      className={css.unsavedChanges}
+                      onClick={props.openDiffModal}
+                    >
+                      {getString('unsavedChanges')}
+                    </Button>
+                  </>
+                ) : null}
                 <Button
-                  text="View Diff"
                   variation={ButtonVariation.PRIMARY}
-                  onClick={props.openDiffModal}
-                  style={{ marginLeft: '15px' }}
+                  type="submit"
+                  disabled={!isSaveEnabled}
+                  text={getString('save')}
+                  onClick={async e => {
+                    e.preventDefault()
+                    if (childRef?.current?.isValidForm()) {
+                      childRef?.current?.submitForm()
+                    } else {
+                      const errors = await childRef?.current?.validateForm()
+
+                      setFormErrors(errors)
+                    }
+                  }}
                 />
+                <Button
+                  variation={ButtonVariation.TERTIARY}
+                  onClick={onCancel || history.goBack}
+                  text={getString('cancel')}
+                  style={{ marginLeft: '10px' }}
+                />
+
                 <Popover
                   className={cx(Classes.DARK)}
                   position={Position.LEFT}

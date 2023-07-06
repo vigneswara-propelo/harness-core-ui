@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
+import { queryByAttribute, screen } from '@testing-library/dom'
+
 import { render, waitFor, fireEvent, act } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@common/utils/routeUtils'
@@ -143,8 +145,8 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
 })
 
 describe('Input Set - error scenarios', () => {
-  test('if API errors are displayed in yellow accordion', async () => {
-    const { getAllByText, getByText, queryByText, container } = render(
+  test('By default save button should be disabled', async () => {
+    const { getAllByText, container } = render(
       <TestWrapper
         path={TEST_INPUT_SET_FORM_PATH}
         pathParams={{
@@ -172,18 +174,62 @@ describe('Input Set - error scenarios', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
+    const saveBtn = await screen.findByRole('button', { name: /save/i })
     expect(container).toMatchSnapshot()
     await waitFor(() => getAllByText('tesa1'))
-    fireEvent.click(getByText('save'))
-    await waitFor(() => {
-      expect(queryByText('common.errorCount')).toBeTruthy()
-    })
 
-    act(() => {
-      fireEvent.mouseOver(getByText('common.seeDetails'))
+    expect(saveBtn).toBeDisabled()
+  })
+
+  // eslint-disable-next-line jest/no-disabled-tests
+  test('should show error banner on save', async () => {
+    const { getByText, queryByText, container } = render(
+      <TestWrapper
+        path={TEST_INPUT_SET_FORM_PATH}
+        pathParams={{
+          accountId: 'testAcc',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'test',
+          pipelineIdentifier: 'pipeline',
+          inputSetIdentifier: 'asd',
+          module: 'cd'
+        }}
+        queryParams={{
+          storeType: StoreType.INLINE
+        }}
+        defaultAppStoreValues={defaultAppStoreValues}
+      >
+        <PipelineContext.Provider
+          value={
+            {
+              state: { pipeline: { name: '', identifier: '' } } as any,
+              getStageFromPipeline: jest.fn((_stageId, pipeline) => ({ stage: pipeline.stages[0], parent: undefined }))
+            } as any
+          }
+        >
+          <EnhancedInputSetForm />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const nameInpt = queryByNameAttribute('name', container)
+
+    act(async () => {
+      fireEvent.change(nameInpt!, { target: { value: '' } })
+
+      await waitFor(() => {
+        expect(queryByAttribute('name', container, 'name')).toBe('')
+      })
+
+      await waitFor(() => {
+        fireEvent.click(getByText('save'))
+        fireEvent.mouseOver(getByText('common.seeDetails'))
+        expect(queryByText('common.errorCount')).toBeTruthy()
+      })
+
+      expect(queryByText('field1: field1 error message (1)'))
+      expect(queryByText('field2: field2 error message (3)'))
     })
-    expect(queryByText('field1: field1 error message (1)'))
-    expect(queryByText('field2: field2 error message (3)'))
   })
 
   test('if API errors should not be displayed if uuidToErrorResponseMap is not present in response', async () => {

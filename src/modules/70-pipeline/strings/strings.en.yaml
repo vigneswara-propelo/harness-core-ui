@@ -2,6 +2,7 @@ verificationResult: 'Verification result:'
 estimatedTimeRemaining: 'Estimated time remaining:'
 progressPercentage: 'Progress percentage:'
 piplineDiffTitle: pipeline.yaml (saved) ↔ pipeline.yaml (updated)
+inputSetDiffTitle: inputset.yaml (saved) ↔ inputset.yaml (updated)
 clone: Clone Pipeline
 moveInlieToRemote: Move {{resource}} Inline to Remote
 discard: '{{ $.common.discard }}'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, getByText as getElementByText, findByText } from '@testing-library/react'
+import { render, waitFor, fireEvent, getByText as getElementByText, findByText, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
@@ -15,6 +15,8 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@common/utils/routeUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { queryByNameAttribute } from '@common/utils/testUtils'
+
 import { EnhancedInputSetForm } from '../InputSetForm'
 import {
   TemplateResponse,
@@ -121,22 +123,27 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
           <EnhancedInputSetForm />
         </GitSyncTestWrapper>
       )
-      const saveBtn = (await findByText(container, 'save')).parentElement
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(saveBtn!)
-      let saveToGitSaveBtn: HTMLElement
-      await waitFor(() => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
-        expect(savePipelinesToGitHeader).toBeInTheDocument()
+      const nameInpt = queryByNameAttribute('name', container)
+      act(async () => {
+        fireEvent.change(nameInpt!, { target: { value: 'asd2' } })
 
-        saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
-        expect(saveToGitSaveBtn).toBeInTheDocument()
-      })
-      await userEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => {
-        expect(updateInputSet).toHaveBeenCalled()
-        expect(updateInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, updateInputSetCallSecondArg)
+        const saveBtn = (await findByText(container, 'save')).parentElement
+        expect(saveBtn).toBeInTheDocument()
+        fireEvent.click(saveBtn!)
+        let saveToGitSaveBtn: HTMLElement
+        await waitFor(() => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
+          expect(savePipelinesToGitHeader).toBeInTheDocument()
+
+          saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
+          expect(saveToGitSaveBtn).toBeInTheDocument()
+        })
+        await userEvent.click(saveToGitSaveBtn!)
+        await waitFor(() => {
+          expect(updateInputSet).toHaveBeenCalled()
+          expect(updateInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, updateInputSetCallSecondArg)
+        })
       })
     })
 
@@ -161,31 +168,35 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
           <EnhancedInputSetForm />
         </GitSyncTestWrapper>
       )
-      const saveBtn = (await findByText(container, 'save')).parentElement
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(saveBtn!)
-      let saveToGitSaveBtn: HTMLElement
-      await waitFor(() => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
-        expect(savePipelinesToGitHeader).toBeInTheDocument()
+      const nameInpt = queryByNameAttribute('name', container)
+      act(async () => {
+        fireEvent.change(nameInpt!, { target: { value: 'asd2' } })
+        const saveBtn = (await findByText(container, 'save')).parentElement
+        expect(saveBtn).toBeInTheDocument()
+        fireEvent.click(saveBtn!)
+        let saveToGitSaveBtn: HTMLElement
+        await waitFor(() => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
+          expect(savePipelinesToGitHeader).toBeInTheDocument()
 
-        const commitToANewBranch = getElementByText(portalDiv, 'common.git.newBranchCommitLabel')
-        fireEvent.click(commitToANewBranch)
+          const commitToANewBranch = getElementByText(portalDiv, 'common.git.newBranchCommitLabel')
+          fireEvent.click(commitToANewBranch)
 
-        const branchInput = portalDiv.querySelector('input[name="branch"]')
-        expect(branchInput).not.toBeDisabled()
-        expect(branchInput?.getAttribute('value')).toBe('feature-patch')
+          const branchInput = portalDiv.querySelector('input[name="branch"]')
+          expect(branchInput).not.toBeDisabled()
+          expect(branchInput?.getAttribute('value')).toBe('feature-patch')
 
-        fireEvent.change(branchInput!, { target: { value: 'feature1' } })
+          fireEvent.change(branchInput!, { target: { value: 'feature1' } })
 
-        saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
-        expect(saveToGitSaveBtn).toBeInTheDocument()
-      })
-      await userEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => {
-        expect(updateInputSet).toHaveBeenCalled()
-        expect(updateInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, updateInputSetCallSecondArgNewBranch)
+          saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
+          expect(saveToGitSaveBtn).toBeInTheDocument()
+        })
+        await userEvent.click(saveToGitSaveBtn!)
+        await waitFor(() => {
+          expect(updateInputSet).toHaveBeenCalled()
+          expect(updateInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, updateInputSetCallSecondArgNewBranch)
+        })
       })
     })
   })
@@ -220,22 +231,26 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
           <EnhancedInputSetForm />
         </GitSyncTestWrapper>
       )
-      const saveBtn = (await findByText(container, 'save')).parentElement
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(saveBtn!)
-      let saveToGitSaveBtn: HTMLElement
-      await waitFor(() => {
-        const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
-        const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
-        expect(savePipelinesToGitHeader).toBeInTheDocument()
+      const nameInpt = queryByNameAttribute('name', container)
+      act(async () => {
+        fireEvent.change(nameInpt!, { target: { value: 'asd2' } })
+        const saveBtn = (await findByText(container, 'save')).parentElement
+        expect(saveBtn).toBeInTheDocument()
+        fireEvent.click(saveBtn!)
+        let saveToGitSaveBtn: HTMLElement
+        await waitFor(() => {
+          const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
+          const savePipelinesToGitHeader = getElementByText(portalDiv, 'common.git.saveResourceLabel')
+          expect(savePipelinesToGitHeader).toBeInTheDocument()
 
-        saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
-        expect(saveToGitSaveBtn).toBeInTheDocument()
-      })
-      fireEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => {
-        expect(createInputSet).toHaveBeenCalled()
-        expect(createInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, createInputSetCallSecondArg)
+          saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
+          expect(saveToGitSaveBtn).toBeInTheDocument()
+        })
+        fireEvent.click(saveToGitSaveBtn!)
+        await waitFor(() => {
+          expect(createInputSet).toHaveBeenCalled()
+          expect(createInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, createInputSetCallSecondArg)
+        })
       })
     })
   })

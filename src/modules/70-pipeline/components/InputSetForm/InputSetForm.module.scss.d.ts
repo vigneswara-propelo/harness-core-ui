@@ -32,6 +32,7 @@ declare const styles: {
   readonly reconcileMenu: string
   readonly saveCancelBtn: string
   readonly treeSidebar: string
+  readonly unsavedChanges: string
   readonly withError: string
 }
 export default styles
