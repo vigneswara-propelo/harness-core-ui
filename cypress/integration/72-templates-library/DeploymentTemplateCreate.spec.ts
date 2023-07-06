@@ -107,7 +107,8 @@ describe('Deployment Template creation and assertion', () => {
       cy.contains('p', 'Connector').click()
     })
     cy.get('button[data-testid="addVariableSave"]').click()
-    cy.contains('p', 'description').scrollIntoView().should('be.visible')
+    cy.get('span[data-icon="description"]').scrollIntoView().should('be.visible').trigger('mouseover')
+    cy.contains('div', 'description').should('be.visible')
     cy.contains('span', 'Select').should('be.visible').click()
     cy.contains('span', 'New Connector').click()
 

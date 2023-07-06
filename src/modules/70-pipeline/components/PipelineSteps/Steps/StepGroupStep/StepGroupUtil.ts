@@ -12,6 +12,7 @@ import type {
   ContainerInfraYamlSpec,
   ExecutionWrapperConfig,
   K8sDirectInfra,
+  NGVariable,
   StepGroupElementConfig
 } from 'services/cd-ng'
 import type { SecurityContext, Toleration } from 'services/ci'
@@ -30,6 +31,7 @@ export interface K8sDirectInfraStepGroupElementConfig extends StepGroupElementCo
     type: K8sDirectInfra['type']
     spec: K8sDirectInfraSpec
   }
+  variables?: NGVariable[]
 }
 
 export interface TolerationFormik extends Toleration {
@@ -39,6 +41,7 @@ export interface TolerationFormik extends Toleration {
 export interface StepGroupFormikValues {
   identifier: string
   name: string
+  variables?: NGVariable[]
   steps?: ExecutionWrapperConfig[]
   type?: 'KubernetesDirect'
   sharedPaths?: ListUIType | string

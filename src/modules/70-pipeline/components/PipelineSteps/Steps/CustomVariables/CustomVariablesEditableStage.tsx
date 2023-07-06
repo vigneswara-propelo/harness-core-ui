@@ -158,7 +158,6 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                   {values.variables?.length > 0 ? (
                     <div className={cx(css.tableRow, css.headerRow, 'variablesTableRow')}>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>
-                      <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('typeLabel')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('description')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('valueLabel')}</Text>
                     </div>
@@ -176,30 +175,51 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
 
                     return (
                       <div key={key} className={cx(css.tableRow, 'variablesTableRow')}>
-                        <TextInputWithCopyBtn
-                          name={`variables[${index}].name`}
-                          label=""
-                          disabled={true}
-                          localName={yamlData.localName}
-                          fullName={yamlData.fqn}
-                        />
-                        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-                          <String
-                            className={css.valueString}
-                            stringID={labelStringMap[variable.type as VariableType]}
-                            data-testid={`variables[${index}].type`}
+                        <Layout.Vertical>
+                          <TextInputWithCopyBtn
+                            name={`variables[${index}].name`}
+                            label=""
+                            disabled={true}
+                            localName={yamlData.localName}
+                            fullName={yamlData.fqn}
                           />
-                          {!!variable?.required && (
-                            <Text
-                              icon="asterisk"
-                              iconProps={{ size: 12, color: Color.RED_500 }}
-                              padding={{ left: 'small' }}
-                              tooltip={getString('pipeline.required')}
-                              tooltipProps={{ position: Position.BOTTOM, isDark: true }}
+                          <Layout.Horizontal
+                            flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+                            padding={{ top: 'small' }}
+                          >
+                            <String
+                              className={css.valueString}
+                              stringID={labelStringMap[variable.type as VariableType]}
+                              data-testid={`variables[${index}].type`}
                             />
-                          )}
-                        </Layout.Horizontal>
-                        <Text lineClamp={1}>{isEmpty(variable?.description) ? '-' : variable?.description}</Text>
+                            {!!variable?.required && (
+                              <Text
+                                icon="asterisk"
+                                iconProps={{ size: 12, color: Color.RED_500 }}
+                                padding={{ left: 'small' }}
+                                tooltip={getString('pipeline.required')}
+                                tooltipProps={{ position: Position.BOTTOM, isDark: true }}
+                              />
+                            )}
+                          </Layout.Horizontal>
+                        </Layout.Vertical>
+                        {!isEmpty(variable?.description) ? (
+                          <Text
+                            icon="description"
+                            inline
+                            padding={'small'}
+                            iconProps={{ size: 32 }}
+                            tooltip={variable?.description}
+                            tooltipProps={{
+                              position: Position.BOTTOM,
+                              isDark: true,
+                              className: css.descriptionContent
+                            }}
+                          />
+                        ) : (
+                          <span />
+                        )}
+
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
                           {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
                             <FormMultiTypeConnectorField

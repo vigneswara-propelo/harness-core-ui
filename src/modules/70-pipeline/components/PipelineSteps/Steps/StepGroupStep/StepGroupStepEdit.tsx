@@ -32,6 +32,7 @@ import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import { KubernetesStepGroupInfra } from './KubernetesStepGroupInfra'
 import type { K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues, TolerationFormik } from './StepGroupUtil'
 import { StepGroupCustomStepProps } from './StepGroupStep'
+import StepGroupVariables from './StepGroupVariablesSelection/StepGroupVariables'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface StepGroupWidgetProps {
@@ -97,7 +98,7 @@ function StepGroupStepEdit(
   formikRef: StepFormikFowardRef<StepGroupFormikValues>
 ): React.ReactElement {
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, customStepProps } = props
-  const { selectedStage } = customStepProps
+  const { selectedStage, isRollback, isProvisionerStep } = customStepProps
 
   const { getString } = useStrings()
   const { CDS_CONTAINER_STEP_GROUP } = useFeatureFlags()
@@ -119,7 +120,8 @@ function StepGroupStepEdit(
       formikRefCurrent?.setValues({
         identifier: formikRefCurrent.values.identifier,
         name: formikRefCurrent.values.name,
-        steps: formikRefCurrent.values.steps
+        steps: formikRefCurrent.values.steps,
+        variables: formikRefCurrent.values.variables
       })
     }
   }, [isContainerBasedExecutionEnabled, formikRef])
@@ -345,6 +347,13 @@ function StepGroupStepEdit(
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
               </div>
+              <StepGroupVariables
+                allowableTypes={allowableTypes}
+                formikRef={formik}
+                readonly={readonly}
+                isRollback={isRollback}
+                isProvisionerStep={isProvisionerStep}
+              />
               {CDS_CONTAINER_STEP_GROUP && selectedStage.stage?.type !== StageType.BUILD && (
                 <>
                   <Switch
@@ -354,7 +363,13 @@ function StepGroupStepEdit(
                     disabled={readonly}
                   />
                   {isContainerBasedExecutionEnabled && (
-                    <KubernetesStepGroupInfra formikRef={formik} allowableTypes={allowableTypes} readonly={readonly} />
+                    <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                      <KubernetesStepGroupInfra
+                        formikRef={formik}
+                        allowableTypes={allowableTypes}
+                        readonly={readonly}
+                      />
+                    </div>
                   )}
                 </>
               )}

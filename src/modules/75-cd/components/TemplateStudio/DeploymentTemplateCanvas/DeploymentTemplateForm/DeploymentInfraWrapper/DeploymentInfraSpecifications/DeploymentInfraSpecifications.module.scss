@@ -8,8 +8,6 @@
 .infraSections {
   margin-top: var(--spacing-large) !important;
   & :global(.variablesTableRow) {
-    grid-template-columns: 2fr 1fr 1fr 3fr !important;
-
     :global(.connectorVariableField) {
       [data-test-id='connectorTooltip'] {
         margin-bottom: 0 !important;

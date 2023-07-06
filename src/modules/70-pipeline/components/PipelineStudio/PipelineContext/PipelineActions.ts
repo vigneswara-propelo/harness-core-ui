@@ -52,6 +52,7 @@ export const DefaultNewPipelineId = '-1'
 
 export enum DrawerTypes {
   StepConfig = 'StepConfig',
+  StepGroupConfig = 'StepGroupConfig',
   AddStep = 'AddCommand',
   PipelineVariables = 'PipelineVariables',
   Templates = 'Templates',
@@ -74,6 +75,7 @@ export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
   [DrawerTypes.ProvisionerStepConfig]: 600,
   [DrawerTypes.AddProvisionerStep]: 700,
   [DrawerTypes.PipelineVariables]: 1147,
+  [DrawerTypes.StepGroupConfig]: 872,
   [DrawerTypes.Templates]: 450,
   [DrawerTypes.ExecutionStrategy]: 1136,
   [DrawerTypes.AddService]: 485,

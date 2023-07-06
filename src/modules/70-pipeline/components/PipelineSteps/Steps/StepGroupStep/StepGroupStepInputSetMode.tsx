@@ -27,11 +27,14 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { InputSetDTO } from '@pipeline/utils/types'
 import Volumes from '@pipeline/components/Volumes/Volumes'
+import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { K8sDirectInfraStepGroupElementConfig } from './StepGroupUtil'
+import StepGroupVariablesInputSetView from './StepGroupVariablesSelection/StepGroupVariablesInputSetView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface StepGroupStepInputSetProps {
   allowableTypes: AllowedTypes
+  initialValues: K8sDirectInfraStepGroupElementConfig
   inputSetData: {
     template?: K8sDirectInfraStepGroupElementConfig
     path?: string
@@ -39,12 +42,13 @@ export interface StepGroupStepInputSetProps {
     allValues?: K8sDirectInfraStepGroupElementConfig
   }
   formik?: FormikProps<InputSetDTO>
+  onUpdate?: ((data: K8sDirectInfraStepGroupElementConfig) => void) | undefined
+  factory?: AbstractStepFactory
 }
 
 function StepGroupStepInputSet(props: StepGroupStepInputSetProps): React.ReactElement {
-  const { inputSetData, allowableTypes, formik } = props
-  const { template, path, readonly } = inputSetData
-
+  const { inputSetData, allowableTypes, formik, initialValues, factory } = props
+  const { template, path, readonly, allValues } = inputSetData
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
@@ -105,6 +109,17 @@ function StepGroupStepInputSet(props: StepGroupStepInputSetProps): React.ReactEl
 
   return (
     <>
+      {!!template?.variables?.length && (
+        <StepGroupVariablesInputSetView
+          factory={factory as unknown as AbstractStepFactory}
+          initialValues={initialValues}
+          template={template}
+          path={path}
+          allValues={allValues}
+          readonly={readonly}
+        />
+      )}
+
       {getMultiTypeFromValue(template?.stepGroupInfra?.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

@@ -129,3 +129,87 @@ export const containerStepGroupTemplate: K8sDirectInfraStepGroupElementConfig = 
     }
   ]
 }
+
+export const stepGroupWithVariablesInitialValues = {
+  name: 'Step Group 1',
+  identifier: 'Step Group 1 step_group_1',
+  steps: [
+    {
+      step: {
+        type: 'Wait',
+        name: 'Wait_1',
+        identifier: 'Wait_1',
+        spec: {
+          duration: '10m'
+        }
+      }
+    }
+  ],
+  variables: [
+    {
+      name: 'sg1StringVar',
+      type: 'String',
+      description: 'StepGroup 1 string variable',
+      required: false,
+      value: 'stringValue'
+    },
+    {
+      name: 'sg1SecretVar',
+      type: 'Secret',
+      description: 'StepGroup 1 secret variable',
+      required: false,
+      value: 'account.secretVariable'
+    },
+    {
+      name: 'sg1NumberVar',
+      type: 'Number',
+      description: 'StepGroup 1 number variable',
+      required: true,
+      value: 33
+    },
+    {
+      name: 'runtimeRequiredVariable',
+      type: 'String',
+      description: '',
+      required: true,
+      value: '<+input>'
+    }
+  ]
+}
+
+export const stepGroupWithBasicVariablesInitialValues = {
+  name: 'sg1',
+  identifier: 'sg1',
+  steps: [
+    {
+      step: {
+        type: 'Wait',
+        name: 'Wait_1',
+        identifier: 'Wait_1',
+        spec: {
+          duration: '10m'
+        }
+      }
+    }
+  ],
+  variables: [
+    {
+      name: 'runtimeRequiredVariable',
+      type: 'String',
+      required: true,
+      description: 'Runtime Required Variable Description',
+      value: ''
+    }
+  ]
+}
+
+export const stepGroupWithVariablesTemplate = {
+  identifier: 'sg1',
+  variables: [
+    {
+      name: 'runtimeRequiredVariable',
+      type: 'String',
+      value: '<+input>'
+    }
+  ]
+}

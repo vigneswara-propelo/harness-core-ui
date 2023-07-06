@@ -5159,6 +5159,7 @@ export interface StringsMap {
   'pipeline.stepDescription.revertPR': string
   'pipeline.stepDescription.updateReleaseRepo': string
   'pipeline.stepDetails': string
+  'pipeline.stepGroupVariables': string
   'pipeline.stepLabel': string
   'pipeline.stepNamePlaceholder': string
   'pipeline.supplier': string

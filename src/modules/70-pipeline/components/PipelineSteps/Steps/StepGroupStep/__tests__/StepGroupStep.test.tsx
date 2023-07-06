@@ -6,12 +6,22 @@
  */
 
 import React, { createRef } from 'react'
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import {
+  act,
+  findAllByText,
+  fireEvent,
+  queryByAttribute,
+  render,
+  screen,
+  waitFor,
+  within,
+  getByText as getByTextGlobal
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import type { StringsMap } from 'stringTypes'
-import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -20,9 +30,16 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepGroupElementConfig } from 'services/pipeline-ng'
 import { StepGroupStep } from '../StepGroupStep'
 import { StepGroupStepEditRef } from '../StepGroupStepEdit'
-import { containerStepGroupInitialValues, containerStepGroupTemplate } from './helper'
+import {
+  containerStepGroupInitialValues,
+  containerStepGroupTemplate,
+  stepGroupWithBasicVariablesInitialValues,
+  stepGroupWithVariablesInitialValues,
+  stepGroupWithVariablesTemplate
+} from './helper'
 import { awsRegions } from './mocks'
 import type { K8sDirectInfraStepGroupElementConfig } from '../StepGroupUtil'
+import { CustomVariables } from '../../CustomVariables/CustomVariables'
 
 const fetchConnector = jest.fn().mockReturnValue({ data: awsConnectorListResponse.data?.content?.[1] })
 jest.mock('services/cd-ng', () => ({
@@ -44,11 +61,14 @@ const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined
 
 describe('StepGroupStep tests', () => {
   const stepGroupStep = new StepGroupStep()
+  const customVariableStep = new CustomVariables()
   beforeAll(() => {
     factory.registerStep(stepGroupStep)
+    factory.registerStep(customVariableStep)
   })
   afterAll(() => {
     factory.deregisterStep(stepGroupStep.getType())
+    factory.deregisterStep(customVariableStep.getType())
   })
 
   test('renders as expected in edit view when stepGroupInfra is NOT present', async () => {
@@ -423,5 +443,106 @@ describe('StepGroupStep tests', () => {
 
     await act(async () => ref.current?.submitForm())
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
+  })
+
+  test('renders variables in edit view ', async () => {
+    const onChange = jest.fn()
+    const onUpdate = jest.fn()
+    const { container, getByText, findByText } = render(
+      <TestStepWidget
+        type={StepType.StepGroup}
+        initialValues={stepGroupWithVariablesInitialValues}
+        isNewStep={false}
+        stepViewType={StepViewType.Edit}
+        onChange={onChange}
+        onUpdate={onUpdate}
+        customStepProps={{
+          stageIdentifier: 'stage_1',
+          selectedStage: {
+            stage: {
+              identifier: 'stage_1',
+              name: 'Stage 1',
+              type: StageType.DEPLOY
+            }
+          }
+        }}
+      />
+    )
+    expect(() => getByText('common.variables')).toBeDefined()
+    const requiredPropertyIcon = container.querySelectorAll('[data-icon="asterisk"]')
+    expect(requiredPropertyIcon.length).toBe(2)
+    const descriptionIcon = container.querySelectorAll('[data-icon="description"]')
+    expect(descriptionIcon.length).toBe(3)
+
+    expect(container.querySelector('input[name="variables[0].name"]')).toHaveValue('sg1StringVar')
+    expect(container.querySelector('input[name="variables[0].value"]')).toHaveValue('stringValue')
+    expect(container.querySelector('input[name="variables[1].name"]')).toHaveValue('sg1SecretVar')
+    expect(getByText('account.secretVariable')).toBeDefined()
+    expect(container.querySelector('input[name="variables[2].name"]')).toHaveValue('sg1NumberVar')
+    expect(container.querySelector('input[name="variables[2].value"]')).toHaveValue(33)
+    expect(container.querySelector('input[name="variables[3].name"]')).toHaveValue('runtimeRequiredVariable')
+    expect(container.querySelector('input[name="variables[3].value"]')).toHaveValue('<+input>')
+
+    // Addition of new variable flow
+    const add = await findByText('variables.newVariable')
+    act(() => {
+      fireEvent.click(add)
+    })
+    const dialog = findDialogContainer() as HTMLElement
+    await waitFor(() => findAllByText(dialog, 'variables.newVariable'))
+    const nameField = queryByAttribute('name', dialog, 'name')
+    const valueField = queryByAttribute('name', dialog, 'value')
+    act(() => {
+      fireEvent.change(nameField!, { target: { value: 'stringNewVariable' } })
+      fireEvent.change(valueField!, { target: { value: 'stringNewVariableValue' } })
+    })
+    const submitBtn = getByTextGlobal(dialog, 'save')
+    await act(async () => {
+      fireEvent.click(submitBtn!)
+    })
+    // Validate new variable
+    expect(container.querySelector('input[name="variables[4].name"]')).toHaveValue('stringNewVariable')
+    expect(container.querySelector('input[name="variables[4].value"]')).toHaveValue('stringNewVariableValue')
+  })
+
+  test('renders variables section in RUNTIME view', async () => {
+    const onUpdate = jest.fn()
+    const { container, getByText } = render(
+      <TestStepWidget
+        type={StepType.StepGroup}
+        initialValues={stepGroupWithBasicVariablesInitialValues}
+        template={stepGroupWithVariablesTemplate}
+        allValues={{
+          variables: [
+            {
+              name: 'runtimeRequiredVariable',
+              type: 'String',
+              description: 'Runtime Required Variable Description',
+              required: true,
+              value: '<+input>'
+            }
+          ]
+        }}
+        onUpdate={onUpdate}
+        isNewStep={false}
+        stepViewType={StepViewType.InputSet}
+        testWrapperProps={{
+          defaultFeatureFlagValues: {
+            CDS_CONTAINER_STEP_GROUP: true
+          }
+        }}
+      />
+    )
+
+    expect(() => getByText('common.variables')).toBeDefined()
+    expect(container.querySelectorAll('[data-icon="asterisk"]').length).toBe(1)
+    expect(getByText('runtimeRequiredVariable')).toBeDefined()
+
+    const valueField = queryByAttribute('name', container, 'variables[0].value')
+    act(() => {
+      fireEvent.change(valueField!, { target: { value: 'stringNewVariableValue' } })
+    })
+
+    expect(container.querySelector('input[name="variables[0].value"]')).toHaveValue('stringNewVariableValue')
   })
 })

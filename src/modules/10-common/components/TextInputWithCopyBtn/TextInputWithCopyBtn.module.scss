@@ -74,6 +74,10 @@
     .input input[type='text'] {
       background-color: var(--grey-100);
     }
+
+    :global(.bp3-input:disabled) {
+      color: var(--grey-700) !important;
+    }
   }
 }
 

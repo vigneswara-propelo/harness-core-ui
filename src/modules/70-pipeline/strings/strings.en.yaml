@@ -20,6 +20,7 @@ stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the ch
 clickHere: Click here
 stepDetails: Step details
 stageVariables: Stage Variables
+stepGroupVariables: StepGroup Variables
 scriptInputVariables: Script Input Variables
 scriptOutputVariables: Script Output Variables
 executionTarget: Execution Target

@@ -13,7 +13,8 @@ import {
   waitFor,
   findAllByText,
   findByText as findByTextGlobal,
-  queryByAttribute
+  queryByAttribute,
+  screen
 } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -109,7 +110,8 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     expect(() => getByText('pipeline.customDeployment.instanceAttributes')).toBeDefined()
 
     expect(container.querySelector('input[name="variables[0].name"]')).toHaveValue('clusterUrl')
-    await waitFor(() => getByText('URL to connect to cluster'))
+    fireEvent.mouseOver(container.querySelectorAll('[data-icon="description"]')[0]!)
+    expect(await screen.findByText('URL to connect to cluster')).toBeInTheDocument()
     expect(container.querySelector('input[name="instancesListPath"]')).toHaveValue('instances')
     expect(container.querySelector('input[name="instanceAttributes[0].description"]')).toHaveValue(
       'IP address of the host'

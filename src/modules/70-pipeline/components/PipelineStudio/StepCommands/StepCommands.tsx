@@ -76,7 +76,9 @@ export function StepCommands(
     gitDetails,
     storeMetadata,
     saveAsTemplateButtonProps,
-    isSaveAsTemplateEnabled = true
+    isSaveAsTemplateEnabled = true,
+    isRollback = false,
+    isProvisionerStep = false
   } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepCommandTabs.StepConfiguration)
@@ -257,7 +259,9 @@ export function StepCommands(
         ref={stepRef}
         allowableTypes={allowableTypes}
         customStepProps={{
-          selectedStage: selectedStage
+          selectedStage: selectedStage,
+          isRollback,
+          isProvisionerStep
         }}
       />
     )

@@ -145,14 +145,14 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     originalSteps={originalTemplate?.spec?.steps}
                     stageIdentifier={DefaultNewStageId}
                     stepGroupIdentifier={originalTemplate.identifier}
-                    stepGroupName={originalTemplate.name}
-                    stepGroupOriginalName={originalTemplate.name}
                     metadataMap={metadataMap}
                     allowableTypes={allowableTypes}
                     stepsFactory={factory}
                     onUpdateStep={onUpdate}
                     readonly={isReadonly}
                     path={'template'}
+                    originalStepGroup={originalTemplate}
+                    stepGroup={variablesTemplate as StepGroupElementConfig}
                   />
                 )}
                 {originalTemplate.type === TemplateType.SecretManager && (

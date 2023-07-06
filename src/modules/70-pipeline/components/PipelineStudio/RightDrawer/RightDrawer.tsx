@@ -289,6 +289,11 @@ const processNodeImpl = (
         } else {
           delete node.stepGroupInfra
         }
+        if ((item as StepGroupElementConfig)?.variables) {
+          set(node, 'variables', (item as StepGroupElementConfig).variables)
+        } else {
+          delete node.variables
+        }
       }
     }
   )
@@ -544,6 +549,7 @@ export function RightDrawer(): React.ReactElement {
     stepData = stepsFactory.getStepData(StepType.StepGroup)
   }
 
+  const isStepGroupConfigDrawer = data?.stepConfig?.isStepGroup
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const isNewEnvironmentEntityEnabled = isNewServiceEnvEntity(
@@ -979,7 +985,7 @@ export function RightDrawer(): React.ReactElement {
       canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
       enforceFocus={false}
       hasBackdrop={true}
-      size={helpPanelVisible ? 1050 : DrawerSizes[type]}
+      size={helpPanelVisible ? 1050 : DrawerSizes[isStepGroupConfigDrawer ? DrawerTypes.StepGroupConfig : type]}
       isOpen={isDrawerOpened}
       position={Position.RIGHT}
       title={title}
@@ -1016,6 +1022,7 @@ export function RightDrawer(): React.ReactElement {
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           selectedStage={selectedStage}
+          isRollback={Boolean(isRollbackToggled)}
           gitDetails={gitDetails}
           storeMetadata={storeMetadata}
         />
@@ -1173,6 +1180,7 @@ export function RightDrawer(): React.ReactElement {
           stepsFactory={stepsFactory}
           hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
           onUpdate={noop}
+          isProvisionerStep={true}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           selectedStage={selectedStage}

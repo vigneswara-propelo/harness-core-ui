@@ -1105,11 +1105,6 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      typeLabel
-                    </p>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                    >
                       description
                     </p>
                     <p
@@ -1122,79 +1117,126 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                     class="tableRow variablesTableRow"
                   >
                     <div
-                      class="textInputWithCopyBtn disabled"
+                      class="Layout--vertical StyledProps--main"
                     >
                       <div
-                        class="bp3-form-group bp3-disabled input"
-                        data-id="variables[0].name-0"
+                        class="textInputWithCopyBtn disabled"
                       >
-                        
                         <div
-                          class="bp3-form-content"
+                          class="bp3-form-group bp3-disabled input"
+                          data-id="variables[0].name-0"
+                        >
+                          
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="bp3-input-group bp3-disabled"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                disabled=""
+                                name="variables[0].name"
+                                type="text"
+                                value="clusterUrl"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="bp3-popover-wrapper popoverWrapper"
                         >
                           <div
-                            class="bp3-input-group bp3-disabled"
+                            class="bp3-popover-target"
                           >
-                            <input
-                              autocomplete="off"
-                              class="bp3-input"
-                              disabled=""
-                              name="variables[0].name"
-                              type="text"
-                              value="clusterUrl"
-                            />
+                            <button
+                              class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="copy-alt"
+                              >
+                                <svg
+                                  fill="none"
+                                  height="12"
+                                  viewBox="0 0 8 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
                           </div>
                         </div>
                       </div>
                       <div
-                        class="bp3-popover-wrapper popoverWrapper"
+                        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
                       >
-                        <div
-                          class="bp3-popover-target"
+                        <span
+                          class="valueString"
+                          data-testid="variables[0].type"
                         >
-                          <button
-                            class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-                            type="button"
-                          >
-                            <span
-                              class="bp3-icon StyledProps--main"
-                              data-icon="copy-alt"
-                            >
-                              <svg
-                                fill="none"
-                                height="12"
-                                viewBox="0 0 8 9"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </button>
-                        </div>
+                          string
+                        </span>
                       </div>
                     </div>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                    <span
+                      class="bp3-popover-wrapper descriptionContent"
                     >
                       <span
-                        class="valueString"
-                        data-testid="variables[0].type"
+                        class="bp3-popover-target Text--targetClass"
                       >
-                        string
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--padding-small"
+                          style="display: inline-flex; align-items: center;"
+                          tabindex="0"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                            data-icon="description"
+                          >
+                            <svg
+                              fill="none"
+                              height="32"
+                              width="32"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <mask
+                                fill="#fff"
+                                id="description_svg__a"
+                              >
+                                <path
+                                  d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                                  fill-rule="evenodd"
+                                />
+                              </mask>
+                              <path
+                                d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5zm4.5 0h-4.5v2h4.5zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5zm-4.5 0h4.5v-2h-4.5zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5zm4.5 0h-4.5v2h4.5zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5zm-4.5 0h4.5v-2h-4.5zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5zm4.5 0h-4.5v2h4.5zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5zm-4.5 0h4.5v-2h-4.5zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5z"
+                                fill="#6b6d85"
+                                mask="url(#description_svg__a)"
+                                opacity="0.3"
+                              />
+                              <rect
+                                height="13.5"
+                                rx="1"
+                                stroke="#6b6d85"
+                                width="10.5"
+                                x="3.75"
+                                y="2.25"
+                              />
+                            </svg>
+                          </span>
+                        </span>
                       </span>
-                    </div>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main"
-                      style="--text-line-clamp: 1;"
-                    >
-                      URL to connect to cluster
-                    </p>
+                    </span>
                     <div
                       class="valueColumn"
                       data-type="FIXED"
@@ -1847,11 +1889,6 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      typeLabel
-                    </p>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                    >
                       description
                     </p>
                     <p
@@ -1864,79 +1901,126 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                     class="tableRow variablesTableRow"
                   >
                     <div
-                      class="textInputWithCopyBtn disabled"
+                      class="Layout--vertical StyledProps--main"
                     >
                       <div
-                        class="bp3-form-group bp3-disabled input"
-                        data-id="variables[0].name-0"
+                        class="textInputWithCopyBtn disabled"
                       >
-                        
                         <div
-                          class="bp3-form-content"
+                          class="bp3-form-group bp3-disabled input"
+                          data-id="variables[0].name-0"
+                        >
+                          
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="bp3-input-group bp3-disabled"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                disabled=""
+                                name="variables[0].name"
+                                type="text"
+                                value="clusterUrl"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="bp3-popover-wrapper popoverWrapper"
                         >
                           <div
-                            class="bp3-input-group bp3-disabled"
+                            class="bp3-popover-target"
                           >
-                            <input
-                              autocomplete="off"
-                              class="bp3-input"
-                              disabled=""
-                              name="variables[0].name"
-                              type="text"
-                              value="clusterUrl"
-                            />
+                            <button
+                              class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="copy-alt"
+                              >
+                                <svg
+                                  fill="none"
+                                  height="12"
+                                  viewBox="0 0 8 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
                           </div>
                         </div>
                       </div>
                       <div
-                        class="bp3-popover-wrapper popoverWrapper"
+                        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
                       >
-                        <div
-                          class="bp3-popover-target"
+                        <span
+                          class="valueString"
+                          data-testid="variables[0].type"
                         >
-                          <button
-                            class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-                            type="button"
-                          >
-                            <span
-                              class="bp3-icon StyledProps--main"
-                              data-icon="copy-alt"
-                            >
-                              <svg
-                                fill="none"
-                                height="12"
-                                viewBox="0 0 8 9"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  clip-rule="evenodd"
-                                  d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </button>
-                        </div>
+                          string
+                        </span>
                       </div>
                     </div>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                    <span
+                      class="bp3-popover-wrapper descriptionContent"
                     >
                       <span
-                        class="valueString"
-                        data-testid="variables[0].type"
+                        class="bp3-popover-target Text--targetClass"
                       >
-                        string
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--padding-small"
+                          style="display: inline-flex; align-items: center;"
+                          tabindex="0"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                            data-icon="description"
+                          >
+                            <svg
+                              fill="none"
+                              height="32"
+                              width="32"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <mask
+                                fill="#fff"
+                                id="description_svg__a"
+                              >
+                                <path
+                                  d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                                  fill-rule="evenodd"
+                                />
+                              </mask>
+                              <path
+                                d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5zm4.5 0h-4.5v2h4.5zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5zm-4.5 0h4.5v-2h-4.5zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5zm4.5 0h-4.5v2h4.5zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5zm-4.5 0h4.5v-2h-4.5zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5zm4.5 0h-4.5v2h4.5zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5zm-4.5 0h4.5v-2h-4.5zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5z"
+                                fill="#6b6d85"
+                                mask="url(#description_svg__a)"
+                                opacity="0.3"
+                              />
+                              <rect
+                                height="13.5"
+                                rx="1"
+                                stroke="#6b6d85"
+                                width="10.5"
+                                x="3.75"
+                                y="2.25"
+                              />
+                            </svg>
+                          </span>
+                        </span>
                       </span>
-                    </div>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main"
-                      style="--text-line-clamp: 1;"
-                    >
-                      URL to connect to cluster
-                    </p>
+                    </span>
                     <div
                       class="valueColumn"
                       data-type="FIXED"

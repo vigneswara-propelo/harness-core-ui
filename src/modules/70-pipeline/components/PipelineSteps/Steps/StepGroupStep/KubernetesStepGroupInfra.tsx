@@ -16,6 +16,7 @@ import {
   Container,
   FormInput,
   getMultiTypeFromValue,
+  Layout,
   MultiTypeInputType,
   Text
 } from '@harness/uicore'
@@ -393,7 +394,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
   }
 
   return (
-    <>
+    <Layout.Vertical>
       <div className={cx(stepCss.formGroup)}>
         <FormMultiTypeConnectorField
           type={'K8sCluster'}
@@ -443,6 +444,6 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           details={renderAccordianDetailSection(formikRef)}
         />
       </Accordion>
-    </>
+    </Layout.Vertical>
   )
 }

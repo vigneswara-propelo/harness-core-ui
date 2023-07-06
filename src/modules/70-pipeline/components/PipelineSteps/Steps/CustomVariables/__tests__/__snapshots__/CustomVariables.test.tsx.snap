@@ -228,11 +228,6 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
       >
-        typeLabel
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-      >
         description
       </p>
       <p
@@ -245,80 +240,79 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[0].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[0].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[0].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            string
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[0].type"
-        >
-          string
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -466,80 +460,79 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[1].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[1].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[1].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            number
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[1].type"
-        >
-          number
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -733,11 +726,6 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
       >
-        typeLabel
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-      >
         description
       </p>
       <p
@@ -750,80 +738,79 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[0].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[0].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[0].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            string
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[0].type"
-        >
-          string
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -971,80 +958,79 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[1].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[1].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[1].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            number
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[1].type"
-        >
-          number
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -1192,80 +1178,79 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[2].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[2].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[2].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            secretType
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[2].type"
-        >
-          secretType
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="RUNTIME"
@@ -1553,11 +1538,6 @@ exports[`Custom Variables should render variables 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
       >
-        typeLabel
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-      >
         description
       </p>
       <p
@@ -1570,80 +1550,79 @@ exports[`Custom Variables should render variables 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[0].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[0].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[0].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            string
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[0].type"
-        >
-          string
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -1791,80 +1770,79 @@ exports[`Custom Variables should render variables 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[1].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[1].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[1].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            number
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[1].type"
-        >
-          number
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="FIXED"
@@ -2012,80 +1990,79 @@ exports[`Custom Variables should render variables 1`] = `
       class="tableRow variablesTableRow"
     >
       <div
-        class="textInputWithCopyBtn disabled"
+        class="Layout--vertical StyledProps--main"
       >
         <div
-          class="bp3-form-group bp3-disabled input"
+          class="textInputWithCopyBtn disabled"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled input"
+          >
+            
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="variables[2].name"
+                  type="text"
+                  value="myVar1"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-popover-wrapper popoverWrapper"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-popover-target"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
+              <button
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 disabled=""
-                name="variables[2].name"
-                type="text"
-                value="myVar1"
-              />
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="copy-alt"
+                >
+                  <svg
+                    fill="none"
+                    height="12"
+                    viewBox="0 0 8 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </div>
         <div
-          class="bp3-popover-wrapper popoverWrapper"
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-top-small"
         >
-          <div
-            class="bp3-popover-target"
+          <span
+            class="valueString"
+            data-testid="variables[2].type"
           >
-            <button
-              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
-              disabled=""
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="copy-alt"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  viewBox="0 0 8 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+            secretType
+          </span>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-      >
-        <span
-          class="valueString"
-          data-testid="variables[2].type"
-        >
-          secretType
-        </span>
-      </div>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main"
-        style="--text-line-clamp: 1;"
-      >
-        -
-      </p>
+      <span />
       <div
         class="valueColumn"
         data-type="RUNTIME"
