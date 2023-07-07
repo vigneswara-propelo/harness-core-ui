@@ -93,6 +93,24 @@ describe('ListingPageTemplate', () => {
     })
   })
 
+  test('it should display link to page documentation under the header if passed', async () => {
+    const testUrl = 'https://google.com'
+
+    renderComponent('content', {
+      headerLinks: { docsURL: testUrl }
+    })
+
+    await waitFor(() =>
+      expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute('href', testUrl)
+    )
+  })
+
+  test('it should not display link to page documentation under the header if not passed', async () => {
+    renderComponent('content')
+
+    expect(screen.queryByRole('link', { name: /cf.shared.readDocumentation/ })).not.toBeInTheDocument()
+  })
+
   test('it should display the toolbar if passed', async () => {
     const testId = 'TOOLBAR-TEST-ID'
 

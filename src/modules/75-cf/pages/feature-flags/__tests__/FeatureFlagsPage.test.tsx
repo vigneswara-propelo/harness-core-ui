@@ -139,6 +139,15 @@ describe('FeatureFlagsPage', () => {
     })
   })
 
+  test('It should have a link to FF documentation', async () => {
+    renderComponent()
+
+    expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute(
+      'href',
+      'https://developer.harness.io/docs/feature-flags/ff-onboarding/cf-feature-flag-overview'
+    )
+  })
+
   test('It should show All Environments Flags view on click of "All Environments" in the EnvironmentSelect dropdown', async () => {
     const refetchAllEnvironmentsFlags = jest.fn()
 

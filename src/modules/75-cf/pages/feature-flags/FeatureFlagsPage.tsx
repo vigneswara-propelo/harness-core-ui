@@ -175,6 +175,9 @@ const FeatureFlagsPage: FC = () => {
       title={title}
       titleTooltipId="ff_ffListing_heading"
       headerContent={!!environments?.length && <CFEnvironmentSelect component={<EnvironmentSelect />} />}
+      headerLinks={{
+        docsURL: 'https://developer.harness.io/docs/feature-flags/ff-onboarding/cf-feature-flag-overview'
+      }}
       toolbar={
         hasFeatureFlags && (
           <>

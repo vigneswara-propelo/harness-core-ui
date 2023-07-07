@@ -6,13 +6,15 @@
  */
 
 import React, { ReactNode, useMemo } from 'react'
-import { Breadcrumb, Page } from '@harness/uicore'
+import { Breadcrumb, Layout, Page, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import cx from 'classnames'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useStrings } from 'framework/strings'
 import ListingPageHeading from './ListingPageHeading'
-
 import css from './ListingPageTemplate.module.scss'
 
 export interface ListingPageTemplateProps {
@@ -20,6 +22,7 @@ export interface ListingPageTemplateProps {
   title: string
   titleTooltipId?: string
   headerContent?: ReactNode
+  headerLinks?: { docsURL?: string }
   toolbar?: ReactNode
   pagination?: ReactNode
   loading?: boolean
@@ -32,6 +35,7 @@ const ListingPageTemplate: React.FC<ListingPageTemplateProps> = ({
   title,
   titleTooltipId,
   headerContent,
+  headerLinks,
   toolbar,
   pagination,
   error,
@@ -62,14 +66,34 @@ const ListingPageTemplate: React.FC<ListingPageTemplateProps> = ({
     [title, titleTooltipId]
   )
 
+  const { getString } = useStrings()
+
   return (
     <main className={css.layout}>
       <Page.Header
         title={headerTitle}
         breadcrumbs={<NGBreadcrumbs customPathParams={{ module: 'cf' }} links={breadcrumbs} />}
-        className={css.header}
+        className={cx(css.header, headerLinks && css.withLinks)}
         content={headerContent}
       />
+
+      {headerLinks?.docsURL && (
+        <Page.SubHeader className={css.links}>
+          <a href={headerLinks.docsURL} target="_blank" rel="noopener noreferrer">
+            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="xsmall">
+              <Text
+                font={{ variation: FontVariation.BODY }}
+                color={Color.PRIMARY_7}
+                tag="div"
+                icon="learning"
+                iconProps={{ color: Color.PRIMARY_7 }}
+              >
+                {getString('cf.shared.readDocumentation')}
+              </Text>
+            </Layout.Horizontal>
+          </a>
+        </Page.SubHeader>
+      )}
 
       {toolbar && <Page.SubHeader className={css.toolbar}>{toolbar}</Page.SubHeader>}
 

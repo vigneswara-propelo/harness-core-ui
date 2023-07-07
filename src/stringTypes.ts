@@ -8356,6 +8356,7 @@ export interface StringsMap {
   'cf.shared.pleaseSelectVariation': string
   'cf.shared.prerequisites': string
   'cf.shared.quickGuide': string
+  'cf.shared.readDocumentation': string
   'cf.shared.rules': string
   'cf.shared.segment': string
   'cf.shared.segments': string

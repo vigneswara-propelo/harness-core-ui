@@ -11,7 +11,9 @@ declare const styles: {
   readonly footer: string
   readonly header: string
   readonly layout: string
+  readonly links: string
   readonly loading: string
   readonly toolbar: string
+  readonly withLinks: string
 }
 export default styles

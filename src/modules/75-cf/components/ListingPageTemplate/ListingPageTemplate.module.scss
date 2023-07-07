@@ -8,9 +8,10 @@
 .layout {
   display: grid;
   height: 100vh;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr auto;
   grid-template-areas:
     'header'
+    'links'
     'toolbar'
     'content'
     'footer';
@@ -18,6 +19,15 @@
 
 .header {
   grid-area: header;
+  &.withLinks {
+    border: none !important;
+  }
+}
+
+.links {
+  grid-area: links;
+  padding: var(--spacing-small) var(--spacing-xlarge) !important;
+  height: auto;
 }
 
 .toolbar {
