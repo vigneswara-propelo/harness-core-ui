@@ -86,7 +86,7 @@ export default function CISideNav(): React.ReactElement {
     if (enabledHostedBuildsForFreeUsers && selectedProject?.identifier) {
       fetchPipelines()
     }
-  }, [selectedProject?.identifier])
+  }, [selectedProject?.identifier, isCIGetStartedVisible])
 
   useEffect(() => {
     if (!fetchingPipelines && fetchPipelinesData) {
