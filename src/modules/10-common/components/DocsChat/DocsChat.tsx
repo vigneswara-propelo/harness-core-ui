@@ -8,19 +8,20 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import { Avatar, Button, ButtonVariation, Icon, Layout, Text, useToggleOpen } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { SubmitTicketModal } from '@common/components/ResourceCenter/SubmitTicketModal/SubmitTicketModal'
+import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import css from './DocsChat.module.scss'
 
 interface Message {
   author: 'harness' | 'user'
   text: string
   timestamp?: number
-  useful?: boolean
 }
 
 const sampleMessages: Array<Message> = [
@@ -34,6 +35,7 @@ const sampleMessages: Array<Message> = [
 interface UsefulOrNotProps {
   query: string
   answer: string
+  openSubmitTicketModal: () => void
 }
 
 enum Vote {
@@ -42,36 +44,46 @@ enum Vote {
   Down
 }
 
-function UsefulOrNot({ query, answer }: UsefulOrNotProps): JSX.Element {
+function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps): JSX.Element {
   const { trackEvent } = useTelemetry()
   const [voted, setVoted] = useState<Vote>(Vote.None)
 
   return (
-    <Layout.Horizontal spacing={'small'} flex={{ align: 'center-center' }}>
-      <Text>
-        <String stringID="common.csBot.feedback" />
-      </Text>
-      <Button
-        icon="main-thumbsup"
-        disabled={voted !== Vote.None}
-        variation={ButtonVariation.ICON}
-        className={cx({ [css.votedUp]: voted === Vote.Up })}
-        onClick={() => {
-          trackEvent(AIChatActions.BotHelpful, { query, answer })
-          setVoted(Vote.Up)
-        }}
-      />
-      <Button
-        icon="main-thumbsdown"
-        disabled={voted !== Vote.None}
-        variation={ButtonVariation.ICON}
-        className={cx({ [css.votedDown]: voted === Vote.Down })}
-        onClick={() => {
-          trackEvent(AIChatActions.BotNotHelpful, { query, answer })
-          setVoted(Vote.Down)
-        }}
-      />
-    </Layout.Horizontal>
+    <>
+      <Layout.Horizontal spacing={'small'} flex={{ align: 'center-center' }}>
+        <Text>
+          <String stringID="common.csBot.feedback" />
+        </Text>
+        <Button
+          icon="main-thumbsup"
+          disabled={voted !== Vote.None}
+          variation={ButtonVariation.ICON}
+          className={cx({ [css.votedUp]: voted === Vote.Up })}
+          onClick={() => {
+            trackEvent(AIChatActions.BotHelpful, { query, answer })
+            setVoted(Vote.Up)
+          }}
+        />
+        <Button
+          icon="main-thumbsdown"
+          disabled={voted !== Vote.None}
+          variation={ButtonVariation.ICON}
+          className={cx({ [css.votedDown]: voted === Vote.Down })}
+          onClick={() => {
+            trackEvent(AIChatActions.BotNotHelpful, { query, answer })
+            setVoted(Vote.Down)
+          }}
+        />
+      </Layout.Horizontal>
+      {voted === Vote.Down ? (
+        <Layout.Horizontal spacing="small">
+          <String stringID="common.csBot.ticketOnError" />
+          <a href="javascript:;" onClick={openSubmitTicketModal}>
+            Click Here
+          </a>
+        </Layout.Horizontal>
+      ) : null}
+    </>
   )
 }
 
@@ -187,7 +199,10 @@ function DocsChat(): JSX.Element {
                       {getString('common.csBot.errorMessage')}
                     </a>
                   ) : (
-                    message.text.replace(/\\n/g, '\n')
+                    <LinkifyText
+                      content={message.text.replace(/\\n/g, '\n')}
+                      textProps={{ color: message.author === 'harness' ? Color.AI_PURPLE_900 : Color.WHITE }}
+                    />
                   )}
                 </div>
                 {message.author === 'user' ? (
@@ -195,7 +210,11 @@ function DocsChat(): JSX.Element {
                 ) : null}
               </div>
               {message.author === 'harness' && index > 1 ? (
-                <UsefulOrNot answer={message.text} query={messages[index - 1].text} />
+                <UsefulOrNot
+                  answer={message.text}
+                  query={messages[index - 1].text}
+                  openSubmitTicketModal={openSubmitTicketModal}
+                />
               ) : null}
             </div>
           )

@@ -230,6 +230,7 @@ export interface StringsMap {
   'common.csBot.askAIDA': string
   'common.csBot.errorMessage': string
   'common.csBot.feedback': string
+  'common.csBot.ticketOnError': string
   'common.csBot.title': string
   'common.current': string
   'common.currentUTCTime': string
