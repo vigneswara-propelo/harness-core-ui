@@ -1108,7 +1108,7 @@ verification:
   currentTest: Current test
   testsRan: Tests ran on
   baselineMessages:
-    passedWithNoBaseline: Verification passed with no data, as no baseline data found for comparison.
+    passedWithNoBaseline: Verification passed without analysis, as no baseline data found for comparison.
     failed: Verification failed by comparing with the baseline data.
     expired: 'Baseline data expired on {{date}} and the verification was carried out without baseline data.'
     passed: Verification passed by comparing with the baseline data.
