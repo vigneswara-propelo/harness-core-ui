@@ -16,7 +16,8 @@ import type {
   DeploymentStageConfig,
   ExecutionWrapperConfig,
   StepElementConfig,
-  StepGroupElementConfig
+  StepGroupElementConfig,
+  ExecutionElementConfig
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -81,6 +82,7 @@ export function ExecutionWrapperInputSetForm(props: {
     stageIdentifier: string
     selectedStage?: DeploymentStageConfig
     stageType?: StageType
+    provisioner?: ExecutionElementConfig['steps']
   }
   parentIconData?: JSX.Element
 }): JSX.Element {

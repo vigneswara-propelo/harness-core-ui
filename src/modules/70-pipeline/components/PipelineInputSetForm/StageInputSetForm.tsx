@@ -1017,10 +1017,13 @@ export function StageInputSetFormInternal({
                   }
                 }}
                 stepViewType={viewType}
-                customStepProps={getCustomStepProps(
-                  deploymentStage?.infrastructure?.infrastructureDefinition?.type || '',
-                  getString
-                )}
+                customStepProps={{
+                  ...getCustomStepProps(
+                    deploymentStage?.infrastructure?.infrastructureDefinition?.type || '',
+                    getString
+                  ),
+                  provisioner: deploymentStage?.infrastructure?.infrastructureDefinition?.provisioner?.steps
+                }}
               />
             )}
             {(deploymentStageTemplate as any)?.platform?.os &&
@@ -1119,7 +1122,8 @@ export function StageInputSetFormInternal({
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
                   stageType,
-                  selectedStage: deploymentStage
+                  selectedStage: deploymentStage,
+                  provisioner: deploymentStage?.infrastructure?.infrastructureDefinition?.provisioner?.steps
                 }}
               />
             )}
@@ -1139,7 +1143,8 @@ export function StageInputSetFormInternal({
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
                   stageType,
-                  selectedStage: deploymentStage
+                  selectedStage: deploymentStage,
+                  provisioner: deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.steps
                 }}
               />
             )}
