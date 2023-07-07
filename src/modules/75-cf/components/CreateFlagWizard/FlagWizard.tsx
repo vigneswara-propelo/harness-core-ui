@@ -20,7 +20,6 @@ import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage, showToaster, FeatureFlagMutivariateKind } from '@cf/utils/CFUtils'
-import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { PageSpinner } from '@common/components'
 import { GIT_SYNC_ERROR_CODE, useGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
@@ -58,7 +57,6 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
   const { showError } = useToaster()
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const history = useHistory()
-  const { activeEnvironment, withActiveEnvironment } = useActiveEnvironment()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
   const { isAutoCommitEnabled, isGitSyncEnabled, gitSyncLoading, handleAutoCommit, getGitSyncFormMeta, handleError } =
@@ -69,7 +67,7 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
     queryParams: {
       accountIdentifier,
       orgIdentifier,
-      environmentIdentifier: activeEnvironment
+      environmentIdentifier
     } as CreateFeatureFlagQueryParams
   })
 
@@ -77,7 +75,7 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
     identifier: '',
     queryParams: {
       projectIdentifier,
-      environmentIdentifier: activeEnvironment,
+      environmentIdentifier,
       accountIdentifier,
       orgIdentifier
     }
@@ -117,12 +115,12 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
               },
               queryParams: {
                 projectIdentifier,
-                environmentIdentifier: activeEnvironment,
+                environmentIdentifier,
                 accountIdentifier,
                 orgIdentifier
               }
             })
-            // We dont want to stop the flow if the Jira Issue wasn't created so show error and resolve regardless
+            // We don't want to stop the flow if the Jira Issue wasn't created so show error and resolve regardless
           } catch (error) {
             showError(getErrorMessage(error), 0, 'cf.featureFlags.jira.errorMessage')
           } finally {
@@ -140,22 +138,20 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
           await handleAutoCommit(formData.autoCommit)
         }
 
-        // if we have recieve a Jira Issue key in URL, we assume the user came from Jira
+        // if we have received a Jira Issue key in URL, we assume the user came from Jira
         if (props.jiraIssueKey) {
           await checkJiraIssue(props.jiraIssueKey)
         }
 
         hideModal()
         history.push({
-          pathname: withActiveEnvironment(
-            routes.toCFFeatureFlagsDetail({
-              orgIdentifier: orgIdentifier as string,
-              projectIdentifier: projectIdentifier as string,
-              featureFlagIdentifier: formData.identifier,
-              accountId: accountIdentifier
-            }),
-            environmentIdentifier
-          ),
+          pathname: routes.toCFFeatureFlagsDetail({
+            orgIdentifier: orgIdentifier as string,
+            projectIdentifier: projectIdentifier as string,
+            featureFlagIdentifier: formData.identifier,
+            accountId: accountIdentifier
+          }),
+          search: `?activeEnvironment=${environmentIdentifier}`,
           state: {
             governanceMetadata: response?.details?.governanceMetadata
           }
