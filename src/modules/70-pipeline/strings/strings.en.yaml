@@ -1908,3 +1908,11 @@ copilot:
   introduction: Introducing Harness AIDA
   helpText: Harness AI Development Assistant(AIDA) can help find the root cause of the error and suggest possible solutions.
 license: License
+downloadLogs:
+  title: Download Logs
+  apiRetriedExceeded: 'Maximum API retry attempts reached. Please try again.'
+  expiredError: 'Status did not become "success" before the expiration time. Please try again.'
+  downloadInProgress: 'Downloading in progress...'
+  downloadFailed: 'Download failed'
+  downloadSuccessful: 'Download successful'
+  downloadRequestFailed: 'Download failed with: {{ errorMsg }}'

@@ -36,7 +36,12 @@ import type {
 import { showHarnessCoPilot, resolveCurrentStep } from '@pipeline/utils/executionUtils'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
-import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
+import {
+  ExecutionStatus,
+  isExecutionComplete,
+  isExecutionFinishedAnyhow,
+  isExecutionWaitingForInput
+} from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -49,6 +54,7 @@ import { useLogSettings } from './useLogsSettings'
 import { InputOutputTab } from '../execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import ExecutionStatusLabel from '../ExecutionStatusLabel/ExecutionStatusLabel'
 import { formatLogsForClipboard, getRawLogLines } from './logsUtils'
+import { LogsScope } from './components/DownloadLogs/DownloadLogsHelper'
 import css from './LogsContent.module.scss'
 
 enum ConsoleDetailTab {
@@ -142,8 +148,15 @@ export const logsRenderer = ({ hasLogs, isSingleSectionLogs, virtuosoRef, state,
 export function LogsContent(props: LogsContentProps): React.ReactElement {
   const { mode, toConsoleView = '', isWarning, renderLogs = logsRenderer } = props
   const pathParams = useParams<ExecutionPathProps & ModulePathParams>()
-  const { pipelineStagesMap, selectedStageId, allNodeMap, selectedStepId, pipelineExecutionDetail, queryParams } =
-    useExecutionContext()
+  const {
+    pipelineStagesMap,
+    selectedStageId,
+    allNodeMap,
+    selectedStepId,
+    pipelineExecutionDetail,
+    queryParams,
+    downloadLogsAction
+  } = useExecutionContext()
   const { state, actions } = useLogsContent()
   const { getString } = useStrings()
   const { linesWithResults, currentIndex } = state.searchData
@@ -153,7 +166,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const hasLogs = state.units.length > 0
   const isSingleSectionLogs = state.units.length === 1
   const { openDialog } = useLogSettings()
-  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
+  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS } =
+    useFeatureFlags()
   const { copyToClipboard } = useCopyToClipboard()
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
@@ -309,6 +323,24 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               <StrTemplate stringID="consoleView" />
             </Link>
           ) : null}
+          {SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS && (
+            <Button
+              icon={'import'}
+              iconProps={{ size: 14 }}
+              className={css.fullScreen}
+              variation={ButtonVariation.ICON}
+              withoutCurrentColor
+              disabled={!isExecutionFinishedAnyhow(currentStep?.status)}
+              onClick={async () => {
+                await downloadLogsAction?.({
+                  logsScope: LogsScope.Step,
+                  state,
+                  uniqueKey: currentStepId,
+                  logBaseKey: currentStep?.logBaseKey
+                })
+              }}
+            />
+          )}
         </div>
       </div>
       {renderLogs({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions })}

@@ -10,6 +10,7 @@ import { createContext, useContext } from 'react'
 import type { PipelineExecutionDetail, GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
+import { DownloadActionProps } from '@pipeline/components/LogsContent/components/DownloadLogs/DownloadLogsHelper'
 
 export interface ExecutionContextParams {
   pipelineExecutionDetail: PipelineExecutionDetail | null
@@ -33,6 +34,7 @@ export interface ExecutionContextParams {
   addNewNodeToMap(id: string, node: ExecutionNode): void
   setIsPipelineInvalid?: (flag: boolean) => void
   retriedHistoryInfo?: { retriedStages?: string[]; retriedExecutionUuids?: string[] }
+  downloadLogsAction?: (props: DownloadActionProps) => Promise<void>
 }
 
 export const ExecutionContext = createContext<ExecutionContextParams>({

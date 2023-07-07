@@ -191,7 +191,8 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     repoName,
     branch,
     storeType: pipelineMetadata?.data?.storeType,
-    stagesExecuted
+    stagesExecuted,
+    runSequence: pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence
   }
   const { canRerun } = getValidExecutionActions(canExecute, status as ExecutionStatus)
   const showRetryPipelineOption = isRetryPipelineAllowed(status as ExecutionStatus) && canRetry

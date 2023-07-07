@@ -46,6 +46,14 @@ export interface Line {
   }
 }
 
+export interface ResponseDownloadLog {
+  expires?: number
+  link?: string
+  status?: 'in progress' | 'success' | 'error' | 'queue'
+  error_msg?: string
+  message?: string
+}
+
 /**
  * Token used for authentication
  */
@@ -161,6 +169,17 @@ interface RcaQueryParams {
   accountID: string
 }
 
+export interface DownloadLogsQueryParams {
+  /**
+   * Account ID to retrieve logs for
+   */
+  accountID: string
+  /**
+   * Unique prefix to retrieve logs for
+   */
+  prefix: string
+}
+
 export interface ResponseRemediation {
   rca: string
   detailed_rca: string
@@ -226,6 +245,50 @@ export const rcaPromise = (
     'POST',
     getConfig('log-service'),
     `/rca`,
+    props,
+    signal
+  )
+
+export type DownloadLogsProps = Omit<GetProps<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>, 'path'>
+
+/**
+ * Get download logs link response from blob
+ *
+ * Retrieve download logs link response from log-service
+ */
+export const DownloadLogs = (props: DownloadLogsProps) => (
+  <Get<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>
+    path={`/blob/prefix`}
+    base={getConfig('log-service')}
+    {...props}
+  />
+)
+
+export type UseDownloadLogsProps = Omit<UseGetProps<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>, 'path'>
+
+/**
+ * Get download logs link response from blob
+ *
+ * Retrieve download logs link response from log-service
+ */
+export const useDownloadLogs = (props: UseDownloadLogsProps) =>
+  useGet<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>(`/blob/prefix`, {
+    base: getConfig('log-service'),
+    ...props
+  })
+
+/**
+ * Get download logs link response from blob
+ *
+ * Retrieve download logs link response from log-service
+ */
+export const downloadLogsPromise = (
+  props: GetUsingFetchProps<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>(
+    getConfig('log-service'),
+    `/blob/prefix`,
     props,
     signal
   )

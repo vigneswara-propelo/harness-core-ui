@@ -38,6 +38,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
+import { useDownloadLogs } from '@pipeline/components/LogsContent/components/DownloadLogs/useDownloadLogs'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
@@ -69,6 +70,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     selectedChildStageId,
     selectedCollapsedNodeId
   } = useExecutionData()
+
+  const { downloadLogsAction } = useDownloadLogs()
 
   const [isPipelineInvalid, setIsPipelineInvalid] = React.useState(false)
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
@@ -342,7 +345,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
         },
-        retriedHistoryInfo
+        retriedHistoryInfo,
+        downloadLogsAction
       }}
     >
       <ExecutionPipelineVariables

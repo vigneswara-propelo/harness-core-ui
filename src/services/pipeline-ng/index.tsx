@@ -2291,6 +2291,7 @@ export interface ExecutionNode {
   failureInfo?: FailureInfoDTO
   identifier?: string
   interruptHistories?: InterruptEffectDTO[]
+  logBaseKey?: string
   name?: string
   nodeRunInfo?: NodeRunInfo
   outcomes?: {
@@ -2388,6 +2389,20 @@ export interface ExecutorInfoDTO {
     | 'MANIFEST'
     | 'UNRECOGNIZED'
   username?: string
+}
+
+export interface ExpressionEvaluation {
+  error?: string
+  fqn?: string
+  originalExpression?: string
+  resolvedValue?: string
+}
+
+export interface ExpressionEvaluationDetail {
+  compiledYaml?: string
+  mapExpression?: {
+    [key: string]: ExpressionEvaluation
+  }
 }
 
 export interface ExpressionMetadataDTO {
@@ -4053,6 +4068,20 @@ export interface PagePMSPipelineSummaryResponse {
   totalPages?: number
 }
 
+export interface PagePipelineExecutionIdentifierSummary {
+  content?: PipelineExecutionIdentifierSummary[]
+  empty?: boolean
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
+  totalPages?: number
+}
+
 export interface PagePipelineExecutionSummary {
   content?: PipelineExecutionSummary[]
   empty?: boolean
@@ -4282,6 +4311,14 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'WAITING'
   )[]
   timeRange?: TimeRange
+}
+
+export interface PipelineExecutionIdentifierSummary {
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  planExecutionId?: string
+  projectIdentifier?: string
+  runSequence?: number
 }
 
 export interface PipelineExecutionInfo {
@@ -4821,6 +4858,7 @@ export interface ResourceDTO {
     | 'NETWORK_MAP'
     | 'CET_AGENT_TOKEN'
     | 'CET_CRITICAL_EVENT'
+    | 'CHAOS_SECURITY_GOVERNANCE'
 }
 
 export interface ResourceScope {
@@ -4925,6 +4963,13 @@ export interface ResponseExecutionNode {
 export interface ResponseExecutionsCount {
   correlationId?: string
   data?: ExecutionsCount
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExpressionEvaluationDetail {
+  correlationId?: string
+  data?: ExpressionEvaluationDetail
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5677,6 +5722,13 @@ export interface ResponsePageNGTriggerEventHistoryResponse {
 export interface ResponsePagePMSPipelineSummaryResponse {
   correlationId?: string
   data?: PagePMSPipelineSummaryResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePagePipelineExecutionIdentifierSummary {
+  correlationId?: string
+  data?: PagePipelineExecutionIdentifierSummary
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -7184,6 +7236,8 @@ export type MergeInputSetRequestRequestBody = MergeInputSetRequest
 export type RunStageRequestDTORequestBody = RunStageRequestDTO
 
 export type CreateTriggerBodyRequestBody = string
+
+export type GetExpressionEvaluatedBodyRequestBody = string
 
 export interface GetInitialStageYamlSnippetQueryParams {
   approvalType: 'HarnessApproval' | 'JiraApproval' | 'CustomApproval' | 'ServiceNowApproval'
@@ -12484,7 +12538,7 @@ export type SubmitExecutionInputProps = Omit<
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    string,
+    GetExpressionEvaluatedBodyRequestBody,
     SubmitExecutionInputPathParams
   >,
   'path' | 'verb'
@@ -12499,7 +12553,7 @@ export const SubmitExecutionInput = ({ nodeExecutionId, ...props }: SubmitExecut
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    string,
+    GetExpressionEvaluatedBodyRequestBody,
     SubmitExecutionInputPathParams
   >
     verb="POST"
@@ -12514,7 +12568,7 @@ export type UseSubmitExecutionInputProps = Omit<
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    string,
+    GetExpressionEvaluatedBodyRequestBody,
     SubmitExecutionInputPathParams
   >,
   'path' | 'verb'
@@ -12529,7 +12583,7 @@ export const useSubmitExecutionInput = ({ nodeExecutionId, ...props }: UseSubmit
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    string,
+    GetExpressionEvaluatedBodyRequestBody,
     SubmitExecutionInputPathParams
   >(
     'POST',
@@ -12548,7 +12602,7 @@ export const submitExecutionInputPromise = (
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    string,
+    GetExpressionEvaluatedBodyRequestBody,
     SubmitExecutionInputPathParams
   > & { nodeExecutionId: string },
   signal?: RequestInit['signal']
@@ -12557,7 +12611,7 @@ export const submitExecutionInputPromise = (
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    string,
+    GetExpressionEvaluatedBodyRequestBody,
     SubmitExecutionInputPathParams
   >('POST', getConfig('pipeline/api'), `/pipeline/execution-input/${nodeExecutionId}`, props, signal)
 
@@ -12829,6 +12883,97 @@ export const dummyTemplateStepApiPromise = (
     props,
     signal
   )
+
+export interface GetListOfExecutionIdentifierQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier?: string
+  page?: number
+  size?: number
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetListOfExecutionIdentifierProps = Omit<
+  MutateProps<
+    ResponsePagePipelineExecutionIdentifierSummary,
+    Failure | Error,
+    GetListOfExecutionIdentifierQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Executions Id list
+ */
+export const GetListOfExecutionIdentifier = (props: GetListOfExecutionIdentifierProps) => (
+  <Mutate<
+    ResponsePagePipelineExecutionIdentifierSummary,
+    Failure | Error,
+    GetListOfExecutionIdentifierQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/pipelines/execution/executionSummary`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetListOfExecutionIdentifierProps = Omit<
+  UseMutateProps<
+    ResponsePagePipelineExecutionIdentifierSummary,
+    Failure | Error,
+    GetListOfExecutionIdentifierQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Executions Id list
+ */
+export const useGetListOfExecutionIdentifier = (props: UseGetListOfExecutionIdentifierProps) =>
+  useMutate<
+    ResponsePagePipelineExecutionIdentifierSummary,
+    Failure | Error,
+    GetListOfExecutionIdentifierQueryParams,
+    void,
+    void
+  >('POST', `/pipelines/execution/executionSummary`, { base: getConfig('pipeline/api'), ...props })
+
+/**
+ * Gets Executions Id list
+ */
+export const getListOfExecutionIdentifierPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePagePipelineExecutionIdentifierSummary,
+    Failure | Error,
+    GetListOfExecutionIdentifierQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePagePipelineExecutionIdentifierSummary,
+    Failure | Error,
+    GetListOfExecutionIdentifierQueryParams,
+    void,
+    void
+  >('POST', getConfig('pipeline/api'), `/pipelines/execution/executionSummary`, props, signal)
 
 export interface GetExecutionBranchesListQueryParams {
   accountIdentifier: string
@@ -13247,6 +13392,91 @@ export const getExecutionDetailV2Promise = (
     GetExecutionDetailV2QueryParams,
     GetExecutionDetailV2PathParams
   >(getConfig('pipeline/api'), `/pipelines/execution/v2/${planExecutionId}`, props, signal)
+
+export interface GetExpressionEvaluatedQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetExpressionEvaluatedPathParams {
+  pipelineIdentifier: string
+}
+
+export type GetExpressionEvaluatedProps = Omit<
+  GetProps<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedPathParams
+  >,
+  'path'
+> &
+  GetExpressionEvaluatedPathParams
+
+/**
+ * Gets Execution Expression evaluated
+ */
+export const GetExpressionEvaluated = ({ pipelineIdentifier, ...props }: GetExpressionEvaluatedProps) => (
+  <Get<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedPathParams
+  >
+    path={`/pipelines/execution/${pipelineIdentifier}/evaluateExpression`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExpressionEvaluatedProps = Omit<
+  UseGetProps<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedPathParams
+  >,
+  'path'
+> &
+  GetExpressionEvaluatedPathParams
+
+/**
+ * Gets Execution Expression evaluated
+ */
+export const useGetExpressionEvaluated = ({ pipelineIdentifier, ...props }: UseGetExpressionEvaluatedProps) =>
+  useGet<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedPathParams
+  >(
+    (paramsInPath: GetExpressionEvaluatedPathParams) =>
+      `/pipelines/execution/${paramsInPath.pipelineIdentifier}/evaluateExpression`,
+    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
+  )
+
+/**
+ * Gets Execution Expression evaluated
+ */
+export const getExpressionEvaluatedPromise = (
+  {
+    pipelineIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedPathParams
+  > & { pipelineIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedPathParams
+  >(getConfig('pipeline/api'), `/pipelines/execution/${pipelineIdentifier}/evaluateExpression`, props, signal)
 
 export interface GetExecutionDetailQueryParams {
   accountIdentifier: string
@@ -18210,6 +18440,8 @@ export interface GetSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
+    | 'ServerlessAwsLambdaPackageV2'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18531,6 +18763,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
+    | 'ServerlessAwsLambdaPackageV2'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -18850,6 +19084,8 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
+    | 'ServerlessAwsLambdaPackageV2'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

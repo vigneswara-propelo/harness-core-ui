@@ -464,7 +464,8 @@ export const MenuCell: CellType = ({ row, column }) => {
           repoName: data.gitDetails?.repoName,
           branch: data.gitDetails?.branch,
           stagesExecuted: data.stagesExecuted,
-          storeType: data.storeType as StoreType
+          storeType: data.storeType as StoreType,
+          runSequence: data?.runSequence
         }}
         isPipelineInvalid={isPipelineInvalid}
         canEdit={canEdit}

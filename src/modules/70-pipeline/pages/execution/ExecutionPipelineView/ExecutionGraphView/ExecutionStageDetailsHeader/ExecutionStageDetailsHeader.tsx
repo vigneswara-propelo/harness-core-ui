@@ -236,7 +236,8 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
                     connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
                     repoName: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName,
                     branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
-                    storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
+                    storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType,
+                    runSequence: pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence
                   }}
                   noMenu
                   stageName={stageNode?.name}

@@ -4156,6 +4156,13 @@ export interface StringsMap {
   'pipeline.digest': string
   'pipeline.digestDependencyRequired': string
   'pipeline.discard': string
+  'pipeline.downloadLogs.apiRetriedExceeded': string
+  'pipeline.downloadLogs.downloadFailed': string
+  'pipeline.downloadLogs.downloadInProgress': string
+  'pipeline.downloadLogs.downloadRequestFailed': string
+  'pipeline.downloadLogs.downloadSuccessful': string
+  'pipeline.downloadLogs.expiredError': string
+  'pipeline.downloadLogs.title': string
   'pipeline.draft': string
   'pipeline.duplicateImport': string
   'pipeline.duplicateImportInputset': string

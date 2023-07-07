@@ -34,7 +34,8 @@ import {
   isExecutionComplete,
   isExecutionActive,
   ExecutionStatus,
-  isRetryPipelineAllowed
+  isRetryPipelineAllowed,
+  isExecutionFinishedAnyhow
 } from '@pipeline/utils/statusHelpers'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
@@ -51,6 +52,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
+import { useDownloadLogs } from '../LogsContent/components/DownloadLogs/useDownloadLogs'
+import { LogsScope } from '../LogsContent/components/DownloadLogs/DownloadLogsHelper'
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
@@ -69,6 +72,7 @@ export interface ExecutionActionsProps {
     executionIdentifier: string
     accountId: string
     stagesExecuted?: string[]
+    runSequence?: number
   }> &
     GitQueryParams
   refetch?(): Promise<void>
@@ -178,7 +182,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     connectorRef,
     repoName,
     storeType,
-    stagesExecuted
+    stagesExecuted,
+    runSequence
   } = params
   const { mutate: interrupt } = useHandleInterrupt({
     planExecutionId: executionIdentifier
@@ -223,7 +228,9 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     }
   })
 
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS } = useFeatureFlags()
+
+  const { downloadLogsAction } = useDownloadLogs()
 
   const { canAbort, canRerun, canMarkAsFailed } = getValidExecutionActions(canExecute, executionStatus)
   const { abortText, rerunText, UserMarkedFailure } = getActionTexts(stageId)
@@ -403,6 +410,19 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                   hidden={!!onCompareExecutions}
                 />
               </>
+            )}
+            {SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS && (
+              <MenuItem
+                text={getString('pipeline.downloadLogs.title')}
+                onClick={() =>
+                  downloadLogsAction({
+                    logsScope: LogsScope.Pipeline,
+                    runSequence,
+                    uniqueKey: pipelineIdentifier
+                  })
+                }
+                disabled={!isExecutionFinishedAnyhow(executionStatus)}
+              />
             )}
           </Menu>
         </Popover>
