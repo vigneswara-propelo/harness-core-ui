@@ -78,7 +78,13 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   TAS: [ConfigFilesMap.Harness, ConfigFilesMap.Github],
   Asg: [ConfigFilesMap.Harness],
   GoogleCloudFunctions: [ConfigFilesMap.Harness],
-  AwsLambda: [ConfigFilesMap.Harness],
+  AwsLambda: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
   AWS_SAM: [ConfigFilesMap.Harness]
 }
 
