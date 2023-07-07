@@ -518,7 +518,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
   const showIACM = hasIACMStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const iacmData = defaultTo(data?.moduleInfo?.iacm, {})
-  const showTriggerInfo = (showCI && ciData) || (showIACM && iacmData)
+  const showCITriggerInfo = (showCI && ciData) || (showIACM && iacmData)
   const triggerInfo = showCI ? ciData : iacmData
   const prOrCommitTitle =
     triggerInfo.ciExecutionInfoDTO?.pullRequest?.title || triggerInfo.ciExecutionInfoDTO?.branch?.commits[0]?.message
@@ -571,18 +571,47 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
     )
   }, [pipelineIdentifier])
 
-  return showTriggerInfo ? (
-    <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
-      <CITriggerInfo {...(triggerInfo as unknown as CITriggerInfoProps)} />
-      {prOrCommitTitle ? (
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
-          {prOrCommitTitle}
-        </Text>
-      ) : (
-        triggerInfoCellTriggeredBySection
-      )}
-    </Layout.Vertical>
-  ) : (
-    triggerInfoCellTriggeredBySection
-  )
+  if (showCITriggerInfo) {
+    return (
+      <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
+        <CITriggerInfo {...(triggerInfo as unknown as CITriggerInfoProps)} />
+        {prOrCommitTitle ? (
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
+            {prOrCommitTitle}
+          </Text>
+        ) : (
+          triggerInfoCellTriggeredBySection
+        )}
+      </Layout.Vertical>
+    )
+  } else if (data?.executionTriggerInfo?.triggerType === 'WEBHOOK_CUSTOM') {
+    return (
+      <Layout.Horizontal>
+        <Icon name={iconName as IconName} size={12} className={css.triggerIcon} />
+        <Text font={{ variation: FontVariation.SMALL }}>{getString('pipeline.triggerBy')}</Text>
+        <Link
+          to={routes.toTriggersDetailPage({
+            projectIdentifier: pathParams.projectIdentifier,
+            orgIdentifier: pathParams.orgIdentifier,
+            accountId: pathParams.accountId,
+            module: pathParams.module,
+            pipelineIdentifier: data.pipelineIdentifier || '',
+            triggerIdentifier: get(data, 'executionTriggerInfo.triggeredBy.identifier') || '',
+            triggerType
+          })}
+          target="_blank"
+        >
+          <Text
+            font={{ variation: FontVariation.SMALL }}
+            color={Color.PRIMARY_7}
+            lineClamp={1}
+            style={{ paddingLeft: 5 }}
+          >
+            {data?.executionTriggerInfo?.triggeredBy?.triggerIdentifier}
+          </Text>
+        </Link>
+      </Layout.Horizontal>
+    )
+  }
+  return triggerInfoCellTriggeredBySection
 }

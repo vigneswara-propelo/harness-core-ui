@@ -5294,6 +5294,7 @@ export interface StringsMap {
   'pipeline.totalCount': string
   'pipeline.traffic': string
   'pipeline.trafficPercentage': string
+  'pipeline.triggerBy': string
   'pipeline.triggerInfo': string
   'pipeline.triggeredBy': string
   'pipeline.triggeredByCron': string

@@ -1761,6 +1761,7 @@ runDisabledOnFreeze: An active freeze is applicable on this pipeline. Any deploy
 viewFreeze: View freeze details
 executionTriggeredBy: This execution was triggered by
 triggeredBy: Triggered by {{triggerType}}
+triggerBy: Triggered by
 manuallyTriggered: This execution was triggered manually
 rollbackExecution: This execution was a rollback to a previous version
 triggeredByThirdParty: Triggered by a third party system

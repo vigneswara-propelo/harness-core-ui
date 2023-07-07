@@ -41,6 +41,7 @@ declare const styles: {
   readonly table: string
   readonly tags: string
   readonly toggleAccordion: string
+  readonly triggerIcon: string
   readonly triggerInfo: string
   readonly triggerInfoCell: string
   readonly viewWindowTextStyle: string
