@@ -253,7 +253,7 @@ function HelmWithHarnessStore({
                           allowableTypes={allowableTypes}
                           helmVersion={formik.values?.helmVersion}
                           deploymentType={deploymentType as string}
-                          helmStore={modifiedPrevStepData?.store ?? ''}
+                          helmStore={modifiedPrevStepData?.store || initialValues?.spec?.store?.type || ''}
                         />
                       }
                     />
