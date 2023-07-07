@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
@@ -21,7 +21,7 @@ import {
 import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
-import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@common/constants/Utils'
@@ -46,7 +46,7 @@ interface ResourceCardListProps {
 }
 
 const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
-  const { accountId, orgIdentifier } = useParams<OrgPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
   const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
@@ -75,7 +75,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data } = useGetSmtpConfig({ queryParams: { accountId } })
-  const showGitOpsCard = useMemo(() => history?.location?.pathname.includes('resources'), [history?.location?.pathname])
+  const showGitOpsCard = accountId && !orgIdentifier && !projectIdentifier
 
   const smtpResource: ResourceOption[] = [
     {
@@ -198,31 +198,31 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       label: <String stringID="common.gitopsAgents" />,
       icon: 'gitops-agent-blue',
       bgColor: 'var(--orange-50)',
-      route: routes.toAccountResourcesGitOps({ accountId, entity: 'agents' })
+      route: routes.toGitOpsResources({ accountId, orgIdentifier, entity: 'agents' })
     } as ResourceOption,
     {
       label: <String stringID="repositories" />,
       icon: 'gitops-repository-blue',
       bgColor: 'var(--primary-1)',
-      route: routes.toAccountResourcesGitOps({ accountId, entity: 'repositories' })
+      route: routes.toGitOpsResources({ accountId, orgIdentifier, entity: 'repositories' })
     } as ResourceOption,
     {
       label: <String stringID="common.clusters" />,
       icon: 'gitops-clusters-blue',
       bgColor: 'var(--purple-50)',
-      route: routes.toAccountResourcesGitOps({ accountId, entity: 'clusters' })
+      route: routes.toGitOpsResources({ accountId, orgIdentifier, entity: 'clusters' })
     } as ResourceOption,
     {
       label: <String stringID="common.repositoryCertificates" />,
       icon: 'gitops-repo-cert-blue',
       bgColor: 'var(--yellow-50)',
-      route: routes.toAccountResourcesGitOps({ accountId, entity: 'repoCertificates' })
+      route: routes.toGitOpsResources({ accountId, orgIdentifier, entity: 'repoCertificates' })
     } as ResourceOption,
     {
       label: <String stringID="common.gnupgKeys" />,
       icon: 'gitops-gnupg-key-blue',
       bgColor: 'var(--magenta-50)',
-      route: routes.toAccountResourcesGitOps({ accountId, entity: 'gnuPGKeys' })
+      route: routes.toGitOpsResources({ accountId, orgIdentifier, entity: 'gnuPGKeys' })
     } as ResourceOption
   ]
 

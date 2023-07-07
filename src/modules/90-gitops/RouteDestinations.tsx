@@ -12,7 +12,7 @@ import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { AccountSideNavProps } from '@common/RouteDestinations'
-import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import {
   DeployEnvironmentWidget,
@@ -74,7 +74,13 @@ export default (
 
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={[routes.toAccountResourcesGitOps({ ...accountPathProps, entity: 'agents' })]}
+      path={[
+        routes.toGitOpsResources({ ...accountPathProps, entity: 'agents' }),
+        routes.toGitOpsResources({ ...accountPathProps, entity: 'repositories' }),
+        routes.toGitOpsResources({ ...accountPathProps, entity: 'repoCertificates' }),
+        routes.toGitOpsResources({ ...accountPathProps, entity: 'clusters' }),
+        routes.toGitOpsResources({ ...accountPathProps, entity: 'gnuPGKeys' })
+      ]}
       pageName={PAGE_NAME.GitOpsPage}
     >
       <GitOpsPage />
@@ -82,31 +88,13 @@ export default (
 
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={[routes.toAccountResourcesGitOps({ ...accountPathProps, entity: 'repositories' })]}
-      pageName={PAGE_NAME.GitOpsPage}
-    >
-      <GitOpsPage />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={[routes.toAccountResourcesGitOps({ ...accountPathProps, entity: 'repoCertificates' })]}
-      pageName={PAGE_NAME.GitOpsPage}
-    >
-      <GitOpsPage />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={[routes.toAccountResourcesGitOps({ ...accountPathProps, entity: 'clusters' })]}
-      pageName={PAGE_NAME.GitOpsPage}
-    >
-      <GitOpsPage />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={[routes.toAccountResourcesGitOps({ ...accountPathProps, entity: 'gnuPGKeys' })]}
+      path={[
+        routes.toGitOpsResources({ ...orgPathProps, entity: 'agents' }),
+        routes.toGitOpsResources({ ...orgPathProps, entity: 'repositories' }),
+        routes.toGitOpsResources({ ...orgPathProps, entity: 'repoCertificates' }),
+        routes.toGitOpsResources({ ...orgPathProps, entity: 'clusters' }),
+        routes.toGitOpsResources({ ...orgPathProps, entity: 'gnuPGKeys' })
+      ]}
       pageName={PAGE_NAME.GitOpsPage}
     >
       <GitOpsPage />

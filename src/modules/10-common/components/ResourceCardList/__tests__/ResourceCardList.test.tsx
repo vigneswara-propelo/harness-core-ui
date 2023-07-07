@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
+import { accountPathProps } from '@common/utils/routeUtils'
 import * as cdngServices from 'services/cd-ng'
 import ResourceCardList from '../ResourceCardList'
 import { smtpConfig } from './mocks/mockData'
@@ -26,10 +28,20 @@ jest.mock('react-router-dom', () => ({
 }))
 jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => ({ data: { data: { value: 'false' } } } as any))
 
+const ACCOUNT_PATH_PARAMS = {
+  accountId: 'TEST_ACCOUNT_ID',
+  entity: 'agents'
+}
+
+const ACCOUNT_LEVEL_GITOPS_ROUTE = routes.toGitOpsResources({
+  ...accountPathProps,
+  entity: ':entity'
+})
+
 describe('Resource card list test', () => {
   test('render', () => {
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper path={ACCOUNT_LEVEL_GITOPS_ROUTE} pathParams={ACCOUNT_PATH_PARAMS}>
         <ResourceCardList />
       </TestWrapper>
     )
@@ -49,5 +61,26 @@ describe('Resource card list test', () => {
     }
     fireEvent.click(smptpCard)
     expect(smtpPageOpened).toBeTruthy()
+  })
+
+  test('GitOps Entities at account level', () => {
+    const { getByText } = render(
+      <TestWrapper path={ACCOUNT_LEVEL_GITOPS_ROUTE} pathParams={ACCOUNT_PATH_PARAMS}>
+        <ResourceCardList />
+      </TestWrapper>
+    )
+
+    const gitOpsEl = getByText('common.gitOps')
+    expect(gitOpsEl).toBeDefined()
+
+    act(() => {
+      fireEvent.click(gitOpsEl)
+    })
+
+    expect(getByText('common.gitopsAgents')).toBeDefined()
+    expect(getByText('repositories')).toBeDefined()
+    expect(getByText('common.clusters')).toBeDefined()
+    expect(getByText('common.repositoryCertificates')).toBeDefined()
+    expect(getByText('common.gnupgKeys')).toBeDefined()
   })
 })

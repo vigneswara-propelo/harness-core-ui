@@ -283,8 +283,9 @@ export interface GovernancePathProps
   evaluationId?: string
 }
 
-export interface AccountLevelGitOpsPathProps {
+export interface GitOpsPathProps {
   entity: string
+  orgIdentifier?: string
 }
 
 /**

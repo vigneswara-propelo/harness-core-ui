@@ -50,7 +50,7 @@ import type {
   EnvironmentGroupQueryParams,
   VariablesPathProps,
   EnvironmentQueryParams,
-  AccountLevelGitOpsPathProps,
+  GitOpsPathProps,
   TemplateType,
   AccountRoutePlacement,
   ExecutionQueryParams,
@@ -874,10 +874,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
   ),
-  toAccountResourcesGitOps: withAccountId(({ entity }: AccountLevelGitOpsPathProps) => {
+  toGitOpsResources: withAccountId(({ entity, orgIdentifier }: GitOpsPathProps) => {
     const path = `resources/gitops/${entity}`
     return getScopeBasedRoute({
-      scope: {},
+      scope: { orgIdentifier },
       path
     })
   }),
