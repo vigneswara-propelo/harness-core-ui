@@ -134,7 +134,9 @@ export const verifyStepInitialValuesWithRunTimeFields = {
       duration: RUNTIME_INPUT_VALUE,
       baseline: RUNTIME_INPUT_VALUE,
       trafficsplit: RUNTIME_INPUT_VALUE,
-      deploymentTag: RUNTIME_INPUT_VALUE
+      deploymentTag: RUNTIME_INPUT_VALUE,
+      controlNodeRegExPattern: RUNTIME_INPUT_VALUE,
+      testNodeRegExPattern: RUNTIME_INPUT_VALUE
     }
   }
 }

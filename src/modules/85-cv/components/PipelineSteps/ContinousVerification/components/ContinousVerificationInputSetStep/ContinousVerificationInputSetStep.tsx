@@ -56,7 +56,17 @@ export function ContinousVerificationInputSetStep(
   const { expressions } = useVariablesExpression()
   const [pipeline, setPipeline] = useState<{ pipeline: PipelineInfoConfig } | undefined>()
   const prefix = isEmpty(path) ? '' : `${path}.`
-  const { sensitivity, duration, baseline, trafficsplit, deploymentTag } = (template?.spec?.spec as spec) || {}
+
+  const {
+    sensitivity,
+    duration,
+    baseline,
+    trafficsplit,
+    deploymentTag,
+    controlNodeRegExPattern,
+    testNodeRegExPattern
+  } = (template?.spec?.spec as spec) || {}
+
   const { monitoredService } = template?.spec || {}
   const { data: pipelineData, refetch: fetchPipeline } = useGetPipeline({
     pipelineIdentifier,
@@ -224,6 +234,35 @@ export function ContinousVerificationInputSetStep(
                 enableConfigureOptions: false,
                 allowableTypes
               }}
+            />
+          </Container>
+        )}
+
+        {checkIfRunTimeInput(controlNodeRegExPattern) && (
+          <Container className={css.itemRuntimeSetting}>
+            <FormInput.MultiTextInput
+              label={getString('cv.verifyStep.controlNodeLabel')}
+              name={`${prefix}spec.spec.controlNodeRegExPattern`}
+              placeholder={getString('cv.verifyStep.controlNodePlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              disabled={readonly}
+            />
+          </Container>
+        )}
+        {checkIfRunTimeInput(testNodeRegExPattern) && (
+          <Container className={css.itemRuntimeSetting}>
+            <FormInput.MultiTextInput
+              label={getString('cv.verifyStep.testNodeLabel')}
+              placeholder={getString('cv.verifyStep.testNodePlaceholder')}
+              name={`${prefix}spec.spec.testNodeRegExPattern`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              disabled={readonly}
             />
           </Container>
         )}
