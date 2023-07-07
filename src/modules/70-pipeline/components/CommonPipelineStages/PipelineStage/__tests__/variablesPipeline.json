@@ -1,0 +1,219 @@
+{
+  "name": "chainedPipeline",
+  "identifier": "chainedPipeline",
+  "projectIdentifier": "Fardeen",
+  "orgIdentifier": "default",
+  "tags": {
+    "__uuid": "SUUU20ejR-ie7ZjEVQchAw"
+  },
+  "stages": [
+    {
+      "stage": {
+        "name": "parStage1",
+        "identifier": "parStage1",
+        "description": "",
+        "type": "Pipeline",
+        "spec": {
+          "org": "default",
+          "pipeline": "childPip",
+          "project": "Fardeen",
+          "inputs": {
+            "identifier": "childPip",
+            "stages": [
+              {
+                "stage": {
+                  "identifier": "childStg1",
+                  "type": "Custom",
+                  "spec": {
+                    "execution": {
+                      "steps": [
+                        {
+                          "step": {
+                            "identifier": "HTTP",
+                            "type": "Http",
+                            "spec": {
+                              "url": "<+input>",
+                              "requestBody": "<+input>",
+                              "__uuid": "7iMUtc8UQwy6cRvsaefx-w"
+                            },
+                            "__uuid": "YTVrZK-7RuyjSDY5dD0Nvg"
+                          },
+                          "__uuid": "daBeod0wSH-RupA60nE-dw"
+                        },
+                        {
+                          "stepGroup": {
+                            "identifier": "childStpGrp",
+                            "steps": [
+                              {
+                                "step": {
+                                  "identifier": "ShellScript",
+                                  "type": "ShellScript",
+                                  "spec": {
+                                    "source": {
+                                      "type": "Inline",
+                                      "spec": {
+                                        "script": "<+input>",
+                                        "__uuid": "5z7PVbgqSFefYUur3lxhHQ"
+                                      },
+                                      "__uuid": "PIU5_kUVS9mke2Q0HWi60Q"
+                                    },
+                                    "__uuid": "_9otEjPtTSOW9NkrYO559g"
+                                  },
+                                  "__uuid": "gKuzRA8qQYio2Wpc_46zKg"
+                                },
+                                "__uuid": "S464FPdAT-mhz0tfElSxOQ"
+                              },
+                              {
+                                "step": {
+                                  "identifier": "Wait",
+                                  "type": "Wait",
+                                  "spec": {
+                                    "duration": "<+input>",
+                                    "__uuid": "ZCVV2U5uQ2Gg7eJKuGLZvw"
+                                  },
+                                  "__uuid": "0M80vWFAQhCZJrwIO6W5Yg"
+                                },
+                                "__uuid": "J7c9tBBDQJGPJz6SHOORyQ"
+                              }
+                            ],
+                            "__uuid": "9FOtk_SjTtG6czJgs-Ao4g"
+                          },
+                          "__uuid": "mh89M4O2R-CKVRlYsH_Kdg"
+                        }
+                      ],
+                      "__uuid": "POsOSVkXSoW-1XjfCDxriA"
+                    },
+                    "__uuid": "sjIDPsX5TzGQ-nXr4NfGGw"
+                  },
+                  "__uuid": "LBXHpfLiRyO9EZkO6k6Spg"
+                },
+                "__uuid": "DzhxNA7eRIC7SBj2UzqUsw"
+              }
+            ],
+            "__uuid": "JZiD9OX9RL-VU-gJIebU6A"
+          },
+          "outputs": [
+            {
+              "name": "",
+              "value": "",
+              "__uuid": "qps6iiYAQuWnG07gGsnzwg"
+            }
+          ],
+          "__uuid": "mESbld1WQCmbpNPGqWYRBA"
+        },
+        "variables": [],
+        "__uuid": "AhefkYJATZmuvXoZ3lqOkw"
+      },
+      "__uuid": "MryOFM5iSquJBS-t6By6_A"
+    },
+    {
+      "stage": {
+        "name": "parStage2",
+        "identifier": "parStage2",
+        "description": "",
+        "type": "Pipeline",
+        "spec": {
+          "org": "default",
+          "pipeline": "childParallePip",
+          "project": "Fardeen",
+          "outputs": [
+            {
+              "name": "output1",
+              "value": "WgKNs5PyRE-tJOdlwWPtEw",
+              "__uuid": "WgKNs5PyRE-tJOdlwWPtEy"
+            },
+            {
+              "name": "output2",
+              "value": "PXd4SmsvTEqU119LVlsJ2w",
+              "__uuid": "PXd4SmsvTEqU119LVlsJ2y"
+            },
+            {
+              "name": "dummyOutput",
+              "value": "QQpr6p_9SMm_Jxj3jcQ5oQ",
+              "__uuid": "QQpr6p_9SMm_Jxj3jcQ5oP"
+            }
+          ],
+          "__uuid": "6hoA0TQJS92gjndOInxAHA"
+        },
+        "__uuid": "G93f1TLiR6aSg8InACg-AQ"
+      },
+      "__uuid": "fFD28qXJSzGLwqwcNMKABA"
+    },
+    {
+      "stage": {
+        "name": "parStage3",
+        "identifier": "parStage3",
+        "description": "",
+        "type": "Pipeline",
+        "spec": {
+          "org": "default",
+          "pipeline": "inputSetChildPipeline",
+          "project": "Fardeen",
+          "inputs": {
+            "identifier": "inputSetChildPipeline",
+            "stages": [
+              {
+                "stage": {
+                  "identifier": "stage1",
+                  "type": "Custom",
+                  "spec": {
+                    "execution": {
+                      "steps": [
+                        {
+                          "step": {
+                            "identifier": "ShellScript_1",
+                            "type": "ShellScript",
+                            "spec": {
+                              "source": {
+                                "type": "Inline",
+                                "spec": {
+                                  "script": "<+input>",
+                                  "__uuid": "YS8AwoBlS0CoXd_3ypUNZA"
+                                },
+                                "__uuid": "_MC1RHQpTWOYdkHbHDYx-Q"
+                              },
+                              "__uuid": "Ng4zezOXQQSw25Wcu0xbUA"
+                            },
+                            "timeout": "11m",
+                            "__uuid": "8tmt9hmTQ6OM73daWW0p1g"
+                          },
+                          "__uuid": "busBZZgNRfCoyjhz0kHzQQ"
+                        },
+                        {
+                          "step": {
+                            "identifier": "HTTP_1",
+                            "type": "Http",
+                            "spec": {
+                              "requestBody": "req",
+                              "method": "GET",
+                              "__uuid": "Mf6PExToQ7quuBdwsrLt5Q"
+                            },
+                            "timeout": "12m",
+                            "__uuid": "Td2qiJ1zRXqSsEC_NZ6DjA"
+                          },
+                          "__uuid": "j1iEeBkRSOWw-cMdqVpZhg"
+                        }
+                      ],
+                      "__uuid": "H2omu9AzTLGRCPyjUA9G8g"
+                    },
+                    "__uuid": "atot18mDQfCOrdECQ8xwIA"
+                  },
+                  "__uuid": "aCW8UmdOTXCLDIf2SksZ4A"
+                },
+                "__uuid": "PziAbjqJQCKVUbQrKcyW9A"
+              }
+            ],
+            "__uuid": "K0M2CBCBQq6e6E9vAKBK-w"
+          },
+          "__uuid": "OXFsb5A5QOmh-x9EZQNzJA"
+        },
+        "tags": {
+          "__uuid": "DJQlPj1VRieI2bzEwNYfeA"
+        },
+        "__uuid": "w4nC-7K9T06t08CqcgwhkA"
+      },
+      "__uuid": "zznV8nNwQpGDp-rJd9_Yyg"
+    }
+  ],
+  "__uuid": "d3qqPYNUT7u0TpmoI4bn5Q"
+}

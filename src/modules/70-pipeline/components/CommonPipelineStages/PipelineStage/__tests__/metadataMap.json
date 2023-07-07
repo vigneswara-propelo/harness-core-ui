@@ -1,0 +1,35 @@
+{
+  "WgKNs5PyRE-tJOdlwWPtEw": {
+    "yamlProperties": {
+      "fqn": "pipeline.stages.parStage2.output.output1",
+      "localName": "stages.parStage2.output.output1",
+      "variableName": "output1",
+      "aliasFQN": "",
+      "visible": true
+    },
+    "yamlOutputProperties": null,
+    "yamlExtraProperties": null
+  },
+  "PXd4SmsvTEqU119LVlsJ2w": {
+    "yamlProperties": {
+      "fqn": "pipeline.stages.parStage2.output.output2",
+      "localName": "stages.parStage2.output.output2",
+      "variableName": "output2",
+      "aliasFQN": "",
+      "visible": true
+    },
+    "yamlOutputProperties": null,
+    "yamlExtraProperties": null
+  },
+  "QQpr6p_9SMm_Jxj3jcQ5oQ": {
+    "yamlProperties": {
+      "fqn": "pipeline.stages.parStage2.output.dummyOutput",
+      "localName": "stages.parStage2.output.dummyOutput",
+      "variableName": "dummyOutput",
+      "aliasFQN": "",
+      "visible": true
+    },
+    "yamlOutputProperties": null,
+    "yamlExtraProperties": null
+  }
+}

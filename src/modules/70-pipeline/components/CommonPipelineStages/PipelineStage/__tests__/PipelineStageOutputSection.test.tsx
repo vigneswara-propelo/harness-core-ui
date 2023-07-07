@@ -18,6 +18,8 @@ import {
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import * as PipelineVariablesContext from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import {
   errorContextProvider,
   getDummyPipelineContextValue,
@@ -26,10 +28,19 @@ import {
 } from './PipelineStageHelper'
 import { PipelineStageOutputSection } from '../PipelineStageOutputSection/PipelineStageOutputSection'
 import { VariableOutputPanel } from '../PipelineStageOutputSection/VariableOutputPanel'
+import variablesPipeline from './variablesPipeline.json'
+import metadataMap from './metadataMap.json'
 
 jest.mock('services/pipeline-ng', () => ({
   useCreateVariablesV2: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
+    mutate: jest.fn(() =>
+      Promise.resolve({
+        data: {
+          yaml: yamlStringify({ pipeline: variablesPipeline }),
+          metadataMap
+        }
+      })
+    ),
     loading: false,
     cancel: jest.fn()
   })),
@@ -70,6 +81,13 @@ jest.mock('resize-observer-polyfill', () => {
     }
   }
   return ResizeObserver
+})
+
+jest.spyOn(PipelineVariablesContext, 'usePipelineVariables').mockImplementation((): any => {
+  return {
+    variablesPipeline: { pipeline: variablesPipeline },
+    metadataMap
+  }
 })
 
 const renderOutputSectionComponent = (value?: PipelineContextInterface): RenderResult => {
@@ -144,16 +162,16 @@ describe('PipelineStageOutputSection Test', () => {
       name: 'pipeline.pipelineChaining.newOutput'
     })
     userEvent.click(newOutputAddButton)
-    const secondOutputRow = await screen.findByTestId('output-row-2')
-    expect(secondOutputRow).toBeInTheDocument()
+    const thirdOutputRow = await screen.findByTestId('output-row-2')
+    expect(thirdOutputRow).toBeInTheDocument()
 
     // Check Onchange - multi type button
-    const multiTypeButton = within(secondOutputRow).getByTestId('multi-type-button')
+    const multiTypeButton = within(thirdOutputRow).getByTestId('multi-type-button')
     userEvent.click(multiTypeButton)
     const runtimeInputText = await screen.findByText('Runtime input')
     expect(runtimeInputText).toBeInTheDocument()
     userEvent.click(runtimeInputText)
-    expect(await within(secondOutputRow).findByPlaceholderText(RUNTIME_INPUT_VALUE)).toBeInTheDocument()
+    expect(await within(thirdOutputRow).findByPlaceholderText(RUNTIME_INPUT_VALUE)).toBeInTheDocument()
   })
 
   test('validate duplicate outputs name', async () => {
@@ -233,5 +251,35 @@ describe('PipelineStageOutputSection Test', () => {
 
     expect(await screen.findByDisplayValue('<+pipeline.name>')).toHaveAttribute('disabled')
     expect(screen.queryByTestId('delete-output-0')).not.toBeInTheDocument()
+  })
+
+  test('Render correct fqn and local name of chained pipeline outputs', async () => {
+    const pipelineContextMockValue = getDummyPipelineContextValue()
+    renderOutputSectionComponent({
+      ...pipelineContextMockValue,
+      state: {
+        ...pipelineContextMockValue.state,
+        selectionState: {
+          selectedSectionId: 'OUTPUTS',
+          selectedStageId: 'parStage2',
+          selectedStepId: undefined
+        }
+      },
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: variablesPipeline.stages?.[1], parent: undefined }
+      })
+    } as any)
+
+    expect(await screen.findByText('pipeline.pipelineChaining.pipelineOutputs')).toBeDefined()
+    const firstOutputRow = await screen.findByTestId('output-row-0')
+    const localFQNCopyButton = firstOutputRow.querySelector('span[data-icon="copy-alt"]')
+    await userEvent.click(localFQNCopyButton as HTMLElement)
+
+    const usedWithinStageText = await screen.findByText('common.usedWithinStage')
+    expect(usedWithinStageText).toBeInTheDocument()
+    const localName = screen.getByText('stages.parStage2.output.output1')
+    const fqn = screen.getByText('pipeline.stages.parStage2.output.output1')
+    expect(localName).toBeInTheDocument()
+    expect(fqn).toBeInTheDocument()
   })
 })
