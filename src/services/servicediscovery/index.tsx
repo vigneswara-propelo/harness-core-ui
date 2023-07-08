@@ -11,7 +11,7 @@ import React from 'react'
 import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, UseMutateProps } from 'restful-react'
 
 import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from '../config'
-export const SPEC_VERSION = ''
+export const SPEC_VERSION = '1.0'
 export interface ApiContainer {
   id?: string
   image?: string
@@ -32,6 +32,7 @@ export interface ApiCreateAgentRequest {
   config?: DatabaseAgentConfiguration
   description?: string
   identity?: string
+  k8sConnector?: DatabaseK8sConnectorRequest
   k8sConnectorID?: string
   name?: string
   tags?: string[]
@@ -70,7 +71,7 @@ export interface ApiGetAgentResponse {
   identity?: string
   installationDetails?: DatabaseInstallationCollection
   installationType?: DatabaseInstallationType
-  k8sConnectorID?: string
+  k8sConnector?: DatabaseK8sConnectorRequest
   name?: string
   networkMapCount?: number
   organizationIdentifier?: string
@@ -356,6 +357,10 @@ export interface DatabaseConnectionCollection {
   updatedBy?: string
 }
 
+export interface DatabaseCronConfig {
+  expression?: string
+}
+
 export interface DatabaseCronJobCollection {
   agentID?: string
   annotations?: {
@@ -416,6 +421,7 @@ export interface DatabaseDataCollectionConfiguration {
   batchSize?: number
   blacklistedNamespaces?: string[]
   collectionWindowInMin?: number
+  cron?: DatabaseCronConfig
   enableBatchResources?: boolean
   enableNodeAgent?: boolean
   enableStorageResources?: boolean
@@ -542,6 +548,13 @@ export interface DatabaseK8SCustomWorkloadV1 {
     [key: string]: string
   }
   replicas?: DatabaseReplicaV1[]
+}
+
+export interface DatabaseK8sConnectorRequest {
+  accountIdentifier?: string
+  id?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface DatabaseKubernetesAgentConfiguration {
@@ -1345,6 +1358,7 @@ export interface V1Condition {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +required
    * +kubebuilder:validation:Required
+   * +kubebuilder:validation:Pattern=``
    * +kubebuilder:validation:MaxLength=316
    */
   type?: string
@@ -5550,6 +5564,7 @@ export interface V1PortStatus {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +optional
    * +kubebuilder:validation:Required
+   * +kubebuilder:validation:Pattern=``
    * +kubebuilder:validation:MaxLength=316
    */
   error?: string
@@ -9313,9 +9328,9 @@ export type CreateNetworkMapProps = Omit<
   CreateNetworkMapPathParams
 
 /**
- * Get list of networkmaps
+ * Create networkmap
  *
- * Get list of networkmaps
+ * Create networkmap
  */
 export const CreateNetworkMap = ({ agentIdentity, ...props }: CreateNetworkMapProps) => (
   <Mutate<
@@ -9345,9 +9360,9 @@ export type UseCreateNetworkMapProps = Omit<
   CreateNetworkMapPathParams
 
 /**
- * Get list of networkmaps
+ * Create networkmap
  *
- * Get list of networkmaps
+ * Create networkmap
  */
 export const useCreateNetworkMap = ({ agentIdentity, ...props }: UseCreateNetworkMapProps) =>
   useMutate<
@@ -9363,9 +9378,9 @@ export const useCreateNetworkMap = ({ agentIdentity, ...props }: UseCreateNetwor
   })
 
 /**
- * Get list of networkmaps
+ * Create networkmap
  *
- * Get list of networkmaps
+ * Create networkmap
  */
 export const createNetworkMapPromise = (
   {

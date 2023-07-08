@@ -110,7 +110,12 @@ const DiscoveryDetails: React.FC = () => {
                 {
                   id: 'network maps',
                   title: getString('discovery.discoveryDetails.tabTitles.networkMaps'),
-                  panel: <NetworkMapTable />
+                  panel: (
+                    <NetworkMapTable
+                      agentName={discoveryAgentData?.name}
+                      connectorID={discoveryAgentData?.k8sConnector?.id}
+                    />
+                  )
                 },
                 {
                   id: 'discovery history',

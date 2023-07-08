@@ -37,7 +37,9 @@ interface FormValues {
   discoveryNamespace: string
   detectNetworkTrace?: boolean
   blacklistedNamespaces?: string[]
-  cronString?: string
+  expression?: string
+  duration: number | undefined
+  minutes?: number | undefined
   connectorRef: string | undefined
   identifier: string | undefined
 }
@@ -66,6 +68,10 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
     discoveryNamespace: '',
     connectorRef: undefined,
     identifier: undefined,
+    expression: undefined,
+    duration: undefined,
+    minutes: 15,
+    blacklistedNamespaces: ['kube-node-lease', 'kube-public', 'kube-system'],
     detectNetworkTrace: isNetworkTraceDetected
   }
 
@@ -78,6 +84,14 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
             name: dAgentFormRef.current?.values.discoveryAgentName,
             identity: dAgentFormRef.current?.values.identifier,
             config: {
+              data: {
+                blacklistedNamespaces: dAgentFormRef.current?.values.blacklistedNamespaces,
+                enableNodeAgent: dAgentFormRef.current?.values.detectNetworkTrace,
+                cron: {
+                  expression: dAgentFormRef.current?.values.expression
+                },
+                collectionWindowInMin: dAgentFormRef.current?.values.duration
+              },
               kubernetes: {
                 namespace: dAgentFormRef.current?.values.discoveryNamespace,
                 imageRegistry: 'index.docker.io/shovan1995',
@@ -90,7 +104,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
             })
             .catch(e => showError(e))
         } else {
-          showError(getString('discovery.dAgentCreateError'))
+          Object.values(errors).map(err => showError(err))
         }
       })
     }
@@ -136,7 +150,12 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
                 .max(50, getString('discovery.dAgentValidation.nameStart'))
                 .required(getString('discovery.dAgentValidation.nameRequired')),
               connectorRef: Yup.string().trim().required(getString('discovery.dAgentValidation.connectConnector')),
-              discoveryNamespace: Yup.string().trim().required(getString('discovery.dAgentValidation.selectNamespace'))
+              discoveryNamespace: Yup.string().trim().required(getString('discovery.dAgentValidation.selectNamespace')),
+              duration: Yup.number()
+                .min(0, getString('discovery.dAgentValidation.durationMaxMin'))
+                .max(60, getString('discovery.dAgentValidation.durationMaxMin'))
+                .required(getString('discovery.dAgentValidation.durationRequired')),
+              minutes: Yup.number().moreThan(14, getString('discovery.dAgentCronError'))
             })}
             onSubmit={() => void 0}
           >
@@ -243,6 +262,8 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
                             />
 
                             <SchedulePanel renderFormTitle={false} hideSeconds formikProps={formikProps} />
+
+                            <FormInput.Text name="duration" label={getString('discovery.forADurationOf')} />
                           </Container>
                         </Layout.Vertical>
                       }

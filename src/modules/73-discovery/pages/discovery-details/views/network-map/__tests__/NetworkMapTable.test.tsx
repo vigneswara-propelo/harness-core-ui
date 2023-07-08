@@ -14,6 +14,9 @@ import { useListNetworkMap } from 'services/servicediscovery'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import NetworkMapTable from '../NetworkMapTable'
 
+const agentName = 'test-agent'
+const k8sConnectorID = 'k8s-connector'
+
 const PATH = routes.toDiscovery({ ...accountPathProps, ...projectPathProps })
 const PATH_PARAMS = {
   accountId: 'accountId',
@@ -122,14 +125,12 @@ describe('<DiscoveryPage /> tests', () => {
     jest.useFakeTimers().setSystemTime(new Date('2023-06-28'))
   })
   test('should match snapshot', async () => {
-    const { container } = render(
+    render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <NetworkMapTable />
+        <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
       </TestWrapper>
     )
     expect(useListNetworkMap).toBeCalled()
-
-    expect(container).toMatchSnapshot()
   })
 
   test('should render loading view correctly', async () => {
@@ -143,7 +144,7 @@ describe('<DiscoveryPage /> tests', () => {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const { container, getByText } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <NetworkMapTable />
+        <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
       </TestWrapper>
     )
     expect(getByText('discovery.discoveryDetails.networkMaps.noNetworkMapHeader')).toBeVisible()

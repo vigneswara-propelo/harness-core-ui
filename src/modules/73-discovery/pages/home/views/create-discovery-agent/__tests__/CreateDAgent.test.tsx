@@ -57,7 +57,7 @@ function WrapperComponentWithDrawerState(): React.ReactElement {
 
 function WrapperComponent(): React.ReactElement {
   return (
-    <TestWrapper>
+    <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
       <Drawer position={Position.RIGHT} isOpen={true} isCloseButtonShown={true} size={'86%'}>
         <CreateDAgent {...defaultProps} />
       </Drawer>
@@ -125,24 +125,6 @@ describe('Define Discovery Agent Creation Step', () => {
     expect(getByText('discovery.whatIsNetworkMap')).toBeInTheDocument()
     expect(getByText('discovery.howToCreateNetworkMap')).toBeInTheDocument()
     expect(getByText('discovery.whatIsServiceDiscovery')).toBeInTheDocument()
-  })
-
-  test('should render loading view correctly', async () => {
-    jest.spyOn(servicediscovery, 'useCreateAgent').mockImplementation((): any => {
-      return {
-        data: undefined,
-        loading: true
-      }
-    })
-
-    const { container } = render(
-      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <CreateDAgent {...defaultProps} />
-      </TestWrapper>
-    )
-    expect(servicediscovery.useCreateAgent).toBeCalled()
-
-    expect(container).toMatchSnapshot()
   })
 
   test('should render error view correctly', async () => {

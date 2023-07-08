@@ -85,11 +85,11 @@ describe('Discovery Agent Status ', () => {
   beforeAll(() => {
     jest.useFakeTimers().setSystemTime(new Date('2023-06-28'))
   })
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('render', async () => {
+  test('render', async () => {
     const props = {
       listData: mockDiscoveryAgent,
-      pagination: mockPagination
+      pagination: mockPagination,
+      refetch: () => Promise.resolve()
     }
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>

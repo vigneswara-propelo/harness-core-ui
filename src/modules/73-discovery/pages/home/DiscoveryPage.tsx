@@ -38,7 +38,11 @@ const DiscoveryPage: React.FC = /* istanbul ignore next */ () => {
   //States for pagination
   const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
 
-  const { data: discoveryAgentList, loading: discoveryAgentListLoading } = useListAgent({
+  const {
+    data: discoveryAgentList,
+    loading: discoveryAgentListLoading,
+    refetch
+  } = useListAgent({
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -107,7 +111,7 @@ const DiscoveryPage: React.FC = /* istanbul ignore next */ () => {
               </Layout.Horizontal>
             </Page.SubHeader>
             <Page.Body className={css.discoveryAgentTable}>
-              <DiscoveryAgentTable listData={discoveryAgentListData} pagination={paginationProps} />
+              <DiscoveryAgentTable listData={discoveryAgentListData} pagination={paginationProps} refetch={refetch} />
             </Page.Body>
           </>
         ) : (

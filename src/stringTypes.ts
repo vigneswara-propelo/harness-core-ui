@@ -5683,9 +5683,11 @@ export interface StringsMap {
   'discovery.createNetworkMap': string
   'discovery.createNewDiscoveryAgent': string
   'discovery.createNewNetworkMap': string
-  'discovery.dAgentCreateError': string
+  'discovery.dAgentCronError': string
   'discovery.dAgentName': string
   'discovery.dAgentValidation.connectConnector': string
+  'discovery.dAgentValidation.durationMaxMin': string
+  'discovery.dAgentValidation.durationRequired': string
   'discovery.dAgentValidation.maxLength': string
   'discovery.dAgentValidation.nameEnd': string
   'discovery.dAgentValidation.nameRequired': string
@@ -5713,6 +5715,7 @@ export interface StringsMap {
   'discovery.discoveryDetails.tabTitles.networkMaps': string
   'discovery.discoveryDetails.tabTitles.resources': string
   'discovery.discoveryNamespacePlaceholder': string
+  'discovery.forADurationOf': string
   'discovery.homepage.discoveryAgentDesc': string
   'discovery.homepage.learnMore': string
   'discovery.homepage.newDiscoveryAgentBtn': string
@@ -5728,6 +5731,13 @@ export interface StringsMap {
   'discovery.networkMapDescription': string
   'discovery.networkMapTable.noOfService': string
   'discovery.newNetworkMap': string
+  'discovery.noDiscoveryData': string
+  'discovery.permissions.confirmDeleteDAgent': string
+  'discovery.permissions.confirmDeleteNetworkMap': string
+  'discovery.permissions.confirmDeleteTitleDAgent': string
+  'discovery.permissions.confirmDeleteTitleNetworkMap': string
+  'discovery.permissions.deletedMessageDAgent': string
+  'discovery.permissions.deletedMessageNetworkMap': string
   'discovery.relatedService': string
   'discovery.searchNetworkMap': string
   'discovery.searchService': string

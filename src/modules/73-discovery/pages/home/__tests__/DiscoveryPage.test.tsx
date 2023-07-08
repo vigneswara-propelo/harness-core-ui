@@ -55,7 +55,9 @@ const mockDiscoveryAgent: ApiGetAgentResponse = {
   accountIdentifier: '',
   id: '',
   identity: '',
-  k8sConnectorID: '',
+  k8sConnector: {
+    id: ''
+  },
   name: '',
   organizationIdentifier: '',
   projectIdentifier: '',
@@ -95,9 +97,11 @@ const PATH_PARAMS = {
 
 describe('<DiscoveryPage /> tests', () => {
   beforeEach(() => jest.clearAllMocks())
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-06-28'))
+  })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('should match snapshot', async () => {
+  test('should match snapshot', async () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <DiscoveryPage />

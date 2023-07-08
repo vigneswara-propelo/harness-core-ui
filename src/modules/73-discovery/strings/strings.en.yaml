@@ -11,8 +11,9 @@ homepage:
     Network Map is a visual representation of services and dependencies that are automatically discovered in your clusters.
     It provides an at-a-glance view of how services interact with one another and how they contribute to the overall performance and health of the system.
 createDiscoveryAgent: Create Discovery Agent
+noDiscoveryData: No Discovery data yet
 dAgentName: Discovery Agent Name
-dAgentCreateError: Invalid configuration, either required fields were not filled or validation has failed
+dAgentCronError: Cron in minutes should not be less than 15, please choose a value equal to or greater than 15
 dAgentValidation:
   nameStart: Discovery Agent name can not start with -
   nameEnd: Discovery Agent name can not end with -
@@ -20,6 +21,8 @@ dAgentValidation:
   nameRequired: Discovery Agent name is required!
   connectConnector: Please select a Connector!
   selectNamespace: Please select a discovery namespace
+  durationRequired: Discovery Agent duration is required field
+  durationMaxMin: Duration must be between 0 and 60 minutes
 networkMapTable:
   noOfService: No of service
 testConnector: DA-Test Connector
@@ -49,6 +52,7 @@ dataCollectionSettingsDesc: Configure the period of detecting services in the co
 createNetworkMap: Create Network Map
 createNewNetworkMap: Create New Network Map
 allDiscoveredServices: All Discovered Services
+forADurationOf: For a duration of (in mins)
 discoveryDetails:
   id: ID
   lastDiscovery: Last Discovery
@@ -86,3 +90,10 @@ discoveryNamespacePlaceholder: Enter a discovery namespace
 searchService: Search a service
 networkDetails: Network Details
 relatedService: Related Services
+permissions:
+  deletedMessageDAgent: 'Discovery Agent {{name}} deleted'
+  confirmDeleteDAgent: Deleting the discovery agent '{{name}}' would mean that you are also deleting all the services it is associated with. Are you sure you want to delete the discovery agent?
+  confirmDeleteTitleDAgent: Delete Discovery Agent
+  deletedMessageNetworkMap: 'Network Map {{name}} deleted'
+  confirmDeleteNetworkMap: Deleting the Network Map '{{name}}' would mean that you are also deleting all the services it is associated with. Are you sure you want to delete the Network Map?
+  confirmDeleteTitleNetworkMap: Delete Network Map

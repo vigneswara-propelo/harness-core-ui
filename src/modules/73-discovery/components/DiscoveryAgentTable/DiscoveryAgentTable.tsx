@@ -5,18 +5,29 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes, Menu, MenuDivider, MenuItem, Position } from '@blueprintjs/core'
-import { Avatar, Button, ButtonVariation, Layout, Popover, TableV2, Text } from '@harness/uicore'
-import React from 'react'
+import { Classes, Intent, Menu, MenuDivider, MenuItem, Position } from '@blueprintjs/core'
+import {
+  Avatar,
+  Button,
+  ButtonVariation,
+  ConfirmationDialog,
+  Layout,
+  Popover,
+  TableV2,
+  Text,
+  useToaster,
+  useToggleOpen
+} from '@harness/uicore'
+import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
-import type { CellProps, Column, Renderer } from 'react-table'
+import type { CellProps, Column, Renderer, Row } from 'react-table'
 import moment from 'moment'
 import { Link, useParams } from 'react-router-dom'
 import { killEvent } from '@common/utils/eventUtils'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
-import type { ApiGetAgentResponse } from 'services/servicediscovery'
+import { ApiGetAgentResponse, useDeleteAgent } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { PaginationPropsWithDefaults } from '@common/hooks/useDefaultPaginationProps'
 import { useStrings } from 'framework/strings'
 import css from './DiscoveryAgentTable.module.scss'
@@ -24,6 +35,7 @@ import css from './DiscoveryAgentTable.module.scss'
 interface DiscoveryAgentTableProps {
   listData: ApiGetAgentResponse[]
   pagination: PaginationPropsWithDefaults
+  refetch: () => Promise<void>
 }
 
 const Name: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => {
@@ -53,7 +65,7 @@ const Name: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next *
           className={css.idPill}
           style={{ background: '#F3F3FA', borderRadius: '5px' }}
         >
-          {row?.original?.id}
+          {row?.original?.identity}
         </Text>
       </Layout.Horizontal>
     </>
@@ -63,7 +75,7 @@ const Name: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next *
 const NetworkCount: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => (
   <Layout.Vertical width={50} height={40} className={css.totalServiceContainer}>
     <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.GREY_500}>
-      {row.original.networkMapCount}
+      {row.original.networkMapCount ?? '--'}
     </Text>
   </Layout.Vertical>
 )
@@ -71,19 +83,26 @@ const NetworkCount: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignor
 const ServiceCount: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => (
   <Layout.Vertical width={60} height={50} className={css.totalServiceContainer}>
     <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.GREY_500}>
-      {row.original.serviceCount}
+      {row.original.serviceCount ?? '--'}
     </Text>
   </Layout.Vertical>
 )
 
 const LastServiceDiscovery: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => {
+  const { getString } = useStrings()
   const date = moment(row.original.installationDetails?.updatedAt).format('MMM DD, YYYY hh:mm A')
   return (
     <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
       <Layout.Vertical spacing={'xsmall'}>
-        <Text font={{ size: 'small' }} lineClamp={1}>
-          {date}
-        </Text>
+        {!row.original.installationDetails ? (
+          <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_400} lineClamp={1}>
+            {getString('discovery.noDiscoveryData')}
+          </Text>
+        ) : (
+          <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
+            {date}
+          </Text>
+        )}
       </Layout.Vertical>
     </Layout.Horizontal>
   )
@@ -92,41 +111,110 @@ const LastServiceDiscovery: Renderer<CellProps<ApiGetAgentResponse>> = /* istanb
 const LastModified: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
-      <Avatar hoverCard={false} name={''} size="normal" />
-      <Layout.Vertical spacing={'xsmall'}>
-        <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_900} lineClamp={1}>
-          {}
-        </Text>
-        <Text font={{ size: 'xsmall' }} color={Color.GREY_500} lineClamp={1}>
-          {row?.original.createdAt ? getTimeAgo(new Date(row.original.createdAt).getTime()) : getString('na')}
-        </Text>
-      </Layout.Vertical>
+    <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }} spacing={'small'}>
+      <Text font={{ size: 'xsmall' }} color={Color.GREY_500} lineClamp={1}>
+        {row?.original.updatedAt ? getTimeAgo(new Date(row.original.updatedAt).getTime()) : getString('na')}
+      </Text>
+      <Avatar hoverCard={true} name={row?.original.updatedBy} size="normal" />
     </Layout.Horizontal>
   )
 }
 
-const ThreeDotMenu: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ () => (
-  <Layout.Horizontal style={{ justifyContent: 'flex-end', marginRight: '10px' }} onClick={killEvent}>
-    <Popover className={Classes.DARK} position={Position.LEFT}>
-      <Button variation={ButtonVariation.ICON} icon="Options" />
-      <Menu style={{ backgroundColor: 'unset' }}>
-        <MenuItem icon="edit" text={'Edit'} onClick={() => void 0} className={css.menuItem} />
-        <MenuDivider />
-        <MenuItem icon="delete" text={'Delete'} className={css.deleteMenuItem} onClick={() => void 0} />
-      </Menu>
-    </Popover>
-  </Layout.Horizontal>
-)
+const ThreeDotMenu = /* istanbul ignore next */ ({
+  row,
+  refetch
+}: {
+  row: Row<ApiGetAgentResponse>
+  refetch: () => Promise<void>
+}): JSX.Element => {
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const { mutate: deleteDiscoveryAgent } = useDeleteAgent({
+    queryParams: { accountIdentifier: accountId, projectIdentifier, organizationIdentifier: orgIdentifier }
+  })
+  const [menuOpen, setMenuOpen] = useState(false)
+  const { getString } = useStrings()
+  const { showSuccess, showError } = useToaster()
+  const {
+    isOpen: isDeleteConfirmationOpen,
+    open: openDeleteConfirmation,
+    close: closeDeleteConfirmation
+  } = useToggleOpen()
 
-const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ listData, pagination }) => {
+  const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    e.stopPropagation()
+    setMenuOpen(false)
+    openDeleteConfirmation()
+  }
+
+  return (
+    <>
+      <Layout.Horizontal style={{ justifyContent: 'flex-end', marginRight: '10px' }} onClick={killEvent}>
+        <Popover
+          isOpen={menuOpen}
+          className={Classes.DARK}
+          onInteraction={nextOpenState => {
+            setMenuOpen(nextOpenState)
+          }}
+          position={Position.LEFT}
+        >
+          <Button
+            variation={ButtonVariation.ICON}
+            onClick={e => {
+              e.stopPropagation()
+              setMenuOpen(true)
+            }}
+            icon="Options"
+          />
+          <Menu style={{ backgroundColor: 'unset' }}>
+            <MenuItem icon="edit" text={'Edit'} disabled onClick={() => void 0} className={css.menuItem} />
+            <MenuDivider />
+            <MenuItem icon="trash" text={getString('delete')} className={css.deleteMenuItem} onClick={handleDelete} />
+          </Menu>
+        </Popover>
+      </Layout.Horizontal>
+
+      <ConfirmationDialog
+        isOpen={isDeleteConfirmationOpen}
+        titleText={getString('discovery.permissions.confirmDeleteTitleDAgent')}
+        contentText={`${getString('discovery.permissions.confirmDeleteDAgent', { name: row.original.name })}`}
+        confirmButtonText={getString('delete')}
+        cancelButtonText={getString('cancel')}
+        onClose={async (isConfirmed: boolean) => {
+          if (isConfirmed) {
+            try {
+              const deleted = await deleteDiscoveryAgent(row.original.identity || '')
+              if (deleted)
+                showSuccess(getString('discovery.permissions.deletedMessageDAgent', { name: row.original.name }))
+              refetch()
+            } catch (err) {
+              showError(err?.data?.message || err?.message)
+            }
+          } else closeDeleteConfirmation()
+        }}
+        intent={Intent.DANGER}
+        buttonIntent={Intent.DANGER}
+      />
+    </>
+  )
+}
+
+const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ listData, pagination, refetch }) => {
   const columns: Column<ApiGetAgentResponse>[] = React.useMemo(
     () => [
       {
         Header: 'Discovery Agent',
-        id: 'toggleButton',
         width: '25%',
         Cell: Name
+      },
+      {
+        Header: 'Last Discovery',
+        width: '25%',
+        Cell: LastServiceDiscovery
+      },
+      {
+        Header: 'Services Discovered',
+        width: '25%',
+        Cell: ServiceCount
       },
       {
         Header: 'Network Maps',
@@ -134,23 +222,13 @@ const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ listData, pag
         Cell: NetworkCount
       },
       {
-        Header: 'Services Discovered',
-        width: '20%',
-        Cell: ServiceCount
-      },
-      {
-        Header: 'Last Service Discovery',
-        width: '30%',
-        Cell: LastServiceDiscovery
-      },
-      {
-        Header: 'Last Updated',
+        Header: 'Last Edited',
         width: '20%',
         Cell: LastModified
       },
       {
         id: 'threeDotMenu',
-        Cell: ThreeDotMenu
+        Cell: ({ row }: { row: Row<ApiGetAgentResponse> }) => <ThreeDotMenu row={row} refetch={refetch} />
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -62,6 +62,7 @@ src/modules/70-pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm
 src/modules/70-pipeline/components/PipelineInputSetForm/ServicesInputSetForm @harness/ui-cd-core
 src/modules/72-templates-library @harness/ui-templates
 src/modules/72-freeze-windows @harness/ui-pipeline
+src/modules/73-discovery @harness/ui-chaos
 src/modules/75-cd @harness/ui-pipeline
 src/modules/75-cd/modals/CDTrial @harness/ui-plg
 src/modules/75-cd/pages/home @harness/ui-plg

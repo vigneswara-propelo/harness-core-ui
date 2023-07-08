@@ -25,6 +25,30 @@ exports[`Discovery Agent Status  render 1`] = `
         class="TableV2--cell TableV2--sortable"
         colspan="1"
         role="columnheader"
+        style="width: 25%;"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          Last Discovery
+        </p>
+      </div>
+      <div
+        class="TableV2--cell TableV2--sortable"
+        colspan="1"
+        role="columnheader"
+        style="width: 25%;"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          Services Discovered
+        </p>
+      </div>
+      <div
+        class="TableV2--cell TableV2--sortable"
+        colspan="1"
+        role="columnheader"
         style="width: 20%;"
       >
         <p
@@ -42,31 +66,7 @@ exports[`Discovery Agent Status  render 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
-          Services Discovered
-        </p>
-      </div>
-      <div
-        class="TableV2--cell TableV2--sortable"
-        colspan="1"
-        role="columnheader"
-        style="width: 30%;"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        >
-          Last Service Discovery
-        </p>
-      </div>
-      <div
-        class="TableV2--cell TableV2--sortable"
-        colspan="1"
-        role="columnheader"
-        style="width: 20%;"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        >
-          Last Updated
+          Last Edited
         </p>
       </div>
       <div
@@ -119,7 +119,43 @@ exports[`Discovery Agent Status  render 1`] = `
                 class="StyledProps--font Text--lineclamp StyledProps--main idPill StyledProps--font-size-small StyledProps--font-weight-light"
                 style="background: rgb(243, 243, 250); border-radius: 5px; --text-line-clamp: 1;"
               >
-                648ffda242d20c0d04713e05
+                local-1
+              </p>
+            </div>
+          </div>
+          <div
+            class="TableV2--cell"
+            role="cell"
+            style="width: 25%;"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey900"
+                  style="--text-line-clamp: 1;"
+                >
+                  Jun 21, 2023 01:17 PM
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="TableV2--cell"
+            role="cell"
+            style="width: 25%;"
+          >
+            <div
+              class="Layout--vertical StyledProps--main totalServiceContainer"
+              style="width: 60px; height: 50px;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
+              >
+                --
               </p>
             </div>
           </div>
@@ -134,7 +170,9 @@ exports[`Discovery Agent Status  render 1`] = `
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
-              />
+              >
+                --
+              </p>
             </div>
           </div>
           <div
@@ -143,42 +181,14 @@ exports[`Discovery Agent Status  render 1`] = `
             style="width: 20%;"
           >
             <div
-              class="Layout--vertical StyledProps--main totalServiceContainer"
-              style="width: 60px; height: 50px;"
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
-              />
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 30%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
-            >
-              <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                style="--text-line-clamp: 1;"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small"
-                  style="--text-line-clamp: 1;"
-                >
-                  Jun 21, 2023 01:17 PM
-                </p>
-              </div>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 20%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
-            >
+                6 days ago
+              </p>
               <div
                 class="Avatar--Avatar Avatar--contentStyle"
               >
@@ -193,41 +203,10 @@ exports[`Discovery Agent Status  render 1`] = `
                       style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
                       tabindex="0"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
-                        data-icon="user"
-                      >
-                        <svg
-                          fill="currentColor"
-                          height="10"
-                          viewBox="0 0 61 73"
-                          width="10"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            clip-rule="evenodd"
-                            d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
+                      S
                     </div>
                   </span>
                 </span>
-              </div>
-              <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
-              >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey900"
-                  style="--text-line-clamp: 1;"
-                />
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                  style="--text-line-clamp: 1;"
-                >
-                  6 days ago
-                </p>
               </div>
             </div>
           </div>

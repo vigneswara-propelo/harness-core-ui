@@ -48,7 +48,7 @@ const Settings: React.FC = () => {
   }
 
   useEffect(() => {
-    if (dAgentData) fetchConnectorDetails(dAgentData?.k8sConnectorID ?? '')
+    if (dAgentData) fetchConnectorDetails(dAgentData?.k8sConnector?.id ?? '')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dAgentData])
 
