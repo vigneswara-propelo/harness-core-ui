@@ -128,6 +128,44 @@ export const InputData: DeploymentMetricsAnalysisRowProps[] = [
   }
 ]
 
+export const InputDataWithIgnoreAndFailFastThresholds: DeploymentMetricsAnalysisRowProps[] = [
+  {
+    ...InputData[0],
+    thresholds: [
+      {
+        id: '6L6gbC9oRlCS8ypbtCi0rA',
+        thresholdType: 'IGNORE',
+        isUserDefined: false,
+        action: 'Ignore',
+        criteria: {
+          measurementType: 'ratio',
+          lessThanThreshold: 0
+        }
+      },
+      {
+        id: 'Fh-N1OUnTmmrBWhqqWqJvQ',
+        thresholdType: 'IGNORE',
+        isUserDefined: false,
+        action: 'Ignore',
+        criteria: {
+          measurementType: 'delta',
+          lessThanThreshold: 0
+        }
+      },
+      {
+        id: 'Kq-ndK5rRYu1S-r-DSE9dw',
+        thresholdType: 'FAIL_FAST',
+        isUserDefined: true,
+        action: 'FailImmediately',
+        criteria: {
+          measurementType: 'ratio',
+          greaterThanThreshold: 1
+        }
+      }
+    ]
+  }
+]
+
 const data1 = [
   { x: 1642941960000, y: 1000.9333333333334 },
   { x: 1642942020000, y: 805.1999999999999 },

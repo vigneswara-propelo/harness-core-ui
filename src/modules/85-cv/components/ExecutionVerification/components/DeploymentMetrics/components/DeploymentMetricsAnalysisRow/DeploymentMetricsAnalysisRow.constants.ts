@@ -47,3 +47,5 @@ export const getAnalysisReason = (
 
 export const MINIMUM_DEVIATION = 'MINIMUM_DEVIATION'
 export const widthPercentagePerGraph = 1
+
+export const IgnoreThresholdTypeName = 'IGNORE'

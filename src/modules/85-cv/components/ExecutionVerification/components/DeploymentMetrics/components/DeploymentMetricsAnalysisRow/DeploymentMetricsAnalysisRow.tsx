@@ -27,7 +27,8 @@ import {
   HostTestData,
   HostControlTestData,
   getAnalysisReason,
-  MINIMUM_DEVIATION
+  MINIMUM_DEVIATION,
+  IgnoreThresholdTypeName
 } from './DeploymentMetricsAnalysisRow.constants'
 import MetricAnalysisMetricThresolds from './components/MetricAnalysisMetricThresolds/MetricAnalysisMetricThresolds'
 import type { StartTimestampDataType } from '../../DeploymentMetrics.types'
@@ -87,6 +88,14 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
     const containerWidth = graphContainerRef.current.getBoundingClientRect().width
     setGraphWidth(containerWidth / widthPercentagePerGraph)
   }, [graphContainerRef])
+
+  const filteredThresholds = useMemo(() => {
+    if (!isSimpleVerification || !Array.isArray(thresholds) || thresholds.length === 0) {
+      return thresholds
+    }
+
+    return thresholds.filter(threshold => threshold.thresholdType !== IgnoreThresholdTypeName)
+  }, [isSimpleVerification, thresholds])
 
   return (
     <>
@@ -158,7 +167,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                       {getAnalysisReason(testData?.[index]?.analysisReason as string, getString, verificationType)}
                     </Text>
                   </Container>
-                  {Array.isArray(thresholds) && thresholds.length ? (
+                  {Array.isArray(filteredThresholds) && filteredThresholds.length ? (
                     <Accordion allowMultiOpen>
                       <Accordion.Panel
                         key={`${transactionName}-${metricName}-${type}`}
@@ -170,7 +179,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                         }
                         details={
                           <MetricAnalysisMetricThresolds
-                            thresholds={thresholds}
+                            thresholds={filteredThresholds}
                             appliedThresholds={testData?.[index]?.appliedThresholds}
                           />
                         }
