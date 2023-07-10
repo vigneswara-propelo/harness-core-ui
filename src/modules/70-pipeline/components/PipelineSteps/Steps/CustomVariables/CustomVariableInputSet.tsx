@@ -31,7 +31,7 @@ import {
   concatValuesWithQuotes,
   isFixedInput
 } from './MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
-import { NameTypeColumn, NameTypeRequiredColumn, VariableType } from './CustomVariableUtils'
+import { NameTypeColumn, VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
   variables: AllNGVariables[]
@@ -151,13 +151,11 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
           isFixedInput(formik, `${basePath}[${index}].value`)
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
-            {isRequiredVariable ? (
-              <NameTypeRequiredColumn>
-                <NameTypeColumn name={`${variableNamePrefix}${variable.name}`} type={variable.type as string} />
-              </NameTypeRequiredColumn>
-            ) : (
-              <NameTypeColumn name={`${variableNamePrefix}${variable.name}`} type={variable.type as string} />
-            )}
+            <NameTypeColumn
+              name={`${variableNamePrefix}${variable.name}`}
+              type={variable.type as string}
+              required={isRequiredVariable}
+            />
             <Text color={Color.GREY_500} font={{ variation: FontVariation.BODY }}>
               {isEmpty(description) ? '-' : description}
             </Text>

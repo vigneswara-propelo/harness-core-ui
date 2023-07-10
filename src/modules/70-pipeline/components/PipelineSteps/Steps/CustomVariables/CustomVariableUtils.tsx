@@ -9,7 +9,6 @@ import React from 'react'
 import { defaultTo } from 'lodash-es'
 import { Layout, SelectOption, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Position } from '@blueprintjs/core'
 import { StringKeys, useStrings } from 'framework/strings'
 import css from './CustomVariables.module.scss'
 
@@ -36,29 +35,22 @@ export const getVaribaleTypeOptions = (
     value: type
   }))
 
-export function NameTypeRequiredColumn(props: { children: React.ReactNode }): React.ReactElement {
+export function NameTypeColumn(props: { name: string; type: string; required?: boolean }): React.ReactElement {
+  const { name, type, required } = props
   const { getString } = useStrings()
-  return (
-    <Layout.Horizontal flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-      {props.children}
-      <Text
-        icon="asterisk"
-        iconProps={{ size: 12, color: Color.RED_500 }}
-        padding={{ left: 'small' }}
-        tooltip={getString('pipeline.required')}
-        tooltipProps={{ position: Position.RIGHT, isDark: true }}
-      />
-    </Layout.Horizontal>
-  )
-}
 
-export function NameTypeColumn(props: { name: string; type: string }): React.ReactElement {
-  const { name, type } = props
   return (
     <Layout.Vertical className={css.nameTypeColumn}>
-      <Text font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }} color={Color.BLACK} lineClamp={1}>
-        {name}
-      </Text>
+      <Layout.Horizontal spacing={'xsmall'} style={{ display: 'flex', alignItems: 'baseline' }}>
+        <Text font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }} color={Color.BLACK} lineClamp={2}>
+          {name}
+        </Text>
+        {!required && (
+          <Text color={Color.GREY_500} font={{ size: 'small', weight: 'semi-bold' }}>
+            {getString('common.optionalLabel')}
+          </Text>
+        )}
+      </Layout.Horizontal>
       <Text font={{ size: 'small' }} color={Color.GREY_600}>
         {type}
       </Text>

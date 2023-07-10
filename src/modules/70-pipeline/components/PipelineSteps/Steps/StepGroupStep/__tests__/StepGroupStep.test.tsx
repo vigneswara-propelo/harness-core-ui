@@ -507,7 +507,7 @@ describe('StepGroupStep tests', () => {
 
   test('renders variables section in RUNTIME view', async () => {
     const onUpdate = jest.fn()
-    const { container, getByText } = render(
+    const { container, getByText, queryByText } = render(
       <TestStepWidget
         type={StepType.StepGroup}
         initialValues={stepGroupWithBasicVariablesInitialValues}
@@ -535,7 +535,7 @@ describe('StepGroupStep tests', () => {
     )
 
     expect(() => getByText('common.variables')).toBeDefined()
-    expect(container.querySelectorAll('[data-icon="asterisk"]').length).toBe(1)
+    expect(queryByText('common.optionalLabel')).not.toBeInTheDocument()
     expect(getByText('runtimeRequiredVariable')).toBeDefined()
 
     const valueField = queryByAttribute('name', container, 'variables[0].value')
