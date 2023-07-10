@@ -9,10 +9,19 @@ import { Select } from '@harness/uicore'
 import qs from 'qs'
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { get } from 'lodash-es'
 import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import css from './ExecutionArtifactsView.module.scss'
+
+// Only CI and CD artifacts for SSCA, avoids node type like pipeline rollback, parallel
+export function getSscaArtifactStageSetupIds(layoutNodeMap?: PipelineExecutionSummary['layoutNodeMap']): string[] {
+  return Object.keys(layoutNodeMap ?? {}).filter(layoutNodeMapKey => {
+    const _nodeType = get(layoutNodeMap, layoutNodeMapKey)?.nodeType as string
+    return _nodeType && ['CI', 'Deployment'].includes(_nodeType)
+  })
+}
 
 export function StageSelector(props: {
   layoutNodeMap?: PipelineExecutionSummary['layoutNodeMap']
@@ -20,8 +29,7 @@ export function StageSelector(props: {
   const history = useHistory()
   const params = useParams<any>()
   const query = useQueryParams<any>()
-  const setupIds = Object.keys(props?.layoutNodeMap ?? {})
-  const options = setupIds.map(value => ({
+  const options = getSscaArtifactStageSetupIds(props.layoutNodeMap).map(value => ({
     value,
     label: props.layoutNodeMap![value].name!
   }))

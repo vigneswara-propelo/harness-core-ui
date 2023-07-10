@@ -6,7 +6,7 @@
  */
 
 import { Color } from '@harness/design-system'
-import { Container, Text } from '@harness/uicore'
+import { Container, OverlaySpinner, Text } from '@harness/uicore'
 import React, { useState } from 'react'
 import { String, useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
@@ -24,18 +24,20 @@ export interface PolicyViolationsProps {
 export interface ExecutionArtifactListViewProps {
   artifacts: Artifact[]
   pipelineExecutionSummary?: PipelineExecutionSummary
+  loading: boolean
 }
 
 export function ExecutionArtifactListView({
   artifacts,
-  pipelineExecutionSummary
+  pipelineExecutionSummary,
+  loading
 }: ExecutionArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
 
   const [enforcementId, showEnforcementViolations] = useState<string | undefined>()
 
   return (
-    <div>
+    <OverlaySpinner show={loading}>
       <div className={css.subSection}>
         <Text color={Color.GREY_900} font={{ weight: 'bold' }}>{`${getString('total')}: ${artifacts.length}`}</Text>
         <StageSelector layoutNodeMap={pipelineExecutionSummary?.layoutNodeMap} />
@@ -58,6 +60,6 @@ export function ExecutionArtifactListView({
           </Text>
         </Container>
       )}
-    </div>
+    </OverlaySpinner>
   )
 }

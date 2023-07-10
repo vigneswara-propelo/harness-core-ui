@@ -23,7 +23,7 @@ import type { ArtifactGroup } from './ArtifactsComponent/ArtifactsComponent'
 import ArtifactsComponent from './ArtifactsComponent/ArtifactsComponent'
 import type { Artifact } from './ArtifactsTable/ArtifactsTable'
 import { ExecutionArtifactListView } from './ExecutionArtifactListView'
-import { StageSelector } from './StageSelector'
+import { StageSelector, getSscaArtifactStageSetupIds } from './StageSelector'
 import artifactsEmptyState from './images/artifacts_empty_state.svg'
 import css from './ExecutionArtifactsView.module.scss'
 
@@ -142,7 +142,7 @@ export default function ExecutionArtifactsView(): React.ReactElement {
   )
   const { stage } = useQueryParams<{ stage: string }>()
 
-  const stageSetupIds = getStageSetupIds(pipelineExecutionSummary)
+  const stageSetupIds = getSscaArtifactStageSetupIds(pipelineExecutionSummary?.layoutNodeMap)
   const stageNodes = getStageNodesWithArtifacts(executionGraph, stageSetupIds)
   const stepArtifacts = getStepArtifacts(
     executionGraph,
@@ -152,7 +152,11 @@ export default function ExecutionArtifactsView(): React.ReactElement {
   const artifactGroups = getArtifactGroups(stageNodes)
 
   return SSCA_ENABLED ? (
-    <ExecutionArtifactListView artifacts={stepArtifacts} pipelineExecutionSummary={pipelineExecutionSummary} />
+    <ExecutionArtifactListView
+      artifacts={stepArtifacts}
+      pipelineExecutionSummary={pipelineExecutionSummary}
+      loading={context.loading}
+    />
   ) : (
     <div className={css.wrapper}>
       <StageSelector layoutNodeMap={pipelineExecutionSummary?.layoutNodeMap} />
