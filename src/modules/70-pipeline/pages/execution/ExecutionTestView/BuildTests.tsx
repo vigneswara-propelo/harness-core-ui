@@ -7,7 +7,7 @@
 
 import { Layout, Select, Heading, Container, Text, SelectOption, PageError } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React, { useState, useEffect, useMemo, SetStateAction, Dispatch } from 'react'
+import React, { useState, useEffect, useMemo, SetStateAction, Dispatch, memo } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { useStrings, UseStringsReturn } from 'framework/strings'
@@ -75,18 +75,111 @@ const renderTestsOverview = ({
   return null
 }
 
-const renderHeader = ({
-  stageIdOptions,
-  selectedStageId,
-  getString,
-  setSelectedStageId,
-  stepIdOptions,
-  setStepIdOptions,
-  setSelectedStepId,
-  stepIdOptionsFromStageKeyMap,
-  selectedStepId,
-  testOverviewHasTests
-}: {
+const MemoizedHeader = memo(
+  ({
+    stageIdOptions,
+    selectedStageId,
+    getString,
+    setSelectedStageId,
+    stepIdOptions,
+    setStepIdOptions,
+    setSelectedStepId,
+    stepIdOptionsFromStageKeyMap,
+    selectedStepId,
+    testOverviewHasTests
+  }: {
+    stageIdOptions: SelectOption[]
+    getString: UseStringsReturn['getString']
+    setSelectedStageId: Dispatch<SetStateAction<SelectOption | undefined>>
+    stepIdOptions: SelectOption[]
+    setStepIdOptions: Dispatch<SetStateAction<SelectOption[]>>
+    setSelectedStepId: Dispatch<SetStateAction<SelectOption | undefined>>
+    stepIdOptionsFromStageKeyMap: { [key: string]: SelectOption[] }
+    selectedStageId?: SelectOption
+    selectedStepId?: SelectOption
+    testOverviewHasTests: boolean
+  }) => {
+    return (
+      <Container
+        flex
+        padding={{ bottom: 'small' }}
+        margin={{ bottom: 'medium' }}
+        style={{ borderBottom: '1px solid #D9DAE6', justifyContent: 'space-between' }}
+      >
+        <Container flex style={{ justifyContent: 'initial' }}>
+          <Heading level={5} color={Color.BLACK} style={{ fontWeight: 600 }}>
+            {getString('pipeline.testsReports.testExecutions')}
+          </Heading>
+          {stageIdOptions && selectedStageId && (
+            <div className={css.stageOptions}>
+              <Select
+                fill
+                popoverClassName={css.repositionWarning}
+                value={selectedStageId}
+                items={stageIdOptions}
+                onChange={option => {
+                  setSelectedStageId(option)
+                  if (option.value === AllOption.value) {
+                    const newStepIdOptions = [...stepIdOptions]
+                    // Add All Steps option if not present
+                    if (!stepIdOptions.some(stepIdOption => stepIdOption.value === AllOption.value)) {
+                      newStepIdOptions.unshift(AllStepsOption)
+                      setStepIdOptions(newStepIdOptions)
+                    }
+                    setSelectedStepId(newStepIdOptions[0])
+                  } else if (option.value) {
+                    const stageStepIdOptions = stepIdOptionsFromStageKeyMap[option.value as string] || []
+                    const newStepIdOptions = [...stageStepIdOptions].filter(
+                      stepIdOption => stepIdOption.value !== AllOption.value
+                    )
+                    // Remove All Steps option if only 1 option available
+                    if (newStepIdOptions.length === 1) {
+                      setStepIdOptions(stageStepIdOptions)
+                      setSelectedStepId(stageStepIdOptions[0])
+                    } else {
+                      setStepIdOptions(stageStepIdOptions)
+                      setSelectedStepId(stageStepIdOptions[1])
+                    }
+                  }
+                }}
+              />
+            </div>
+          )}
+          {stepIdOptions && selectedStepId && (
+            <div className={css.stepOptions}>
+              <Select
+                fill
+                value={selectedStepId}
+                items={stepIdOptions}
+                disabled={selectedStageId?.value === AllOption.value && selectedStepId.value === AllOption.value}
+                onChange={option => setSelectedStepId(option)}
+              />
+            </div>
+          )}
+        </Container>
+        {testOverviewHasTests && (
+          <Text
+            className={css.poweredByTi}
+            font={{ variation: FontVariation.TINY, weight: 'semi-bold' }}
+            icon="upgrade-bolt"
+            iconProps={{
+              intent: 'primary',
+              size: 16,
+              color: Color.PRIMARY_8
+            }}
+            color={Color.PRIMARY_8}
+          >
+            {getString('pipeline.testsReports.poweredByTI')}
+          </Text>
+        )}
+      </Container>
+    )
+  }
+)
+
+MemoizedHeader.displayName = 'MemoizedHeader'
+
+const renderHeader = (props: {
   stageIdOptions: SelectOption[]
   getString: UseStringsReturn['getString']
   setSelectedStageId: Dispatch<SetStateAction<SelectOption | undefined>>
@@ -97,81 +190,9 @@ const renderHeader = ({
   selectedStageId?: SelectOption
   selectedStepId?: SelectOption
   testOverviewHasTests: boolean
-}): JSX.Element => (
-  <Container
-    flex
-    padding={{ bottom: 'small' }}
-    margin={{ bottom: 'medium' }}
-    style={{ borderBottom: '1px solid #D9DAE6', justifyContent: 'space-between' }}
-  >
-    <Container flex style={{ justifyContent: 'initial' }}>
-      <Heading level={5} color={Color.BLACK} style={{ fontWeight: 600 }}>
-        {getString('pipeline.testsReports.testExecutions')}
-      </Heading>
-      {stageIdOptions && selectedStageId && (
-        <div className={css.stageOptions}>
-          <Select
-            fill
-            popoverClassName={css.repositionWarning}
-            value={selectedStageId}
-            items={stageIdOptions}
-            onChange={option => {
-              setSelectedStageId(option)
-              if (option.value === AllOption.value) {
-                const newStepIdOptions = [...stepIdOptions]
-                // Add All Steps option if not present
-                if (!stepIdOptions.some(stepIdOption => stepIdOption.value === AllOption.value)) {
-                  newStepIdOptions.unshift(AllStepsOption)
-                  setStepIdOptions(newStepIdOptions)
-                }
-                setSelectedStepId(newStepIdOptions[0])
-              } else if (option.value) {
-                const stageStepIdOptions = stepIdOptionsFromStageKeyMap[option.value as string] || []
-                const newStepIdOptions = [...stageStepIdOptions].filter(
-                  stepIdOption => stepIdOption.value !== AllOption.value
-                )
-                // Remove All Steps option if only 1 option available
-                if (newStepIdOptions.length === 1) {
-                  setStepIdOptions(stageStepIdOptions)
-                  setSelectedStepId(stageStepIdOptions[0])
-                } else {
-                  setStepIdOptions(stageStepIdOptions)
-                  setSelectedStepId(stageStepIdOptions[1])
-                }
-              }
-            }}
-          />
-        </div>
-      )}
-      {stepIdOptions && selectedStepId && (
-        <div className={css.stepOptions}>
-          <Select
-            fill
-            value={selectedStepId}
-            items={stepIdOptions}
-            disabled={selectedStageId?.value === AllOption.value && selectedStepId.value === AllOption.value}
-            onChange={option => setSelectedStepId(option)}
-          />
-        </div>
-      )}
-    </Container>
-    {testOverviewHasTests && (
-      <Text
-        className={css.poweredByTi}
-        font={{ variation: FontVariation.TINY, weight: 'semi-bold' }}
-        icon="upgrade-bolt"
-        iconProps={{
-          intent: 'primary',
-          size: 16,
-          color: Color.PRIMARY_8
-        }}
-        color={Color.PRIMARY_8}
-      >
-        {getString('pipeline.testsReports.poweredByTI')}
-      </Text>
-    )}
-  </Container>
-)
+}): JSX.Element => {
+  return <MemoizedHeader {...props} />
+}
 
 export function TIAndReports({
   header,
