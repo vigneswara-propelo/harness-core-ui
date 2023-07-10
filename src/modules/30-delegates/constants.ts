@@ -94,3 +94,10 @@ export enum DelegateDefaultName {
   KUBERNETES = 'kubernetes-delegate'
 }
 export const DelegateNameLengthLimit = 63
+
+export const DELEGATE_TO_DEFAULT_NAME_MAP: { [key: string]: string } = {
+  DOCKER: 'docker-delegate',
+  HELM: 'helm-delegate',
+  TERRAFORM: 'terraform-delegate',
+  KUBERNETES: 'kubernetes-delegate'
+}

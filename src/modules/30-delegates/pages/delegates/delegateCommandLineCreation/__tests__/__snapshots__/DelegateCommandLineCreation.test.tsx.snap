@@ -180,7 +180,7 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
                 >
                   test
                 </p>
@@ -200,7 +200,7 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg
@@ -616,7 +616,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
             class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
           >
             <p
-              class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+              class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
             >
               delegates.commandLineCreation.lastCommandKubernetesLastLine
             </p>
@@ -636,7 +636,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
                     type="button"
                   >
                     <span
-                      class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                      class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                       icon="duplicate"
                     >
                       <svg
@@ -1020,7 +1020,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                   class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
                   >
                     test
                   </p>
@@ -1040,7 +1040,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                           type="button"
                         >
                           <span
-                            class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                             icon="duplicate"
                           >
                             <svg
@@ -1093,7 +1093,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
               class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
               >
                 delegates.commandLineCreation.secondCommandTerraFormFirstLine
               </p>
@@ -1113,7 +1113,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                       type="button"
                     >
                       <span
-                        class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                        class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                         icon="duplicate"
                       >
                         <svg
@@ -1146,7 +1146,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
             class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
             >
               delegates.commandLineCreation.firstCommandTerraFormFirstLine
             </p>
@@ -1166,7 +1166,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                     type="button"
                   >
                     <span
-                      class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                      class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                       icon="duplicate"
                     >
                       <svg
@@ -1547,7 +1547,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                 >
                   delegates.commandLineCreation.firstCommandHelmFirstLine
                 </p>
@@ -1567,7 +1567,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg
@@ -1595,7 +1595,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
               class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
               >
                 delegates.commandLineCreation.firstCommandHelmSecondLine
               </p>
@@ -1615,7 +1615,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                       type="button"
                     >
                       <span
-                        class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                        class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                         icon="duplicate"
                       >
                         <svg
@@ -1669,7 +1669,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
                 >
                   test
                 </p>
@@ -1689,7 +1689,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg
@@ -2072,7 +2072,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                 >
                   delegates.commandLineCreation.firstCommandHelmFirstLine
                 </p>
@@ -2092,7 +2092,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg
@@ -2120,7 +2120,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
               class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
               >
                 delegates.commandLineCreation.firstCommandHelmSecondLine
               </p>
@@ -2140,7 +2140,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                       type="button"
                     >
                       <span
-                        class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                        class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                         icon="duplicate"
                       >
                         <svg
@@ -2194,7 +2194,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
                 >
                   test
                 </p>
@@ -2214,7 +2214,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg

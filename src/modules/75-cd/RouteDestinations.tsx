@@ -90,6 +90,7 @@ import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
+import CDOnboardingWizardWithCLI from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -265,7 +266,16 @@ TriggerFactory.registerTriggerForm(TriggerFormType.Artifact, {
   component: KubernetesArtifacts,
   baseFactory: artifactSourceBaseFactory
 })
+const CDOnboardingWizardComponent = (): JSX.Element => {
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const PLG_CD_CLI_WIZARD_ENABLED = useFeatureFlag(FeatureFlag.PLG_CD_CLI_WIZARD_ENABLED)
 
+  return PLG_CD_CLI_WIZARD_ENABLED ? (
+    <Redirect to={routes.toCDOnboardingWizardWithCLI({ accountId, projectIdentifier, orgIdentifier, module: 'cd' })} />
+  ) : (
+    <CDOnboardingWizard />
+  )
+}
 const ServiceDetails = (): React.ReactElement => {
   const isCommunity = useGetCommunity()
 
@@ -286,6 +296,7 @@ export default (
     >
       <GetStartedWithCD />
     </RouteWithLayout>
+
     <RouteWithLayout
       exact
       layout={EmptyLayout}
@@ -293,7 +304,17 @@ export default (
       path={routes.toCDOnboardingWizard({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       pageName={PAGE_NAME.CDOnboardingWizard}
     >
-      <CDOnboardingWizard />
+      <CDOnboardingWizardComponent />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toCDOnboardingWizardWithCLI({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.CDOnboardingWizard}
+    >
+      <CDOnboardingWizardWithCLI />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}

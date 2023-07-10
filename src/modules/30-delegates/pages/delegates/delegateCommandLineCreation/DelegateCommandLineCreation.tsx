@@ -43,8 +43,16 @@ import KuberntesManifestSizingTable from './components/KuberntesManifestSizingTa
 import css from './DelegateCommandLineCreation.module.scss'
 
 interface DelegateCommandLineCreationProps {
-  onDone: HideModal
+  delegateName?: string
   oldDelegateCreation?: () => void
+  onDone: HideModal
+  hideDocker?: boolean
+  checkAndSuggestDelegateName?: boolean
+  onDelegateConfigChange?: (data: {
+    delegateName?: DelegateDefaultName
+    delegateType?: DelegateCommandLineTypes
+    delegateProblemType?: DelegateCommonProblemTypes
+  }) => void
 }
 interface CommonStatesforAllClicksProps {
   commandTypeLocal: CommandType | undefined
@@ -58,7 +66,13 @@ const installDelegateLink =
 const intsallDelegateLinkTutorial =
   'https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate'
 
-const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({ onDone, oldDelegateCreation }) => {
+const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({
+  onDone,
+  oldDelegateCreation,
+  hideDocker,
+  onDelegateConfigChange,
+  delegateName: defaultDelegateName
+}) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [delegateType, setDelegateType] = useState<DelegateCommandLineTypes>(DelegateCommandLineTypes.KUBERNETES)
@@ -74,7 +88,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   )
   const { showError } = useToaster()
   const [verifyButtonClicked, setVerifyButtonClicked] = useState<boolean>(false)
-  const [delegateName, setDelegateName] = useState<string>(DelegateDefaultName.HELM)
+  const [delegateName, setDelegateName] = useState<string>(defaultDelegateName || DelegateDefaultName.HELM)
   const [kubenetesYamlOriginal, setKubernetesYamlOriginal] = useState<string>('')
 
   const [kubenetesYamlUpdatedValue, setKubernetesYamlUpdatedValue] = useState<string>('')
@@ -101,7 +115,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       fileFormat: 'text/plain'
     } as GenerateKubernetesYamlQueryParams
   })
-  const getKubernetesYaml = async () => {
+  const getKubernetesYaml = async (): Promise<void> => {
     if (!kubenetesYamlOriginal) {
       const yamlData = await downloadKubernetesYaml({
         name: DelegateDefaultName.KUBERNETES,
@@ -114,7 +128,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       setKubernetesYamlUpdatedValue(yamlData as any)
     }
   }
-  const setTerraFormDataToCommand = () => {
+  const setTerraFormDataToCommand = (): void => {
     if (terraFormData) {
       setCommand(terraFormData)
       setOriginalCommand(terraFormData)
@@ -125,6 +139,14 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       setTerraFormDataToCommand()
     }
   }, [terraFormData])
+
+  useEffect(() => {
+    onDelegateConfigChange?.({
+      delegateName: delegateName as DelegateDefaultName,
+      delegateType: delegateType as DelegateCommandLineTypes,
+      delegateProblemType: commonProblemsDelegateType
+    })
+  }, [delegateName, delegateType, commonProblemsDelegateType])
 
   const {
     refetch,
@@ -174,7 +196,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       setOriginalCommand(commandData?.resource['command'])
     }
   }, [commandData])
-  const commonCommandsForAllDelegateTypes = () => {
+  const commonCommandsForAllDelegateTypes = (): void => {
     setVerifyButtonClicked(false)
     setErrorDelegateName(false)
     setErrorDelegateNameLength(false)
@@ -186,17 +208,17 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
     delegateNameLocal,
     delegateDefaultNameLocal,
     commonProblemsDelegateTypeLocal
-  }: CommonStatesforAllClicksProps) => {
+  }: CommonStatesforAllClicksProps): void => {
     setCommandType(commandTypeLocal)
-    setDelegateName(delegateNameLocal)
+    setDelegateName(defaultDelegateName || delegateNameLocal)
     setDelegateDefaultName(delegateDefaultNameLocal)
     setCommonProblemsDelegateType(commonProblemsDelegateTypeLocal)
     commonCommandsForAllDelegateTypes()
   }
-  const onDelegateError = () => {
+  const onDelegateError = (): void => {
     setShowVerifyButton(false)
   }
-  const checkIfErrorBlockAlreadyVisible = () => {
+  const checkIfErrorBlockAlreadyVisible = (): void => {
     if (!showVerifyButton && verifyButtonClicked) {
       setShowVerifyButton(true)
     }
@@ -263,7 +285,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       ></Button>
     </Layout.Horizontal>
   )
-  const delegateNameError = () => {
+  const delegateNameError = (): string | undefined => {
     let errorMessage = undefined
     if (errorDelegateName) {
       errorMessage = getString('delegates.delegateNameRegexIssue')
@@ -452,26 +474,28 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 round
                 intent={delegateType === DelegateCommandLineTypes.KUBERNETES ? 'primary' : 'none'}
               ></Button>
-              <Button
-                intent={delegateType === DelegateCommandLineTypes.DOCKER ? 'primary' : 'none'}
-                onClick={() => {
-                  commonStatesforAllClicks({
-                    commandTypeLocal: CommandType.DOCKER,
-                    delegateNameLocal: DelegateDefaultName.DOCKER,
-                    delegateDefaultNameLocal: DelegateDefaultName.DOCKER,
-                    commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.DOCKER
-                  })
+              {!hideDocker && (
+                <Button
+                  intent={delegateType === DelegateCommandLineTypes.DOCKER ? 'primary' : 'none'}
+                  onClick={() => {
+                    commonStatesforAllClicks({
+                      commandTypeLocal: CommandType.DOCKER,
+                      delegateNameLocal: DelegateDefaultName.DOCKER,
+                      delegateDefaultNameLocal: DelegateDefaultName.DOCKER,
+                      commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.DOCKER
+                    })
 
-                  setDelegateType(DelegateCommandLineTypes.DOCKER)
-                  setkubernetesType(undefined)
-                  trackEvent(DelegateActions.DelegateCommandLineDocker, {
-                    category: Category.DELEGATE
-                  })
-                }}
-                icon="docker-step"
-                text={getString('delegate.cardData.docker.name')}
-                round
-              ></Button>
+                    setDelegateType(DelegateCommandLineTypes.DOCKER)
+                    setkubernetesType(undefined)
+                    trackEvent(DelegateActions.DelegateCommandLineDocker, {
+                      category: Category.DELEGATE
+                    })
+                  }}
+                  icon="docker-step"
+                  text={getString('delegate.cardData.docker.name')}
+                  round
+                ></Button>
+              )}
             </Layout.Horizontal>
             {delegateType && (
               <Text

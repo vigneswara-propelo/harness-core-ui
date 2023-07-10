@@ -14,6 +14,8 @@ export interface StepDetailsInterface {
   isOptional?: boolean
   helpPanelReferenceId?: string
   errorMessage?: string[]
+  nextButtonTitle?: string
+  disableNext?: () => boolean
 }
 
 export interface StepperProps {
@@ -22,4 +24,6 @@ export interface StepperProps {
   onStepChange?: (id: string) => void
   isStepValid?: (selectedTabId: string) => boolean
   runValidationOnMount?: boolean
+  hideTitleWhenActive?: boolean
+  activeStepId?: string
 }

@@ -6,7 +6,7 @@ exports[`CommandBlock test command block 1`] = `
     class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
     >
       test
     </p>
@@ -26,7 +26,7 @@ exports[`CommandBlock test command block 1`] = `
             type="button"
           >
             <span
-              class="bp3-icon bp3-icon-duplicate StyledProps--main"
+              class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
               icon="duplicate"
             >
               <svg
@@ -75,7 +75,7 @@ exports[`CommandBlock test command block telemetry and other options 1`] = `
     class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
     >
       test
     </p>
@@ -95,7 +95,7 @@ exports[`CommandBlock test command block telemetry and other options 1`] = `
             type="button"
           >
             <span
-              class="bp3-icon bp3-icon-duplicate StyledProps--main"
+              class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
               icon="duplicate"
             >
               <svg

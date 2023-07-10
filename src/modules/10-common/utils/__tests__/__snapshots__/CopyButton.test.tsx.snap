@@ -42,7 +42,7 @@ exports[`copy button copy 1`] = `
           </div>
         </div>
         <span
-          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
           icon="duplicate"
         >
           <svg

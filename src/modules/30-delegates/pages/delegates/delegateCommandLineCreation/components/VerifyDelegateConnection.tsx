@@ -93,7 +93,6 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
       onSuccessHandler && onSuccessHandler()
     }
   }, [data, verifyHeartBeat, loading, onSuccessHandler])
-
   const getVerifyDelegateDetails = () => {
     if (showError) {
       return (

@@ -263,6 +263,7 @@ describe('Delegate Command line creation failure', () => {
     await act(async () => {
       fireEvent.click(getByText('delegates.commandLineCreation.retryConnections'))
     })
+
     await act(async () => {
       fireEvent.click(getByText('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot'))
     })

@@ -640,6 +640,102 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  title: Get started with comprehensive deployments
+  description: Set up a Harness CD pipeline or a GitOps app to automate deployment of your service to your infrastructure
+  flowbyquestions:
+    what:
+      title: What do you want to deploy?
+      samplesvc: We will start you with a sample service. You can add your own by editing the yaml later.
+      aboutSvc: Tell us about your service
+      svcrep: Service representation
+      K8sSteps:
+        k8sSvcRep: How is your Kubernetes Service represented?
+        artifact: Your artifact is usually specified in the image tag(s) of these manifests.
+    howNwhere:
+      title: How and where do you want to deploy?
+      subtitle: Choose how you would like to deploy.
+      K8s:
+        title: Tell us how and where you want to deploy your Kubernetes Manifest
+        description: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster either via a CD pipeline or via a GitOps workflow. Make the selection below.
+        cdPipeline:
+          title: CD Pipeline
+          delegatetitle: Install the delegate
+          subtitle: Connect with a Kubernetes Delegate
+          delegateDescription: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster via a CD pipeline.
+          delegateDescription2: You need to install a Harness Kubernetes Delegate on your Kubernetes cluster as a prerequisite for the CD Pipeline. This delegate will then receive various tasks (such as secrets decryption, connecting to private systems and more) from your CD pipeline and automatically run them on your behalf.
+          howDelegateWorks: You will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target Kubernetes cluster.
+          description1: In the CD Pipeline approach, you will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target Kubernetes cluster.
+          installDelegate: Install the Kubernetes delegate to create a CD Pipeline for deployment
+          installButton: Install the Kubernetes delegate
+          delegateFailed: Delegate connection failed
+          delegateInstalled: Installed
+        cdGitops:
+          title: GitOps Workflow
+          subtitle: Connect with a GitOps agent
+          description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster. You have the Hosted GitOps and Self-Managed GitOps options to get started with Harness GitOps.
+    deplopymentSteps:
+      title: Here are the steps to deploy!
+      stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
+      stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" href="{{sampleAppURL}}"">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
+      stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
+      forkRepo: Fork the harnesscd-example-apps repository through the GitHub web interface. This enables personal experimentation and modifications without impacting the original codebase.
+      steps:
+        step1:
+          title: '1. Create an API key for CLI authentication.'
+          generateButton: Generate API key
+          regenerateButton: Re-Generate API key
+          apiKeyPlacholder: HARNESS-API-KEY
+          fetchingApiKeys: Fetching Api Keys
+        step2:
+          title: 2. Download the Harness CLI.
+          arm: https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-linux-arm64.tar.gz
+          amd: https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-linux-amd64.tar.gz
+          mac: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-darwin-amd64.tar.gz
+          linux: lincurl -L0 https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-linux-arm64.tar.gz
+          win: https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-windows-amd64.zip
+        step3:
+          title: '3. Provide GitHub access details.'
+          githubusername: 'GitHub username'
+          githubpat: 'GitHub Personal Access Token (PAT)'
+          githubHint: As you’ll eventually control deployment configuration by editing YAML definitions, Harness CD needs to read from your repository.
+        step4:
+          title: '4. Pipeline Setup'
+          description1: 'Run the steps to deploy the sample guestbook application located at <a target="_blank" href="{{guestBookURL}}">{{guestBookURL}}</a>.'
+          description2: You will first create a Harness Service representing this application and a Harness Environment representing the infrastructure where you are deploying (and already identified by the Delegate installed in the previous step).
+          commands:
+            gitpatPlaceholder: GITHUB-PAT
+            gitusernamePlaceholder: GITHUB_USERNAME
+            clonecmd: 'git clone https://github.com/{{gitUser}}/harnesscd-example-apps.git'
+            cddir: cd harnesscd-example-apps
+            logincmd: 'harness login --api-key {{apiKey}} --account-id {{accId}}'
+            createsecret: 'harness secret  --token {{gitPat}} apply'
+            creategithubcon: 'harness connector --file guestbook/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '
+            createk8scon: 'harness connector --file guestbook/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name {{delegateName}}'
+            createsvccmd: harness service --file guestbook/harnesscd-pipeline/service.yml apply
+            createenvcmd: harness environment --file guestbook/harnesscd-pipeline/environment.yml apply
+            createinfracmd: harness infrastructure  --file guestbook/harnesscd-pipeline/infrastructure-definition.yml apply
+            createpipeline:
+              createcanarycmd: harness pipeline --file guestbook/harnesscd-pipeline/canary-pipeline.yml apply
+              createbluegreencmd: harness pipeline --file guestbook/harnesscd-pipeline/bluegreen-pipeline.yml apply
+              createrollingcmd: harness pipeline --file guestbook/harnesscd-pipeline/rolling-pipeline.yml apply
+        step5:
+          title: 5. Pick deployment strategy
+          description: Create a pipeline with your preferred deployment strategy. We recommend starting with the Canary strategy as it reduces the probability of failed changes.
+          verifyPipeline: Verify once you have complete the steps above to make sure they were successfully executed.
+          pipelinenotfound: Pipeline not created
+          recheckpipeline: Please re-check that all commands were entered successfully into your CLI.
+          retryVerify: Retry Verification
+          pipelinesuccess: The pipeline was successfully created.
+    reviewAndRunStep:
+      title: Verify the setup
+      noDelegate: No delegate connected
+      continueWithoutDelegate: Without a delegate connected you will be able to view your pipeline in the next step, but will not be able to to successfully run it.
+      checkDelegate: Check Delegate
+      delegateSuccess: Delegate successfully created.
+      delegateLoading: Delegate verification in progress.
+      runPipeline: View and run your pipeline
+      runWithoutDelegate: View and run your pipeline without delegate
+      noPipeline: 'Unfortunately, we were unable to find the pipeline with id: {{pipelineid}}. Please ensure that the pipeline exists before we can proceed to the next step.'
   getStartedBtn: Get started with a guided deployment
   whyHarnessCD: Why Harness CD
   cdWizardEventName: CD Wizard - {{ eventName }}

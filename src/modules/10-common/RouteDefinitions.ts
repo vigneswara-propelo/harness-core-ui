@@ -827,6 +827,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/cd-onboarding`
   ),
+  toCDOnboardingWizardWithCLI: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/cd-onboarding-wizard`
+  ),
   toPipelineStudio: withAccountId(
     ({
       orgIdentifier,

@@ -257,7 +257,7 @@ HTMLCollection [
                   class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                   >
                     delegates.commandLineCreation.firstCommandHelmFirstLine
                   </p>
@@ -277,7 +277,7 @@ HTMLCollection [
                           type="button"
                         >
                           <span
-                            class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                             icon="duplicate"
                           >
                             <svg
@@ -305,7 +305,7 @@ HTMLCollection [
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                 >
                   delegates.commandLineCreation.firstCommandHelmSecondLine
                 </p>
@@ -325,7 +325,7 @@ HTMLCollection [
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg
@@ -379,7 +379,7 @@ HTMLCollection [
                   class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
                   >
                     test
                   </p>
@@ -399,7 +399,7 @@ HTMLCollection [
                           type="button"
                         >
                           <span
-                            class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                             icon="duplicate"
                           >
                             <svg
@@ -823,7 +823,7 @@ HTMLCollection [
                   class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                   >
                     delegates.commandLineCreation.firstCommandHelmFirstLine
                   </p>
@@ -843,7 +843,7 @@ HTMLCollection [
                           type="button"
                         >
                           <span
-                            class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                             icon="duplicate"
                           >
                             <svg
@@ -871,7 +871,7 @@ HTMLCollection [
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                 >
                   delegates.commandLineCreation.firstCommandHelmSecondLine
                 </p>
@@ -891,7 +891,7 @@ HTMLCollection [
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg
@@ -945,7 +945,7 @@ HTMLCollection [
                   class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
                   >
                     test
                   </p>
@@ -965,7 +965,7 @@ HTMLCollection [
                           type="button"
                         >
                           <span
-                            class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                             icon="duplicate"
                           >
                             <svg
@@ -1378,7 +1378,7 @@ HTMLCollection [
                   class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                   >
                     delegates.commandLineCreation.firstCommandHelmFirstLine
                   </p>
@@ -1398,7 +1398,7 @@ HTMLCollection [
                           type="button"
                         >
                           <span
-                            class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                             icon="duplicate"
                           >
                             <svg
@@ -1426,7 +1426,7 @@ HTMLCollection [
                 class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-yaml"
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
                 >
                   delegates.commandLineCreation.firstCommandHelmSecondLine
                 </p>
@@ -1446,7 +1446,7 @@ HTMLCollection [
                         type="button"
                       >
                         <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                           icon="duplicate"
                         >
                           <svg
@@ -1500,7 +1500,7 @@ HTMLCollection [
                   class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
+                    class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--color StyledProps--font-variation-yaml"
                   >
                     test
                   </p>
@@ -1520,7 +1520,7 @@ HTMLCollection [
                           type="button"
                         >
                           <span
-                            class="bp3-icon bp3-icon-duplicate StyledProps--main"
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
                             icon="duplicate"
                           >
                             <svg

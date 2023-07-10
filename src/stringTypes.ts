@@ -548,6 +548,7 @@ export interface StringsMap {
   'common.hostLabel': string
   'common.hostNames': string
   'common.hourly': string
+  'common.howItWorks': string
   'common.iacm': string
   'common.iacmText': string
   'common.ifNotPresent': string
@@ -6062,6 +6063,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.delegateWorksInfo': string
   'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.deploymentType': string
+  'cd.getStartedWithCD.description': string
   'cd.getStartedWithCD.destinationDetails': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.disconnected': string
@@ -6073,6 +6075,83 @@ export interface StringsMap {
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
   'cd.getStartedWithCD.failedToProvisionCluster': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.forkRepo': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.apiKeyPlacholder': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.fetchingApiKeys': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.generateButton': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.regenerateButton': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.amd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.arm': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.linux': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.mac': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.win': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step3.githubHint': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step3.githubpat': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step3.githubusername': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step3.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.cddir': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.clonecmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createenvcmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.creategithubcon': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createinfracmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createk8scon': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createpipeline.createbluegreencmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createpipeline.createcanarycmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createpipeline.createrollingcmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createsecret': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createsvccmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.gitpatPlaceholder': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.gitusernamePlaceholder': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.logincmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.description1': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.description2': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.description': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.pipelinenotfound': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.pipelinesuccess': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.recheckpipeline': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.retryVerify': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.verifyPipeline': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsIntro': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsIntro2': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsTitle': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdGitops.description': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdGitops.subtitle': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdGitops.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegateDescription': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegateDescription2': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegateFailed': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegateInstalled': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegatetitle': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description1': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.howDelegateWorks': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.installButton': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.installDelegate': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.subtitle': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.description': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.subtitle': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.title': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.checkDelegate': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.continueWithoutDelegate': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.delegateLoading': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.delegateSuccess': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.noDelegate': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.noPipeline': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.runPipeline': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.runWithoutDelegate': string
+  'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.title': string
+  'cd.getStartedWithCD.flowbyquestions.what.K8sSteps.artifact': string
+  'cd.getStartedWithCD.flowbyquestions.what.K8sSteps.k8sSvcRep': string
+  'cd.getStartedWithCD.flowbyquestions.what.aboutSvc': string
+  'cd.getStartedWithCD.flowbyquestions.what.samplesvc': string
+  'cd.getStartedWithCD.flowbyquestions.what.svcrep': string
+  'cd.getStartedWithCD.flowbyquestions.what.title': string
   'cd.getStartedWithCD.frequency': string
   'cd.getStartedWithCD.getStartedBtn': string
   'cd.getStartedWithCD.gitOpsAgent': string
@@ -6185,6 +6264,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
+  'cd.getStartedWithCD.title': string
   'cd.getStartedWithCD.tryAnotherCreds': string
   'cd.getStartedWithCD.tryCICTA': string
   'cd.getStartedWithCD.useOwnManifest': string
@@ -7494,7 +7574,6 @@ export interface StringsMap {
   'ce.nodeRecommendation.estimatedSavings': string
   'ce.nodeRecommendation.fetchRecommendationError': string
   'ce.nodeRecommendation.gke': string
-  'ce.nodeRecommendation.howItWorks': string
   'ce.nodeRecommendation.inconsistentResourceReq': string
   'ce.nodeRecommendation.instaceFamiliesModalDesc': string
   'ce.nodeRecommendation.instanceFam': string

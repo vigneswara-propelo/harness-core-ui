@@ -82,7 +82,6 @@ const GetStartedWithAB: React.FC = () => {
   const {
     currentUserInfo: { uuid }
   } = useAppStore()
-
   return (
     <WithABFFProvider
       fallback={<GetStartedWithCD />}
