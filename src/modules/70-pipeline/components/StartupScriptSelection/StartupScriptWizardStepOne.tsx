@@ -28,11 +28,11 @@ import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/Thumb
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -241,7 +241,7 @@ function StartupScriptWizardStepOne({
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
                     {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
-                      <ConfigureOptions
+                      <ConnectorConfigureOptions
                         className={css.configureOptions}
                         value={formik.values.connectorRef as unknown as string}
                         type={ConnectorMap[formik.values.selectedStore]}
@@ -254,6 +254,14 @@ function StartupScriptWizardStepOne({
                           }
                         }
                         isReadonly={isReadonly}
+                        connectorReferenceFieldProps={{
+                          accountIdentifier: accountId,
+                          projectIdentifier,
+                          orgIdentifier,
+                          type: ConnectorMap[formik.values.selectedStore],
+                          label: `${getString('connector')}`,
+                          gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                        }}
                       />
                     ) : (
                       <Button

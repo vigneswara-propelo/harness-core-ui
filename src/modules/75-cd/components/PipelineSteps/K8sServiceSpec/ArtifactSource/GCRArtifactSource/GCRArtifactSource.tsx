@@ -280,6 +280,10 @@ const Content = (props: GCRRenderContent): JSX.Element => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: get(template, `artifacts.${artifactPath}.spec.connectorRef`)
+              }}
             />
           )}
 

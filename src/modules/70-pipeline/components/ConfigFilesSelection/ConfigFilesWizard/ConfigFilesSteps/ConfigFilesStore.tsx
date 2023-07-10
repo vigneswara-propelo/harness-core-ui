@@ -29,12 +29,12 @@ import { isEmpty } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -235,7 +235,7 @@ function ConfigFileStore({
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
                     {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
-                      <ConfigureOptions
+                      <ConnectorConfigureOptions
                         className={css.configureOptions}
                         value={formik.values.connectorRef as unknown as string}
                         type={ConfigFilesToConnectorMap[formik.values.store]}
@@ -246,6 +246,16 @@ function ConfigFileStore({
                           formik.setFieldValue('connectorRef', value)
                         }}
                         isReadonly={isReadonly}
+                        connectorReferenceFieldProps={{
+                          accountIdentifier: accountId,
+                          projectIdentifier,
+                          orgIdentifier,
+                          type: ConfigFilesToConnectorMap[formik.values.store],
+                          label: `${getString(ConfigFileTypeTitle[formik.values.store as ConfigFileType])} ${getString(
+                            'connector'
+                          )}`,
+                          gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                        }}
                       />
                     ) : (
                       <Button

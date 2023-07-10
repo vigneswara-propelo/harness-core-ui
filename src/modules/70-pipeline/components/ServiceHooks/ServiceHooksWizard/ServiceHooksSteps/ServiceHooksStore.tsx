@@ -28,11 +28,11 @@ import { isEmpty } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -205,7 +205,7 @@ function ServiceHooksStore({
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
                     {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
-                      <ConfigureOptions
+                      <ConnectorConfigureOptions
                         className={css.configureOptions}
                         value={formik.values.connectorRef as unknown as string}
                         type={ServiceHooksToConnectorMap[formik.values.storeType]}
@@ -218,6 +218,16 @@ function ServiceHooksStore({
                           }
                         }
                         isReadonly={isReadonly}
+                        connectorReferenceFieldProps={{
+                          accountIdentifier: accountId,
+                          projectIdentifier,
+                          orgIdentifier,
+                          type: ServiceHooksToConnectorMap[formik.values.storeType],
+                          label: `${getString(
+                            ServiceHookStoreTypeTitle[formik.values.storeType as ServiceHookStoreType]
+                          )} ${getString('connector')}`,
+                          gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                        }}
                       />
                     ) : (
                       <Button

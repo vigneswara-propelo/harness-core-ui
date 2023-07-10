@@ -202,6 +202,10 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           }}
           type={'Jira'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          templateProps={{
+            isTemplatizedView: true,
+            templateValue: template?.spec?.connectorRef
+          }}
         />
       ) : null}
 

@@ -46,6 +46,7 @@ import { useQueryParams } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { isMultiTypeFixed } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
 import {
@@ -301,7 +302,7 @@ function FormContent({
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <ConnectorConfigureOptions
             style={{ marginTop: 14 }}
             value={formik.values.spec.connectorRef as string}
             type="String"
@@ -310,6 +311,15 @@ function FormContent({
             showDefaultField={false}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: 'Jira',
+              label: getString('pipeline.jiraApprovalStep.connectorRef'),
+              disabled: isApprovalStepFieldDisabled(readonly),
+              gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+            }}
           />
         )}
       </div>

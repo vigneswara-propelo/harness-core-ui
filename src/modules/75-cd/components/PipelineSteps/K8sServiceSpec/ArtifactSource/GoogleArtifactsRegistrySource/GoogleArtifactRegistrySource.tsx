@@ -311,6 +311,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: get(template, `artifacts.${artifactPath}.spec.connectorRef`)
+              }}
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.project`, template) && (

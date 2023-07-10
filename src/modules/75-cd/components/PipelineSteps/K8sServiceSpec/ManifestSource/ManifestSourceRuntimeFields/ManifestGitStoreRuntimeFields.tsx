@@ -79,6 +79,10 @@ const ManifestGitStoreRuntimeFields = ({
               branch: defaultTo(branch, ''),
               getDefaultFromOtherRepo: true
             }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: get(template, `${manifestPath}.spec.store.spec.connectorRef`)
+            }}
           />
         </div>
       )}

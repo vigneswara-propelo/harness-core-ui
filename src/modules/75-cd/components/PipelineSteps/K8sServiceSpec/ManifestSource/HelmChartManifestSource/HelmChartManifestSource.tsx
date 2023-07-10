@@ -367,6 +367,10 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               branch: defaultTo(branch, ''),
               getDefaultFromOtherRepo: true
             }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: get(template, connectorRefPath)
+            }}
           />
         </div>
       )}

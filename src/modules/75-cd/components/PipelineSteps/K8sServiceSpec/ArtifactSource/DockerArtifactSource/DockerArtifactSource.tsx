@@ -279,6 +279,10 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: get(template, `artifacts.${artifactPath}.spec.connectorRef`)
+              }}
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (

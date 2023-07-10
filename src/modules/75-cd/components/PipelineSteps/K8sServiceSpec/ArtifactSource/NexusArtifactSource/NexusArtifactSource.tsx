@@ -741,6 +741,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: get(template, `artifacts.${artifactPath}.spec.connectorRef`)
+              }}
             />
           )}
           <div className={css.inputFieldLayout}>

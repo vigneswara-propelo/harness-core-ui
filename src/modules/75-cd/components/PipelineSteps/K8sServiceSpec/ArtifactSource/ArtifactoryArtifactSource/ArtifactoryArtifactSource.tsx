@@ -687,6 +687,10 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: get(template, `artifacts.${artifactPath}.spec.connectorRef`)
+              }}
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryUrl`, template) && (

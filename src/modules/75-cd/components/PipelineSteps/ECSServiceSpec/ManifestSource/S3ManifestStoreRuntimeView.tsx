@@ -284,6 +284,10 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
               branch: defaultTo(branch, ''),
               getDefaultFromOtherRepo: true
             }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: get(template, connectorRefPath)
+            }}
           />
         </div>
       )}
