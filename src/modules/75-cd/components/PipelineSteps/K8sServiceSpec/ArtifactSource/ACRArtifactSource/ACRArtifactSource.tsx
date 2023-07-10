@@ -201,11 +201,11 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     })
 
   useEffect(() => {
-    if (getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED) {
       refetchSubscriptions({
         body: pipelineRuntimeYaml,
         queryParams: {
-          connectorRef: artifact?.spec?.connectorRef,
+          connectorRef: connectorRefValue,
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
