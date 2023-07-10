@@ -512,7 +512,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                   >
                     {selectedTemplate.name}
                   </Text>
-                  {supportingTemplatesGitx && (
+                  {supportingTemplatesGitx && (template as TemplateResponse)?.storeType === 'REMOTE' && (
                     <Layout.Horizontal flex={{ alignItems: 'center' }}>
                       <GitPopoverV2
                         setDefaultBranch={setDefaultBranch}
