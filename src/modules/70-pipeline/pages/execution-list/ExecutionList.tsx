@@ -170,29 +170,33 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   return (
     <>
-      <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
-        {showHealthAndExecution && !isCommunityAndCDModule && (
-          <Container className={css.healthAndExecutions} data-testid="health-and-executions">
-            <PipelineSummaryCards />
-            <PipelineBuildExecutionsChart />
-          </Container>
-        )}
+      {showHealthAndExecution && !isCommunityAndCDModule && (
+        <Container className={css.healthAndExecutions} data-testid="health-and-executions">
+          <PipelineSummaryCards />
+          <PipelineBuildExecutionsChart />
+        </Container>
+      )}
 
-        {showSubHeader && (
-          <ExecutionListSubHeader
-            onBranchChange={(value: string) => {
-              setSelectedBranch(value || defaultBranchSelect)
-            }}
-            selectedBranch={selectedBranch}
-            showRepoBranchFilter={isDeploymentsPage}
-            onChangeRepo={onChangeRepo}
-            repoName={repoName}
-            borderless
-            ref={searchRef}
-            isExecutionPage={isExecutionPage}
-            {...rest}
-          />
-        )}
+      {showSubHeader && (
+        <ExecutionListSubHeader
+          onBranchChange={(value: string) => {
+            setSelectedBranch(value || defaultBranchSelect)
+          }}
+          selectedBranch={selectedBranch}
+          showRepoBranchFilter={isDeploymentsPage}
+          onChangeRepo={onChangeRepo}
+          repoName={repoName}
+          borderless
+          ref={searchRef}
+          isExecutionPage={isExecutionPage}
+          {...rest}
+        />
+      )}
+      <Page.Body
+        className={css.pageBody}
+        error={showSpinner ? undefined : (error?.data as Error)?.message || error?.message}
+        retryOnError={() => fetchExecutions()}
+      >
         <GlobalFreezeBanner globalFreezes={globalFreezes} />
 
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
@@ -210,6 +214,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
               }}
               selectedSortMethod={sort?.toString()}
               className={css.listHeader}
+              buttonTestId="sort-dropdown-button"
             />
             <MemoisedExecutionListTable
               executionList={executionList}

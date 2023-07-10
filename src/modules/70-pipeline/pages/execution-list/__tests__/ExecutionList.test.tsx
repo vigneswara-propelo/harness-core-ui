@@ -7,7 +7,6 @@
 
 import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { cloneDeep } from 'lodash-es'
 import React from 'react'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import routes from '@common/RouteDefinitions'
@@ -147,28 +146,27 @@ jest.mock('services/gitops', () => ({
   }))
 }))
 
-const commonRequest = (): any =>
-  cloneDeep({
-    body: null,
-    queryParamStringifyOptions: { arrayFormat: 'repeat' },
-    queryParams: {
-      accountIdentifier: 'accountId',
-      module: 'cd',
-      branch: undefined,
-      filterIdentifier: undefined,
-      orgIdentifier: 'orgIdentifier',
-      projectIdentifier: 'projectIdentifier',
-      page: 0,
-      size: 20,
-      sort: 'startTs,DESC',
-      searchTerm: undefined,
-      status: undefined,
-      repoIdentifier: undefined,
-      repoName: undefined,
-      pipelineIdentifier: undefined,
-      myDeployments: undefined
-    }
-  })
+const commonRequest = (): any => ({
+  body: null,
+  queryParamStringifyOptions: { arrayFormat: 'repeat' },
+  queryParams: {
+    accountIdentifier: 'accountId',
+    module: 'cd',
+    branch: undefined,
+    filterIdentifier: undefined,
+    orgIdentifier: 'orgIdentifier',
+    projectIdentifier: 'projectIdentifier',
+    page: 0,
+    size: 20,
+    sort: 'startTs,DESC',
+    searchTerm: undefined,
+    status: undefined,
+    repoIdentifier: undefined,
+    repoName: undefined,
+    pipelineIdentifier: undefined,
+    myDeployments: undefined
+  }
+})
 
 const getModuleParams = (module = 'cd') => ({
   accountId: 'accountId',
@@ -410,6 +408,16 @@ describe('Execution List', () => {
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
 
+  test('should fetch executions when a sort option is selected in the sort dropdown', async () => {
+    renderExecutionPage()
+    const sortDropdownButton = await screen.findByTestId('sort-dropdown-button')
+    await userEvent.click(sortDropdownButton)
+    userEvent.click(await screen.findByText('Name (Z->A, 9->0)'))
+    const request = commonRequest()
+    request.queryParams.sort = 'name,DESC'
+    await waitFor(() => expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request))
+  })
+
   test('should show an error if a new filter is saved with empty filter fields', async () => {
     const { baseElement } = renderExecutionPage()
     const filtersButton = await waitFor(() => {
@@ -435,5 +443,36 @@ describe('Execution List', () => {
     const rows = await screen.findAllByRole('row')
     const cdAbortedByFreezeRow = rows[7]
     expect(within(cdAbortedByFreezeRow).getByText('pipeline.executionStatus.AbortedByFreeze')).toBeDefined()
+  })
+
+  test('should render error message with retry button if executions API returns an error', async () => {
+    const mutate = jest.fn(() =>
+      Promise.reject({
+        status: 'ERROR',
+        code: 'INVALID_REQUEST',
+        message: 'Invalid request',
+        correlationId: 'correlationId',
+        detailedMessage: null,
+        responseMessages: [
+          {
+            code: 'INVALID_REQUEST',
+            level: 'ERROR',
+            message: 'Invalid request',
+            exception: null,
+            failureTypes: []
+          }
+        ],
+        metadata: null
+      })
+    )
+    ;(useGetListOfExecutions as jest.Mock).mockImplementation(() => ({
+      cancel: jest.fn(),
+      loading: false,
+      mutate
+    }))
+    renderExecutionPage()
+    expect(await screen.findByText('Invalid request')).toBeInTheDocument()
+    await userEvent.click(screen.getByText('Retry'))
+    await waitFor(() => expect(mutate).toBeCalled())
   })
 })

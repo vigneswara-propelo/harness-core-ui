@@ -716,7 +716,7 @@ exports[`Service Detail Summary -  Initial render - basic snapshot 1`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main PageBody--pageBody"
+      class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
       data-name="page-body"
       data-testid="page-body"
     >

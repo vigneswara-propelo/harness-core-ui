@@ -17,3 +17,7 @@
 .listHeader {
   margin: var(--spacing-large) var(--spacing-large) 0 var(--spacing-large) !important;
 }
+
+.pageBody {
+  --page-header-height: 138px; // page header height (73px) + filters height (65px)
+}

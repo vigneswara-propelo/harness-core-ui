@@ -9,5 +9,6 @@
 declare const styles: {
   readonly healthAndExecutions: string
   readonly listHeader: string
+  readonly pageBody: string
 }
 export default styles
