@@ -119,9 +119,9 @@ describe('deploy environment entity widget', () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          '{"category":"multi","parallel":true,"environments":[{"label":"Env_1","value":"Env_1"}],"environmentFilters":{},"infrastructures":{"Env_1":[]}}'
+          '{"category":"multi","parallel":true,"environments":[{"label":"Env_1","value":"Env_1"}],"environmentFilters":{},"infrastructures":{}}'
         )
-      ).toBeVisible()
+      ).toBeInTheDocument()
     )
   })
 })

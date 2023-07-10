@@ -174,7 +174,7 @@ export default function DeployEnvironmentEntityWidget({
                 ? getMultiTypeFromValue(infrastructure) === MultiTypeInputType.RUNTIME
                   ? RUNTIME_INPUT_VALUE
                   : [{ label: infrastructure, value: infrastructure }]
-                : []
+                : undefined
             )
           }
         }
