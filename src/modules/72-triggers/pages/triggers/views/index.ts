@@ -10,7 +10,6 @@ import ArtifactTriggerConfigPanel from './ArtifactTriggerConfigPanel'
 import WebhookTriggerConfigPanel from './WebhookTriggerConfigPanel'
 import WebhookConditionsPanel from './WebhookConditionsPanel'
 import TriggerOverviewPanel from './TriggerOverviewPanel'
-import SchedulePanel from './SchedulePanel'
 import WebhookPipelineInputPanel from './WebhookPipelineInputPanel'
 
 export {
@@ -19,6 +18,5 @@ export {
   WebhookTriggerConfigPanel,
   WebhookConditionsPanel,
   WebhookPipelineInputPanel,
-  TriggerOverviewPanel,
-  SchedulePanel
+  TriggerOverviewPanel
 }

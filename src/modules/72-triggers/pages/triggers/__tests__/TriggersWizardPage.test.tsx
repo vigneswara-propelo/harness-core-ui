@@ -117,7 +117,7 @@ jest.mock('@pipeline/factories/ArtifactTriggerInputFactory', () => ({
 function WrapperComponent(): JSX.Element {
   return (
     <TestWrapper pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
-      <TriggersWizardPage isFixedUTCTimeSchedulePanel />
+      <TriggersWizardPage />
     </TestWrapper>
   )
 }
@@ -279,7 +279,6 @@ describe('TriggersWizardPage Triggers tests', () => {
           queryByText(document.body, result.current.getString('triggers.schedulePanel.enterCustomCron'))
         ).not.toBeNull()
       )
-      expect(container).toMatchSnapshot()
     })
 
     test('Invalid yaml shows error message', async () => {

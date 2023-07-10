@@ -987,6 +987,7 @@ export interface StringsMap {
   'common.schedulePanel.WED': string
   'common.schedulePanel.cronExpression': string
   'common.schedulePanel.cronExpressionRequired': string
+  'common.schedulePanel.currentTime': string
   'common.schedulePanel.currentUTCTime': string
   'common.schedulePanel.dailyTabTitle': string
   'common.schedulePanel.dayOfMonthLabel': string
@@ -1004,6 +1005,7 @@ export interface StringsMap {
   'common.schedulePanel.monthsParentheses': string
   'common.schedulePanel.ofEvery': string
   'common.schedulePanel.onThe': string
+  'common.schedulePanel.quartzExpression': string
   'common.schedulePanel.runAt': string
   'common.schedulePanel.runDailyAt': string
   'common.schedulePanel.runEvery': string
@@ -1011,6 +1013,7 @@ export interface StringsMap {
   'common.schedulePanel.runOnSpecificDay': string
   'common.schedulePanel.runOnSpecificDayMonth': string
   'common.schedulePanel.startingWith': string
+  'common.schedulePanel.unixExpression': string
   'common.schedulePanel.weeklyTabTitle': string
   'common.schedulePanel.yearlyTabTitle': string
   'common.scope': string
@@ -5595,8 +5598,6 @@ export interface StringsMap {
   'triggers.schedulePanel.TUE': string
   'triggers.schedulePanel.WED': string
   'triggers.schedulePanel.cronExpression': string
-  'triggers.schedulePanel.currentTime': string
-  'triggers.schedulePanel.currentUTCTime': string
   'triggers.schedulePanel.dailyTabTitle': string
   'triggers.schedulePanel.dayOfMonthLabel': string
   'triggers.schedulePanel.dayOfWeekLabel': string
@@ -5613,7 +5614,6 @@ export interface StringsMap {
   'triggers.schedulePanel.monthsParentheses': string
   'triggers.schedulePanel.ofEvery': string
   'triggers.schedulePanel.onThe': string
-  'triggers.schedulePanel.quartzExpression': string
   'triggers.schedulePanel.runAt': string
   'triggers.schedulePanel.runDailyAt': string
   'triggers.schedulePanel.runEvery': string
@@ -5621,7 +5621,6 @@ export interface StringsMap {
   'triggers.schedulePanel.runOnSpecificDay': string
   'triggers.schedulePanel.runOnSpecificDayMonth': string
   'triggers.schedulePanel.startingWith': string
-  'triggers.schedulePanel.unixExpression': string
   'triggers.schedulePanel.weeklyTabTitle': string
   'triggers.schedulePanel.yearlyTabTitle': string
   'triggers.scheduledLabel': string

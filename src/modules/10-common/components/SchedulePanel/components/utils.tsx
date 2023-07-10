@@ -48,7 +48,7 @@ const months = [
 
 const daysInMonth: { [key: string]: number } = {
   '1': 31,
-  '2': 29, // allow lead year
+  '2': 29, // allow leap year
   '3': 31,
   '4': 30,
   '5': 31,
@@ -123,7 +123,9 @@ export const scheduleTabsId = {
   MONTHLY: 'Monthly',
   YEARLY: 'Yearly',
   CUSTOM: 'Custom'
-}
+} as const
+
+export type ScheduleTabs = typeof scheduleTabsId[keyof typeof scheduleTabsId]
 
 export const resetScheduleObject = {
   minutes: undefined,
@@ -218,7 +220,7 @@ export const getSlashValue = ({
   value,
   startMonth
 }: {
-  selectedScheduleTab: string
+  selectedScheduleTab: ScheduleTabs
   id: string
   value: string
   startMonth?: string
@@ -237,58 +239,50 @@ export const getSlashValue = ({
 export const getDayOfWeekStr = (days?: string[]): string =>
   days?.length ? shortDays.filter(day => days.includes(day)).join(',') : '*'
 
-export const getDefaultExpressionBreakdownValues = (tabId: string): DefaultExpressionBreakdownInterface => {
+export const getDefaultExpressionBreakdownValues = (tabId: ScheduleTabs): DefaultExpressionBreakdownInterface => {
   if (tabId === scheduleTabsId.CUSTOM) {
     // persist expression from formik values
     return { ...resetScheduleObject }
   } else if (tabId === scheduleTabsId.MINUTES) {
     const { minutes, hours, dayOfMonth, month, dayOfWeek } = defaultMinutesValues
-    const constructedExpression =
-      tabId !== scheduleTabsId.CUSTOM
-        ? `${getSlashValue({
-            selectedScheduleTab: tabId,
-            id: 'minutes',
-            value: minutes
-          })} ${hours} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
-        : undefined
+    const constructedExpression = `${getSlashValue({
+      selectedScheduleTab: tabId,
+      id: 'minutes',
+      value: minutes
+    })} ${hours} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
+
     return {
       ...defaultMinutesValues,
       expression: constructedExpression
     }
   } else if (tabId === scheduleTabsId.HOURLY) {
     const { minutes, hours, dayOfMonth, month, dayOfWeek } = defaultHourlyValues
-    const constructedExpression =
-      tabId !== scheduleTabsId.CUSTOM
-        ? `${minutes} ${getSlashValue({
-            selectedScheduleTab: tabId,
-            id: 'hours',
-            value: hours
-          })} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
-        : undefined
+    const constructedExpression = `${minutes} ${getSlashValue({
+      selectedScheduleTab: tabId,
+      id: 'hours',
+      value: hours
+    })} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
+
     return {
       ...defaultHourlyValues,
       expression: constructedExpression
     }
   } else if (tabId === scheduleTabsId.DAILY) {
     const { minutes, hours, dayOfMonth, month, dayOfWeek } = defaultDailyValues
-    const constructedExpression =
-      tabId !== scheduleTabsId.CUSTOM
-        ? `${minutes} ${hours} ${getSlashValue({
-            selectedScheduleTab: tabId,
-            id: 'dayOfMonth',
-            value: dayOfMonth
-          })} ${month} ${getDayOfWeekStr(dayOfWeek)}`
-        : undefined
+    const constructedExpression = `${minutes} ${hours} ${getSlashValue({
+      selectedScheduleTab: tabId,
+      id: 'dayOfMonth',
+      value: dayOfMonth
+    })} ${month} ${getDayOfWeekStr(dayOfWeek)}`
+
     return {
       ...defaultDailyValues,
       expression: constructedExpression
     }
   } else if (tabId === scheduleTabsId.WEEKLY) {
     const { minutes, hours, dayOfMonth, month, dayOfWeek } = defaultWeeklyValues
-    const constructedExpression =
-      tabId !== scheduleTabsId.CUSTOM
-        ? `${minutes} ${hours} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
-        : undefined
+    const constructedExpression = `${minutes} ${hours} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
+
     return {
       ...defaultWeeklyValues,
       expression: constructedExpression
@@ -296,25 +290,21 @@ export const getDefaultExpressionBreakdownValues = (tabId: string): DefaultExpre
   } else if (tabId === scheduleTabsId.MONTHLY) {
     const { minutes, hours, dayOfMonth, month, startMonth, dayOfWeek } = defaultMonthlyValues
     // startMonth only applicable for Monthly tab, handled in getSlashValue
-    const constructedExpression =
-      tabId !== scheduleTabsId.CUSTOM
-        ? `${minutes} ${hours} ${dayOfMonth} ${getSlashValue({
-            selectedScheduleTab: tabId,
-            id: 'month',
-            startMonth,
-            value: month
-          })} ${getDayOfWeekStr(dayOfWeek)}`
-        : undefined
+    const constructedExpression = `${minutes} ${hours} ${dayOfMonth} ${getSlashValue({
+      selectedScheduleTab: tabId,
+      id: 'month',
+      startMonth,
+      value: month
+    })} ${getDayOfWeekStr(dayOfWeek)}`
+
     return {
       ...defaultMonthlyValues,
       expression: constructedExpression
     }
   } else if (tabId === scheduleTabsId.YEARLY) {
     const { minutes, hours, dayOfMonth, month, dayOfWeek } = defaultYearlyValues
-    const constructedExpression =
-      tabId !== scheduleTabsId.CUSTOM
-        ? `${minutes} ${hours} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
-        : undefined
+    const constructedExpression = `${minutes} ${hours} ${dayOfMonth} ${month} ${getDayOfWeekStr(dayOfWeek)}`
+
     return {
       ...defaultYearlyValues,
       expression: constructedExpression
@@ -353,6 +343,11 @@ export const AmPmMap = {
   PM: 'PM'
 }
 
+export enum CronFormat {
+  QUARTZ = 'QUARTZ',
+  UNIX = 'UNIX'
+}
+
 export const getMilitaryHours = ({ hours, amPm }: { hours: string; amPm: string }): string => {
   if (hours === '*') return '*'
   const hoursInt = parseInt(hours)
@@ -376,4 +371,11 @@ export const getBreakdownValues = (cronExpression: string): ExpressionBreakdownI
   }
 }
 
-export const isCronValid = (expression: string): boolean => isValidCron(expression, { alias: true })
+export const isCronValid = (expression: string, isQuartz?: boolean): boolean => {
+  const expLength = expression?.trim().split(' ').length
+
+  if (isQuartz) {
+    return expLength === 6 || expLength === 7
+  }
+  return isValidCron(expression, { alias: true })
+}

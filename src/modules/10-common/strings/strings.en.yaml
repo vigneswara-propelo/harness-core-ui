@@ -1193,7 +1193,8 @@ environmentPrefix: 'Environment: {{ name }}'
 infrastructurePrefix: 'Infrastructure: {{ name }}'
 serviceOverridePrefix: 'Service Override: {{ name }}'
 schedulePanel:
-  currentUTCTime: '{{$.common.currentUTCTime}}'
+  currentUTCTime: 'The Cron expression will be evaluated against UTC time. {{$.common.currentUTCTime}}'
+  currentTime: 'Your local time: '
   minutesLabel: 'Minutes'
   hourlyTabTitle: '{{$.common.hourly}}'
   dailyTabTitle: '{{$.common.daily}}'
@@ -1228,6 +1229,8 @@ schedulePanel:
   expressionBreakdown: 'Expression Breakdown'
   cronExpression: 'Cron Expression'
   cronExpressionRequired: 'Cron Expression required'
+  unixExpression: 'UNIX Expression'
+  quartzExpression: 'Quartz Expression'
 allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time

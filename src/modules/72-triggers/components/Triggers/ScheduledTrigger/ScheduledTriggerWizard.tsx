@@ -70,7 +70,7 @@ import {
   getDefaultExpressionBreakdownValues,
   resetScheduleObject,
   scheduleTabsId
-} from '@triggers/components/steps/SchedulePanel/components/utils'
+} from '@common/components/SchedulePanel/components/utils'
 import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import useTriggerView from '@common/components/Wizard/useTriggerView'

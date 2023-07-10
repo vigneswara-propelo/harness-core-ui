@@ -38,12 +38,12 @@ describe('ExpressionBreakdown', () => {
 
     expect(container.querySelector('[data-name="expressionBreakdown"]')).toBeInTheDocument()
     expect(container.querySelector('[data-tooltip-id="expressionBreakdown"]')).toBeInTheDocument()
-    expect(queryByText('triggers.schedulePanel.expressionBreakdown')).toBeInTheDocument()
-    expect(queryByText('triggers.schedulePanel.minutesLabel')).toBeInTheDocument()
-    expect(queryByText('triggers.schedulePanel.hoursLabel')).toBeInTheDocument()
-    expect(queryByText('triggers.schedulePanel.dayOfMonthLabel')).toBeInTheDocument()
-    expect(queryByText('triggers.schedulePanel.monthLabel')).toBeInTheDocument()
-    expect(queryByText('triggers.schedulePanel.dayOfWeekLabel')).toBeInTheDocument()
+    expect(queryByText('common.schedulePanel.expressionBreakdown')).toBeInTheDocument()
+    expect(queryByText('common.schedulePanel.minutesLabel')).toBeInTheDocument()
+    expect(queryByText('common.schedulePanel.hoursLabel')).toBeInTheDocument()
+    expect(queryByText('common.schedulePanel.dayOfMonthLabel')).toBeInTheDocument()
+    expect(queryByText('common.schedulePanel.monthLabel')).toBeInTheDocument()
+    expect(queryByText('common.schedulePanel.dayOfWeekLabel')).toBeInTheDocument()
     expect(queryByText('0/5')).toBeInTheDocument()
 
     // This is based on the expression values

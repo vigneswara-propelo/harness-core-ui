@@ -8,7 +8,7 @@
 import { ObjectSchema, string, TestContext, ValidationError } from 'yup'
 import { isEmpty } from 'lodash-es'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
-import { CronFormat, isCronValid } from '@triggers/components/steps/SchedulePanel/components/utils'
+import { CronFormat, isCronValid } from '@common/components/SchedulePanel/components/utils'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'

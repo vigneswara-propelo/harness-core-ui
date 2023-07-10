@@ -16,6 +16,7 @@ declare const styles: {
   readonly repeatEveryOption: string
   readonly repeatOnContainer: string
   readonly schedulePanelContainer: string
+  readonly schedulePanelContainerPadding: string
   readonly timePopover: string
   readonly timezone: string
 }

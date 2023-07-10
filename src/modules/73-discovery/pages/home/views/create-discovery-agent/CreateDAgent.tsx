@@ -261,7 +261,12 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
                               labelFor={tag => tag as string}
                             />
 
-                            <SchedulePanel renderFormTitle={false} hideSeconds formikProps={formikProps} />
+                            <SchedulePanel
+                              renderFormTitle={false}
+                              hideSeconds
+                              formikProps={formikProps}
+                              isQuartsExpressionSupported={false}
+                            />
 
                             <FormInput.Text name="duration" label={getString('discovery.forADurationOf')} />
                           </Container>

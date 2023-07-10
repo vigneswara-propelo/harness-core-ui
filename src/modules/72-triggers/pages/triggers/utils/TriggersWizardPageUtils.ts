@@ -32,7 +32,7 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import type { TriggerType } from '@triggers/components/Triggers/TriggerInterface'
-import { isCronValid } from '../views/subviews/ScheduleUtils'
+import { CronFormat, isCronValid } from '@common/components/SchedulePanel/components/utils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 import type {
   artifactManifestData,
@@ -42,7 +42,6 @@ import type {
   TriggerConfigDTO,
   FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
-import { CronFormat } from '../views/subviews/CustomTab'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'

@@ -81,8 +81,10 @@ import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
   resetScheduleObject,
-  getBreakdownValues
-} from './views/subviews/ScheduleUtils'
+  getBreakdownValues,
+  CronFormat
+} from '@common/components/SchedulePanel/components/utils'
+import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import type { AddConditionInterface } from './views/AddConditionsSection'
 import { GitSourceProviders } from './utils/TriggersListUtils'
 import {
@@ -113,13 +115,11 @@ import {
   WebhookTriggerConfigPanel,
   WebhookConditionsPanel,
   WebhookPipelineInputPanel,
-  SchedulePanel,
   TriggerOverviewPanel
 } from './views'
 import WebhookPipelineInputPanelV1 from './views/V1/WebhookPipelineInputPanelV1'
 import ArtifactConditionsPanel from './views/ArtifactConditionsPanel'
 
-import { CronFormat } from './views/subviews/CustomTab'
 import type {
   ConnectorRefInterface,
   FlatInitialValuesInterface,
@@ -135,12 +135,7 @@ import css from './TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
-interface TriggersWizardPageProps {
-  isFixedUTCTimeSchedulePanel?: boolean
-}
-
-const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
-  const { isFixedUTCTimeSchedulePanel } = props
+const TriggersWizardPage = (): JSX.Element => {
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier, module } = useParams<
     PipelineType<{
       projectIdentifier: string
@@ -2145,7 +2140,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         onFormikEffect={onFormikEffect}
       >
         <TriggerOverviewPanel />
-        <SchedulePanel isFixedUTCTime={isFixedUTCTimeSchedulePanel} />
+        <SchedulePanel isQuartsExpressionSupported hideSeconds />
 
         {isSimplifiedYAML ? (
           <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />

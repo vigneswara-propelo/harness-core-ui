@@ -124,7 +124,12 @@ function WrapperComponent(props: { initialValues: any }): JSX.Element {
         {formikProps => {
           return (
             <FormikForm>
-              <SchedulePanel {...defaultTriggerConfigDefaultProps} formikProps={formikProps} hideSeconds={true} />
+              <SchedulePanel
+                {...defaultTriggerConfigDefaultProps}
+                formikProps={formikProps}
+                hideSeconds={true}
+                isQuartsExpressionSupported={false}
+              />
               <Button text="Submit" className="submitButton" type="submit" />
             </FormikForm>
           )
@@ -135,6 +140,18 @@ function WrapperComponent(props: { initialValues: any }): JSX.Element {
 }
 
 describe('SchedulePanel Triggers tests', () => {
+  let spy: any
+
+  beforeEach(() => {
+    const mockedDate = new Date('2023-01-10T10:00:00')
+
+    spy = jest.spyOn(global, 'Date').mockImplementation(() => mockedDate)
+  })
+
+  afterEach(() => {
+    spy.mockRestore()
+  })
+
   describe('Renders/snapshots', () => {
     test('Initial Render - Schedule Panel', async () => {
       const { container } = render(<WrapperComponent initialValues={getMockTriggerConfigValues({})} />)

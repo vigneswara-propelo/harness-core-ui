@@ -112,7 +112,13 @@ export const StepSyncSchedule: React.FC<StepProps<CreateUpdateLdapWizardProps> &
           {formikProps => {
             return (
               <FormikForm>
-                <SchedulePanel formikProps={formikProps} isEdit={true} renderFormTitle={false} hideSeconds={false} />
+                <SchedulePanel
+                  formikProps={formikProps}
+                  isEdit={true}
+                  renderFormTitle={false}
+                  hideSeconds={false}
+                  isQuartsExpressionSupported={false}
+                />
               </FormikForm>
             )
           }}

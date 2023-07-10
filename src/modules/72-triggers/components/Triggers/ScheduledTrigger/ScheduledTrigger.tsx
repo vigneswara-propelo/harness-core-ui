@@ -8,9 +8,9 @@
 import React from 'react'
 
 import TriggerOverviewPanel from '@triggers/components/steps/TriggerOverviewPanel/TriggerOverviewPanel'
-import SchedulePanel from '@triggers/components/steps/SchedulePanel/SchedulePanel'
 import WebhookPipelineInputPanel from '@triggers/components/steps/WebhookPipelineInputPanel/WebhookPipelineInputPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
+import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import { Trigger, TriggerProps } from '../Trigger'
 import type { TriggerBaseType } from '../TriggerInterface'
 import ScheduledTriggerWizard from './ScheduledTriggerWizard'
@@ -23,7 +23,7 @@ export abstract class ScheduledTrigger<T> extends Trigger<T> {
   }
 
   renderStepTwo(): JSX.Element {
-    return <SchedulePanel />
+    return <SchedulePanel isQuartsExpressionSupported hideSeconds />
   }
 
   renderStepThree(isSimplifiedYAML?: boolean): JSX.Element {

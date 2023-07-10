@@ -18,8 +18,8 @@ import type {
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { TriggerBaseType, TriggerType } from '@triggers/components/Triggers/TriggerInterface'
+import { CronFormat } from '@common/components/SchedulePanel/components/utils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
-import type { CronFormat } from '../views/subviews/CustomTab'
 
 export interface ConnectorRefInterface {
   identifier?: string

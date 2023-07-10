@@ -6,8 +6,8 @@
  */
 
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import { scheduleTabsId } from '@common/components/SchedulePanel/components/utils'
 import type { TriggerOverviewPanelPropsInterface } from '../views/TriggerOverviewPanel'
-import { scheduleTabsId } from '../views/subviews/ScheduleUtils'
 
 export const originalPipeline = {
   name: 'pipeline-1',

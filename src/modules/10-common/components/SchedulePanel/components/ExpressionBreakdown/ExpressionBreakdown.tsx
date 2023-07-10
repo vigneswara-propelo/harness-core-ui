@@ -14,7 +14,7 @@ import type { StringKeys } from 'framework/strings'
 import { EXP_BREAKDOWN_INPUTS, scheduleTabsId, getMilitaryHours, getSlashValue, getDayOfWeekStr } from '../utils'
 import css from './ExpressionBreakdown.module.scss'
 
-interface ExpressionBreakdownPropsInterface {
+export interface ExpressionBreakdownPropsInterface {
   formikValues?: any
   activeInputs: EXP_BREAKDOWN_INPUTS[]
 }

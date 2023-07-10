@@ -11,12 +11,33 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Hourly select
     >
       <div>
         <div
-          class="Layout--vertical Layout--layout-spacing-large StyledProps--main schedulePanelContainer"
+          class="Layout--vertical Layout--layout-spacing-large StyledProps--main schedulePanelContainer schedulePanelContainerPadding"
         >
           <span
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
             common.schedule
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                common.schedulePanel.currentUTCTime
+                 
+                10
+                :
+                00
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                common.schedulePanel.currentTime
+                10
+                :
+                00
+              </p>
+            </div>
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"
@@ -1080,12 +1101,33 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Minutes selec
     >
       <div>
         <div
-          class="Layout--vertical Layout--layout-spacing-large StyledProps--main schedulePanelContainer"
+          class="Layout--vertical Layout--layout-spacing-large StyledProps--main schedulePanelContainer schedulePanelContainerPadding"
         >
           <span
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
             common.schedule
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                common.schedulePanel.currentUTCTime
+                 
+                10
+                :
+                00
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                common.schedulePanel.currentTime
+                10
+                :
+                00
+              </p>
+            </div>
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"
@@ -1553,12 +1595,33 @@ exports[`SchedulePanel Triggers tests Renders/snapshots Initial Render - Schedul
     >
       <div>
         <div
-          class="Layout--vertical Layout--layout-spacing-large StyledProps--main schedulePanelContainer"
+          class="Layout--vertical Layout--layout-spacing-large StyledProps--main schedulePanelContainer schedulePanelContainerPadding"
         >
           <span
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
             common.schedule
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                common.schedulePanel.currentUTCTime
+                 
+                10
+                :
+                00
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                common.schedulePanel.currentTime
+                10
+                :
+                00
+              </p>
+            </div>
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"

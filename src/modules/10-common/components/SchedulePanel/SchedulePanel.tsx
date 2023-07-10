@@ -11,7 +11,7 @@ import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 
-import { getDefaultExpressionBreakdownValues, scheduleTabsId } from './components/utils'
+import { ScheduleTabs, getDefaultExpressionBreakdownValues, scheduleTabsId } from './components/utils'
 
 import MinutesTab from './components/MinutesTab/MinutesTab'
 import HourlyTab from './components/HourlyTab/HourlyTab'
@@ -34,6 +34,29 @@ export interface SchedulePanelPropsInterface {
    */
   renderFormTitle?: boolean
   hideSeconds: boolean
+  isQuartsExpressionSupported: boolean
+}
+
+const FormTitle: React.FC = () => {
+  const { getString } = useStrings()
+  const currentDate = new Date()
+
+  return (
+    <Text className={css.formContentTitle} inline={true}>
+      {getString('common.schedule')}
+      <HarnessDocTooltip tooltipId="schedulePanel" useStandAlone={true} />
+      <Layout.Horizontal flex>
+        <Text>
+          {getString('common.schedulePanel.currentUTCTime')} {currentDate.getUTCHours()}:
+          {String(currentDate.getUTCMinutes()).padStart(2, '0')}
+        </Text>
+        <Text>
+          {getString('common.schedulePanel.currentTime')}
+          {currentDate.getHours()}:{String(currentDate.getMinutes()).padStart(2, '0')}
+        </Text>
+      </Layout.Horizontal>
+    </Text>
+  )
 }
 
 const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
@@ -44,22 +67,21 @@ const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
   formikProps,
   isEdit = false,
   renderFormTitle = true,
-  hideSeconds
+  hideSeconds,
+  isQuartsExpressionSupported
 }): JSX.Element => {
   const { getString } = useStrings()
 
   return (
-    <Layout.Vertical className={cx(css.schedulePanelContainer)} spacing="large">
-      {renderFormTitle && (
-        <Text className={css.formContentTitle} inline={true}>
-          {getString('common.schedule')}
-          <HarnessDocTooltip tooltipId="schedulePanel" useStandAlone={true} />
-        </Text>
-      )}
+    <Layout.Vertical
+      className={cx(css.schedulePanelContainer, { [css.schedulePanelContainerPadding]: renderFormTitle })}
+      spacing="large"
+    >
+      {renderFormTitle && <FormTitle />}
       <Layout.Vertical className={css.formContent}>
         <Tabs
           id="Wizard"
-          onChange={(val: string) => {
+          onChange={(val: ScheduleTabs) => {
             const newDefaultValues = selectedScheduleTab !== val ? getDefaultExpressionBreakdownValues(val) : {}
             formikProps.setValues({ ...values, ...newDefaultValues, selectedScheduleTab: val })
           }}
@@ -110,7 +132,7 @@ const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
           <Tab
             id={scheduleTabsId.CUSTOM}
             title={getString('common.repo_provider.customLabel')}
-            panel={<CustomTab formikProps={formikProps} hideSeconds={hideSeconds} />}
+            panel={<CustomTab formikProps={formikProps} isQuartsExpressionSupported={isQuartsExpressionSupported} />}
           />
         </Tabs>
       </Layout.Vertical>
