@@ -15,6 +15,8 @@ export enum StepType {
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
   Container = 'Container',
+  InitContainer = 'InitContainer',
+  RunContainer = 'RunContainer',
   GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
   GitOpsFetchLinkedApps = 'GitOpsFetchLinkedApps',
   Command = 'Command',

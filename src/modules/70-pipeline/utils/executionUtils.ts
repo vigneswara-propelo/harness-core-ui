@@ -160,7 +160,9 @@ export const StepV2TypeIconsMap: {
   TERRAFORM_DESTROY_V2: 'terraform-destroy',
   TERRAFORM_PLAN_V2: 'terraform-plan',
   TERRAFORM_APPLY_V2: 'terraform-apply',
-  JenkinsBuildV2: 'service-jenkins'
+  JenkinsBuildV2: 'service-jenkins',
+  InitContainer: 'initialize-ci-step',
+  RunContainer: 'run-ci-step'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
