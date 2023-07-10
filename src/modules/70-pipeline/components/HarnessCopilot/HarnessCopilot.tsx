@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import moment from 'moment'
 import { Drawer, PopoverInteractionKind, PopoverPosition, Position } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -72,6 +72,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const currentStepId = resolveCurrentStep(selectedStepId, queryParams)
   const selectedStep = allNodeMap[currentStepId]
   const [showDelayMssg, setShowDelayMessage] = useState<boolean>(false)
+  const controllerRef = useRef<AbortController>()
 
   useEffect(() => {
     let timerId: NodeJS.Timeout
@@ -82,8 +83,9 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   }, [status])
 
   useEffect(() => {
-    if (remediations.length) {
-      // reset and flush out existing remediations when a different step is selected
+    // abort any stray api calls to fetch remediations and reset to default state
+    if (currentStepId) {
+      controllerRef.current?.abort()
       setRemediations([])
       setRemediationsGeneratedAt(null)
       setStatus(AIAnalysisStatus.NotInitiated)
@@ -91,6 +93,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   }, [currentStepId])
 
   const fetchAnalysis = useCallback((): void => {
+    controllerRef.current = new AbortController()
     setStatus(AIAnalysisStatus.InProgress)
     const apiBodyPayload = getPostAPIBodyPayload()
     if (!logsToken) {
@@ -99,15 +102,18 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     }
     const currentTime = new Date().getTime()
     try {
-      rcaPromise({
-        queryParams: { 'X-Harness-Token': logsToken, accountID: accountId },
-        requestOptions: {
-          headers: {
-            'content-type': 'application/x-www-form-urlencoded'
-          }
+      rcaPromise(
+        {
+          queryParams: { 'X-Harness-Token': logsToken, accountID: accountId },
+          requestOptions: {
+            headers: {
+              'content-type': 'application/x-www-form-urlencoded'
+            }
+          },
+          body: createFormDataFromObjectPayload(apiBodyPayload)
         },
-        body: createFormDataFromObjectPayload(apiBodyPayload)
-      })
+        controllerRef.current?.signal
+      )
         .then((response: ResponseRemediation) => {
           if (response?.rca) {
             const remediationFetched = [response]
@@ -120,14 +126,26 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
           }
         })
         .catch((err: Error) => {
-          setError(err)
-          setStatus(AIAnalysisStatus.Failure)
+          // ignore errors like user aborted API request
+          if (!controllerRef.current?.signal.aborted) {
+            setStatus(AIAnalysisStatus.Failure)
+            setError(err as Error)
+          }
         })
     } catch (e) {
       setError(e as Error)
       setStatus(AIAnalysisStatus.Failure)
     }
-  }, [logsToken, pipelineStagesMap, selectedStageId, pipelineExecutionDetail, selectedStepId, selectedStep, accountId])
+  }, [
+    logsToken,
+    pipelineStagesMap,
+    selectedStageId,
+    pipelineExecutionDetail,
+    selectedStepId,
+    selectedStep,
+    accountId,
+    controllerRef.current
+  ])
 
   const getPostAPIBodyPayload = useCallback((): RcaRequestBody => {
     const commonArgs = {
@@ -315,7 +333,21 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
       default:
         return <></>
     }
-  }, [status, showTooltip, remediations, error, logsToken, showDelayMssg])
+  }, [
+    status,
+    showTooltip,
+    remediations,
+    error,
+    logsToken,
+    showDelayMssg,
+    pipelineStagesMap,
+    selectedStageId,
+    pipelineExecutionDetail,
+    selectedStepId,
+    selectedStep,
+    accountId,
+    controllerRef.current
+  ])
 
   const renderRemediation = useCallback(
     (remediation: string): JSX.Element => {
