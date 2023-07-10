@@ -21,6 +21,7 @@ import type {
   PatchFeaturePathParams,
   PatchFeatureQueryParams
 } from 'services/cf'
+import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -28,6 +29,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import routes from '@common/RouteDefinitions'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 import useArchiveFlagDialog from '../FlagArchiving/useArchiveFlagDialog'
+import useRestoreFlagDialog from '../FlagArchiving/useRestoreFlagDialog'
 import useEditFlagDetailsModal from '../FlagActivation/hooks/useEditFlagDetailsModal'
 
 export interface FlagDetailsOptionsMenuButtonProps {
@@ -79,11 +81,17 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     onSuccess: () => history.push(featureFlagListURL)
   })
 
-  const { openDialog } = useArchiveFlagDialog({
+  const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
     flagData: featureFlag,
     queryParams,
     archiveFlag: deleteFeatureFlag,
-    backToListingPage: () => history.push(featureFlagListURL)
+    onArchive: () => history.push(featureFlagListURL)
+  })
+
+  const openRestoreFlagDialog = useRestoreFlagDialog({
+    flagData: featureFlag,
+    queryParams,
+    onRestore: () => refetchFlag()
   })
 
   const { openEditDetailsModal } = useEditFlagDetailsModal({
@@ -106,32 +114,66 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
       }
     : undefined
 
-  return (
-    <RbacOptionsMenuButton
-      items={[
-        {
-          icon: 'edit',
-          text: getString('edit'),
-          onClick: openEditDetailsModal,
-          permission: {
-            permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-            resource: { resourceType: ResourceType.ENVIRONMENT }
-          },
-          ...planEnforcementProps
-        },
-        {
-          icon: FFM_7921_ARCHIVING_FEATURE_FLAGS ? 'archive' : 'trash',
-          text: FFM_7921_ARCHIVING_FEATURE_FLAGS ? getString('archive') : getString('delete'),
-          onClick: FFM_7921_ARCHIVING_FEATURE_FLAGS ? openDialog : confirmDeleteFlag,
-          permission: {
-            resource: { resourceType: ResourceType.FEATUREFLAG },
-            permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
-          },
-          ...planEnforcementProps
-        }
-      ]}
-    />
-  )
+  const options: Record<string, RbacMenuItemProps> = {
+    archive: {
+      icon: 'archive',
+      text: getString('archive'),
+      onClick: openArchiveDialog,
+      permission: {
+        resource: { resourceType: ResourceType.FEATUREFLAG },
+        permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
+      },
+      ...planEnforcementProps
+    },
+    delete: {
+      icon: 'trash',
+      text: getString('delete'),
+      onClick: confirmDeleteFlag,
+      permission: {
+        resource: { resourceType: ResourceType.FEATUREFLAG },
+        permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
+      },
+      ...planEnforcementProps
+    },
+    restore: {
+      icon: 'redo',
+      text: getString('cf.featureFlags.archiving.restore'),
+      onClick: openRestoreFlagDialog,
+      permission: {
+        resource: { resourceType: ResourceType.FEATUREFLAG },
+        permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
+      },
+      ...planEnforcementProps
+    },
+    edit: {
+      icon: 'edit',
+      text: getString('edit'),
+      onClick: openEditDetailsModal,
+      permission: {
+        permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
+        resource: { resourceType: ResourceType.ENVIRONMENT }
+      },
+      ...planEnforcementProps
+    }
+  }
+
+  const getMenuItems = (
+    archivingFlags: boolean,
+    flag: Feature,
+    menuOptions: Record<string, RbacMenuItemProps>
+  ): RbacMenuItemProps[] => {
+    if (archivingFlags) {
+      if (flag.archived) {
+        return [menuOptions.restore, menuOptions.delete]
+      } else {
+        return [menuOptions.edit, menuOptions.archive]
+      }
+    } else {
+      return [menuOptions.edit, menuOptions.delete]
+    }
+  }
+
+  return <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, featureFlag, options)} />
 }
 
 export default FlagDetailsOptionsMenuButton

@@ -10,7 +10,6 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServiceMock from 'services/cf'
-
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import FlagActivationDetails from '../FlagActivationDetails'
@@ -71,6 +70,9 @@ describe('FlagActivationDetails', () => {
     jest
       .spyOn(cfServiceMock, 'useDeleteFeatureFlag')
       .mockReturnValue({ data: [], loading: false, mutate: jest.fn() } as any)
+    jest
+      .spyOn(cfServiceMock, 'useRestoreFeatureFlag')
+      .mockReturnValue({ data: [], loading: false, mutate: jest.fn() } as any)
   })
 
   test('it should render rbac menu correctly', async () => {
@@ -78,7 +80,7 @@ describe('FlagActivationDetails', () => {
 
     await userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
 
-    await waitFor(() => expect(document.getElementsByTagName('li')[0]).toHaveTextContent(/edit/i))
+    expect(document.querySelector('[data-icon="edit"]')).toBeInTheDocument()
   })
 
   test('it should render edit flag modal correctly', async () => {
@@ -87,7 +89,7 @@ describe('FlagActivationDetails', () => {
     await userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
 
     await waitFor(() => expect(document.getElementsByTagName('li')[0]).toBeInTheDocument())
-    await userEvent.click(document.getElementsByTagName('li')[0].getElementsByTagName('a')[0])
+    await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
     await waitFor(() => expect(screen.getByTestId('edit-flag-form')).toBeInTheDocument())
     expect(screen.getByTestId('edit-flag-form')).toMatchSnapshot()
