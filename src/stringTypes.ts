@@ -5948,7 +5948,6 @@ export interface StringsMap {
   'cd.duplicateIdError': string
   'cd.duplicateStep': string
   'cd.dynamicProvisioning': string
-  'cd.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService': string
   'cd.ecsRollingDeployStep.forceNewDeployment': string
   'cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances': string
   'cd.editIdError': string
@@ -6673,6 +6672,8 @@ export interface StringsMap {
   'cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureProductionService': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureStageService': string
+  'cd.steps.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService': string
+  'cd.steps.ecsBGSwapTargetGroupsStep.downsizeOldServiceDelayInSecs': string
   'cd.steps.ecsRunTaskStep.ecsRunTaskDefinition': string
   'cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArn': string
   'cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArnPlaceholder': string

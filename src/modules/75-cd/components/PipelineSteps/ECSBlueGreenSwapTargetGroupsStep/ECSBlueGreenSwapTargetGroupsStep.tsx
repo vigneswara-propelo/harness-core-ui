@@ -25,6 +25,7 @@ import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVar
 export interface ECSBlueGreenSwapTargetGroupsStepValues extends StepElementConfig {
   spec: {
     doNotDownsizeOldService?: boolean | string
+    downsizeOldServiceDelayInSecs?: number
   }
 }
 

@@ -29,12 +29,17 @@ const ECSBlueGreenSwapTargetGroupsStepEdit = (
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
 
+  const onSubmit = (values: ECSBlueGreenSwapTargetGroupsStepValues): void => {
+    if (values.spec.doNotDownsizeOldService) {
+      delete values.spec.downsizeOldServiceDelayInSecs
+    }
+    onUpdate?.(values)
+  }
+
   return (
     <>
       <Formik<ECSBlueGreenSwapTargetGroupsStepValues>
-        onSubmit={(values: ECSBlueGreenSwapTargetGroupsStepValues) => {
-          onUpdate?.(values)
-        }}
+        onSubmit={onSubmit}
         formName="ecsBlueGreenSwapTargetGroupsStepEdit"
         initialValues={initialValues}
         validate={data => {
@@ -64,9 +69,26 @@ const ECSBlueGreenSwapTargetGroupsStepEdit = (
               >
                 <FormInput.CheckBox
                   name="spec.doNotDownsizeOldService"
-                  label={getString('cd.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService')}
+                  label={getString('cd.steps.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService')}
+                  disabled={readonly}
                 />
               </Layout.Horizontal>
+
+              {!formik.values.spec.doNotDownsizeOldService && (
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormInput.Text
+                    name="spec.downsizeOldServiceDelayInSecs"
+                    label={getString('cd.steps.ecsBGSwapTargetGroupsStep.downsizeOldServiceDelayInSecs')}
+                    placeholder={getString('common.enterPlaceholder', {
+                      name: getString('cd.steps.ecsBGSwapTargetGroupsStep.downsizeOldServiceDelayInSecs')
+                    })}
+                    disabled={readonly}
+                    inputGroup={{
+                      type: 'number'
+                    }}
+                  />
+                </div>
+              )}
             </FormikForm>
           )
         }}

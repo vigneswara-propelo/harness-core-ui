@@ -185,6 +185,10 @@ steps:
     packageCommandOptions: Package Command Options
   serverlessDeployStepV2:
     deployCommandOptions: Deploy Command Options
+  ecsBGSwapTargetGroupsStep:
+    doNotDownsizeOldService: Do not downsize old service
+    downsizeOldServiceDelayInSecs: Downsize Old Service Delay (Seconds)
+
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -944,8 +948,7 @@ getStartedWithCD:
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
-ecsBGSwapTargetGroupsStep:
-  doNotDownsizeOldService: Do not downsize old service
+
 serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef

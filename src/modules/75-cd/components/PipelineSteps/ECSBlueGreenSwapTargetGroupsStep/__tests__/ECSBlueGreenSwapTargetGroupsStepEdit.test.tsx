@@ -59,7 +59,7 @@ describe('GenericExecutionStepEdit tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const identifierEditIcon = queryByAttribute('data-icon', container, 'Edit')
     expect(identifierEditIcon).toBeInTheDocument()
@@ -92,7 +92,22 @@ describe('GenericExecutionStepEdit tests', () => {
     expect(timeoutInput.value).toBe('20m')
 
     const doNotDownsizeOldServiceCheckbox = queryByNameAttribute('spec.doNotDownsizeOldService') as HTMLInputElement
+    expect(doNotDownsizeOldServiceCheckbox).toBeInTheDocument()
+
+    // by default, downsizeOldServiceDelayInSecs should not be displayed
+    const downsizeOldServiceDelayInSecsInput = queryByNameAttribute(
+      'spec.downsizeOldServiceDelayInSecs'
+    ) as HTMLInputElement
+    expect(downsizeOldServiceDelayInSecsInput).toBeInTheDocument()
+    expect(downsizeOldServiceDelayInSecsInput.value).toBe('')
+
+    // Click checbox
     await userEvent.click(doNotDownsizeOldServiceCheckbox)
+    // downsizeOldServiceDelayInSecs should not be displayed
+    const downsizeOldServiceDelayInSecsInputHidden = queryByNameAttribute(
+      'spec.downsizeOldServiceDelayInSecs'
+    ) as HTMLInputElement
+    await waitFor(() => expect(downsizeOldServiceDelayInSecsInputHidden).not.toBeInTheDocument())
 
     act(() => {
       formikRef.current?.submitForm()
@@ -104,6 +119,67 @@ describe('GenericExecutionStepEdit tests', () => {
         timeout: '20m',
         spec: {
           doNotDownsizeOldService: true
+        },
+        type: StepType.EcsBlueGreenSwapTargetGroups
+      })
+    )
+  })
+
+  test(`when' Do not downsize old service' is NOT checked`, async () => {
+    const { container } = render(
+      <TestWrapper>
+        <ECSBlueGreenSwapTargetGroupsStepEditRef
+          initialValues={emptyInitialValues}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          readonly={false}
+          stepViewType={StepViewType.Edit}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          ref={formikRef}
+        />
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const nameInput = queryByNameAttribute('name') as HTMLInputElement
+    expect(nameInput).toBeInTheDocument()
+    expect(nameInput.value).toBe('')
+    act((): void => {
+      fireEvent.change(nameInput, { target: { value: 'Test Name' } })
+    })
+    expect(nameInput.value).toBe('Test Name')
+
+    const timeoutInput = queryByNameAttribute('timeout') as HTMLInputElement
+    expect(timeoutInput).toBeInTheDocument()
+    expect(timeoutInput.value).toBe('')
+    act(() => {
+      fireEvent.change(timeoutInput, { target: { value: '20m' } })
+    })
+    expect(timeoutInput.value).toBe('20m')
+
+    const doNotDownsizeOldServiceCheckbox = queryByNameAttribute('spec.doNotDownsizeOldService') as HTMLInputElement
+    expect(doNotDownsizeOldServiceCheckbox).toBeInTheDocument()
+
+    // by default, downsizeOldServiceDelayInSecs should be displayed
+    const downsizeOldServiceDelayInSecsInput = queryByNameAttribute(
+      'spec.downsizeOldServiceDelayInSecs'
+    ) as HTMLInputElement
+    expect(downsizeOldServiceDelayInSecsInput).toBeInTheDocument()
+    expect(downsizeOldServiceDelayInSecsInput.value).toBe('')
+    fireEvent.change(downsizeOldServiceDelayInSecsInput, { target: { value: '50' } })
+
+    act(() => {
+      formikRef.current?.submitForm()
+    })
+    await waitFor(() =>
+      expect(onUpdate).toHaveBeenCalledWith({
+        identifier: 'Test_Name',
+        name: 'Test Name',
+        timeout: '20m',
+        spec: {
+          doNotDownsizeOldService: false,
+          downsizeOldServiceDelayInSecs: 50
         },
         type: StepType.EcsBlueGreenSwapTargetGroups
       })

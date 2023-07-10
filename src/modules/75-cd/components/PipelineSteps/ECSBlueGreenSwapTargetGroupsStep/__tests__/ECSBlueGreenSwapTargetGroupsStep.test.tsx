@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -56,6 +56,15 @@ describe('EcsBlueGreenSwapTargetGroupsStep tests', () => {
     await userEvent.type(timeoutInput!, '30m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('30m'))
 
+    // by default, downsizeOldServiceDelayInSecs should not be displayed
+    const downsizeOldServiceDelayInSecsInput = queryByNameAttribute(
+      'spec.downsizeOldServiceDelayInSecs',
+      container
+    ) as HTMLInputElement
+    expect(downsizeOldServiceDelayInSecsInput).toBeInTheDocument()
+    expect(downsizeOldServiceDelayInSecsInput.value).toBe('')
+    fireEvent.change(downsizeOldServiceDelayInSecsInput, { target: { value: '50' } })
+
     act(() => {
       ref.current?.submitForm()
     })
@@ -66,7 +75,8 @@ describe('EcsBlueGreenSwapTargetGroupsStep tests', () => {
         timeout: '30m',
         type: StepType.EcsBlueGreenSwapTargetGroups,
         spec: {
-          doNotDownsizeOldService: false
+          doNotDownsizeOldService: false,
+          downsizeOldServiceDelayInSecs: 50
         }
       })
     )
