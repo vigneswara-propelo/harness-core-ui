@@ -35,6 +35,7 @@ export const shouldShowGitConfigStores = (deploymentType: ServiceDefinition['typ
     ServiceDeploymentType.AzureWebApp,
     ServiceDeploymentType.NativeHelm,
     ServiceDeploymentType.AwsLambda,
+    ServiceDeploymentType.Asg,
     ServiceDeploymentType.GoogleCloudFunctions
   ].includes(deploymentType as ServiceDeploymentType)
 }

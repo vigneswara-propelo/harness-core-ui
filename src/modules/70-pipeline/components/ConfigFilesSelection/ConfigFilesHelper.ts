@@ -76,7 +76,13 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   CustomDeployment: [ConfigFilesMap.Harness],
   Elastigroup: [ConfigFilesMap.Harness],
   TAS: [ConfigFilesMap.Harness, ConfigFilesMap.Github],
-  Asg: [ConfigFilesMap.Harness],
+  Asg: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
   GoogleCloudFunctions: [
     ConfigFilesMap.Harness,
     ConfigFilesMap.Github,
