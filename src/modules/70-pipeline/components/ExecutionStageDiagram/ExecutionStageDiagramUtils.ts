@@ -311,6 +311,9 @@ export const getStatusProps = (
         secondaryIconStyle.animation = `${css.fadeIn} 1s`
         break
       case ExecutionStatusEnum.IgnoreFailed:
+        secondaryIcon = 'ignoreFailed'
+        secondaryIconStyle.animation = `${css.fadeIn} 1s`
+        break
       case ExecutionStatusEnum.Success:
         secondaryIcon = 'execution-success'
         secondaryIconProps.color = Color.GREEN_450

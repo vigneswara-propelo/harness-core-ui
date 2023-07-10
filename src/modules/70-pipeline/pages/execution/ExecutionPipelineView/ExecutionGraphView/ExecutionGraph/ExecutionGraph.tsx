@@ -274,9 +274,16 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   return (
     <div className={css.main}>
       {isExecutionIgnoreFailed(pipelineExecutionDetail?.pipelineExecutionSummary?.status) ? (
-        <Layout.Horizontal spacing="medium" background={Color.GREY_200} className={css.executionError}>
-          <Icon name="warning-sign" intent={Intent.WARNING} />
-          <Text lineClamp={1}>{getString('pipeline.execution.ignoreFailedWarningText')}</Text>
+        <Layout.Horizontal
+          spacing="small"
+          background={Color.GREY_200}
+          className={css.executionError}
+          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+        >
+          <Icon name="ignoreFailed" />
+          <Text lineClamp={1} color={Color.GREY_800}>
+            {getString('pipeline.execution.ignoreFailedWarningText')}
+          </Text>
         </Layout.Horizontal>
       ) : null}
       {!isEmpty(pipelineExecutionDetail?.pipelineExecutionSummary?.executionErrorInfo?.message) ? (

@@ -45,8 +45,8 @@ export const stringsMap: Record<ExecutionStatus, StringKeys> = {
 }
 
 export const iconMap: Record<ExecutionStatus, IconProps> = {
-  Success: { name: 'tick-circle', size: 9 },
-  IgnoreFailed: { name: 'tick-circle', size: 9 },
+  Success: { name: 'tick-circle', size: 10 },
+  IgnoreFailed: { name: 'ignoreFailed', size: 12 },
   Paused: { name: 'pause', size: 12 },
   Pausing: { name: 'pause', size: 12 },
   Failed: { name: 'warning-sign', size: 9 },

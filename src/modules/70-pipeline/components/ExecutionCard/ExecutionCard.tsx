@@ -258,7 +258,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                       />
                     }
                   >
-                    <Icon name="warning-sign" size={16} className={css.ignoreWarning} />
+                    <Icon name="ignoreFailed" size={16} className={css.ignoreWarning} />
                   </Popover>
                 ) : null}
               </div>

@@ -652,9 +652,9 @@ exports[`Wait Step View Test renders snapshot: Policy Enforcement Tab - Wait Ste
                   >
                     <svg
                       data-icon="tick-circle"
-                      height="9"
+                      height="10"
                       viewBox="0 0 16 16"
-                      width="9"
+                      width="10"
                     >
                       <desc>
                         tick-circle

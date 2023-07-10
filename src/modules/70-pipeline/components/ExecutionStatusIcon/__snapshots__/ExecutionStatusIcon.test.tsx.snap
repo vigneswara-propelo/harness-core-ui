@@ -348,21 +348,40 @@ exports[`ExecutionStatusIcon IgnoreFailed 1`] = `
       class="bp3-popover-target"
     >
       <span
-        class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon ignorefailed"
-        icon="tick-circle"
+        class="bp3-icon StyledProps--main statusIcon ignorefailed"
+        data-icon="ignoreFailed"
         tabindex="0"
       >
         <svg
-          data-icon="tick-circle"
           height="14"
           viewBox="0 0 16 16"
           width="14"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <desc>
-            tick-circle
-          </desc>
+          <circle
+            cx="8"
+            cy="8"
+            fill="#fff"
+            r="8"
+          />
           <path
-            d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
+            d="M8 15.5a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"
+            fill="#42AB45"
+          />
+          <path
+            clip-rule="evenodd"
+            d="M3.314 13.856A7.5 7.5 0 0013.856 3.314L3.314 13.856z"
+            fill="#FCB519"
+            fill-rule="evenodd"
+          />
+          <path
+            d="M9.468 4.43L5.286 8.566 3.141 6.544a.59.59 0 00-.809.858l2.571 2.425a.59.59 0 00.831-.022l4.587-4.561a.59.59 0 00-.853-.815z"
+            fill="#fff"
+          />
+          <path
+            clip-rule="evenodd"
+            d="M12.605 12.31a.732.732 0 00-.719-.744.732.732 0 00-.719.745c0 .411.322.745.72.745a.732.732 0 00.718-.745zm-.754-1.275a.5.5 0 00.53-.468l.213-3.419a.5.5 0 00-.5-.53h-.416a.5.5 0 00-.5.53l.205 3.34v.017a.5.5 0 00.468.53z"
+            fill="#fff"
             fill-rule="evenodd"
           />
         </svg>

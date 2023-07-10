@@ -20,7 +20,7 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
   NotStarted: { name: 'play-outline', size: 14 },
   Skipped: { name: 'skipped', size: 14 },
   Success: { name: 'tick-circle', size: 14 },
-  IgnoreFailed: { name: 'tick-circle', size: 14 },
+  IgnoreFailed: { name: 'ignoreFailed', size: 14 },
   Failed: { name: 'warning-sign', size: 14 },
   Errored: { name: 'warning-sign', size: 14 },
   InterventionWaiting: { name: 'time', size: 14 },

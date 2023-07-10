@@ -148,9 +148,9 @@ exports[`Policy Evaluation Content snapshot for all policy set statuses and poli
                   >
                     <svg
                       data-icon="tick-circle"
-                      height="9"
+                      height="10"
                       viewBox="0 0 16 16"
-                      width="9"
+                      width="10"
                     >
                       <desc>
                         tick-circle
@@ -673,9 +673,9 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for passed
       >
         <svg
           data-icon="tick-circle"
-          height="9"
+          height="10"
           viewBox="0 0 16 16"
-          width="9"
+          width="10"
         >
           <desc>
             tick-circle

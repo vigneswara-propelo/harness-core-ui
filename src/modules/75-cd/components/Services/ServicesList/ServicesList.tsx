@@ -334,7 +334,7 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
         <ExecutionStatusLabel status={mapToExecutionStatus(status.toUpperCase())} />
         {isExecutionIgnoreFailed(mapToExecutionStatus(status.toUpperCase())) ? (
           <Text
-            icon={'warning-sign'}
+            icon={'ignoreFailed'}
             intent={Intent.WARNING}
             tooltip={getString('pipeline.execution.ignoreFailedWarningText')}
             tooltipProps={{ position: Position.LEFT }}
