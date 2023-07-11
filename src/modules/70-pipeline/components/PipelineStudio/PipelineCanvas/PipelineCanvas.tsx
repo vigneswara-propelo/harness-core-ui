@@ -523,7 +523,7 @@ export function PipelineCanvas({
             draft.identifier = defaultTo(pipeline?.identifier, '')
           }
         )
-      : createTemplate(pipeline, newTemplate)
+      : createTemplate(pipeline, newTemplate, gitDetails?.branch, gitDetails?.repoName)
     processNode.description = pipeline.description
     processNode.tags = pipeline.tags
     processNode.projectIdentifier = pipeline.projectIdentifier

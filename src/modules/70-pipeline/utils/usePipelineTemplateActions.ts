@@ -55,7 +55,7 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
               draft.name = defaultTo(pipeline?.name, '')
               draft.identifier = defaultTo(pipeline?.identifier, '')
             })
-          : createTemplate(pipeline, template)
+          : createTemplate(pipeline, template, gitDetails?.branch, gitDetails?.repoName)
         copyPipelineMetaData(processNode)
         await updatePipeline(processNode)
         setIsTemplateUpdated(true)
