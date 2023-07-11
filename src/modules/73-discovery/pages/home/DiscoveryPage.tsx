@@ -23,6 +23,8 @@ import DiscoveryAgentTable from '@discovery/components/DiscoveryAgentTable/Disco
 import { useQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import EmptyStateDiscoveryAgent from './views/empty-state/EmptyStateDiscoveryAgent'
 import CreateDAgent from './views/create-discovery-agent/CreateDAgent'
 import css from './DiscoveryPage.module.scss'
@@ -41,7 +43,7 @@ const DiscoveryPage: React.FC = () => {
   const {
     data: discoveryAgentList,
     loading: discoveryAgentListLoading,
-    refetch
+    refetch: refetchListAgent
   } = useListAgent({
     queryParams: {
       accountIdentifier: accountId,
@@ -96,6 +98,17 @@ const DiscoveryPage: React.FC = () => {
                     variation={ButtonVariation.PRIMARY}
                     icon="plus"
                     onClick={() => setDrawerOpen(true)}
+                    permission={{
+                      resourceScope: {
+                        accountIdentifier: accountId,
+                        orgIdentifier,
+                        projectIdentifier
+                      },
+                      resource: {
+                        resourceType: ResourceType.NETWORK_MAP
+                      },
+                      permission: PermissionIdentifier.CREATE_NETWORK_MAP
+                    }}
                   />
                 </Layout.Horizontal>
                 <Container data-name="monitoredServiceSeachContainer">
@@ -111,7 +124,11 @@ const DiscoveryPage: React.FC = () => {
               </Layout.Horizontal>
             </Page.SubHeader>
             <Page.Body className={css.discoveryAgentTable}>
-              <DiscoveryAgentTable listData={discoveryAgentListData} pagination={paginationProps} refetch={refetch} />
+              <DiscoveryAgentTable
+                listData={discoveryAgentListData}
+                pagination={paginationProps}
+                refetch={refetchListAgent}
+              />
             </Page.Body>
           </>
         ) : (
@@ -126,7 +143,7 @@ const DiscoveryPage: React.FC = () => {
           withoutBoxShadow
           onClick={() => setDrawerOpen(false)}
         />
-        <CreateDAgent setDrawerOpen={setDrawerOpen} />
+        <CreateDAgent setDrawerOpen={setDrawerOpen} refetchDagent={refetchListAgent} />
       </Drawer>
     </Container>
   )

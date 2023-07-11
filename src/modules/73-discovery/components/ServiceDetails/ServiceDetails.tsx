@@ -59,11 +59,6 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ serviceId, infraId, ser
                     <Overview infraId={infraId} serviceId={serviceId} />
                   </Container>
                 )
-              },
-              {
-                id: 'resource',
-                title: getString('resources'),
-                panel: <div>Resources</div>
               }
             ]}
           />

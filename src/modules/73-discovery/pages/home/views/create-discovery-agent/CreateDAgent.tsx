@@ -22,6 +22,7 @@ import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash-es'
 import NetworkMap from '@discovery/images/NetworkMap.svg'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -30,11 +31,15 @@ import List from '@discovery/components/List/List'
 import { useCreateAgent } from 'services/servicediscovery'
 import NumberedList from '@discovery/components/NumberedList/NumberedList'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
+import RbacButton from '@rbac/components/Button/Button'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import css from './CreateDAgent.module.scss'
 
 interface FormValues {
   discoveryAgentName: string
   discoveryNamespace: string
+  nodeAgentSelector: string
   detectNetworkTrace?: boolean
   blacklistedNamespaces?: string[]
   expression?: string
@@ -46,9 +51,10 @@ interface FormValues {
 
 export interface DrawerProps {
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
+  refetchDagent?: () => void
 }
 
-const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDrawerOpen }) => {
+const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDrawerOpen, refetchDagent }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -66,6 +72,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
   const inputValues: FormValues = {
     discoveryAgentName: '',
     discoveryNamespace: '',
+    nodeAgentSelector: '',
     connectorRef: undefined,
     identifier: undefined,
     expression: undefined,
@@ -75,38 +82,40 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
     detectNetworkTrace: isNetworkTraceDetected
   }
 
-  const handleSubmit = (): void => {
-    if (dAgentFormRef.current) {
-      dAgentFormRef.current.validateForm().then(errors => {
-        if (Object.keys(errors).length === 0) {
-          infraMutate({
-            k8sConnectorID: dAgentFormRef.current?.values.connectorRef,
-            name: dAgentFormRef.current?.values.discoveryAgentName,
-            identity: dAgentFormRef.current?.values.identifier,
-            config: {
-              data: {
-                blacklistedNamespaces: dAgentFormRef.current?.values.blacklistedNamespaces,
-                enableNodeAgent: dAgentFormRef.current?.values.detectNetworkTrace,
-                cron: {
-                  expression: dAgentFormRef.current?.values.expression
-                },
-                collectionWindowInMin: dAgentFormRef.current?.values.duration
-              },
-              kubernetes: {
-                namespace: dAgentFormRef.current?.values.discoveryNamespace,
-                imageRegistry: 'index.docker.io/shovan1995',
-                serviceAccount: 'cluster-admin-1'
-              }
-            }
+  const handleSubmit = async (): Promise<void> => {
+    try {
+      if (dAgentFormRef.current) {
+        const dAgentFormValdiation = await dAgentFormRef.current.validateForm()
+        if (!isEmpty(dAgentFormValdiation)) {
+          return dAgentFormRef.current.validateForm().then(errors => {
+            Object.values(errors).map(err => showError(err))
           })
-            .then(() => {
-              setDrawerOpen(false)
-            })
-            .catch(e => showError(e))
-        } else {
-          Object.values(errors).map(err => showError(err))
         }
-      })
+        await infraMutate({
+          k8sConnectorID: dAgentFormRef.current?.values.connectorRef,
+          name: dAgentFormRef.current?.values.discoveryAgentName,
+          identity: dAgentFormRef.current?.values.identifier,
+          config: {
+            data: {
+              blacklistedNamespaces: dAgentFormRef.current?.values.blacklistedNamespaces,
+              enableNodeAgent: dAgentFormRef.current?.values.detectNetworkTrace,
+              cron: {
+                expression: dAgentFormRef.current?.values.expression
+              },
+              collectionWindowInMin: dAgentFormRef.current?.values.duration,
+              nodeAgentSelector: dAgentFormRef.current?.values.nodeAgentSelector
+            },
+            kubernetes: {
+              namespace: dAgentFormRef.current?.values.discoveryNamespace
+            }
+          }
+        }).then(() => {
+          setDrawerOpen(false)
+          refetchDagent?.()
+        })
+      }
+    } catch (error) {
+      showError(error.data?.description || error.data?.message)
     }
   }
 
@@ -128,12 +137,24 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
             text={getString('cancel')}
             onClick={() => setDrawerOpen(false)}
           />
-          <Button
+          <RbacButton
             type="submit"
             variation={ButtonVariation.PRIMARY}
             intent="success"
             text={getString('discovery.createDiscoveryAgent')}
             onClick={() => handleSubmit()}
+            permission={{
+              resourceScope: {
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier
+              },
+              resource: {
+                resourceType: ResourceType.NETWORK_MAP,
+                resourceIdentifier: ResourceCategory.DISCOVERY
+              },
+              permission: PermissionIdentifier.CREATE_NETWORK_MAP
+            }}
           />
         </Layout.Horizontal>
       </Layout.Horizontal>
@@ -155,6 +176,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
                 .min(0, getString('discovery.dAgentValidation.durationMaxMin'))
                 .max(60, getString('discovery.dAgentValidation.durationMaxMin'))
                 .required(getString('discovery.dAgentValidation.durationRequired')),
+              nodeAgentSelector: Yup.string().trim(),
               minutes: Yup.number().moreThan(14, getString('discovery.dAgentCronError'))
             })}
             onSubmit={() => void 0}
@@ -245,6 +267,8 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
                               onChange={() => setIsNetworkTraceDetected(prev => !prev)}
                               checked={isNetworkTraceDetected}
                             />
+
+                            <FormInput.Text name="nodeAgentSelector" label={getString('discovery.nodeAgentSelector')} />
 
                             <FormInput.TagInput
                               name="blacklistedNamespaces"

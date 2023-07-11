@@ -5690,6 +5690,7 @@ export interface StringsMap {
   'discovery.createNetworkMap': string
   'discovery.createNewDiscoveryAgent': string
   'discovery.createNewNetworkMap': string
+  'discovery.dAgentCreateError': string
   'discovery.dAgentCronError': string
   'discovery.dAgentName': string
   'discovery.dAgentValidation.connectConnector': string
@@ -5699,6 +5700,7 @@ export interface StringsMap {
   'discovery.dAgentValidation.nameEnd': string
   'discovery.dAgentValidation.nameRequired': string
   'discovery.dAgentValidation.nameStart': string
+  'discovery.dAgentValidation.nodeAgentSelectorReq': string
   'discovery.dAgentValidation.selectNamespace': string
   'discovery.dataCollectionSettings': string
   'discovery.dataCollectionSettingsDesc': string
@@ -5735,10 +5737,12 @@ export interface StringsMap {
   'discovery.howToCreateNetworkMap': string
   'discovery.howToCreateNetworkMapDesc': string
   'discovery.networkDetails': string
+  'discovery.networkMapCreated': string
   'discovery.networkMapDescription': string
   'discovery.networkMapTable.noOfService': string
   'discovery.newNetworkMap': string
   'discovery.noDiscoveryData': string
+  'discovery.nodeAgentSelector': string
   'discovery.permissions.confirmDeleteDAgent': string
   'discovery.permissions.confirmDeleteNetworkMap': string
   'discovery.permissions.confirmDeleteTitleDAgent': string

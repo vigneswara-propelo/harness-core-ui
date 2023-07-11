@@ -79,7 +79,7 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, netwo
     }
   }
 
-  const handleCreateNetworkMap = (): void => {
+  const handleCreateNetworkMap = async (): Promise<void> => {
     const connections: DatabaseConnection[] = []
     const resources: DatabaseNetworkMapEntity[] = []
 
@@ -111,12 +111,11 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, netwo
       resources,
       name
     }
-
-    createNetworkMapMutate({
-      ...response
-    })
-      .then(() => {
-        showSuccess('Network Map Created Successfully')
+    try {
+      await createNetworkMapMutate({
+        ...response
+      }).then(() => {
+        showSuccess(getString('discovery.networkMapCreated'))
         history.push(
           routes.toDiscoveryDetails({
             accountId,
@@ -126,7 +125,9 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, netwo
           })
         )
       })
-      .catch(e => showError(e))
+    } catch (error) {
+      showError(error.data?.description || error.data?.message)
+    }
   }
 
   const RenderSelectServiceCheckbox: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (

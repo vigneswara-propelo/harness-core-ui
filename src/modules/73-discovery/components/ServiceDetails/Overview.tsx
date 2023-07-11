@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import { useGetServiceFromK8SCustomService, useGetK8SCustomService } from 'services/servicediscovery'
 import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import ListItems from './ListItems'
+import css from './ServiceDetails.module.scss'
 
 interface OverviewProps {
   infraId: string
@@ -66,23 +67,7 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
             </Layout.Vertical>
           </Container>
         ) : (
-          <Layout.Vertical
-            background={Color.WHITE}
-            spacing="medium"
-            style={{
-              boxShadow: '0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16)',
-              padding: '36px',
-              borderRadius: '4px'
-            }}
-          >
-            <ListItems
-              title={getString('common.cluster')}
-              content={
-                <Text icon={'kubernetes-harness'} color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceData?.agentID}
-                </Text>
-              }
-            />
+          <Layout.Vertical background={Color.WHITE} spacing="medium" className={css.serviceDetails}>
             <ListItems
               title={getString('common.namespace')}
               content={
@@ -90,7 +75,6 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
                   {serviceData?.namespace}
                 </Text>
               }
-              padding={{ top: 'medium' }}
             />
             <Divider />
             <ListItems
@@ -188,7 +172,9 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               title={getString('kind')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceWorkloadData?.kind}
+                  {serviceWorkloadData &&
+                    serviceWorkloadData?.workloads &&
+                    serviceWorkloadData?.workloads[0].owner?.kind}
                 </Text>
               }
             />

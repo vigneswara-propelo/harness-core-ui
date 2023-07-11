@@ -12,6 +12,7 @@ homepage:
     It provides an at-a-glance view of how services interact with one another and how they contribute to the overall performance and health of the system.
 createDiscoveryAgent: Create Discovery Agent
 noDiscoveryData: No Discovery data yet
+dAgentCreateError: Invalid configuration, required fields were not filled
 dAgentName: Discovery Agent Name
 dAgentCronError: Cron in minutes should not be less than 15, please choose a value equal to or greater than 15
 dAgentValidation:
@@ -23,6 +24,7 @@ dAgentValidation:
   selectNamespace: Please select a discovery namespace
   durationRequired: Discovery Agent duration is required field
   durationMaxMin: Duration must be between 0 and 60 minutes
+  nodeAgentSelectorReq: Node selector for discovery agent is required
 networkMapTable:
   noOfService: No of service
 testConnector: DA-Test Connector
@@ -84,12 +86,14 @@ serviceDrawer:
   workloads: Workload Information
 detectNetworkTrace: Detect network trace connectivity
 blacklistedNamespaces: Backlisted Namespaces
+nodeAgentSelector: Add Node Selector
 newNetworkMap: New Network Map
 searchNetworkMap: Search for a network map
 discoveryNamespacePlaceholder: Enter a discovery namespace
 searchService: Search a service
 networkDetails: Network Details
 relatedService: Related Services
+networkMapCreated: Network Map Created Successfully
 permissions:
   deletedMessageDAgent: 'Discovery Agent {{name}} deleted'
   confirmDeleteDAgent: Deleting the discovery agent '{{name}}' would mean that you are also deleting all the services it is associated with. Are you sure you want to delete the discovery agent?

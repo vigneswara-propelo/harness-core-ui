@@ -7,7 +7,7 @@
  */
 
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button, Container, Icon, Layout, Page, PageSpinner, TableV2, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Page, PageSpinner, TableV2, Text } from '@harness/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
@@ -25,6 +25,9 @@ import routes from '@common/RouteDefinitions'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useQueryParams } from '@common/hooks'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
+import RbacButton from '@rbac/components/Button/Button'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import css from './DiscoveryServices.module.scss'
 
 export interface ConnectionMap {
@@ -158,10 +161,21 @@ export default function DiscoveredServices({
     const history = useHistory()
     return (
       <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
-        <Button
+        <RbacButton
           minimal
           tooltip={getString('discovery.createNetworkMap')}
           icon="plus"
+          permission={{
+            resourceScope: {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier
+            },
+            resource: {
+              resourceType: ResourceType.NETWORK_MAP
+            },
+            permission: PermissionIdentifier.CREATE_NETWORK_MAP
+          }}
           onClick={() => {
             history.push({
               pathname: routes.toCreateNetworkMap({
