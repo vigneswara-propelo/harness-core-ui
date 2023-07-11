@@ -60,3 +60,11 @@
   overflow: auto;
   max-width: 200px;
 }
+
+.deleteProjectText {
+  word-break: break-word;
+
+  b {
+    color: var(--black);
+  }
+}

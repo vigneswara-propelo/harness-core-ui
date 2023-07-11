@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly customselect: string
+  readonly deleteProjectText: string
   readonly expandSearch: string
   readonly filterTab: string
   readonly header: string

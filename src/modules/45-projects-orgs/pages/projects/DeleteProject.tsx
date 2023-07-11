@@ -7,14 +7,25 @@
 
 import { Intent } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { useToaster, useConfirmationDialog, Checkbox, Button, ButtonVariation, Layout } from '@harness/uicore'
+import {
+  useToaster,
+  useConfirmationDialog,
+  Button,
+  Layout,
+  ButtonSize,
+  ButtonVariation,
+  TextInput,
+  Text
+} from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import React, { useState } from 'react'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { Project, useDeleteProject } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore, SavedProjectDetails } from 'framework/AppStore/AppStoreContext'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import css from './ProjectsPage.module.scss'
 
 interface UseDeleteProjectDialogReturn {
   openDialog: () => void
@@ -22,30 +33,62 @@ interface UseDeleteProjectDialogReturn {
 interface DeleteProjectOrgButtonsProps {
   onDelete: () => void
   onCancel: () => void
+  name: string
+  disableDeleteBtn?: boolean
+  inputPlaceholder: string
+  inputLabel: string
 }
-export const DeleteProjectOrgButtons: React.FC<DeleteProjectOrgButtonsProps> = ({ onDelete, onCancel }) => {
+
+export const DeleteProjectOrgButtons: React.FC<DeleteProjectOrgButtonsProps> = ({
+  onDelete,
+  onCancel,
+  name,
+  disableDeleteBtn,
+  inputLabel,
+  inputPlaceholder
+}) => {
   const { getString } = useStrings()
+  const [inputText, setInputText] = useState<string>('')
   const [doubleCheckDelete, setDoubleCheckDelete] = useState<boolean>(false)
+
   return (
-    <Layout.Vertical spacing="none">
-      <Checkbox
-        margin={{ top: 'none', bottom: 'medium' }}
-        label={getString('authSettings.yesIamSure')}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-          setDoubleCheckDelete(event.currentTarget.checked)
-        }}
-      />
-      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'flex-start' }}>
-        <Button
-          disabled={!doubleCheckDelete}
-          text={getString('delete')}
-          intent={Intent.DANGER}
-          onClick={() => {
-            onDelete?.()
-          }}
-        />
-        <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={() => onCancel?.()} />
-      </Layout.Horizontal>
+    <Layout.Vertical spacing="none" width="100%">
+      {!doubleCheckDelete ? (
+        <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'flex-start' }}>
+          <Button
+            text={getString('projectsOrgs.confirmDeleteProject')}
+            intent={Intent.DANGER}
+            size={ButtonSize.LARGE}
+            onClick={() => {
+              setDoubleCheckDelete(true)
+            }}
+          />
+          <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={() => onCancel?.()} />
+        </Layout.Horizontal>
+      ) : (
+        <Layout.Vertical>
+          <Text margin={{ bottom: 'xsmall' }} font={{ variation: FontVariation.FORM_HELP }}>
+            {inputLabel}:
+          </Text>
+          <TextInput
+            placeholder={inputPlaceholder}
+            value={inputText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputText(e.target.value)}
+            autoFocus
+          />
+          <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'flex-start' }}>
+            <Button
+              text={getString('delete')}
+              intent={Intent.DANGER}
+              disabled={inputText !== name || disableDeleteBtn}
+              onClick={() => {
+                onDelete?.()
+              }}
+            />
+            <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={() => onCancel?.()} />
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      )}
     </Layout.Vertical>
   )
 }
@@ -55,7 +98,7 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
   const { getRBACErrorMessage } = useRBACError()
   const { preference: savedProjectFromPreferenceStore, clearPreference: clearSavedProject } =
     usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
-  const { mutate: deleteProject } = useDeleteProject({
+  const { mutate: deleteProject, loading } = useDeleteProject({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ ''
@@ -94,7 +137,16 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
     }
   }
   const { openDialog, closeDialog } = useConfirmationDialog({
-    contentText: getString('projectCard.confirmDelete', { name: data.name }),
+    contentText: (
+      <String
+        stringID="projectsOrgs.deleteProjectText"
+        vars={{
+          name: data.name
+        }}
+        className={css.deleteProjectText}
+        useRichText={true}
+      />
+    ),
     titleText: getString('projectCard.confirmDeleteTitle'),
     intent: Intent.DANGER,
     customButtons: (
@@ -103,6 +155,10 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
           closeDialog()
         }}
         onDelete={onDeleteAction}
+        name={data.name}
+        disableDeleteBtn={loading}
+        inputLabel={getString('projectsOrgs.toConfirmProject')}
+        inputPlaceholder={getString('projectsOrgs.toDelete', { name: getString('projectLabel') })}
       />
     ),
     onCloseDialog: async (isConfirmed: boolean) => {

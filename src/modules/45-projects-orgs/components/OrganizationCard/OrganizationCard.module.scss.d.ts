@@ -11,6 +11,7 @@ declare const styles: {
   readonly cardMenu: string
   readonly cardTags: string
   readonly colorBar: string
+  readonly deleteOrgText: string
   readonly description: string
   readonly flexEnd: string
   readonly overflow: string

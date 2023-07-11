@@ -222,8 +222,17 @@ describe('Project Page List', () => {
         await waitFor(() => getByText(document.body, 'projectCard.confirmDeleteTitle'))
         const form = findDialogContainer()
         expect(form).toBeTruthy()
-        const chckBox = queryByText(form as HTMLElement, 'authSettings.yesIamSure')
-        fireEvent.click(chckBox!)
+
+        const confirmBtn = queryByText(form as HTMLElement, 'projectsOrgs.confirmDeleteProject')
+        act(() => {
+          fireEvent.click(confirmBtn!)
+        })
+
+        await act(async () => {
+          fireEvent.change(form?.querySelector('input[type="text"]')!, {
+            target: { value: 'test' }
+          })
+        })
         await waitFor(() => expect(queryByText(form as HTMLElement, 'delete')).not.toBeDisabled())
         const deleteBtn = queryByText(form as HTMLElement, 'delete')
         fireEvent.click(deleteBtn!)

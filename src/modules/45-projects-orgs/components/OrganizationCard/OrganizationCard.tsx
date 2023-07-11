@@ -14,7 +14,7 @@ import { OrganizationAggregateDTO, useDeleteOrganization } from 'services/cd-ng'
 
 import { useToaster } from '@common/exports'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -47,7 +47,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = props => {
   } = organizationAggregateDTO
   const orgMembers = admins?.concat(collaborators || [])
   const [menuOpen, setMenuOpen] = useState(false)
-  const { mutate: deleteOrg } = useDeleteOrganization({ queryParams: { accountIdentifier: accountId } })
+  const { mutate: deleteOrg, loading } = useDeleteOrganization({ queryParams: { accountIdentifier: accountId } })
   const { getString } = useStrings()
   const permissionRequest = {
     resource: {
@@ -78,7 +78,16 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = props => {
     }
   }
   const { openDialog, closeDialog } = useConfirmationDialog({
-    contentText: getString('projectsOrgs.confirmDelete', { name: data.name }),
+    contentText: (
+      <String
+        stringID="projectsOrgs.confirmDelete"
+        vars={{
+          name: data.name
+        }}
+        className={css.deleteOrgText}
+        useRichText={true}
+      />
+    ),
     titleText: getString('projectsOrgs.confirmDeleteTitle'),
     intent: Intent.DANGER,
     customButtons: (
@@ -86,7 +95,11 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = props => {
         onCancel={() => {
           closeDialog()
         }}
+        name={data.name}
         onDelete={onDeleteAction}
+        disableDeleteBtn={loading}
+        inputLabel={getString('projectsOrgs.toConfirmOrg')}
+        inputPlaceholder={getString('projectsOrgs.toDelete', { name: getString('orgLabel') })}
       />
     ),
     onCloseDialog: async (isConfirmed: boolean) => {

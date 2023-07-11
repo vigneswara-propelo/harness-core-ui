@@ -3596,6 +3596,7 @@ export interface StringsMap {
   'projectsOrgs.collaborator': string
   'projectsOrgs.collaboratorsTitle': string
   'projectsOrgs.confirmDelete': string
+  'projectsOrgs.confirmDeleteProject': string
   'projectsOrgs.confirmDeleteTitle': string
   'projectsOrgs.createANewProject': string
   'projectsOrgs.createAProject': string
@@ -3605,6 +3606,7 @@ export interface StringsMap {
   'projectsOrgs.createProjectLoader': string
   'projectsOrgs.createProjectMessage': string
   'projectsOrgs.deleteInvitation': string
+  'projectsOrgs.deleteProjectText': string
   'projectsOrgs.editTitle': string
   'projectsOrgs.enableModules': string
   'projectsOrgs.getStarted': string
@@ -3707,6 +3709,9 @@ export interface StringsMap {
   'projectsOrgs.searchProjectPlaceHolder': string
   'projectsOrgs.selectAnExistingProject': string
   'projectsOrgs.tabProjects': string
+  'projectsOrgs.toConfirmOrg': string
+  'projectsOrgs.toConfirmProject': string
+  'projectsOrgs.toDelete': string
   'projectsOrgs.urlMessageOrg': string
   'projectsOrgs.urlMessageProject': string
   'projectsOrgs.viewAllProjects': string

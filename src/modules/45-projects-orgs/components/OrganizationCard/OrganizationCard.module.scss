@@ -70,3 +70,11 @@
 .title {
   max-width: 250px !important;
 }
+
+.deleteOrgText {
+  word-break: break-word;
+
+  b {
+    color: var(--black);
+  }
+}

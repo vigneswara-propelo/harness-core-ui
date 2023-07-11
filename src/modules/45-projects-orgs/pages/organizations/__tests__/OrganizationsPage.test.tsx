@@ -142,9 +142,15 @@ describe('Org Page List', () => {
       const form = findDialogContainer()
       expect(form).toBeTruthy()
 
-      const chckBox = queryByText(form as HTMLElement, 'authSettings.yesIamSure')
+      const confirmBtn = queryByText(form as HTMLElement, 'projectsOrgs.confirmDeleteProject')
       act(() => {
-        fireEvent.click(chckBox!)
+        fireEvent.click(confirmBtn!)
+      })
+
+      await act(async () => {
+        fireEvent.change(form?.querySelector('input[type="text"]')!, {
+          target: { value: 'bfvbfkbvf' }
+        })
       })
 
       await waitFor(() => expect(queryByText(form as HTMLElement, 'delete')).not.toBeDisabled())
@@ -155,6 +161,38 @@ describe('Org Page List', () => {
 
       await waitFor(() => expect(deleteOrganization).toBeCalled())
       expect(deleteOrganization).toBeCalled()
+    }),
+    test('try deleting Organization with incorrect org name input', async () => {
+      deleteOrganization.mockReset()
+      const menu = container
+        .querySelector(`[data-testid="org-card-${organization.identifier}"]`)
+        ?.querySelector("[data-icon='more']")
+      fireEvent.click(menu!)
+      const popover = findPopoverContainer()
+      const deleteMenu = getByText(popover as HTMLElement, 'delete')
+      await act(async () => {
+        fireEvent.click(deleteMenu!)
+        await waitFor(() => getByText(document.body, 'projectsOrgs.confirmDeleteTitle'))
+      })
+      const form = findDialogContainer()
+      expect(form).toBeTruthy()
+
+      const confirmBtn = queryByText(form as HTMLElement, 'projectsOrgs.confirmDeleteProject')
+      act(() => {
+        fireEvent.click(confirmBtn!)
+      })
+
+      await act(async () => {
+        fireEvent.change(form?.querySelector('input[type="text"]')!, {
+          target: { value: 'test' }
+        })
+      })
+
+      const deleteBtn = queryByText(form as HTMLElement, 'delete')
+      act(() => {
+        fireEvent.click(deleteBtn!)
+      })
+      expect(deleteOrganization).not.toBeCalled()
     }),
     test('Edit Organization', async () => {
       const menu = container
