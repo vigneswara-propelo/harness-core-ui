@@ -13,13 +13,13 @@ import CELogo from '@discovery/images/chaos-engineering-logo.svg'
 import NetworkMapVisual from '@discovery/images/network-map-visual.svg'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './NetworkMapTable.module.scss'
 
-const EmptyStateNetworkMap: React.FC = /* istanbul ignore next */ () => {
+const EmptyStateNetworkMap: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
 
   return (
     <Layout.Horizontal className={css.noNetworkMapDiv} width={'80%'}>

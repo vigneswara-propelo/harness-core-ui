@@ -11,7 +11,7 @@ import { Button, Container, Layout, Text, CardSelect, Page, PageSpinner } from '
 import { FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { DatabaseInstallationCollection, useListInstallation } from 'services/servicediscovery'
-import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import { SimpleLogViewer } from '@common/components/LogViewer/SimpleLogViewer'
 import { DiscoveryAgentStatus } from '@discovery/components/DelegateAgentStatus/DelegateAgentStatus'
 import { useStrings } from 'framework/strings'
@@ -19,7 +19,7 @@ import css from './DiscoveryHistory.module.scss'
 
 const DiscoveryHistory: React.FC = () => {
   const { getString } = useStrings()
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
 
   const { data: infraInstalls, loading: infraInstallLoading } = useListInstallation({
     queryParams: {
@@ -53,7 +53,6 @@ const DiscoveryHistory: React.FC = () => {
         <PageSpinner />
       ) : (
         <Container height={'100vh'} style={{ display: 'flex' }}>
-          {}
           <Layout.Vertical width={'30%'}>
             <Layout.Horizontal style={{ padding: '10px 30px' }} flex={{ justifyContent: 'space-between' }}>
               <Text font={{ variation: FontVariation.CARD_TITLE }}>

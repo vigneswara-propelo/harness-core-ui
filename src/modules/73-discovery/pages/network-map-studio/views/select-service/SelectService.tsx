@@ -20,11 +20,11 @@ import {
   useCreateNetworkMap,
   useListService
 } from 'services/servicediscovery'
-import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
-import type { ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
-import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
 import type { FormValues } from '../../NetworkMapStudio'
 import css from './SelectService.module.scss'
 
@@ -36,11 +36,11 @@ interface Props {
 const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, networkMapRef }) => {
   const { getString } = useStrings()
   const history = useHistory()
-  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps>()
   const [selectedServices, setSelectedServices] = useState<DatabaseServiceCollection[]>([])
   const { showError, showSuccess } = useToaster()
 
-  const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
+  const { page, size } = useQueryParams<CommonPaginationQueryParams>()
 
   const { data: discoveredServices, loading } = useListService({
     agentIdentity: dAgentId,
@@ -48,17 +48,17 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, netwo
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      limit: size ? parseInt(size) : 0,
-      page: page ? parseInt(page) : 0,
+      limit: size ?? 0,
+      page: page ?? 0,
       all: false
     }
   })
 
   const paginationProps = useDefaultPaginationProps({
-    pageSize: size ? parseInt(size) : 0,
-    pageIndex: discoveredServices?.page?.index || 0,
-    itemCount: discoveredServices?.page?.totalItems || 0,
-    pageCount: discoveredServices?.page?.totalPages || 0,
+    pageSize: discoveredServices?.page?.limit ?? DEFAULT_PAGE_SIZE,
+    pageIndex: discoveredServices?.page?.index ?? DEFAULT_PAGE_INDEX,
+    itemCount: discoveredServices?.page?.totalItems ?? 0,
+    pageCount: discoveredServices?.page?.totalPages ?? 0,
     showPagination: true
   })
 

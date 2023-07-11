@@ -12,18 +12,16 @@ import { useParams } from 'react-router-dom'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useGetServiceFromK8SCustomService, useGetK8SCustomService } from 'services/servicediscovery'
-import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import ListItems from './ListItems'
 
-interface Overview {
+interface OverviewProps {
   infraId: string
   serviceId: string
 }
 
-const Overview: React.FC<Overview> = /* istanbul ignore next */ props => {
-  const { infraId, serviceId } = props
-
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
+export default function Overview({ infraId, serviceId }: OverviewProps): React.ReactElement {
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
   const { getString } = useStrings()
   const { data: serviceData, loading: getServiceLoader } = useGetServiceFromK8SCustomService({
     agentIdentity: infraId,
@@ -267,5 +265,3 @@ const Overview: React.FC<Overview> = /* istanbul ignore next */ props => {
     </Layout.Horizontal>
   )
 }
-
-export default Overview

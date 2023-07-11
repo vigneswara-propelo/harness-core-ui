@@ -13,14 +13,14 @@ import React, { useEffect } from 'react'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { useGetAgent } from 'services/servicediscovery'
-import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import { getConnectorPromise, ResponseConnectorResponse } from 'services/cd-ng'
 import { DiscoveryAgentStatus } from '@discovery/components/DelegateAgentStatus/DelegateAgentStatus'
 import ListItems from './ListItems'
 import { RenderConnectorStatus } from './ConnectorStatus'
 
 const Settings: React.FC = () => {
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
   const { getString } = useStrings()
   const { data: dAgentData, loading: dAgentDataLoading } = useGetAgent({
     agentIdentity: dAgentId,

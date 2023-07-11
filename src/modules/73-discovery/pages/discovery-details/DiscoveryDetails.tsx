@@ -11,18 +11,18 @@ import { Button, ButtonVariation, Container, Layout, Page, Tabs, Text } from '@h
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import type { ModulePathParams, DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetAgent } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
-import DiscoveredServices from './views/discovered-resources/DiscoveredServices'
 import NetworkMapTable from './views/network-map/NetworkMapTable'
 import DiscoveryHistory from './views/discovery-history/DiscoveryHistory'
 import Settings from './views/settings/Settings'
+import DiscoveredResources from './views/discovered-resources/DiscoveredResources'
 import css from './DiscoveryDetails.module.scss'
 
 const DiscoveryDetails: React.FC = () => {
-  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps>()
   const { getString } = useStrings()
 
   const { data: discoveryAgentData } = useGetAgent({
@@ -95,7 +95,7 @@ const DiscoveryDetails: React.FC = () => {
           </Layout.Horizontal>
         }
       />
-      <Page.Body>
+      <Page.Body className={css.container}>
         <Layout.Horizontal className={css.tabsContainerMain} flex={{ justifyContent: 'space-between' }}>
           <Container width={'100%'}>
             <Tabs
@@ -105,7 +105,7 @@ const DiscoveryDetails: React.FC = () => {
                 {
                   id: 'discovered services',
                   title: getString('discovery.discoveryDetails.tabTitles.resources'),
-                  panel: <DiscoveredServices />
+                  panel: <DiscoveredResources />
                 },
                 {
                   id: 'network maps',

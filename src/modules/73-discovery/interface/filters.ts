@@ -5,10 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export interface ServiceDiscoveryFilterParams {
-  page?: string | undefined
-  size?: string | undefined
-}
-
-export const DEFAULT_PAGE_SIZE = 10
 export const DEFAULT_PAGE_INDEX = 0
+export const DEFAULT_PAGE_SIZE = 20
+export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100]

@@ -12,7 +12,7 @@ import { Drawer, Position } from '@blueprintjs/core'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -21,14 +21,14 @@ import { ApiGetAgentResponse, useListAgent } from 'services/servicediscovery'
 import RbacButton from '@rbac/components/Button/Button'
 import DiscoveryAgentTable from '@discovery/components/DiscoveryAgentTable/DiscoveryAgentTable'
 import { useQueryParams } from '@common/hooks'
-import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
+import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
 import EmptyStateDiscoveryAgent from './views/empty-state/EmptyStateDiscoveryAgent'
 import CreateDAgent from './views/create-discovery-agent/CreateDAgent'
 import css from './DiscoveryPage.module.scss'
 
-const DiscoveryPage: React.FC = /* istanbul ignore next */ () => {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+const DiscoveryPage: React.FC = () => {
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const discoveryLabel = getString('common.discovery')
   const [search, setSearch] = useState('')
@@ -36,7 +36,7 @@ const DiscoveryPage: React.FC = /* istanbul ignore next */ () => {
   useDocumentTitle(discoveryLabel)
 
   //States for pagination
-  const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
+  const { page, size } = useQueryParams<CommonPaginationQueryParams>()
 
   const {
     data: discoveryAgentList,
@@ -49,16 +49,16 @@ const DiscoveryPage: React.FC = /* istanbul ignore next */ () => {
       projectIdentifier: projectIdentifier,
       search: search,
       all: false,
-      page: page ? parseInt(page) : 0,
-      limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE
+      page: page ?? 0,
+      limit: size ?? DEFAULT_PAGE_SIZE
     }
   })
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: discoveryAgentList?.page?.totalItems ?? 0,
-    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
     pageCount: discoveryAgentList?.page?.totalPages ?? 1,
-    pageIndex: page ? parseInt(page) : 0
+    pageIndex: discoveryAgentList?.page?.index ?? DEFAULT_PAGE_INDEX,
+    pageSize: discoveryAgentList?.page?.limit ?? DEFAULT_PAGE_SIZE
   })
 
   const discoveryAgentListData: ApiGetAgentResponse[] = React.useMemo(

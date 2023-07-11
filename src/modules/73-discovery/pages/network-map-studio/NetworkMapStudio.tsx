@@ -27,7 +27,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings, String } from 'framework/strings'
 
 import { Page } from '@common/exports'
-import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
@@ -48,8 +48,8 @@ export interface FormValues {
 }
 
 const NetworkMapStudio: React.FC = () => {
-  const { dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const { dAgentId } = useParams<DiscoveryPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { isOpen, open, close } = useToggleOpen()
   const history = useHistory()

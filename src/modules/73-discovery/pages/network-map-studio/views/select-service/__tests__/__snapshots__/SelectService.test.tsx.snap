@@ -236,7 +236,9 @@ exports[`<SelectService /> tests should match snapshot 1`] = `
               <span
                 class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small-semi"
               >
-                (1 - 0) of 1
+                1
+                 of 
+                1
               </span>
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -348,7 +350,7 @@ exports[`<SelectService /> tests should match snapshot 1`] = `
                             data-testid="dropdown-value"
                             style="--text-line-clamp: 1;"
                           >
-                            Select
+                            20
                           </p>
                         </div>
                         <div

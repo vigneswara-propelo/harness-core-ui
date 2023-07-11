@@ -97,8 +97,7 @@ export const variablePathProps: VariablesPathProps = {
 
 export const discoveryPathProps: DiscoveryPathProps = {
   ...projectPathProps,
-  dAgentId: ':dAgentId',
-  discoveryId: ':discoveryId'
+  dAgentId: ':dAgentId'
 }
 
 export const rolePathProps: RolePathProps = {

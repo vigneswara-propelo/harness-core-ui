@@ -201,6 +201,408 @@ exports[`<DiscoveryPage /> tests should match snapshot 1`] = `
 </div>
 `;
 
+exports[`<DiscoveryPage /> tests should render empty loaded view correctly 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="PageHeader--breadcrumbsDiv"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <a
+                class="Breadcrumbs--breadcrumb"
+                href="/account/accountId/chaos"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                  data-icon="chaos-main"
+                >
+                  <svg
+                    fill="none"
+                    height="16"
+                    viewBox="0 0 32 32"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                      fill="url(#chaos-main_svg__a)"
+                      fill-rule="evenodd"
+                    />
+                    <defs>
+                      <lineargradient
+                        gradientUnits="userSpaceOnUse"
+                        id="chaos-main_svg__a"
+                        x1="12.755"
+                        x2="27.888"
+                        y1="6.364"
+                        y2="29.992"
+                      >
+                        <stop
+                          stop-color="#FF61A2"
+                        />
+                        <stop
+                          offset="1"
+                          stop-color="#D8005A"
+                        />
+                      </lineargradient>
+                    </defs>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                >
+                  Discovery_Test
+                </p>
+              </a>
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="8"
+                  viewBox="0 0 8 14"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            projectLabel common.discovery
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main PageBody--pageBody"
+      data-name="page-body"
+      data-testid="page-body"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+        data-testid="page-subheader"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+          style="width: 100%;"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <button
+              aria-label="discovery.homepage.newDiscoveryAgentBtn"
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+                icon="plus"
+              >
+                <svg
+                  data-icon="plus"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    plus
+                  </desc>
+                  <path
+                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                discovery.homepage.newDiscoveryAgentBtn
+              </span>
+            </button>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            data-name="monitoredServiceSeachContainer"
+          >
+            <div
+              class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+              data-name=""
+              style="width: 250px; max-width: 250px;"
+            >
+              <span
+                class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                data-icon="thinner-search"
+              >
+                <svg
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                class="bp3-input  ExpandingSearchInput--filter"
+                dir="auto"
+                placeholder="discovery.homepage.searchDiscoveryAgent"
+                style="padding-right: 38px;"
+                type="search"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main PageBody--pageBody discoveryAgentTable"
+        data-name="page-body"
+        data-testid="page-body"
+      >
+        <div
+          class="discovery-agent-table"
+        >
+          Discovery Agent Table
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<DiscoveryPage /> tests should render empty loaded view correctly 2`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="PageHeader--breadcrumbsDiv"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <a
+                class="Breadcrumbs--breadcrumb"
+                href="/account/accountId/chaos"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                  data-icon="chaos-main"
+                >
+                  <svg
+                    fill="none"
+                    height="16"
+                    viewBox="0 0 32 32"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                      fill="url(#chaos-main_svg__a)"
+                      fill-rule="evenodd"
+                    />
+                    <defs>
+                      <lineargradient
+                        gradientUnits="userSpaceOnUse"
+                        id="chaos-main_svg__a"
+                        x1="12.755"
+                        x2="27.888"
+                        y1="6.364"
+                        y2="29.992"
+                      >
+                        <stop
+                          stop-color="#FF61A2"
+                        />
+                        <stop
+                          offset="1"
+                          stop-color="#D8005A"
+                        />
+                      </lineargradient>
+                    </defs>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                >
+                  Discovery_Test
+                </p>
+              </a>
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="8"
+                  viewBox="0 0 8 14"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            projectLabel common.discovery
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main PageBody--pageBody"
+      data-name="page-body"
+      data-testid="page-body"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+        data-testid="page-subheader"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+          style="width: 100%;"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <button
+              aria-label="discovery.homepage.newDiscoveryAgentBtn"
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+                icon="plus"
+              >
+                <svg
+                  data-icon="plus"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    plus
+                  </desc>
+                  <path
+                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                discovery.homepage.newDiscoveryAgentBtn
+              </span>
+            </button>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            data-name="monitoredServiceSeachContainer"
+          >
+            <div
+              class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+              data-name=""
+              style="width: 250px; max-width: 250px;"
+            >
+              <span
+                class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                data-icon="thinner-search"
+              >
+                <svg
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                class="bp3-input  ExpandingSearchInput--filter"
+                dir="auto"
+                placeholder="discovery.homepage.searchDiscoveryAgent"
+                style="padding-right: 38px;"
+                type="search"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main PageBody--pageBody discoveryAgentTable"
+        data-name="page-body"
+        data-testid="page-body"
+      >
+        <div
+          class="discovery-agent-table"
+        >
+          Discovery Agent Table
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`<DiscoveryPage /> tests should render error view correctly 1`] = `
 <div>
   <div
@@ -507,6 +909,244 @@ exports[`<DiscoveryPage /> tests should render loading view correctly 1`] = `
         <button>
           Open Discovery Drawer
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<DiscoveryPage /> tests test search functionality 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="PageHeader--breadcrumbsDiv"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <a
+                class="Breadcrumbs--breadcrumb"
+                href="/account/undefined/settings"
+              >
+                <span
+                  class="bp3-icon bp3-icon-cog StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+                  icon="cog"
+                >
+                  <svg
+                    data-icon="cog"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      cog
+                    </desc>
+                    <path
+                      d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                >
+                  common.accountSettings
+                </p>
+              </a>
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="8"
+                  viewBox="0 0 8 14"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <a
+                class="Breadcrumbs--breadcrumb"
+                href="/account/undefined/settings/resources"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                >
+                  common.accountResources
+                </p>
+              </a>
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="8"
+                  viewBox="0 0 8 14"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            account common.discovery
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main PageBody--pageBody"
+      data-name="page-body"
+      data-testid="page-body"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+        data-testid="page-subheader"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+          style="width: 100%;"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <button
+              aria-label="discovery.homepage.newDiscoveryAgentBtn"
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+                icon="plus"
+              >
+                <svg
+                  data-icon="plus"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    plus
+                  </desc>
+                  <path
+                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                discovery.homepage.newDiscoveryAgentBtn
+              </span>
+            </button>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            data-name="monitoredServiceSeachContainer"
+          >
+            <div
+              class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+              data-name=""
+              style="width: 250px; max-width: 250px;"
+            >
+              <span
+                class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                data-icon="thinner-search"
+              >
+                <svg
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                class="bp3-input  ExpandingSearchInput--filter"
+                dir="auto"
+                placeholder="discovery.homepage.searchDiscoveryAgent"
+                style="padding-right: 38px;"
+                type="search"
+                value="test abc"
+              />
+              <span
+                class="ExpandingSearchInput--btnWrapper"
+              >
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                  type="button"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="main-close"
+                  >
+                    <svg
+                      height="8"
+                      viewBox="0 0 14 14"
+                      width="8"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.6 7l5-5c.3-.2.4-.5.4-.8 0-.7-.5-1.2-1.2-1.2-.3 0-.6.1-.8.3l-5 5-5-5C1.8.1 1.5 0 1.2 0 .5 0 0 .5 0 1.2c0 .3.1.6.3.8l5 5-5 5c-.2.2-.3.5-.3.8 0 .7.5 1.2 1.2 1.2.3 0 .6-.1.8-.3l5-5 5 5c.2.2.5.4.8.4.6 0 1.2-.5 1.2-1.2 0-.3-.1-.6-.3-.8z"
+                        fill="#4d5969"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main PageBody--pageBody discoveryAgentTable"
+        data-name="page-body"
+        data-testid="page-body"
+      >
+        <div
+          class="discovery-agent-table"
+        >
+          Discovery Agent Table
+        </div>
       </div>
     </div>
   </div>

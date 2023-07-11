@@ -27,12 +27,12 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { useHistory, useParams } from 'react-router-dom'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
-import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import { DatabaseNetworkMapCollection, useDeleteNetworkMap, useListNetworkMap } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
-import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
+import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
 import { useStrings } from 'framework/strings'
 import EmptyStateNetworkMap from './EmptyStateNetworkMap'
 import css from './NetworkMapTable.module.scss'
@@ -43,14 +43,14 @@ interface NetworkMapTableProps {
 }
 
 const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next */ ({ agentName, connectorID }) => {
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
   const [search, setSearch] = useState('')
 
   //States for pagination
-  const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
+  const { page, size } = useQueryParams<CommonPaginationQueryParams>()
 
   const {
     data: networkMapList,
@@ -62,8 +62,8 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      page: page ? parseInt(page) : DEFAULT_PAGE_INDEX,
-      limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+      page: page ?? DEFAULT_PAGE_INDEX,
+      limit: size ?? DEFAULT_PAGE_SIZE,
       all: false,
       search: search
     }
@@ -71,9 +71,9 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: networkMapList?.page?.totalItems ?? 1,
-    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
     pageCount: networkMapList?.page?.totalPages ?? 1,
-    pageIndex: page ? parseInt(page) : 0
+    pageIndex: networkMapList?.page?.index ?? DEFAULT_PAGE_INDEX,
+    pageSize: networkMapList?.page?.limit ?? DEFAULT_PAGE_SIZE
   })
 
   const Name: Renderer<CellProps<DatabaseNetworkMapCollection>> = ({ row }) => (

@@ -24,7 +24,7 @@ import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import NetworkMap from '@discovery/images/NetworkMap.svg'
 import { useStrings } from 'framework/strings'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import List from '@discovery/components/List/List'
 import { useCreateAgent } from 'services/servicediscovery'
@@ -49,7 +49,7 @@ export interface DrawerProps {
 }
 
 const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDrawerOpen }) => {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [isNetworkTraceDetected, setIsNetworkTraceDetected] = useState<boolean>(false)

@@ -19,12 +19,7 @@ interface ServiceDetailsProps {
   closeModal: () => void
 }
 
-const ServiceDetails: React.FC<ServiceDetailsProps> = /* istanbul ignore next */ ({
-  serviceId,
-  infraId,
-  serviceName,
-  closeModal
-}) => {
+const ServiceDetails: React.FC<ServiceDetailsProps> = ({ serviceId, infraId, serviceName, closeModal }) => {
   const { getString } = useStrings()
 
   return (
@@ -40,6 +35,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = /* istanbul ignore next */
         }
         toolbar={
           <Button
+            data-testid="closeButton"
             margin={{ left: 'medium' }}
             icon="cross"
             variation={ButtonVariation.SECONDARY}

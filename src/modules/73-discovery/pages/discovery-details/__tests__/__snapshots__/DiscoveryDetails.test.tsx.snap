@@ -256,7 +256,7 @@ exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody container"
     data-name="page-body"
     data-testid="page-body"
   >
@@ -345,7 +345,7 @@ exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
             <div
               class="discovered-services"
             >
-              Discovered Services
+              Discovered Resources
             </div>
           </div>
         </div>
@@ -608,7 +608,7 @@ exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody container"
     data-name="page-body"
     data-testid="page-body"
   >
@@ -697,7 +697,7 @@ exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
             <div
               class="discovered-services"
             >
-              Discovered Services
+              Discovered Resources
             </div>
           </div>
         </div>
@@ -960,7 +960,7 @@ exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody container"
     data-name="page-body"
     data-testid="page-body"
   >
@@ -1049,7 +1049,7 @@ exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
             <div
               class="discovered-services"
             >
-              Discovered Services
+              Discovered Resources
             </div>
           </div>
         </div>

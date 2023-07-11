@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as servicediscovery from 'services/servicediscovery'
@@ -190,5 +190,53 @@ describe('<DiscoveryPage /> tests', () => {
     expect(useListAgent).toBeCalled()
 
     expect(getByText('Empty State Discovery Table')).toBeInTheDocument()
+  })
+
+  test('should render empty loaded view correctly', async () => {
+    jest.spyOn(servicediscovery, 'useListAgent').mockImplementation((): any => {
+      return {
+        data: mockDiscoveryList,
+        loading: false
+      }
+    })
+    const { container, getByText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <DiscoveryPage />
+      </TestWrapper>
+    )
+    expect(useListAgent).toBeCalled()
+
+    const newDiscoveryBtn = getByText('discovery.homepage.newDiscoveryAgentBtn')
+    expect(newDiscoveryBtn).not.toBeNull()
+    await act(async () => {
+      fireEvent.click(newDiscoveryBtn)
+      expect(container).toMatchSnapshot()
+    })
+    const closeBtn = document.querySelectorAll('[icon="cross"]')[0]
+    await act(async () => {
+      fireEvent.click(closeBtn)
+      expect(container).toMatchSnapshot()
+    })
+  })
+
+  test('test search functionality', async () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <DiscoveryPage />
+      </TestWrapper>
+    )
+
+    const query = 'test abc'
+    const searchInput = getByPlaceholderText('discovery.homepage.searchDiscoveryAgent') as HTMLInputElement
+    expect(searchInput).not.toBe(null)
+    if (!searchInput) {
+      throw Error('no search input')
+    }
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: query } })
+    })
+    await waitFor(() => expect(searchInput?.value).toBe(query))
+
+    expect(container).toMatchSnapshot()
   })
 })

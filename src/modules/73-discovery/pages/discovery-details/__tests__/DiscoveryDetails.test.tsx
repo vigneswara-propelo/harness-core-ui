@@ -15,11 +15,11 @@ import DiscoveryDetails from '../DiscoveryDetails'
 
 jest.useFakeTimers({ advanceTimers: true })
 
-jest.mock('@discovery/pages/discovery-details/views/discovered-resources/DiscoveredServices', () => ({
-  ...jest.requireActual('@discovery/pages/discovery-details/views/discovered-resources/DiscoveredServices'),
+jest.mock('@discovery/pages/discovery-details/views/discovered-resources/DiscoveredResources', () => ({
+  ...jest.requireActual('@discovery/pages/discovery-details/views/discovered-resources/DiscoveredResources'),
   __esModule: true,
   default: () => {
-    return <div className={'discovered-services'}>Discovered Services</div>
+    return <div className={'discovered-services'}>Discovered Resources</div>
   }
 }))
 
