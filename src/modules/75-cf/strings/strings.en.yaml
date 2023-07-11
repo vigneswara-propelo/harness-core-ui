@@ -2173,5 +2173,4 @@ cfTrialHomePage:
       description: Start 14 day FF Enterprise trial
 percentageRollout:
   toTargetGroup: 'To Target Group:'
-  invalidTotalError: Variation weights must add up to 100%
-  bucketBy: Bucket targets by
+  assignToVariation: '% needs to be assigned to a Variation.'

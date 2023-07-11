@@ -490,7 +490,7 @@ describe('TargetingRulesTab', () => {
       await userEvent.click(saveButton)
 
       await waitFor(() => {
-        expect(screen.getAllByText('cf.featureFlags.rules.validation.valueMustAddTo100')).toHaveLength(3)
+        expect(screen.getByText('100cf.percentageRollout.assignToVariation')).toBeInTheDocument()
         expect(screen.getByText('cf.featureFlags.rules.validation.selectTargetGroup')).toBeInTheDocument()
         expect(saveChangesMock).not.toBeCalled()
       })

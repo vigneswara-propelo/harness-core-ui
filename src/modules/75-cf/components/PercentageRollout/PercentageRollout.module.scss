@@ -9,21 +9,11 @@
   margin-bottom: 0 !important;
 }
 
-.targetGroupContainer {
-  padding-bottom: var(--layout-spacing);
-  border-bottom: 1px solid var(--grey-200);
-}
-
 .distribution {
   display: grid;
   grid-template-columns: 1fr minmax(max-content, 4.5ch);
   grid-gap: var(--layout-spacing);
   align-items: center;
-}
-
-.bucketBy {
-  grid-column: 1/3;
-  margin-bottom: 0 !important;
 }
 
 .variationRow {

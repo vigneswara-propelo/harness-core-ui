@@ -11,7 +11,6 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Segment, Variation } from 'services/cf'
 import { CFVariationColorsColorRef } from '@cf/constants'
-import { FeatureFlagBucketBy } from '@cf/utils/CFUtils'
 import DistributionBar, { DistributionSegment } from './DistributionBar'
 
 import css from './PercentageRollout.module.scss'
@@ -22,11 +21,8 @@ export interface PercentageRolloutProps {
   fieldValues?: {
     variations: { variation: string; weight: string | number }[]
   }
-  value?: SelectOption
+  targetGroupValue?: SelectOption
   targetGroups?: Segment[]
-  bucketByAttributes?: string[]
-  hideOverError?: boolean
-  hideTargetGroupDivider?: boolean
   addClearButton?: boolean
   distributionWidth?: string | number
   disabled?: boolean
@@ -35,14 +31,11 @@ export interface PercentageRolloutProps {
 
 const PercentageRollout: FC<PercentageRolloutProps> = ({
   prefix,
-  variations,
+  variations = [],
   fieldValues,
-  targetGroups,
-  bucketByAttributes,
-  value,
+  targetGroups = [],
+  targetGroupValue,
   distributionWidth = '100%',
-  hideOverError = false,
-  hideTargetGroupDivider = false,
   addClearButton = false,
   disabled = false,
   ...restProps
@@ -50,26 +43,8 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
   const { getString } = useStrings()
 
   const targetGroupItems = useMemo<SelectOption[]>(
-    () => (targetGroups || []).map(({ name, identifier }) => ({ label: name, value: identifier })),
+    () => targetGroups.map(({ name, identifier }) => ({ label: name, value: identifier })),
     [targetGroups]
-  )
-
-  const bucketByItems = useMemo<SelectOption[]>(
-    () => [
-      {
-        label: getString('name'),
-        value: FeatureFlagBucketBy.NAME
-      },
-      {
-        label: getString('identifier'),
-        value: FeatureFlagBucketBy.IDENTIFIER
-      },
-      ...(bucketByAttributes || [])
-        .filter(attribute => attribute !== FeatureFlagBucketBy.NAME && attribute !== FeatureFlagBucketBy.IDENTIFIER)
-        .sort((a, b) => a.localeCompare(b))
-        .map(attribute => ({ label: attribute, value: attribute }))
-    ],
-    [bucketByAttributes]
   )
 
   const distributionSegments = useMemo<DistributionSegment[]>(
@@ -92,66 +67,45 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
 
   return (
     <Layout.Vertical spacing="large" {...restProps}>
-      {!!targetGroups && (
-        <div className={hideTargetGroupDivider ? '' : css.targetGroupContainer}>
-          <FormInput.Select
-            value={value ? value : undefined}
-            className={css.targetGroup}
-            name={prefix('clauses[0].values[0]')}
-            items={targetGroupItems}
-            label={getString('cf.percentageRollout.toTargetGroup')}
-            addClearButton={addClearButton}
-            disabled={disabled}
-          />
-        </div>
+      {!!targetGroups.length && (
+        <FormInput.Select
+          value={targetGroupValue}
+          className={css.targetGroup}
+          name={prefix('clauses[0].values[0]')}
+          items={targetGroupItems}
+          label={getString('cf.percentageRollout.toTargetGroup')}
+          addClearButton={addClearButton}
+          disabled={disabled}
+        />
       )}
 
       <Container className={css.distribution} width={distributionWidth}>
-        {!!bucketByAttributes && (
-          <FormInput.Select
-            className={css.bucketBy}
-            inline
-            name={prefix('bucketBy')}
-            items={bucketByItems}
-            label={getString('cf.percentageRollout.bucketBy')}
-            disabled={disabled}
-          />
-        )}
-
         <DistributionBar distributionSegments={distributionSegments} />
 
         <div>{total}%</div>
 
-        {variations.map((variation, index) => {
-          return (
-            <div className={css.variationRow} key={variation.identifier}>
-              <FormInput.Text
-                inline
-                name={prefix(`variations[${index}].weight`)}
-                aria-label={variation.name || variation.identifier}
-                inputGroup={{ type: 'number', max: 100, min: 0 }}
-                disabled={disabled}
-              />
-              <Text
-                padding={{ left: 'medium' }}
-                inline
-                icon="full-circle"
-                iconProps={{ color: CFVariationColorsColorRef[index % CFVariationColorsColorRef.length] }}
-                color={Color.GREY_600}
-                font={{ variation: FontVariation.FORM_INPUT_TEXT }}
-              >
-                {variation.name || variation.identifier}
-              </Text>
-            </div>
-          )
-        })}
+        {variations.map((variation, index) => (
+          <div className={css.variationRow} key={variation.identifier}>
+            <FormInput.Text
+              inline
+              name={prefix(`variations[${index}].weight`)}
+              aria-label={variation.name || variation.identifier}
+              inputGroup={{ type: 'number', max: 100, min: 0 }}
+              disabled={disabled}
+            />
+            <Text
+              padding={{ left: 'medium' }}
+              inline
+              icon="full-circle"
+              iconProps={{ color: CFVariationColorsColorRef[index % CFVariationColorsColorRef.length] }}
+              color={Color.GREY_600}
+              font={{ variation: FontVariation.FORM_INPUT_TEXT }}
+            >
+              {variation.name || variation.identifier}
+            </Text>
+          </div>
+        ))}
       </Container>
-
-      {!hideOverError && total > 100 && (
-        <Text font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>
-          {getString('cf.percentageRollout.invalidTotalError')}
-        </Text>
-      )}
     </Layout.Vertical>
   )
 }

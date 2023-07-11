@@ -13,8 +13,8 @@ import { FormError } from '@harness/uicore'
 import type { Segment, Variation } from 'services/cf'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
+import { getPercentageRolloutVariationsArrayTest } from '@cf/hooks/usePercentageRolloutValidationSchema'
 import type { UseStringsReturn } from 'framework/strings'
-import { useStrings } from 'framework/strings'
 import SubSection, { SubSectionProps } from '../SubSection'
 import { CFPipelineInstructionType, FlagConfigurationStepFormDataValues } from '../../types'
 
@@ -35,12 +35,7 @@ export const servePercentageRolloutSchema = (getString: UseStringsReturn['getStr
                 )
             })
           ),
-        variations: Yup.array().test(
-          'invalidTotalError',
-          getString('cf.percentageRollout.invalidTotalError'),
-          (variations: { weight: number }[] = []) =>
-            variations.map(({ weight = 0 }) => weight).reduce((total, weight) => total + weight, 0) === 100
-        )
+        variations: getPercentageRolloutVariationsArrayTest(getString)
       })
     })
   })
@@ -64,8 +59,7 @@ const ServePercentageRollout: FC<ServePercentageRolloutProps> = ({
   ...props
 }) => {
   const [initialLoad, setInitialLoad] = useState<boolean>(true)
-  const { touched, errors, isValid } = useFormikContext()
-  const { getString } = useStrings()
+  const { errors } = useFormikContext()
 
   useEffect(() => {
     setField('identifier', 'AddRuleIdentifier')
@@ -97,6 +91,11 @@ const ServePercentageRollout: FC<ServePercentageRolloutProps> = ({
     [prefix, variations]
   )
 
+  const percentageRolloutError = useMemo<string>(
+    () => get(errors, prefix('spec.distribution.variations')),
+    [errors, prefix]
+  )
+
   usePercentageRolloutEqualiser(variationWeightIds)
 
   return (
@@ -106,18 +105,11 @@ const ServePercentageRollout: FC<ServePercentageRolloutProps> = ({
         variations={variations}
         fieldValues={get(fieldValues, prefix('spec.distribution'))}
         prefix={(fieldName: string) => prefix(`spec.distribution.${fieldName}`)}
-        hideOverError
       />
 
-      {!isValid &&
-        errors &&
-        get(touched, prefix('identifier')) &&
-        get(errors, prefix('spec.distribution.variations')) && (
-          <FormError
-            name={prefix('spec.distribution.variations')}
-            errorMessage={getString('cf.percentageRollout.invalidTotalError')}
-          />
-        )}
+      {percentageRolloutError && (
+        <FormError name={prefix('spec.distribution.variations')} errorMessage={percentageRolloutError} />
+      )}
     </SubSection>
   )
 }

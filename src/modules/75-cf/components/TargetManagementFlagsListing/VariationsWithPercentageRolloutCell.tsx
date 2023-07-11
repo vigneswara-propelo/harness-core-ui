@@ -95,7 +95,6 @@ const VariationsWithPercentageRolloutCell: FC<VariationsWithPercentageRolloutCel
               prefix={field => `${fieldPrefix}.percentageRollout.${field}`}
               fieldValues={rowValues.percentageRollout}
               data-testid="variation-percentage-rollout"
-              hideOverError
             />
           </ReasonTooltip>
           {percentageRolloutError && (

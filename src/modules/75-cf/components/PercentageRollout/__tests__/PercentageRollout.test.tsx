@@ -10,7 +10,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { Segment, TargetAttributesResponse, Variation } from 'services/cf'
+import type { Segment, Variation } from 'services/cf'
 import PercentageRollout, { PercentageRolloutProps } from '@cf/components/PercentageRollout/PercentageRollout'
 
 const mockTargetGroups: Segment[] = [
@@ -25,8 +25,6 @@ const mockVariations: Variation[] = [
   { name: 'Variation 3', value: 'var3', identifier: 'var3', description: 'Variation 3 description' }
 ]
 
-const mockAttributes: TargetAttributesResponse = ['attribute1', 'attribute2', 'attribute3']
-
 const renderComponent = (props: Partial<PercentageRolloutProps> = {}): RenderResult => {
   const prefix = props.prefix || (fieldName => fieldName)
 
@@ -39,7 +37,6 @@ const renderComponent = (props: Partial<PercentageRolloutProps> = {}): RenderRes
             fieldValues={{ variations: values.variations }}
             targetGroups={mockTargetGroups}
             variations={mockVariations}
-            bucketByAttributes={mockAttributes}
             {...props}
           />
         )}
@@ -104,67 +101,5 @@ describe('PercentageRollout', () => {
 
     await userEvent.type(variationInputs[2], '34')
     expect(total).toHaveTextContent('100%')
-  })
-
-  describe('Over 100% error', () => {
-    test('it should display an error message when the total is > 100%', async () => {
-      renderComponent()
-
-      expect(screen.queryByText('cf.percentageRollout.invalidTotalError')).not.toBeInTheDocument()
-
-      const input = screen.getAllByRole('spinbutton')[0]
-
-      await userEvent.type(input, '99')
-      expect(screen.queryByText('cf.percentageRollout.invalidTotalError')).not.toBeInTheDocument()
-
-      await userEvent.clear(input)
-      await userEvent.type(input, '101')
-      expect(screen.getByText('cf.percentageRollout.invalidTotalError')).toBeInTheDocument()
-
-      await userEvent.clear(input)
-      await userEvent.type(input, '100')
-      expect(screen.queryByText('cf.percentageRollout.invalidTotalError')).not.toBeInTheDocument()
-    })
-
-    test('it should not display an error message when the total is > 100% and hideOverError is passed', async () => {
-      renderComponent({ hideOverError: true })
-
-      expect(screen.queryByText('cf.percentageRollout.invalidTotalError')).not.toBeInTheDocument()
-
-      const input = screen.getAllByRole('spinbutton')[0]
-
-      await userEvent.type(input, '99')
-      expect(screen.queryByText('cf.percentageRollout.invalidTotalError')).not.toBeInTheDocument()
-
-      await userEvent.clear(input)
-      await userEvent.type(input, '101')
-      expect(screen.queryByText('cf.percentageRollout.invalidTotalError')).not.toBeInTheDocument()
-    })
-  })
-
-  describe('Bucket By select', () => {
-    test('it should display a drop down with with all attributes to bucket by', async () => {
-      const { container } = renderComponent()
-
-      expect(screen.getByText('cf.percentageRollout.bucketBy')).toBeInTheDocument()
-
-      mockAttributes.forEach(attribute => {
-        expect(screen.queryByText(attribute)).not.toBeInTheDocument()
-      })
-
-      await userEvent.click(container.querySelector('[name$="bucketBy"]')?.closest('.bp3-input') as HTMLElement)
-
-      await waitFor(() => {
-        mockAttributes.forEach(attribute => {
-          expect(screen.getByText(attribute)).toBeInTheDocument()
-        })
-      })
-    })
-
-    test('it should not display a drop down with attributes to bucket by if bucketByAttributes is undefined', async () => {
-      renderComponent({ bucketByAttributes: undefined })
-
-      expect(screen.queryByText('cf.percentageRollout.bucketBy')).not.toBeInTheDocument()
-    })
   })
 })

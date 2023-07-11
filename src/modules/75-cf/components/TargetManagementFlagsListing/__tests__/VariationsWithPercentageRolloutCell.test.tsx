@@ -75,7 +75,7 @@ describe('VariationsWithPercentageRolloutCell', () => {
   })
 
   test('it should display the percentage rollout error when an error exists', async () => {
-    const errorMessage = 'cf.percentageRollout.invalidTotalError'
+    const errorMessage = 'ERROR MESSAGE'
 
     renderComponent(
       {},
@@ -96,7 +96,7 @@ describe('VariationsWithPercentageRolloutCell', () => {
         flags: {
           [mockFeatures[0].identifier]: {
             percentageRollout: {
-              variations: 'cf.percentageRollout.invalidTotalError'
+              variations: errorMessage
             }
           }
         }

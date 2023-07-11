@@ -6,8 +6,10 @@
  */
 
 import { FontVariation } from '@harness/design-system'
-import { Container, Text, Button, SelectOption } from '@harness/uicore'
+import { Container, Text, Button, SelectOption, FormError } from '@harness/uicore'
 import React, { ReactElement, useMemo } from 'react'
+import { useFormikContext } from 'formik'
+import { get } from 'lodash-es'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
 import type { Segment, Variation } from 'services/cf'
@@ -35,6 +37,7 @@ const PercentageRolloutItem = ({
   featureFlagVariations
 }: VariationPercentageRolloutProps): ReactElement => {
   const { getString } = useStrings()
+  const { errors } = useFormikContext<unknown>()
 
   const variationWeightIds = useMemo<string[]>(
     () =>
@@ -42,6 +45,11 @@ const PercentageRolloutItem = ({
         (_, variationIndex) => `targetingRuleItems[${index}].variations[${variationIndex}].weight`
       ),
     [featureFlagVariations, index]
+  )
+
+  const percentageRolloutError = useMemo<string>(
+    () => get(errors, `targetingRuleItems.[${index}].variations`),
+    [errors, index]
   )
 
   usePercentageRolloutEqualiser(variationWeightIds)
@@ -73,13 +81,14 @@ const PercentageRolloutItem = ({
           variations={featureFlagVariations}
           fieldValues={variationPercentageRollout}
           prefix={(fieldName: string) => `targetingRuleItems[${index}].${fieldName}`}
-          value={initialOption}
+          targetGroupValue={initialOption}
           distributionWidth={340}
           addClearButton
-          hideOverError
-          hideTargetGroupDivider
           disabled={disabled}
         />
+        {percentageRolloutError && (
+          <FormError name={`targetingRuleItems[${index}].percentageRollout`} errorMessage={percentageRolloutError} />
+        )}
       </Container>
     </>
   )

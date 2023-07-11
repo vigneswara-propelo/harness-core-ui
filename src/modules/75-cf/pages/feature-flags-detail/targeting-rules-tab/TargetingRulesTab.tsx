@@ -229,17 +229,17 @@ const TargetingRulesTab = ({
         }
       }
     },
-    [initialValues.offVariation, initialValues.onVariation, initialValues.state, openDialog, saveChanges]
+    [initialValues.offVariation, initialValues.onVariation, openDialog, saveChanges, valStateOn]
   )
 
   return (
     <Formik
-      enableReinitialize={true}
-      validateOnChange={false}
+      enableReinitialize
+      validateOnChange
       validateOnBlur={false}
       formName="targeting-rules-form"
       initialValues={initialValues}
-      validate={values => validate(values)}
+      validate={validate}
       onSubmit={onSubmit}
     >
       {formikProps => (

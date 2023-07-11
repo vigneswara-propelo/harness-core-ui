@@ -13,7 +13,7 @@ import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetAllTargetAttributes, Clause, Segment } from 'services/cf'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { FeatureFlagBucketBy, getErrorMessage } from '@cf/utils/CFUtils'
+import { getErrorMessage } from '@cf/utils/CFUtils'
 import RuleRow from './RuleRow'
 
 import css from './TargetBasedOnConditions.module.scss'
@@ -48,14 +48,14 @@ const TargetBasedOnConditions: FC<TargetBasedOnConditionsProps> = ({ targetGroup
     () => [
       {
         label: getString('name'),
-        value: FeatureFlagBucketBy.NAME
+        value: 'name'
       },
       {
         label: getString('identifier'),
-        value: FeatureFlagBucketBy.IDENTIFIER
+        value: 'identifier'
       },
       ...(targetAttributes || [])
-        .filter(attribute => attribute !== FeatureFlagBucketBy.NAME && attribute !== FeatureFlagBucketBy.IDENTIFIER)
+        .filter(attribute => attribute !== 'name' && attribute !== 'identifier')
         .sort((a, b) => a.localeCompare(b))
         .map(attribute => ({ label: attribute, value: attribute }))
     ],

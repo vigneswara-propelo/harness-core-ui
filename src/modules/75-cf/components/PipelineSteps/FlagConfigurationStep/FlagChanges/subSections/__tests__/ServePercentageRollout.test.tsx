@@ -148,7 +148,7 @@ describe('servePercentageRolloutSchema', () => {
         { spec: { distribution: { clauses: validTargetGroup } } },
         { abortEarly: false }
       )
-    ).toThrow('cf.percentageRollout.invalidTotalError')
+    ).toThrow('100cf.percentageRollout.assignToVariation')
   })
 
   test('it should throw when variations are less than 100', async () => {
@@ -157,7 +157,7 @@ describe('servePercentageRolloutSchema', () => {
         { spec: { distribution: { clauses: validTargetGroup, variations: [{ weight: 10 }, { weight: 10 }] } } },
         { abortEarly: false }
       )
-    ).toThrow('cf.percentageRollout.invalidTotalError')
+    ).toThrow('80cf.percentageRollout.assignToVariation')
   })
 
   test('it should throw when variations are more than 100', async () => {
@@ -166,7 +166,7 @@ describe('servePercentageRolloutSchema', () => {
         { spec: { distribution: { clauses: validTargetGroup, variations: [{ weight: 60 }, { weight: 60 }] } } },
         { abortEarly: false }
       )
-    ).toThrow('cf.percentageRollout.invalidTotalError')
+    ).toThrow('-20cf.percentageRollout.assignToVariation')
   })
 
   test('it should not throw when variations are equal to 100', async () => {

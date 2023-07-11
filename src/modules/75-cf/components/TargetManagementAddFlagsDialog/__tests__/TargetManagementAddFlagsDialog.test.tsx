@@ -217,6 +217,6 @@ describe('TargetManagementAddFlagsDialog', () => {
     await waitFor(() => expect(screen.getByText('cf.featureFlags.percentageRollout')).toBeInTheDocument())
     await userEvent.click(screen.getByText('cf.featureFlags.percentageRollout'))
 
-    await waitFor(() => expect(screen.getByText('cf.percentageRollout.invalidTotalError')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('100cf.percentageRollout.assignToVariation')).toBeInTheDocument())
   })
 })

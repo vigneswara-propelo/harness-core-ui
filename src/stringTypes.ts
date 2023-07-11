@@ -8342,8 +8342,7 @@ export interface StringsMap {
   'cf.onboarding.youCreated': string
   'cf.onboarding.youreUsing': string
   'cf.onboarding.youveSelected': string
-  'cf.percentageRollout.bucketBy': string
-  'cf.percentageRollout.invalidTotalError': string
+  'cf.percentageRollout.assignToVariation': string
   'cf.percentageRollout.toTargetGroup': string
   'cf.pipeline.advanced.title': string
   'cf.pipeline.flagConfiguration.addEditVariationToSpecificTargets': string

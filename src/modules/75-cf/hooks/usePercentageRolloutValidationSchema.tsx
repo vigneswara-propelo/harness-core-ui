@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -7,8 +8,9 @@
 
 import { useMemo } from 'react'
 import * as yup from 'yup'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { PERCENTAGE_ROLLOUT_VALUE } from '@cf/constants'
+import type { WeightedVariation } from 'services/cf'
 
 export default function usePercentageRolloutValidationSchema(): yup.Schema<any> {
   const { getString } = useStrings()
@@ -17,21 +19,22 @@ export default function usePercentageRolloutValidationSchema(): yup.Schema<any> 
     () =>
       yup.object().when('variation', {
         is: PERCENTAGE_ROLLOUT_VALUE,
-        then: yup
-          .object({
-            variations: yup
-              .array()
-              .test(
-                'invalidTotalError',
-                getString('cf.percentageRollout.invalidTotalError'),
-                (variations?: { weight: number }[]) =>
-                  (variations || /* istanbul ignore next */ [])
-                    .map(({ weight }) => weight || 0)
-                    .reduce((total, weight) => total + weight, 0) === 100
-              )
-          })
-          .required()
+        then: yup.object({ variations: getPercentageRolloutVariationsArrayTest(getString) }).required()
       }),
-    [getString]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+}
+
+function getTotal(variations: WeightedVariation[]): number {
+  return variations.map(({ weight }) => weight || 0).reduce((total, weight) => total + weight, 0)
+}
+
+export function getPercentageRolloutVariationsArrayTest(getString: UseStringsReturn['getString']): yup.Schema<any> {
+  return yup.array().test(
+    'invalidTotalError',
+    ({ originalValue: variations = [] }) =>
+      100 - getTotal(variations) + getString('cf.percentageRollout.assignToVariation'),
+    (variations: WeightedVariation[] = []) => getTotal(variations) === 100
   )
 }

@@ -7,10 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly bucketBy: string
   readonly distribution: string
   readonly targetGroup: string
-  readonly targetGroupContainer: string
   readonly variationRow: string
 }
 export default styles

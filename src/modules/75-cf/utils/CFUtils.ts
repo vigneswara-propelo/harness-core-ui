@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Intent, IToaster, IToasterProps, Position, Toaster } from '@blueprintjs/core'
 import { get } from 'lodash-es'
 import { Utils } from '@harness/uicore'
@@ -93,51 +93,6 @@ export const isFeatureFlagOn = (featureFlag: Feature): boolean => {
 
 export const featureFlagHasCustomRules = (featureFlag: Feature) => {
   return !!(featureFlag.envProperties?.rules?.length || featureFlag.envProperties?.variationMap?.length)
-}
-
-export enum FeatureFlagBucketBy {
-  IDENTIFIER = 'identifier',
-  NAME = 'name'
-}
-
-export const useBucketByItems = () => {
-  const { getString } = useStrings()
-  const [additions, setAdditions] = useState<string[]>([])
-  const addBucketByItem = useCallback(
-    (item: string) => {
-      const _item = (item || '').trim()
-
-      if (
-        _item &&
-        _item !== FeatureFlagBucketBy.NAME &&
-        _item !== FeatureFlagBucketBy.IDENTIFIER &&
-        !additions.includes(_item)
-      ) {
-        setAdditions([...additions, _item])
-      }
-    },
-    [additions, setAdditions]
-  )
-  const bucketByItems = useMemo(() => {
-    const _items = [
-      {
-        label: getString('identifier'),
-        value: FeatureFlagBucketBy.IDENTIFIER as string
-      },
-      {
-        label: getString('name'),
-        value: FeatureFlagBucketBy.NAME as string
-      }
-    ]
-
-    if (additions.length) {
-      additions.forEach(addition => _items.push({ label: addition, value: addition }))
-    }
-
-    return _items
-  }, [getString, additions])
-
-  return { bucketByItems, addBucketByItem }
 }
 
 // This util unescape <strong/> sequences in i18n output to support bold text
