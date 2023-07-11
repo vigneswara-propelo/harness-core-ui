@@ -323,13 +323,17 @@ describe('STUDIO MODE', () => {
   })
 
   test('should accept values from input sets and submit the form', async () => {
-    const { container, getByText, queryByText, queryByTestId, queryAllByTestId } = render(
+    const { container, getByText, getByRole, queryByText, queryByTestId, queryAllByTestId } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
       </TestWrapper>
     )
 
     await waitFor(() => expect(queryByTestId('selectExistingOrProvide')).toBeTruthy())
+    const runPipelineButton = getByRole('button', {
+      name: 'runPipeline'
+    })
+    expect(runPipelineButton).toBeDisabled()
 
     // Click on the Add input sets button
     act(() => {
@@ -366,6 +370,7 @@ describe('STUDIO MODE', () => {
         expect.any(Object)
       )
     )
+    expect(runPipelineButton).not.toBeDisabled()
 
     // Save the snapshot - value is present from merge input set API
     expect(container).toMatchSnapshot('after applying input sets')

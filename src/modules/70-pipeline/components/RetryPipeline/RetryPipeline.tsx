@@ -733,7 +733,13 @@ function RetryPipeline({
     setExistingProvide(existingProvideValue)
   }
   const getRetryPipelineDisabledState = (): boolean => {
-    return getErrorsList(formErrors).errorCount > 0 || !selectedStage
+    return (
+      getErrorsList(formErrors).errorCount > 0 ||
+      !selectedStage ||
+      ((!selectedInputSets || selectedInputSets.length === 0) &&
+        existingProvide === 'existing' &&
+        !!inputSetTemplateYaml)
+    )
   }
 
   const currentPipelineValues = currentPipeline?.pipeline
@@ -1039,11 +1045,7 @@ function RetryPipeline({
                   onClick={event => {
                     event.stopPropagation()
                     setRetryClicked(true)
-                    if ((!selectedInputSets || selectedInputSets.length === 0) && existingProvide === 'existing') {
-                      setExistingProvide('provide')
-                    } else {
-                      submitForm()
-                    }
+                    submitForm()
                   }}
                   featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
                   permission={{

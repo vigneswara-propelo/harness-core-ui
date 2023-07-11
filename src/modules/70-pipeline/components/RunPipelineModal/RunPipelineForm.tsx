@@ -801,6 +801,17 @@ function RunPipelineFormBasic({
     getTemplateFromPipeline()
   }
 
+  const getRunPipelineFormDisabledState = (): boolean => {
+    return (
+      blockedStagesSelected ||
+      (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
+      loadingShouldDisableDeployment ||
+      loadingInputSets ||
+      // useExistingInputSets option is enabled and no input-set is chosen (with runtime inputs)
+      ((!selectedInputSets || selectedInputSets.length === 0) && existingProvide === 'existing' && hasRuntimeInputs)
+    )
+  }
+
   let runPipelineFormContent: React.ReactElement | null = null
   const remoteFetchError = pipelineError?.data as Error
   const getRemoteBranchFromError = (error: IRemoteFetchError): string | undefined =>
@@ -989,25 +1000,16 @@ function RunPipelineFormBasic({
                             // _formSubmitCount is custom state var used to track submitCount.
                             // enableReinitialize prop resets the submitCount, so error checks fail.
                             setFormikState(prevState => ({ ...prevState, _formSubmitCount: 1 }))
-                            if (
-                              (!selectedInputSets || selectedInputSets.length === 0) &&
-                              existingProvide === 'existing'
-                            ) {
-                              hasRuntimeInputs ? setExistingProvide('provide') : submitForm()
-                            } else {
-                              if (selectedView === SelectedView.YAML) {
-                                const parsedYaml = yamlParse<PipelineConfig>(
-                                  defaultTo(yamlHandler?.getLatestYaml(), '')
-                                )
-                                if (parsedYaml.pipeline) {
-                                  setValues(parsedYaml.pipeline)
-                                  setTimeout(() => {
-                                    submitForm()
-                                  }, 0)
-                                }
-                              } else {
-                                submitForm()
+                            if (selectedView === SelectedView.YAML) {
+                              const parsedYaml = yamlParse<PipelineConfig>(defaultTo(yamlHandler?.getLatestYaml(), ''))
+                              if (parsedYaml.pipeline) {
+                                setValues(parsedYaml.pipeline)
+                                setTimeout(() => {
+                                  submitForm()
+                                }, 0)
                               }
+                            } else {
+                              submitForm()
                             }
                           }}
                           featuresProps={getFeaturePropsForRunPipelineButton({
@@ -1021,12 +1023,7 @@ function RunPipelineFormBasic({
                             },
                             permission: PermissionIdentifier.EXECUTE_PIPELINE
                           }}
-                          disabled={
-                            blockedStagesSelected ||
-                            (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
-                            loadingShouldDisableDeployment ||
-                            loadingInputSets
-                          }
+                          disabled={getRunPipelineFormDisabledState()}
                         />
                         <div className={css.secondaryButton}>
                           <Button

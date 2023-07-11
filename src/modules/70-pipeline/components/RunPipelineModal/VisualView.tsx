@@ -134,12 +134,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
           ev.preventDefault()
           ev.stopPropagation()
           setRunClicked(true)
-
-          if ((!selectedInputSets || selectedInputSets.length === 0) && existingProvide === 'existing') {
-            setExistingProvide('provide')
-          } else {
-            submitForm()
-          }
+          submitForm()
         }
       }}
     >
