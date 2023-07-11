@@ -10,7 +10,8 @@ import {
   ButtonVariation,
   TextInput,
   FormError,
-  PageSpinner
+  PageSpinner,
+  Container
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import React, { useEffect } from 'react'
@@ -87,39 +88,41 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout }) => {
           <>
             {loading && <PageSpinner message={getString('common.saving')} />}
             <FormikForm>
-              <Card className={css.card}>
-                <Layout.Horizontal
-                  className={css.sessionTimeoutLayout}
-                  spacing={'medium'}
-                  flex={{ justifyContent: 'flex-start' }}
-                >
-                  <Text color={Color.BLACK} font={{ variation: FontVariation.LEAD }}>
-                    {getString('authSettings.sessionTimeOut')}
-                  </Text>
-                  <TextInput
-                    type="number"
-                    value={formik.values.timeout as any}
-                    min={MINIMUM_SESSION_TIME_OUT_IN_MINUTES}
-                    max={MAXIMUM_SESSION_TIME_OUT_IN_MINUTES}
-                    wrapperClassName={css.textInpt}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      formik.setFieldValue('timeout', e.target.value)
-                    }
-                    name="timeout"
-                  ></TextInput>
-                  <Button
-                    type="submit"
-                    text={getString('save')}
-                    variation={ButtonVariation.SECONDARY}
-                    disabled={loading || !!formik.errors.timeout}
+              <Container margin="xlarge">
+                <Card className={css.card}>
+                  <Layout.Horizontal
+                    className={css.sessionTimeoutLayout}
+                    spacing={'medium'}
+                    flex={{ justifyContent: 'flex-start' }}
+                  >
+                    <Text color={Color.BLACK} font={{ variation: FontVariation.LEAD }}>
+                      {getString('authSettings.sessionTimeOut')}
+                    </Text>
+                    <TextInput
+                      type="number"
+                      value={formik.values.timeout as any}
+                      min={MINIMUM_SESSION_TIME_OUT_IN_MINUTES}
+                      max={MAXIMUM_SESSION_TIME_OUT_IN_MINUTES}
+                      wrapperClassName={css.textInpt}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        formik.setFieldValue('timeout', e.target.value)
+                      }
+                      name="timeout"
+                    ></TextInput>
+                    <Button
+                      type="submit"
+                      text={getString('save')}
+                      variation={ButtonVariation.SECONDARY}
+                      disabled={loading || !!formik.errors.timeout}
+                    />
+                  </Layout.Horizontal>
+                  <FormError
+                    className={css.sessionTimeoutError}
+                    name="timeoutErrorMsg"
+                    errorMessage={formik.errors.timeout}
                   />
-                </Layout.Horizontal>
-                <FormError
-                  className={css.sessionTimeoutError}
-                  name="timeoutErrorMsg"
-                  errorMessage={formik.errors.timeout}
-                />
-              </Card>
+                </Card>
+              </Container>
             </FormikForm>
           </>
         )

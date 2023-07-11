@@ -1035,43 +1035,47 @@ exports[`Configuration Configuration page 1`] = `
               >
                 <div>
                   <div
-                    class="bp3-card bp3-elevation-0 Card--card card"
+                    class="StyledProps--font StyledProps--main StyledProps--margin-xlarge"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main sessionTimeoutLayout StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                      class="bp3-card bp3-elevation-0 Card--card card"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-lead"
-                      >
-                        authSettings.sessionTimeOut
-                      </p>
                       <div
-                        class="TextInput--main textInpt"
+                        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main sessionTimeoutLayout StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                       >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-lead"
+                        >
+                          authSettings.sessionTimeOut
+                        </p>
                         <div
-                          class="bp3-input-group"
+                          class="TextInput--main textInpt"
                         >
-                          <input
-                            class="bp3-input"
-                            max="4320"
-                            min="30"
-                            name="timeout"
-                            type="number"
-                            value="530"
-                          />
+                          <div
+                            class="bp3-input-group"
+                          >
+                            <input
+                              class="bp3-input"
+                              max="4320"
+                              min="30"
+                              name="timeout"
+                              type="number"
+                              value="530"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <button
-                        aria-label="save"
-                        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-                        type="submit"
-                      >
-                        <span
-                          class="bp3-button-text"
+                        <button
+                          aria-label="save"
+                          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+                          type="submit"
                         >
-                          save
-                        </span>
-                      </button>
+                          <span
+                            class="bp3-button-text"
+                          >
+                            save
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
