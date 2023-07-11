@@ -283,9 +283,14 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
   })
 
   describe('Node filtering', () => {
-    test('Should not render node filtering if feature flag is disabled', () => {
+    test('Should not render node filtering if both regex and CD nodes feature flag is disabled', () => {
       render(
-        <TestWrapper defaultFeatureFlagValues={{ CV_UI_DISPLAY_NODE_REGEX_FILTER: false }}>
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_NODE_REGEX_FILTER: false,
+            CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: false
+          }}
+        >
           <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
             <div>
               <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
@@ -296,9 +301,14 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
 
       expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
     })
-    test('Should render node filtering if feature flag is enabled', async () => {
+    test('Should render node filtering if regex feature flag is enabled', async () => {
       render(
-        <TestWrapper defaultFeatureFlagValues={{ CV_UI_DISPLAY_NODE_REGEX_FILTER: true }}>
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_NODE_REGEX_FILTER: true,
+            CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: false
+          }}
+        >
           <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
             <div>
               <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
@@ -315,11 +325,72 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         expect(screen.getByPlaceholderText(/cv.verifyStep.controlNodePlaceholder/)).toBeInTheDocument()
       )
       await waitFor(() => expect(screen.getByPlaceholderText(/cv.verifyStep.testNodePlaceholder/)).toBeInTheDocument())
+
+      await waitFor(() => expect(document.querySelector('input[name="spec.spec.shouldUseCDNodes"]')).toBeNull())
+    })
+
+    test('Should render node filtering if should use nodes from CD feature flag is enabled', async () => {
+      render(
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: true,
+            CV_UI_DISPLAY_NODE_REGEX_FILTER: false
+          }}
+        >
+          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument()
+
+      await userEvent.click(screen.getByText(/projectsOrgs.optional/))
+
+      await waitFor(() =>
+        expect(document.querySelector('input[name="spec.spec.shouldUseCDNodes"]')).toBeInTheDocument()
+      )
+      await waitFor(() =>
+        expect(screen.queryByPlaceholderText(/cv.verifyStep.testNodePlaceholder/)).not.toBeInTheDocument()
+      )
+    })
+
+    test('Should render node filtering with all the fields if use nodes from CD and regex feature flags are enabled', async () => {
+      render(
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: true,
+            CV_UI_DISPLAY_NODE_REGEX_FILTER: true
+          }}
+        >
+          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument()
+
+      await userEvent.click(screen.getByText(/projectsOrgs.optional/))
+
+      await waitFor(() =>
+        expect(document.querySelector('input[name="spec.spec.shouldUseCDNodes"]')).toBeInTheDocument()
+      )
+      await waitFor(() => expect(screen.getByPlaceholderText(/cv.verifyStep.testNodePlaceholder/)).toBeInTheDocument())
     })
 
     test('Should not render node filtering if unsupported deployment type is chosen', () => {
       render(
-        <TestWrapper defaultFeatureFlagValues={{ CV_UI_DISPLAY_NODE_REGEX_FILTER: true }}>
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_NODE_REGEX_FILTER: true,
+            CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: true
+          }}
+        >
           <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
             <div>
               <SelectVerificationType

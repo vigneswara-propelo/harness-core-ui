@@ -9874,6 +9874,8 @@ export interface StringsMap {
   'cv.verifyStep.controlNodePlaceholder': string
   'cv.verifyStep.nodeFilteringDescription': string
   'cv.verifyStep.nodeFilteringTitle': string
+  'cv.verifyStep.shouldUseCDNodesDescription': string
+  'cv.verifyStep.shouldUseCDNodesLabel': string
   'cv.verifyStep.shouldUseNodesFromCD': string
   'cv.verifyStep.testNodeLabel': string
   'cv.verifyStep.testNodePlaceholder': string

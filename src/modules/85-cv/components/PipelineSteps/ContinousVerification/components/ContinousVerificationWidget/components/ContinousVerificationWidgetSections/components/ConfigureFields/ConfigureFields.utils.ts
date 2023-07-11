@@ -13,3 +13,15 @@ export function isValidNodeFilteringType(type?: string): boolean {
 
   return NodeFilteringEnabledTypes.includes(type as VerificationTypes)
 }
+
+export function canShowNodeFilterOptions({
+  isRegexNodeFilterFFEnabled,
+  isFilterFromCDEnabled,
+  analysisType
+}: {
+  isRegexNodeFilterFFEnabled?: boolean
+  isFilterFromCDEnabled?: boolean
+  analysisType?: string
+}): boolean {
+  return Boolean((isRegexNodeFilterFFEnabled || isFilterFromCDEnabled) && isValidNodeFilteringType(analysisType))
+}

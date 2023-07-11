@@ -1302,3 +1302,8 @@ verifyStep:
     for inclusion. It improves performance, reduces costs, and increases accuracy by focusing on relevant nodes.
   controlNodePlaceholder: Enter * for default  or specify Regex [canary-1 | canary-2]
   testNodePlaceholder: Enter * for default  or specify Regex [test-1 | test-2]
+  shouldUseCDNodesLabel: Use node details from CD
+  shouldUseCDNodesDescription:
+    Checking this checkbox ensures that metrics and log details are collected and analyzed specifically for
+    the newly deployed nodes. This helps focus the analysis on the latest changes and avoids potential
+    confusion with existing or shut down nodes.

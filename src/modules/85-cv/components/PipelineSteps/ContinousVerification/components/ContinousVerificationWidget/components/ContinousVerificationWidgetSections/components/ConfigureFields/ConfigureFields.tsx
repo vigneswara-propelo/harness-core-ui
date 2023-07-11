@@ -15,7 +15,7 @@ import type { ContinousVerificationData } from '@cv/components/PipelineSteps/Con
 import { defaultDeploymentTag, VerificationTypes } from './constants'
 import { BaselineSelect, Duration, VerificationSensitivity } from '../VerificationJobFields/VerificationJobFields'
 import NodeFilteringFields from './components/NodeFilteringFields/NodeFilteringFields'
-import { isValidNodeFilteringType } from './ConfigureFields.utils'
+import { canShowNodeFilterOptions, isValidNodeFilteringType } from './ConfigureFields.utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function ConfigureFields(props: {
@@ -30,12 +30,16 @@ export default function ConfigureFields(props: {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const { CV_UI_DISPLAY_NODE_REGEX_FILTER: isNodeFilterFFEnabled } = useFeatureFlags()
+  const {
+    CV_UI_DISPLAY_NODE_REGEX_FILTER: isRegexNodeFilterFFEnabled,
+    CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled
+  } = useFeatureFlags()
 
   useEffect(() => {
     if (!isValidNodeFilteringType(formValues?.spec?.type)) {
       setFieldValue('spec.spec.controlNodeRegExPattern', undefined)
       setFieldValue('spec.spec.testNodeRegExPattern', undefined)
+      setFieldValue('spec.spec.shouldUseCDNodes', undefined)
     }
   }, [formValues?.spec?.type])
 
@@ -157,9 +161,11 @@ export default function ConfigureFields(props: {
         </div>
       )}
 
-      {isNodeFilterFFEnabled && isValidNodeFilteringType(formValues?.spec?.type) && (
-        <NodeFilteringFields allowableTypes={allowableTypes} />
-      )}
+      {canShowNodeFilterOptions({
+        analysisType: formValues?.spec?.type,
+        isFilterFromCDEnabled,
+        isRegexNodeFilterFFEnabled
+      }) && <NodeFilteringFields allowableTypes={allowableTypes} />}
     </>
   )
 }
