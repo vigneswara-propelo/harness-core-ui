@@ -32,7 +32,9 @@ import {
   getArtifactFormData,
   shouldHideHeaderAndNavBtns,
   resetFieldValue,
-  getConnectorIdValue
+  getConnectorIdValue,
+  helperTextData,
+  isFieldFixedAndNonEmpty
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -55,6 +57,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -91,7 +94,8 @@ function FormComponent({
   formik,
   isMultiArtifactSource,
   initialValues,
-  editArtifactModePrevStepData
+  editArtifactModePrevStepData,
+  selectedArtifact
 }: any) {
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -211,6 +215,24 @@ function FormComponent({
       </div>
     )
   })
+
+  const getVersionFieldHelperText = () => {
+    return (
+      getMultiTypeFromValue(formik.values?.version) === MultiTypeInputType.FIXED &&
+      getHelpeTextForTags(
+        helperTextData(selectedArtifact as ArtifactType, formik, defaultTo(connectorRefValue, '')),
+        getString,
+        false
+      )
+    )
+  }
+
+  const isAllFieldsAreFixed = (): boolean => {
+    return (
+      isFieldFixedAndNonEmpty(defaultTo(packageNameValue, '')) &&
+      isFieldFixedAndNonEmpty(defaultTo(connectorRefValue, ''))
+    )
+  }
 
   return (
     <FormikForm>
@@ -520,6 +542,7 @@ function FormComponent({
               disabled={isReadonly}
               name="spec.version"
               label={getString('version')}
+              helperText={getVersionFieldHelperText()}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               useValue
               multiTypeInputProps={{
@@ -544,7 +567,9 @@ function FormComponent({
                   ) {
                     return
                   }
-                  refetchVersionDetails()
+                  if (isAllFieldsAreFixed()) {
+                    refetchVersionDetails()
+                  }
                 }
               }}
             />

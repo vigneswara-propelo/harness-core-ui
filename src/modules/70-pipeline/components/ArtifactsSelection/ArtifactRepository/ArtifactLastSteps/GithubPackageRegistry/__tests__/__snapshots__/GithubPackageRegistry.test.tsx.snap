@@ -444,6 +444,11 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                       </span>
                     </span>
                   </div>
+                  <div
+                    class="bp3-form-helper-text"
+                  >
+                    pipeline.testsReports.callgraphField.package  is  pipeline.tagDependencyRequired
+                  </div>
                 </div>
               </div>
             </div>

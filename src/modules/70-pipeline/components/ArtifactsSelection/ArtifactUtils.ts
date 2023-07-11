@@ -106,6 +106,11 @@ export const helperTextData = (
         repositoryName: formik.values?.spec?.repositoryName,
         connectorRef: connectorIdValue
       }
+    case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+      return {
+        package: formik.values?.spec?.packageName,
+        connectorRef: connectorIdValue
+      }
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       return {
         imagePath: formik.values?.imagePath,
