@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TargetsPage TargetsPage should render data correctly 1`] = `
+exports[`TargetsPage It should render data correctly 1`] = `
 <div>
   <main
     class="layout"
   >
     <div
-      class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header withLinks StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
       data-testid="page-header"
     >
       <div
@@ -116,6 +116,46 @@ exports[`TargetsPage TargetsPage should render data correctly 1`] = `
         data-testid="CFTargetManagementHeaderSpacer"
         style="width: 325px;"
       />
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main PageSubHeader--container links StyledProps--flex"
+      data-testid="page-subheader"
+    >
+      <a
+        href="https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-target-management/targeting-users-with-flags/"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-primary7"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-learning StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+            icon="learning"
+          >
+            <svg
+              data-icon="learning"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+            >
+              <desc>
+                learning
+              </desc>
+              <path
+                d="M8.441 1.104a.985.985 0 00-.882 0L.365 5c-.487.253-.487.747 0 1L7.56 9.896a.985.985 0 00.882 0L15.635 6c.487-.253.487-.747 0-1L8.44 1.104z"
+                fill-rule="evenodd"
+              />
+              <path
+                d="M14 5.5l.016 4.514c.002.548.447.99.994.99a.99.99 0 00.99-.99V5.5h-2zM3.371 9.047l4.387 2.432a.5.5 0 00.485 0l4.39-2.432a.25.25 0 01.371.218v2.955a.25.25 0 01-.134.222l-4.635 2.436a.5.5 0 01-.466 0l-4.635-2.436A.25.25 0 013 12.22V9.265a.25.25 0 01.371-.218z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          cf.shared.readDocumentation
+        </p>
+      </a>
     </div>
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container toolbar StyledProps--flex"

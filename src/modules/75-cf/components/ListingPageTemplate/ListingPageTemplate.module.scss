@@ -21,12 +21,13 @@
   grid-area: header;
   &.withLinks {
     border: none !important;
+    padding-bottom: 0 !important;
   }
 }
 
 .links {
   grid-area: links;
-  padding: var(--spacing-small) var(--spacing-xlarge) !important;
+  padding: 0 var(--spacing-xlarge) var(--spacing-small) !important;
   height: auto;
 }
 

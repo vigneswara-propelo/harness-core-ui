@@ -6,7 +6,7 @@
  */
 
 import React, { ReactNode, useMemo } from 'react'
-import { Breadcrumb, Layout, Page, Text } from '@harness/uicore'
+import { Breadcrumb, Page, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { getErrorMessage } from '@cf/utils/CFUtils'
@@ -80,17 +80,14 @@ const ListingPageTemplate: React.FC<ListingPageTemplateProps> = ({
       {headerLinks?.docsURL && (
         <Page.SubHeader className={css.links}>
           <a href={headerLinks.docsURL} target="_blank" rel="noopener noreferrer">
-            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="xsmall">
-              <Text
-                font={{ variation: FontVariation.BODY }}
-                color={Color.PRIMARY_7}
-                tag="div"
-                icon="learning"
-                iconProps={{ color: Color.PRIMARY_7 }}
-              >
-                {getString('cf.shared.readDocumentation')}
-              </Text>
-            </Layout.Horizontal>
+            <Text
+              font={{ variation: FontVariation.BODY }}
+              color={Color.PRIMARY_7}
+              icon="learning"
+              iconProps={{ color: Color.PRIMARY_7, size: 14 }}
+            >
+              {getString('cf.shared.readDocumentation')}
+            </Text>
           </a>
         </Page.SubHeader>
       )}

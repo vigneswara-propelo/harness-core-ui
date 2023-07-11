@@ -29,7 +29,7 @@ describe('TargetsPage', () => {
     )
   }
 
-  test('TargetsPage should render loading correctly 1', async () => {
+  test('It should render loading correctly 1', async () => {
     mockImport('services/cf', {
       useGetAllTargets: () => ({ loading: true, refetch: jest.fn() })
     })
@@ -50,7 +50,7 @@ describe('TargetsPage', () => {
     expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
   })
 
-  test('TargetsPage should render loading correctly 2', async () => {
+  test('It should render loading correctly 2', async () => {
     mockImport('services/cf', {
       useGetAllTargets: () => ({ loading: false, data: { segments: [] }, refetch: jest.fn() })
     })
@@ -72,7 +72,7 @@ describe('TargetsPage', () => {
     expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
   })
 
-  test('TargetsPage should render loading correctly 3', async () => {
+  test('It should render loading correctly 3', async () => {
     mockImport('services/cf', {
       useGetAllTargets: () => ({ loading: true, refetch: jest.fn() })
     })
@@ -94,7 +94,7 @@ describe('TargetsPage', () => {
     expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
   })
 
-  test('TargetsPage should render error correctly 1', async () => {
+  test('It should render error correctly 1', async () => {
     const error = { message: 'SOME ERROR OCCURS' }
     mockImport('services/cf', {
       useGetAllTargets: () => ({ error, loading: false, refetch: jest.fn() })
@@ -117,7 +117,7 @@ describe('TargetsPage', () => {
     expect(getByText(document.body, error.message)).toBeDefined()
   })
 
-  test('TargetsPage should render error correctly 2', async () => {
+  test('It should render error correctly 2', async () => {
     const error = { message: 'SOME ERROR OCCURS' }
     mockImport('services/cf', {
       useGetAllTargets: () => ({ data: [], loading: false, refetch: jest.fn() })
@@ -190,7 +190,7 @@ describe('TargetsPage', () => {
     expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.targets' })).toBeInTheDocument()
   })
 
-  test('TargetsPage should render data correctly', async () => {
+  test('It should render data correctly', async () => {
     mockImport('services/cf', {
       useGetAllTargets: () => ({
         data: [
@@ -236,12 +236,21 @@ describe('TargetsPage', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('TargetsPage should render a Target table', async () => {
+  test('It should render a Target table', async () => {
     renderComponent()
     expect(document.querySelector('.TableV2--body')).toBeVisible()
   })
 
-  test('TargetsPage should render one Target per row in Targets table', async () => {
+  test('It should render a link to Targets documentation', async () => {
+    renderComponent()
+
+    expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute(
+      'href',
+      'https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-target-management/targeting-users-with-flags/'
+    )
+  })
+
+  test('It should render one Target per row in Targets table', async () => {
     mockImport('services/cf', {
       useGetAllTargets: () => ({
         data: {
