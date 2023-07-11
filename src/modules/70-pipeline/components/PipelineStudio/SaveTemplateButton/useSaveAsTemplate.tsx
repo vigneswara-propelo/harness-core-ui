@@ -32,13 +32,11 @@ import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateEr
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import type { GovernanceMetadata } from 'services/pipeline-ng'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './SaveAsTemplate.module.scss'
 
 interface TemplateActionsReturnType {
@@ -57,14 +55,12 @@ export function useSaveAsTemplate({
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const { supportingTemplatesGitx } = React.useContext(AppStoreContext)
-  const { showSuccess, showError, clear } = useToaster()
+  const { showSuccess, clear } = useToaster()
   const { getString } = useStrings()
-  const { CDS_TEMPLATE_ERROR_HANDLING } = useFeatureFlags()
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
   const { openTemplateReconcileErrorsModal, openSelectedTemplateErrorsModal } = useTemplateErrors({
     entity: TemplateErrorEntity.TEMPLATE
   })
-  const { getRBACErrorMessage } = useRBACError()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -148,12 +144,8 @@ export function useSaveAsTemplate({
       })
     } else {
       clear()
-      if (CDS_TEMPLATE_ERROR_HANDLING) {
-        openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors, latestTemplate)
-        hideConfigModal()
-      } else {
-        showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
-      }
+      openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors, latestTemplate)
+      hideConfigModal()
     }
   }
 

@@ -56,7 +56,6 @@ import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHa
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { isNewTemplate } from '../TemplateStudioUtils'
 import css from './SaveTemplatePopover.module.scss'
@@ -94,7 +93,6 @@ function SaveTemplatePopover(
     updateTemplate
   } = React.useContext(TemplateContext)
   const { getString } = useStrings()
-  const { CDS_TEMPLATE_ERROR_HANDLING } = useFeatureFlags()
   const { accountId, templateIdentifier, templateType, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
@@ -302,10 +300,10 @@ function SaveTemplatePopover(
       })
     } else {
       clear()
-      {
-        CDS_TEMPLATE_ERROR_HANDLING
-          ? openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors)
-          : showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+      if ((error as any)?.metadata?.schemaErrors) {
+        openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors)
+      } else {
+        showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
       }
     }
   }

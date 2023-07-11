@@ -50,7 +50,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { GovernanceMetadata, PipelineInfoConfig } from 'services/pipeline-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import type { AccessControlCheckError } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
@@ -60,7 +59,7 @@ import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateEr
 import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { hasChainedPipelineStage } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { AccessControlCheckError } from 'services/cd-ng'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 import css from './SavePipelinePopover.module.scss'
 
@@ -102,7 +101,6 @@ function SavePipelinePopover(
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
-  const { CDS_TEMPLATE_ERROR_HANDLING } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const isYaml = view === SelectedView.YAML
@@ -310,13 +308,15 @@ function SavePipelinePopover(
             isEdit
           })
         } else {
-          CDS_TEMPLATE_ERROR_HANDLING
-            ? openSelectedTemplateErrorsModal?.((response as any)?.metadata?.schemaErrors)
-            : showError(
-                getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
-                undefined,
-                'pipeline.save.pipeline.error'
-              )
+          if ((response as any)?.metadata?.schemaErrors) {
+            openSelectedTemplateErrorsModal?.((response as any)?.metadata?.schemaErrors)
+          } else {
+            showError(
+              getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
+              undefined,
+              'pipeline.save.pipeline.error'
+            )
+          }
         }
       }
     }
