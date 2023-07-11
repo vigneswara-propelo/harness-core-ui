@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -46,6 +46,20 @@ function GitOpsRevertPRInputStep({
           template={inputSetData?.template}
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
+      )}
+
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.lg)}>
+          <FormInput.MultiTextInput
+            name={`${prefix}spec.commitId`}
+            placeholder={getString('common.commitId')}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('common.commitId')}
+          />
+        </div>
       )}
     </>
   )

@@ -69,7 +69,10 @@ describe('Test Revert PR Step', () => {
           type: StepType.RevertPR,
           name: 'Test A',
           identifier: 'Test_A',
-          timeout: RUNTIME_INPUT_VALUE
+          timeout: RUNTIME_INPUT_VALUE,
+          spec: {
+            commitId: RUNTIME_INPUT_VALUE
+          }
         }}
         initialValues={{
           type: StepType.RevertPR,
