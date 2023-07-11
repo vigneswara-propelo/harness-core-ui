@@ -2433,7 +2433,6 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.approvalCriteria.spec.conditions[0].key-5"
                   >
                     <div
                       class="bp3-form-content"
@@ -2629,7 +2628,6 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.approvalCriteria.spec.conditions[1].key-8"
                   >
                     <div
                       class="bp3-form-content"

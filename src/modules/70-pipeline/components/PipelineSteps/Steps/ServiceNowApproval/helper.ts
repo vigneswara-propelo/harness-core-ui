@@ -77,8 +77,7 @@ const getInitialApprovalRejectionConditionValues = (
   // The value in YAML is always a string.
   // We'll figure out the component from operator and key
   const { operator, value, key } = condition
-  const list = fieldList.find(field => field.name === key)?.allowedValues
-
+  const list = fieldList.find(field => field.key === key)?.allowedValues
   if (isEmpty(list)) {
     // Simple text input
     return value?.toString()

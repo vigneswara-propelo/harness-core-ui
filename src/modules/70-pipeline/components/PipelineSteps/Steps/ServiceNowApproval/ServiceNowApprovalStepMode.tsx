@@ -19,7 +19,7 @@ import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceNowApprovalData,
@@ -47,6 +47,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import {
+  ServiceNowFieldNG,
   useGetServiceNowIssueCreateMetadata,
   useGetServiceNowTicketTypes,
   useGetServiceNowTicketTypesV2
@@ -83,6 +84,7 @@ function FormContent({
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [count, setCount] = useState(0)
+  const [fieldList, setFieldList] = useState<ServiceNowFieldNG[]>([])
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const commonParams = {
     accountIdentifier: accountId,
@@ -111,10 +113,32 @@ function FormContent({
         })) || []
       : []
 
-  const fieldList =
-    connectorRefFixedValue && ticketTypeKeyFixedValue && !getServiceNowIssueCreateMetadataQuery.loading
-      ? getServiceNowIssueCreateMetadataQuery?.data?.data || []
-      : []
+  useDeepCompareEffect(() => {
+    if (connectorRefFixedValue && ticketTypeKeyFixedValue) {
+      // When creating new approval step , this effect fetches data from createMetadata API
+      if (isEmpty(getServiceNowIssueCreateMetadataQuery.data?.data)) {
+        getServiceNowIssueCreateMetadataQuery.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRefFixedValue.toString(),
+            ticketType: ticketTypeKeyFixedValue.toString()
+          }
+        })
+      } else {
+        setFieldList(getServiceNowIssueCreateMetadataQuery.data?.data as ServiceNowFieldNG[])
+        const approvalCriteria = getApprovalRejectionCriteriaForInitialValues(
+          formik.values.spec.approvalCriteria,
+          getServiceNowIssueCreateMetadataQuery.data?.data
+        )
+        formik.setFieldValue('spec.approvalCriteria', approvalCriteria)
+        const rejectionCriteria = getApprovalRejectionCriteriaForInitialValues(
+          formik.values.spec.rejectionCriteria,
+          getServiceNowIssueCreateMetadataQuery.data?.data
+        )
+        formik.setFieldValue('spec.rejectionCriteria', rejectionCriteria)
+      }
+    }
+  }, [connectorRefFixedValue, ticketTypeKeyFixedValue, getServiceNowIssueCreateMetadataQuery.data?.data])
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
@@ -135,22 +159,6 @@ function FormContent({
       }
     }
   }, [connectorRefFixedValue])
-
-  useDeepCompareEffect(() => {
-    if (ticketTypeKeyFixedValue && connectorRefFixedValue) {
-      getServiceNowIssueCreateMetadataQuery.refetch({
-        queryParams: {
-          ...commonParams,
-          connectorRef: connectorRefFixedValue.toString(),
-          ticketType: ticketTypeKeyFixedValue.toString()
-        }
-      })
-      const approvalCriteria = getApprovalRejectionCriteriaForInitialValues(formik.values.spec.approvalCriteria)
-      formik.setFieldValue('spec.approvalCriteria', approvalCriteria)
-      const rejectionCriteria = getApprovalRejectionCriteriaForInitialValues(formik.values.spec.rejectionCriteria)
-      formik.setFieldValue('spec.rejectionCriteria', rejectionCriteria)
-    }
-  }, [ticketTypeKeyFixedValue, connectorRefFixedValue])
 
   const ticketTypesLoading = getServiceNowTicketTypesQuery.loading || getServiceNowTicketTypesV2Query.loading
 
@@ -265,6 +273,16 @@ function FormContent({
               allowableTypes,
               expressions,
               onChange: (value: unknown, _valueType, type) => {
+                // When ticketType value is fixed and changed we refetch the createMetadata call to get latest data
+                if (type === MultiTypeInputType.FIXED && !isEmpty(get(value, 'value'))) {
+                  getServiceNowIssueCreateMetadataQuery.refetch({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: (connectorRefFixedValue as string).toString(),
+                      ticketType: (get(value, 'value') as string).toString()
+                    }
+                  })
+                }
                 // Clear dependent fields
                 if (
                   type === MultiTypeInputType.FIXED &&
@@ -308,7 +326,7 @@ function FormContent({
         <ServiceNowApprovalRejectionCriteria
           fieldList={fieldList}
           title={getString('pipeline.approvalCriteria.approvalCriteria')}
-          isFetchingFields={false}
+          isFetchingFields={getServiceNowIssueCreateMetadataQuery?.loading}
           mode="approvalCriteria"
           values={formik.values.spec.approvalCriteria}
           onChange={values => formik.setFieldValue('spec.approvalCriteria', values)}

@@ -7,7 +7,7 @@
 
 import React, { ReactElement, useEffect, useState } from 'react'
 import { FieldArray } from 'formik'
-import { get, isEmpty, set } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import {
   Button,
   FormInput,
@@ -29,7 +29,8 @@ import {
 import { useDeepCompareEffect } from '@common/hooks'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { errorCheck } from '@common/utils/formikHelpers'
-import { handleOperatorChange, operatorValues } from '../JiraApproval/helper'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { handleOperatorChange, operatorValues, setAllowedValuesOptions } from '../JiraApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Common/ApprovalRejectionCriteria.module.scss'
@@ -108,6 +109,7 @@ export function Conditions({
   const { expressions } = useVariablesExpression()
   const name = `spec.${mode}.spec.conditions`
   const approvalRejectionCriteriaError = get(formik?.errors, name)
+
   if (isFetchingFields) {
     return <div className={css.fetching}>{getString('pipeline.approvalCriteria.fetchingFields')}</div>
   }
@@ -204,7 +206,9 @@ export function Conditions({
                   intent="primary"
                   data-testid="add-conditions"
                   disabled={isApprovalStepFieldDisabled(readonly)}
-                  onClick={() => push({ key: 'state', operator: 'equals', value: [] })}
+                  onClick={() => {
+                    push({ key: 'state', operator: 'equals', value: [] })
+                  }}
                 >
                   {getString('add')}
                 </Button>
@@ -246,6 +250,7 @@ export function Jexl(props: SnowApprovalRejectionCriteriaProps): JSX.Element {
 }
 
 export function ServiceNowApprovalRejectionCriteria(props: SnowApprovalRejectionCriteriaProps): ReactElement {
+  const { CDS_SERVICENOW_USE_METADATA_V2 } = useFeatureFlags()
   const { values, onChange, title, readonly } = props
   const [type, setType] = useState<ApprovalRejectionCriteriaType>(values.type)
   const [allowedFieldKeys, setAllowedFieldKeys] = useState<SelectOption[]>([])
@@ -258,7 +263,9 @@ export function ServiceNowApprovalRejectionCriteria(props: SnowApprovalRejection
     if (!isEmpty(props.fieldList)) {
       // If the status list is non empty, initialise it so that status is by default a dropdown
       allowedFieldKeysToSet = props.fieldList.map(field => {
-        set(allowedValuesForFieldsToSet, field.key, field.allowedValues)
+        allowedValuesForFieldsToSet[field.key] = CDS_SERVICENOW_USE_METADATA_V2
+          ? setAllowedValuesOptions(field.allowedValues)
+          : (field.allowedValues as SelectOption[])
         return { label: field.name, value: field.key }
       })
     }
@@ -302,7 +309,6 @@ export function ServiceNowApprovalRejectionCriteria(props: SnowApprovalRejection
           {getString('common.jexlExpression')}
         </Radio>
       </div>
-
       {type === ApprovalRejectionCriteriaType.KeyValues ? (
         <Conditions {...props} allowedFieldKeys={allowedFieldKeys} allowedValuesForFields={allowedValuesForFields} />
       ) : (
