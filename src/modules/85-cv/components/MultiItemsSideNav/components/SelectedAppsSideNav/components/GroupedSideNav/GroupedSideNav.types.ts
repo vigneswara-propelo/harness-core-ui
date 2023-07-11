@@ -12,6 +12,7 @@ export interface GroupedMetric {
   metricName?: string
   index?: number
   continuousVerification?: boolean
+  serviceHealth?: boolean
 }
 
 export interface GroupedCreatedMetrics {

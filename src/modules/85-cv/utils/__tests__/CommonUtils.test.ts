@@ -50,6 +50,7 @@ describe('Test for getRiskColorValue', () => {
     expect(getRiskColorValue(SLOErrorBudget.EXHAUSTED)).toEqual(Utils.getRealCSSColor(Color.RED_900))
     expect(getRiskColorValue(RiskValues.UNHEALTHY)).toEqual(Utils.getRealCSSColor(Color.RED_900))
     expect(getRiskColorValue(RiskValues.NO_ANALYSIS)).toEqual(Utils.getRealCSSColor(Color.GREY_400))
+    expect(getRiskColorValue(RiskValues.CUSTOMER_DEFINED_UNHEALTHY)).toEqual(Utils.getRealCSSColor(Color.RED_900))
     expect(getRiskColorValue()).toEqual(Utils.getRealCSSColor(Color.GREY_400))
   })
   test('getRiskColorValue should return correct non realCSSColors', () => {

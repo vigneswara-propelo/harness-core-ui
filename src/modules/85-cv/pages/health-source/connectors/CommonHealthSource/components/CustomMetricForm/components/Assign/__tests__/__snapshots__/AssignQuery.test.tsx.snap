@@ -73,6 +73,7 @@ exports[`Validate AssignQuery should not render RiskProfile when continuousVerif
                 class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
               >
                 <input
+                  data-testid="formikCheckbox"
                   name="healthScore"
                   type="checkbox"
                 />
@@ -241,6 +242,7 @@ exports[`Validate AssignQuery should render RiskProfile when continuousVerificat
               >
                 <input
                   checked=""
+                  data-testid="formikCheckbox"
                   name="healthScore"
                   type="checkbox"
                 />
@@ -642,6 +644,7 @@ exports[`Validate AssignQuery should render form errors 1`] = `
               >
                 <input
                   checked=""
+                  data-testid="formikCheckbox"
                   name="healthScore"
                   type="checkbox"
                 />

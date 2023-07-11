@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import {
   failFastThresholdsMockData,
   ignoreThresholdsMockData
@@ -285,6 +292,7 @@ const singleMetricDetailMock = {
   },
   index: 0,
   metricName: 'metric 1',
+  serviceHealth: false,
   continuousVerification: true
 }
 
@@ -292,6 +300,16 @@ export const groupedCreatedMetricsForFailCVEnableTest = {
   'group 1': [
     {
       ...singleMetricDetailMock,
+      continuousVerification: false
+    }
+  ]
+}
+
+export const groupedCreatedMetricsForServiceHealthEnableTest = {
+  'group 1': [
+    {
+      ...singleMetricDetailMock,
+      serviceHealth: true,
       continuousVerification: false
     }
   ]

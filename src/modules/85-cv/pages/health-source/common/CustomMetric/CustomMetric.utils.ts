@@ -100,7 +100,8 @@ export const getGroupAndMetric = (
     return {
       groupName: item.groupName || defaultGroupedMetric(getString),
       metricName: item.metricName,
-      continuousVerification: item.continuousVerification
+      continuousVerification: item.continuousVerification,
+      serviceHealth: item.healthScore
     }
   })
 }
@@ -114,7 +115,8 @@ export const getGroupedCreatedMetrics = (
       index,
       groupName: item.groupName || defaultGroupedMetric(getString),
       metricName: item.metricName,
-      continuousVerification: item.continuousVerification
+      continuousVerification: item.continuousVerification,
+      serviceHealth: item.healthScore
     }
   })
   return groupBy(filteredList.reverse(), function (item) {

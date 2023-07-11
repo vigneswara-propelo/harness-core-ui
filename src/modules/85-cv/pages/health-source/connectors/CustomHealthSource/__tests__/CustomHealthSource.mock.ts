@@ -446,7 +446,7 @@ export const sourceData = {
             metricName: 'CustomHealth Metric 101',
             riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] },
             analysis: {
-              liveMonitoring: { enabled: true },
+              liveMonitoring: { enabled: false },
               deploymentVerification: {
                 enabled: false,
                 serviceInstanceFieldName: 'serviceInstance',

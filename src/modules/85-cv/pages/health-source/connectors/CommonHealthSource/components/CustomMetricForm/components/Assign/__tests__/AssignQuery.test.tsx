@@ -216,7 +216,7 @@ describe('Validate AssignQuery', () => {
         </TestWrapper>
       )
 
-      const cvCheckbox = screen.getByTestId(/formikCheckbox/)
+      const cvCheckbox = screen.getAllByTestId(/formikCheckbox/)[0]
 
       expect(cvCheckbox).toBeInTheDocument()
       expect(cvCheckbox).toBeChecked()

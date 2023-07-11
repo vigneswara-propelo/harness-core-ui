@@ -85,11 +85,13 @@ export function getActionItems(getString: UseStringsReturn['getString']): Select
 export const isGroupTransationTextField = (selectedMetricType?: string | null): boolean =>
   MetricTypesForTransactionTextField.some(field => field === selectedMetricType)
 
-function getGroupsWithCVEnabled(groupedCreatedMetrics: GroupedCreatedMetrics): string[] {
+function getGroupsWithCVandServiceHealthEnabled(groupedCreatedMetrics: GroupedCreatedMetrics): string[] {
   const CVEnabledGroups = []
 
   for (const groupName in groupedCreatedMetrics) {
-    const isCVEnabled = groupedCreatedMetrics[groupName].some(metricDetails => metricDetails.continuousVerification)
+    const isCVEnabled = groupedCreatedMetrics[groupName].some(
+      metricDetails => metricDetails.continuousVerification || metricDetails.serviceHealth
+    )
 
     if (isCVEnabled) {
       CVEnabledGroups.push(groupName)
@@ -104,9 +106,9 @@ export function getCustomMetricGroupNames(groupedCreatedMetrics: GroupedCreatedM
     return []
   }
 
-  const groupsWithCVEnabled = getGroupsWithCVEnabled(groupedCreatedMetrics)
+  const groupsWithCVAndServiceHealthEnabled = getGroupsWithCVandServiceHealthEnabled(groupedCreatedMetrics)
 
-  return groupsWithCVEnabled.filter(
+  return groupsWithCVAndServiceHealthEnabled.filter(
     groupName => groupName !== '' && groupName !== DefaultCustomMetricGroupName && groupName !== ExceptionGroupName
   )
 }
@@ -361,8 +363,8 @@ export function getMetricTypeItems(
   return options
 }
 
-function getMetricsHaveCVEnabled(selectedMetricDetails: GroupedMetric[]): GroupedMetric[] {
-  return selectedMetricDetails.filter(metricDetail => metricDetail.continuousVerification)
+function getMetricsHaveCVAndServiceHealthEnabled(selectedMetricDetails: GroupedMetric[]): GroupedMetric[] {
+  return selectedMetricDetails.filter(metricDetail => metricDetail.continuousVerification || metricDetail.serviceHealth)
 }
 
 function getMetricsNameOptionsFromGroupName(
@@ -375,7 +377,7 @@ function getMetricsNameOptionsFromGroupName(
     return []
   }
 
-  const filteredCVSelectedMetrics = getMetricsHaveCVEnabled(selectedMetricDetails)
+  const filteredCVSelectedMetrics = getMetricsHaveCVAndServiceHealthEnabled(selectedMetricDetails)
 
   const metricNameOptions: SelectItem[] = []
 
@@ -518,7 +520,7 @@ export const getMetricPacksForPayload = (formData: any): TimeSeriesMetricPackDTO
 
 // Utils for only custom metrics health source, like Prometheus, Datadog
 function getAllMetricsNameOptions(groupedCreatedMetrics: GroupedCreatedMetrics): SelectItem[] {
-  const groups = getGroupsWithCVEnabled(groupedCreatedMetrics)
+  const groups = getGroupsWithCVandServiceHealthEnabled(groupedCreatedMetrics)
 
   if (!Array.isArray(groups) || !groups.length) {
     return []
@@ -527,7 +529,7 @@ function getAllMetricsNameOptions(groupedCreatedMetrics: GroupedCreatedMetrics):
   const options: SelectItem[] = []
 
   groups.forEach(group => {
-    const cvEnabledMetrics = getMetricsHaveCVEnabled(groupedCreatedMetrics[group])
+    const cvEnabledMetrics = getMetricsHaveCVAndServiceHealthEnabled(groupedCreatedMetrics[group])
 
     cvEnabledMetrics.forEach(metricDetail => {
       if (metricDetail.metricName) {
@@ -585,7 +587,7 @@ export const getMetricsWithCVEnabled = (groupedCreatedMetrics: GroupedCreatedMet
   const metricsWithCVEnabled = [] as string[]
 
   groupNamesWithCVEnabled.forEach(groupName => {
-    const cvEnabledMetrics = getMetricsHaveCVEnabled(groupedCreatedMetrics[groupName])
+    const cvEnabledMetrics = getMetricsHaveCVAndServiceHealthEnabled(groupedCreatedMetrics[groupName])
 
     if (Array.isArray(cvEnabledMetrics) && cvEnabledMetrics.length) {
       const cvEnabledMetricNames = cvEnabledMetrics.map(cvEnabledMetric => cvEnabledMetric.metricName as string)

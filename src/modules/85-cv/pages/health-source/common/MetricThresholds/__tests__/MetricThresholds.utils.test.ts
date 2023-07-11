@@ -48,6 +48,7 @@ import {
   groupedCreatedMetricsDefault,
   groupedCreatedMetricsForCVEnableTest,
   groupedCreatedMetricsForFailCVEnableTest,
+  groupedCreatedMetricsForServiceHealthEnableTest,
   metricPacksMock,
   metricThresholdExpectedMock,
   metricThresholdsArrayMock,
@@ -683,7 +684,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(result2).toEqual(false)
   })
 
-  test('getCustomMetricGroupNames should return group names which atleast contains one metric whose CV is enabled', () => {
+  test('getCustomMetricGroupNames should return group names which atleast contains one metric whose CV or HealthSource is enabled', () => {
     const result = getCustomMetricGroupNames(groupedCreatedMetricsForCVEnableTest)
 
     expect(result).toEqual(['group 1', 'group 2'])
@@ -691,6 +692,10 @@ describe('AppDIgnoreThresholdTabContent', () => {
     const result2 = getCustomMetricGroupNames(groupedCreatedMetricsForFailCVEnableTest)
 
     expect(result2).toEqual([])
+
+    const result3 = getCustomMetricGroupNames(groupedCreatedMetricsForServiceHealthEnableTest)
+
+    expect(result3).toEqual(['group 1'])
   })
 
   test('isGivenMetricPackContainsThresholds should return false if not valid parameters are passed', () => {

@@ -71,7 +71,12 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     })
 
     updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
-  }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
+  }, [
+    formikValues?.groupName,
+    formikValues?.metricName,
+    formikValues?.continuousVerification,
+    formikValues?.healthScore
+  ])
 
   useEffect(() => {
     let isUpdated = false

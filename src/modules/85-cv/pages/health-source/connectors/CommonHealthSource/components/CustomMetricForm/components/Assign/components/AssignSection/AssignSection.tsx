@@ -57,10 +57,15 @@ export default function AssignSection({
       {!hideSLIAndHealthScore ? (
         <>
           <Container margin={{ top: 'large', bottom: 'large' }}>
-            <FormInput.CheckBox
-              name={CustomMetricFormFieldNames.HEALTH_SCORE}
-              label={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
+            <CVPromptCheckbox
+              isFormikCheckbox
+              checkboxLabel={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
               helperText={getString('cv.monitoringSources.commonHealthSource.assign.serviceHealth.helptext')}
+              checkboxName={CustomMetricFormFieldNames.HEALTH_SCORE}
+              checked={values[CustomMetricFormFieldNames.HEALTH_SCORE] as boolean}
+              filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
+              formikValues={parentFormValues}
+              selectedMetric={parentFormValues.selectedMetric}
             />
           </Container>
           <Container margin={{ top: 'large', bottom: 'large' }}>

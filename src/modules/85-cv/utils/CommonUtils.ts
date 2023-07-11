@@ -48,7 +48,8 @@ export enum RiskValues {
   WARNING = 'WARNING',
   UNHEALTHY = 'UNHEALTHY',
   FAILED = 'FAILED',
-  PASSED = 'PASSED'
+  PASSED = 'PASSED',
+  CUSTOMER_DEFINED_UNHEALTHY = 'CUSTOMER_DEFINED_UNHEALTHY'
 }
 
 export enum SLOErrorBudget {
@@ -77,6 +78,7 @@ export const getRiskColorValue = (
       return realCSSColor ? Utils.getRealCSSColor(Color.ORANGE_700) : Color.ORANGE_700
     case RiskValues.UNHEALTHY:
     case RiskValues.FAILED:
+    case RiskValues.CUSTOMER_DEFINED_UNHEALTHY:
       return realCSSColor ? Utils.getRealCSSColor(Color.RED_900) : Color.RED_900
     case SLOErrorBudget.EXHAUSTED:
       return realCSSColor ? Utils.getRealCSSColor(Color.RED_900) : Color.RED_900
