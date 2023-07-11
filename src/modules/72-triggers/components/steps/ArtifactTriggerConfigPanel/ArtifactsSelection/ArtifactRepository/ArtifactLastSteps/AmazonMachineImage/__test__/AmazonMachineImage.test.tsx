@@ -6,29 +6,57 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { awsRegions } from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/__tests__/mocks'
 import type { AMIFilter } from 'services/pipeline-ng'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import { AmazonMachineImage } from '../AmazonMachineImage'
-import { amiTags } from './mocks'
+import { amiTagsData } from './mocks'
+
+const getListTagsForAmiArtifact = jest.fn(() => Promise.resolve(amiTagsData))
 
 jest.mock('services/portal', () => ({
   useListAwsRegions: jest.fn().mockImplementation(() => ({ data: awsRegions, loading: false }))
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListTagsForAmiArtifactMutation: jest
-    .fn()
-    .mockImplementation(() => ({ data: amiTags, loading: false, mutate: jest.fn() }))
+  useListTagsForAmiArtifactMutation: jest.fn().mockImplementation(() => ({
+    data: amiTagsData,
+    mutate: getListTagsForAmiArtifact,
+    isLoading: false
+  }))
 }))
 
+const fillMultiTypeTagSelectorData = async (
+  tagKey: string,
+  container: HTMLElement,
+  tag: AMIFilter,
+  index: number,
+  addButton: HTMLElement
+): Promise<void> => {
+  const { name, value } = tag
+
+  userEvent.click(addButton)
+
+  await waitFor(() => expect(queryByNameAttribute(`${tagKey}[${index}].name`, container)).toBeInTheDocument())
+  const tagName = queryByNameAttribute(`${tagKey}[${index}].name`, container) as HTMLInputElement
+  await waitFor(() => expect(tagName.placeholder).toBe(''))
+
+  userEvent.click(tagName)
+  userEvent.click(await screen.findByText(name!))
+  await waitFor(() => expect(tagName).toHaveValue(name))
+
+  await userEvent.type(container.querySelector(`input[name="${tagKey}[${index}].value"]`) as HTMLInputElement, value!)
+}
+
+const tags: AMIFilter[] = [{ name: 'owner', value: '1' }]
+const filters: AMIFilter[] = [{ name: 'ami-image-id', value: '1' }]
+
 describe('AMI Artifact Trigger Test', () => {
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Create flow', async () => {
+  test('Create flow', async () => {
     const handleSubmit = jest.fn()
-    const { findByText, baseElement } = render(
+    const { findByText, container } = render(
       <TestWrapper>
         <AmazonMachineImage
           key=""
@@ -46,70 +74,44 @@ describe('AMI Artifact Trigger Test', () => {
         />
       </TestWrapper>
     )
-    // TODO: Update for tags and filters use case.
-    const tags: AMIFilter[] = [
-      // { name: 'owner', value: '1' }
-      // { name: 'purpose', value: '2' }
-    ]
-    const filters: AMIFilter[] = [
-      // {name: 'ami-image-id', value: '1' }
-      // { name: 'ami-name', value: '2' }
-    ]
 
     expect(await findByText('pipeline.artifactsSelection.artifactDetails')).toBeInTheDocument()
-    const regionField = baseElement.querySelector('[name="region"]') as HTMLInputElement
+    const regionField = container.querySelector('[name="region"]') as HTMLInputElement
     expect(regionField).toHaveValue('')
-    const submitButton = baseElement.querySelector('[type="submit"]') as HTMLButtonElement
+    const submitButton = container.querySelector('[type="submit"]') as HTMLButtonElement
 
     // Error check
-    fireEvent.click(submitButton)
+    userEvent.click(submitButton)
     expect(await findByText('validation.regionRequired')).toBeInTheDocument()
 
-    // Enter field values
+    // Enter region values
     userEvent.click(regionField)
     const dropDownSelectOption = await findByText('US East (N. Virginia)')
+
     expect(dropDownSelectOption).toBeInTheDocument()
     userEvent.click(dropDownSelectOption)
-    const addAMITagsButton = await screen.findByText('pipeline.amiTags', { selector: 'span.bp3-button-text' })
-    const addAMIFiltersButton = await screen.findByText('pipeline.amiFilters', { selector: 'span.bp3-button-text' })
+
+    await waitFor(() => {
+      expect(queryByNameAttribute('region', container)).toHaveValue('US East (N. Virginia)')
+    })
 
     // Enter AMI Tags
-    tags.forEach(async ({ name, value }, index) => {
-      userEvent.click(addAMITagsButton)
-      const tagName = (await waitFor(() => {
-        const $tagName = baseElement.querySelector(`input[name="tags[${index}].name"]`)
-        expect($tagName).toBeInTheDocument()
-        return $tagName
-      })) as HTMLInputElement
-
-      userEvent.click(tagName)
-      userEvent.click(await screen.findByText(name!))
-      await waitFor(() => expect(tagName).toHaveValue(name))
-      userEvent.type(baseElement.querySelector(`input[name="tags[${index}].value"]`) as HTMLInputElement, value!)
-    })
+    /* const addAMITagsButton = await screen.findByText('pipeline.amiTags', { selector: 'span.bp3-button-text' })
+    fillMultiTypeTagSelectorData('tags', container, tags[0], 0, addAMITagsButton)
+    await waitFor(() => expect(container.querySelector(`input[name="tags[0].value"]`)).toHaveValue(tags[0].value)) */
 
     //  Enter AMI Filters
-    filters.forEach(async ({ name, value }, index) => {
-      userEvent.click(addAMIFiltersButton)
-      const filterName = (await waitFor(() => {
-        const $filterName = baseElement.querySelector(`input[name="filters[${index}].name"]`)
-        expect($filterName).toBeInTheDocument()
-        return $filterName
-      })) as HTMLInputElement
-
-      userEvent.click(filterName)
-      userEvent.click(await screen.findByText(name!))
-      await waitFor(() => expect(filterName).toHaveValue(name))
-      userEvent.type(baseElement.querySelector(`input[name="filters[${index}].value"]`) as HTMLInputElement, value!)
-    })
+    const addAMIFiltersButton = await screen.findByText('pipeline.amiFilters', { selector: 'span.bp3-button-text' })
+    fillMultiTypeTagSelectorData('filters', container, filters[0], 0, addAMIFiltersButton)
+    await waitFor(() => expect(container.querySelector(`input[name="filters[0].value"]`)).toHaveValue(filters[0].value))
 
     // Submit Form
-    fireEvent.click(submitButton)
+    userEvent.click(submitButton)
     await waitFor(() =>
       expect(handleSubmit).toHaveBeenCalledWith({
         connectorRef: 'connectorRef',
         region: 'us-east-1',
-        tags,
+        tags: [],
         filters,
         eventConditions: [],
         version: '<+trigger.artifact.build>'
@@ -118,16 +120,8 @@ describe('AMI Artifact Trigger Test', () => {
   })
 
   test('Edit flow', async () => {
-    const tags: AMIFilter[] = [
-      { name: 'owner', value: '1' },
-      { name: 'purpose', value: '2' }
-    ]
-    const filters: AMIFilter[] = [
-      { name: 'ami-image-id', value: '1' },
-      { name: 'ami-name', value: '2' }
-    ]
     const handleSubmit = jest.fn()
-    const { findByText, baseElement } = render(
+    const { findByText, container } = render(
       <TestWrapper>
         <AmazonMachineImage
           key=""
@@ -147,9 +141,9 @@ describe('AMI Artifact Trigger Test', () => {
     )
 
     expect(await findByText('pipeline.artifactsSelection.artifactDetails')).toBeInTheDocument()
-    const regionField = baseElement.querySelector('[name="region"]') as HTMLInputElement
+    const regionField = container.querySelector('[name="region"]') as HTMLInputElement
     expect(regionField).toHaveValue('US East (N. Virginia)')
-    const submitButton = baseElement.querySelector('[type="submit"]') as HTMLButtonElement
+    const submitButton = container.querySelector('[type="submit"]') as HTMLButtonElement
 
     // Change region value
     userEvent.click(regionField)

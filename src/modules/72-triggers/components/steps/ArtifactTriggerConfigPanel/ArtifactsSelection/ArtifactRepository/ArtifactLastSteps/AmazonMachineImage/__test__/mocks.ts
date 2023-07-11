@@ -5,17 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const amiTags = [
-  {
-    tagName: 'owner'
-  },
-  {
-    tagName: 'purpose'
-  },
-  {
-    tagName: 'team'
-  },
-  {
-    tagName: 'type'
-  }
-]
+export const amiTagsData = {
+  data: [
+    {
+      tagName: 'owner'
+    },
+    {
+      tagName: 'purpose'
+    },
+    {
+      tagName: 'team'
+    },
+    {
+      tagName: 'type'
+    }
+  ]
+}

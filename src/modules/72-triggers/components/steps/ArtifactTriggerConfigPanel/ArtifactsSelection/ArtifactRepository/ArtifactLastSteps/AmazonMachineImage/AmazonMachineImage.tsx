@@ -101,7 +101,8 @@ function FormComponent({
     if (formik.values?.region) {
       refetchTags()
     }
-  }, [formik.values?.region, refetchTags])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formik.values?.region])
 
   return (
     <FormikForm>
