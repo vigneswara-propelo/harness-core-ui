@@ -189,7 +189,7 @@ const licenseRedirectData: LicenseRedirectProps = {
 
 export default function ChaosRoutes(): React.ReactElement {
   // feature flags to control RBAC registrations
-  const { CHAOS_GAMEDAY_ENABLED, CHAOS_SECURITY_GOVERNANCE, PL_DISCOVERY_ENABLE } = useFeatureFlags()
+  const { CHAOS_SECURITY_GOVERNANCE, PL_DISCOVERY_ENABLE } = useFeatureFlags()
 
   // Pipeline registrations
   PipelineStudioFactory.registerStep(new ChaosExperimentStep())
@@ -234,17 +234,16 @@ export default function ChaosRoutes(): React.ReactElement {
     }
   })
 
-  if (CHAOS_GAMEDAY_ENABLED)
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
-      icon: 'chaos-main',
-      label: 'chaos.chaosGameday',
-      category: ResourceCategory.CHAOS,
-      permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
-      }
-    })
+  RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
+    icon: 'chaos-main',
+    label: 'chaos.chaosGameday',
+    category: ResourceCategory.CHAOS,
+    permissionLabels: {
+      [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
+    }
+  })
 
   if (CHAOS_SECURITY_GOVERNANCE)
     RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SECURITY_GOVERNANCE, {

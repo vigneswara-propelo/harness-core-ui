@@ -89,23 +89,6 @@ describe('Chaos Sidenav Render', () => {
     `)
   })
 
-  test('show nav labels behind feature flags - gamedays', () => {
-    render(
-      <TestWrapper
-        path={routes.toChaosMicroFrontend({
-          accountId: ':accountId',
-          orgIdentifier: ':orgIdentifier',
-          projectIdentifier: ':projectIdentifier'
-        })}
-        pathParams={{ accountId: 'dummyAccID', orgIdentifier: 'dummyOrgID', projectIdentifier: 'dummyProjID' }}
-        defaultFeatureFlagValues={{ CHAOS_GAMEDAY_ENABLED: true }}
-      >
-        <ChaosSideNav />
-      </TestWrapper>
-    )
-    expect(screen.getByRole('link', { name: 'chaos.navLabels.gamedays' })).toBeInTheDocument()
-  })
-
   test('show nav labels behind feature flags - probes', () => {
     render(
       <TestWrapper

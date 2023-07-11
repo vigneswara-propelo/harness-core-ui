@@ -22,13 +22,8 @@ export default function ChaosSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
   const { getString } = useStrings()
-  const {
-    CHAOS_PROBE_ENABLED,
-    CHAOS_GAMEDAY_ENABLED,
-    CHAOS_DASHBOARD_ENABLED,
-    CHAOS_SECURITY_GOVERNANCE,
-    CHAOS_IMAGE_REGISTRY_DEV
-  } = useFeatureFlags()
+  const { CHAOS_PROBE_ENABLED, CHAOS_DASHBOARD_ENABLED, CHAOS_SECURITY_GOVERNANCE, CHAOS_IMAGE_REGISTRY_DEV } =
+    useFeatureFlags()
   const { updateAppStore } = useAppStore()
   const history = useHistory()
 
@@ -55,9 +50,9 @@ export default function ChaosSideNav(): React.ReactElement {
             to={routes.toChaosExperiments({ ...params })}
           />
           <SidebarLink label={getString('chaos.navLabels.chaosHubs')} to={routes.toChaosHubs({ ...params })} />
-          {CHAOS_GAMEDAY_ENABLED && (
-            <SidebarLink label={getString('chaos.navLabels.gamedays')} to={routes.toChaosGameDays({ ...params })} />
-          )}
+
+          <SidebarLink label={getString('chaos.navLabels.gamedays')} to={routes.toChaosGameDays({ ...params })} />
+
           {CHAOS_PROBE_ENABLED && (
             <SidebarLink label={getString('chaos.navLabels.probes')} to={routes.toChaosProbes({ ...params })} />
           )}
