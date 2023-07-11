@@ -28,6 +28,8 @@ export const timestamp = moment.now()
 export const HARNESS_SUPPORT_LINK =
   '/sso.html?action=login&brand_id=114095000394&locale_id=1&return_to=https%3A%2F%2Fsupport.harness.io%2Fhc%2Fen-us%2Frequests&src=zendesk&timestamp=' +
   timestamp
+export const CANNY_SUPPORT_LINK =
+  'https://app.harness.io/sso.html?src=canny&action=login&companyID=6450229969594e0bc28b76ef&redirect=https%3A%2F%2Fharness-io.canny.io%2F'
 
 export const WHATS_NEW_LINK = `https://docs.harness.io/article/ueeiji09do-what-s-new`
 export const EARLY_ACCESS_LINK = `https://docs.harness.io/article/w4krvu96i3-early-access`
@@ -36,6 +38,12 @@ export const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): vo
   e.stopPropagation()
   e.preventDefault()
   window.open(HARNESS_SUPPORT_LINK)
+}
+
+export const cannySupportShareYourIdeas = (e: React.MouseEvent<Element, MouseEvent>): void => {
+  e.stopPropagation()
+  e.preventDefault()
+  window.open(CANNY_SUPPORT_LINK)
 }
 
 export function getReleaseNodeLink(): string {

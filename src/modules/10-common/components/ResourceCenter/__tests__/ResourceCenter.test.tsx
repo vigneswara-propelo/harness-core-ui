@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, act } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
@@ -82,6 +82,23 @@ describe('ResourceCenter', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+  test('Should render resource center properly on share your ideas', () => {
+    const { getByText } = render(
+      <TestWrapper>
+        <ResourceCenter />
+      </TestWrapper>
+    )
+
+    const shareIdeastext = getByText('common.help')
+    expect(shareIdeastext).toBeDefined()
+    act(() => {
+      fireEvent.click(shareIdeastext)
+    })
+    expect(getByText('common.resourceCenter.ticketmenu.shareYourIdeas')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(getByText('common.resourceCenter.ticketmenu.shareYourIdeas'))
+    })
   })
 
   test('should render modal when click on icon', async () => {

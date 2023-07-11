@@ -985,7 +985,8 @@ resourceCenter:
     ticketsDesc: 'View and manage your tickets'
     submitDesc: 'Get help from our expert system'
     submitTicket: Submit a ticket
-    viewTicket: View my ticket
+    viewTicket: View my tickets
+    shareYourIdeas: Share your Ideas
     ticketSubject: Ticket Subject
     ticketDetails: Ticket Details
     ticketIssue: What is the problem you are facing?
@@ -1567,3 +1568,4 @@ csBot:
   feedback: Was this answer helpful?
   errorMessage: Something went wrong. Click here to submit a ticket instead.
   ticketOnError: Would you like to create a support ticket?
+addNewCreditCard: Add a new card

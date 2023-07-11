@@ -47,6 +47,7 @@ export interface StringsMap {
   'common.addAttribute': string
   'common.addName': string
   'common.addNewCluster': string
+  'common.addNewCreditCard': string
   'common.addNewRepo': string
   'common.addVariable': string
   'common.addedEntityLabel': string
@@ -952,6 +953,7 @@ export interface StringsMap {
   'common.resourceCenter.ticketmenu.issueType': string
   'common.resourceCenter.ticketmenu.platform': string
   'common.resourceCenter.ticketmenu.priority': string
+  'common.resourceCenter.ticketmenu.shareYourIdeas': string
   'common.resourceCenter.ticketmenu.submitDesc': string
   'common.resourceCenter.ticketmenu.submitTicket': string
   'common.resourceCenter.ticketmenu.suggestionsPanel': string

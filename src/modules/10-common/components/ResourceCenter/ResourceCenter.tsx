@@ -32,7 +32,8 @@ import {
   HARNESS_API_DOCS_LINK,
   SITE_STATUS_LINK,
   HARNESS_TUTORIALS,
-  openFileATicket
+  openFileATicket,
+  cannySupportShareYourIdeas
 } from './utils'
 import { CommunitySubmitTicket } from './MenuItems'
 import { useReleaseNotesModal } from './ReleaseNotesModal/useReleaseNotesModal'
@@ -83,6 +84,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
       })
       _refiner('showForm', refinerSurveryId, true)
     }
+
     const finalTiles: Resource[] = [
       {
         title: getString('common.resourceCenter.ticketmenu.submitTicket'),
@@ -114,6 +116,14 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
       disabled: buttonDisabled,
       iconSize: 20,
       testId: 'feedback'
+    })
+    finalTiles.push({
+      title: getString('common.resourceCenter.ticketmenu.shareYourIdeas'),
+      icon: 'chat',
+      onClick: (e: React.MouseEvent<Element, MouseEvent>) => cannySupportShareYourIdeas(e),
+      disabled: buttonDisabled,
+      iconSize: 20,
+      testId: 'shareIdeas'
     })
 
     return finalTiles
