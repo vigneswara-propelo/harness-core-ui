@@ -21,7 +21,7 @@ export interface DeploymentTypeContext {
   services?: MultiSelectOption[]
   environments?: MultiSelectOption[]
   artifacts?: string
-  gitOpsAppNames?: MultiSelectOption[]
+  gitOpsAppIdentifiers?: MultiSelectOption[]
 }
 
 export interface BuildTypeContext {
@@ -44,7 +44,7 @@ const exclusionList = [
   'environments',
   'artifacts',
   'deploymentType',
-  'gitOpsAppNames'
+  'gitOpsAppIdentifiers'
 ]
 
 export const getValidFilterArguments = (formData: Record<string, any>): PipelineExecutionFilterProperties => {
@@ -59,7 +59,7 @@ export const getValidFilterArguments = (formData: Record<string, any>): Pipeline
     services,
     environments,
     artifacts,
-    gitOpsAppNames,
+    gitOpsAppIdentifiers,
     deploymentType,
     infrastructureType,
     pipelineTags
@@ -86,7 +86,7 @@ export const getValidFilterArguments = (formData: Record<string, any>): Pipeline
           ?.split(',')
           ?.map((artifact: string) => artifact.trim())
           ?.filter((artifact: string) => artifact),
-        gitOpsAppNames: gitOpsAppNames?.map((app: MultiSelectOption) => app?.value)
+        gitOpsAppIdentifiers: gitOpsAppIdentifiers?.map((app: MultiSelectOption) => app?.value)
       }
     }
   })

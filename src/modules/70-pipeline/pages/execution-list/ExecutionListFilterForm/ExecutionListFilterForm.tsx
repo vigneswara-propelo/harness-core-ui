@@ -135,7 +135,7 @@ export function ExecutionListFilterForm<
     const {
       environments,
       services,
-      gitOpsAppNames,
+      gitOpsAppIdentifiers,
       deploymentType: deploymentTypeSelectOptions
     } = initialValues as DeploymentTypeContext
     const deploymentTypeValue = formikProps?.values?.deploymentType
@@ -206,16 +206,18 @@ export function ExecutionListFilterForm<
           }}
         />
 
-        <FormInput.MultiSelect
-          items={gitOpsAppNames || []}
-          name="gitOpsAppNames"
-          label={getString('applications')}
-          placeholder={getString('pipeline.selectApplications')}
-          key="gitOpsAppNames"
-          multiSelectProps={{
-            allowCreatingNewItems: false
-          }}
-        />
+        {type === 'PipelineExecution' && module === 'cd' ? (
+          <FormInput.MultiSelect
+            items={gitOpsAppIdentifiers || []}
+            name="gitOpsAppIdentifiers"
+            label={getString('applications')}
+            placeholder={getString('pipeline.selectApplications')}
+            key="gitOpsAppIdentifiers"
+            multiSelectProps={{
+              allowCreatingNewItems: false
+            }}
+          />
+        ) : null}
       </>
     )
   }

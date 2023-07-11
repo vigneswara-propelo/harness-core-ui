@@ -410,15 +410,15 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group"
-          data-id="gitOpsAppNames-8"
+          data-id="gitOpsAppIdentifiers-8"
         >
           <label
             class="bp3-label"
-            for="gitOpsAppNames"
+            for="gitOpsAppIdentifiers"
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="pipelineFilterFormTest_gitOpsAppNames"
+              data-tooltip-id="pipelineFilterFormTest_gitOpsAppIdentifiers"
             >
               applications
             </span>
@@ -448,7 +448,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
                       <input
                         autocomplete="off"
                         class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                        name="gitOpsAppNames"
+                        name="gitOpsAppIdentifiers"
                         placeholder="- Select -"
                         value=""
                       />

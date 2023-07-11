@@ -49,7 +49,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0, GITOPS_ORG_LEVEL } = useFeatureFlags()
 
   const { showError } = useToaster()
   const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
@@ -75,7 +75,10 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data } = useGetSmtpConfig({ queryParams: { accountId } })
-  const showGitOpsCard = accountId && !orgIdentifier && !projectIdentifier
+  let showGitOpsCard = accountId && !orgIdentifier && !projectIdentifier
+  if (GITOPS_ORG_LEVEL) {
+    showGitOpsCard = (accountId || orgIdentifier) && !projectIdentifier
+  }
 
   const smtpResource: ResourceOption[] = [
     {
