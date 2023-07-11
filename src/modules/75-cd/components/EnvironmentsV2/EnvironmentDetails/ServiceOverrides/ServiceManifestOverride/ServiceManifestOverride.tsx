@@ -93,7 +93,8 @@ import {
   OverrideManifestStoresTypes,
   getAllowedOverrideManifests,
   AllowedManifestOverrideTypes,
-  TASOverrideManifests
+  TASOverrideManifests,
+  ECSOverrideManifests
 } from './ServiceManifestOverrideUtils'
 import ServiceManifestOverridesList from './ServiceManifestOverridesList'
 import css from './ServiceManifestOverride.module.scss'
@@ -414,7 +415,15 @@ function ServiceManifestOverride({
 
   const allowedOverrideManifestTypes = React.useMemo((): ManifestTypes[] => {
     if (serviceType) {
-      return serviceType === ServiceDeploymentType.TAS ? TASOverrideManifests : AllowedManifestOverrideTypes
+      switch (serviceType) {
+        case ServiceDeploymentType.TAS:
+          return TASOverrideManifests
+
+        case ServiceDeploymentType.ECS:
+          return ECSOverrideManifests
+        default:
+          return AllowedManifestOverrideTypes
+      }
     } else {
       // Environment Configurations
       return getAllowedOverrideManifests({ NG_SVC_ENV_REDESIGN })
