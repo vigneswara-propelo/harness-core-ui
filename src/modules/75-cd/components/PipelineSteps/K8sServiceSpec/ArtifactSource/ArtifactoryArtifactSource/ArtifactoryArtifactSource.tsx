@@ -559,6 +559,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       orgIdentifier,
       repoIdentifier,
       branch,
+      tagInput: defaultTo(artifact?.spec?.tag, artifact?.spec?.artifactPath),
       ...artifactoryTagsDataCallMetadataQueryParams
     },
     lazy: true

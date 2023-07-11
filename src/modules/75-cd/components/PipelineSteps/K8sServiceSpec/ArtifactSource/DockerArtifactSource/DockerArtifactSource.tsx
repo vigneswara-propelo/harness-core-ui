@@ -167,7 +167,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
     queryParams: {
       ...queryParams,
-      fqnPath: tagFqnPath
+      fqnPath: tagFqnPath,
+      tagInput: artifact?.spec?.tag
     },
     lazy: true
   })
