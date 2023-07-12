@@ -74,7 +74,12 @@
     }
   }
   .cardListContainer {
-    margin-top: 0 !important;
+    display: flex;
+    gap: var(--spacing-small);
+    flex-wrap: wrap;
+    label {
+      margin-left: 0px !important;
+    }
   }
 }
 
