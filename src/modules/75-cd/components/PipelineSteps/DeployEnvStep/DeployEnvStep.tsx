@@ -75,6 +75,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getEnvironmentRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { Category, EnvironmentActions, ExitModalActions } from '@common/constants/TrackingConstants'
@@ -121,7 +122,12 @@ const cleanData = (values: EnvironmentResponseDTO): EnvironmentRequestDTO => {
     projectIdentifier: values.projectIdentifier,
     description: newDescription,
     tags: values.tags,
-    type: newType as 'PreProduction' | 'Production'
+    type: newType as 'PreProduction' | 'Production',
+    yaml: yamlStringify({
+      environment: {
+        ...values
+      }
+    })
   }
 }
 
