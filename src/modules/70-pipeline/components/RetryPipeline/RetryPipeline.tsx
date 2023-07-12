@@ -74,6 +74,8 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -127,6 +129,7 @@ function RetryPipeline({
   const { showSuccess, showWarning, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
+  const loadFromCache = useFeatureFlag(FeatureFlag.CDS_ENABLE_LOAD_FROM_CACHE_FOR_RETRY_FORM).toString()
 
   const {
     projectIdentifier,
@@ -212,7 +215,7 @@ function RetryPipeline({
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+    requestOptions: { headers: { 'Load-From-Cache': loadFromCache } }
   })
 
   const {
@@ -342,7 +345,7 @@ function RetryPipeline({
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+    requestOptions: { headers: { 'Load-From-Cache': loadFromCache } }
   })
   /*------------------------------------------------API Calls------------------------------*/
 
