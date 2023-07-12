@@ -10,8 +10,8 @@ declare const styles: {
   readonly askAiBtn: string
   readonly closeBtn: string
   readonly copilot: string
+  readonly crossBtn: string
   readonly drawer: string
-  readonly failurePill: string
   readonly flex1: string
   readonly flex2: string
   readonly label: string
@@ -23,7 +23,6 @@ declare const styles: {
   readonly remediation: string
   readonly remediations: string
   readonly statusActionBtn: string
-  readonly successPill: string
   readonly tooltip: string
   readonly tooltipContent: string
   readonly tooltipPadding: string

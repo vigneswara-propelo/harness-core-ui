@@ -21,6 +21,7 @@ import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ExecutionQueryParams, showHarnessCoPilot } from '@pipeline/utils/executionUtils'
 import HarnessCopilot from '@pipeline/components/HarnessCopilot/HarnessCopilot'
+import { ErrorScope } from '@pipeline/components/HarnessCopilot/AIDAUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 
 import css from './StepDetailsTab.module.scss'
@@ -66,7 +67,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
           flex={{ justifyContent: 'flex-start' }}
           padding={{ top: 'large', bottom: 'large', right: 'bottom', left: 'medium' }}
         >
-          <HarnessCopilot mode="step-details" />
+          <HarnessCopilot mode="step-details" scope={ErrorScope.Step} />
         </Container>
       ) : null}
       <StepDetails step={step} labels={labels} executionMetadata={executionMetadata} />

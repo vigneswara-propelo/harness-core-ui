@@ -1910,6 +1910,7 @@ copilot:
   possibleSolutions: Possible Solutions
   introduction: Introducing Harness AIDA
   helpText: Harness AI Development Assistant(AIDA) can help find the root cause of the error and suggest possible solutions.
+  remediations: remediations
 license: License
 downloadLogs:
   title: Download Logs

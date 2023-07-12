@@ -5,22 +5,33 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render } from '@testing-library/react'
+import { screen, render } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 import HarnessCopilot from '../HarnessCopilot'
+import { ErrorScope } from '../AIDAUtils'
 
 describe('Test HarnessCopilot component', () => {
-  test('initial render', () => {
+  test('initial render for Step level error scope', () => {
     const { getByText } = render(
       <TestWrapper>
-        <HarnessCopilot mode="console-view" />
+        <HarnessCopilot mode="console-view" scope={ErrorScope.Step} />
       </TestWrapper>
     )
+    expect(getByText('pipeline.copilot.analyzeFailure')).toBeInTheDocument()
     expect(getByText('pipeline.copilot.askAIDA')).toBeInTheDocument()
 
     //tooltip and it's content is visible
     expect(getByText('pipeline.copilot.introduction')).toBeInTheDocument()
     expect(getByText('pipeline.copilot.helpText')).toBeInTheDocument()
+  })
+  test('initial render for Stage level error scope', () => {
+    const { getByText } = render(
+      <TestWrapper>
+        <HarnessCopilot mode="console-view" scope={ErrorScope.Stage} />
+      </TestWrapper>
+    )
+    expect(screen.queryByText('pipeline.copilot.analyzeFailure')).not.toBeInTheDocument()
+    expect(getByText('pipeline.copilot.askAIDA')).toBeInTheDocument()
   })
 })

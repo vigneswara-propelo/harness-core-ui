@@ -62,6 +62,7 @@ export interface StringsMap {
   'common.allErrors': string
   'common.allServices': string
   'common.allowFirstGenAccess': string
+  'common.analyzing': string
   'common.and': string
   'common.andCaps': string
   'common.annotations': string
@@ -4086,6 +4087,7 @@ export interface StringsMap {
   'pipeline.copilot.label': string
   'pipeline.copilot.noRemediationFound': string
   'pipeline.copilot.possibleSolutions': string
+  'pipeline.copilot.remediations': string
   'pipeline.copilot.requestTimedOut': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string

@@ -7,7 +7,7 @@
 
 import type * as React from 'react'
 import type { IconName } from '@harness/uicore'
-import { defaultTo, get, has, isEmpty } from 'lodash-es'
+import { defaultTo, get, has, isEmpty, identity } from 'lodash-es'
 import type { Module } from 'framework/types/ModuleName'
 import {
   ExecutionStatus,
@@ -30,11 +30,13 @@ import type {
   ExecutionNode,
   ExecutionNodeAdjacencyList,
   ResponsePipelineExecutionDetail,
-  InterruptEffectDTO
+  InterruptEffectDTO,
+  ResponseMessage
 } from 'services/pipeline-ng'
 import type { CDStageModuleInfo } from 'services/cd-ng'
 import type { CIPipelineStageModuleInfo } from 'services/ci'
 import { Infrastructure, Platform } from 'services/logs'
+import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import {
   ExecutionPipelineNode,
   ExecutionPipelineNodeType,
@@ -1645,3 +1647,16 @@ export const getPluginUsedFromStepParams = (selectedStep: ExecutionNode, stepTyp
       return ''
   }
 }
+
+export const getNodeId = (selectedStageExecutionId: string, selectedStageId: string): string =>
+  selectedStageExecutionId !== selectedStageId && !isEmpty(selectedStageExecutionId)
+    ? selectedStageExecutionId
+    : selectedStageId
+
+export const getStageErrorMessage = (responseMessages: ResponseMessage[], stage: GraphLayoutNode | undefined): string =>
+  responseMessages.length > 0
+    ? extractInfo(responseMessages)
+        .map(err => err.error?.message)
+        .filter(identity)
+        .join(', ')
+    : defaultTo(stage?.failureInfo?.message, '')

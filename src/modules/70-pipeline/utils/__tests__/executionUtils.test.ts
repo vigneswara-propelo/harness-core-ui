@@ -380,6 +380,29 @@ describe('ExecutionUtils tests', () => {
         })
       ).toEqual(['s3', 's1', 's2'])
     })
+
+    test('Test getNodeId method', () => {
+      expect(utils.getNodeId('', '')).toBe('')
+      expect(utils.getNodeId('selected_stage_id', '')).toBe('selected_stage_id')
+      expect(utils.getNodeId('', 'stage_id')).toBe('stage_id')
+      expect(utils.getNodeId('selected_stage_id', 'stage_id')).toBe('selected_stage_id')
+    })
+
+    test('Test getStageErrorMessage method', () => {
+      expect(utils.getStageErrorMessage([], nodeLayoutForCIStage)).toBe('1 error occurred:\\n\\t* exit status 1\\n\\n')
+      expect(
+        utils.getStageErrorMessage([{ level: 'ERROR', message: 'Error occurred during init' }], nodeLayoutForCIStage)
+      ).toBe('Error occurred during init')
+      expect(
+        utils.getStageErrorMessage(
+          [
+            { level: 'ERROR', message: 'Error occurred during init' },
+            { level: 'ERROR', message: 'Execution aborted' }
+          ],
+          nodeLayoutForCIStage
+        )
+      ).toBe('Error occurred during init, Execution aborted')
+    })
   })
 
   describe('Utils for Harness AIDA integration', () => {

@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { defaultTo, find, get, identity, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, Text } from '@harness/uicore'
+import { ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { String as StrTemplate, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -25,6 +25,9 @@ import {
 } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
+import HarnessCopilot from '@pipeline/components/HarnessCopilot/HarnessCopilot'
+import { ErrorScope } from '@pipeline/components/HarnessCopilot/AIDAUtils'
+import { showHarnessCoPilot } from '@pipeline/utils/executionUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -149,7 +152,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
       )}
     </div>
   )
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
   const runPipeline = (): void => {
     isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
@@ -182,6 +185,31 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     ])
     return !isEmpty(parentRollbackStageId) && parentRollbackStageId === selectedStageId
   }, [pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary, selectedStageId])
+
+  const renderErrorMssgWrapper = useCallback(
+    (renderWithAIDA?: boolean): React.ReactElement => {
+      return renderWithAIDA ? (
+        <Layout.Horizontal flex>
+          <ExecutionStatusLabel status={stage?.status as ExecutionStatus} />
+          <Container padding={{ left: 'xsmall' }}>
+            <Layout.Vertical className={css.errorMsg} flex={{ alignItems: 'baseline' }}>
+              <StrTemplate className={css.errorTitle} stringID="errorSummaryText" tagName="div" />
+              <Text lineClamp={1}>{errorMessage}</Text>
+            </Layout.Vertical>
+          </Container>
+        </Layout.Horizontal>
+      ) : (
+        <>
+          <ExecutionStatusLabel status={stage?.status as ExecutionStatus} />
+          <div className={css.errorMsg}>
+            <StrTemplate className={css.errorTitle} stringID="errorSummaryText" tagName="div" />
+            <Text lineClamp={1}>{errorMessage}</Text>
+          </div>
+        </>
+      )
+    },
+    [stage, errorMessage]
+  )
 
   return (
     <div className={css.main}>
@@ -302,11 +330,22 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
 
       {shouldShowError ? (
         <div className={css.errorMsgWrapper}>
-          <ExecutionStatusLabel status={stage?.status as ExecutionStatus} />
-          <div className={css.errorMsg}>
-            <StrTemplate className={css.errorTitle} stringID="errorSummaryText" tagName="div" />
-            <Text lineClamp={1}>{errorMessage}</Text>
-          </div>
+          {showHarnessCoPilot({
+            pipelineStagesMap,
+            selectedStageId,
+            pipelineExecutionDetail,
+            enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
+            enableForCD: CD_AI_ENHANCED_REMEDIATIONS
+          }) ? (
+            <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ right: 'small' }} width="100%">
+              <Layout.Horizontal flex>{renderErrorMssgWrapper(true)}</Layout.Horizontal>
+              <Container className={css.copilot}>
+                <HarnessCopilot mode="console-view" scope={ErrorScope.Stage} />
+              </Container>
+            </Layout.Horizontal>
+          ) : (
+            renderErrorMssgWrapper()
+          )}
         </div>
       ) : null}
 

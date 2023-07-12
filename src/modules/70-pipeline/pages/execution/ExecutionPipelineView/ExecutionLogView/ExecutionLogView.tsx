@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { Container, Dialog } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, has, identity, isEmpty } from 'lodash-es'
+import { defaultTo, get, has } from 'lodash-es'
 
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import factory from '@pipeline/factories/ExecutionFactory'
@@ -18,7 +18,7 @@ import { ExecutionNode, useGetExecutionNode } from 'services/pipeline-ng'
 import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ConsoleViewStepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
-import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
+import { getNodeId, getStageErrorMessage } from '@pipeline/utils/executionUtils'
 import { StageSelection } from './StageSelection/StageSelection'
 import css from './ExecutionLogView.module.scss'
 
@@ -54,23 +54,14 @@ export default function ExecutionLogView(): React.ReactElement {
   const errorMessage =
     get(selectedStep, 'failureInfo.message') || get(selectedStep, 'executableResponses[0].skipTask.message')
 
-  const getNodeId =
-    selectedStageExecutionId !== selectedStageId && !isEmpty(selectedStageExecutionId)
-      ? selectedStageExecutionId
-      : selectedStageId
+  const nodeId = getNodeId(selectedStageExecutionId, selectedStageId)
 
-  const stage = pipelineStagesMap.get(getNodeId)
+  const stage = pipelineStagesMap.get(nodeId)
   const responseMessages = defaultTo(
     pipelineExecutionDetail?.pipelineExecutionSummary?.failureInfo?.responseMessages,
     []
   )
-  const stageErrorMessage =
-    responseMessages.length > 0
-      ? extractInfo(responseMessages)
-          .map(err => err.error?.message)
-          .filter(identity)
-          .join(', ')
-      : defaultTo(stage?.failureInfo?.message, '')
+  const stageErrorMessage = getStageErrorMessage(responseMessages, stage)
 
   const isSkipped = isExecutionSkipped(selectedStep?.status)
   const openExecutionTimeInputsForStep = React.useCallback(

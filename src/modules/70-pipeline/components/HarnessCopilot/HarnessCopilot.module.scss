@@ -26,14 +26,7 @@
   border-radius: 100px;
   padding: var(--spacing-xsmall) var(--spacing-4) !important;
   width: fit-content !important;
-}
-
-.successPill {
   background-color: var(--ai-purple-100) !important;
-}
-
-.failurePill {
-  background-color: var(--red-50) !important;
 }
 
 .statusActionBtn {
@@ -147,4 +140,12 @@
 
 .remediations {
   height: calc(100% - 110px);
+}
+
+.crossBtn {
+  color: var(--grey-300) !important;
+  &:hover {
+    cursor: pointer;
+    color: var(--grey-300) !important;
+  }
 }

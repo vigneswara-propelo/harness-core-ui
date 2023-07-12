@@ -10,7 +10,7 @@ import moment from 'moment'
 import { Drawer, PopoverInteractionKind, PopoverPosition, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get } from 'lodash-es'
+import { capitalize, get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { Button, ButtonVariation, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { RcaRequestBody, ResponseRemediation, rcaPromise, Error } from 'services/logs'
@@ -19,7 +19,6 @@ import { pluralize } from '@common/utils/StringUtils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useLocalStorage } from '@common/hooks'
 import { createFormDataFromObjectPayload } from '@common/constants/Utils'
-import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import {
@@ -33,11 +32,13 @@ import {
 import type { LogsContentProps } from '@pipeline/factories/ExecutionFactory/types'
 import { getTaskFromExecutableResponse } from '../LogsContent/LogsState/createSections'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
+import { getErrorMessage, ErrorScope } from './AIDAUtils'
 
 import css from './HarnessCopilot.module.scss'
 
 interface HarnessCopilotProps {
   mode: LogsContentProps['mode']
+  scope: ErrorScope
 }
 
 enum AIAnalysisStatus {
@@ -51,7 +52,7 @@ enum AIAnalysisStatus {
 const SHOW_DELAY_MSSG_AFTER_DURATION = 7000
 
 function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
-  const { mode } = props
+  const { mode, scope } = props
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps & ModulePathParams>()
   const {
@@ -61,7 +62,8 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     selectedStepId,
     queryParams,
     allNodeMap,
-    logsToken
+    logsToken,
+    selectedStageExecutionId
   } = useExecutionContext()
   const [showTooltip, setShowTooltip] = useLocalStorage<boolean>('show_harness_ai_co-pilot_tooptip', true)
   const [showPanel, setShowPanel] = useState<boolean>(false)
@@ -73,6 +75,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const selectedStep = allNodeMap[currentStepId]
   const [showDelayMssg, setShowDelayMessage] = useState<boolean>(false)
   const controllerRef = useRef<AbortController>()
+  const showMinimalView = scope === ErrorScope.Stage
 
   useEffect(() => {
     let timerId: NodeJS.Timeout
@@ -164,33 +167,53 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
       }),
       step_type,
       accountID: accountId,
-      err_summary:
-        get(selectedStep, 'failureInfo.message', '') ||
-        get(selectedStep, 'failureInfo.responseMessages', [])
-          ?.filter((respMssg: ResponseMessage) => !!respMssg?.message)
-          ?.map((respMssg: ResponseMessage) => respMssg.message)
-          ?.join(','),
+      err_summary: getErrorMessage({
+        erropScope: scope,
+        allNodeMap,
+        pipelineExecutionDetail,
+        pipelineStagesMap,
+        queryParams,
+        selectedStageExecutionId,
+        selectedStageId,
+        selectedStepId
+      }),
       keys: get(getTaskFromExecutableResponse(selectedStep), 'logKeys', '""')
     }
-  }, [pipelineStagesMap, selectedStageId, pipelineExecutionDetail, selectedStepId, selectedStep, accountId])
+  }, [
+    allNodeMap,
+    queryParams,
+    pipelineStagesMap,
+    selectedStageId,
+    selectedStageExecutionId,
+    pipelineExecutionDetail,
+    selectedStepId,
+    selectedStep,
+    accountId,
+    scope
+  ])
 
   const renderCTA = useCallback((): JSX.Element => {
     const hasRemediations = Array.isArray(remediations) && remediations.length > 0
     const errorMssg = (error as Error)?.error_msg ?? getString('errorTitle')
-    const footerColor = mode === 'console-view' ? Color.GREY_200 : Color.GREY_900
+    const footerColor = mode === 'step-details' || showMinimalView ? Color.GREY_900 : Color.GREY_200
+    const commonLabelProps = {
+      font: { variation: FontVariation.BODY },
+      className: css.statusActionBtn,
+      color: Color.AI_PURPLE_700
+    }
 
     switch (status) {
       case AIAnalysisStatus.NotInitiated:
         return (
-          <Layout.Horizontal
-            flex={{ justifyContent: 'flex-start' }}
-            className={cx(css.pill, css.successPill)}
-            spacing="medium"
-          >
+          <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.pill} spacing="medium">
             <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
               <Icon name="harness-copilot" size={25} />
               <Layout.Horizontal flex spacing="xsmall">
-                <Text font={{ variation: FontVariation.BODY }}>{getString('pipeline.copilot.analyzeFailure')}</Text>
+                {showMinimalView ? (
+                  <></>
+                ) : (
+                  <Text font={{ variation: FontVariation.BODY }}>{getString('pipeline.copilot.analyzeFailure')}</Text>
+                )}
                 <Text
                   font={{ variation: FontVariation.BODY }}
                   color={Color.AI_PURPLE_700}
@@ -236,24 +259,33 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
       case AIAnalysisStatus.InProgress:
         return (
           <Layout.Vertical flex>
-            <Layout.Horizontal
-              flex={{ justifyContent: 'flex-start' }}
-              className={cx(css.pill, css.successPill)}
-              spacing="medium"
-            >
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.pill} spacing="medium">
               <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
                 <Icon name="harness-copilot" size={25} />
-                <Text font={{ variation: FontVariation.BODY }}>{getString('pipeline.copilot.analyzing')}</Text>
+                <Text font={{ variation: FontVariation.BODY }}>
+                  {showMinimalView
+                    ? capitalize(getString('common.analyzing'))
+                    : getString('pipeline.copilot.analyzing')}
+                </Text>
                 <Icon name="loading" size={25} color={Color.AI_PURPLE_900} />
               </Layout.Horizontal>
-              <Text
-                font={{ variation: FontVariation.BODY }}
-                onClick={() => setStatus(AIAnalysisStatus.NotInitiated)}
-                className={css.statusActionBtn}
-                color={Color.AI_PURPLE_700}
-              >
-                {getString('common.stop')}
-              </Text>
+              {showMinimalView ? (
+                <Icon
+                  name="small-cross"
+                  size={20}
+                  onClick={() => setStatus(AIAnalysisStatus.NotInitiated)}
+                  className={css.crossBtn}
+                />
+              ) : (
+                <Text
+                  font={{ variation: FontVariation.BODY }}
+                  onClick={() => setStatus(AIAnalysisStatus.NotInitiated)}
+                  className={css.statusActionBtn}
+                  color={Color.AI_PURPLE_700}
+                >
+                  {getString('common.stop')}
+                </Text>
+              )}
             </Layout.Horizontal>
             {showDelayMssg ? (
               <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
@@ -269,65 +301,60 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
         return (
           <Layout.Horizontal
             flex={{ justifyContent: 'flex-start' }}
-            className={cx(css.pill, { [css.successPill]: hasRemediations }, { [css.failurePill]: !hasRemediations })}
-            spacing="medium"
+            className={css.pill}
+            spacing={showMinimalView ? 'small' : 'medium'}
           >
             <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
               <Icon name="harness-copilot" size={25} />
               {hasRemediations ? (
-                <Text font={{ variation: FontVariation.BODY }}>
-                  {getString('pipeline.copilot.foundPossibleRemediations').concat(pluralize(remediations.length))}
-                </Text>
+                showMinimalView ? (
+                  <Text {...commonLabelProps} onClick={() => setShowPanel(true)}>
+                    {`${getString('common.viewText')} ${capitalize(getString('pipeline.copilot.remediations'))}`}
+                  </Text>
+                ) : (
+                  <Layout.Horizontal spacing="small">
+                    <Text font={{ variation: FontVariation.BODY }}>
+                      {getString('pipeline.copilot.foundPossibleRemediations').concat(pluralize(remediations.length))}
+                    </Text>
+                    <Text {...commonLabelProps} onClick={() => setShowPanel(true)}>
+                      {getString('common.viewText')}
+                    </Text>
+                  </Layout.Horizontal>
+                )
               ) : (
                 <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
                   <Text font={{ variation: FontVariation.BODY }}>
                     {getString('pipeline.copilot.noRemediationFound')}
                   </Text>
                   <Icon name="danger-icon" size={20} />
+                  <Text {...commonLabelProps} onClick={() => setStatus(AIAnalysisStatus.NotInitiated)}>
+                    {getString('close')}
+                  </Text>
                 </Layout.Horizontal>
               )}
             </Layout.Horizontal>
-            {hasRemediations ? (
-              <Text
-                font={{ variation: FontVariation.BODY }}
-                onClick={() => setShowPanel(true)}
-                className={css.statusActionBtn}
-                color={Color.AI_PURPLE_700}
-              >
-                {getString('common.viewText')}
-              </Text>
-            ) : (
-              <Text
-                font={{ variation: FontVariation.BODY }}
-                onClick={() => setStatus(AIAnalysisStatus.NotInitiated)}
-                className={css.statusActionBtn}
-                color={Color.AI_PURPLE_700}
-              >
-                {getString('close')}
-              </Text>
-            )}
           </Layout.Horizontal>
         )
       case AIAnalysisStatus.Failure:
         return (
-          <Layout.Horizontal
-            flex={{ justifyContent: 'flex-start' }}
-            className={cx(css.pill, css.failurePill)}
-            spacing="medium"
-          >
+          <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.pill} spacing="medium">
             <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
               <Icon name="harness-copilot" size={25} />
               {errorMssg ? <Text font={{ variation: FontVariation.BODY }}>{errorMssg}</Text> : null}
               <Icon name="danger-icon" size={20} />
             </Layout.Horizontal>
-            <Text
-              font={{ variation: FontVariation.BODY }}
-              onClick={fetchAnalysis}
-              className={css.statusActionBtn}
-              color={Color.AI_PURPLE_700}
-            >
-              {getString('retry')}
-            </Text>
+            {showMinimalView ? (
+              <Icon name="repeat" onClick={fetchAnalysis} color={Color.AI_PURPLE_700} className={css.copilot} />
+            ) : (
+              <Text
+                font={{ variation: FontVariation.BODY }}
+                onClick={fetchAnalysis}
+                className={css.statusActionBtn}
+                color={Color.AI_PURPLE_700}
+              >
+                {getString('retry')}
+              </Text>
+            )}
           </Layout.Horizontal>
         )
       default:
@@ -340,13 +367,16 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     error,
     logsToken,
     showDelayMssg,
+    showMinimalView,
     pipelineStagesMap,
     selectedStageId,
+    selectedStageExecutionId,
     pipelineExecutionDetail,
     selectedStepId,
     selectedStep,
     accountId,
-    controllerRef.current
+    controllerRef.current,
+    scope
   ])
 
   const renderRemediation = useCallback(

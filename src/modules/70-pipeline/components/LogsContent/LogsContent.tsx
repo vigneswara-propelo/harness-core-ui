@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
@@ -45,7 +45,8 @@ import {
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import HarnessCopilot from '../HarnessCopilot/HarnessCopilot'
+import HarnessCopilot from '@pipeline/components/HarnessCopilot/HarnessCopilot'
+import { ErrorScope } from '@pipeline/components/HarnessCopilot/AIDAUtils'
 import { useLogsContent } from './useLogsContent'
 import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
 import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/SingleSectionLogs'
@@ -385,7 +386,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
             enableForCD: CD_AI_ENHANCED_REMEDIATIONS
           }) ? (
             <Container className={css.copilot} width="40%" flex={{ justifyContent: 'flex-end' }}>
-              <HarnessCopilot mode="console-view" />
+              <HarnessCopilot mode="console-view" scope={ErrorScope.Step} />
             </Container>
           ) : null}
         </Layout.Horizontal>
@@ -440,12 +441,26 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
   const manuallySelected = React.useRef(false)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(status)
   const shouldShowInputOutput = ((stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
+  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
+  const { pipelineStagesMap, selectedStageId, pipelineExecutionDetail } = useExecutionContext()
 
   React.useEffect(() => {
     if (!shouldShowInputOutput && activeTab !== ConsoleDetailTab.CONSOLE_LOGS) {
       setActiveTab(ConsoleDetailTab.CONSOLE_LOGS)
     }
   }, [identifier, isStageExecutionInputConfigured, activeTab, shouldShowInputOutput])
+
+  const renderErrorMssgWrapper = useCallback((): React.ReactElement => {
+    return (
+      <>
+        <ExecutionStatusLabel status={'Failed' as ExecutionStatus} />
+        <div className={css.errorMsg}>
+          <StrTemplate className={css.errorTitle} stringID="errorSummaryText" tagName="div" />
+          <Text lineClamp={1}>{stageErrorMessage}</Text>
+        </div>
+      </>
+    )
+  }, [stageErrorMessage])
 
   return (
     <div className={css.tabs}>
@@ -496,11 +511,22 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
         )}
         {stageErrorMessage && (
           <div className={css.errorMsgWrapper}>
-            <ExecutionStatusLabel status={'Failed' as ExecutionStatus} />
-            <div className={css.errorMsg}>
-              <StrTemplate className={css.errorTitle} stringID="errorSummaryText" tagName="div" />
-              <Text lineClamp={1}>{stageErrorMessage}</Text>
-            </div>
+            {showHarnessCoPilot({
+              pipelineStagesMap,
+              selectedStageId,
+              pipelineExecutionDetail,
+              enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
+              enableForCD: CD_AI_ENHANCED_REMEDIATIONS
+            }) ? (
+              <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ right: 'small' }} width="100%">
+                <Layout.Horizontal flex>{renderErrorMssgWrapper()}</Layout.Horizontal>
+                <Container>
+                  <HarnessCopilot mode="console-view" scope={ErrorScope.Stage} />
+                </Container>
+              </Layout.Horizontal>
+            ) : (
+              renderErrorMssgWrapper()
+            )}
           </div>
         )}
       </Tabs>

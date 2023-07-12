@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly copilot: string
   readonly errorMsg: string
   readonly errorMsgWrapper: string
   readonly errorTitle: string
