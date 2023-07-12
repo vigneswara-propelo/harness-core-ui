@@ -29,7 +29,6 @@ import {
 import { useDeepCompareEffect } from '@common/hooks'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { errorCheck } from '@common/utils/formikHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { handleOperatorChange, operatorValues, setAllowedValuesOptions } from '../JiraApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -250,7 +249,6 @@ export function Jexl(props: SnowApprovalRejectionCriteriaProps): JSX.Element {
 }
 
 export function ServiceNowApprovalRejectionCriteria(props: SnowApprovalRejectionCriteriaProps): ReactElement {
-  const { CDS_SERVICENOW_USE_METADATA_V2 } = useFeatureFlags()
   const { values, onChange, title, readonly } = props
   const [type, setType] = useState<ApprovalRejectionCriteriaType>(values.type)
   const [allowedFieldKeys, setAllowedFieldKeys] = useState<SelectOption[]>([])
@@ -263,9 +261,8 @@ export function ServiceNowApprovalRejectionCriteria(props: SnowApprovalRejection
     if (!isEmpty(props.fieldList)) {
       // If the status list is non empty, initialise it so that status is by default a dropdown
       allowedFieldKeysToSet = props.fieldList.map(field => {
-        allowedValuesForFieldsToSet[field.key] = CDS_SERVICENOW_USE_METADATA_V2
-          ? setAllowedValuesOptions(field.allowedValues)
-          : (field.allowedValues as SelectOption[])
+        allowedValuesForFieldsToSet[field.key] = setAllowedValuesOptions(field?.allowedValues ?? [])
+
         return { label: field.name, value: field.key }
       })
     }
