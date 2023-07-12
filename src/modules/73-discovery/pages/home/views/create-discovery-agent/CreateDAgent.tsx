@@ -173,9 +173,8 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
               connectorRef: Yup.string().trim().required(getString('discovery.dAgentValidation.connectConnector')),
               discoveryNamespace: Yup.string().trim().required(getString('discovery.dAgentValidation.selectNamespace')),
               duration: Yup.number()
-                .min(0, getString('discovery.dAgentValidation.durationMaxMin'))
-                .max(60, getString('discovery.dAgentValidation.durationMaxMin'))
-                .required(getString('discovery.dAgentValidation.durationRequired')),
+                .min(1, getString('discovery.dAgentValidation.durationMaxMin'))
+                .max(10, getString('discovery.dAgentValidation.durationMaxMin')),
               nodeAgentSelector: Yup.string().trim(),
               minutes: Yup.number().moreThan(14, getString('discovery.dAgentCronError'))
             })}
@@ -292,7 +291,11 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
                               isQuartsExpressionSupported={false}
                             />
 
-                            <FormInput.Text name="duration" label={getString('discovery.forADurationOf')} />
+                            <FormInput.Text
+                              name="duration"
+                              inputGroup={{ type: 'number' }}
+                              label={getString('discovery.forADurationOf')}
+                            />
                           </Container>
                         </Layout.Vertical>
                       }

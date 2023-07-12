@@ -52,7 +52,7 @@ export default function DiscoveredResourcesGraph({
   const initialGraphNodes = getGraphNodesFromServiceList(serviceList)
   const initialGraphEdges = getGraphEdgesFromServiceConnections(connectionList)
 
-  if (initialGraphNodes.length === 0 || initialGraphEdges.length === 0) {
+  if (initialGraphNodes.length === 0 || !connectionList) {
     return (
       <Page.Body>
         <PageSpinner />

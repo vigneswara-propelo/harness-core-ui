@@ -23,7 +23,7 @@ dAgentValidation:
   connectConnector: Please select a Connector!
   selectNamespace: Please select a discovery namespace
   durationRequired: Discovery Agent duration is required field
-  durationMaxMin: Duration must be between 0 and 60 minutes
+  durationMaxMin: Duration must be between 1 and 10 minutes
   nodeAgentSelectorReq: Node selector for discovery agent is required
 networkMapTable:
   noOfService: No of service
