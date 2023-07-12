@@ -155,7 +155,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
     selectedStepId,
     pipelineExecutionDetail,
     queryParams,
-    downloadLogsAction
+    downloadLogsAction,
+    logsToken
   } = useExecutionContext()
   const { state, actions } = useLogsContent()
   const { getString } = useStrings()
@@ -336,7 +337,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
                   logsScope: LogsScope.Step,
                   state,
                   uniqueKey: currentStepId,
-                  logBaseKey: currentStep?.logBaseKey
+                  logBaseKey: currentStep?.logBaseKey,
+                  logsToken
                 })
               }}
             />

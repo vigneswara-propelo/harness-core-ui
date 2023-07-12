@@ -47,9 +47,9 @@ export interface Line {
 }
 
 export interface ResponseDownloadLog {
-  expires?: number
+  expires?: string
   link?: string
-  status?: 'in progress' | 'success' | 'error' | 'queue'
+  status?: 'in_progress' | 'success' | 'error' | 'queued'
   error_msg?: string
   message?: string
 }
@@ -258,7 +258,7 @@ export type DownloadLogsProps = Omit<GetProps<ResponseDownloadLog, Error, Downlo
  */
 export const DownloadLogs = (props: DownloadLogsProps) => (
   <Get<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>
-    path={`/blob/prefix`}
+    path={`/blob/download`}
     base={getConfig('log-service')}
     {...props}
   />
@@ -272,7 +272,7 @@ export type UseDownloadLogsProps = Omit<UseGetProps<ResponseDownloadLog, Error, 
  * Retrieve download logs link response from log-service
  */
 export const useDownloadLogs = (props: UseDownloadLogsProps) =>
-  useGet<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>(`/blob/prefix`, {
+  useGet<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>(`/blob/download`, {
     base: getConfig('log-service'),
     ...props
   })
@@ -288,7 +288,7 @@ export const downloadLogsPromise = (
 ) =>
   getUsingFetch<ResponseDownloadLog, Error, DownloadLogsQueryParams, void>(
     getConfig('log-service'),
-    `/blob/prefix`,
+    `/blob/download`,
     props,
     signal
   )

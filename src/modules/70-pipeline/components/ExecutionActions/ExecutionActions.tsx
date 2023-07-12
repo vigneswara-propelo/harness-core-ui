@@ -49,6 +49,7 @@ import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
@@ -193,6 +194,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     nodeExecutionId: defaultTo(stageId, '')
   })
 
+  const { logsToken } = useExecutionContext()
   const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -418,7 +420,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                   downloadLogsAction({
                     logsScope: LogsScope.Pipeline,
                     runSequence,
-                    uniqueKey: pipelineIdentifier
+                    uniqueKey: pipelineIdentifier,
+                    logsToken
                   })
                 }
                 disabled={!isExecutionFinishedAnyhow(executionStatus)}

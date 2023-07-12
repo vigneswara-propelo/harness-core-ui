@@ -10,12 +10,11 @@ import { useParams } from 'react-router-dom'
 import { getErrorInfoFromErrorObject } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { downloadLogsPromise } from 'services/logs'
+import { downloadLogsPromise, getTokenPromise } from 'services/logs'
 import { UseStringsReturn, useStrings } from 'framework/strings'
 import {
   DownloadActionProps,
   DownloadLogsProps,
-  DownloadLogsResponseStatus,
   DownloadLogsToaster,
   LogsScope,
   handleDownload,
@@ -32,6 +31,7 @@ const checkStatusAndDownload = async (
   toasterKey: string,
   accountID: string,
   prefix: string,
+  logsToken: string,
   getString: UseStringsReturn['getString'],
   retries = 0,
   startTime = 0
@@ -41,19 +41,19 @@ const checkStatusAndDownload = async (
   }
 
   try {
+    // istanbul ignore next
     if (retries >= MAX_RETRIES) {
-      handleToasters(
-        toasterKey,
-        true,
-        DownloadLogsResponseStatus.ERROR,
-        getString,
-        getString('pipeline.downloadLogs.apiRetriedExceeded')
-      )
+      handleToasters(toasterKey, true, 'error', getString, getString('pipeline.downloadLogs.apiRetriedExceeded'))
       return
     }
 
     const response = await downloadLogsPromise({
-      queryParams: { accountID, prefix }
+      queryParams: { accountID, prefix },
+      requestOptions: {
+        headers: {
+          'X-Harness-Token': logsToken
+        }
+      }
     })
 
     if (!response?.status) {
@@ -64,38 +64,33 @@ const checkStatusAndDownload = async (
     const currentTime = new Date().getTime()
     const expirationTime = startTime + 30 * 60 * 1000 // expire time set to 30min from start
 
-    if (response?.status === DownloadLogsResponseStatus.SUCCESS && response?.link) {
-      handleToasters(toasterKey, true, DownloadLogsResponseStatus.SUCCESS, getString)
+    if (response?.status === 'success' && response?.link) {
+      handleToasters(toasterKey, true, 'success', getString)
       handleDownload(response?.link)
       return
-    } else if (response?.status === DownloadLogsResponseStatus.ERROR) {
+    } else if (response?.status === 'error') {
       handleToasters(
         toasterKey,
         true,
-        DownloadLogsResponseStatus.ERROR,
+        'error',
         getString,
         getString('pipeline.downloadLogs.downloadRequestFailed', { errorMsg: response?.message || response?.error_msg })
       )
     } else if (currentTime < expirationTime) {
       await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS))
-      await checkStatusAndDownload(scope, toasterKey, accountID, prefix, getString, retries + 1, startTime)
+      await checkStatusAndDownload(scope, toasterKey, accountID, prefix, logsToken, getString, retries + 1, startTime)
     } else {
-      handleToasters(
-        toasterKey,
-        true,
-        DownloadLogsResponseStatus.ERROR,
-        getString,
-        getString('pipeline.downloadLogs.expiredError')
-      )
+      handleToasters(toasterKey, true, 'error', getString, getString('pipeline.downloadLogs.expiredError'))
     }
   } catch (error) {
-    handleToasters(toasterKey, true, DownloadLogsResponseStatus.ERROR, getString, getErrorInfoFromErrorObject(error))
+    handleToasters(toasterKey, true, 'error', getString, getErrorInfoFromErrorObject(error))
   }
 }
 
 export function useDownloadLogs(): DownloadLogsProps {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const logsTokenRef = React.useRef('')
 
   React.useEffect(() => {
     return () => {
@@ -104,7 +99,7 @@ export function useDownloadLogs(): DownloadLogsProps {
   }, [])
 
   const downloadLogsAction = async (props: DownloadActionProps): Promise<void> => {
-    const { logsScope, state, runSequence, uniqueKey, logBaseKey } = props
+    const { logsScope, state, runSequence, uniqueKey, logBaseKey, logsToken } = props
     const logKeyFromState = getLogPrefix(state)
     const prefix =
       logsScope === LogsScope.Pipeline
@@ -112,8 +107,26 @@ export function useDownloadLogs(): DownloadLogsProps {
         : logBaseKey || logKeyFromState
 
     const toasterKey = logsScope === LogsScope.Pipeline ? `${uniqueKey}_${runSequence}` : uniqueKey
-    handleToasters(toasterKey, false, DownloadLogsResponseStatus.IN_PROGRESS, getString)
-    await checkStatusAndDownload(logsScope, toasterKey, accountId, defaultTo(prefix, ''), getString)
+    handleToasters(toasterKey, false, 'in_progress', getString)
+
+    // fetch token if not present
+    if (!logsToken) {
+      const tokenResponse = await getTokenPromise({
+        queryParams: { accountID: accountId }
+      })
+      logsTokenRef.current = tokenResponse as any
+    } else {
+      logsTokenRef.current = logsToken
+    }
+
+    await checkStatusAndDownload(
+      logsScope,
+      toasterKey,
+      accountId,
+      defaultTo(prefix, ''),
+      logsTokenRef.current,
+      getString
+    )
   }
 
   return { downloadLogsAction }

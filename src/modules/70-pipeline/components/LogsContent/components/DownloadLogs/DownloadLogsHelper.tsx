@@ -10,6 +10,7 @@ import { Intent, Position, Toaster } from '@blueprintjs/core'
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { UseStringsReturn } from 'framework/strings'
+import { ResponseDownloadLog } from 'services/logs'
 import { State } from '../../LogsState/types'
 import css from './DownloadLogs.module.scss'
 
@@ -19,16 +20,12 @@ export enum LogsScope {
   Stage = 'Stage'
 }
 
-export enum DownloadLogsResponseStatus {
-  IN_PROGRESS = 'in progress',
-  SUCCESS = 'success',
-  ERROR = 'error',
-  QUEUE = 'queue'
-}
+export type DownloadLogsResponseStatus = Required<ResponseDownloadLog>['status']
 
 export interface DownloadActionProps {
   logsScope: LogsScope
   uniqueKey: string // pipelineId in case of pipeline logs for others it can be nodeUuid.
+  logsToken?: string
   logBaseKey?: string
   runSequence?: number
   state?: State
@@ -45,10 +42,10 @@ export const DownloadLogsToaster = Toaster.create({
 })
 
 const statusToIntentMap: Record<DownloadLogsResponseStatus, Intent> = {
-  [DownloadLogsResponseStatus.SUCCESS]: Intent.SUCCESS,
-  [DownloadLogsResponseStatus.IN_PROGRESS]: Intent.PRIMARY,
-  [DownloadLogsResponseStatus.QUEUE]: Intent.PRIMARY,
-  [DownloadLogsResponseStatus.ERROR]: Intent.DANGER
+  success: Intent.SUCCESS,
+  in_progress: Intent.PRIMARY,
+  queued: Intent.PRIMARY,
+  error: Intent.DANGER
 }
 
 export const handleDownload = async (url: string): Promise<void> => {
