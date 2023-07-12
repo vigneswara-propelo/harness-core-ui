@@ -335,32 +335,30 @@ export function PipelineCanvas({
       )
     } else {
       return (
-        <PipelineVariablesContextProvider pipeline={pipeline} storeMetadata={storeMetadata}>
-          <ModalDialog
-            width={dialogWidth}
-            enforceFocus={false}
-            isOpen={true}
-            onClose={onCloseCreate}
-            showOverlay={loadingSetting}
-            title={modalMode === 'create' ? getString('moduleRenderer.newPipeLine') : getString('editPipeline')}
-          >
-            <CreatePipelines
-              afterSave={onSubmit}
-              initialValues={merge(pipeline, {
-                repo: repoName || gitDetails.repoIdentifier || '',
-                branch: branch || gitDetails.branch || '',
-                connectorRef: defaultTo(connectorRef, ''),
-                storeType: getPipelineStoreType(),
-                filePath: gitDetails.filePath
-              })}
-              closeModal={onCloseCreate}
-              gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
-              primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
-              isReadonly={isReadonly}
-              isGitXEnforced={enforceGitXSetting?.data?.value === 'true'}
-            />
-          </ModalDialog>
-        </PipelineVariablesContextProvider>
+        <ModalDialog
+          width={dialogWidth}
+          enforceFocus={false}
+          isOpen={true}
+          onClose={onCloseCreate}
+          showOverlay={loadingSetting}
+          title={modalMode === 'create' ? getString('moduleRenderer.newPipeLine') : getString('editPipeline')}
+        >
+          <CreatePipelines
+            afterSave={onSubmit}
+            initialValues={merge(pipeline, {
+              repo: repoName || gitDetails.repoIdentifier || '',
+              branch: branch || gitDetails.branch || '',
+              connectorRef: defaultTo(connectorRef, ''),
+              storeType: getPipelineStoreType(),
+              filePath: gitDetails.filePath
+            })}
+            closeModal={onCloseCreate}
+            gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
+            primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
+            isReadonly={isReadonly}
+            isGitXEnforced={enforceGitXSetting?.data?.value === 'true'}
+          />
+        </ModalDialog>
       )
     }
   }, [
