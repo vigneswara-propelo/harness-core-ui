@@ -28,6 +28,11 @@ exports[`Unit tests for cv connector hoc should render form 1`] = `
           </svg>
         </span>
       </span>
+      <span
+        class="StepWizard--title StepWizard--header"
+      >
+        connectors.prometheusLabel
+      </span>
       <div
         class="StepWizard--navStep StepWizard--activeStep"
       >

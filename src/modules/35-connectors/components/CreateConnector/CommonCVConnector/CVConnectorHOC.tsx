@@ -15,7 +15,11 @@ import {
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO, ConnectorConfigDTO } from 'services/cd-ng'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import { getConnectorIconByType, getConnectorIconPropsByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import {
+  getConnectorIconByType,
+  getConnectorIconPropsByType,
+  getConnectorTitleIdByType
+} from '@connectors/pages/connectors/utils/ConnectorHelper'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import DelegateSelectorStep, { DelegateSelectorProps } from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import type { ConnectionConfigProps } from './constants'
@@ -60,7 +64,11 @@ export function cvConnectorHOC(hocInput: CVConnectorHOCInput): (props: CreateCon
       : null
 
     return (
-      <StepWizard icon={getConnectorIconByType(connectorType)} iconProps={getConnectorIconPropsByType(connectorType)}>
+      <StepWizard
+        icon={getConnectorIconByType(connectorType)}
+        iconProps={getConnectorIconPropsByType(connectorType)}
+        title={getString(getConnectorTitleIdByType(connectorType))}
+      >
         <ConnectorDetailsStep
           type={connectorType}
           name={getString('overview')}

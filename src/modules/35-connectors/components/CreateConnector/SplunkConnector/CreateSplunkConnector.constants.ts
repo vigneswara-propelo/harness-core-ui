@@ -10,5 +10,9 @@ export const getAuthOptions = (getString: UseStringsReturn['getString']): Select
   {
     label: getString('connectors.bearerToken'),
     value: AuthTypes.BEARER_TOKEN
+  },
+  {
+    label: getString('connectors.elk.noAuthentication'),
+    value: AuthTypes.ANNONYMOUS
   }
 ]

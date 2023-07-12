@@ -188,8 +188,6 @@ describe('Unit tests for createAppdConnector', () => {
 
     await waitFor(() => expect(getByText('UrlLabel')).not.toBeNull())
 
-    screen.debug(container, 30000)
-
     // expect recieved value to be there
     expect(document.body.querySelector(`input[value="${SplunkURL}"]`)).not.toBeNull()
     expect(document.body.querySelector(`input[value="splunkUsername"]`)).not.toBeNull()
@@ -249,7 +247,7 @@ describe('Unit tests for createAppdConnector', () => {
               orgIdentifier: 'default',
               projectIdentifier: 'Test_101',
               tags: {},
-              type: 'AppDynamics',
+              type: 'Splunk',
               spec: {
                 passwordRef: {
                   identifier: 'abc',
@@ -310,9 +308,70 @@ describe('Unit tests for createAppdConnector', () => {
         },
         tags: {},
         tokenRef: undefined,
-        type: 'AppDynamics',
+        type: 'Splunk',
         url: 'http://dgdgtrty.com',
         username: 'new_and_updateduser'
+      })
+    )
+  })
+
+  test('Shoud test if No Auth option is selected, then no auth fields are rendered', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateSplunkConnector
+          accountId="dummyAccountId"
+          orgIdentifier="dummyOrgId"
+          projectIdentifier="dummyProjectId"
+          onClose={noop}
+          onSuccess={noop}
+          isEditMode={false}
+          setIsEditMode={noop}
+          connectorInfo={
+            {
+              name: 'dasdadasdasda',
+              identifier: 'dasdadasdasda',
+              description: '',
+              orgIdentifier: 'default',
+              projectIdentifier: 'Test_101',
+              tags: {},
+              type: 'Splunk',
+              spec: {
+                type: 'Anonymous',
+                splunkUrl: 'https://sdfs.com',
+                delegateSelectors: []
+              }
+            } as unknown as ConnectorInfoDTO
+          }
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getByText('UrlLabel')).not.toBeNull())
+
+    // expect recieved value to be there
+    expect(container.querySelector(`input[value="https://sdfs.com"]`)).not.toBeNull()
+    expect(container.querySelector(`input[value="connectors.elk.noAuthentication"]`)).not.toBeNull()
+
+    expect(document.body.querySelector(`input[name="username"]`)).toBeNull()
+
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+
+    await waitFor(() =>
+      expect(onNextMock).toHaveBeenCalledWith({
+        accountId: 'dummyAccountId',
+        authType: 'Anonymous',
+        description: '',
+        identifier: 'dasdadasdasda',
+        name: 'dasdadasdasda',
+        orgIdentifier: 'dummyOrgId',
+        passwordRef: undefined,
+        projectIdentifier: 'dummyProjectId',
+        spec: { delegateSelectors: [], splunkUrl: 'https://sdfs.com', type: 'Anonymous' },
+        tags: {},
+        tokenRef: undefined,
+        type: 'Splunk',
+        url: 'https://sdfs.com',
+        username: undefined
       })
     )
   })

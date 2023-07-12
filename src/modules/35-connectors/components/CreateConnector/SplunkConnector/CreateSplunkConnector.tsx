@@ -106,7 +106,7 @@ function SplunkConfigStep(props: ConnectionConfigProps): JSX.Element {
               />
             </Layout.Horizontal>
 
-            {formikProps.values.authType === AuthTypes.USER_PASSWORD ? (
+            {formikProps.values.authType === AuthTypes.USER_PASSWORD && (
               <>
                 <FormInput.Text name="username" label={getString('username')} />
                 <ConnectorSecretField
@@ -120,7 +120,9 @@ function SplunkConfigStep(props: ConnectionConfigProps): JSX.Element {
                   }}
                 />
               </>
-            ) : (
+            )}
+
+            {formikProps.values.authType === AuthTypes.BEARER_TOKEN && (
               <SecretInput name={'tokenRef'} label={getString('connectors.bearerToken')} scope={scope} />
             )}
           </Layout.Vertical>

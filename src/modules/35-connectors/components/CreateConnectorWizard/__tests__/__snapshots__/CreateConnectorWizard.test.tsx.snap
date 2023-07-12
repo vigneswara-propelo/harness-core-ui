@@ -40,6 +40,11 @@ exports[`Create connector Wizard should open CreateConnectorWizard for App Dynam
               </svg>
             </span>
           </span>
+          <span
+            class="StepWizard--title StepWizard--header"
+          >
+            connectors.title.appdynamics
+          </span>
           <div
             class="StepWizard--navStep StepWizard--activeStep"
           >
@@ -4510,6 +4515,11 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Prometheu
               </svg>
             </span>
           </span>
+          <span
+            class="StepWizard--title StepWizard--header"
+          >
+            connectors.prometheusLabel
+          </span>
           <div
             class="StepWizard--navStep StepWizard--activeStep"
           >
@@ -4901,6 +4911,11 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Splunk 1`
                 </g>
               </svg>
             </span>
+          </span>
+          <span
+            class="StepWizard--title StepWizard--header"
+          >
+            connectors.title.splunk
           </span>
           <div
             class="StepWizard--navStep StepWizard--activeStep"
@@ -5680,6 +5695,11 @@ exports[`Create connector Wizard should open CreateConnectorWizard for custom 1`
                 />
               </svg>
             </span>
+          </span>
+          <span
+            class="StepWizard--title StepWizard--header"
+          >
+            connectors.customLabel
           </span>
           <div
             class="StepWizard--navStep StepWizard--activeStep"
