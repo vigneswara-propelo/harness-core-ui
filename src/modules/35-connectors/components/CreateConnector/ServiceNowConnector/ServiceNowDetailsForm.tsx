@@ -282,43 +282,32 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                   </Container>
                 ) : null}
                 {formik.values.authType === AuthTypes.ADFS ? (
-                  <>
-                    <Layout.Horizontal>
-                      <Layout.Vertical className={css.detailsFormWidth} margin={{ right: 'xxlarge' }}>
-                        <SecretInput
-                          name={'resourceIdRef'}
-                          label={getString('connectors.serviceNow.resourceID')}
-                          isMultiTypeSelect
-                        />
-                        <SecretInput
-                          name={'certificateRef'}
-                          label={getString('common.certificate')}
-                          isMultiTypeSelect
-                        />
-                      </Layout.Vertical>
-                      <Layout.Vertical className={css.detailsFormWidth}>
-                        <SecretInput
-                          name={'clientIdRef'}
-                          label={getString('connectors.serviceNow.clientID')}
-                          isMultiTypeSelect
-                        />
-                        <SecretInput
-                          name={'privateKeyRef'}
-                          label={getString('connectors.serviceNow.privateKey')}
-                          isMultiTypeSelect
-                        />
-                      </Layout.Vertical>
-                    </Layout.Horizontal>
+                  <Layout.Vertical className={css.detailsFormWidth}>
+                    <SecretInput
+                      name={'resourceIdRef'}
+                      label={getString('connectors.serviceNow.resourceID')}
+                      isMultiTypeSelect
+                    />
+                    <SecretInput name={'certificateRef'} label={getString('common.certificate')} isMultiTypeSelect />
+                    <SecretInput
+                      name={'clientIdRef'}
+                      label={getString('connectors.serviceNow.clientID')}
+                      isMultiTypeSelect
+                    />
+                    <SecretInput
+                      name={'privateKeyRef'}
+                      label={getString('connectors.serviceNow.privateKey')}
+                      isMultiTypeSelect
+                    />
                     <FormInput.Text
                       name="adfsUrl"
                       placeholder={getString('UrlLabel')}
                       label={getString('connectors.serviceNow.adfsUrl')}
-                      className={css.detailsFormWidth}
                     />
-                  </>
+                  </Layout.Vertical>
                 ) : null}
                 {formik.values.authType === AuthTypes.REFRESH_TOKEN ? (
-                  <Layout.Vertical className={css.detailsFormWidth} margin={{ right: 'xxlarge' }}>
+                  <Layout.Vertical className={css.detailsFormWidth}>
                     <SecretInput
                       name={'clientIdRef'}
                       label={getString('connectors.serviceNow.clientID')}
