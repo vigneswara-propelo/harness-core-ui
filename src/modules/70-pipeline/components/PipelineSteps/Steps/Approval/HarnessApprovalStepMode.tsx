@@ -316,7 +316,7 @@ function FormContent({
                         <>
                           <div className={css.headerRow}>
                             <String className={css.label} stringID="variableNameLabel" />
-                            <String className={css.label} stringID="common.configureOptions.defaultValue" />
+                            <String className={css.label} stringID="valueLabel" />
                           </div>
                           {(formik.values.spec.approverInputs as ApproverInputsSubmitCallInterface[]).map(
                             (_unused: ApproverInputsSubmitCallInterface, i: number) => (
