@@ -37,6 +37,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
@@ -99,23 +100,28 @@ export default function ArtifactsSelection({
   const [context, setModalContext] = useState(ModalViewFor.PRIMARY)
   const [sidecarIndex, setEditIndex] = useState(0)
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
-
+  const [artifactTypes, setArtifactTypes] = useState<ArtifactType[]>(allowedArtifactTypes[deploymentType])
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { BAMBOO_ARTIFACT_NG } = useFeatureFlags()
+  const { BAMBOO_ARTIFACT_NG, CDS_GITHUB_PACKAGES } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
     if (
       BAMBOO_ARTIFACT_NG &&
       isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Bamboo)
+      !artifactTypes?.includes(ENABLED_ARTIFACT_TYPES.Bamboo)
     ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Bamboo)
+      setArtifactTypes([...artifactTypes, ENABLED_ARTIFACT_TYPES.Bamboo])
+    }
+    if (!CDS_GITHUB_PACKAGES && isSshOrWinrmDeploymentType(deploymentType)) {
+      setArtifactTypes(
+        artifactTypes.filter((artifact: string) => artifact !== ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -558,7 +564,7 @@ export default function ArtifactsSelection({
         <ArtifactWizard
           artifactInitialValue={getArtifactInitialValues()}
           iconsProps={getIconProps()}
-          types={availableArtifactTypes ?? allowedArtifactTypes[deploymentType]}
+          types={availableArtifactTypes ?? artifactTypes}
           expressions={expressions}
           allowableTypes={allowableTypes}
           lastSteps={artifactSelectionLastSteps}
@@ -607,7 +613,9 @@ export default function ArtifactsSelection({
       expressions,
       allowableTypes,
       isEditMode,
-      artifactLastStepProps
+      artifactLastStepProps,
+      deploymentType,
+      artifactTypes
     ]
   )
 

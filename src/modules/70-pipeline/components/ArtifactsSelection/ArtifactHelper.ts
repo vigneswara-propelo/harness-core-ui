@@ -13,7 +13,7 @@ import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validatio
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType, isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ArtifactType } from './ArtifactInterface'
 
 export enum ModalViewFor {
@@ -217,7 +217,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -230,7 +231,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -380,4 +382,28 @@ export const getInitialSelectedArtifactValue = (
     }
   }
   return null
+}
+
+export enum PACKAGE_TYPES {
+  CONTAINER = 'container',
+  MAVEN = 'maven',
+  NPM = 'npm',
+  NUGET = 'nuget'
+}
+
+export const packageTypesList: SelectOption[] = [
+  { label: 'Container', value: PACKAGE_TYPES.CONTAINER },
+  { label: 'Maven', value: PACKAGE_TYPES.MAVEN },
+  { label: 'Npm', value: PACKAGE_TYPES.NPM },
+  { label: 'Nuget', value: PACKAGE_TYPES.NUGET }
+]
+
+export const getPackageTypeList = (deploymentType: string): SelectOption[] => {
+  if (isSshOrWinrmDeploymentType(deploymentType)) {
+    return [
+      { label: 'Container', value: PACKAGE_TYPES.CONTAINER },
+      { label: 'Maven', value: PACKAGE_TYPES.MAVEN }
+    ]
+  }
+  return packageTypesList
 }

@@ -233,6 +233,7 @@ export interface GithubPackageRegistryProps {
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
   editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
+  selectedDeploymentType?: string
 }
 
 export interface ACRArtifactProps {

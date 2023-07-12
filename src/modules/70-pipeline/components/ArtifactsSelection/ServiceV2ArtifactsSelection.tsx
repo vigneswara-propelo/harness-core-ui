@@ -56,6 +56,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 // eslint-disable-next-line no-restricted-imports
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
+import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
@@ -163,16 +164,22 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { BAMBOO_ARTIFACT_NG } = useFeatureFlags()
+  const { BAMBOO_ARTIFACT_NG, CDS_GITHUB_PACKAGES } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const [artifactTypes, setArtifactTypes] = useState<ArtifactType[]>(allowedArtifactTypes[deploymentType])
 
   useEffect(() => {
     if (
       BAMBOO_ARTIFACT_NG &&
       isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Bamboo)
+      !artifactTypes?.includes(ENABLED_ARTIFACT_TYPES.Bamboo)
     ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Bamboo)
+      setArtifactTypes([...artifactTypes, ENABLED_ARTIFACT_TYPES.Bamboo])
+    }
+    if (!CDS_GITHUB_PACKAGES && isSshOrWinrmDeploymentType(deploymentType)) {
+      setArtifactTypes(
+        artifactTypes.filter((artifact: string) => artifact !== ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -683,7 +690,7 @@ export default function ServiceV2ArtifactsSelection({
       <ArtifactWizard
         artifactInitialValue={getArtifactInitialValues}
         iconsProps={getIconProps}
-        types={availableArtifactTypes ?? allowedArtifactTypes[deploymentType]}
+        types={availableArtifactTypes ?? artifactTypes}
         expressions={expressions}
         allowableTypes={allowableTypes}
         lastSteps={artifactSelectionLastSteps}
@@ -732,7 +739,8 @@ export default function ServiceV2ArtifactsSelection({
       isEditMode,
       isArtifactEditMode,
       artifactLastStepProps,
-      renderExistingArtifact
+      renderExistingArtifact,
+      artifactTypes
     ]
   )
 

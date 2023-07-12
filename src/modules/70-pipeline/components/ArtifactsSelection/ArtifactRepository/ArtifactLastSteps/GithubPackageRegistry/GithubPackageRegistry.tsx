@@ -57,27 +57,19 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
-import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
+import { isSshOrWinrmDeploymentType, getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
+import {
+  ArtifactIdentifierValidation,
+  ModalViewFor,
+  tagOptions,
+  PACKAGE_TYPES,
+  getPackageTypeList
+} from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { GithubPackageRegistryArtifactDigestField } from './GithubPackageRegistryDigestField'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
-export enum PACKAGE_TYPES {
-  CONTAINER = 'container',
-  MAVEN = 'maven',
-  NPM = 'npm',
-  NUGET = 'nuget'
-}
-
-const packageTypesList: SelectOption[] = [
-  { label: 'Container', value: PACKAGE_TYPES.CONTAINER },
-  { label: 'Maven', value: PACKAGE_TYPES.MAVEN },
-  { label: 'Npm', value: PACKAGE_TYPES.NPM },
-  { label: 'Nuget', value: PACKAGE_TYPES.NUGET }
-]
 
 const packageSourcesList: SelectOption[] = [
   { label: 'Organization', value: PackageSourceTypes.Org },
@@ -95,6 +87,7 @@ function FormComponent({
   isMultiArtifactSource,
   initialValues,
   editArtifactModePrevStepData,
+  deploymentType,
   selectedArtifact
 }: any) {
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
@@ -114,6 +107,9 @@ function FormComponent({
   const connectorRefValue = getGenuineValue(
     defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   )
+  const isSshOrWinrm = React.useMemo(() => {
+    return isSshOrWinrmDeploymentType(deploymentType)
+  }, [deploymentType])
   const packageNameValue = getGenuineValue(formik.values.spec.packageName || initialValues?.spec?.packageName)
   const orgValue = getGenuineValue(formik.values.spec.org)
 
@@ -123,10 +119,13 @@ function FormComponent({
   )
 
   useEffect(() => {
+    if (isSshOrWinrm) {
+      return formik.setFieldValue('spec.packageType', defaultTo(packageTypeValue, defaultPackageType.value))
+    }
     if (packageTypeValue !== defaultPackageType.value) {
       formik.setFieldValue('spec.packageType', defaultPackageType.value)
     }
-  }, [packageTypeValue, defaultPackageType])
+  }, [packageTypeValue, defaultPackageType, deploymentType])
 
   const {
     data: packageDetails,
@@ -216,6 +215,9 @@ function FormComponent({
     )
   })
 
+  const packageTypesList = React.useMemo(() => {
+    return getPackageTypeList(deploymentType)
+  }, [deploymentType])
   const getVersionFieldHelperText = () => {
     return (
       getMultiTypeFromValue(formik.values?.version) === MultiTypeInputType.FIXED &&
@@ -245,8 +247,8 @@ function FormComponent({
               items={packageTypesList}
               name="spec.packageType"
               // Fixing the default value to container since the input is disabled, this ensures value doesn't get cleared in case of artifact source template
-              value={defaultPackageType}
-              disabled
+              value={isSshOrWinrm ? formik.values?.spec?.packageType : defaultPackageType}
+              disabled={!isSshOrWinrm}
               onChange={value => {
                 formik.setValues({
                   ...omit(formik.values, ['packageSource']),
@@ -677,7 +679,8 @@ export function GithubPackageRegistry(
     prevStepData,
     selectedArtifact,
     artifactIdentifiers,
-    editArtifactModePrevStepData
+    editArtifactModePrevStepData,
+    selectedDeploymentType
   } = props
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
@@ -829,7 +832,7 @@ export function GithubPackageRegistry(
         }}
       >
         {formik => {
-          return <FormComponent {...props} formik={formik} />
+          return <FormComponent {...props} formik={formik} deploymentType={selectedDeploymentType} />
         }}
       </Formik>
     </Layout.Vertical>
