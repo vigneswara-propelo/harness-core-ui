@@ -29,6 +29,7 @@ import AccessTokenCalloutForCommit from '@common/components/AccessTokenCalloutFo
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { StringsMap } from 'stringTypes'
+import { isOnPrem } from '@common/utils/utils'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
 import css from './SaveToGitFormV2.module.scss'
 
@@ -159,7 +160,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
         {getString('common.git.saveResourceLabel', { resource: props.resource.type })}
       </Text>
 
-      {PIE_GITX_OAUTH ? (
+      {PIE_GITX_OAUTH && !isOnPrem ? (
         <AccessTokenCalloutForCommit connectorIdWithScope={resource?.storeMetadata?.connectorRef || ''} />
       ) : null}
 
