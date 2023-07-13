@@ -21,7 +21,7 @@ describe('Run Tests Step', () => {
     selectStepInStepLibrary('Run Tests')
     cy.get('button[data-testid="cr-field-spec.connectorRef"]').click({ force: true })
     cy.wait(500)
-    cy.get('.ConnectorReferenceField-module_leftInfo_NnbjCW').eq(0).click({ force: true })
+    cy.get('span[data-icon="pipeline-approval"]').first().click({ force: true })
     cy.get('.bp3-button-text').contains('Apply Selected').click()
     cy.get('.bp3-input-group').eq(1).type('Image')
     cy.get('.bp3-input-group').eq(2).click()
