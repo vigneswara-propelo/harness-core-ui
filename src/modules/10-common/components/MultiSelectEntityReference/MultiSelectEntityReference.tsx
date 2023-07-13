@@ -58,23 +58,9 @@ export type ScopeAndIdentifier = {
   scope: Scope
   identifier: string
 }
-type CheckedItemsData<T> = {
-  items: T[]
-  scopedItemsTotal: number
-  updatedWithOldData: boolean
-}
 
-type CheckedItems<T> = {
-  [Scope.PROJECT]: CheckedItemsData<T>
-  [Scope.ORG]: CheckedItemsData<T>
-  [Scope.ACCOUNT]: CheckedItemsData<T>
-  total: number
-}
-
-type SelectDTO<T> = {
-  selectedData: T[]
-  previousSelectedItemsUuidAndScope: ScopeAndIdentifier[] | undefined
-  scopesUpdatedWithPreviousData: ScopeUpdatedWithPreviousData
+const getScopedItems = (items: ScopeAndIdentifier[] = [], scope: Scope) => {
+  return items.filter(item => item.scope === scope)
 }
 
 export interface MultiSelectEntityReferenceProps<T> {
@@ -106,14 +92,7 @@ export function getDefaultScope(orgIdentifier?: string, projectIdentifier?: stri
   }
   return Scope.ACCOUNT
 }
-const intializeCheckedList = () => {
-  return {
-    [Scope.PROJECT]: { items: [], scopedItemsTotal: 0, updatedWithOldData: false },
-    [Scope.ORG]: { items: [], scopedItemsTotal: 0, updatedWithOldData: false },
-    [Scope.ACCOUNT]: { items: [], scopedItemsTotal: 0, updatedWithOldData: false },
-    total: 0
-  }
-}
+
 export function MultiSelectEntityReference<T extends Identifier>(
   props: MultiSelectEntityReferenceProps<T>
 ): JSX.Element {
@@ -144,54 +123,18 @@ export function MultiSelectEntityReference<T extends Identifier>(
   const [selectedRecord, setSelectedRecord] = useState<T>()
   const [renderedList, setRenderedList] = useState<JSX.Element>()
 
-  const [checkedItems, setCheckedItems] = useState<CheckedItems<T>>(intializeCheckedList())
-  const getScopeAndUuidFromSelectDTO = (onSelectDTO: SelectDTO<T>): ScopeAndIdentifier[] => {
-    const scopeAndUuidArray: ScopeAndIdentifier[] = []
-    if (onSelectDTO?.scopesUpdatedWithPreviousData) {
-      onSelectDTO.previousSelectedItemsUuidAndScope?.forEach((el: ScopeAndIdentifier) => {
-        if (!onSelectDTO.scopesUpdatedWithPreviousData[el.scope]) {
-          scopeAndUuidArray.push(el)
-        }
-      })
-    }
-    onSelectDTO?.selectedData.forEach(el => {
-      scopeAndUuidArray.push({ scope: getScopeFromDTO(el), identifier: el.identifier })
-    })
-    return scopeAndUuidArray
-  }
-  useEffect(() => {
-    if (selectedItemsUuidAndScope && data) {
-      const tempCheckedItems: CheckedItems<T> = checkedItems
-      let isItemListUpdated = false
-      selectedItemsUuidAndScope.forEach(el => {
-        if (el.scope === selectedScope) {
-          const item = data.find(_el => _el.identifier === el.identifier)?.record
-          if (
-            item &&
-            tempCheckedItems[el.scope].items.findIndex(_el => _el.identifier === item.identifier) === -1 &&
-            !tempCheckedItems[el.scope].updatedWithOldData
-          ) {
-            tempCheckedItems[el.scope].items.push(item)
-            isItemListUpdated = true
-          }
-        }
-      })
-      if (isItemListUpdated) {
-        tempCheckedItems[selectedScope].updatedWithOldData = isItemListUpdated
-      }
-      setCheckedItems(tempCheckedItems)
-    }
-  }, [data])
+  const [checkedItems, setCheckedItems] = useState<ScopeAndIdentifier[]>([])
+
   useEffect(() => {
     if (selectedItemsUuidAndScope) {
-      const tempCheckedItems: CheckedItems<T> = checkedItems
+      const tempCheckedItems: ScopeAndIdentifier[] = checkedItems
       selectedItemsUuidAndScope.forEach(el => {
-        tempCheckedItems[el.scope].scopedItemsTotal++
-        tempCheckedItems.total++
+        tempCheckedItems.push({ identifier: el.identifier, scope: el.scope })
       })
       setCheckedItems(tempCheckedItems)
     }
   }, [selectedItemsUuidAndScope])
+
   const delayedFetchRecords = useRef(
     debounce((scope: Scope, search: string | undefined, done: (records: EntityReferenceResponse<T>[]) => void) => {
       setLoading(true)
@@ -246,22 +189,18 @@ export function MultiSelectEntityReference<T extends Identifier>(
       ? TAB_ID.PROJECT
       : TAB_ID.ACCOUNT
 
-  const onCheckboxChange = (checked: boolean, item: T) => {
-    const tempCheckedItems: T[] = [...(checkedItems[selectedScope].items || [])]
+  const onCheckboxChange = (checked: boolean, item: ScopeAndIdentifier) => {
+    const tempCheckedItems: ScopeAndIdentifier[] = [...checkedItems]
     if (checked) {
       tempCheckedItems.push(item)
     } else {
       tempCheckedItems.splice(
-        tempCheckedItems.findIndex(el => isEqual(el, item)),
+        tempCheckedItems.findIndex(el => el.identifier === item.identifier),
         1
       )
     }
 
-    setCheckedItems({
-      ...checkedItems,
-      [selectedScope]: { items: tempCheckedItems, scopedItemsTotal: tempCheckedItems.length, updatedWithOldData: true },
-      total: checked ? checkedItems.total + 1 : checkedItems.total - 1
-    })
+    setCheckedItems(tempCheckedItems)
   }
 
   useEffect(() => {
@@ -284,8 +223,8 @@ export function MultiSelectEntityReference<T extends Identifier>(
       renderedListTemp = (
         <div className={cx(css.referenceList, { [css.referenceListOverflow]: data.length > 5 })}>
           {data.map((item: EntityReferenceResponse<T>) => {
-            const checked = !!checkedItems[selectedScope]?.items.find(el => {
-              return isEqual(el, item.record)
+            const checked = !!checkedItems.find(el => {
+              return isEqual(el.identifier, item.identifier)
             })
             return (
               <Layout.Horizontal
@@ -296,7 +235,12 @@ export function MultiSelectEntityReference<T extends Identifier>(
                 flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
               >
                 <Checkbox
-                  onChange={e => onCheckboxChange((e.target as any).checked, item.record)}
+                  onChange={e =>
+                    onCheckboxChange((e.target as any).checked, {
+                      identifier: item.record.identifier,
+                      scope: selectedScope
+                    })
+                  }
                   data-testid={`Checkbox-${item.identifier}`}
                   disabled={disableItems(item.record['identifier'], disablePreSelectedItems, selectedItemsUuidAndScope)}
                   className={css.checkbox}
@@ -318,7 +262,7 @@ export function MultiSelectEntityReference<T extends Identifier>(
       )
     }
     setRenderedList(renderedListTemp)
-  }, [selectedScope, loading, error, data, checkedItems, checkedItems.total, selectedRecord])
+  }, [selectedScope, loading, error, data, checkedItems, selectedRecord])
 
   const canRenderTab = (scope: Scope): boolean => {
     if (onlyCurrentScope && !isEqual(scope, defaultScope)) {
@@ -334,8 +278,9 @@ export function MultiSelectEntityReference<T extends Identifier>(
     icon: IconName,
     title: StringKeys
   ): React.ReactElement | null => {
+    const count = getScopedItems(checkedItems, scope).length
     let multiSelectCount = null
-    if (checkedItems[scope]?.scopedItemsTotal) {
+    if (count) {
       multiSelectCount = (
         <Text
           inline
@@ -347,7 +292,7 @@ export function MultiSelectEntityReference<T extends Identifier>(
           color={Color.WHITE}
           border={{ radius: 100 }}
         >
-          {checkedItems[scope].scopedItemsTotal}
+          {count}
         </Text>
       )
     }
@@ -369,28 +314,13 @@ export function MultiSelectEntityReference<T extends Identifier>(
   }
 
   const onSelect = () => {
-    const allCheckedItems: T[] = [
-      ...checkedItems[Scope.PROJECT].items,
-      ...checkedItems[Scope.ORG].items,
-      ...checkedItems[Scope.ACCOUNT].items
-    ]
-    const scopesWhichUpdatedWithPreviousSelectedData = {
-      [Scope.PROJECT]: checkedItems[Scope.PROJECT].updatedWithOldData,
-      [Scope.ACCOUNT]: checkedItems[Scope.ACCOUNT].updatedWithOldData,
-      [Scope.ORG]: checkedItems[Scope.ORG].updatedWithOldData
-    }
-    onMultiSelect?.(
-      getScopeAndUuidFromSelectDTO({
-        selectedData: allCheckedItems,
-        previousSelectedItemsUuidAndScope: selectedItemsUuidAndScope,
-        scopesUpdatedWithPreviousData: scopesWhichUpdatedWithPreviousSelectedData
-      })
-    )
+    onMultiSelect(checkedItems)
   }
 
   const showWarningMessage =
     Array.isArray(scopeCountMap?.get(selectedScope)) &&
-    (scopeCountMap?.get(selectedScope) as string[]).length < checkedItems[selectedScope]?.scopedItemsTotal
+    (scopeCountMap?.get(selectedScope) as string[]).length <
+      getScopedItems(selectedItemsUuidAndScope, selectedScope).length
 
   return (
     <Container className={cx(css.container, className)}>
@@ -406,20 +336,14 @@ export function MultiSelectEntityReference<T extends Identifier>(
                   variation={ButtonVariation.SECONDARY}
                   size={ButtonSize.SMALL}
                   onClick={() => {
-                    setCheckedItems({
-                      ...checkedItems,
-                      [selectedScope]: {
-                        items: checkedItems[selectedScope]?.items?.filter(item =>
-                          scopeCountMap?.get(selectedScope)?.find((id: string) => id === item.identifier)
-                        ),
-                        scopedItemsTotal: scopeCountMap?.get(selectedScope)?.length,
-                        updatedWithOldData: true
-                      },
-                      total:
-                        checkedItems.total -
-                        checkedItems[selectedScope]?.scopedItemsTotal +
-                        (scopeCountMap?.get(selectedScope) as string[])?.length
-                    })
+                    setCheckedItems(
+                      checkedItems.filter(item => {
+                        return (
+                          item.scope !== selectedScope ||
+                          Boolean(scopeCountMap?.get(selectedScope)?.find((id: string) => id === item.identifier))
+                        )
+                      })
+                    )
                   }}
                 />
               </Layout.Horizontal>
@@ -451,7 +375,7 @@ export function MultiSelectEntityReference<T extends Identifier>(
             intent="primary"
             text={getString('entityReference.apply')}
             onClick={onSelect}
-            disabled={!checkedItems || checkedItems.total < 1}
+            disabled={!checkedItems || checkedItems.length < 1}
           />
         </Layout.Horizontal>
         <Layout.Horizontal spacing={'small'}>
@@ -464,7 +388,7 @@ export function MultiSelectEntityReference<T extends Identifier>(
             color={Color.WHITE}
             border={{ radius: 100 }}
           >
-            {checkedItems.total}
+            {checkedItems.length}
           </Text>
         </Layout.Horizontal>
       </Layout.Horizontal>

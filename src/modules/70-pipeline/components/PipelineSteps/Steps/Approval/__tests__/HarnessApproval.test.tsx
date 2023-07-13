@@ -470,7 +470,7 @@ describe('Harness Approval tests', () => {
     expect(getByText('6')).toBeInTheDocument()
     expect(getByText('common.userGroupsWarningMessage')).toBeInTheDocument()
     fireEvent.click(getByText('update'))
-    expect(getByText('5')).toBeInTheDocument()
+    expect(getByText('4')).toBeInTheDocument()
   })
 
   test('Schedule auto approval should work as expected', async () => {
