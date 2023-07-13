@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Button,
   ButtonVariation,
@@ -58,7 +58,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const [isNetworkTraceDetected, setIsNetworkTraceDetected] = useState<boolean>(false)
+  const [isNetworkTraceDetected, setIsNetworkTraceDetected] = React.useState<boolean>(false)
   const dAgentFormRef = React.useRef<FormikProps<FormValues>>()
 
   const { mutate: infraMutate } = useCreateAgent({
@@ -98,7 +98,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
           config: {
             data: {
               blacklistedNamespaces: dAgentFormRef.current?.values.blacklistedNamespaces,
-              enableNodeAgent: dAgentFormRef.current?.values.detectNetworkTrace,
+              enableNodeAgent: isNetworkTraceDetected,
               cron: {
                 expression: dAgentFormRef.current?.values.expression
               },
