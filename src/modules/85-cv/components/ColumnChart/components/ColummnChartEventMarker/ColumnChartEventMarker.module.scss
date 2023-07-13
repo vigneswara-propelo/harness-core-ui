@@ -22,4 +22,10 @@
     transform: rotate(45deg);
     box-shadow: 1px 1px 3px 0px var(--grey-200);
   }
+
+  .eventMarkerCustom {
+    position: relative;
+    top: 15px;
+    right: 7px;
+  }
 }

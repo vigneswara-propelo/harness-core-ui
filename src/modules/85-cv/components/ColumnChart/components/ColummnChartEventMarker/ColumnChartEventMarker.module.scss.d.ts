@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly eventMarker: string
+  readonly eventMarkerCustom: string
   readonly eventMarkerSquare: string
 }
 export default styles

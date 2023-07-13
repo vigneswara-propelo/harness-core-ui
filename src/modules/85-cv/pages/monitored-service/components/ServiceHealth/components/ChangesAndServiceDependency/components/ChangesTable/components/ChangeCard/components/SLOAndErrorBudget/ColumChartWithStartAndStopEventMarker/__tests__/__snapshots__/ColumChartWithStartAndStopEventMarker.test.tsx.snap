@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render ColumChartWithStartAndStopEventMarker with only start time 1`] = `
+<div>
+  <div
+    style="position: absolute; top: 20px; display: flex;"
+  >
+    <div
+      class="StyledProps--font StyledProps--main eventMarker"
+      style="height: 170px; left: 200px;"
+    >
+      <div
+        class="StyledProps--font StyledProps--main eventMarkerCustom"
+      >
+        <img
+          height="12"
+          src="test-file-stub"
+          width="12"
+        />
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main overlay StyledProps--background-green200"
+      style="left: 200px; width: 300px;"
+    />
+  </div>
+</div>
+`;
+
+exports[`Should render ColumChartWithStartAndStopEventMarker with start time and deployed time 1`] = `
+<div>
+  <div
+    style="position: absolute; top: 20px; display: flex;"
+  >
+    <div
+      class="StyledProps--font StyledProps--main eventMarker"
+      style="height: 170px; left: 200px;"
+    >
+      <div
+        class="StyledProps--font StyledProps--main eventMarkerCustom"
+      >
+        <img
+          height="12"
+          src="test-file-stub"
+          width="12"
+        />
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main overlay StyledProps--background-green200"
+      style="left: 200px; width: 100px;"
+    />
+    <div
+      class="StyledProps--font StyledProps--main eventMarker"
+      style="height: 170px; left: 300px;"
+    >
+      <div
+        class="StyledProps--font StyledProps--main eventMarkerCustom"
+      >
+        <img
+          height="12"
+          src="test-file-stub"
+          width="12"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Should render ColumChartWithStartAndStopEventMarker with start time and stop time 1`] = `
+<div>
+  <div
+    style="position: absolute; top: 20px; display: flex;"
+  >
+    <div
+      class="StyledProps--font StyledProps--main eventMarker"
+      style="height: 170px; left: 100px;"
+    >
+      <div
+        class="StyledProps--font StyledProps--main eventMarkerCustom"
+      >
+        <img
+          height="12"
+          src="test-file-stub"
+          width="12"
+        />
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main overlay StyledProps--background-grey200"
+      style="left: 100px; width: 200px;"
+    />
+    <div
+      class="StyledProps--font StyledProps--main eventMarker"
+      style="height: 170px; left: 300px;"
+    >
+      <div
+        class="StyledProps--font StyledProps--main eventMarkerCustom"
+      >
+        <img
+          height="12"
+          src="test-file-stub"
+          width="12"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
