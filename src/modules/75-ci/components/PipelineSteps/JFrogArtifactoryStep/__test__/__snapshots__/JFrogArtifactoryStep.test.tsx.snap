@@ -1811,7 +1811,7 @@ exports[`JFrogArtifactory Step InputSet View should render all fields 1`] = `
                     class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                     style="display: flex; align-items: center;"
                   >
-                    pipelineSteps.connectorLabel
+                    ci.artifactoryConnectorLabel
                   </p>
                 </div>
               </span>
