@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useFormikContext } from 'formik'
 import { get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
-import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import { Container, getMultiTypeFromValue, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
@@ -22,11 +22,22 @@ import {
   getStepTypeByDeploymentType,
   infraDefinitionTypeMapping
 } from '@pipeline/utils/stageHelpers'
+import {
+  getFlattenedStages,
+  getStageIndexFromPipeline
+} from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+
+// eslint-disable-next-line no-restricted-imports
+import PropagateFromEnvironment from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/PropagateWidget/PropagateFromEnvironment'
+// eslint-disable-next-line no-restricted-imports
+import { setupMode } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 
 import { StepWidget } from '../../AbstractSteps/StepWidget'
 import factory from '../../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../../PipelineSteps/PipelineStepInterface'
 import type { StageInputSetFormProps } from '../StageInputSetForm'
+import { getPropagateStageOptions, PropagateSelectOption } from './utils'
 
 import css from '../PipelineInputSetForm.module.scss'
 
@@ -41,6 +52,12 @@ export default function SingleEnvironmentInputSetForm({
   stageIdentifier,
   allowableTypes
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement {
+  const {
+    state: { pipeline, templateTypes }
+  } = usePipelineContext()
+
+  const { index: stageIndex } = getStageIndexFromPipeline(pipeline, stageIdentifier)
+
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
 
@@ -62,9 +79,16 @@ export default function SingleEnvironmentInputSetForm({
     getMultiTypeFromValue(environment.environmentRef)
   )
 
+  const useFromStageInputSetValue = get(deploymentStageInputSet, 'environment.useFromStage.stage')
+  const [setupModeType, setSetupMode] = useState(
+    // Do not add isEmpty check here. This will move to DIFFERENT when propagate is selected and focus moved away
+    isNil(useFromStageInputSetValue) ? setupMode.DIFFERENT : setupMode.PROPAGATE
+  )
+
   /** If the template has environmentRef marked as runtime, then we need to give user the option to select environment at runtime.
    * The below StepWidget handles fetching the environments, and then rendering the input field for the same. */
-  const showEnvironmentsSelectionInputField = isValueRuntimeInput(environmentTemplate?.environmentRef)
+  const showEnvironmentsSelectionInputField =
+    isValueRuntimeInput(environmentTemplate?.environmentRef) && setupModeType === setupMode.DIFFERENT
 
   // This state is required to prevent parallel formik updates with environments and infrastructures
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(showEnvironmentsSelectionInputField)
@@ -105,6 +129,45 @@ export default function SingleEnvironmentInputSetForm({
     Array.isArray(environmentTemplate?.infrastructureDefinitions) &&
     environmentTemplate?.infrastructureDefinitions?.some(infraTemplate => !isNil(infraTemplate.inputs))
 
+  const propagateStageOptions: SelectOption[] = useMemo(() => {
+    const { stages } = getFlattenedStages(pipeline)
+    return getPropagateStageOptions(stages, stageIndex, templateTypes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stageIndex])
+
+  // This is for prefilling the selected value in the field
+  const [selectedPropagatedState, setSelectedPropagatedState] = useState<PropagateSelectOption | string>(
+    propagateStageOptions?.find(v => v?.value === useFromStageInputSetValue) as SelectOption
+  )
+
+  const onPropogatedStageSelect = (value: SelectOption): void => {
+    setSelectedPropagatedState(value)
+    formik.setFieldValue(`${path}.environment`, { useFromStage: { stage: value.value } })
+  }
+
+  const onStageEnvironmentChange = (mode: string): void => {
+    if (!readonly) {
+      setSetupMode(mode)
+      setSelectedPropagatedState('')
+
+      if (mode === setupMode.DIFFERENT) {
+        formik.setFieldValue(`${path}.environment`, { environmentRef: '' })
+      } else {
+        formik.setFieldValue(`${path}.environment`, {
+          useFromStage: {
+            stage: ''
+          }
+        })
+      }
+    }
+  }
+
+  const shouldShowPropagateFromStage =
+    !isEmpty(propagateStageOptions) &&
+    // using deploymentStage as deploymentStageTemplate is not reliable in case of optional fields
+    (isValueRuntimeInput(deploymentStage?.environment?.environmentRef) ||
+      isValueRuntimeInput(deploymentStage?.environment?.useFromStage as unknown as string))
+
   const showEnvironmentPrefix =
     environmentIdentifier &&
     !isValueRuntimeInput(environmentIdentifier) &&
@@ -113,10 +176,38 @@ export default function SingleEnvironmentInputSetForm({
       showServiceOverrides ||
       showClustersSelectionInputField ||
       showInfrastructuresSelectionInputField ||
-      showInfrastructuresInputSetForm)
+      showInfrastructuresInputSetForm) &&
+    setupModeType === setupMode.DIFFERENT
 
   return (
     <div id={`${path}.Environment`} className={css.accordionSummary}>
+      {shouldShowPropagateFromStage && (
+        <>
+          <Container
+            margin={{
+              left: 'xxlarge',
+              bottom: setupModeType === setupMode.DIFFERENT || !isEmpty(selectedPropagatedState) ? 'large' : 'none'
+            }}
+          >
+            <PropagateFromEnvironment
+              setupModeType={setupModeType}
+              selectedPropagatedState={selectedPropagatedState}
+              propagateStageOptions={propagateStageOptions as SelectOption[]}
+              readonly={!!readonly}
+              onStageEnvironmentChange={onStageEnvironmentChange}
+              onPropogatedStageSelect={onPropogatedStageSelect}
+              subscribeToForm={false}
+            />
+          </Container>
+          {get(formik.values, `${path}.environment.useFromStage.stage`) && (
+            <Text color={Color.BLACK}>
+              {getString('pipeline.infrastructurePropagatedFrom')}{' '}
+              {(selectedPropagatedState as PropagateSelectOption)?.infraLabel}
+            </Text>
+          )}
+        </>
+      )}
+
       {showEnvironmentsSelectionInputField && (
         <StepWidget
           factory={factory}

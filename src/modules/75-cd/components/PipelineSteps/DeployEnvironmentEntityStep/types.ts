@@ -45,6 +45,7 @@ export interface DeployEnvironmentEntityFormState {
   environmentFilters?: Record<string, FilterYaml[]>
   infraClusterFilters?: FilterYaml[]
   provisioner?: ExecutionElementConfig
+  propagateFrom?: SelectOption
 }
 
 export interface DeployEnvironmentEntityCustomStepProps {

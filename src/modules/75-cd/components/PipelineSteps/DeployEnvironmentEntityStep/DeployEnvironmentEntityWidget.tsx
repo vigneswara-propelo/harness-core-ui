@@ -7,21 +7,16 @@
 
 import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react'
 import { isEmpty, noop, set } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { FormikProps } from 'formik'
 import produce from 'immer'
-import { RadioGroup } from '@blueprintjs/core'
-import cx from 'classnames'
 
 import {
   AllowedTypes,
   ConfirmationDialog,
   Formik,
-  FormikForm,
   getMultiTypeFromValue,
-  Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  Toggle,
   useToggleOpen
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
@@ -34,23 +29,13 @@ import { isMultiTypeExpression } from '@common/utils/utils'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
-import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
-import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
-import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import { getValidationSchema } from './utils/utils'
 
-import {
-  InlineEntityFiltersProps,
-  InlineEntityFiltersRadioType
-} from './components/InlineEntityFilters/InlineEntityFiltersUtils'
-
-import css from './DeployEnvironmentEntityStep.module.scss'
+import { InlineEntityFiltersRadioType } from './components/InlineEntityFilters/InlineEntityFiltersUtils'
+import BaseDeployEnvironmentEntityStep from './BaseDeployEnvironmentEntityStep'
 
 export interface DeployEnvironmentEntityWidgetProps extends Required<DeployEnvironmentEntityCustomStepProps> {
   initialValues: DeployEnvironmentEntityFormState
@@ -313,7 +298,7 @@ export default function DeployEnvironmentEntityWidget({
     }
   }
 
-  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+  function handleFilterRadio(selectedRadioValue: InlineEntityFiltersRadioType): void {
     if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
       formikRef.current?.setFieldValue('environmentFilters.fixedScenario', undefined)
     }
@@ -339,108 +324,22 @@ export default function DeployEnvironmentEntityWidget({
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
           formikRef.current = formik
-          const { values } = formik
-
-          const isMultiEnvironment = values.category === 'multi'
-          const isEnvironmentGroup = values.category === 'group'
-          const toggleLabel = getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
-            name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
-          })
 
           return (
-            <FormikForm>
-              <div className={cx(css.environmentEntityWidget)}>
-                <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
-                  <Layout.Vertical flex={{ alignItems: 'center' }}>
-                    <Toggle
-                      checked={isMultiEnvironment || isEnvironmentGroup}
-                      onToggle={handleMultiEnvironmentToggle}
-                      label={toggleLabel}
-                      tooltipId={'multiEnvInfraToggle'}
-                    />
-                    {(isMultiEnvironment || isEnvironmentGroup) && (
-                      <RadioGroup
-                        onChange={handleEnvironmentGroupToggle}
-                        options={[
-                          {
-                            label: getString('environments'),
-                            value: getString('environments')
-                          },
-                          {
-                            label: getString('common.environmentGroup.label'),
-                            value: getString('common.environmentGroup.label')
-                          }
-                        ]}
-                        selectedValue={radioValue}
-                        disabled={readonly}
-                        className={css.radioGroup}
-                        inline
-                      />
-                    )}
-                  </Layout.Vertical>
-                </Layout.Vertical>
-                {isEnvironmentGroup ? (
-                  <DeployEnvironmentGroup
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    serviceIdentifiers={serviceIdentifiers}
-                    stageIdentifier={stageIdentifier}
-                    deploymentType={deploymentType}
-                    customDeploymentRef={customDeploymentRef}
-                    gitOpsEnabled={gitOpsEnabled}
-                    scope={scope}
-                  />
-                ) : isMultiEnvironment ? (
-                  <StepWidget<InlineEntityFiltersProps>
-                    type={StepType.InlineEntityFilters}
-                    factory={factory}
-                    stepViewType={StepViewType.Edit}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    initialValues={{
-                      filterPrefix: 'environmentFilters.fixedScenario',
-                      entityStringKey: 'environments',
-                      onRadioValueChange: handleFilterRadio,
-                      baseComponent: (
-                        <DeployEnvironment
-                          initialValues={initialValues}
-                          readonly={readonly}
-                          allowableTypes={allowableTypes}
-                          isMultiEnvironment
-                          serviceIdentifiers={serviceIdentifiers}
-                          stageIdentifier={stageIdentifier}
-                          deploymentType={deploymentType}
-                          customDeploymentRef={customDeploymentRef}
-                          gitOpsEnabled={gitOpsEnabled}
-                          environmentsTypeRef={environmentsTypeRef}
-                        />
-                      ),
-                      entityFilterProps: {
-                        entities: ['environments', gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
-                      },
-                      gridAreaProps: {
-                        headerAndRadio: 'input-field',
-                        content: 'main-content'
-                      }
-                    }}
-                  />
-                ) : (
-                  <DeployEnvironment
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    isMultiEnvironment={false}
-                    serviceIdentifiers={serviceIdentifiers}
-                    stageIdentifier={stageIdentifier}
-                    deploymentType={deploymentType}
-                    customDeploymentRef={customDeploymentRef}
-                    gitOpsEnabled={gitOpsEnabled}
-                    environmentsTypeRef={environmentsTypeRef}
-                  />
-                )}
-              </div>
-            </FormikForm>
+            <BaseDeployEnvironmentEntityStep
+              serviceIdentifiers={serviceIdentifiers}
+              stageIdentifier={stageIdentifier}
+              deploymentType={deploymentType}
+              gitOpsEnabled={gitOpsEnabled}
+              customDeploymentRef={customDeploymentRef}
+              initialValues={initialValues}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+              handleMultiEnvironmentToggle={handleMultiEnvironmentToggle}
+              handleEnvironmentGroupToggle={handleEnvironmentGroupToggle}
+              radioValue={radioValue}
+              handleFilterRadio={handleFilterRadio}
+            />
           )
         }}
       </Formik>

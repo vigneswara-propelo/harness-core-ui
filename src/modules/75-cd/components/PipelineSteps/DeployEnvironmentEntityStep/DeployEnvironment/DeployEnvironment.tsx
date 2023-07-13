@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject, useEffect, useMemo, useState } from 'react'
+import React, { MutableRefObject, useEffect, useState } from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
@@ -15,51 +15,41 @@ import { v4 as uuid } from 'uuid'
 
 import {
   AllowedTypes,
-  ButtonSize,
-  ButtonVariation,
   FormInput,
   getMultiTypeFromValue,
   Layout,
-  ModalDialog,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
-  useToaster,
-  useToggleOpen
+  useToaster
 } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
-import type { EnvironmentYaml, NGEnvironmentInfoConfig } from 'services/cd-ng'
+import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
+import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 
-import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import {
   isMultiTypeExpression,
   isMultiTypeFixed,
   isMultiTypeRuntime,
   isValueExpression,
+  isValueFixed,
   isValueRuntimeInput
 } from '@common/utils/utils'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
-import RbacButton from '@rbac/components/Button/Button'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isAsgDeploymentType } from '@pipeline/utils/stageHelpers'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
-import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -67,7 +57,6 @@ import type {
   EnvironmentWithInputs
 } from '../types'
 import { useGetEnvironmentsData } from './useGetEnvironmentsData'
-import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
 
@@ -76,6 +65,7 @@ import {
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 import { DeployProvisioner } from '../DeployProvisioner/DeployProvisioner'
+import EnvironmentSelection from './EnvironmentSelection'
 import css from './DeployEnvironment.module.scss'
 
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -87,25 +77,32 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   isUnderEnvGroup?: boolean
   envGroupIdentifier?: string
   environmentsTypeRef?: MutableRefObject<MultiTypeInputType | null>
+  canPropagateFromStage?: boolean
+  previousStages?: StageElementWrapperConfig[]
+  selectedPropagatedState?: SelectOption | string
 }
 
-export function getAllFixedEnvironments(data: DeployEnvironmentEntityFormState): string[] {
-  if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
+function getSelectedEnvironmentsWhenPropagating(
+  value?: string,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  const prevEnvId = (
+    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
+      ?.stage as DeploymentStageElementConfig
+  )?.spec?.environment?.environmentRef
+  return prevEnvId && isValueFixed(prevEnvId) ? [prevEnvId] : []
+}
+
+export function getAllFixedEnvironments(
+  data: DeployEnvironmentEntityFormState,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  if (data.propagateFrom?.value) {
+    return getSelectedEnvironmentsWhenPropagating(data.propagateFrom?.value as string, previousStages)
+  } else if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
     return [data.environment as string]
   } else if (data.environments && Array.isArray(data.environments)) {
     return data.environments.map(environment => environment.value as string)
-  }
-
-  return []
-}
-
-export function getSelectedEnvironmentsFromOptions(items: SelectOption | SelectOption[]): string[] {
-  if (Array.isArray(items)) {
-    return items.map(item => item.value as string)
-    /** If single environment, then items should contain some value.
-     * If it's empty or runtime or expression return empty array */
-  } else if (items && getMultiTypeFromValue(items) === MultiTypeInputType.FIXED) {
-    return [items.value as string]
   }
 
   return []
@@ -123,26 +120,24 @@ export default function DeployEnvironment({
   deploymentType,
   customDeploymentRef,
   gitOpsEnabled,
-  environmentsTypeRef
+  environmentsTypeRef,
+  canPropagateFromStage,
+  previousStages,
+  selectedPropagatedState
 }: DeployEnvironmentProps): JSX.Element {
   const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { showWarning } = useToaster()
-  const { expressions } = useVariablesExpression()
-  const { projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { refetchPipelineVariable } = usePipelineVariables()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
-  const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
-  const {
-    CDS_OrgAccountLevelServiceEnvEnvGroup,
-    CD_NG_DYNAMIC_PROVISIONING_ENV_V2,
-    CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled
-  } = useFeatureFlags()
+  const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2, CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled } = useFeatureFlags()
 
   // State
-  const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
+  const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
+    getAllFixedEnvironments(initialValues, previousStages)
+  )
   const [environmentsType, setEnvironmentsType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment || initialValues.environments)
   )
@@ -152,7 +147,7 @@ export default function DeployEnvironment({
   const isExpression = isMultiTypeExpression(environmentsType)
   const filterPrefix = 'environmentFilters.runtime'
 
-  const shouldRenderEnvironmentEntitiesList = isFixed && !isEmpty(selectedEnvironments)
+  const shouldRenderEnvironmentEntitiesList = (isFixed || values.propagateFrom) && !isEmpty(selectedEnvironments)
 
   // API
   const {
@@ -179,6 +174,15 @@ export default function DeployEnvironment({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!values.environment) {
+      setSelectedEnvironments(
+        getSelectedEnvironmentsWhenPropagating(values.propagateFrom?.value as string, previousStages)
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values.propagateFrom?.value])
 
   useDeepCompareEffect(() => {
     if (nonExistingEnvironmentIdentifiers.length) {
@@ -211,15 +215,6 @@ export default function DeployEnvironment({
     }
   }, [values.environment, values.environments, environmentsType])
 
-  const selectOptions = useMemo(() => {
-    /* istanbul ignore else */
-    if (!isNil(environmentsList)) {
-      return environmentsList.map(environment => ({ label: environment.name, value: environment.identifier }))
-    }
-
-    return []
-  }, [environmentsList])
-
   const loading = isFixed && (loadingEnvironmentsList || loadingEnvironmentsData)
 
   const shouldRenderChildEntity = isExpression
@@ -230,7 +225,7 @@ export default function DeployEnvironment({
 
   useEffect(() => {
     // This condition is required to clear the list when switching from multi environment to single environment
-    if (!isMultiEnvironment && !values.environment && selectedEnvironments.length) {
+    if (!isMultiEnvironment && !values.environment && isNil(values.propagateFrom) && selectedEnvironments.length) {
       setSelectedEnvironments([])
     }
 
@@ -357,64 +352,11 @@ export default function DeployEnvironment({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, environmentsList, environmentsData])
 
-  const disabled = readonly || (isFixed && loading)
-
-  let placeHolderForEnvironments =
-    Array.isArray(values.environments) && values.environments
-      ? getString('environments')
-      : isUnderEnvGroup
-      ? getString('common.allEnvironments')
-      : getString('cd.pipelineSteps.environmentTab.selectEnvironments')
-
-  if (loading) {
-    placeHolderForEnvironments = getString('loading')
-  }
-
-  const placeHolderForEnvironment = loading
-    ? getString('loading')
-    : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
-
   const updateFormikAndLocalState = (newFormValues: DeployEnvironmentEntityFormState): void => {
     // this sets the form values
     setValues(newFormValues)
     // this updates the local state
     setSelectedEnvironments(getAllFixedEnvironments(newFormValues))
-  }
-
-  const updateEnvironmentsList = (newEnvironmentInfo: EnvironmentYaml): void => {
-    prependEnvironmentToEnvironmentList(newEnvironmentInfo)
-    closeAddNewModal()
-
-    const scopedEnvRef = getScopedValueFromDTO({
-      projectIdentifier,
-      orgIdentifier,
-      identifier: newEnvironmentInfo.identifier
-    })
-
-    const newFormValues = produce(values, draft => {
-      if (draft.environments && Array.isArray(draft.environments)) {
-        draft.environments.push({ label: newEnvironmentInfo.name, value: scopedEnvRef })
-        if (gitOpsEnabled && draft.clusters) {
-          if (draft.infrastructures) {
-            delete draft.infrastructures
-          }
-        } else if (!gitOpsEnabled && draft.infrastructures) {
-          if (draft.clusters) {
-            delete draft.clusters
-          }
-        }
-        set(draft, uniquePathForEnvironments.current, draft.environments)
-      } else {
-        draft.environment = scopedEnvRef
-        if (gitOpsEnabled) {
-          draft.cluster = ''
-        } else {
-          draft.infrastructure = ''
-        }
-      }
-    })
-
-    updateFormikAndLocalState(newFormValues)
   }
 
   const onEnvironmentEntityUpdate = (): void => {
@@ -468,137 +410,36 @@ export default function DeployEnvironment({
       })
     }
   }
-  const commonProps = {
-    name: isMultiEnvironment ? uniquePathForEnvironments.current : 'environment',
-    tooltipProps: isMultiEnvironment
-      ? { dataTooltipId: 'specifyYourEnvironments' }
-      : { dataTooltipId: 'specifyYourEnvironment' },
-    label: isMultiEnvironment
-      ? getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')
-      : getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment'),
-    disabled: disabled
-  }
 
-  const onMultiSelectChangeForEnvironments = (items: SelectOption[]): void => {
-    setFieldTouched(uniquePathForEnvironments.current, true)
-    if (items?.at(0)?.value === 'All') {
-      setFieldValue(`environments`, undefined)
-      setSelectedEnvironments([])
-    } else {
-      setFieldValue(`environments`, items)
-      setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
-    }
-  }
+  const shouldShowDynamicProvisioning =
+    !(isFixed && isEmpty(selectedEnvironments)) &&
+    isNil(values.propagateFrom) &&
+    !isMultiEnvironment &&
+    CD_NG_DYNAMIC_PROVISIONING_ENV_V2 &&
+    !isAsgDeploymentType(deploymentType)
 
   return (
     <>
-      <Layout.Horizontal
-        spacing="medium"
-        flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
-        className={css.inputField}
-        margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
-      >
-        {isMultiEnvironment ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup ? (
-            /*** This condition is added as entities one step down the entity tree
-              will be following the parent scope so no need of the new component here ***/
-            <MultiTypeEnvironmentField
-              {...commonProps}
-              placeholder={placeHolderForEnvironments}
-              openAddNewModal={openAddNewModal}
-              isMultiSelect
-              onMultiSelectChange={onMultiSelectChangeForEnvironments}
-              multitypeInputValue={environmentsType}
-              isNewConnectorLabelVisible
-              onChange={item => {
-                onMultiSelectChangeForEnvironments(item as SelectOption[])
-              }}
-              width={300}
-              multiTypeProps={{
-                expressions,
-                onTypeChange: setEnvironmentsType,
-                allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
-              }}
-            />
-          ) : (
-            <FormMultiTypeMultiSelectDropDown
-              {...commonProps}
-              dropdownProps={{
-                placeholder: placeHolderForEnvironments,
-                items: selectOptions,
-                // Field disabled
-                disabled,
-                isAllSelectionSupported: isUnderEnvGroup
-              }}
-              onChange={onMultiSelectChangeForEnvironments}
-              multiTypeProps={{
-                onTypeChange: setEnvironmentsType,
-                width: 280,
-                allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
-              }}
-            />
-          )
-        ) : CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-          <MultiTypeEnvironmentField
-            {...commonProps}
-            placeholder={placeHolderForEnvironment}
-            setRefValue={true}
-            openAddNewModal={openAddNewModal}
-            isNewConnectorLabelVisible
-            onChange={(item, _valueType, type) => {
-              if (isMultiTypeExpression(type as MultiTypeInputType)) {
-                setSelectedEnvironments([])
-              } else if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && (item as string)?.length) {
-                setSelectedEnvironments([item as string])
-              } else setSelectedEnvironments([])
-            }}
-            width={300}
-            multiTypeProps={{
-              onTypeChange: setEnvironmentsType,
-              expressions,
-              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
-              defaultValueToReset: ''
-            }}
-          />
-        ) : (
-          <FormInput.MultiTypeInput
-            {...commonProps}
-            useValue
-            placeholder={placeHolderForEnvironment}
-            multiTypeInputProps={{
-              onTypeChange: setEnvironmentsType,
-              width: 300,
-              selectProps: { items: selectOptions },
-              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
-              defaultValueToReset: '',
-              onChange: item => {
-                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
-              },
-              expressions
-            }}
-            selectItems={selectOptions}
-          />
-        )}
-        {isFixed && !isUnderEnvGroup && (
-          <RbacButton
-            margin={{ top: 'xlarge' }}
-            size={ButtonSize.SMALL}
-            variation={ButtonVariation.LINK}
-            disabled={readonly}
-            onClick={openAddNewModal}
-            permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
-              permission: PermissionIdentifier.EDIT_ENVIRONMENT
-            }}
-            text={getString('common.plusNewName', { name: getString('environment') })}
-            id={'add-new-environment'}
-          />
-        )}
-      </Layout.Horizontal>
+      {isNil(values.propagateFrom) && (
+        <EnvironmentSelection
+          isMultiEnvironment={isMultiEnvironment}
+          isUnderEnvGroup={isUnderEnvGroup}
+          uniquePathForEnvironments={uniquePathForEnvironments}
+          readonly={readonly}
+          loading={loading}
+          environmentsType={environmentsType}
+          setEnvironmentsType={setEnvironmentsType}
+          setSelectedEnvironments={setSelectedEnvironments}
+          allowableTypes={allowableTypes}
+          gitOpsEnabled={gitOpsEnabled}
+          environmentsList={environmentsList}
+          prependEnvironmentToEnvironmentList={prependEnvironmentToEnvironmentList}
+          updateFormikAndLocalState={updateFormikAndLocalState}
+          canPropagateFromStage={canPropagateFromStage}
+        />
+      )}
 
-      <Layout.Vertical className={css.mainContent} spacing="medium">
+      <Layout.Vertical className={canPropagateFromStage ? '' : css.mainContent} spacing="medium">
         {isMultiEnvironment && !isUnderEnvGroup ? (
           <FormInput.CheckBox
             label={
@@ -625,12 +466,9 @@ export default function DeployEnvironment({
             gitOpsEnabled={gitOpsEnabled}
           />
         )}
-        {!(isFixed && isEmpty(selectedEnvironments)) &&
-        !isMultiEnvironment &&
-        CD_NG_DYNAMIC_PROVISIONING_ENV_V2 &&
-        !isAsgDeploymentType(deploymentType) ? (
+        {shouldShowDynamicProvisioning && (
           <DeployProvisioner initialValues={initialValues} allowableTypes={allowableTypes} />
-        ) : null}
+        )}
         {shouldRenderChildEntity && !loading && !isMultiEnvironment && (
           <>
             <Divider />
@@ -651,6 +489,8 @@ export default function DeployEnvironment({
                 deploymentType={deploymentType}
                 customDeploymentRef={customDeploymentRef}
                 lazyInfrastructure={isExpression}
+                previousStages={previousStages}
+                selectedPropagatedState={selectedPropagatedState}
               />
             )}
           </>
@@ -705,25 +545,6 @@ export default function DeployEnvironment({
             }}
           />
         )}
-        <ModalDialog
-          isOpen={isAddNewModalOpen}
-          onClose={closeAddNewModal}
-          title={getString('newEnvironment')}
-          canEscapeKeyClose={false}
-          canOutsideClickClose={false}
-          enforceFocus={false}
-          lazy
-          width={1128}
-          height={840}
-          className={css.dialogStyles}
-        >
-          <AddEditEnvironmentModal
-            data={{}}
-            onCreateOrUpdate={updateEnvironmentsList}
-            closeModal={closeAddNewModal}
-            isEdit={false}
-          />
-        </ModalDialog>
       </Layout.Vertical>
     </>
   )

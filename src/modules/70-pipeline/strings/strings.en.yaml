@@ -1920,3 +1920,4 @@ downloadLogs:
   downloadFailed: 'Download failed'
   downloadSuccessful: 'Download successful'
   downloadRequestFailed: 'Download failed with: {{ errorMsg }}'
+infrastructurePropagatedFrom: 'Infrastructure Propagated From:'

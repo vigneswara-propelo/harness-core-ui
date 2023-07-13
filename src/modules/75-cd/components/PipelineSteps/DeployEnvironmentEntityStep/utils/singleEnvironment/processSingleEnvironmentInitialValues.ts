@@ -27,43 +27,68 @@ export function processSingleEnvironmentInitialValues(
       set(formState, 'environment', RUNTIME_INPUT_VALUE)
       set(formState, 'provisioner', environment.provisioner)
     } else {
-      set(formState, 'environment', environment.environmentRef)
-      set(formState, 'provisioner', environment.provisioner)
-      // if environmentRef is a FIXED value and contains selected environment
-      set(
-        formState,
-        'environmentInputs',
-        getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
-          ? { [environment.environmentRef]: environment?.environmentInputs }
-          : isValueExpression(environment.environmentRef)
-          ? { environment: { expression: environment.environmentInputs } }
-          : {}
-      )
+      if (environment.useFromStage) {
+        set(
+          formState,
+          'propagateFrom',
+          environment.useFromStage.stage
+            ? { label: environment.useFromStage.stage, value: environment.useFromStage.stage }
+            : { label: '', value: '' }
+        )
+      } else {
+        set(formState, 'environment', environment.environmentRef)
+        set(formState, 'provisioner', environment.provisioner)
+        // if environmentRef is a FIXED value and contains selected environment
+        set(
+          formState,
+          'environmentInputs',
+          getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
+            ? { [environment.environmentRef as string]: environment?.environmentInputs }
+            : isValueExpression(environment.environmentRef)
+            ? { environment: { expression: environment.environmentInputs } }
+            : {}
+        )
 
-      if (isOverridesEnabled) {
-        if (!isNil(environment.servicesOverrides) && !isEmpty(environment.servicesOverrides)) {
-          environment.servicesOverrides.forEach(serviceOverride => {
+        if (isOverridesEnabled) {
+          if (!isNil(environment.servicesOverrides) && !isEmpty(environment.servicesOverrides)) {
+            environment.servicesOverrides.forEach(serviceOverride => {
+              set(
+                formState,
+                'serviceOverrideInputs',
+                getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
+                  ? {
+                      [environment.environmentRef as string]: {
+                        [serviceOverride.serviceRef]: serviceOverride.serviceOverrideInputs
+                      }
+                    }
+                  : isValueExpression(environment.environmentRef)
+                  ? { environment: { expression: environment.servicesOverrides } }
+                  : {}
+              )
+            })
+          } else if (!isNil(environment.serviceOverrideInputs) && !isEmpty(environment.serviceOverrideInputs)) {
             set(
               formState,
               'serviceOverrideInputs',
-              getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
+              getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED &&
+                serviceIdentifiers?.length
                 ? {
-                    [environment.environmentRef]: {
-                      [serviceOverride.serviceRef]: serviceOverride.serviceOverrideInputs
+                    [environment.environmentRef as string]: {
+                      [serviceIdentifiers?.[0] as string]: environment?.serviceOverrideInputs
                     }
                   }
                 : isValueExpression(environment.environmentRef)
-                ? { environment: { expression: environment.servicesOverrides } }
+                ? { environment: { expression: environment.serviceOverrideInputs } }
                 : {}
             )
-          })
-        } else if (!isNil(environment.serviceOverrideInputs) && !isEmpty(environment.serviceOverrideInputs)) {
+          }
+        } else {
           set(
             formState,
             'serviceOverrideInputs',
             getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED && serviceIdentifiers?.length
               ? {
-                  [environment.environmentRef]: {
+                  [environment.environmentRef as string]: {
                     [serviceIdentifiers?.[0] as string]: environment?.serviceOverrideInputs
                   }
                 }
@@ -72,57 +97,43 @@ export function processSingleEnvironmentInitialValues(
               : {}
           )
         }
-      } else {
-        set(
-          formState,
-          'serviceOverrideInputs',
-          getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED && serviceIdentifiers?.length
-            ? {
-                [environment.environmentRef]: {
-                  [serviceIdentifiers?.[0] as string]: environment?.serviceOverrideInputs
+
+        // This is clusters specific handling
+        if (gitOpsEnabled) {
+          const gitOpsClusters = environment.gitOpsClusters
+
+          // infrastructure is 1st identifier if gitOpsClusters is an array
+          const cluster = Array.isArray(gitOpsClusters) ? gitOpsClusters[0]?.identifier : gitOpsClusters
+
+          set(formState, 'cluster', cluster)
+        } else {
+          const infrastructureDefinitions = environment.infrastructureDefinitions
+
+          // infrastructure is 1st identifier if infrastructureDefinitions is an array
+          const infrastructure = Array.isArray(infrastructureDefinitions)
+            ? infrastructureDefinitions[0]?.identifier
+            : infrastructureDefinitions
+
+          set(formState, 'infrastructure', infrastructure)
+          // if infrastructureDefinitions is an array and contains selected infrastructure
+          set(
+            formState,
+            'infrastructureInputs',
+            isValueExpression(infrastructure)
+              ? {
+                  environment: {
+                    infrastructure: { expression: infrastructureDefinitions?.[0]?.inputs }
+                  }
                 }
-              }
-            : isValueExpression(environment.environmentRef)
-            ? { environment: { expression: environment.serviceOverrideInputs } }
-            : {}
-        )
-      }
-
-      // This is clusters specific handling
-      if (gitOpsEnabled) {
-        const gitOpsClusters = environment.gitOpsClusters
-
-        // infrastructure is 1st identifier if gitOpsClusters is an array
-        const cluster = Array.isArray(gitOpsClusters) ? gitOpsClusters[0]?.identifier : gitOpsClusters
-
-        set(formState, 'cluster', cluster)
-      } else {
-        const infrastructureDefinitions = environment.infrastructureDefinitions
-
-        // infrastructure is 1st identifier if infrastructureDefinitions is an array
-        const infrastructure = Array.isArray(infrastructureDefinitions)
-          ? infrastructureDefinitions[0]?.identifier
-          : infrastructureDefinitions
-
-        set(formState, 'infrastructure', infrastructure)
-        // if infrastructureDefinitions is an array and contains selected infrastructure
-        set(
-          formState,
-          'infrastructureInputs',
-          isValueExpression(infrastructure)
-            ? {
-                environment: {
-                  infrastructure: { expression: infrastructureDefinitions?.[0]?.inputs }
+              : Array.isArray(infrastructureDefinitions) && infrastructure
+              ? {
+                  [environment.environmentRef as string]: {
+                    [infrastructure]: infrastructureDefinitions?.[0]?.inputs
+                  }
                 }
-              }
-            : Array.isArray(infrastructureDefinitions) && infrastructure
-            ? {
-                [environment.environmentRef]: {
-                  [infrastructure]: infrastructureDefinitions?.[0]?.inputs
-                }
-              }
-            : {}
-        )
+              : {}
+          )
+        }
       }
     }
   }
@@ -151,7 +162,7 @@ export function processSingleEnvironmentGitOpsInitialValues(
         formState,
         'environmentInputs',
         getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
-          ? { [environment.environmentRef]: environment?.environmentInputs }
+          ? { [environment.environmentRef as string]: environment?.environmentInputs }
           : {}
       )
       set(formState, 'provisioner', environment.provisioner)

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
@@ -13,48 +13,40 @@ import { v4 as uuid } from 'uuid'
 
 import {
   AllowedTypes,
-  ButtonSize,
-  ButtonVariation,
-  FormInput,
   getMultiTypeFromValue,
-  Layout,
-  ModalDialog,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
-  useToaster,
-  useToggleOpen
+  Text,
+  useToaster
 } from '@harness/uicore'
 
+import { Color } from '@harness/design-system'
+
+import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 import { useDeepCompareEffect } from '@common/hooks'
-import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 
-import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import { ButtonProps } from '@rbac/components/Button/Button'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
-import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { PropagateSelectOption } from '@pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm/utils'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import InfrastructureEntitiesList from '../InfrastructureEntitiesList/InfrastructureEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
-  InfrastructureWithInputs,
-  InfrastructureYaml
+  InfrastructureWithInputs
 } from '../types'
 import { useGetInfrastructuresData } from './useGetInfrastructuresData'
 
-import css from './DeployInfrastructure.module.scss'
+import InfrastructureSelection from './InfrastructureSelection'
 
 interface DeployInfrastructureProps
   extends Required<
@@ -67,27 +59,40 @@ interface DeployInfrastructureProps
   isMultiInfrastructure?: boolean
   lazyInfrastructure?: boolean
   environmentPermission?: ButtonProps['permission']
+  previousStages?: StageElementWrapperConfig[]
+  selectedPropagatedState?: PropagateSelectOption | string
+}
+
+function getSelectedInfrastructuresWhenPropagating(
+  value?: string,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  const infrastructureDefinitions = (
+    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
+      ?.stage as DeploymentStageElementConfig
+  )?.spec?.environment?.infrastructureDefinitions
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (isValueRuntimeInput(infrastructureDefinitions as any)) return []
+
+  const prevInfraId = infrastructureDefinitions?.[0].identifier
+  return prevInfraId ? [prevInfraId] : []
 }
 
 export function getAllFixedInfrastructures(
   data: DeployEnvironmentEntityFormState,
-  environmentIdentifier: string
+  environmentIdentifier: string,
+  previousStages?: StageElementWrapperConfig[]
 ): string[] {
-  if (data.infrastructure && getMultiTypeFromValue(data.infrastructure) === MultiTypeInputType.FIXED) {
+  if (data.propagateFrom?.value) {
+    return getSelectedInfrastructuresWhenPropagating(data.propagateFrom?.value as string, previousStages)
+  } else if (data.infrastructure && getMultiTypeFromValue(data.infrastructure) === MultiTypeInputType.FIXED) {
     return [data.infrastructure as string]
   } else if (
     data.infrastructures?.[environmentIdentifier] &&
     Array.isArray(data.infrastructures[environmentIdentifier])
   ) {
     return data.infrastructures[environmentIdentifier].map(infrastructure => infrastructure.value as string)
-  }
-
-  return []
-}
-
-export function getSelectedInfrastructuresFromOptions(items: SelectOption[]): string[] {
-  if (Array.isArray(items)) {
-    return items.map(item => item.value as string)
   }
 
   return []
@@ -102,23 +107,22 @@ export default function DeployInfrastructure({
   deploymentType,
   customDeploymentRef,
   lazyInfrastructure,
-  environmentPermission
+  environmentPermission,
+  previousStages,
+  selectedPropagatedState
 }: DeployInfrastructureProps): JSX.Element {
   const { values, setFieldValue, setValues, setFieldTouched, validateForm } =
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { showWarning } = useToaster()
-  const { expressions } = useVariablesExpression()
   const { refetchPipelineVariable } = usePipelineVariables()
-  const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentRef || {}
-  const { getTemplate } = useTemplateSelector()
   const uniquePathForInfrastructures = React.useRef(`_pseudo_field_${uuid()}`)
   let envToFetchInfraInputs = environmentIdentifier
 
   // State
   const [selectedInfrastructures, setSelectedInfrastructures] = useState(
-    getAllFixedInfrastructures(initialValues, environmentIdentifier)
+    getAllFixedInfrastructures(initialValues, environmentIdentifier, previousStages)
   )
   const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.infrastructure)
@@ -162,6 +166,15 @@ export default function DeployInfrastructure({
     lazyInfrastructure
   })
 
+  useEffect(() => {
+    if (!values.infrastructure) {
+      setSelectedInfrastructures(
+        getSelectedInfrastructuresWhenPropagating(values.propagateFrom?.value as string, previousStages)
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values.propagateFrom?.value])
+
   useDeepCompareEffect(() => {
     if (nonExistingInfrastructureIdentifiers.length) {
       showWarning(
@@ -172,18 +185,6 @@ export default function DeployInfrastructure({
       )
     }
   }, [nonExistingInfrastructureIdentifiers])
-
-  const selectOptions = useMemo(() => {
-    /* istanbul ignore else */
-    if (!isNil(infrastructuresList)) {
-      return infrastructuresList.map(infrastructure => ({
-        label: infrastructure.name,
-        value: infrastructure.identifier
-      }))
-    }
-
-    return []
-  }, [infrastructuresList])
 
   const loading = loadingInfrastructuresList || loadingInfrastructuresData
 
@@ -282,21 +283,6 @@ export default function DeployInfrastructure({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, infrastructuresList, infrastructuresData])
 
-  const disabled = readonly || (isFixed && loading)
-
-  let placeHolderForInfrastructures =
-    values.infrastructures && Array.isArray(values.infrastructures[environmentIdentifier])
-      ? getString('common.infrastructures')
-      : getString('cd.pipelineSteps.environmentTab.allInfrastructures')
-
-  if (loading) {
-    placeHolderForInfrastructures = getString('loading')
-  }
-
-  const placeHolderForInfrastructure = loading
-    ? getString('loading')
-    : getString('cd.pipelineSteps.environmentTab.selectInfrastructure')
-
   const updateFormikAndLocalState = (newFormValues: DeployEnvironmentEntityFormState): void => {
     const fieldName = isMultiInfrastructure ? `infrastructures.${environmentIdentifier}` : 'infrastructure'
     // this sets the form values
@@ -306,34 +292,6 @@ export default function DeployInfrastructure({
 
     // this updates the local state
     setSelectedInfrastructures(getAllFixedInfrastructures(newFormValues, environmentIdentifier))
-  }
-
-  const updateInfrastructuresList = (newInfrastructureInfo: InfrastructureYaml): void => {
-    prependInfrastructureToInfrastructureList(newInfrastructureInfo)
-    closeAddNewModal()
-
-    const newFormValues = produce(values, draft => {
-      if (draft.category === 'multi') {
-        if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
-          draft.infrastructures[environmentIdentifier].push({
-            label: newInfrastructureInfo.name,
-            value: newInfrastructureInfo.identifier
-          })
-        } else {
-          set(draft, `infrastructures.['${environmentIdentifier}']`, [
-            {
-              label: newInfrastructureInfo.name,
-              value: newInfrastructureInfo.identifier
-            }
-          ])
-        }
-        set(draft, uniquePathForInfrastructures.current, draft.infrastructures?.[environmentIdentifier])
-      } else {
-        draft.infrastructure = newInfrastructureInfo.identifier
-      }
-    })
-
-    updateFormikAndLocalState(newFormValues)
   }
 
   const onInfrastructureEntityUpdate = (): void => {
@@ -361,69 +319,32 @@ export default function DeployInfrastructure({
 
   return (
     <>
-      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        {isMultiInfrastructure ? (
-          <FormMultiTypeMultiSelectDropDown
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructures')}
-            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructures' }}
-            name={uniquePathForInfrastructures.current}
-            // Form group disabled
-            disabled={disabled}
-            dropdownProps={{
-              placeholder: placeHolderForInfrastructures,
-              items: selectOptions,
-              // Field disabled
-              disabled,
-              isAllSelectionSupported: true
-            }}
-            onChange={items => {
-              if (items?.at(0)?.value === 'All') {
-                setFieldValue(`infrastructures.['${environmentIdentifier}']`, undefined)
-                setSelectedInfrastructures([])
-              } else {
-                setFieldValue(`infrastructures.['${environmentIdentifier}']`, items)
-                setSelectedInfrastructures(getSelectedInfrastructuresFromOptions(items))
-              }
-            }}
-            multiTypeProps={{
-              width: 280,
-              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
-            }}
-          />
-        ) : (
-          <FormInput.MultiTypeInput
-            tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
-            name="infrastructure"
-            useValue
-            disabled={disabled}
-            placeholder={placeHolderForInfrastructure}
-            multiTypeInputProps={{
-              onTypeChange: setInfrastructureRefType,
-              width: 300,
-              selectProps: { items: selectOptions },
-              allowableTypes,
-              defaultValueToReset: '',
-              onChange: item => {
-                setSelectedInfrastructures(getSelectedInfrastructuresFromOptions([item as SelectOption]))
-              },
-              expressions
-            }}
-            selectItems={selectOptions}
-          />
-        )}
-        {isFixed && !lazyInfrastructure && (
-          <RbacButton
-            margin={{ top: 'xlarge' }}
-            size={ButtonSize.SMALL}
-            variation={ButtonVariation.LINK}
-            disabled={readonly}
-            onClick={openAddNewModal}
-            permission={environmentPermission}
-            text={getString('common.plusNewName', { name: getString('infrastructureText') })}
-          />
-        )}
-      </Layout.Horizontal>
+      {isNil(values.propagateFrom) ? (
+        <InfrastructureSelection
+          environmentIdentifier={environmentIdentifier}
+          isMultiInfrastructure={isMultiInfrastructure}
+          uniquePathForInfrastructures={uniquePathForInfrastructures}
+          readonly={readonly}
+          loading={loading}
+          infrastructureRefType={infrastructureRefType}
+          setInfrastructureRefType={setInfrastructureRefType}
+          setSelectedInfrastructures={setSelectedInfrastructures}
+          allowableTypes={allowableTypes}
+          infrastructuresList={infrastructuresList}
+          prependInfrastructureToInfrastructureList={prependInfrastructureToInfrastructureList}
+          updateFormikAndLocalState={updateFormikAndLocalState}
+          deploymentType={deploymentType}
+          customDeploymentRef={customDeploymentRef}
+          lazyInfrastructure={lazyInfrastructure}
+          environmentPermission={environmentPermission}
+        />
+      ) : (
+        <Text color={Color.BLACK}>
+          {getString('pipeline.infrastructurePropagatedFrom')}{' '}
+          {(selectedPropagatedState as PropagateSelectOption)?.infraLabel}
+        </Text>
+      )}
+
       {isFixed && !isEmpty(selectedInfrastructures) && (
         <InfrastructureEntitiesList
           loading={loading || updatingInfrastructuresData}
@@ -437,30 +358,6 @@ export default function DeployInfrastructure({
           environmentPermission={environmentPermission}
         />
       )}
-
-      <ModalDialog
-        isOpen={isAddNewModalOpen}
-        onClose={closeAddNewModal}
-        title={getString('common.newName', { name: getString('infrastructureText') })}
-        canEscapeKeyClose={false}
-        canOutsideClickClose={false}
-        enforceFocus={false}
-        lazy
-        width={1128}
-        height={840}
-        className={css.dialogStyles}
-      >
-        <InfrastructureModal
-          hideModal={closeAddNewModal}
-          refetch={updateInfrastructuresList}
-          environmentIdentifier={environmentIdentifier}
-          selectedInfrastructure={''}
-          stageDeploymentType={deploymentType as ServiceDeploymentType}
-          stageCustomDeploymentData={customDeploymentRef}
-          getTemplate={getTemplate}
-          scope={getScopeFromValue(environmentIdentifier)}
-        />
-      </ModalDialog>
     </>
   )
 }

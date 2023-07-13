@@ -38,7 +38,7 @@ export function getEnvironmentsFormStateFromInitialValues(
   } else {
     defaultTo(environments, []).map((environment: EnvironmentYamlV2, index: number) => {
       set(formState, `environments.${index}`, {
-        label: getIdentifierFromScopedRef(environment.environmentRef),
+        label: getIdentifierFromScopedRef(environment.environmentRef as string),
         value: environment.environmentRef
       })
 
@@ -52,7 +52,7 @@ export function getEnvironmentsFormStateFromInitialValues(
               'serviceOverrideInputs',
               getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
                 ? {
-                    [environment.environmentRef]: {
+                    [environment.environmentRef as string]: {
                       [serviceOverride.serviceRef]: serviceOverride.serviceOverrideInputs
                     }
                   }
@@ -67,7 +67,7 @@ export function getEnvironmentsFormStateFromInitialValues(
             'serviceOverrideInputs',
             getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED && serviceIdentifiers?.length
               ? {
-                  [environment.environmentRef]: {
+                  [environment.environmentRef as string]: {
                     [serviceIdentifiers?.[0] as string]: environment?.serviceOverrideInputs
                   }
                 }

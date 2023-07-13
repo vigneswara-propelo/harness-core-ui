@@ -7,13 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly environmentEntityWidget: string
-  readonly inputField: string
-  readonly inputSetSpinner: string
-  readonly inputWidth: string
-  readonly mainContent: string
-  readonly modalFooter: string
-  readonly radioGroup: string
-  readonly toggle: string
+  readonly propagateFromRadio: string
+  readonly stageSelectDropDown: string
+  readonly stageSelectionGrid: string
 }
 export default styles

@@ -20,6 +20,15 @@ export function processSingleEnvironmentFormValues(
 ): DeployEnvironmentEntityConfig {
   const { gitOpsEnabled, serviceIdentifiers } = customStepProps
   const isOverridesEnabled = (customStepProps as any).isOverridesEnabled
+  if (!isNil(data.propagateFrom)) {
+    return {
+      environment: {
+        useFromStage: {
+          stage: defaultTo(data.propagateFrom.value as string, '')
+        }
+      }
+    }
+  }
 
   if (!isNil(data.environment)) {
     // ! Do not merge this with the other returns even if they look similar. It makes it confusing to read
@@ -113,7 +122,11 @@ export function processSingleEnvironmentFormValues(
     }
   }
 
-  return {}
+  return {
+    environment: {
+      environmentRef: ''
+    }
+  }
 }
 
 export function processSingleEnvironmentGitOpsFormValues(

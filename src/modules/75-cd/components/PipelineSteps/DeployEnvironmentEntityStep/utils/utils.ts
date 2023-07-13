@@ -36,7 +36,9 @@ export function processInitialValues(
   const gitOpsEnabled = !!customStepProps.gitOpsEnabled
 
   // istanbul ignore else
-  if (initialValues.environment && initialValues.environment.environmentRef) {
+  if (initialValues.environment && initialValues.environment.useFromStage && !gitOpsEnabled) {
+    return processSingleEnvironmentInitialValues(initialValues.environment, customStepProps)
+  } else if (initialValues.environment && initialValues.environment.environmentRef) {
     if (gitOpsEnabled) {
       return processSingleEnvironmentGitOpsInitialValues(initialValues.environment)
     } else {
@@ -132,14 +134,19 @@ export function getValidationSchema(getString: UseStringsReturn['getString'], gi
     .test({
       test(valueObj: DeployEnvironmentEntityFormState): boolean | Yup.ValidationError {
         if (valueObj.category === 'single') {
-          if (!valueObj.environment) {
+          if (!valueObj.environment && isNil(valueObj.propagateFrom)) {
             return this.createError({
               path: 'environment',
               message: getString('cd.pipelineSteps.environmentTab.environmentIsRequired')
             })
           }
 
-          if (!gitOpsEnabled && !valueObj.infrastructure && !isValueRuntimeInput(valueObj.environment)) {
+          if (
+            !gitOpsEnabled &&
+            !valueObj.infrastructure &&
+            !isValueRuntimeInput(valueObj.environment) &&
+            isNil(valueObj.propagateFrom)
+          ) {
             return this.createError({
               path: 'infrastructure',
               message: getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired')

@@ -302,6 +302,8 @@ pipelineSteps:
     deleteClusterFromListConfirmationText: Are you sure you want to remove Cluster - {{name}} from the list?
     deleteEnvironmentGroupFromListDialogTitleText: Remove Environment Group from list?
     deleteEnvironmentGroupFromListConfirmationText: Are you sure you want to remove Environment Group - {{name}} from the list?
+    propagateEnvironmentFrom: 'Propagate Environment From:'
+    deployToDifferentEnvironment: Deploy to Different Environment
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage

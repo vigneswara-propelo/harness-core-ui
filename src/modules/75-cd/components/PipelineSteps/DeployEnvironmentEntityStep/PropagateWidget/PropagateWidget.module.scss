@@ -1,0 +1,22 @@
+.stageSelectionGrid {
+  cursor: pointer;
+  position: relative;
+  .stageSelectDropDown {
+    width: 350px;
+    margin-bottom: 0px;
+    font-size: 13px;
+    :global {
+      .bp3-form-helper-text {
+        position: absolute;
+        bottom: -26px;
+      }
+      .bp3-input {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.propagateFromRadio {
+  flex-shrink: 0;
+}

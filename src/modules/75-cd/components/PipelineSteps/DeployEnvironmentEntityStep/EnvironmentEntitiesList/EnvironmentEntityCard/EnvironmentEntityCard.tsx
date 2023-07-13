@@ -132,6 +132,10 @@ export function EnvironmentEntityCard({
     permission: PermissionIdentifier.EDIT_ENVIRONMENT
   }
 
+  const isPropagating = useMemo(() => {
+    return !isNil(values.propagateFrom)
+  }, [values.propagateFrom])
+
   return (
     <Card className={css.card}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -155,21 +159,25 @@ export function EnvironmentEntityCard({
         </Layout.Vertical>
 
         <Container>
-          <RbacButton
-            variation={ButtonVariation.ICON}
-            icon="edit"
-            data-testid={`edit-environment-${identifier}`}
-            disabled={readonly}
-            onClick={() => onEditClick({ environment, environmentInputs })}
-            permission={environmentPermission}
-          />
-          <Button
-            variation={ButtonVariation.ICON}
-            icon="remove-minus"
-            data-testid={`delete-environment-${identifier}`}
-            disabled={readonly}
-            onClick={() => onDeleteClick({ environment, environmentInputs })}
-          />
+          {!isPropagating && (
+            <React.Fragment>
+              <RbacButton
+                variation={ButtonVariation.ICON}
+                icon="edit"
+                data-testid={`edit-environment-${identifier}`}
+                disabled={readonly}
+                onClick={() => onEditClick({ environment, environmentInputs })}
+                permission={environmentPermission}
+              />
+              <Button
+                variation={ButtonVariation.ICON}
+                icon="remove-minus"
+                data-testid={`delete-environment-${identifier}`}
+                disabled={readonly}
+                onClick={() => onDeleteClick({ environment, environmentInputs })}
+              />
+            </React.Fragment>
+          )}
         </Container>
       </Layout.Horizontal>
 
@@ -192,7 +200,7 @@ export function EnvironmentEntityCard({
               allowableTypes={allowableTypes}
               deploymentType={deploymentType}
               stageIdentifier={stageIdentifier}
-              readonly={readonly}
+              readonly={readonly || isPropagating}
             />
 
             <ServiceOverrideInputs
@@ -202,7 +210,7 @@ export function EnvironmentEntityCard({
               allowableTypes={allowableTypes}
               deploymentType={deploymentType}
               stageIdentifier={stageIdentifier}
-              readonly={readonly}
+              readonly={readonly || isPropagating}
             />
           </Collapse>
         </>

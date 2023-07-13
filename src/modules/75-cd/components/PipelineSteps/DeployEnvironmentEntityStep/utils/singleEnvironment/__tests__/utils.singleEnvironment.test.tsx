@@ -529,7 +529,11 @@ describe('process single environment form values', () => {
   test('no environment in form state', () => {
     const output = processSingleEnvironmentFormValues({}, { gitOpsEnabled: false })
 
-    expect(output).toEqual({})
+    expect(output).toEqual({
+      environment: {
+        environmentRef: ''
+      }
+    })
   })
 
   test('environment, service overrides and infra inputs when environment is expression', () => {

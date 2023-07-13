@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import React, { useMemo, useState } from 'react'
+import { defaultTo, isEmpty, isNil } from 'lodash-es'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
@@ -71,6 +71,10 @@ export function InfrastructureEntityCard({
     return inputsKeys.length === 1 && inputsKeys.includes('provisioner')
   }, [infrastructureInputs])
 
+  const isPropagating = useMemo(() => {
+    return !isNil(values.propagateFrom)
+  }, [values.propagateFrom])
+
   return (
     <Card className={css.card}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -92,21 +96,25 @@ export function InfrastructureEntityCard({
         </Layout.Vertical>
 
         <Container>
-          <RbacButton
-            variation={ButtonVariation.ICON}
-            icon="edit"
-            data-testid={`edit-infrastructure-${identifier}`}
-            disabled={readonly}
-            onClick={() => onEditClick({ infrastructureDefinition, infrastructureInputs })}
-            permission={environmentPermission}
-          />
-          <Button
-            variation={ButtonVariation.ICON}
-            icon="remove-minus"
-            data-testid={`delete-infrastructure-${identifier}`}
-            disabled={readonly}
-            onClick={() => onDeleteClick({ infrastructureDefinition, infrastructureInputs })}
-          />
+          {!isPropagating && (
+            <React.Fragment>
+              <RbacButton
+                variation={ButtonVariation.ICON}
+                icon="edit"
+                data-testid={`edit-infrastructure-${identifier}`}
+                disabled={readonly}
+                onClick={() => onEditClick({ infrastructureDefinition, infrastructureInputs })}
+                permission={environmentPermission}
+              />
+              <Button
+                variation={ButtonVariation.ICON}
+                icon="remove-minus"
+                data-testid={`delete-infrastructure-${identifier}`}
+                disabled={readonly}
+                onClick={() => onDeleteClick({ infrastructureDefinition, infrastructureInputs })}
+              />
+            </React.Fragment>
+          )}
         </Container>
       </Layout.Horizontal>
       {!onlyProvisionerInput &&
@@ -151,7 +159,7 @@ export function InfrastructureEntityCard({
                     infrastructureInputs?.type) as StepType
                 }
                 path={`infrastructureInputs.['${environmentIdentifier}'].${identifier}.spec`}
-                readonly={readonly}
+                readonly={readonly || isPropagating}
                 stepViewType={StepViewType.TemplateUsage}
                 customStepProps={{
                   // serviceRef: deploymentStage?.service?.serviceRef,

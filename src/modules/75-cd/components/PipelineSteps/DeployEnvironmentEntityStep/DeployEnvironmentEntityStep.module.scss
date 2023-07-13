@@ -23,8 +23,16 @@
     }
   }
 
+  .input-field {
+    grid-area: input-field;
+  }
+
   .toggle {
     grid-area: toggle;
+  }
+
+  .main-content {
+    grid-area: main-content;
   }
 
   .radio-group {

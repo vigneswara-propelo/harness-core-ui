@@ -4470,6 +4470,7 @@ export interface StringsMap {
   'pipeline.infraSpecifications.serviceAccountName': string
   'pipeline.infraSpecifications.serviceAccountNamePlaceholder': string
   'pipeline.infraSpecifications.validation.requiredExistingStage': string
+  'pipeline.infrastructurePropagatedFrom': string
   'pipeline.inputSetDiffTitle': string
   'pipeline.inputSetErrorStrip.errorInfo': string
   'pipeline.inputSetErrorStrip.existingYaml': string
@@ -6405,6 +6406,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deployToAll': string
+  'cd.pipelineSteps.environmentTab.deployToDifferentEnvironment': string
   'cd.pipelineSteps.environmentTab.envGroupToggleText': string
   'cd.pipelineSteps.environmentTab.environmentGroupConfirmationText': string
   'cd.pipelineSteps.environmentTab.environmentGroupDialogTitleText': string
@@ -6428,6 +6430,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel': string
   'cd.pipelineSteps.environmentTab.newEnvironment': string
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string
+  'cd.pipelineSteps.environmentTab.propagateEnvironmentFrom': string
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.selectEnvironments': string
