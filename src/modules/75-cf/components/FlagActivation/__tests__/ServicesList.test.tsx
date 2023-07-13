@@ -9,24 +9,25 @@ import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useToaster } from '@harness/uicore'
+import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useGetServiceDetailsMock from 'services/cd-ng'
 import * as cfServiceMock from 'services/cf'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockServiceList from './__data__/mockService'
 import mockPaginatedServiceList from './__data__/mockPaginationServices'
-import ServicesList from '../ServicesList'
+import ServicesList, { ServicesListProps } from '../ServicesList'
 
 const refetchFlagMock = jest.fn()
 const loadingMessage = 'Loading, please wait...'
 
-const renderComponent = (): RenderResult => {
+const renderComponent = (props: Partial<ServicesListProps> = {}): RenderResult => {
   return render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <ServicesList featureFlag={mockFeature} refetchFlag={refetchFlagMock} />
+      <ServicesList featureFlag={mockFeature} refetchFlag={refetchFlagMock} {...props} />
     </TestWrapper>
   )
 }
@@ -57,6 +58,27 @@ describe('ServiceList', () => {
     mockFeature.services!.forEach(service => {
       expect(screen.getByText(service.name)).toBeInTheDocument()
     })
+  })
+
+  test('it should prevent the modal from being opened if the flag is archived', async () => {
+    const archivedMockFeature = cloneDeep(mockFeature)
+    archivedMockFeature.archived = true
+
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockServiceList,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
+    usePatchServicesMock.mockReturnValue({
+      loading: false,
+      mutate: patchMock
+    } as any)
+
+    renderComponent({ featureFlag: archivedMockFeature })
+
+    expect(screen.getByRole('button', { name: 'edit-services' })).toBeDisabled()
   })
 
   test('it should send patch request correctly', async () => {

@@ -126,23 +126,27 @@ exports[`FlagActivation it should render correctly 1`] = `
                           <div
                             class="bp3-card bp3-elevation-0 Card--card"
                           >
-                            <label
-                              class="bp3-control bp3-switch bp3-align-left bp3-large switch"
+                            <div
+                              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                             >
-                              <input
-                                checked=""
-                                data-testid="flag-status-switch"
-                                type="checkbox"
-                              />
-                              <span
-                                class="bp3-control-indicator"
-                              />
-                              <span
-                                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-input-text"
+                              <label
+                                class="bp3-control bp3-switch bp3-align-left bp3-large switch"
                               >
-                                cf.featureFlags.flagOn
-                              </span>
-                            </label>
+                                <input
+                                  checked=""
+                                  data-testid="flag-status-switch"
+                                  type="checkbox"
+                                />
+                                <span
+                                  class="bp3-control-indicator"
+                                />
+                                <span
+                                  class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-input-text"
+                                >
+                                  cf.featureFlags.flagOn
+                                </span>
+                              </label>
+                            </div>
                           </div>
                           <div
                             class="bp3-card bp3-elevation-0 Card--card"

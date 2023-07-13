@@ -6,22 +6,23 @@
  */
 
 import React from 'react'
-import { getByTestId, getByText, render, screen, waitFor } from '@testing-library/react'
+import { RenderResult, getByTestId, getByText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { cloneDeep } from 'lodash-es'
 import * as ffServices from 'services/cf'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
-import { FlagPrerequisites } from '../FlagPrerequisites'
+import { FlagPrerequisites, FlagPrerequisitesProps } from '../FlagPrerequisites'
 
 const mockFeatures = {
   ...mockFeatureFlags,
   features: [...mockFeatureFlags.features.slice(-3)]
 }
 
-const renderComponent = (): void => {
-  render(
+const renderComponent = (props: Partial<FlagPrerequisitesProps> = {}): RenderResult => {
+  return render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{
@@ -36,6 +37,7 @@ const renderComponent = (): void => {
         featureFlag={mockFeature}
         refetchFlag={jest.fn()}
         setGovernanceMetadata={jest.fn()}
+        {...props}
       />
     </TestWrapper>
   )
@@ -49,8 +51,7 @@ describe('FlagPrerequisites', () => {
       error: null,
       refetch: jest.fn()
     } as any)
-  })
-  afterEach(() => {
+
     jest.clearAllMocks()
   })
 
@@ -62,7 +63,7 @@ describe('FlagPrerequisites', () => {
       expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
-    await userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.featureFlags.newPrerequisite' }))
 
     const modal = screen.getByTestId('flag-prerequisite-modal')
     await waitFor(() => {
@@ -72,18 +73,27 @@ describe('FlagPrerequisites', () => {
     expect(screen.getByTestId('flag-prerequisite-modal')).toMatchSnapshot()
   })
 
-  test('form should render when adding prerequisite', async () => {
+  test('it should not allow the modal to be opened if the flag is archived', async () => {
+    const archivedMockFeature = cloneDeep(mockFeature)
+    archivedMockFeature.archived = true
+
+    renderComponent({ featureFlag: archivedMockFeature })
+
+    expect(screen.getByRole('button', { name: 'cf.featureFlags.newPrerequisite' })).toBeDisabled()
+  })
+
+  test('it should render a form when adding prerequisite', async () => {
     renderComponent()
 
     await waitFor(() => {
       expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
-    await userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.featureFlags.newPrerequisite' }))
 
     await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeVisible())
 
-    await userEvent.click(screen.getByTestId('prerequisites-button'))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.shared.prerequisites' }))
 
     await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeVisible())
   })
@@ -94,9 +104,10 @@ describe('FlagPrerequisites', () => {
       expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
-    await userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.featureFlags.newPrerequisite' }))
+
     await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeVisible())
-    await userEvent.click(screen.getByTestId('prerequisites-button'))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.shared.prerequisites' }))
 
     await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeVisible())
 
@@ -131,7 +142,7 @@ describe('FlagPrerequisites', () => {
     expect(modal).toBeVisible()
     expect(getByText(modal, 'cf.addPrerequisites.editPrerequisitesHeading')).toBeVisible()
     expect(getByTestId(modal, 'prerequisites-form')).toBeVisible()
-    expect(getByTestId(modal, 'prerequisites-button')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'cf.shared.prerequisites' })).toBeVisible()
   })
 
   test('It should populate the form inputs with the correct values', async () => {

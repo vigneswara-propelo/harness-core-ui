@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeatureEnabledMock from '@cf/pages/feature-flags-detail/targeting-rules-tab/hooks/useFeatureEnabled'
@@ -23,6 +24,8 @@ const renderComponent = (): void => {
 }
 
 describe('DisabledFeatureTooltip', () => {
+  beforeEach(() => jest.clearAllMocks())
+
   test('it should return RBAC Tooltip when user does not have permission', async () => {
     jest.spyOn(useFeatureEnabledMock, 'default').mockReturnValue({
       enabledByPlanEnforcement: true,
@@ -34,7 +37,7 @@ describe('DisabledFeatureTooltip', () => {
 
     renderComponent()
 
-    fireEvent.mouseOver(screen.getByTestId('disabled-feature-tooltip'))
+    userEvent.hover(screen.getByTestId('disabled-feature-tooltip'))
 
     await waitFor(() => expect(screen.getByText(/rbac.youAreMissingTheFollowingPermission/)).toBeInTheDocument())
   })
@@ -50,7 +53,7 @@ describe('DisabledFeatureTooltip', () => {
 
     renderComponent()
 
-    fireEvent.mouseOver(screen.getByTestId('disabled-feature-tooltip'))
+    userEvent.hover(screen.getByTestId('disabled-feature-tooltip'))
 
     await waitFor(() => expect(screen.getByText('cf.planEnforcement.upgradeRequiredMau')).toBeInTheDocument())
   })

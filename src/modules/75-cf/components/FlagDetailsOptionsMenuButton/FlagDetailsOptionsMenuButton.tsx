@@ -21,10 +21,10 @@ import type {
   PatchFeaturePathParams,
   PatchFeatureQueryParams
 } from 'services/cf'
-import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import routes from '@common/RouteDefinitions'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'

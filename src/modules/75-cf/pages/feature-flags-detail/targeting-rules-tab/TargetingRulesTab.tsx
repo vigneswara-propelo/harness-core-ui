@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Container, Formik, FormikForm, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Card, Container, Formik, FormikForm, Layout, Tag, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
-import React, { ReactElement, useCallback, useState } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { FieldArray, FieldArrayRenderProps } from 'formik'
@@ -45,11 +45,7 @@ export interface TargetingRulesTabProps {
   refetchFlagLoading: boolean
 }
 
-const TargetingRulesTab = ({
-  featureFlagData,
-  refetchFlag,
-  refetchFlagLoading
-}: TargetingRulesTabProps): ReactElement => {
+const TargetingRulesTab: FC<TargetingRulesTabProps> = ({ featureFlagData, refetchFlag, refetchFlagLoading }) => {
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { getString } = useStrings()
@@ -90,7 +86,7 @@ const TargetingRulesTab = ({
   })
 
   const { featureEnabled, canEdit, canToggle } = useFeatureEnabled()
-  const disabled = patchFeatureLoading || refetchFlagLoading || !featureEnabled
+  const disabled = patchFeatureLoading || refetchFlagLoading || !featureEnabled || !!featureFlagData?.archived
 
   const handleRefetchSegments = async (searchTerm: string): Promise<void> =>
     await refetchSegments({
@@ -251,19 +247,22 @@ const TargetingRulesTab = ({
               className={css.flagRulesSection}
             >
               <Card elevation={0}>
-                <FlagToggleSwitch
-                  disabled={disabled || !canToggle}
-                  currentState={formikProps.values.state}
-                  currentEnvironmentState={featureFlagData.envProperties?.state}
-                  handleToggle={() =>
-                    formikProps.setFieldValue(
-                      'state',
-                      formikProps.values.state === FeatureFlagActivationStatus.OFF
-                        ? FeatureFlagActivationStatus.ON
-                        : FeatureFlagActivationStatus.OFF
-                    )
-                  }
-                />
+                <Layout.Horizontal spacing="small">
+                  <FlagToggleSwitch
+                    disabled={disabled || !canToggle}
+                    currentState={formikProps.values.state}
+                    currentEnvironmentState={featureFlagData.envProperties?.state}
+                    handleToggle={() =>
+                      formikProps.setFieldValue(
+                        'state',
+                        formikProps.values.state === FeatureFlagActivationStatus.OFF
+                          ? FeatureFlagActivationStatus.ON
+                          : FeatureFlagActivationStatus.OFF
+                      )
+                    }
+                  />
+                  {featureFlagData.archived && <Tag minimal>{getString('cf.shared.archived').toUpperCase()}</Tag>}
+                </Layout.Horizontal>
               </Card>
               <FieldArray
                 name="targetingRuleItems"

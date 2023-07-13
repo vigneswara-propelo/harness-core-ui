@@ -7,14 +7,12 @@
 
 import { Icon, PopoverPosition } from '@blueprintjs/core'
 import { ButtonVariation } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import React, { FC } from 'react'
 import { useStrings } from 'framework/strings'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-
 import type { Variation } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import type { VariationColorMap } from '../../types'
@@ -27,12 +25,13 @@ export interface AddTargetingButtonProps {
   disabled?: boolean
 }
 
-const AddTargetingButton = ({
+const AddTargetingButton: FC<AddTargetingButtonProps> = ({
   targetingDropdownVariations,
   variationColorMap,
   addVariation,
-  addPercentageRollout
-}: AddTargetingButtonProps): ReactElement => {
+  addPercentageRollout,
+  disabled
+}) => {
   const { getString } = useStrings()
   const { activeEnvironment } = useActiveEnvironment()
 
@@ -71,6 +70,7 @@ const AddTargetingButton = ({
 
   return (
     <RbacOptionsMenuButton
+      disabled={disabled}
       icon="plus"
       rightIcon="chevron-down"
       variation={ButtonVariation.SECONDARY}
@@ -79,7 +79,8 @@ const AddTargetingButton = ({
       tooltipProps={{
         interactionKind: 'click',
         minimal: true,
-        position: PopoverPosition.BOTTOM_LEFT
+        position: PopoverPosition.BOTTOM_LEFT,
+        disabled: disabled
       }}
     />
   )

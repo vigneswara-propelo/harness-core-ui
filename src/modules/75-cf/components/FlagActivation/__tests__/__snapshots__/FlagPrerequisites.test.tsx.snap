@@ -382,7 +382,6 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
         <button
           aria-label="cf.shared.prerequisites"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
-          data-testid="prerequisites-button"
           type="button"
         >
           <span

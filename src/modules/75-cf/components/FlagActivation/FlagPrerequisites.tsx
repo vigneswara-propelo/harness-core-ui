@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { flatMap, get, isEqual } from 'lodash-es'
 import * as yup from 'yup'
@@ -50,7 +50,7 @@ import patch from '../../utils/instructions'
 import SaveFlagToGitSubForm from '../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
 import { PrerequisiteItem } from './FlagPrerequisiteItem'
 
-interface FlagPrerequisitesProps {
+export interface FlagPrerequisitesProps {
   featureFlag: Feature
   gitSync: UseGitSync
   refetchFlag: () => void
@@ -61,7 +61,7 @@ interface PrerequisiteEntry {
   feature: string
   variation: string
 }
-export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
+export const FlagPrerequisites: FC<FlagPrerequisitesProps> = props => {
   const { featureFlag, refetchFlag, gitSync, setGovernanceMetadata } = props
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -311,7 +311,6 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
                             intent="primary"
                             text={getString('cf.shared.prerequisites')}
                             icon="small-plus"
-                            data-testid="prerequisites-button"
                             onClick={() => {
                               arrayHelpers.push({ feature: '', variations: [''] })
                             }}
@@ -395,7 +394,6 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
       )}
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
         <RbacButton
-          data-testid="add-prerequisites-button"
           minimal
           icon="small-plus"
           size={ButtonSize.SMALL}

@@ -7,12 +7,10 @@
 
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
 import React from 'react'
 import * as uuid from 'uuid'
 import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import * as cfServicesMock from 'services/cf'
 import type { TargetingRulesTabProps } from '../TargetingRulesTab'
@@ -44,10 +42,6 @@ const renderComponent = (
   )
 
 describe('TargetingRulesTab', () => {
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   beforeAll(() => {
     jest.spyOn(uuid, 'v4').mockReturnValue('UUID')
   })
@@ -64,6 +58,44 @@ describe('TargetingRulesTab', () => {
       loading: false,
       refetch: jest.fn()
     } as any)
+
+    jest.clearAllMocks()
+  })
+
+  test('it should disable this section if the selected flag is archived', async () => {
+    const archivedMockFeature = cloneDeep(mockFeature)
+    archivedMockFeature.archived = true
+
+    renderComponent({
+      featureFlagData: {
+        ...archivedMockFeature,
+        envProperties: {
+          pipelineConfigured: false,
+          pipelineDetails: undefined,
+          defaultServe: { variation: 'false' },
+          environment: 'qatest',
+          modifiedAt: 1635333973373,
+          offVariation: 'false',
+          rules: [],
+          state: 'off',
+          variationMap: [],
+          version: 56
+        }
+      }
+    })
+
+    expect(screen.getByText('CF.SHARED.ARCHIVED')).toBeInTheDocument()
+
+    // flag variations dropdowns
+    const textboxes = screen.getAllByRole('textbox')
+    expect(textboxes[0]).toBeDisabled()
+    expect(textboxes[1]).toBeDisabled()
+
+    // Add Targeting Button
+    expect(screen.getByRole('button', { name: 'cf.featureFlags.rules.addTargeting' })).toHaveAttribute('disabled')
+
+    // Flag toggle
+    expect(screen.getByRole('checkbox', { name: 'cf.featureFlags.flagOff' })).toBeDisabled()
   })
 
   describe('Flag State', () => {
@@ -138,10 +170,7 @@ describe('TargetingRulesTab', () => {
       await userEvent.click(onVariationDropdownOptions[1])
       expect(onVariationDropdown).toHaveValue('False')
 
-      // click save
-      const saveButton = screen.getByRole('button', { name: 'save' })
-      expect(saveButton).toBeInTheDocument()
-      await userEvent.click(saveButton)
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
       expect(screen.getByText('cf.featureFlags.rules.ruleChangeModalTitle')).toBeInTheDocument()
       expect(screen.getByText('cf.featureFlags.rules.ruleChangeModalDescriptionEnabled')).toBeInTheDocument()
@@ -484,10 +513,7 @@ describe('TargetingRulesTab', () => {
       await userEvent.click(percentageRolloutOption)
       expect(screen.getByTestId('percentage_rollout_item_1')).toBeInTheDocument()
 
-      // click save
-      const saveButton = screen.getByText('save')
-      expect(saveButton).toBeInTheDocument()
-      await userEvent.click(saveButton)
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
       await waitFor(() => {
         expect(screen.getByText('100cf.percentageRollout.assignToVariation')).toBeInTheDocument()
@@ -553,10 +579,8 @@ describe('TargetingRulesTab', () => {
       await userEvent.clear(falseWeight)
       await userEvent.type(falseWeight, '30')
 
-      // click save
-      const saveButton = screen.getByText('save')
-      expect(saveButton).toBeInTheDocument()
-      await userEvent.click(saveButton)
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
       await waitFor(() => expect(saveChangesMock).toBeCalledWith(expectedFormValues))
     })
 

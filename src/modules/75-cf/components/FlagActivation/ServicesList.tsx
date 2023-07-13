@@ -205,8 +205,7 @@ export interface ServicesListProps {
   refetchFlag: () => void
 }
 
-const ServicesList: React.FC<ServicesListProps> = props => {
-  const { featureFlag, refetchFlag } = props
+const ServicesList: FC<ServicesListProps> = ({ featureFlag, refetchFlag }) => {
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
 
   const { handleResponseError } = useResponseError()
@@ -402,6 +401,7 @@ const ServicesList: React.FC<ServicesListProps> = props => {
 
         <FlexExpander />
         <RbacButton
+          disabled={featureFlag.archived}
           variation={ButtonVariation.ICON}
           icon="Edit"
           onClick={() => setShowModal(true)}
