@@ -17,6 +17,7 @@ import {
   MockSensitivityComponent,
   expectedErrorsForEmptyTemplateInputs,
   formikMockValues,
+  formikMockValuesWithRolling,
   formikMockValuesWithSimpleVerification,
   mockedTemplateInputs,
   mockedTemplateInputsToValidate
@@ -309,9 +310,12 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
             CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: false
           }}
         >
-          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+          <Formik initialValues={formikMockValuesWithRolling.values} onSubmit={jest.fn()}>
             <div>
-              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+              <SelectVerificationType
+                allowableTypes={[MultiTypeInputType.FIXED]}
+                formik={formikMockValuesWithRolling}
+              />
             </div>
           </Formik>
         </TestWrapper>
@@ -337,9 +341,12 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
             CV_UI_DISPLAY_NODE_REGEX_FILTER: false
           }}
         >
-          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+          <Formik initialValues={formikMockValuesWithRolling.values} onSubmit={jest.fn()}>
             <div>
-              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+              <SelectVerificationType
+                allowableTypes={[MultiTypeInputType.FIXED]}
+                formik={formikMockValuesWithRolling}
+              />
             </div>
           </Formik>
         </TestWrapper>
@@ -365,9 +372,12 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
             CV_UI_DISPLAY_NODE_REGEX_FILTER: true
           }}
         >
-          <Formik initialValues={formikMockValues.values} onSubmit={jest.fn()}>
+          <Formik initialValues={formikMockValuesWithRolling.values} onSubmit={jest.fn()}>
             <div>
-              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValues} />
+              <SelectVerificationType
+                allowableTypes={[MultiTypeInputType.FIXED]}
+                formik={formikMockValuesWithRolling}
+              />
             </div>
           </Formik>
         </TestWrapper>
