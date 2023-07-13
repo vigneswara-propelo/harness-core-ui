@@ -72,7 +72,13 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
     ConfigFilesMap.Bitbucket,
     ConfigFilesMap.GitLab
   ],
-  ECS: [ConfigFilesMap.Harness],
+  ECS: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
   CustomDeployment: [ConfigFilesMap.Harness],
   Elastigroup: [ConfigFilesMap.Harness],
   TAS: [ConfigFilesMap.Harness, ConfigFilesMap.Github],
