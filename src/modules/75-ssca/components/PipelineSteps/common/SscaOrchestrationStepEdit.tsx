@@ -6,18 +6,7 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import {
-  Accordion,
-  Formik,
-  FormikForm,
-  FormInput,
-  getMultiTypeFromValue,
-  Icon,
-  Layout,
-  MultiTypeInputType,
-  SelectOption,
-  Text
-} from '@harness/uicore'
+import { Accordion, Formik, FormikForm, FormInput, Icon, Layout, SelectOption, Text } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
@@ -47,10 +36,11 @@ import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiT
 import { useStrings } from 'framework/strings'
 import type {} from 'services/ci'
 import { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'services/pipeline-ng'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaOrchestrationStepFunctionConfigs'
 import { SscaStepProps } from './types'
 import { AllMultiTypeInputTypesForStep } from './utils'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './SscaStep.module.scss'
 
 const getTypedOptions = <T extends string>(input: T[]): SelectOption[] => {
@@ -79,7 +69,7 @@ const SscaOrchestrationStepEdit = <T,>(
 ): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
+  const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
   const { getStageFromPipeline, state } = usePipelineContext()
   const { stage: currentStage } = getStageFromPipeline<BuildStageElementConfig>(
     state.selectionState.selectedStageId || ''
@@ -186,7 +176,7 @@ const SscaOrchestrationStepEdit = <T,>(
                 gitScope={gitScope}
                 setRefValue
                 configureOptionsProps={{
-                  hideExecutionTimeField: true
+                  hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
                 }}
               />
 
@@ -200,11 +190,12 @@ const SscaOrchestrationStepEdit = <T,>(
                 multiTextInputProps={{
                   disabled: readonly,
                   multiTextInputProps: {
+                    expressions,
                     allowableTypes: AllMultiTypeInputTypesForStep
                   }
                 }}
                 configureOptionsProps={{
-                  hideExecutionTimeField: true
+                  hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
                 }}
               />
 
@@ -221,6 +212,11 @@ const SscaOrchestrationStepEdit = <T,>(
                 name="spec.attestation.spec.privateKey"
                 label={getString('connectors.serviceNow.privateKey')}
                 expressions={expressions}
+                allowableTypes={allowableTypes}
+                enableConfigureOptions
+                configureOptionsProps={{
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                }}
                 disabled={readonly}
               />
 
@@ -228,6 +224,11 @@ const SscaOrchestrationStepEdit = <T,>(
                 name="spec.attestation.spec.password"
                 label={getString('password')}
                 expressions={expressions}
+                allowableTypes={allowableTypes}
+                enableConfigureOptions
+                configureOptionsProps={{
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                }}
                 disabled={readonly}
               />
 
@@ -241,7 +242,7 @@ const SscaOrchestrationStepEdit = <T,>(
                     {getString('infrastructureText')}
                   </Text>
 
-                  <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <div className={css.formGroup}>
                     <FormMultiTypeConnectorField
                       name="spec.infrastructure.spec.connectorRef"
                       label={getString('connector')}
@@ -255,40 +256,38 @@ const SscaOrchestrationStepEdit = <T,>(
                       setRefValue
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
-                    {getMultiTypeFromValue(get(formik.values, 'spec.infrastructure.spec.connectorRef')) ===
-                      MultiTypeInputType.RUNTIME &&
-                      !readonly && (
-                        <ConnectorConfigureOptions
-                          style={{ marginTop: 10 }}
-                          value={get(formik.values, 'spec.infrastructure.spec.connectorRef')}
-                          type={
-                            <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                              <Icon name={getIconByType('K8sCluster')}></Icon>
-                              <Text>{getString('pipelineSteps.kubernetesInfraStep.kubernetesConnector')}</Text>
-                            </Layout.Horizontal>
+                    {isValueRuntimeInput(get(formik.values, 'spec.infrastructure.spec.connectorRef')) && !readonly && (
+                      <ConnectorConfigureOptions
+                        style={{ marginTop: 10 }}
+                        value={get(formik.values, 'spec.infrastructure.spec.connectorRef')}
+                        type={
+                          <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                            <Icon name={getIconByType('K8sCluster')}></Icon>
+                            <Text>{getString('pipelineSteps.kubernetesInfraStep.kubernetesConnector')}</Text>
+                          </Layout.Horizontal>
+                        }
+                        variableName="spec.infrastructure.spec.connector"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => {
+                          formik.setFieldValue('spec.infrastructure.spec.connector', value)
+                        }}
+                        isReadonly={readonly}
+                        connectorReferenceFieldProps={{
+                          accountIdentifier: accountId,
+                          projectIdentifier,
+                          orgIdentifier,
+                          label: getString('connector'),
+                          disabled: readonly,
+                          gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true },
+                          tooltipProps: {
+                            dataTooltipId: 'k8InfraConnector'
                           }
-                          variableName="spec.infrastructure.spec.connector"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          onChange={value => {
-                            formik.setFieldValue('spec.infrastructure.spec.connector', value)
-                          }}
-                          isReadonly={readonly}
-                          connectorReferenceFieldProps={{
-                            accountIdentifier: accountId,
-                            projectIdentifier,
-                            orgIdentifier,
-                            label: getString('connector'),
-                            disabled: readonly,
-                            gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true },
-                            tooltipProps: {
-                              dataTooltipId: 'k8InfraConnector'
-                            }
-                          }}
-                        />
-                      )}
+                        }}
+                      />
+                    )}
                   </div>
-                  <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <div className={css.formGroup}>
                     <FormInput.MultiTextInput
                       name="spec.infrastructure.spec.namespace"
                       style={{ width: '400px' }}
@@ -297,22 +296,20 @@ const SscaOrchestrationStepEdit = <T,>(
                       placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
                       multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
                     />
-                    {getMultiTypeFromValue(get(formik.values, 'spec.infrastructure.spec.namespace')) ===
-                      MultiTypeInputType.RUNTIME &&
-                      !readonly && (
-                        <ConfigureOptions
-                          value={get(formik.values, 'spec.infrastructure.spec.namespace')}
-                          type="String"
-                          variableName="spec.infrastructure.spec.namespace"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          onChange={value => {
-                            formik.setFieldValue('spec.infrastructure.spec.namespace', value)
-                          }}
-                          isReadonly={readonly}
-                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                        />
-                      )}
+                    {isValueRuntimeInput(get(formik.values, 'spec.infrastructure.spec.namespace')) && !readonly && (
+                      <ConfigureOptions
+                        value={get(formik.values, 'spec.infrastructure.spec.namespace')}
+                        type="String"
+                        variableName="spec.infrastructure.spec.namespace"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => {
+                          formik.setFieldValue('spec.infrastructure.spec.namespace', value)
+                        }}
+                        isReadonly={readonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                      />
+                    )}
                   </div>
 
                   <Layout.Horizontal spacing="small">
@@ -326,8 +323,7 @@ const SscaOrchestrationStepEdit = <T,>(
                       }}
                       tooltipProps={{ dataTooltipId: 'setContainerResources' }}
                     />
-                    {getMultiTypeFromValue(get(formik.values, 'spec.infrastructure.spec.resources.limits.memory')) ===
-                      MultiTypeInputType.RUNTIME &&
+                    {isValueRuntimeInput(get(formik.values, 'spec.infrastructure.spec.resources.limits.memory')) &&
                       !readonly && (
                         <ConfigureOptions
                           style={{ marginTop: 18 }}
@@ -340,8 +336,10 @@ const SscaOrchestrationStepEdit = <T,>(
                             formik.setFieldValue('spec.infrastructure.spec.resources.limits.memory', value)
                           }}
                           isReadonly={readonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
+
                     <FormInput.MultiTextInput
                       name="spec.infrastructure.spec.resources.limits.cpu"
                       label={getString('pipelineSteps.limitCPULabel')}
@@ -352,8 +350,7 @@ const SscaOrchestrationStepEdit = <T,>(
                       }}
                       tooltipProps={{ dataTooltipId: 'setContainerResources' }}
                     />
-                    {getMultiTypeFromValue(get(formik.values, 'spec.infrastructure.spec.resources.limits.cpu')) ===
-                      MultiTypeInputType.RUNTIME &&
+                    {isValueRuntimeInput(get(formik.values, 'spec.infrastructure.spec.resources.limits.cpu')) &&
                       !readonly && (
                         <ConfigureOptions
                           style={{ marginTop: 18 }}
@@ -366,6 +363,7 @@ const SscaOrchestrationStepEdit = <T,>(
                             formik.setFieldValue('spec.infrastructure.spec.resources.limits.cpu', value)
                           }}
                           isReadonly={readonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                   </Layout.Horizontal>
@@ -396,22 +394,21 @@ const SscaOrchestrationStepEdit = <T,>(
                             }}
                             tooltipProps={{ dataTooltipId: 'setContainerResources' }}
                           />
-                          {getMultiTypeFromValue(get(formik.values, 'spec.resources.limits.memory')) ===
-                            MultiTypeInputType.RUNTIME &&
-                            !readonly && (
-                              <ConfigureOptions
-                                style={{ marginTop: 18 }}
-                                value={get(formik.values, 'spec.resources.limits.memory')}
-                                type="String"
-                                variableName="spec.resources.limits.memory"
-                                showRequiredField={false}
-                                showDefaultField={false}
-                                onChange={value => {
-                                  formik.setFieldValue('spec.resources.limits.memory', value)
-                                }}
-                                isReadonly={readonly}
-                              />
-                            )}
+                          {isValueRuntimeInput(get(formik.values, 'spec.resources.limits.memory')) && !readonly && (
+                            <ConfigureOptions
+                              style={{ marginTop: 18 }}
+                              value={get(formik.values, 'spec.resources.limits.memory')}
+                              type="String"
+                              variableName="spec.resources.limits.memory"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => {
+                                formik.setFieldValue('spec.resources.limits.memory', value)
+                              }}
+                              isReadonly={readonly}
+                              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                            />
+                          )}
                           <FormInput.MultiTextInput
                             name="spec.resources.limits.cpu"
                             label={getString('pipelineSteps.limitCPULabel')}
@@ -422,22 +419,21 @@ const SscaOrchestrationStepEdit = <T,>(
                             }}
                             tooltipProps={{ dataTooltipId: 'setContainerResources' }}
                           />
-                          {getMultiTypeFromValue(get(formik.values, 'spec.resources.limits.cpu')) ===
-                            MultiTypeInputType.RUNTIME &&
-                            !readonly && (
-                              <ConfigureOptions
-                                style={{ marginTop: 18 }}
-                                value={get(formik.values, 'spec.resources.limits.cpu')}
-                                type="String"
-                                variableName="spec.resources.limits.cpu"
-                                showRequiredField={false}
-                                showDefaultField={false}
-                                onChange={value => {
-                                  formik.setFieldValue('spec.resources.limits.cpu', value)
-                                }}
-                                isReadonly={readonly}
-                              />
-                            )}
+                          {isValueRuntimeInput(get(formik.values, 'spec.resources.limits.cpu')) && !readonly && (
+                            <ConfigureOptions
+                              style={{ marginTop: 18 }}
+                              value={get(formik.values, 'spec.resources.limits.cpu')}
+                              type="String"
+                              variableName="spec.resources.limits.cpu"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => {
+                                formik.setFieldValue('spec.resources.limits.cpu', value)
+                              }}
+                              isReadonly={readonly}
+                              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                            />
+                          )}
                         </Layout.Horizontal>
                       )}
                     </div>

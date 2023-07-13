@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { render, act, screen } from '@testing-library/react'
+import { render, act, screen, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { queryByNameAttribute, doConfigureOptionsTesting } from '@common/utils/testUtils'
 import { CiSscaOrchestrationStep } from '../CiSscaOrchestrationStep/CiSscaOrchestrationStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -121,5 +123,32 @@ describe('CI Ssca Orchestration Step', () => {
       />
     )
     expect(screen.queryByText('pipelineSteps.stepNameLabel')).not.toBeInTheDocument()
+  })
+
+  test('configure values should work fine for runtime inputs', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container } = render(
+      <TestStepWidget
+        initialValues={runtimeValues}
+        template={runtimeValues}
+        type={StepType.SscaOrchestration}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        readonly={false}
+        ref={ref}
+      />
+    )
+
+    const modals = document.getElementsByClassName('bp3-dialog')
+    expect(modals.length).toBe(0)
+
+    const privateKey = queryByNameAttribute('spec.attestation.spec.privateKey', container) as HTMLInputElement
+    expect(privateKey).toBeInTheDocument()
+    const cogPrivateKey = document.getElementById('configureOptions_spec.attestation.spec.privateKey')
+    userEvent.click(cogPrivateKey!)
+    await waitFor(() => expect(modals.length).toBe(1))
+    const privateKeyCogModal = modals[0] as HTMLElement
+    await doConfigureOptionsTesting(privateKeyCogModal, privateKey)
   })
 })

@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly fileStoreLabel: string
+  readonly formGroup: string
   readonly formLabel: string
   readonly stepContainer: string
 }

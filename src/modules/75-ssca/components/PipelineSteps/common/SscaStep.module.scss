@@ -22,3 +22,9 @@
 .fileStoreLabel {
   margin-bottom: calc(var(--spacing-medium) * -1);
 }
+
+.formGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

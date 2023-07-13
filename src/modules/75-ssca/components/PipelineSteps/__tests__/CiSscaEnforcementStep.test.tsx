@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { render, act, screen } from '@testing-library/react'
+import { render, act, screen, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { StepViewType, StepFormikRef, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { doConfigureOptionsTesting, queryByNameAttribute } from '@common/utils/testUtils'
 import { CiSscaEnforcementStep } from '../CiSscaEnforcementStep/CiSscaEnforcementStep'
 import { SscaCiEnforcementStepData } from '../common/types'
 
@@ -154,5 +156,32 @@ describe('CI Ssca Enforcement Step', () => {
     )
     expect(response).toEqual({})
     expect(new CiSscaEnforcementStep().processFormData(runtimeValues)).toEqual(runtimeValues)
+  })
+
+  test('configure values should work fine for runtime inputs', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container } = render(
+      <TestStepWidget
+        initialValues={runtimeValues}
+        template={runtimeValues}
+        type={StepType.SscaEnforcement}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        readonly={false}
+        ref={ref}
+      />
+    )
+
+    const modals = document.getElementsByClassName('bp3-dialog')
+    expect(modals.length).toBe(0)
+
+    const publicKey = queryByNameAttribute('spec.verifyAttestation.spec.publicKey', container) as HTMLInputElement
+    expect(publicKey).toBeInTheDocument()
+    const cogPublicKey = document.getElementById('configureOptions_spec.verifyAttestation.spec.publicKey')
+    userEvent.click(cogPublicKey!)
+    await waitFor(() => expect(modals.length).toBe(1))
+    const publicKeyCogModal = modals[0] as HTMLElement
+    await doConfigureOptionsTesting(publicKeyCogModal, publicKey)
   })
 })
