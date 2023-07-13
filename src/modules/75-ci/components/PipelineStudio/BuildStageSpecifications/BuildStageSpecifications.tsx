@@ -9,7 +9,7 @@ import React, { useEffect } from 'react'
 import * as yup from 'yup'
 import { Accordion, Card, Formik, FormikForm, Switch, Text, MultiTypeInputType } from '@harness/uicore'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { cloneDeep, debounce, defaultTo, isEqual, uniqBy } from 'lodash-es'
+import { cloneDeep, debounce, defaultTo, isEqual, set, uniqBy } from 'lodash-es'
 import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
@@ -19,6 +19,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { NGVariable, StageElementConfig, StringNGVariable } from 'services/cd-ng'
+import { UseFromStageInfraYaml } from 'services/ci'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type {
   CustomVariableEditableExtraProps,
@@ -35,7 +36,9 @@ import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { BuildTabs } from '../CIPipelineStagesUtils'
+import { Modes } from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import css from './BuildStageSpecifications.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
@@ -65,7 +68,26 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
 
+  const [buildInfraType, setBuildInfraType] = React.useState<CIBuildInfrastructureType | undefined>(undefined)
   const { stage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
+  const { stage: propagatedStage } = getStageFromPipeline<BuildStageElementConfig>(
+    (stage?.stage?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage || ''
+  )
+  const currentMode = (stage?.stage?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage
+    ? Modes.Propagate
+    : Modes.NewConfiguration
+
+  React.useEffect(() => {
+    const stageBuildInfraType =
+      (stage?.stage?.spec?.infrastructure?.type as CIBuildInfrastructureType) ||
+      (stage?.stage?.spec?.runtime?.type as CIBuildInfrastructureType)
+    const propagatedStageType =
+      (propagatedStage?.stage?.spec?.infrastructure?.type as CIBuildInfrastructureType) ||
+      (propagatedStage?.stage?.spec?.runtime?.type as CIBuildInfrastructureType)
+    currentMode === Modes.NewConfiguration
+      ? setBuildInfraType(stageBuildInfraType)
+      : setBuildInfraType(propagatedStageType)
+  }, [stage, propagatedStage, currentMode])
 
   const getInitialValues = (): {
     identifier: string
@@ -74,6 +96,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
     tags?: { [key: string]: string }
     cloneCodebase: boolean
     sharedPaths: string[]
+    cacheIntelligenceEnabled?: boolean
     variables: NGVariable[]
   } => {
     const pipelineData = stage?.stage || null
@@ -84,6 +107,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
     const description = pipelineData?.description || ''
     const tags = pipelineData?.tags
     const cloneCodebase = !!spec?.cloneCodebase
+    const cacheIntelligenceEnabled = !!spec?.caching?.enabled
     const sharedPaths =
       typeof spec?.sharedPaths === 'string'
         ? spec?.sharedPaths
@@ -102,6 +126,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
       tags,
       cloneCodebase,
       sharedPaths: sharedPaths as any,
+      cacheIntelligenceEnabled: cacheIntelligenceEnabled,
       variables
     }
   }
@@ -161,6 +186,8 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
         } else {
           delete spec.sharedPaths
         }
+
+        spec.caching = set(spec.caching, 'enabled', values.cacheIntelligenceEnabled)
 
         if (values.variables && values.variables.length > 0) {
           stageData.variables = values.variables
@@ -273,6 +300,25 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                     />
                   </FormikForm>
                 </Card>
+
+                <>
+                  <div className={css.tabHeading} id="cacheIntelligence">
+                    {getString('ci.cacheIntelligence.label')}
+                  </div>
+                  <Card disabled={isReadonly} className={cx(css.sectionCard)}>
+                    <FormikForm className={cx(css.fields, css.contentCard)}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Switch
+                          checked={formValues.cacheIntelligenceEnabled}
+                          label={getString('ci.cacheIntelligence.enable')}
+                          onChange={e => setFieldValue('cacheIntelligenceEnabled', e.currentTarget.checked)}
+                          disabled={isReadonly || buildInfraType !== CIBuildInfrastructureType.Cloud}
+                          tooltipProps={{ tooltipId: 'enableCacheIntelligence' }}
+                        />
+                      </div>
+                    </FormikForm>
+                  </Card>
+                </>
 
                 <Accordion className={css.accordionTitle} activeId="">
                   <Accordion.Panel

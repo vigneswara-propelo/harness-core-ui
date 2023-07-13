@@ -8588,6 +8588,9 @@ export interface StringsMap {
   'ci.buildInfra.useNewInfra': string
   'ci.buildInfra.vMs': string
   'ci.buildInfra.vmLabel': string
+  'ci.cacheIntelligence.enable': string
+  'ci.cacheIntelligence.keyNamePlaceholder': string
+  'ci.cacheIntelligence.label': string
   'ci.ciTrialHomePage.startTrial.description': string
   'ci.ciTrialHomePage.startTrial.startBtn.description': string
   'ci.clipboardCopyFail': string

@@ -10,7 +10,11 @@ import { render, act, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import BuildStageSpecifications from '../BuildStageSpecifications'
-import { getDummyPipelineContextValue } from './BuildStageSpecificationsTestHelpers'
+import {
+  getDummyPipelineContextValue,
+  mockedPipelineContextValueForCloudInfra,
+  mockedPipelineContextValueForNonCloudInfra
+} from './BuildStageSpecificationsTestHelpers'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -51,5 +55,55 @@ describe('BuildStageSpecifications tests', () => {
     expect(getByText('pipeline.stageVariables')).toBeTruthy()
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('Render for Non Cloud infra for new configuration mode', async () => {
+    const { container, getByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={mockedPipelineContextValueForNonCloudInfra}>
+          <BuildStageSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(getByText('ci.cacheIntelligence.label')).toBeInTheDocument()
+    expect(getByText('ci.cacheIntelligence.enable')).toBeInTheDocument()
+
+    const switches = container.querySelectorAll('input[type="checkbox"]')
+    expect(switches.length).toBe(2) // clone codebase and enable cache intelligence
+
+    const enableCacheIntelSwitch = switches[1]
+    expect(enableCacheIntelSwitch).not.toHaveClass('bp3-disabled')
+
+    await act(async () => {
+      fireEvent.click(enableCacheIntelSwitch)
+    })
+    // Should not be able to enable Cache Intelligence on Non cloud infra
+    expect(enableCacheIntelSwitch.getAttribute('checked')).toBeFalsy()
+  })
+
+  test('Render for Cloud infra for new configuration mode', async () => {
+    const { container, getByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={mockedPipelineContextValueForCloudInfra}>
+          <BuildStageSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(getByText('ci.cacheIntelligence.label')).toBeInTheDocument()
+    expect(getByText('ci.cacheIntelligence.enable')).toBeInTheDocument()
+
+    const switches = container.querySelectorAll('input[type="checkbox"]')
+    expect(switches.length).toBe(2) // clone codebase and enable cache intelligence
+
+    const enableCacheIntelSwitch = switches[1]
+    expect(enableCacheIntelSwitch).not.toHaveClass('bp3-disabled')
+
+    await act(async () => {
+      fireEvent.click(enableCacheIntelSwitch)
+    })
+
+    expect(enableCacheIntelSwitch).not.toHaveAttribute('checked')
   })
 })

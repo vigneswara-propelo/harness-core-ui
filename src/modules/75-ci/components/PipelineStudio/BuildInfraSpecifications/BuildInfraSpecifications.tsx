@@ -156,7 +156,7 @@ type BuildInfraFormValues = (KubernetesBuildInfraFormValues | AWSVMInfraFormValu
   buildInfraType?: CIBuildInfrastructureType
 }
 
-enum Modes {
+export enum Modes {
   Propagate,
   NewConfiguration
 }

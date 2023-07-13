@@ -113,3 +113,95 @@ export const getDummyPipelineContextValue = (): PipelineContextInterface => {
     })
   } as any
 }
+
+export const mockedPipelineContextValueForNonCloudInfra: PipelineContextInterface = {
+  ...pipelineContextMock,
+  updatePipeline: jest.fn(),
+  updatePipelineView: jest.fn(),
+  updateStage: jest.fn(),
+  getStageFromPipeline: jest.fn(() => {
+    return {
+      stage: {
+        stage: {
+          name: 'Build Stage',
+          identifier: 'BuildStage',
+          type: 'CI',
+          spec: {
+            cloneCodebase: true,
+            caching: {
+              enabled: true,
+              paths: ['/harness/.go', '/harness/release/linux/amd64/drone-cache'],
+              key: 'mykey1'
+            },
+            infrastructure: {
+              type: 'KubernetesDirect',
+              spec: {
+                connectorRef: 'tisanity2',
+                namespace: 'default',
+                automountServiceAccountToken: true,
+                nodeSelector: {},
+                os: 'Linux'
+              }
+            },
+            execution: {
+              steps: [
+                {
+                  step: {
+                    type: 'Run',
+                    name: 'Run_1',
+                    identifier: 'Run_1',
+                    spec: { shell: 'Sh', command: 'echo hello', envVariables: { GOPATH: '/harness/.go' } }
+                  }
+                }
+              ]
+            },
+            sharedPaths: ['sample']
+          }
+        },
+        parent: undefined
+      }
+    }
+  })
+} as any
+
+export const mockedPipelineContextValueForCloudInfra: PipelineContextInterface = {
+  ...pipelineContextMock,
+  updatePipeline: jest.fn(),
+  updatePipelineView: jest.fn(),
+  updateStage: jest.fn(),
+  getStageFromPipeline: jest.fn(() => {
+    return {
+      stage: {
+        stage: {
+          name: 'Build Stage',
+          identifier: 'BuildStage',
+          type: 'CI',
+          spec: {
+            cloneCodebase: true,
+            caching: {
+              enabled: false,
+              paths: ['/harness/.go', '/harness/release/linux/amd64/drone-cache'],
+              key: 'mykey1'
+            },
+            platform: { os: 'Linux', arch: 'Amd64' },
+            runtime: { type: 'Cloud', spec: {} },
+            execution: {
+              steps: [
+                {
+                  step: {
+                    type: 'Run',
+                    name: 'Run_1',
+                    identifier: 'Run_1',
+                    spec: { shell: 'Sh', command: 'echo hello', envVariables: { GOPATH: '/harness/.go' } }
+                  }
+                }
+              ]
+            },
+            sharedPaths: ['sample']
+          }
+        },
+        parent: undefined
+      }
+    }
+  })
+} as any
