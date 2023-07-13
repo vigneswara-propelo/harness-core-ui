@@ -183,7 +183,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         </TestWrapper>
       )
 
-      const verificationTypeDropdownInput = document.querySelector('input[name="spec.type"]')
+      const verificationTypeDropdownInput = screen.getByTestId(/selectedVerificationLabel/)
 
       expect(verificationTypeDropdownInput).toBeInTheDocument()
 
@@ -202,7 +202,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         </TestWrapper>
       )
 
-      const verificationTypeDropdownInput = document.querySelector('input[name="spec.type"]')
+      const verificationTypeDropdownInput = screen.getByTestId(/selectedVerificationLabel/)
 
       expect(verificationTypeDropdownInput).toBeInTheDocument()
 
@@ -210,9 +210,9 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
 
       expect(screen.getByText('Rolling Update')).toBeInTheDocument()
 
-      const simpleVerificationOption = screen.getByText('pipeline.deploymentType.thresholdAnalysis')
+      const simpleVerificationOption = screen.getAllByText('pipeline.deploymentType.thresholdAnalysis')[0]
 
-      expect(simpleVerificationOption).toBeInTheDocument()
+      await waitFor(() => expect(simpleVerificationOption).toBeInTheDocument())
 
       await userEvent.click(simpleVerificationOption)
     })
@@ -229,7 +229,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         </TestWrapper>
       )
 
-      const verificationTypeDropdownInput = document.querySelector('input[name="spec.type"]')
+      const verificationTypeDropdownInput = screen.getByTestId(/selectedVerificationLabel/)
 
       expect(verificationTypeDropdownInput).toBeInTheDocument()
 
@@ -237,7 +237,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
 
       expect(screen.getByText('Rolling Update')).toBeInTheDocument()
 
-      const simpleVerificationOption = screen.getByText('pipeline.deploymentType.thresholdAnalysis')
+      const simpleVerificationOption = screen.getAllByText('pipeline.deploymentType.thresholdAnalysis')[0]
 
       expect(simpleVerificationOption).toBeInTheDocument()
 

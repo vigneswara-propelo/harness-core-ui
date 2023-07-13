@@ -5,18 +5,37 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const continousVerificationTypes = [
+import { VerificationTypesOptionsType } from './SelectVerificationType.types'
+
+export const continousVerificationTypes: VerificationTypesOptionsType[] = [
   {
     value: 'Auto',
     label: 'Auto',
-    icon: { name: 'nav-settings' }
+    icon: { name: 'nav-settings' },
+    descriptionKey: 'cv.verifyStep.verificationTypesDescription.auto'
   },
   {
     value: 'Rolling',
     label: 'Rolling Update',
-    icon: { name: 'rolling' }
+    icon: { name: 'rolling' },
+    descriptionKey: 'cv.verifyStep.verificationTypesDescription.rolling'
   },
-  { value: 'Canary', label: 'Canary', icon: { name: 'canary' } },
-  { value: 'Bluegreen', label: 'Blue Green', icon: { name: 'bluegreen' } },
-  { value: 'LoadTest', label: 'Load Test', icon: { name: 'lab-test' } }
+  {
+    value: 'Canary',
+    label: 'Canary',
+    icon: { name: 'canary' },
+    descriptionKey: 'cv.verifyStep.verificationTypesDescription.canary'
+  },
+  {
+    value: 'Bluegreen',
+    label: 'Blue Green',
+    icon: { name: 'bluegreen' },
+    descriptionKey: 'cv.verifyStep.verificationTypesDescription.blueGreen'
+  },
+  {
+    value: 'LoadTest',
+    label: 'Load Test',
+    icon: { name: 'lab-test' },
+    descriptionKey: 'cv.verifyStep.verificationTypesDescription.loadTest'
+  }
 ]

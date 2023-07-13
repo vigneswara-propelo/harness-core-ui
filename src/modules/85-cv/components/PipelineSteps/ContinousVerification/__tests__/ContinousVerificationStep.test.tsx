@@ -8,7 +8,9 @@
 import React from 'react'
 import { set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { screen } from '@testing-library/dom'
+import userEvent from '@testing-library/user-event'
 import * as usePermission from '@rbac/hooks/usePermission'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -80,7 +82,7 @@ describe('Test ContinousVerificationStep Step', () => {
     jest.clearAllMocks()
   })
 
-  test('should render editView when current step is being edited', () => {
+  test('should render editView when current step is being edited', async () => {
     const initialValues = {
       name: 'CV Step',
       type: 'ContinousVerification',
@@ -107,7 +109,8 @@ describe('Test ContinousVerificationStep Step', () => {
     const { container } = render(
       <TestStepWidget initialValues={initialValues} type={StepType.Verify} stepViewType={StepViewType.Edit} />
     )
-    expect(container).toMatchSnapshot()
+
+    await waitFor(() => expect(container).toMatchSnapshot())
   })
 
   test('renders inputSetView', () => {
@@ -206,9 +209,9 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeTruthy()
+      expect(getByText('connectors.cdng.monitoredService.label')).toBeInTheDocument()
       const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
-      expect(monitoredService).toBeTruthy()
+      expect(monitoredService).toBeInTheDocument()
       expect(monitoredService.value).toBe(mockedMonitoredServiceAndHealthSources.data.monitoredService.name)
     })
 
@@ -221,18 +224,19 @@ describe('Test ContinousVerificationStep Step', () => {
     })
 
     //verify if the continous verification type is getting selected correctly.
-    const verificationTypeDropdown = container.querySelector('input[name="spec.type"]') as HTMLInputElement
-    const selectCaret = container
-      .querySelector(`[name="spec.type"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-    await waitFor(() => {
-      fireEvent.click(selectCaret!)
+    const verificationTypeDropdownInput = screen.getByTestId(/selectedVerificationDisplay/)
+
+    await waitFor(async () => {
+      await userEvent.click(verificationTypeDropdownInput)
     })
-    const typeToSelect = await findByText(container, 'Rolling Update')
-    act(() => {
-      fireEvent.click(typeToSelect)
+
+    const typeToSelect = screen.getByTestId('Rolling-option')
+
+    act(async () => {
+      await userEvent.click(typeToSelect!)
     })
-    expect(verificationTypeDropdown.value).toBe('Rolling Update')
+
+    await waitFor(() => expect(screen.getByTestId(/selectedVerificationLabel/)).toHaveTextContent('Rolling'))
 
     // verify if the correct fields are present for the selected verification type of rolling update
     await waitFor(() => {
@@ -265,9 +269,9 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeTruthy()
+      expect(getByText('connectors.cdng.monitoredService.label')).toBeInTheDocument()
       const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
-      expect(monitoredService).toBeTruthy()
+      expect(monitoredService).toBeInTheDocument()
       expect(monitoredService.value).toBe(mockedMonitoredServiceAndHealthSources.data.monitoredService.name)
     })
 
@@ -280,18 +284,19 @@ describe('Test ContinousVerificationStep Step', () => {
     })
 
     //verify if the continous verification type is getting selected correctly.
-    const verificationTypeDropdown = container.querySelector('input[name="spec.type"]') as HTMLInputElement
-    const selectCaret = container
-      .querySelector(`[name="spec.type"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-    await waitFor(() => {
-      fireEvent.click(selectCaret!)
+    const verificationTypeDropdownInput = screen.getByTestId(/selectedVerificationDisplay/)
+
+    await waitFor(async () => {
+      await userEvent.click(verificationTypeDropdownInput)
     })
-    const typeToSelect = await findByText(container, 'Auto')
-    act(() => {
-      fireEvent.click(typeToSelect)
+
+    const typeToSelect = screen.getByTestId('Auto-option')
+
+    act(async () => {
+      await userEvent.click(typeToSelect!)
     })
-    expect(verificationTypeDropdown.value).toBe('Auto')
+
+    await waitFor(() => expect(screen.getByTestId(/selectedVerificationLabel/)).toHaveTextContent('Auto'))
 
     // verify if the correct fields are present for the selected verification type of rolling update
     await waitFor(() => {
@@ -322,11 +327,13 @@ describe('Test ContinousVerificationStep Step', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'CV Step' } })
 
+    screen.debug(container, 90000)
+
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeTruthy()
+      expect(getByText('connectors.cdng.monitoredService.label')).toBeInTheDocument()
       const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
-      expect(monitoredService).toBeTruthy()
+      expect(monitoredService).toBeInTheDocument()
       expect(monitoredService.value).toBe(mockedMonitoredServiceAndHealthSources.data.monitoredService.name)
     })
 
@@ -339,18 +346,19 @@ describe('Test ContinousVerificationStep Step', () => {
     })
 
     //verify if the continous verification type is getting selected correctly.
-    const verificationTypeDropdown = container.querySelector('input[name="spec.type"]') as HTMLInputElement
-    const selectCaret = container
-      .querySelector(`[name="spec.type"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-    await waitFor(() => {
-      fireEvent.click(selectCaret!)
+    const verificationTypeDropdownInput = screen.getByTestId(/selectedVerificationDisplay/)
+
+    await waitFor(async () => {
+      await userEvent.click(verificationTypeDropdownInput)
     })
-    const typeToSelect = await findByText(container, 'Load Test')
-    act(() => {
-      fireEvent.click(typeToSelect)
+
+    const typeToSelect = screen.getByTestId('LoadTest-option')
+
+    act(async () => {
+      await userEvent.click(typeToSelect!)
     })
-    expect(verificationTypeDropdown.value).toBe('Load Test')
+
+    await waitFor(() => expect(screen.getByTestId(/selectedVerificationLabel/)).toHaveTextContent('Load Test'))
 
     // verify if the correct fields are present for the selected verification type of Load Test
     await waitFor(() => {
@@ -415,18 +423,19 @@ describe('Test ContinousVerificationStep Step', () => {
     })
 
     //verify if the continous verification type is getting selected correctly.
-    const verificationTypeDropdown = container.querySelector('input[name="spec.type"]') as HTMLInputElement
-    const selectCaret = container
-      .querySelector(`[name="spec.type"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-    await waitFor(() => {
-      fireEvent.click(selectCaret!)
+    const verificationTypeDropdownInput = screen.getByTestId(/selectedVerificationDisplay/)
+
+    await waitFor(async () => {
+      await userEvent.click(verificationTypeDropdownInput)
     })
-    const typeToSelect = await findByText(container, 'Load Test')
-    act(() => {
-      fireEvent.click(typeToSelect)
+
+    const typeToSelect = screen.getByTestId('LoadTest-option')
+
+    act(async () => {
+      await userEvent.click(typeToSelect!)
     })
-    expect(verificationTypeDropdown.value).toBe('Load Test')
+
+    await waitFor(() => expect(screen.getByTestId(/selectedVerificationLabel/)).toHaveTextContent('Load Test'))
 
     // verify if the correct fields are present for the selected verification type
     await waitFor(() => {

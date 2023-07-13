@@ -1307,3 +1307,10 @@ verifyStep:
     Checking this checkbox ensures that metrics and log details are collected and analyzed specifically for
     the newly deployed nodes. This helps focus the analysis on the latest changes and avoids potential
     confusion with existing or shut down nodes.
+  verificationTypesDescription:
+    auto: Harness automatically selects the best continuous verification analysis based on the deployment strategy.
+    rolling: Rolling update completes then a before/after analysis occurs.
+    canary: Analyzing canary phase(s) before continuing on. Analyzing stable vs canary during analysis window.
+    blueGreen: Analyzes nodes groups before and after deployment during analysis window.
+    loadTest: Analysis only after deployment.
+    simpleVerification: Simple validation on static thresholds or "Fail Fast" threshlolds. Not application for log analysis.

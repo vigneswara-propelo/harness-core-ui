@@ -9899,6 +9899,12 @@ export interface StringsMap {
   'cv.verifyStep.shouldUseNodesFromCD': string
   'cv.verifyStep.testNodeLabel': string
   'cv.verifyStep.testNodePlaceholder': string
+  'cv.verifyStep.verificationTypesDescription.auto': string
+  'cv.verifyStep.verificationTypesDescription.blueGreen': string
+  'cv.verifyStep.verificationTypesDescription.canary': string
+  'cv.verifyStep.verificationTypesDescription.loadTest': string
+  'cv.verifyStep.verificationTypesDescription.rolling': string
+  'cv.verifyStep.verificationTypesDescription.simpleVerification': string
   'cv.wednesday': string
   'cv.week': string
   'cv.weeks': string

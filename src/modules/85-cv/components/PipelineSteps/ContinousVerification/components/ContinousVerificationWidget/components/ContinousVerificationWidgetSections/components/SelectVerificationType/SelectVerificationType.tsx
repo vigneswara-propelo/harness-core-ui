@@ -6,8 +6,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { FormInput, AllowedTypes, SelectOption, Text, Layout } from '@harness/uicore'
-import cx from 'classnames'
+import { AllowedTypes, Text, Layout } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
@@ -18,7 +17,7 @@ import type { ContinousVerificationData } from '@cv/components/PipelineSteps/Con
 import { continousVerificationTypes } from './constants'
 import ConfigureFields from '../ConfigureFields/ConfigureFields'
 import { VerificationTypes } from '../ConfigureFields/constants'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import VerificationTypeDropdown from './components/VerificationTypeDropdown'
 interface SelectVerificationTypeProps {
   formik: FormikProps<ContinousVerificationData>
   allowableTypes: AllowedTypes
@@ -47,7 +46,8 @@ export default function SelectVerificationType(props: SelectVerificationTypeProp
       options.push({
         value: VerificationTypes.SimpleVerification,
         label: getString('pipeline.deploymentType.thresholdAnalysis'),
-        icon: { name: 'simple-verification' }
+        icon: { name: 'simple-verification' },
+        descriptionKey: 'cv.verifyStep.verificationTypesDescription.simpleVerification'
       })
     }
 
@@ -59,13 +59,7 @@ export default function SelectVerificationType(props: SelectVerificationTypeProp
       <>
         <Layout.Vertical spacing={'medium'}>
           <Text font={{ size: 'small' }}>{getString('connectors.cdng.verificationTypeHeading')}</Text>
-          <div className={cx(stepCss.formGroup)}>
-            <FormInput.Select
-              name="spec.type"
-              label={getString('connectors.cdng.continousVerificationType')}
-              items={continousVerificationTypeOptions as SelectOption[]}
-            />
-          </div>
+          <VerificationTypeDropdown verificationTypeOptions={continousVerificationTypeOptions} />
         </Layout.Vertical>
         {formik?.values?.spec?.type ? <ConfigureFields formik={formik} allowableTypes={allowableTypes} /> : null}
       </>

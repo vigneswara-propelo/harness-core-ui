@@ -32,14 +32,14 @@ export default function BaseContinousVerification(props: {
     <Card>
       <>
         {stepViewType !== StepViewType.Template && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <div className={cx(stepCss.formGroup)}>
             <FormInput.InputWithIdentifier
               isIdentifierEditable={isNewStep}
               inputLabel={getString('pipelineSteps.stepNameLabel')}
             />
           </div>
         )}
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup)}>
           <FormMultiTypeDurationField
             name="timeout"
             label={getString('pipelineSteps.timeoutLabel')}
