@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, AllowedTypes, Container, SelectOption } from '@harness/uicore'
+import { Accordion, AllowedTypes, Container, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { get, isEmpty } from 'lodash-es'
@@ -16,6 +16,8 @@ import { CIStepOptionalConfig } from '@ci/components/PipelineSteps/CIStep/CIStep
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { SecurityStepData, SecurityStepSpec } from './types'
 import SecurityField, { CustomTooltipFieldProps } from './SecurityField'
 
@@ -32,6 +34,7 @@ import {
   inputSetImageFields,
   inputSetIngestionFields,
   inputSetInstanceFields,
+  inputSetSbomFields,
   inputSetScanFields,
   inputSetTargetFields,
   inputSetToolFields,
@@ -39,6 +42,8 @@ import {
   JFROG_ARTIFACTORY_CONTAINER_TYPE,
   LOCAL_IMAGE_CONTAINER_TYPE,
   logLevelOptions,
+  SBOM_CYCLONEDX,
+  SBOM_SPDX,
   severityOptions,
   tooltipIds,
   USER_PASSWORD_AUTH_TYPE
@@ -586,6 +591,15 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
       />
 
       <SecurityField
+        allowableTypes={[MultiTypeInputType.FIXED]}
+        formik={formik}
+        customTooltipFields={toolTipOverrides}
+        enableFields={{
+          ...inputSetSbomFields(prefix, template)
+        }}
+      />
+
+      <SecurityField
         allowableTypes={allowableTypes}
         formik={formik}
         customTooltipFields={toolTipOverrides}
@@ -593,6 +607,52 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
           ...inputSetAdvancedFields(getString, prefix, template)
         }}
       />
+    </>
+  )
+}
+
+type SbomFieldsProps = {
+  allowableTypes: AllowedTypes
+  formik: FormikProps<SecurityStepData<SecurityStepSpec>>
+  toolTipOverrides?: CustomTooltipFieldProps
+}
+
+export const SbomFields = (props: SbomFieldsProps) => {
+  const SSCA_ENABLED = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
+  const { allowableTypes, formik, toolTipOverrides } = props
+
+  if (formik.values.spec.mode === 'ingestion') return null
+  if (!SSCA_ENABLED) return null
+
+  if (formik.initialValues.spec.sbom && formik.initialValues.spec.sbom?.format == undefined) {
+    formik.initialValues.spec.sbom.format = 'spdx-json'
+    formik.setFieldValue('spec.sbom.format', SBOM_SPDX.value)
+  }
+
+  return (
+    <>
+      <SecurityField
+        allowableTypes={allowableTypes}
+        formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
+        customTooltipFields={toolTipOverrides}
+        enableFields={{
+          header: {
+            label: 'sto.sbom.fieldsHeading'
+          },
+          'spec.sbom.generate': {
+            label: 'ssca.orchestrationStep.sbomGeneration',
+            fieldType: 'checkbox',
+            optional: true
+          },
+          'spec.sbom.format': {
+            label: 'ssca.orchestrationStep.sbomFormat',
+            fieldType: 'dropdown',
+            optional: false,
+            selectItems: [SBOM_SPDX, SBOM_CYCLONEDX]
+          }
+        }}
+      />
+      <Divider style={{ marginBottom: dividerBottomMargin }} />
     </>
   )
 }

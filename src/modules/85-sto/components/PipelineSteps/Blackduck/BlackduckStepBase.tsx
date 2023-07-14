@@ -25,6 +25,7 @@ import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './Bla
 import type { BlackduckStepProps, BlackduckStepData } from './BlackduckStep'
 import {
   AdditionalFields,
+  SbomFields,
   SecurityAuthFields,
   SecurityImageFields,
   SecurityIngestionFields,
@@ -182,6 +183,8 @@ export const BlackduckStepBase = (
                 <Divider style={{ marginBottom: dividerBottomMargin }} />
               </>
             )}
+
+            <SbomFields allowableTypes={allowableTypes} formik={formik} />
 
             <AdditionalFields
               readonly={readonly}

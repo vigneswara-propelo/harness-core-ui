@@ -184,6 +184,9 @@ export const METASPLOIT_DYNAMIC_BY_CVE_CONFIG = {
 }
 export const AWS_ACCOUNT_AUTH_TYPE = { value: 'aws', label: 'AWS Account' }
 
+export const SBOM_SPDX = { value: 'spdx-json', label: 'SPDX' }
+export const SBOM_CYCLONEDX = { value: 'cyclonedx-json', label: 'CycloneDX' }
+
 export const instanceProtocolSelectItems = [
   {
     value: 'https',
@@ -1029,6 +1032,62 @@ const tooltipPrefix = 'securityStep'
 function getTooltipName(tooltipName: string) {
   return `${tooltipPrefix}${tooltipName}`
 }
+
+export const sbomFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpec>) =>
+  data.spec.mode !== 'ingestion'
+    ? [
+        {
+          name: 'spec.sbom.generate',
+          type: TransformValuesTypes.Boolean,
+          label: 'ssca.orchestrationStep.sbomGeneration'
+        },
+        {
+          name: 'spec.sbom.format',
+          type: TransformValuesTypes.Text,
+          label: 'ssca.orchestrationStep.sbomFormat'
+        }
+      ]
+    : []
+
+export const sbomFieldValidationConfig = (
+  data: SecurityStepData<SecurityStepSpec>,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] => [
+  {
+    name: 'spec.sbom.generate',
+    type: ValidationFieldTypes.Boolean,
+    label: 'ssca.orchestrationStep.sbomGeneration'
+  },
+  {
+    name: 'spec.sbom.format',
+    type: ValidationFieldTypes.Text,
+    label: 'ssca.orchestrationStep.sbomFormat',
+    isRequired: stepViewType === StepViewType.InputSet || data.spec.mode !== 'ingestion'
+  }
+]
+
+export const inputSetSbomFields = (
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
+        // Instance fields
+        ...(shouldRenderRunTimeInputView(template?.spec.sbom?.generate) && {
+          [getInputSetFieldName(prefix, 'spec.sbom.generate')]: {
+            label: 'ssca.orchestrationStep.sbomGeneration',
+            fieldType: 'checkbox'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.sbom?.format) && {
+          [getInputSetFieldName(prefix, 'spec.sbom.format')]: {
+            label: 'ssca.orchestrationStep.sbomFormat',
+            selectItems: [SBOM_SPDX, SBOM_CYCLONEDX],
+            fieldType: 'dropdown'
+          }
+        })
+      }
+    : {}
 
 export const tooltipIds = {
   mode: getTooltipName('Mode'),

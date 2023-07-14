@@ -99,3 +99,5 @@ trial:
   description: Deliver highly secure applications while maintaining deployment velocity and minimizing rework.
   learnMore: Learn more about Security Testing Orchestration
   comingSoon: '{{$.common.trialCommingSoon}}'
+sbom:
+  fieldsHeading: Software Bill of Materials

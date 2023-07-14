@@ -108,6 +108,11 @@ type AdvancedSettings = {
   include_raw?: boolean // TODO verify that this is optional
 }
 
+type Sbom = {
+  generate?: boolean
+  format?: 'spdx-json' | 'cyclonedx-json'
+}
+
 export interface SecurityStepSpec {
   mode: ScanMode
   config: string
@@ -123,6 +128,7 @@ export interface SecurityStepSpec {
   resources?: Resources
   runAsUser?: string
   settings?: MultiTypeMapType
+  sbom?: Sbom
 }
 export interface SecurityStepData<T> {
   type: string

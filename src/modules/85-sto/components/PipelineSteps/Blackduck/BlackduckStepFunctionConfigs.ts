@@ -18,7 +18,9 @@ import {
   imageFieldsValidationConfig,
   ingestionFieldValidationConfig,
   INGESTION_SCAN_MODE,
-  USER_PASSWORD_AUTH_TYPE
+  USER_PASSWORD_AUTH_TYPE,
+  sbomFieldsTransformConfig,
+  sbomFieldValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { BlackduckStepData } from './BlackduckStep'
@@ -68,7 +70,8 @@ export const transformValuesFieldsConfig = (data: BlackduckStepData): Field[] =>
     ...commonFieldsTransformConfig(data),
     ...authFieldsTransformConfig(data),
     ...toolFieldsTransformConfig(data),
-    ...extraAuthFieldsTransformConfig(data)
+    ...extraAuthFieldsTransformConfig(data),
+    ...sbomFieldsTransformConfig(data)
   ]
 
   return transformValuesFieldsConfigValues
@@ -140,6 +143,7 @@ export const editViewValidateFieldsConfig = (data: BlackduckStepData) => {
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
+    ...sbomFieldValidationConfig(data),
     ...additionalFieldsValidationConfigEitView
   ]
 
@@ -154,6 +158,7 @@ export function getInputSetViewValidateFieldsConfig(data: BlackduckStepData): In
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
+    ...sbomFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet
   ]
 

@@ -9950,6 +9950,7 @@ export interface StringsMap {
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.processingSecurityResults': string
+  'sto.sbom.fieldsHeading': string
   'sto.scans': string
   'sto.securityStage.description': string
   'sto.stepDescription.AWSECR': string

@@ -124,6 +124,10 @@ describe('Blackduck Step', () => {
               serializer: RUNTIME_INPUT_VALUE
             }
           },
+          sbom: {
+            generate: RUNTIME_INPUT_VALUE,
+            format: RUNTIME_INPUT_VALUE
+          },
           resources: {
             limits: {
               cpu: RUNTIME_INPUT_VALUE,
@@ -197,6 +201,10 @@ describe('Blackduck Step', () => {
               serializer: RUNTIME_INPUT_VALUE
             }
           },
+          sbom: {
+            generate: RUNTIME_INPUT_VALUE,
+            format: RUNTIME_INPUT_VALUE
+          },
           resources: {
             limits: {
               cpu: RUNTIME_INPUT_VALUE,
@@ -262,6 +270,10 @@ describe('Blackduck Step', () => {
               serializer: RUNTIME_INPUT_VALUE
             }
           },
+          sbom: {
+            generate: RUNTIME_INPUT_VALUE,
+            format: RUNTIME_INPUT_VALUE
+          },
           resources: {
             limits: {
               cpu: RUNTIME_INPUT_VALUE,
@@ -325,6 +337,10 @@ describe('Blackduck Step', () => {
               level: RUNTIME_INPUT_VALUE,
               serializer: RUNTIME_INPUT_VALUE
             }
+          },
+          sbom: {
+            generate: RUNTIME_INPUT_VALUE,
+            format: RUNTIME_INPUT_VALUE
           },
           resources: {
             limits: {
@@ -394,6 +410,10 @@ describe('Blackduck Step', () => {
             args: {
               cli: 'additional cli args'
             }
+          },
+          sbom: {
+            generate: true,
+            format: 'spdx-json'
           },
           // Right now we do not support Image Pull Policy but will do in the future
           // pull: 'always',
