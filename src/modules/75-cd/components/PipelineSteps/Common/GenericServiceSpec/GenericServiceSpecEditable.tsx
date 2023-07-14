@@ -14,6 +14,7 @@ import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/W
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
 import {
+  ServiceDeploymentType,
   getSelectedDeploymentType,
   getVariablesHeaderTooltipId,
   isOnlyOneManifestAllowedForDeploymentType,
@@ -72,7 +73,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
   )
 
   const getAllowedManifestTypes = (): ManifestTypes[] => {
-    if (CDS_SERVERLESS_V2) {
+    if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda && CDS_SERVERLESS_V2) {
       return [...allowedManifestTypes[selectedDeploymentType], ManifestDataType.Values]
     }
     return allowedManifestTypes[selectedDeploymentType]
