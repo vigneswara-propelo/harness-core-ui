@@ -6,10 +6,18 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
 import { NodeProps, ReactFlowProvider } from 'reactflow'
 import { TestWrapper } from '@common/utils/testUtils'
 import HexagonNode from '../HexagonNode'
+
+jest.mock('@discovery/components/ServiceDetails/ServiceDetails', () => ({
+  ...jest.requireActual('@discovery/components/ServiceDetails/ServiceDetails'),
+  __esModule: true,
+  default: () => {
+    return <div className={'service-details'}>Service Details</div>
+  }
+}))
 
 const props: NodeProps = {
   id: 'a1',
@@ -32,6 +40,38 @@ describe('HexagonNode', () => {
         </ReactFlowProvider>
       </TestWrapper>
     )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('render component with mock data with data field missing name', async () => {
+    const newProps = { ...props, data: { id: 'a1' } }
+    const { container } = render(
+      <TestWrapper>
+        <ReactFlowProvider>
+          <HexagonNode {...newProps} />
+        </ReactFlowProvider>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('test node click', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <ReactFlowProvider>
+          <HexagonNode {...props} />
+        </ReactFlowProvider>
+      </TestWrapper>
+    )
+
+    const nodeContainer = container.querySelector('.nodeContainer')
+    if (!nodeContainer) {
+      throw Error('no element found')
+    }
+    act(() => {
+      fireEvent.click(nodeContainer)
+    })
+
     expect(container).toMatchSnapshot()
   })
 })

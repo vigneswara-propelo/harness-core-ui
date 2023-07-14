@@ -9,7 +9,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as servicediscovery from 'services/servicediscovery'
-import { NetworkGraphProps } from '@discovery/components/NetworkGraph/NetworkGraph'
 import DiscoveredResourcesGraph from '../DiscoveredResourcesGraph'
 import { mockConnections, mockServices } from '../../mocks'
 
@@ -22,13 +21,7 @@ jest.mock('services/servicediscovery', () => ({
 jest.mock('@discovery/components/NetworkGraph/NetworkGraph', () => ({
   ...jest.requireActual('@discovery/components/NetworkGraph/NetworkGraph'),
   __esModule: true,
-  default: (props: NetworkGraphProps) => {
-    props.onNodeClick({
-      id: 'a1',
-      data: { name: 'a1' },
-      position: { x: 0, y: 0 }
-    })
-
+  default: () => {
     return <div className={'networkGraph'}>Network Graph</div>
   }
 }))

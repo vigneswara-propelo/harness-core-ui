@@ -8,20 +8,14 @@
 import React from 'react'
 import { ReactFlowProvider } from 'reactflow'
 import { useParams } from 'react-router-dom'
-import { Page, PageSpinner, useToggleOpen } from '@harness/uicore'
-import { Drawer, Position } from '@blueprintjs/core'
-import {
-  ApiListCustomServiceConnection,
-  DatabaseK8SCustomServiceCollection,
-  useListK8SCustomService
-} from 'services/servicediscovery'
+import { Page, PageSpinner } from '@harness/uicore'
+import { ApiListCustomServiceConnection, useListK8SCustomService } from 'services/servicediscovery'
 import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getGraphEdgesFromServiceConnections,
   getGraphNodesFromServiceList
 } from '@discovery/components/NetworkGraph/utils/graphDataTransformation'
 import NetworkGraph from '@discovery/components/NetworkGraph/NetworkGraph'
-import ServiceDetails from '@discovery/components/ServiceDetails/ServiceDetails'
 import css from './DiscoveredResourcesGraph.module.scss'
 
 interface DiscoveredResourcesGraphProps {
@@ -34,8 +28,6 @@ export default function DiscoveredResourcesGraph({
   connectionList
 }: DiscoveredResourcesGraphProps): React.ReactElement {
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
-  const [selectedServiceDetails, setSelectedServiceDetails] = React.useState<DatabaseK8SCustomServiceCollection>()
-  const { isOpen, open, close } = useToggleOpen()
 
   const { data: serviceList } = useListK8SCustomService({
     agentIdentity: dAgentId,
@@ -62,26 +54,8 @@ export default function DiscoveredResourcesGraph({
 
   return (
     <div className={css.graphContainer}>
-      <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
-        <ServiceDetails
-          serviceName={selectedServiceDetails?.name ?? ''}
-          serviceId={selectedServiceDetails?.id ?? ''}
-          infraId={dAgentId ?? ''}
-          closeModal={close}
-        />
-      </Drawer>
       <ReactFlowProvider>
-        <NetworkGraph
-          nodes={initialGraphNodes}
-          edges={initialGraphEdges}
-          onNodeClick={node => {
-            setSelectedServiceDetails({
-              id: node.id,
-              name: node.data.name
-            })
-            open()
-          }}
-        />
+        <NetworkGraph nodes={initialGraphNodes} edges={initialGraphEdges} />
       </ReactFlowProvider>
     </div>
   )

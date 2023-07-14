@@ -33,3 +33,69 @@ exports[`HexagonNode render component with mock data 1`] = `
   </div>
 </div>
 `;
+
+exports[`HexagonNode render component with mock data with data field missing name 1`] = `
+<div>
+  <div
+    class="nodeContainer"
+  >
+    <div
+      class="hexagon"
+    >
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+        style="height: inherit;"
+      >
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-xsmall"
+          style="--text-line-clamp: 3;"
+        />
+      </div>
+    </div>
+    <div
+      class="react-flow__handle react-flow__handle-top nodrag nopan targetHandle target connectable connectablestart connectableend connectionindicator"
+      data-handlepos="top"
+      data-id="null-null-target"
+    />
+    <div
+      class="react-flow__handle react-flow__handle-bottom nodrag nopan sourceHandle source connectable connectablestart connectableend connectionindicator"
+      data-handlepos="bottom"
+      data-id="null-null-source"
+    />
+  </div>
+</div>
+`;
+
+exports[`HexagonNode test node click 1`] = `
+<div>
+  <div
+    class="nodeContainer"
+  >
+    <div
+      class="hexagon"
+    >
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+        style="height: inherit;"
+      >
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-xsmall"
+          style="--text-line-clamp: 3;"
+        >
+          a1
+        </p>
+      </div>
+    </div>
+    <div
+      class="react-flow__handle react-flow__handle-top nodrag nopan targetHandle target connectable connectablestart connectableend connectionindicator"
+      data-handlepos="top"
+      data-id="null-null-target"
+    />
+    <div
+      class="react-flow__handle react-flow__handle-bottom nodrag nopan sourceHandle source connectable connectablestart connectableend connectionindicator"
+      data-handlepos="bottom"
+      data-id="null-null-source"
+    />
+  </div>
+</div>
+`;

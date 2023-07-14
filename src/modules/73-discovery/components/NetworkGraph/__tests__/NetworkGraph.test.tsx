@@ -28,7 +28,7 @@ describe('NetworkGraph', () => {
     const { container } = render(
       <TestWrapper>
         <ReactFlowProvider>
-          <NetworkGraph nodes={mockNodes} edges={mockEdges} onNodeClick={() => void 0} />
+          <NetworkGraph nodes={mockNodes} edges={mockEdges} />
         </ReactFlowProvider>
       </TestWrapper>
     )

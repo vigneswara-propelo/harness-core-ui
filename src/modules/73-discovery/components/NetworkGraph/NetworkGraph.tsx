@@ -14,8 +14,7 @@ import ReactFlow, {
   Controls,
   MiniMap,
   Background,
-  BackgroundVariant,
-  Node
+  BackgroundVariant
 } from 'reactflow'
 
 import 'reactflow/dist/style.css'
@@ -26,7 +25,6 @@ import type { LayoutedGraph } from './types'
 import NamespaceGroupNode from './components/nodes/NamspaceGroupNode/NamespaceGroupNode'
 
 export type NetworkGraphProps = Omit<LayoutedGraph, 'options'> & {
-  onNodeClick: (node: Node) => void
   isNodeConnectable?: boolean
 }
 
@@ -40,7 +38,6 @@ const proOptions = { hideAttribution: true }
 export default function NetworkGraph({
   nodes: initialNodes,
   edges: initialEdges,
-  onNodeClick,
   isNodeConnectable = false
 }: NetworkGraphProps): React.ReactElement {
   const [nodes, setNodes, onNodesChange] = useNodesState([])
@@ -95,12 +92,8 @@ export default function NetworkGraph({
       defaultEdgeOptions={edgeOptions}
       proOptions={proOptions}
       fitView
-      // These lines are being ignored as reactflow doesn't actually render the nodes and edges
-      // in a test environment https://github.com/wbkd/react-flow/issues/716.
-      // Because of this the nodes click via jest can't be tested.
-      onNodeClick={/* istanbul ignore next */ (_, node) => onNodeClick(node)}
     >
-      <Controls />
+      <Controls showInteractive={false} />
       <MiniMap zoomable pannable />
       <Background variant={BackgroundVariant.Dots} color="#aaa" gap={16} size={1} />
     </ReactFlow>
