@@ -24,7 +24,6 @@ import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 
-import routes from '@common/RouteDefinitions'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { useStrings } from 'framework/strings'
 import { EntityDetail, EntitySetupUsageDTO, Error, useGetReferencedBy } from 'services/cd-ng'
@@ -32,6 +31,7 @@ import {
   EntitySetupUsageDTOColumnData,
   RenderScope
 } from '@common/pages/entityUsage/views/EntityUsageListView/EntityUsageList'
+import { useGetEntityMetadata } from '@common/hooks/useGetEntityMetadata'
 import css from './ReferencedBy.module.scss'
 
 export const getIconByType = (type: EntityDetail['type'] | undefined): IconName => {
@@ -137,6 +137,10 @@ export default function ReferencedBy(): React.ReactElement {
     [getString]
   )
 
+  const { overrideEntityInfo } = useGetEntityMetadata({
+    entityInfo: {}
+  })
+
   return (
     <>
       <Layout.Horizontal flex className={css.header}>
@@ -178,16 +182,14 @@ export default function ReferencedBy(): React.ReactElement {
           columns={columns}
           data={data}
           name="ReferenceByView"
-          onRowClick={node => {
+          onRowClick={async node => {
             if (node?.referredByEntity?.entityRef?.identifier) {
-              history.push(
-                routes.toServiceStudio({
-                  accountId: node?.referredByEntity?.entityRef?.accountIdentifier || '',
-                  orgIdentifier: node?.referredByEntity?.entityRef?.orgIdentifier,
-                  projectIdentifier: node?.referredByEntity?.entityRef?.projectIdentifier,
-                  serviceId: node?.referredByEntity?.entityRef?.identifier
-                })
-              )
+              const targetUrl = await overrideEntityInfo({
+                entityInfo: node.referredByEntity
+              })
+              if (targetUrl) {
+                history.push(targetUrl)
+              }
             }
           }}
           pagination={{

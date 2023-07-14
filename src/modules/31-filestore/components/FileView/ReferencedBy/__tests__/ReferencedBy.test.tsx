@@ -7,11 +7,12 @@
 
 import React from 'react'
 
-import { render } from '@testing-library/react'
+import { RenderResult, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { getDummyFileStoreContextValue } from '@filestore/components/FileStoreContext/__tests__/mock'
+import routes from '@common/RouteDefinitions'
 import { referencedByResponse } from './mock'
 import ReferencedBy from '../ReferencedBy'
 
@@ -34,20 +35,49 @@ function WrapperComponent(props: any): JSX.Element {
   )
 }
 
+const renderComponent = (): RenderResult => {
+  const context = getDummyFileStoreContextValue() || {}
+  return render(
+    <WrapperComponent
+      context={{
+        ...context,
+        isCachedNode: jest.fn().mockReturnValue(false)
+      }}
+    />
+  )
+}
+
+const referencedByContentArray = referencedByResponse.data.content
+const accountId = referencedByContentArray[0].accountIdentifier
+const serviceId = referencedByContentArray[0].referredByEntity.entityRef.identifier
+const orgIdentifier = referencedByContentArray[0].referredByEntity.entityRef.orgIdentifier
+const projectIdentifier = referencedByContentArray[0].referredByEntity.entityRef.projectIdentifier
+
 describe('Define referenced by component', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
   test('should render referenced list view', async () => {
-    const context = getDummyFileStoreContextValue() || {}
-    const { container } = render(
-      <WrapperComponent
-        context={{
-          ...context,
-          isCachedNode: jest.fn().mockReturnValue(false)
-        }}
-      />
-    )
+    const { container, getByText } = renderComponent()
+
+    expect(getByText(referencedByContentArray[0].referredByEntity.name)).toBeInTheDocument()
+    expect(getByText(referencedByContentArray[0].referredByEntity.entityRef.projectIdentifier)).toBeInTheDocument()
     expect(container).toBeDefined()
+  })
+
+  test('should route to service detail page on row click', async () => {
+    const { getByTestId } = renderComponent()
+
+    const rows = await screen.findAllByRole('row')
+    fireEvent.click(rows[1])
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent(
+      `${routes.toServiceStudio({
+        accountId,
+        serviceId,
+        orgIdentifier,
+        projectIdentifier
+      })}?tab=configuration`
+    )
   })
 })

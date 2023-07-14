@@ -211,21 +211,27 @@ const getTemplateUrl = async (scope: EntityScope, identifier: string): Promise<s
     })
 }
 
-export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL: () => Promise<string> } => {
+export const useGetEntityMetadata = (
+  prop: UseGetEntityUrlProp
+): {
+  getEntityURL: () => Promise<string>
+  overrideEntityInfo: (overrideEntityProp: UseGetEntityUrlProp) => Promise<string>
+} => {
   const entityInfo = prop.entityInfo
-  const {
-    accountIdentifier = '',
-    orgIdentifier = '',
-    projectIdentifier = '',
-    identifier = '',
-    pipelineIdentifier,
-    branch
-  } = entityInfo?.entityRef || {}
-  const entityType = entityInfo?.type
   const { module } = useParams<ModulePathParams>()
 
-  const getEntityURL = async (): Promise<string> => {
+  const getEntityURL = async (overrideEntityProp?: UseGetEntityUrlProp): Promise<string> => {
     let entityUrl: string
+    const overrideEntityData = overrideEntityProp?.entityInfo
+    const {
+      accountIdentifier = '',
+      orgIdentifier = '',
+      projectIdentifier = '',
+      identifier = '',
+      pipelineIdentifier,
+      branch
+    } = overrideEntityData?.entityRef || entityInfo?.entityRef || {}
+    const entityType = overrideEntityData?.type || entityInfo?.type
 
     switch (entityType) {
       case 'Connectors':
@@ -327,7 +333,12 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
     return Promise.resolve(entityUrl)
   }
 
+  const overrideEntityInfo = async (overrideEntityProp: UseGetEntityUrlProp): Promise<string> => {
+    return await getEntityURL(overrideEntityProp)
+  }
+
   return {
-    getEntityURL
+    getEntityURL,
+    overrideEntityInfo
   }
 }
