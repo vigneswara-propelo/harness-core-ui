@@ -34,7 +34,8 @@ export const featureFlagFilters = (features: Features | null): Array<FilterProps
   {
     queryProps: {},
     label: 'cf.flagFilters.allFlags',
-    total: features?.featureCounts?.totalFeatures || 0
+    total: features?.featureCounts?.totalFeatures || 0,
+    tooltipId: 'ff_flagFilters_allFlags'
   },
   {
     queryProps: { key: FlagFilterKeys.ENABLED, value: 'true' },
@@ -72,7 +73,8 @@ export const featureFlagFilters = (features: Features | null): Array<FilterProps
     queryProps: { key: FlagFilterKeys.ARCHIVED, value: 'true' },
     label: 'cf.flagFilters.archivedFlags',
     total: features?.featureCounts?.totalArchived || 0,
-    filterTotalColor: Color.GREY_700
+    filterTotalColor: Color.GREY_700,
+    tooltipId: 'ff_flagFilters_archivedFlags'
   }
 ]
 
