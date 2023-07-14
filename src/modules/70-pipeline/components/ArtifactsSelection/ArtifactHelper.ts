@@ -50,7 +50,7 @@ export const isSidecarAllowed = (
   isReadOnly: boolean,
   featureFlags: Partial<Record<FeatureFlag, boolean>>
 ): boolean => {
-  if (featureFlags.CDS_SERVERLESS_V2) {
+  if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda && featureFlags.CDS_SERVERLESS_V2) {
     return false
   }
   return (
