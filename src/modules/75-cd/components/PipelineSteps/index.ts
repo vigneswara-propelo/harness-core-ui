@@ -136,13 +136,12 @@ import { AwsSamBuildStep } from './AwsSam/AwsSamBuildStep/AwsSamBuildStep'
 import { K8sBlueGreenStageScaleDown } from './K8sBlueGreenStageScaleDown/K8sBlueGreenStageScaleDown'
 import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
 import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
-import { AwsSamDownloadManifestsStep } from './AwsSam/AwsSamDownloadManifests/AwsSamDownloadManifestsStep'
 import { RancherInfrastructureSpec } from './RancherInfrastructureSpec/RancherInfrastructureSpec'
-import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifestsStep/DownloadServerlessManifestsStep'
 import { ServerlessAwsLambdaPrepareRollbackV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaPrepareRollbackV2Step/ServerlessAwsLambdaPrepareRollbackV2Step'
 import { ServerlessAwsLambdaRollbackV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaRollbackV2/ServerlessAwsLambdaRollbackV2'
 import { ServerlessAwsLambdaPackageV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaPackageV2Step/ServerlessAwsLambdaPackageV2Step'
 import { ServerlessAwsLambdaDeployV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaDeployV2Step/ServerlessAwsLambdaDeployV2Step'
+import { DownloadManifestsStep } from './Common/DownloadManifestsStep/DownloadManifestsStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -273,8 +272,7 @@ factory.registerStep(new AwsSamDeployStep())
 factory.registerStep(new AwsSamBuildStep())
 factory.registerStep(new AwsSamServiceSpec())
 factory.registerStep(new AwsSamInfraSpec())
-factory.registerStep(new AwsSamDownloadManifestsStep())
-factory.registerStep(new DownloadServerlessManifestsStep())
+factory.registerStep(new DownloadManifestsStep())
 factory.registerStep(new RancherInfrastructureSpec())
 factory.registerStep(new ServerlessAwsLambdaPrepareRollbackV2Step())
 factory.registerStep(new ServerlessAwsLambdaRollbackV2Step())

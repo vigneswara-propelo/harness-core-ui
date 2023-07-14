@@ -14,20 +14,20 @@ import { queryByNameAttribute } from '@common/utils/testUtils'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { DownloadServerlessManifestsStep } from '../DownloadServerlessManifestsStep'
+import { DownloadManifestsStep } from '../DownloadManifestsStep'
 
-factory.registerStep(new DownloadServerlessManifestsStep())
+factory.registerStep(new DownloadManifestsStep())
 
 const existingInitialValues = {
   identifier: 'Step_1',
   name: 'Step 1',
   timeout: '20m',
-  type: StepType.DownloadServerlessManifests
+  type: StepType.DownloadManifests
 }
 const onUpdate = jest.fn()
 const onChange = jest.fn()
 
-describe('DownloadServerlessManifestsStep tests', () => {
+describe('DownloadManifests tests', () => {
   beforeEach(() => {
     onUpdate.mockReset()
     onChange.mockReset()
@@ -37,7 +37,7 @@ describe('DownloadServerlessManifestsStep tests', () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.DownloadServerlessManifests}
+        type={StepType.DownloadManifests}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -64,7 +64,7 @@ describe('DownloadServerlessManifestsStep tests', () => {
         identifier: 'Step_1',
         name: 'Step 1',
         timeout: '30m',
-        type: StepType.DownloadServerlessManifests,
+        type: StepType.DownloadManifests,
         spec: {}
       })
     )
@@ -77,15 +77,15 @@ describe('DownloadServerlessManifestsStep tests', () => {
           identifier: 'Step_1',
           name: 'Step 1',
           timeout: '',
-          type: StepType.DownloadServerlessManifests
+          type: StepType.DownloadManifests
         }}
         template={{
           identifier: 'Step_1',
           name: 'Step 1',
           timeout: RUNTIME_INPUT_VALUE,
-          type: StepType.DownloadServerlessManifests
+          type: StepType.DownloadManifests
         }}
-        type={StepType.DownloadServerlessManifests}
+        type={StepType.DownloadManifests}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}
       />
@@ -104,7 +104,7 @@ describe('DownloadServerlessManifestsStep tests', () => {
       identifier: 'Step_1',
       name: 'Step 1',
       timeout: '20m',
-      type: StepType.DownloadServerlessManifests
+      type: StepType.DownloadManifests
     })
   })
 
@@ -112,7 +112,7 @@ describe('DownloadServerlessManifestsStep tests', () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.DownloadServerlessManifests}
+        type={StepType.DownloadManifests}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}

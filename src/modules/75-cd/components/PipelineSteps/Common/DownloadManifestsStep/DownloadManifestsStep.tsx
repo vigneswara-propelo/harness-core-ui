@@ -17,12 +17,12 @@ import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@p
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { GenericExecutionStepEditRef } from '../../Common/GenericExecutionStep/GenericExecutionStepEdit'
-import { GenericExecutionStepInputSet } from '../../Common/GenericExecutionStep/GenericExecutionStepInputSet'
-import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
+import { GenericExecutionStepEditRef } from '../GenericExecutionStep/GenericExecutionStepEdit'
+import { GenericExecutionStepInputSet } from '../GenericExecutionStep/GenericExecutionStepInputSet'
+import { validateGenericFields } from '../GenericExecutionStep/utils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-interface DownloadServerlessManifestsVariableStepProps {
+interface DownloadManifestsVariableStepProps {
   initialValues: StepElementConfig
   stageIdentifier: string
   onUpdate?(data: StepElementConfig): void
@@ -30,16 +30,16 @@ interface DownloadServerlessManifestsVariableStepProps {
   variablesData: StepElementConfig
 }
 
-export class DownloadServerlessManifestsStep extends PipelineStep<StepElementConfig> {
-  protected type = StepType.DownloadServerlessManifests
-  protected stepName = 'Download Serverless Manifests'
-  protected stepIcon: IconName = 'serverless-aws-lambda-download'
+export class DownloadManifestsStep extends PipelineStep<StepElementConfig> {
+  protected type = StepType.DownloadManifests
+  protected stepName = 'Download Manifests'
+  protected stepIcon: IconName = 'download-manifests'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DownloadManifests'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
-    type: StepType.DownloadServerlessManifests,
+    type: StepType.DownloadManifests,
     timeout: '10m',
     spec: {}
   }
@@ -73,7 +73,7 @@ export class DownloadServerlessManifestsStep extends PipelineStep<StepElementCon
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as DownloadServerlessManifestsVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as DownloadManifestsVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -86,7 +86,7 @@ export class DownloadServerlessManifestsStep extends PipelineStep<StepElementCon
 
     return (
       <GenericExecutionStepEditRef
-        formikFormName={'downloadServerlessManifestsStep'}
+        formikFormName={'DownloadManifestsStep'}
         initialValues={initialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}

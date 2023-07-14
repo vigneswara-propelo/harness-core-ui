@@ -164,7 +164,7 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { BAMBOO_ARTIFACT_NG, CDS_GITHUB_PACKAGES } = useFeatureFlags()
+  const { BAMBOO_ARTIFACT_NG, CDS_GITHUB_PACKAGES, CDS_SERVERLESS_V2 } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const [artifactTypes, setArtifactTypes] = useState<ArtifactType[]>(allowedArtifactTypes[deploymentType])
 
@@ -760,7 +760,7 @@ export default function ServiceV2ArtifactsSelection({
         accountId={accountId}
         refetchConnectors={refetchConnectorList}
         isReadonly={readonly}
-        isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
+        isSidecarAllowed={isSidecarAllowed(deploymentType, readonly, { CDS_SERVERLESS_V2 })}
         isMultiArtifactSource
       />
       <ArtifactConfigDrawer
