@@ -49,7 +49,7 @@ export function ManualInterventionStep(props: BaseStepProps): React.ReactElement
         className={css.sm}
         multiTypeDurationProps={{
           enableConfigureOptions: false,
-          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+          allowableTypes: [MultiTypeInputType.FIXED]
         }}
         disabled={disabled}
       />
@@ -106,7 +106,7 @@ export function RetryStep(props: BaseStepProps): React.ReactElement {
             name: retryCountFieldName
           }}
           name={retryCountFieldName}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+          allowableTypes={[MultiTypeInputType.FIXED]}
           value={retryCountValue}
           onChange={newValue => {
             const parsedValue = parseInt(newValue as string)
@@ -154,7 +154,7 @@ export function RetryStep(props: BaseStepProps): React.ReactElement {
                         skipErrorsIf={form => typeof get(form?.errors, retryIntervalsFieldName) === 'string'}
                         multiTypeDurationProps={{
                           enableConfigureOptions: false,
-                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                          allowableTypes: [MultiTypeInputType.FIXED],
                           defaultValueToReset: ''
                         }}
                         disabled={disabled}
