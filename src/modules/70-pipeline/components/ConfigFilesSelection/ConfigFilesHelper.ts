@@ -80,7 +80,13 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
     ConfigFilesMap.GitLab
   ],
   CustomDeployment: [ConfigFilesMap.Harness],
-  Elastigroup: [ConfigFilesMap.Harness],
+  Elastigroup: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
   TAS: [ConfigFilesMap.Harness, ConfigFilesMap.Github],
   Asg: [
     ConfigFilesMap.Harness,
