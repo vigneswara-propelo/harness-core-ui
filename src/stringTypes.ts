@@ -5073,6 +5073,7 @@ export interface StringsMap {
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.ACR': string
   'pipeline.stepDescription.AdvancedCommandFlags': string
+  'pipeline.stepDescription.AnalyzeDeploymentImpact': string
   'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
@@ -8855,6 +8856,15 @@ export interface StringsMap {
   'cv.affectedServices': string
   'cv.allMetrics': string
   'cv.analysisScreens.totalClusters': string
+  'cv.analyzeStep.healthSources.healthSourceNotPresent': string
+  'cv.analyzeStep.monitoredService.createMonitoredService': string
+  'cv.analyzeStep.monitoredService.fetchingMonitoredService': string
+  'cv.analyzeStep.monitoredService.monitoredServiceNotPresent': string
+  'cv.analyzeStep.notifications.configureNotification': string
+  'cv.analyzeStep.notifications.fetchingNotifications': string
+  'cv.analyzeStep.notifications.notificationMethod': string
+  'cv.analyzeStep.notifications.notificationsNotPresent': string
+  'cv.analyzeStep.notifications.notificationsTitle': string
   'cv.andYouHave': string
   'cv.anomalous': string
   'cv.anomalousMetrics': string

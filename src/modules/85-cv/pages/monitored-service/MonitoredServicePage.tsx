@@ -203,7 +203,8 @@ const CVMonitoredServiceDetails: React.FC = () => {
 
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
 
-  const { identifier } = useParams<{ identifier?: string }>()
+  const { identifier, serviceIdentifier, environmentIdentifier } =
+    useParams<{ identifier?: string; serviceIdentifier?: string; environmentIdentifier?: string }>()
 
   if (identifier) {
     return <ServiceHealthAndConfiguration />
@@ -215,7 +216,7 @@ const CVMonitoredServiceDetails: React.FC = () => {
         breadcrumbs={<DetailsBreadcrumb />}
         title={getString('cv.monitoredServices.addNewMonitoredServices')}
       />
-      <Configurations />
+      <Configurations serviceIdentifier={serviceIdentifier} environmentIdentifier={environmentIdentifier} />
     </>
   )
 }

@@ -15,4 +15,6 @@ export type MonitoredServiceOverviewProps = {
   formikProps: FormikProps<MonitoredServiceForm>
   onChangeMonitoredServiceType?: (type: MonitoredServiceDTO['type']) => void
   config?: MonitoredServiceConfig
+  serviceIdentifier?: string
+  environmentIdentifier?: string
 }

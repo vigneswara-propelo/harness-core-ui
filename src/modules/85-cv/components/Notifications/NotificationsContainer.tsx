@@ -12,7 +12,7 @@ import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { CompositeSLOContext } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CompositeSLOContext'
 import SRMNotificationTable from '@cv/components/Notifications/components/SRMNotificationTable/SRMNotificationTable'
-import { GET_NOTIFICATIONS_PAGE_SIZE } from './NotificationsContainer.constants'
+import { NOTIFICATIONS_PAGE_SIZE } from './NotificationsContainer.constants'
 import { NotificationsContainerProps, SRMNotificationType } from './NotificationsContainer.types'
 import { getErrorMessage } from '../ExecutionVerification/components/DeploymentMetrics/DeploymentMetrics.utils'
 import css from './NotificationsContainer.module.scss'
@@ -61,12 +61,12 @@ export default function NotificationsContainer(props: NotificationsContainerProp
         handleDeleteNotification={handleDeleteNotification}
         handleCreateNotification={handleCreateNotification}
         handleToggleNotification={handleToggleNotification}
-        data={notificationsInTable?.slice(page * GET_NOTIFICATIONS_PAGE_SIZE, (page + 1) * GET_NOTIFICATIONS_PAGE_SIZE)}
+        data={notificationsInTable?.slice(page * NOTIFICATIONS_PAGE_SIZE, (page + 1) * NOTIFICATIONS_PAGE_SIZE)}
         notificationRulesComponent={children}
         pageIndex={page}
-        totalPages={Math.ceil(notificationsInTable.length / GET_NOTIFICATIONS_PAGE_SIZE)}
-        pageItemCount={GET_NOTIFICATIONS_PAGE_SIZE}
-        pageSize={GET_NOTIFICATIONS_PAGE_SIZE}
+        totalPages={Math.ceil(notificationsInTable.length / NOTIFICATIONS_PAGE_SIZE)}
+        pageItemCount={NOTIFICATIONS_PAGE_SIZE}
+        pageSize={NOTIFICATIONS_PAGE_SIZE}
         totalItems={notificationsInTable.length}
         gotoPage={(index: number) => {
           setPage(index)

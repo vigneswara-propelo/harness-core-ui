@@ -8,5 +8,7 @@
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 
 import { ContinousVerificationStep } from './ContinousVerification/ContinousVerificationStep'
+import { AnalyzeDeploymentImpact } from './AnalyzeDeploymentImpact/AnalyzeDeploymentImpact'
 
 factory.registerStep(new ContinousVerificationStep())
+factory.registerStep(new AnalyzeDeploymentImpact())

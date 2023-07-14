@@ -69,7 +69,9 @@ function Service(
   formikRef?: TemplateFormRef
 ): JSX.Element {
   const { getString } = useStrings()
-  const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
+  const { identifier, serviceIdentifier, environmentIdentifier } = useParams<
+    ProjectPathProps & { identifier: string; serviceIdentifier?: string; environmentIdentifier?: string }
+  >()
   const isEdit = !!identifier
   const ref = useRef<any | null>()
   const { SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
@@ -248,6 +250,8 @@ function Service(
                   })
                 }}
                 config={config}
+                serviceIdentifier={serviceIdentifier}
+                environmentIdentifier={environmentIdentifier}
               />
               {!isHealthSrcSectionHidden || !isChangeSrcSectionHidden ? (
                 <Text color={Color.BLACK} className={css.sourceTableLabel}>

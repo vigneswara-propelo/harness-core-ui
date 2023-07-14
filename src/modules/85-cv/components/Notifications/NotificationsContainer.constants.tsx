@@ -13,4 +13,4 @@ import {
 export const defaultOption = { label: '', value: '' }
 export const eventStatusDefaultOptions = [eventStatusOptions[0]]
 export const eventTypeDefaultOptions = eventTypeOptions
-export const GET_NOTIFICATIONS_PAGE_SIZE = 10
+export const NOTIFICATIONS_PAGE_SIZE = 10

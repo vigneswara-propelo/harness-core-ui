@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Layout,
   FormInput,
@@ -47,7 +47,7 @@ import OrgAccountLevelServiceEnvField from './component/OrgAccountLevelServiceEn
 import css from './MonitoredServiceOverview.module.scss'
 
 export default function MonitoredServiceOverview(props: MonitoredServiceOverviewProps): JSX.Element {
-  const { formikProps, isEdit, onChangeMonitoredServiceType, config } = props
+  const { formikProps, isEdit, onChangeMonitoredServiceType, config, serviceIdentifier, environmentIdentifier } = props
   const { isTemplate, templateScope } = useMonitoredServiceContext()
   const { getString } = useStrings()
   const [tempServiceType, setTempServiceType] = useState<MonitoredServiceDTO['type']>()
@@ -89,6 +89,13 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
         : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
     [templateScope]
   ) as AllowedTypes
+
+  useEffect(() => {
+    if (serviceIdentifier && environmentIdentifier) {
+      formikProps.setFieldValue('serviceRef', serviceIdentifier)
+      formikProps.setFieldValue('environmentRef', environmentIdentifier)
+    }
+  }, [serviceIdentifier, environmentIdentifier, formikProps])
 
   return (
     <CardWithOuterTitle title={config && isEdit ? '' : getString('overview')} className={css.monitoredService}>

@@ -19,6 +19,8 @@ export const getInitFormData = (
   defaultMonitoredService: MonitoredServiceDTO | undefined,
   isEdit: boolean,
   isTemplate = false,
+  serviceIdentifier: string,
+  environmentIdentifier: string,
   data?: MonitoredServiceDTO | NGMonitoredServiceTemplateInfoConfig,
   templateScope?: Scope
 ): MonitoredServiceForm => {
@@ -47,8 +49,8 @@ export const getInitFormData = (
     identifier = '',
     description = '',
     tags = {},
-    serviceRef = '',
-    environmentRef = '',
+    serviceRef = serviceIdentifier,
+    environmentRef = environmentIdentifier,
     environmentRefList = [],
     sources,
     dependencies = [],

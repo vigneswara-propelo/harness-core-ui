@@ -1,0 +1,198 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { UseGetReturnData } from '@common/utils/testUtils'
+import type { ManualInterventionFailureActionConfig, ResponsePMSPipelineResponseDTO } from 'services/pipeline-ng'
+import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
+
+export const PipelineResponse: UseGetReturnData<ResponsePMSPipelineResponseDTO> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      yamlPipeline:
+        'pipeline:\n    name: Test\n    identifier: Test\n    projectIdentifier: Harshiltest\n    orgIdentifier: default\n    tags: {}\n    stages:\n        - stage:\n              name: Test\n              identifier: Test\n              description: ""\n              type: Deployment\n              spec:\n                  serviceConfig:\n                      serviceDefinition:\n                          type: Kubernetes\n                          spec:\n                              manifestOverrideSets: []\n                              manifests: []\n                              artifacts:\n                                  sidecars: []\n                              variables: []\n                      serviceRef: <+input>\n                  infrastructure:\n                      environmentRef: <+input>\n                      infrastructureDefinition:\n                          type: KubernetesDirect\n                          spec:\n                              connectorRef: testkubenew\n                              namespace: test\n                              releaseName: test\n                      allowSimultaneousDeployments: false\n                  execution:\n                      steps:\n                          - step:\n                                type: Verify\n                                name: Test\n                                identifier: Test\n                                spec:\n                                    monitoredServiceRef: <+input>\n                                    type: Rolling\n                                    healthSources:\n                                        - identifier: appd\n                                    spec:\n                                        sensitivity: High\n                                        duration: 5m\n                                        deploymentTag: <+serviceConfig.artifacts.primary.tag>\n                                timeout: 2h\n                                failureStrategies:\n                                    - onFailure:\n                                          errors:\n                                              - Verification\n                                          action:\n                                              type: ManualIntervention\n                                              spec:\n                                                  timeout: 2h\n                                                  onTimeout:\n                                                      action:\n                                                          type: StageRollback\n                                    - onFailure:\n                                          errors:\n                                              - Unknown\n                                          action:\n                                              type: ManualIntervention\n                                              spec:\n                                                  timeout: 2h\n                                                  onTimeout:\n                                                      action:\n                                                          type: Ignore\n                      rollbackSteps: []\n              tags: {}\n              failureStrategies:\n                  - onFailure:\n                        errors:\n                            - AllErrors\n                        action:\n                            type: StageRollback\n',
+      gitDetails: {
+        objectId: '',
+        branch: '',
+        repoIdentifier: '',
+        rootFolder: '',
+        filePath: ''
+      }
+    },
+    correlationId: '49b3d700-6d42-4d7c-9a92-d72a416389b6'
+  }
+}
+
+export const mockedMonitoredServiceAndHealthSources = {
+  data: {
+    monitoredService: {
+      orgIdentifier: 'default',
+      projectIdentifier: 'Harshiltest',
+      identifier: 'testtest',
+      name: 'testtest',
+      type: 'Application',
+      description: null,
+      serviceRef: 'test',
+      environmentRef: 'test',
+      sources: {
+        healthSources: [
+          {
+            name: 'appd-healthsource',
+            identifier: 'appd',
+            type: 'AppDynamics',
+            spec: {
+              connectorRef: 'Testappd',
+              feature: null,
+              appdApplicationName: 'prod',
+              appdTierName: 'cv-nextgen',
+              metricPacks: [{ identifier: 'Errors' }]
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+export const mockedMonitoredService = {
+  data: {
+    monitoredService: {
+      orgIdentifier: 'default',
+      projectIdentifier: 'Harshiltest',
+      identifier: 'testtest',
+      name: 'testtest',
+      type: 'Application',
+      description: null,
+      serviceRef: 'test',
+      environmentRef: 'test',
+      sources: {
+        healthSources: []
+      }
+    }
+  }
+}
+
+export const ANALYZE_STEP_INITIAL_VALUES = {
+  name: 'Analyze Deployment Step',
+  type: 'AnalyzeDeploymentImpact',
+  identifier: 'AnalyzeDeploymentImpact',
+  timeout: '15m',
+  spec: {
+    duration: '',
+    healthSources: [],
+    monitoredService: {
+      type: '',
+      spec: {}
+    }
+  },
+  failureStrategies: [
+    {
+      onFailure: {
+        errors: [ErrorType.Verification],
+        action: {
+          type: Strategy.ManualIntervention,
+          spec: {
+            timeout: '2h',
+            onTimeout: {
+              action: {
+                type: Strategy.StageRollback
+              }
+            }
+          }
+        } as ManualInterventionFailureActionConfig
+      }
+    },
+    {
+      onFailure: {
+        errors: [ErrorType.Unknown],
+        action: {
+          type: Strategy.ManualIntervention,
+          spec: {
+            timeout: '2h',
+            onTimeout: {
+              action: {
+                type: Strategy.Ignore
+              }
+            }
+          }
+        } as ManualInterventionFailureActionConfig
+      }
+    }
+  ]
+}
+
+export const verifyStepInitialValuesWithRunTimeFields = {
+  name: 'CV Step',
+  type: 'AnalyzeDeploymentImpact',
+  identifier: 'AnalyzeDeploymentImpact',
+  timeout: RUNTIME_INPUT_VALUE,
+  spec: {
+    monitoredServiceRef: RUNTIME_INPUT_VALUE,
+    type: 'Rolling',
+    healthSources: [],
+    spec: {
+      sensitivity: RUNTIME_INPUT_VALUE,
+      duration: RUNTIME_INPUT_VALUE,
+      baseline: RUNTIME_INPUT_VALUE,
+      trafficsplit: RUNTIME_INPUT_VALUE,
+      deploymentTag: RUNTIME_INPUT_VALUE
+    }
+  }
+}
+
+export const monitoredServiceYamlData = {
+  type: 'Canary',
+  monitoredService: { type: 'Default', spec: {} },
+  spec: {
+    sensitivity: { label: 'High', value: 'HIGH' },
+    duration: { label: '1 hr 30 min', value: '90m' },
+    deploymentTag: '<+serviceConfig.artifacts.primary.tag>',
+    baseline: '',
+    trafficsplit: ''
+  },
+  monitoredServiceRef: '<+input>',
+  healthSources: []
+}
+
+export const mockedHealthSource = {
+  type: 'SumologicMetrics',
+  identifier: 'sumo_temp',
+  name: 'sumo temp',
+  version: 'v2',
+  spec: {
+    connectorRef: 'Sumo_logic',
+    feature: 'SumologicMetrics',
+    queries: [],
+    queryDefinitions: [
+      {
+        identifier: 'M1',
+        name: 'M1',
+        groupName: 'g1',
+        query: '<+input>',
+        queryParams: {
+          serviceInstanceField: '<+input>'
+        },
+        liveMonitoringEnabled: false,
+        continuousVerificationEnabled: false,
+        sliEnabled: true,
+        metricThresholds: [],
+        riskProfile: {
+          thresholdTypes: []
+        }
+      }
+    ]
+  }
+}
+
+export const mockedSignalFXHealthSource = {
+  ...mockedHealthSource,
+  type: 'SplunkSignalFXMetrics'
+}

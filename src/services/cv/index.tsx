@@ -497,6 +497,7 @@ export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   subscription: string
   tenantId?: string
   useManagedIdentity?: boolean
+  vaultConfiguredManually?: boolean
   vaultName: string
 }
 
@@ -1147,6 +1148,8 @@ export type DataCollectionFailureInstanceDetails = SecondaryEventDetails & {
 export interface DataCollectionInfo {
   collectHostData?: boolean
   dataCollectionDsl?: string
+  serviceInstances?: string[]
+  validServiceInstanceRegExPatterns?: string[]
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -1208,6 +1211,9 @@ export interface DataCollectionRequest {
 export interface DataCollectionTaskDTO {
   accountId?: string
   dataCollectionInfo?: DataCollectionInfo
+  dataCollectionMetadata?: {
+    [key: string]: string
+  }
   endTime?: number
   startTime?: number
   uuid?: string
@@ -1215,6 +1221,9 @@ export interface DataCollectionTaskDTO {
 }
 
 export interface DataCollectionTaskResult {
+  dataCollectionMetadata?: {
+    [key: string]: string
+  }
   dataCollectionTaskId?: string
   exception?: string
   executionLogs?: ExecutionLog[]
@@ -1326,6 +1335,8 @@ export interface DeploymentActivitySummaryDTO {
   serviceIdentifier?: string
   serviceName?: string
 }
+
+export type DeploymentImpactReportConditionSpec = NotificationRuleConditionSpec & { [key: string]: any }
 
 export interface DeploymentLogAnalysisDTO {
   clusterCoordinates?: ClusterCoordinates[]
@@ -3918,6 +3929,7 @@ export interface NotificationRuleCondition {
     | 'ChangeObserved'
     | 'CodeErrors'
     | 'FireHydrantReport'
+    | 'DeploymentImpactReport'
 }
 
 export interface NotificationRuleConditionSpec {
@@ -4195,6 +4207,17 @@ export interface PageMonitoredServicePlatformResponse {
 
 export interface PageMonitoredServiceResponse {
   content?: MonitoredServiceResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageNotificationRuleCondition {
+  content?: NotificationRuleCondition[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -5283,6 +5306,13 @@ export interface ResponsePageMonitoredServicePlatformResponse {
 export interface ResponsePageMonitoredServiceResponse {
   correlationId?: string
   data?: PageMonitoredServiceResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageNotificationRuleCondition {
+  correlationId?: string
+  data?: PageNotificationRuleCondition
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6462,8 +6492,10 @@ export interface Sources {
 export type SplunkConnectorDTO = ConnectorConfigDTO & {
   accountId: string
   delegateSelectors?: string[]
-  passwordRef: string
+  passwordRef?: string
   splunkUrl: string
+  tokenRef?: string
+  type?: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
   username?: string
 }
 
@@ -7278,7 +7310,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromTemplateInputBodyRequestBody = string
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface SaveAccountLevelAnnotationPathParams {
   accountIdentifier: string
@@ -13600,7 +13632,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13614,7 +13646,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -13629,7 +13661,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13643,7 +13675,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -13655,7 +13687,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -13664,7 +13696,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 

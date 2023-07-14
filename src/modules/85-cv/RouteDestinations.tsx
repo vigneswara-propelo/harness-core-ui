@@ -204,6 +204,11 @@ export const cdModuleParams: ModulePathParams = {
   module: ':module(cd)'
 }
 
+export const serviceAndEnvParams = {
+  serviceIdentifier: ':serviceIdentifier',
+  environmentIdentifier: ':environmentIdentifier'
+}
+
 const RedirectToCVProject = (): React.ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
@@ -579,6 +584,22 @@ export const SRMRoutes = (
       })}
     >
       <RedirectToCETEventSummaryDetail />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={[
+        routes.toCVAddMonitoredServiceForServiceAndEnv({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...serviceAndEnvParams
+        })
+      ]}
+    >
+      <MonitoredServiceProvider isTemplate={false}>
+        <MonitoredServicePage />
+      </MonitoredServiceProvider>
     </RouteWithLayout>
 
     <RouteWithLayout

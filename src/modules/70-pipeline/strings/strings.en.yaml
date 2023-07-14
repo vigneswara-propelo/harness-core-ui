@@ -1273,6 +1273,7 @@ stepDescription:
   HarnessApproval: Add manual approvals as steps and stages.
   JiraApproval: Use Jira issues to approve steps and stages.
   Verify: Verify a deployment using your monitoring tools.
+  AnalyzeDeploymentImpact: Analyze the deployment impact.
   JiraCreate: Create a Jira issue as a step in the execution of a Pipeline.
   JiraUpdate: Update a Jira issue as a step in the execution of a Pipeline.
   TerraformRollback: Roll back your provisioned infrastructure and resources and return your environment to its pre-deployment state.

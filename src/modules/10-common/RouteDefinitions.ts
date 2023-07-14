@@ -1834,6 +1834,16 @@ const routes = {
         : `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
     }
   ),
+  toCVAddMonitoredServiceForServiceAndEnv: withAccountId(
+    ({
+      projectIdentifier,
+      orgIdentifier,
+      serviceIdentifier,
+      environmentIdentifier
+    }: Partial<ProjectPathProps & { module: string; serviceIdentifier: string; environmentIdentifier: string }>) => {
+      return `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup/serviceIdentifier/${serviceIdentifier}/environmentIdentifier/${environmentIdentifier}`
+    }
+  ),
   toCVAddMonitoringServicesEdit: withAccountId(
     ({
       projectIdentifier,

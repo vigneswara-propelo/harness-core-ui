@@ -1314,3 +1314,16 @@ verifyStep:
     blueGreen: Analyzes nodes groups before and after deployment during analysis window.
     loadTest: Analysis only after deployment.
     simpleVerification: Simple validation on static thresholds or "Fail Fast" threshlolds. Not application for log analysis.
+analyzeStep:
+  healthSources:
+    healthSourceNotPresent: Health Sources have not been set up for this monitored service. You can create them directly within the monitored service's configuration.
+  notifications:
+    fetchingNotifications: Fetching notifications ...
+    notificationsNotPresent: Notifications have not been set up for this monitored service. You can create them directly within the monitored service's configuration.
+    notificationsTitle: Receive notifications for conditions configured in SRM that are relevant to the Deployment Impact Analysis.
+    configureNotification: Configure notification
+    notificationMethod: Notification method
+  monitoredService:
+    monitoredServiceNotPresent: Monitored service has not been set up. You can create them directly within the SRM
+    fetchingMonitoredService: Fetching monitored service details ...
+    createMonitoredService: Create Monitored Service

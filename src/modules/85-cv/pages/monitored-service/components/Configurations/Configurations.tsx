@@ -59,10 +59,18 @@ interface ConfigurationsInterface {
   templateValue?: NGTemplateInfoConfig
   updateTemplate?: (template: MonitoredServiceForm) => void
   config?: MonitoredServiceConfig
+  serviceIdentifier?: string
+  environmentIdentifier?: string
 }
 
 export default function Configurations(
-  { updateTemplate, templateValue, config }: ConfigurationsInterface,
+  {
+    updateTemplate,
+    templateValue,
+    config,
+    serviceIdentifier = '',
+    environmentIdentifier = ''
+  }: ConfigurationsInterface,
   formikRef: TemplateFormRef
 ): JSX.Element {
   const { getString } = useStrings()
@@ -247,6 +255,8 @@ export default function Configurations(
         defaultMonitoredService,
         isTemplate ? !isNewTemplate(templateIdentifier) : !!identifier,
         isTemplate,
+        serviceIdentifier,
+        environmentIdentifier,
         isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService,
         templateScope
       )
@@ -263,7 +273,9 @@ export default function Configurations(
       identifier,
       loadingGetMonitoredService,
       defaultMonitoredService,
-      templateValue
+      templateValue,
+      serviceIdentifier,
+      environmentIdentifier
     ]
   )
 

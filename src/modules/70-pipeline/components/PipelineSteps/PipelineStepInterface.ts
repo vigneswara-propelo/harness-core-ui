@@ -82,6 +82,7 @@ export enum StepType {
   ServiceNowUpdate = 'ServiceNowUpdate',
   ServiceNowImportSet = 'ServiceNowImportSet',
   Verify = 'Verify',
+  AnalyzeDeploymentImpact = 'AnalyzeDeploymentImpact',
   JiraCreate = 'JiraCreate',
   JiraUpdate = 'JiraUpdate',
   TERRAFORM_ROLLBACK_V2 = 'TerraformRollback',
