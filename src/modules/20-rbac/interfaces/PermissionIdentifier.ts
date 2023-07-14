@@ -246,5 +246,14 @@ export enum PermissionIdentifier {
   VIEW_NETWORK_MAP = 'servicediscovery_networkmap_view',
   CREATE_NETWORK_MAP = 'servicediscovery_networkmap_create',
   EDIT_NETWORK_MAP = 'servicediscovery_networkmap_edit',
-  DELETE_NETWORK_MAP = 'servicediscovery_networkmap_delete'
+  DELETE_NETWORK_MAP = 'servicediscovery_networkmap_delete',
+
+  //CET Permissions
+  CET_AGENTS_VIEW = 'cet_agents_view',
+  CET_TOKEN_VIEW = 'cet_token_view',
+  CET_TOKEN_CREATE = 'cet_token_create',
+  CET_TOKEN_REVOKE = 'cet_token_revoke',
+  CET_CRITICALEVENT_VIEW = 'cet_criticalevent_view',
+  CET_CRITICALEVENT_CREATE = 'cet_criticalevent_create',
+  CET_CRITICALEVENT_DELETE = 'cet_criticalevent_delete'
 }

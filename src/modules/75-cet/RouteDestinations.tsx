@@ -29,6 +29,10 @@ import SettingsList from '@default-settings/pages/SettingsList'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
 import { useQueryParams } from '@common/hooks'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { String as LocaleString } from 'framework/strings'
 import { CETMonitoredServices } from './pages/CETMonitoredServices'
 import SideNav from './components/SideNav/SideNav'
 import CETHomePage from './pages/CETHomePage'
@@ -150,6 +154,49 @@ export const licenseRedirectData: LicenseRedirectProps = {
 }
 
 const ETRoutes: FC = () => {
+  //RBAC
+  RbacFactory.registerResourceCategory(ResourceCategory.CET, {
+    icon: 'cet',
+    label: 'common.purpose.cet.continuous'
+  })
+
+  RbacFactory.registerResourceTypeHandler(ResourceType.CET_AGENT, {
+    icon: 'cet',
+    label: 'common.agents',
+    labelSingular: 'common.agents',
+    category: ResourceCategory.CET,
+
+    permissionLabels: {
+      [PermissionIdentifier.CET_AGENTS_VIEW]: <LocaleString stringID="rbac.permissionLabels.view" />
+    }
+  })
+
+  RbacFactory.registerResourceTypeHandler(ResourceType.CET_TOKEN, {
+    icon: 'cet',
+    label: 'common.tokens',
+    labelSingular: 'common.tokens',
+    category: ResourceCategory.CET,
+
+    permissionLabels: {
+      [PermissionIdentifier.CET_TOKEN_VIEW]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.CET_TOKEN_CREATE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.CET_TOKEN_REVOKE]: <LocaleString stringID="delegates.tokens.revoke" />
+    }
+  })
+
+  RbacFactory.registerResourceTypeHandler(ResourceType.CET_CRITICAL_EVENT, {
+    icon: 'cet',
+    label: 'cv.codeErrors.criticalEvents',
+    labelSingular: 'cv.codeErrors.criticalEvents',
+    category: ResourceCategory.CET,
+
+    permissionLabels: {
+      [PermissionIdentifier.CET_CRITICALEVENT_VIEW]: <LocaleString stringID="rbac.permissionLabels.view" />,
+      [PermissionIdentifier.CET_CRITICALEVENT_CREATE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+      [PermissionIdentifier.CET_CRITICALEVENT_DELETE]: <LocaleString stringID="delete" />
+    }
+  })
+
   return (
     <>
       <RouteWithLayout
