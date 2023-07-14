@@ -9,35 +9,29 @@ import React from 'react'
 import { Formik } from '@harness/uicore'
 
 import * as Yup from 'yup'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 
+import { isEmpty } from 'lodash-es'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { AnalyzeDeploymentImpactWidgetProps } from './types'
 import { AnalyzeDeploymentImpactWidgetSections } from './components/AnalyzeDeploymentImpactWidgetSections/AnalyzeDeploymentImpactWidgetSections'
-// import { validateMonitoredService } from './AnalyzeDeploymentImpactWidget.utils'
 import { AnalyzeDeploymentImpactData } from '../../AnalyzeDeploymentImpact.types'
+import { validateMonitoredService } from './AnalyzeDeploymentImpactWidget.utils'
 
 export function AnalyzeDeploymentImpactWidget(
-  {
-    initialValues,
-    onUpdate,
-    isNewStep,
-    stepViewType,
-    // onChange,
-    allowableTypes
-  }: AnalyzeDeploymentImpactWidgetProps,
+  { initialValues, onUpdate, isNewStep, stepViewType, onChange, allowableTypes }: AnalyzeDeploymentImpactWidgetProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element {
   const { getString } = useStrings()
 
-  // const validateForm = (formData: AnalyzeDeploymentImpactData): FormikErrors<AnalyzeDeploymentImpactData> => {
-  //   const { healthSources, monitoredService } = formData.spec
-  //   const monitoredServiceRef = monitoredService.spec.monitoredServiceRef as string
-  //   return validateMonitoredService(monitoredServiceRef, getString, healthSources)
-  // }
+  const validateForm = (formData: AnalyzeDeploymentImpactData): FormikErrors<AnalyzeDeploymentImpactData> => {
+    const { healthSources, monitoredService } = formData.spec
+    const monitoredServiceRef = monitoredService.spec.monitoredServiceRef as string
+    return validateMonitoredService(monitoredServiceRef, getString, healthSources)
+  }
 
   const defaultAnalyzeSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -50,15 +44,12 @@ export function AnalyzeDeploymentImpactWidget(
   return (
     <Formik<AnalyzeDeploymentImpactData>
       onSubmit={/* istanbul ignore next */ data => onUpdate?.(data)}
-      validate={() => {
-        // This will be added in the next PR.
-        // const errors = validateForm(data)
-        // if (!isEmpty(errors)) {
-        //   onChange?.(data)
-        //   return errors
-        // } else {
-        //   onChange?.(data)
-        // }
+      validate={data => {
+        const errors = validateForm(data)
+        /* istanbul ignore next */ onChange?.(data)
+        if (!isEmpty(errors)) {
+          return errors
+        }
       }}
       formName="analyzeStep"
       initialValues={initialValues}
