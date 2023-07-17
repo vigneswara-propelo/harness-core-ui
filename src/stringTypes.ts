@@ -7951,6 +7951,7 @@ export interface StringsMap {
   'cet.continuous': string
   'cet.homepage.learnMore': string
   'cet.homepage.slogan': string
+  'cet.monitoredservice.agentconfig': string
   'cet.nav.settings': string
   'cet.title': string
   'cf.addPrerequisites.addPrerequisitesDesc': string
