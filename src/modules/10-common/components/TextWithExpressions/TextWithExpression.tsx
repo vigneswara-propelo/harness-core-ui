@@ -35,13 +35,16 @@ interface ResolvedValueComponentProps {
 interface ExpressionTooltipContentProps {
   hasError: boolean
   resolvedValueObject: ExpressionEvaluation
+  word: string
 }
 
 const VAR_REGEX = /(<\+[a-zA-z0-9_.]+?>)/g
 
-const ExpressionTooltipContent = ({ hasError, resolvedValueObject }: ExpressionTooltipContentProps): JSX.Element => {
-  const [hovered, setIsHovered] = React.useState<boolean>(false)
-
+const ExpressionTooltipContent = ({
+  hasError,
+  resolvedValueObject,
+  word
+}: ExpressionTooltipContentProps): JSX.Element => {
   if (hasError) {
     return (
       <Layout.Vertical padding="medium" flex={{ alignItems: 'flex-start' }}>
@@ -51,44 +54,38 @@ const ExpressionTooltipContent = ({ hasError, resolvedValueObject }: ExpressionT
           iconProps={{ className: css.expressionIcon }}
           padding={{ bottom: 'small' }}
         >
-          {resolvedValueObject?.originalExpression}
+          {defaultTo(resolvedValueObject?.originalExpression, word)}
         </Text>
         <Text icon="error-outline" color={Color.WHITE} iconProps={{ className: css.errorIcon }}>
-          {resolvedValueObject.error}
+          {resolvedValueObject?.error}
         </Text>
       </Layout.Vertical>
     )
   }
   return (
-    <Layout.Horizontal
-      padding="medium"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <Layout.Horizontal padding="medium">
       <Text
         color={Color.WHITE}
         icon="expression-input"
         padding={{ right: 'small' }}
         iconProps={{ className: css.expressionIcon }}
       >
-        {resolvedValueObject?.originalExpression}
+        {defaultTo(resolvedValueObject?.originalExpression, word)}
       </Text>
-      {hovered && (
-        <CopyToClipBoard content={resolvedValueObject?.originalExpression as string} showFeedback hidePopover />
-      )}
+      <CopyToClipBoard content={defaultTo(resolvedValueObject?.originalExpression, word)} showFeedback hidePopover />
     </Layout.Horizontal>
   )
 }
 
 const ResolvedValueComponent = ({ metadataMap, word, fqnPath }: ResolvedValueComponentProps): JSX.Element => {
-  const valueObject = metadataMap[`${fqnPath}+${word}`]
+  const valueObject = metadataMap?.[`${fqnPath}+${word}`]
 
   const hasError = !!valueObject?.error?.length
 
   return (
     <Text
       key={`${fqnPath}+${word}`}
-      tooltip={<ExpressionTooltipContent hasError={hasError} resolvedValueObject={valueObject} />}
+      tooltip={<ExpressionTooltipContent hasError={hasError} resolvedValueObject={valueObject} word={word} />}
       tooltipProps={{
         isDark: true,
         interactionKind: PopoverInteractionKind.HOVER,
@@ -101,7 +98,7 @@ const ResolvedValueComponent = ({ metadataMap, word, fqnPath }: ResolvedValueCom
       alwaysShowTooltip
       className={css.expressionValue}
     >
-      {defaultTo(valueObject?.resolvedValue, valueObject?.originalExpression)}
+      {defaultTo(valueObject?.resolvedValue, word)}
     </Text>
   )
 }
