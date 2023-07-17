@@ -193,7 +193,7 @@ function useValidateValues({
     }
   }
 }
-function FormikInputSetForm(props: FormikInputSetFormProps, childRef: any): React.ReactElement {
+export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactElement {
   const {
     inputSet,
     template,
@@ -247,32 +247,6 @@ function FormikInputSetForm(props: FormikInputSetFormProps, childRef: any): Reac
     queryParams: { accountIdentifier: accountId },
     lazy: false
   })
-
-  const formikRef1 = React.useRef<FormikProps<InputSetDTO & GitContextProps & StoreMetadata>>(null)
-
-  React.useImperativeHandle(childRef, () => ({
-    isFormDirty: () => {
-      const test = isEqual(formikRef1?.current?.values, inputSet)
-      return test
-    },
-    submitForm() {
-      if (formikRef1.current) {
-        return formikRef1.current.submitForm()
-      }
-      return Promise.resolve()
-    },
-    validateForm() {
-      if (formikRef1.current) {
-        return formikRef1.current.validateForm()
-      }
-      return Promise.resolve()
-    },
-    isValidForm() {
-      if (formikRef1.current) {
-        return formikRef1.current.isValid
-      }
-    }
-  }))
 
   React.useEffect(() => {
     if (allowDifferentRepoSettingsError) {
@@ -395,7 +369,6 @@ function FormikInputSetForm(props: FormikInputSetFormProps, childRef: any): Reac
               }
             )
           }}
-          innerRef={formikRef1}
         >
           {formikProps => {
             formikRef.current = formikProps
@@ -553,5 +526,3 @@ function FormikInputSetForm(props: FormikInputSetFormProps, childRef: any): Reac
     </Container>
   )
 }
-
-export const FormikInputSetFormWithRef = React.forwardRef(FormikInputSetForm)

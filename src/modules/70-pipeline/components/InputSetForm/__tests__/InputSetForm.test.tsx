@@ -42,7 +42,7 @@ import {
   GetOverlayInputSetEdit,
   MergedPipelineResponse
 } from './InputSetMocks'
-import { FormikInputSetFormWithRef, isYamlPresent, showPipelineInputSetForm } from '../FormikInputSetForm'
+import { FormikInputSetForm, isYamlPresent, showPipelineInputSetForm } from '../FormikInputSetForm'
 import NewInputSetModal from '../NewInputSetModal'
 
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS' })
@@ -414,7 +414,7 @@ describe.skip('Render Forms - Snapshot Testing', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <FormikInputSetFormWithRef
+        <FormikInputSetForm
           template={templateData as ResponseInputSetTemplateWithReplacedExpressionsResponse}
           pipeline={PipelineResponse.data}
           inputSet={{
@@ -480,7 +480,7 @@ describe.skip('Render Forms - Snapshot Testing', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <FormikInputSetFormWithRef
+        <FormikInputSetForm
           template={templateData as ResponseInputSetTemplateWithReplacedExpressionsResponse}
           pipeline={PipelineResponse.data}
           inputSet={{

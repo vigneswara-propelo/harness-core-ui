@@ -71,7 +71,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 
 import GitPopover from '../GitPopover/GitPopover'
-import { FormikInputSetFormWithRef } from './FormikInputSetForm'
+import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
 import { OutOfSyncErrorStrip } from '../InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
@@ -522,7 +522,6 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   // Form dirty and isSaveEnabled are different
   // form dirty is determined on formvalues.pipeline and save is enabled on ipset identifier
   const [isSaveEnabled, setIsSaveEnabled] = React.useState(false)
-  const childRef = React.useRef(null)
 
   const handleFormDirty = (dirty: boolean): void => {
     setIsFormDirty(dirty)
@@ -534,7 +533,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
         enablePipelineTemplatesResolution={false}
         storeMetadata={{ storeType, connectorRef, repoName, branch, filePath }}
       >
-        <FormikInputSetFormWithRef
+        <FormikInputSetForm
           inputSet={isNewInModal && inputSetInitialValue ? merge(inputSet, inputSetInitialValue) : inputSet}
           template={template}
           pipeline={pipeline}
@@ -555,7 +554,6 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
           filePath={filePath}
           handleFormDirty={handleFormDirty}
           setIsSaveEnabled={setIsSaveEnabled}
-          ref={childRef}
         />
       </PipelineVariablesContextProvider>
     ),
@@ -649,9 +647,8 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       openDiffModal={openDiffModal}
       isFormDirty={isFormDirty}
       onCancel={onCancel}
-      childRef={childRef}
       isSaveEnabled={isSaveEnabled}
-      setFormErrors={setFormErrors}
+      formikRef={formikRef}
     >
       {child()}
     </InputSetFormWrapper>
@@ -677,8 +674,7 @@ export interface InputSetFormWrapperProps {
   isFormDirty: boolean
   onCancel?: () => void
   isSaveEnabled?: boolean
-  childRef: any
-  setFormErrors?: any
+  formikRef: React.MutableRefObject<FormikProps<InputSetDTO & GitContextProps & StoreMetadata> | undefined>
 }
 
 export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.ReactElement {
@@ -694,14 +690,13 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     disableVisualView,
     inputSetUpdateResponseHandler,
     menuOpen,
+    formikRef,
     handleMenu,
     onBranchChange,
     handleReloadFromCache = noop,
     onCancel,
     isFormDirty = false,
-    childRef,
-    isSaveEnabled = false,
-    setFormErrors
+    isSaveEnabled = false
   } = props
 
   const history = useHistory()
@@ -801,13 +796,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   text={getString('save')}
                   onClick={async e => {
                     e.preventDefault()
-                    if (childRef?.current?.isValidForm()) {
-                      childRef?.current?.submitForm()
-                    } else {
-                      const errors = await childRef?.current?.validateForm()
-
-                      setFormErrors(errors)
-                    }
+                    formikRef?.current?.submitForm()
                   }}
                 />
                 <Button
