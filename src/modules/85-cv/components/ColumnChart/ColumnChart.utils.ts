@@ -44,3 +44,25 @@ export function getColumnPositions(containerWidth: number, timestamps?: ColumnDa
 export function getLoadingColumnPositions(containerWidth: number): number[] {
   return LOADING_COLUMN_HEIGHTS.map((_, index) => (containerWidth / LOADING_COLUMN_HEIGHTS.length) * index)
 }
+
+export const calculatePositionForStartAndEndTimestamp = ({
+  endOfTimestamps,
+  startTime,
+  endTime,
+  startOfTimestamps,
+  containerWidth
+}: {
+  endOfTimestamps: number
+  startTime: number
+  endTime: number
+  startOfTimestamps: number
+  containerWidth: number
+}): {
+  startPosition: number
+  endPosition: number
+} => {
+  return {
+    endPosition: (1 - (endOfTimestamps - endTime) / (endOfTimestamps - startOfTimestamps)) * containerWidth,
+    startPosition: (1 - (endOfTimestamps - startTime) / (endOfTimestamps - startOfTimestamps)) * containerWidth
+  }
+}

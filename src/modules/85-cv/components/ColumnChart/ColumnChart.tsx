@@ -12,8 +12,14 @@ import { Text, Container, Popover, PageError, NoDataCard } from '@harness/uicore
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import noDataImage from '@cv/assets/noData.svg'
+import ColumChartWithStartAndStopEventMarker from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/ColumChartWithStartAndStopEventMarker/ColumChartWithStartAndStopEventMarker'
 import type { ColumnChartProps } from './ColumnChart.types'
-import { calculatePositionForTimestamp, getColumnPositions, getLoadingColumnPositions } from './ColumnChart.utils'
+import {
+  calculatePositionForStartAndEndTimestamp,
+  calculatePositionForTimestamp,
+  getColumnPositions,
+  getLoadingColumnPositions
+} from './ColumnChart.utils'
 import { COLUMN_WIDTH, COLUMN_HEIGHT, TOTAL_COLUMNS, LOADING_COLUMN_HEIGHTS } from './ColumnChart.constants'
 import ColumnChartPopoverContent from './components/ColumnChartPopoverContent/ColumnChartPopoverContent'
 import ColumnChartEventMarker from './components/ColummnChartEventMarker/ColumnChartEventMarker'
@@ -29,12 +35,14 @@ export default function ColumnChart(props: ColumnChartProps): JSX.Element {
     refetchOnError,
     columnHeight = COLUMN_HEIGHT,
     timestampMarker,
+    multiTimeStampMarker,
     hasTimelineIntegration,
     duration
   } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const [cellPositions, setCellPositions] = useState<number[]>(Array(TOTAL_COLUMNS).fill(null))
   const [markerPosition, setMarkerPosition] = useState<number | undefined>()
+  const [multiMarkerPosition, setMultipleMarkerPosition] = useState<{ startMarker: number; endMarker?: number }>()
   const { getString } = useStrings()
 
   useLayoutEffect(() => {
@@ -55,6 +63,15 @@ export default function ColumnChart(props: ColumnChartProps): JSX.Element {
           startOfTimestamps: data[0].timeRange.startTime
         })
       )
+    } else if (multiTimeStampMarker && data?.[data.length - 1]?.timeRange?.endTime && data[0]?.timeRange?.startTime) {
+      const { startPosition, endPosition } = calculatePositionForStartAndEndTimestamp({
+        containerWidth,
+        endTime: multiTimeStampMarker?.markerEndTime?.timestamp || 0,
+        startTime: multiTimeStampMarker.markerStartTime.timestamp,
+        endOfTimestamps: data[data.length - 1].timeRange.endTime,
+        startOfTimestamps: data[0].timeRange.startTime
+      })
+      setMultipleMarkerPosition({ startMarker: startPosition, endMarker: endPosition })
     }
   }, [containerRef?.current, data, isLoading])
 
@@ -111,6 +128,14 @@ export default function ColumnChart(props: ColumnChartProps): JSX.Element {
           columnHeight={columnHeight}
           leftOffset={markerPosition}
           markerColor={timestampMarker?.color || ''}
+        />
+      )}
+      {multiMarkerPosition && (
+        <ColumChartWithStartAndStopEventMarker
+          columnHeight={columnHeight}
+          startMarkerPosition={multiMarkerPosition?.startMarker || 0}
+          deployedOrStopMarkerPosition={multiMarkerPosition?.endMarker || 0}
+          containerWidth={(containerRef?.current?.parentElement?.getBoundingClientRect().width || 0) - leftOffset}
         />
       )}
       {cellPositions.map((position, index) => {

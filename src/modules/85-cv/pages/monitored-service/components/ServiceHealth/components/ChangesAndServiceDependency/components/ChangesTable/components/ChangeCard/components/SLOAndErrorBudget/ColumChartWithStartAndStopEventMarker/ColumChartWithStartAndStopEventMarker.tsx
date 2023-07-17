@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import StopImage from '@cv/assets/Stop.svg'
 import SuccessImage from '@cv/assets/greenTick.svg'
@@ -37,20 +36,18 @@ export default function ColumChartWithStartAndStopEventMarker({
   return (
     <div style={{ position: 'absolute', top: 20, display: 'flex' }}>
       <ColumnChartEventMarker
-        data-testId="startMarker"
         columnHeight={columnHeightDerived}
         customMarker={DeploymentImage}
         leftOffset={startMarkerPosition}
-        markerColor={Color.GREEN_400}
+        markerColor={'var(--green-400)'}
       />
       <ColumnChartOverlay isStopped={isStopped} startMarkerPosition={startMarkerPosition} width={shadowWidth} />
       {deployedOrStopMarkerPosition ? (
         <ColumnChartEventMarker
-          data-testId="deployedOrStopMarker"
           columnHeight={columnHeightDerived}
           customMarker={isStopped ? StopImage : SuccessImage}
           leftOffset={deployedOrStopMarkerPosition}
-          markerColor={isStopped ? Color.GREY_200 : Color.GREEN_400}
+          markerColor={isStopped ? 'var(--gray-200)' : 'var(--green-400)'}
         />
       ) : null}
     </div>

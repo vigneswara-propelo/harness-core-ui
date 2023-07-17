@@ -209,6 +209,8 @@ allowpaths:
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback/{logFeedbackId}/ticket
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/baseline
   - /monitored-service/platform/list
+  - /srm-analysis-step/{activityId}/analysis-summary
+  - /srm-analysis-step/{executionDetailId}/stop-analysis
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

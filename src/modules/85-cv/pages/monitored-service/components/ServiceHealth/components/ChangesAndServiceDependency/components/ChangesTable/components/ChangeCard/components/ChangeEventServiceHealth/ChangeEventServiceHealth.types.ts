@@ -10,6 +10,7 @@ import type { ChangeEventDTO, VerifyStepSummary } from 'services/cv'
 export interface ChangeEventServiceHealthProps {
   monitoredServiceIdentifier: string
   startTime: number
+  endTime?: number
   eventType: ChangeEventDTO['type']
   timeStamps: [number, number]
   setTimestamps: (timeStamps: [number, number]) => void

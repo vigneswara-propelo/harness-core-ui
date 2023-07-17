@@ -90,7 +90,14 @@ export interface AnalysisDTO {
 export interface AnalysisResult {
   count?: number
   label?: number
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   riskScore?: number
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
 }
@@ -110,7 +117,14 @@ export interface AnalyzedRadarChartLogDataDTO {
   frequencyData?: FrequencyDTO[]
   label?: number
   message?: string
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   riskScore?: number
 }
 
@@ -800,6 +814,7 @@ export interface ChangeEventDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
 }
 
 /**
@@ -838,6 +853,7 @@ export interface ChangeSourceDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
 }
 
 /**
@@ -902,17 +918,31 @@ export interface ClusterHostFrequencyData {
 }
 
 export interface ClusterSummary {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
   count?: number
   feedback?: LogFeedback
   feedbackApplied?: LogFeedback
   frequencyData?: HostFrequencyData[]
   label?: number
-  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
   previousRisk?: number
-  previousRiskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  previousRiskLevel?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   risk?: number
-  riskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  riskLevel?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   testFrequencyData?: number[]
 }
@@ -941,6 +971,7 @@ export interface ConnectorConfigDTO {
 }
 
 export interface ConnectorInfoDTO {
+  accountIdentifier?: string
   description?: string
   identifier: string
   name: string
@@ -1042,6 +1073,7 @@ export type CustomChangeEventMetadata = ChangeEventMetadata & {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   user?: string
 }
 
@@ -1324,6 +1356,7 @@ export interface DemoChangeEventDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   monitoredServiceIdentifier?: string
 }
 
@@ -1348,7 +1381,14 @@ export interface DeploymentLogAnalysisDTO {
 export interface DeploymentTimeSeriesAnalysisDTO {
   failFast?: boolean
   hostSummaries?: HostInfo[]
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   transactionMetricSummaries?: TransactionMetricHostData[]
 }
@@ -1370,7 +1410,14 @@ export interface DeploymentVerificationJobInstanceSummary {
   logsAnalysisSummary?: LogsAnalysisSummary
   progressPercentage?: number
   remainingTimeMs?: number
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   startTime?: number
   status?:
     | 'IGNORED'
@@ -2027,7 +2074,7 @@ export type ErrorTrackingHealthSourceSpec = HealthSourceSpec & {
 }
 
 export interface EventCount {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
   count?: number
   displayName?: string
 }
@@ -2533,6 +2580,14 @@ export interface GithubApiAccessSpecDTO {
   [key: string]: any
 }
 
+export type GithubApp = GithubHttpCredentialsSpecDTO & {
+  applicationId?: string
+  applicationIdRef?: string
+  installationId?: string
+  installationIdRef?: string
+  privateKeyRef: string
+}
+
 export type GithubAppSpec = GithubApiAccessSpecDTO & {
   applicationId?: string
   applicationIdRef?: string
@@ -2562,7 +2617,7 @@ export interface GithubCredentialsDTO {
 
 export type GithubHttpCredentials = GithubCredentialsDTO & {
   spec: GithubHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken' | 'OAuth'
+  type: 'UsernamePassword' | 'UsernameToken' | 'OAuth' | 'GithubApp'
 }
 
 export interface GithubHttpCredentialsSpecDTO {
@@ -2713,6 +2768,7 @@ export type HarnessCDEventMetadata = ChangeEventMetadata & {
 
 export type HarnessConnector = ConnectorConfigDTO & {
   apiAccess?: HarnessApiAccess
+  apiUrl?: string
   authentication: HarnessAuthentication
   executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
@@ -2731,6 +2787,21 @@ export interface HarnessHttpCredentialsSpecDTO {
 
 export type HarnessJWTTokenSpec = HarnessApiAccessSpecDTO & {
   tokenRef: string
+}
+
+export type HarnessSRMAnalysisEventMetadata = ChangeEventMetadata & {
+  analysisDuration?: Duration
+  analysisEndTime?: number
+  analysisStartTime?: number
+  analysisStatus?: 'RUNNING' | 'COMPLETED' | 'ABORTED'
+  artifactTag?: string
+  artifactType?: string
+  executionNotificationDetailsId?: string
+  pipelineId?: string
+  pipelinePath?: string
+  planExecutionId?: string
+  stageId?: string
+  stageStepId?: string
 }
 
 export type HarnessTokenSpec = HarnessApiAccessSpecDTO & {
@@ -2992,7 +3063,14 @@ export interface HostData {
   controlData?: number[]
   hostName?: string
   nearestControlHost?: string
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   testData?: number[]
 }
@@ -3006,7 +3084,14 @@ export interface HostInfo {
   canary?: boolean
   hostName?: string
   primary?: boolean
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
 }
 
@@ -3075,6 +3160,7 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
     | 'CUSTOM_INCIDENT'
     | 'CUSTOM_INFRA'
     | 'CUSTOM_FF'
+    | 'SRM_STEP_ANALYSIS'
   eventEndTime?: number
   eventStartTime?: number
   internalChangeEvent?: InternalChangeEvent
@@ -3281,7 +3367,14 @@ export interface LiveMonitoringEventCount {
 }
 
 export interface LiveMonitoringLogAnalysisClusterDTO {
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
   text?: string
   x?: number
@@ -3294,7 +3387,14 @@ export interface LiveMonitoringLogAnalysisRadarChartClusterDTO {
   clusterType?: 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   message?: string
   radius?: number
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -3320,22 +3420,36 @@ export interface LogAnalysisCluster {
 }
 
 export interface LogAnalysisClusterChartDTO {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
   hostName?: string
   label?: number
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   text?: string
   x?: number
   y?: number
 }
 
 export interface LogAnalysisClusterDTO {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
   controlFrequencyData?: number[]
   count?: number
   label?: number
   message?: string
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   testFrequencyData?: number[]
 }
@@ -3362,28 +3476,49 @@ export interface LogAnalysisRadarChartClusterDTO {
   angle?: number
   baseline?: LogAnalysisRadarChartClusterDTO
   clusterId?: string
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
   hasControlData?: boolean
   label?: number
   message?: string
   radius?: number
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
 }
 
 export interface LogAnalysisRadarChartListDTO {
   averageControlFrequencyData?: TimestampFrequencyCount[]
   baseline?: LogAnalysisRadarChartListDTO
   clusterId?: string
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
   count?: number
   feedback?: LogFeedback
   feedbackApplied?: LogFeedback
   hasControlData?: boolean
   label?: number
   message?: string
-  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
-  previousRisk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  previousRisk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   testHostFrequencyData?: HostFrequencyData[]
   totalTestFrequencyData?: TimestampFrequencyCount[]
 }
@@ -3438,7 +3573,14 @@ export interface LogData {
   count?: number
   label?: number
   riskScore?: number
-  riskStatus?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  riskStatus?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
   text?: string
   trend?: FrequencyDTO[]
@@ -3520,7 +3662,14 @@ export interface MetricDTO {
 }
 
 export interface MetricData {
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   timestamp?: number
   value?: number
 }
@@ -3909,7 +4058,14 @@ export type NexusUsernamePasswordAuth = NexusAuthCredentials & {
 export interface NodeRiskCount {
   count?: number
   displayName?: string
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
 }
 
 export interface NodeRiskCountDTO {
@@ -4207,17 +4363,6 @@ export interface PageMonitoredServicePlatformResponse {
 
 export interface PageMonitoredServiceResponse {
   content?: MonitoredServiceResponse[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  pageToken?: string
-  totalItems?: number
-  totalPages?: number
-}
-
-export interface PageNotificationRuleCondition {
-  content?: NotificationRuleCondition[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -5310,13 +5455,6 @@ export interface ResponsePageMonitoredServiceResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageNotificationRuleCondition {
-  correlationId?: string
-  data?: PageNotificationRuleCondition
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponsePageNotificationRuleResponse {
   correlationId?: string
   data?: PageNotificationRuleResponse
@@ -5955,6 +6093,14 @@ export interface RestResponseSLOErrorBudgetResetDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseSRMAnalysisStepDetailDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: SRMAnalysisStepDetailDTO
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseServiceDependencyGraphDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -6063,7 +6209,14 @@ export interface ResultSummary {
   controlClusterHostFrequencies?: ClusterHostFrequencyData[]
   controlClusterSummaries?: ControlClusterSummary[]
   risk?: number
-  riskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  riskLevel?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   testClusterSummaries?: ClusterSummary[]
 }
@@ -6084,7 +6237,14 @@ export interface RiskCount {
 export interface RiskData {
   endTime?: number
   healthScore?: number
-  riskStatus?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  riskStatus?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   startTime?: number
   timeRangeParams?: TimeRangeParams
 }
@@ -6273,6 +6433,15 @@ export interface SLOTargetSpec {
   [key: string]: any
 }
 
+export interface SRMAnalysisStepDetailDTO {
+  analysisDuration: Duration
+  analysisEndTime: number
+  analysisStartTime: number
+  analysisStatus: 'RUNNING' | 'COMPLETED' | 'ABORTED'
+  executionDetailIdentifier: string
+  monitoredServiceIdentifier: string
+}
+
 export interface SRMLicenseUsageDTO {
   accountIdentifier?: string
   activeServices?: UsageDataDTO
@@ -6328,6 +6497,7 @@ export interface ServiceDependencyMetadata {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   )[]
   type?: 'KUBERNETES'
 }
@@ -6353,7 +6523,14 @@ export interface ServiceGuardTxnMetricAnalysisDataDTO {
   lastSeenTime?: number
   longTermPattern?: boolean
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   shortTermHistory?: number[]
 }
@@ -6449,7 +6626,14 @@ export interface ServiceSummaryDetails {
   environmentRef?: string
   identifierRef?: string
   riskData?: RiskData
-  riskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  riskLevel?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   riskScore?: number
   serviceName?: string
   serviceRef?: string
@@ -7033,7 +7217,14 @@ export interface TimestampInfo {
 
 export interface TransactionMetric {
   metricName?: string
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   transactionName?: string
 }
@@ -7048,7 +7239,14 @@ export interface TransactionMetricHostData {
   failFast?: boolean
   hostData?: HostData[]
   metricName?: string
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  risk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   score?: number
   transactionName?: string
 }
@@ -7095,7 +7293,14 @@ export interface TransactionMetricRisk {
   longTermPattern?: boolean
   metricIdentifier?: string
   metricName?: string
-  metricRisk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  metricRisk?:
+    | 'NO_DATA'
+    | 'NO_ANALYSIS'
+    | 'HEALTHY'
+    | 'OBSERVE'
+    | 'NEED_ATTENTION'
+    | 'UNHEALTHY'
+    | 'CUSTOMER_DEFINED_UNHEALTHY'
   metricScore?: number
   transactionName?: string
 }
@@ -7568,6 +7773,7 @@ export interface ChangeEventListForAccountQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -7674,6 +7880,7 @@ export interface ChangeEventTimelineForAccountQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -8017,6 +8224,7 @@ export interface ChangeEventListQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -8117,6 +8325,7 @@ export interface ChangeEventTimelineQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -11032,6 +11241,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   )[]
   startTime: number
   endTime: number
@@ -11102,6 +11312,7 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
+    | 'SrmStepAnalysis'
   )[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
@@ -14215,8 +14426,9 @@ export interface GetMonitoredServiceOverAllHealthScoreQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
+  duration?: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
   endTime: number
+  startTime?: number
 }
 
 export interface GetMonitoredServiceOverAllHealthScorePathParams {
@@ -17513,6 +17725,174 @@ export const getSplunkSavedSearchesPromise = (
     signal
   )
 
+export interface GetSRMAnalysisSummaryQueryParams {
+  accountId: string
+}
+
+export interface GetSRMAnalysisSummaryPathParams {
+  activityId: string
+}
+
+export type GetSRMAnalysisSummaryProps = Omit<
+  GetProps<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    GetSRMAnalysisSummaryQueryParams,
+    GetSRMAnalysisSummaryPathParams
+  >,
+  'path'
+> &
+  GetSRMAnalysisSummaryPathParams
+
+/**
+ * get summary of srm analysis activity
+ */
+export const GetSRMAnalysisSummary = ({ activityId, ...props }: GetSRMAnalysisSummaryProps) => (
+  <Get<RestResponseSRMAnalysisStepDetailDTO, unknown, GetSRMAnalysisSummaryQueryParams, GetSRMAnalysisSummaryPathParams>
+    path={`/srm-analysis-step/${activityId}/analysis-summary`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSRMAnalysisSummaryProps = Omit<
+  UseGetProps<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    GetSRMAnalysisSummaryQueryParams,
+    GetSRMAnalysisSummaryPathParams
+  >,
+  'path'
+> &
+  GetSRMAnalysisSummaryPathParams
+
+/**
+ * get summary of srm analysis activity
+ */
+export const useGetSRMAnalysisSummary = ({ activityId, ...props }: UseGetSRMAnalysisSummaryProps) =>
+  useGet<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    GetSRMAnalysisSummaryQueryParams,
+    GetSRMAnalysisSummaryPathParams
+  >(
+    (paramsInPath: GetSRMAnalysisSummaryPathParams) => `/srm-analysis-step/${paramsInPath.activityId}/analysis-summary`,
+    { base: getConfig('cv/api'), pathParams: { activityId }, ...props }
+  )
+
+/**
+ * get summary of srm analysis activity
+ */
+export const getSRMAnalysisSummaryPromise = (
+  {
+    activityId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    GetSRMAnalysisSummaryQueryParams,
+    GetSRMAnalysisSummaryPathParams
+  > & { activityId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    GetSRMAnalysisSummaryQueryParams,
+    GetSRMAnalysisSummaryPathParams
+  >(getConfig('cv/api'), `/srm-analysis-step/${activityId}/analysis-summary`, props, signal)
+
+export interface StopSRMAnalysisStepQueryParams {
+  accountId: string
+}
+
+export interface StopSRMAnalysisStepPathParams {
+  executionDetailId: string
+}
+
+export type StopSRMAnalysisStepProps = Omit<
+  MutateProps<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    StopSRMAnalysisStepQueryParams,
+    void,
+    StopSRMAnalysisStepPathParams
+  >,
+  'path' | 'verb'
+> &
+  StopSRMAnalysisStepPathParams
+
+/**
+ * stop srm analysis step
+ */
+export const StopSRMAnalysisStep = ({ executionDetailId, ...props }: StopSRMAnalysisStepProps) => (
+  <Mutate<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    StopSRMAnalysisStepQueryParams,
+    void,
+    StopSRMAnalysisStepPathParams
+  >
+    verb="PUT"
+    path={`/srm-analysis-step/${executionDetailId}/stop-analysis`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseStopSRMAnalysisStepProps = Omit<
+  UseMutateProps<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    StopSRMAnalysisStepQueryParams,
+    void,
+    StopSRMAnalysisStepPathParams
+  >,
+  'path' | 'verb'
+> &
+  StopSRMAnalysisStepPathParams
+
+/**
+ * stop srm analysis step
+ */
+export const useStopSRMAnalysisStep = ({ executionDetailId, ...props }: UseStopSRMAnalysisStepProps) =>
+  useMutate<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    StopSRMAnalysisStepQueryParams,
+    void,
+    StopSRMAnalysisStepPathParams
+  >(
+    'PUT',
+    (paramsInPath: StopSRMAnalysisStepPathParams) =>
+      `/srm-analysis-step/${paramsInPath.executionDetailId}/stop-analysis`,
+    { base: getConfig('cv/api'), pathParams: { executionDetailId }, ...props }
+  )
+
+/**
+ * stop srm analysis step
+ */
+export const stopSRMAnalysisStepPromise = (
+  {
+    executionDetailId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    StopSRMAnalysisStepQueryParams,
+    void,
+    StopSRMAnalysisStepPathParams
+  > & { executionDetailId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseSRMAnalysisStepDetailDTO,
+    unknown,
+    StopSRMAnalysisStepQueryParams,
+    void,
+    StopSRMAnalysisStepPathParams
+  >('PUT', getConfig('cv/api'), `/srm-analysis-step/${executionDetailId}/stop-analysis`, props, signal)
+
 export interface GetStackdriverLogSampleDataQueryParams {
   accountId: string
   orgIdentifier: string
@@ -18458,7 +18838,7 @@ export interface GetVerifyStepDeploymentLogAnalysisResultV2QueryParams {
   label?: number
   filter?: string
   healthSources?: string[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE')[]
   hostName?: string
   minAngle?: number
   maxAngle?: number
@@ -18557,7 +18937,7 @@ export interface GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams
   accountId: string
   filter?: string
   healthSources?: string[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE')[]
   hostName?: string
   minAngle?: number
   maxAngle?: number
@@ -18659,7 +19039,7 @@ export interface GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams {
   accountId: string
   filter?: string
   healthSources?: string[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE')[]
   hostName?: string
   minAngle?: number
   maxAngle?: number

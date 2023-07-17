@@ -11,11 +11,12 @@ import { Classes } from '@blueprintjs/core'
 import classnames from 'classnames'
 import { isNumber } from 'lodash-es'
 import { getColorStyle } from '@common/components/HeatMap/ColorUtils'
-import type { VerifyStepSummary } from 'services/cv'
+import { AnalysisStatus } from '@cv/components/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
+import type { SRMAnalysisStepDetailDTO, VerifyStepSummary } from 'services/cv'
 import styles from './CVProgressBar.module.scss'
 
 export interface CVProgressBarProps {
-  status?: VerifyStepSummary['verificationStatus']
+  status?: VerifyStepSummary['verificationStatus'] | SRMAnalysisStepDetailDTO['analysisStatus']
   value?: number
   riskScore?: number
   className?: string
@@ -27,11 +28,15 @@ function statusToIntent(status: CVProgressBarProps['status']): string {
     case 'VERIFICATION_FAILED':
       return Classes.INTENT_DANGER
     case 'IN_PROGRESS':
+    case 'RUNNING':
       return Classes.INTENT_PRIMARY
     case 'NOT_STARTED':
       return ''
+    case AnalysisStatus.COMPLETED:
     case 'VERIFICATION_PASSED':
       return Classes.INTENT_SUCCESS
+    case 'ABORTED':
+      return Classes.INTENT_WARNING
     default:
       return ''
   }

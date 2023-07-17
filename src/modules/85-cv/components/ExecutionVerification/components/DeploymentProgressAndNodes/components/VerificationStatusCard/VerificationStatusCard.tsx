@@ -8,28 +8,39 @@
 import React from 'react'
 import { IconName, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { VerifyStepSummary } from 'services/cv'
+import type { HarnessSRMAnalysisEventMetadata, VerifyStepSummary } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import { AnalysisStatus } from '@cv/components/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
 import css from './VerificationStatusCard.module.scss'
 
 export default function VerificationStatusCard({
   status
 }: {
-  status: VerifyStepSummary['verificationStatus'] | PipelineExecutionSummary['status']
+  status:
+    | VerifyStepSummary['verificationStatus']
+    | PipelineExecutionSummary['status']
+    | HarnessSRMAnalysisEventMetadata['analysisStatus']
 }) {
   let statusMessage: string | undefined = undefined
   let color: Color | undefined = undefined
   let backgroundColor: Color | undefined = undefined
   let icon = ''
+  let iconColor = ''
   const { getString } = useStrings()
   switch (status) {
     case 'IN_PROGRESS':
-    case 'Running':
       statusMessage = getString('inProgress')
       color = Color.PRIMARY_2
       backgroundColor = Color.PRIMARY_6
       icon = 'deployment-inprogress-new'
+      break
+    case 'RUNNING':
+      statusMessage = getString('pipeline.executionStatus.Running')
+      color = Color.PRIMARY_2
+      backgroundColor = Color.PRIMARY_6
+      iconColor = Color.WHITE
+      icon = 'loading'
       break
     case 'VERIFICATION_FAILED':
     case 'Failed':
@@ -52,14 +63,34 @@ export default function VerificationStatusCard({
       backgroundColor = Color.GREEN_350
       icon = 'deployment-success-new'
       break
+    case AnalysisStatus.COMPLETED:
+      statusMessage = getString('success')
+      color = Color.GREEN_700
+      backgroundColor = Color.GREEN_100
+      icon = 'success-tick'
+      break
+    case 'ABORTED':
+      statusMessage = getString('ce.co.ruleState.stopped')
+      color = Color.BLACK
+      backgroundColor = Color.GREY_200
+      icon = 'circle-stop'
+      break
     default:
       statusMessage = status
   }
   if (!statusMessage) {
     return null
   }
+
+  const iconColorProp = iconColor ? { iconProps: { color: iconColor } } : {}
   return (
-    <Text className={css.verificationStatusCard} icon={icon as IconName} background={backgroundColor} color={color}>
+    <Text
+      className={css.verificationStatusCard}
+      icon={icon as IconName}
+      background={backgroundColor}
+      color={color}
+      {...iconColorProp}
+    >
       {statusMessage}
     </Text>
   )

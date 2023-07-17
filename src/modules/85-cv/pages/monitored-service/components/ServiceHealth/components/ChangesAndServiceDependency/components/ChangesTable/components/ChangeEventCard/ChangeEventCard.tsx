@@ -20,6 +20,7 @@ import HarnessNextGenEventCard from './components/EventCards/HarnessNextGenEvent
 import HarnessCDEventCard from './components/EventCards/HarnessCDEventCard/HarnessCDEventCard'
 import K8sChangeEventCard from './components/EventCards/K8sChangeEventCard/K8sChangeEventCard'
 import InternalCSEventCard from './components/EventCards/InternalCSEventCard/InternalCSEventCard'
+import SRMStepAnalysis from './components/EventCards/SRMStepAnalysis/SRMStepAnalysis'
 
 export default function ChangeEventCard({ activityId }: { activityId: string }): JSX.Element {
   const { getString } = useStrings()
@@ -32,6 +33,7 @@ export default function ChangeEventCard({ activityId }: { activityId: string }):
   })
 
   const { type } = data?.resource || {}
+
   if (loading) {
     return <PageSpinner />
   } else if (error) {
@@ -42,6 +44,8 @@ export default function ChangeEventCard({ activityId }: { activityId: string }):
         return <PagerDutyEventCard data={data?.resource} />
       case ChangeSourceTypes.HarnessCD:
         return <HarnessCDEventCard data={data?.resource} />
+      case ChangeSourceTypes.SrmStepAnalysis:
+        return <SRMStepAnalysis data={data?.resource} />
       case ChangeSourceTypes.HarnessCDNextGen:
         return <HarnessNextGenEventCard data={data?.resource} />
       case ChangeSourceTypes.K8sCluster:

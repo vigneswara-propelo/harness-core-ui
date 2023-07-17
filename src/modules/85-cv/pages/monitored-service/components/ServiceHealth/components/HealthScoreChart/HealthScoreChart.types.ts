@@ -14,6 +14,7 @@ export interface HealthScoreChartProps {
   setHealthScoreData?: (healthScoreData: RiskData[]) => void
   timeFormat?: string
   endTime?: number
+  startTime?: number
   columChartProps?: Pick<ColumnChartProps, 'columnHeight' | 'columnWidth' | 'timestampMarker'>
   hasTimelineIntegration?: boolean
   isChangeEventView?: boolean

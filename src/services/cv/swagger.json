@@ -35,6 +35,9 @@
       "name": "verify-step"
     },
     {
+      "name": "srm-analysis-step"
+    },
+    {
       "name": "account{accountIdentifier}orgs{orgIdentifier}projects{projectIdentifier}verifications{verifyStepExecutionId}"
     },
     {
@@ -1641,7 +1644,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
             },
             "collectionFormat": "multi"
           },
@@ -1735,7 +1738,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
             },
             "collectionFormat": "multi"
           },
@@ -1829,7 +1832,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
             },
             "collectionFormat": "multi"
           },
@@ -1946,7 +1949,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
             },
             "collectionFormat": "multi"
           },
@@ -2063,7 +2066,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+              "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
             },
             "collectionFormat": "multi"
           },
@@ -2289,6 +2292,68 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseListProgressLog"
+            }
+          }
+        }
+      }
+    },
+    "/srm-analysis-step/{activityId}/analysis-summary": {
+      "get": {
+        "tags": ["srm-analysis-step"],
+        "summary": "get summary of srm analysis activity",
+        "description": "",
+        "operationId": "getSRMAnalysisSummary",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseSRMAnalysisStepDetailDTO"
+            }
+          }
+        }
+      }
+    },
+    "/srm-analysis-step/{executionDetailId}/stop-analysis": {
+      "put": {
+        "tags": ["srm-analysis-step"],
+        "summary": "stop srm analysis step",
+        "description": "",
+        "operationId": "stopSRMAnalysisStep",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "executionDetailId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseSRMAnalysisStepDetailDTO"
             }
           }
         }
@@ -3305,36 +3370,6 @@
         }
       }
     },
-    "/aws/regions": {
-      "get": {
-        "tags": ["aws"],
-        "summary": "get regions",
-        "description": "",
-        "operationId": "getAllAwsRegions",
-        "produces": ["application/json"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListString"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/aws/prometheus/workspaces": {
       "get": {
         "tags": ["aws"],
@@ -3385,6 +3420,36 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseListAwsPrometheusWorkspaceDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/aws/regions": {
+      "get": {
+        "tags": ["aws"],
+        "summary": "get regions",
+        "description": "",
+        "operationId": "getAllAwsRegions",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListString"
             }
           },
           "400": {
@@ -3950,7 +4015,8 @@
               "Coverity",
               "ServerlessAwsLambdaDeployV2",
               "AnalyzeDeploymentImpact",
-              "ServerlessAwsLambdaPackageV2"
+              "ServerlessAwsLambdaPackageV2",
+              "RevertPR"
             ]
           },
           {
@@ -4070,7 +4136,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4194,7 +4261,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4332,7 +4400,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4481,7 +4550,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4648,7 +4718,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4811,7 +4882,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4929,7 +5001,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -5113,7 +5186,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -5192,7 +5266,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -7935,7 +8010,7 @@
           {
             "name": "duration",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string",
             "enum": ["FOUR_HOURS", "TWENTY_FOUR_HOURS", "THREE_DAYS", "SEVEN_DAYS", "THIRTY_DAYS"]
           },
@@ -7943,6 +8018,13 @@
             "name": "endTime",
             "in": "query",
             "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
             "type": "integer",
             "format": "int64"
           }
@@ -8757,86 +8839,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponsePageNotificationRuleResponse"
-            }
-          }
-        }
-      }
-    },
-    "/monitored-service/{identifier}/notification-rule-conditions": {
-      "get": {
-        "tags": ["monitored-service"],
-        "summary": "get notification rule conditions for MonitoredService",
-        "description": "",
-        "operationId": "getNotificationRuleConditionsForMonitoredService",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "identifier",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "types",
-            "in": "query",
-            "required": true,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "ErrorBudgetRemainingPercentage",
-                "ErrorBudgetRemainingMinutes",
-                "ErrorBudgetBurnRate",
-                "ChangeImpact",
-                "HealthScore",
-                "ChangeObserved",
-                "CodeErrors",
-                "FireHydrantReport",
-                "DeploymentImpactReport"
-              ]
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 10,
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponsePageNotificationRuleCondition"
             }
           }
         }
@@ -16070,7 +16072,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         }
       }
     },
@@ -16278,7 +16288,15 @@
         },
         "metricRisk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "metricScore": {
           "type": "number",
@@ -16593,11 +16611,11 @@
         },
         "clusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         },
         "previousClusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         },
         "risk": {
           "type": "integer",
@@ -16636,11 +16654,27 @@
         },
         "riskLevel": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "previousRiskLevel": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         }
       }
     },
@@ -16789,7 +16823,15 @@
         },
         "riskLevel": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         }
       }
     },
@@ -16994,7 +17036,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "score": {
           "type": "number",
@@ -17270,7 +17320,15 @@
       "properties": {
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "score": {
           "type": "number",
@@ -17304,7 +17362,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "score": {
           "type": "number",
@@ -17349,7 +17415,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "score": {
           "type": "number",
@@ -17368,7 +17442,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "score": {
           "type": "number",
@@ -17393,7 +17475,15 @@
       "properties": {
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "count": {
           "type": "integer",
@@ -17508,7 +17598,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         }
       }
     },
@@ -17668,7 +17766,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "environmentName": {
           "type": "string"
@@ -17851,7 +17957,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "x": {
           "type": "number",
@@ -17863,7 +17977,7 @@
         },
         "clusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         }
       }
     },
@@ -17905,7 +18019,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "radius": {
           "type": "number",
@@ -17920,7 +18042,7 @@
         },
         "clusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         },
         "hasControlData": {
           "type": "boolean",
@@ -17956,7 +18078,7 @@
       "properties": {
         "clusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         },
         "count": {
           "type": "integer",
@@ -17982,19 +18104,35 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "previousRisk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "clusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         },
         "previousClusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         },
         "count": {
           "type": "integer",
@@ -18120,11 +18258,19 @@
         },
         "clusterType": {
           "type": "string",
-          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+          "enum": ["BASELINE", "KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT", "NO_BASELINE_AVAILABLE"]
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "score": {
           "type": "number",
@@ -18566,6 +18712,60 @@
         },
         "durationEstimated": {
           "type": "boolean"
+        }
+      }
+    },
+    "RestResponseSRMAnalysisStepDetailDTO": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "$ref": "#/definitions/SRMAnalysisStepDetailDTO"
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "SRMAnalysisStepDetailDTO": {
+      "type": "object",
+      "required": [
+        "analysisDuration",
+        "analysisEndTime",
+        "analysisStartTime",
+        "analysisStatus",
+        "executionDetailIdentifier",
+        "monitoredServiceIdentifier"
+      ],
+      "properties": {
+        "analysisStartTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "analysisEndTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "analysisDuration": {
+          "$ref": "#/definitions/Duration"
+        },
+        "analysisStatus": {
+          "type": "string",
+          "enum": ["RUNNING", "COMPLETED", "ABORTED"]
+        },
+        "monitoredServiceIdentifier": {
+          "type": "string"
+        },
+        "executionDetailIdentifier": {
+          "type": "string"
         }
       }
     },
@@ -20007,7 +20207,8 @@
             "CustomDeploy",
             "CustomIncident",
             "CustomInfrastructure",
-            "CustomFF"
+            "CustomFF",
+            "SrmStepAnalysis"
           ]
         }
       }
@@ -20073,7 +20274,8 @@
                 "CustomDeploy",
                 "CustomIncident",
                 "CustomInfrastructure",
-                "CustomFF"
+                "CustomFF",
+                "SrmStepAnalysis"
               ]
             }
           },
@@ -20195,6 +20397,58 @@
         }
       ]
     },
+    "HarnessSRMAnalysisEventMetadata": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChangeEventMetadata"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "analysisStartTime": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "analysisEndTime": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "analysisDuration": {
+              "$ref": "#/definitions/Duration"
+            },
+            "planExecutionId": {
+              "type": "string"
+            },
+            "pipelineId": {
+              "type": "string"
+            },
+            "stageStepId": {
+              "type": "string"
+            },
+            "stageId": {
+              "type": "string"
+            },
+            "artifactType": {
+              "type": "string"
+            },
+            "artifactTag": {
+              "type": "string"
+            },
+            "analysisStatus": {
+              "type": "string",
+              "enum": ["RUNNING", "COMPLETED", "ABORTED"]
+            },
+            "pipelinePath": {
+              "type": "string"
+            },
+            "executionNotificationDetailsId": {
+              "type": "string"
+            }
+          },
+          "description": "This is the change Source entity defined in Harness"
+        }
+      ]
+    },
     "InternalChangeEvent": {
       "type": "object",
       "properties": {
@@ -20234,7 +20488,8 @@
                 "CUSTOM_DEPLOY",
                 "CUSTOM_INCIDENT",
                 "CUSTOM_INFRA",
-                "CUSTOM_FF"
+                "CUSTOM_FF",
+                "SRM_STEP_ANALYSIS"
               ]
             },
             "updatedBy": {
@@ -20491,7 +20746,8 @@
             "CustomDeploy",
             "CustomIncident",
             "CustomInfrastructure",
-            "CustomFF"
+            "CustomFF",
+            "SrmStepAnalysis"
           ]
         },
         "changeSourceIdentifier": {
@@ -23255,7 +23511,8 @@
             "CustomDeploy",
             "CustomIncident",
             "CustomInfrastructure",
-            "CustomFF"
+            "CustomFF",
+            "SrmStepAnalysis"
           ]
         },
         "enabled": {
@@ -23596,7 +23853,8 @@
               "CustomDeploy",
               "CustomIncident",
               "CustomInfrastructure",
-              "CustomFF"
+              "CustomFF",
+              "SrmStepAnalysis"
             ]
           }
         }
@@ -23754,7 +24012,15 @@
         },
         "riskStatus": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "startTime": {
           "type": "integer",
@@ -24668,61 +24934,6 @@
         },
         "data": {
           "$ref": "#/definitions/PageNotificationRuleResponse"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "PageNotificationRuleCondition": {
-      "type": "object",
-      "properties": {
-        "totalPages": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "totalItems": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageItemCount": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "content": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NotificationRuleCondition"
-          }
-        },
-        "pageIndex": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "empty": {
-          "type": "boolean"
-        },
-        "pageToken": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponsePageNotificationRuleCondition": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/PageNotificationRuleCondition"
         },
         "metaData": {
           "type": "object"
@@ -26305,6 +26516,9 @@
         "description": {
           "type": "string"
         },
+        "accountIdentifier": {
+          "type": "string"
+        },
         "orgIdentifier": {
           "type": "string"
         },
@@ -27023,6 +27237,34 @@
     "GithubApiAccessSpecDTO": {
       "type": "object"
     },
+    "GithubApp": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/GithubHttpCredentialsSpecDTO"
+        },
+        {
+          "type": "object",
+          "required": ["privateKeyRef"],
+          "properties": {
+            "installationId": {
+              "type": "string"
+            },
+            "applicationId": {
+              "type": "string"
+            },
+            "installationIdRef": {
+              "type": "string"
+            },
+            "applicationIdRef": {
+              "type": "string"
+            },
+            "privateKeyRef": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "GithubAppSpec": {
       "allOf": [
         {
@@ -27117,7 +27359,7 @@
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["UsernamePassword", "UsernameToken", "OAuth"]
+              "enum": ["UsernamePassword", "UsernameToken", "OAuth", "GithubApp"]
             },
             "spec": {
               "$ref": "#/definitions/GithubHttpCredentialsSpecDTO"
@@ -27481,6 +27723,9 @@
             },
             "executeOnDelegate": {
               "type": "boolean"
+            },
+            "apiUrl": {
+              "type": "string"
             },
             "type": {
               "type": "string",
@@ -29585,7 +29830,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         }
       }
     },
@@ -29819,7 +30072,15 @@
         },
         "riskStatus": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "trend": {
           "type": "array",
@@ -29898,7 +30159,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "x": {
           "type": "number",
@@ -29948,7 +30217,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "angle": {
           "type": "number",
@@ -30010,7 +30287,15 @@
         },
         "risk": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "frequencyData": {
           "type": "array",
@@ -30187,7 +30472,15 @@
         },
         "riskLevel": {
           "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+          "enum": [
+            "NO_DATA",
+            "NO_ANALYSIS",
+            "HEALTHY",
+            "OBSERVE",
+            "NEED_ATTENTION",
+            "UNHEALTHY",
+            "CUSTOMER_DEFINED_UNHEALTHY"
+          ]
         },
         "riskData": {
           "$ref": "#/definitions/RiskData"
@@ -31844,10 +32137,10 @@
           "type": "integer",
           "format": "int32"
         },
-        "displayName": {
+        "identifier": {
           "type": "string"
         },
-        "identifier": {
+        "displayName": {
           "type": "string"
         }
       }

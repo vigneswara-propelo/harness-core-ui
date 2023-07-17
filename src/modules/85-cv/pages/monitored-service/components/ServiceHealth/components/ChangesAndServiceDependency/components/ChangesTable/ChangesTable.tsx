@@ -14,7 +14,7 @@ import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } f
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useChangeEventList, useChangeEventListForAccount } from 'services/cv'
-import { useDeepCompareEffect } from '@common/hooks'
+import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getCVMonitoringServicesSearchParam,
@@ -59,6 +59,7 @@ export default function ChangesTable({
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
 
   const projectRef = useRef(projectIdentifier)
+  const { eventId: queryParamActivityId } = useQueryParams<{ eventId?: number }>()
 
   const drawerOptions = {
     size: '800px',
@@ -157,6 +158,12 @@ export default function ChangesTable({
   const { content = [], pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = data?.resource ?? {}
 
   const wrapperProps: ChangesTableContentWrapper = { isCardView, totalItems, dataTooltipId }
+
+  useEffect(() => {
+    if (queryParamActivityId) {
+      showDrawer({ id: queryParamActivityId })
+    }
+  }, [])
 
   useEffect(() => {
     if (startTime && endTime && projectRef.current === projectIdentifier) {

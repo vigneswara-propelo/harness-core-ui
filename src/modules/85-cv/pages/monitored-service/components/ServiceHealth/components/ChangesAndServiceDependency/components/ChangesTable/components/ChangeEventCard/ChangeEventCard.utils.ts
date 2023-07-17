@@ -19,7 +19,7 @@ export const createChangeDetailsData = (resource: ChangeEventDTO | undefined) =>
   return {
     type,
     category,
-    status: metadata?.status,
+    status: metadata?.status || metadata?.analysisStatus,
     details: {
       service: { name: serviceName },
       environment: { name: environmentName },
@@ -95,6 +95,7 @@ export const createChangeTitleDataForInternalCS = (resource?: ChangeEventDTO): C
 export const getTextForRedirectButton = (getString: UseStringsReturn['getString'], type?: string): string => {
   switch (type) {
     case ChangeSourceTypes.HarnessCDNextGen:
+    case ChangeSourceTypes.SrmStepAnalysis:
       return getString('cv.changeSource.changeSourceCard.viewDeployment')
     case ChangeSourceTypes.HarnessFF:
       return getString('cv.changeSource.changeSourceCard.viewFeatureFlag')

@@ -24,6 +24,7 @@ export interface ChangeDetailsDataInterface {
   }
   executedBy?: { shouldVisible?: boolean; component: React.ReactElement } | null
   name?: string
+  deploymentImpactAnalysis?: { shouldVisible?: boolean; component: React.ReactElement }
 }
 
 export interface ChangeTitleData {

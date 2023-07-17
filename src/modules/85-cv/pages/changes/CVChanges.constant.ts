@@ -30,6 +30,10 @@ export const ChangeSourceConnectorOptions = (
     {
       label: getString('cv.changeSource.FeatureFlag.label'),
       value: ChangeSourceTypes.HarnessFF
+    },
+    {
+      label: getString('cv.changeSource.DeploymentImpactAnalysis'),
+      value: ChangeSourceTypes.SrmStepAnalysis
     }
   ]
 

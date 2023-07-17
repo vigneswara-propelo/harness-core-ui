@@ -68,7 +68,7 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
         class="gridContainer"
       >
         <p
-          class="StyledProps--font StyledProps--main gridItem StyledProps--font-size-small"
+          class="StyledProps--font StyledProps--main gridItem StyledProps--font-size-small StyledProps--font-weight-semi-bold"
         >
           service
         </p>
@@ -78,7 +78,7 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
           service1
         </p>
         <p
-          class="StyledProps--font StyledProps--main gridItem StyledProps--font-size-small"
+          class="StyledProps--font StyledProps--main gridItem StyledProps--font-size-small StyledProps--font-weight-semi-bold"
         >
           environment
         </p>
@@ -88,7 +88,7 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
           prod
         </p>
         <p
-          class="StyledProps--font StyledProps--main gridItem StyledProps--font-size-small"
+          class="StyledProps--font StyledProps--main gridItem StyledProps--font-size-small StyledProps--font-weight-semi-bold"
         >
           source
         </p>

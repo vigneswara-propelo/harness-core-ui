@@ -5,20 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
 import { Card, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
-import type { ChangeEventDTO, HarnessCDEventMetadata } from 'services/cv'
+import type { ChangeEventDTO, HarnessSRMAnalysisEventMetadata } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import ChangeEventServiceHealth from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/ChangeEventServiceHealth/ChangeEventServiceHealth'
 import SLOAndErrorBudget from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/SLOAndErrorBudget'
 import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
 import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { UserLabel } from '@common/exports'
+import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { ChangeTitleData, ChangeDetailsDataInterface } from '../../../ChangeEventCard.types'
 import { createChangeTitleData, createChangeDetailsData } from '../../../ChangeEventCard.utils'
 import ChangeDetails from '../../ChangeDetails/ChangeDetails'
@@ -26,18 +27,22 @@ import DeploymentTimeDuration from '../../DeploymentTimeDuration/DeploymentTimeD
 import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
 import { durationAsString } from '../../DeploymentTimeDuration/DeploymentTimeDuration.utils'
 import ChangeTitleWithRedirectButton from '../../ChangeTitleWithRedirectButton/ChangeTitleWithRedirectButton'
+import { TIME_FORMAT } from '../../DeploymentTimeDuration/DeploymentTimeDuration.constant'
+import StatusChip from '../../ChangeDetails/components/StatusChip/StatusChip'
+import { statusToColorMapping } from '../../ChangeDetails/ChangeDetails.utils'
 import css from '../../../ChangeEventCard.module.scss'
 
-export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
+export default function SRMStepAnalysis({ data }: { data: ChangeEventDTO }): JSX.Element {
   const { getString } = useStrings()
   const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
-  const metadata: HarnessCDEventMetadata = defaultTo(data.metadata, {})
+  const metadata: HarnessSRMAnalysisEventMetadata = defaultTo(data.metadata, {})
   const { artifactType = '', artifactTag = '', verifyStepSummaries } = metadata
   const changeInfoData = { artifactType, artifactTag }
+
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
 
-  const { data: executionDetails } = useGetExecutionDetailV2({
+  const { data: executionDetails, loading } = useGetExecutionDetailV2({
     planExecutionId: defaultTo(metadata.planExecutionId, ''),
     queryParams: {
       accountIdentifier: accountId,
@@ -48,26 +53,37 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
   })
 
   const { pipelineExecutionSummary } = defaultTo(executionDetails?.data, {})
-  const { pipelineIdentifier, runSequence, status } = defaultTo(pipelineExecutionSummary, {})
+  const { name: pipelineName, runSequence } = defaultTo(pipelineExecutionSummary, {})
 
   const changeTitleData: ChangeTitleData = useMemo(
-    () => createChangeTitleData(data, pipelineIdentifier, runSequence, status),
+    () => createChangeTitleData(data, pipelineName, runSequence, metadata.analysisStatus),
     [pipelineExecutionSummary]
   )
 
   const timePassed = useMemo(() => {
-    /* istanbul ignore else */ if (metadata.deploymentStartTime && metadata.deploymentEndTime) {
-      return durationAsString(metadata.deploymentEndTime, moment().valueOf())
+    /* istanbul ignore else */ if (metadata.analysisStartTime && metadata.analysisEndTime) {
+      return durationAsString(metadata.analysisEndTime, moment().valueOf())
     }
     return ''
-  }, [metadata.deploymentStartTime, metadata.deploymentEndTime])
+  }, [metadata.analysisStartTime, metadata.analysisEndTime])
 
   const { triggeredBy, triggerType } = defaultTo(pipelineExecutionSummary?.executionTriggerInfo, {})
   const { identifier, extraInfo } = defaultTo(triggeredBy, {})
 
+  const { color, backgroundColor } = statusToColorMapping(metadata.analysisStatus, data.type) || {}
+
+  useEffect(() => {
+    if (data.type === ChangeSourceTypes.SrmStepAnalysis) {
+      setTimestamps([
+        data.metadata.analysisStartTime - TWO_HOURS_IN_MILLISECONDS,
+        data.metadata.analysisEndTime + TWO_HOURS_IN_MILLISECONDS
+      ])
+    }
+  }, [data.type])
+
   return (
     <Card className={css.main}>
-      <ChangeTitleWithRedirectButton changeTitleData={changeTitleData} />
+      {!loading && <ChangeTitleWithRedirectButton changeTitleData={changeTitleData} />}
       <Container margin={{ top: 'medium', bottom: 'medium' }} height={1} background={Color.GREY_200} />
 
       <ChangeDetails
@@ -97,7 +113,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
 
                     <Text
                       icon={'calendar'}
-                      iconProps={{ size: 12, color: Color.PRIMARY_1 }}
+                      iconProps={{ size: 12, color: Color.PRIMARY_7 }}
                       font={{ size: 'small' }}
                       color={Color.BLACK_100}
                     >
@@ -106,12 +122,32 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
                     </Text>
                   </Layout.Horizontal>
                   <DeploymentTimeDuration
-                    startTime={data.metadata.deploymentStartTime}
-                    endTime={data.metadata.deploymentEndTime}
+                    startTime={data.metadata.analysisStartTime}
+                    endTime={data.metadata.analysisEndTime}
                     type={data.type}
                   />
                 </Layout.Vertical>
               </>
+            )
+          },
+          deploymentImpactAnalysis: {
+            shouldVisible: true,
+            component: (
+              <Layout.Vertical spacing="small">
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="small">
+                  <Text font={{ size: 'small' }} margin={{ left: 'small', right: 'small' }} color={Color.BLACK_100}>
+                    Analysis Duration: 2 Days
+                  </Text>
+                  <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+                    {`${moment(metadata.analysisStartTime).format(TIME_FORMAT)} to ${moment(
+                      metadata.analysisStartTime
+                    ).format(TIME_FORMAT)}`}
+                  </Text>
+                </Layout.Horizontal>
+                {metadata.analysisStatus && (
+                  <StatusChip status={metadata.analysisStatus} color={color} backgroundColor={backgroundColor} />
+                )}
+              </Layout.Vertical>
             )
           }
         }}
@@ -122,7 +158,8 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
         <>
           <ChangeEventServiceHealth
             monitoredServiceIdentifier={data.monitoredServiceIdentifier}
-            startTime={data.eventTime}
+            startTime={data.metadata.analysisStartTime - TWO_HOURS_IN_MILLISECONDS}
+            endTime={data.metadata.analysisEndTime + TWO_HOURS_IN_MILLISECONDS}
             eventType={data.type}
             timeStamps={timeStamps}
             setTimestamps={setTimestamps}
@@ -131,9 +168,9 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
           />
           <SLOAndErrorBudget
             monitoredServiceIdentifier={data.monitoredServiceIdentifier}
-            startTime={timeStamps[0] || data.eventTime}
-            endTime={timeStamps[1] || data.eventTime + TWO_HOURS_IN_MILLISECONDS}
-            eventTime={data.eventTime}
+            startTime={data.metadata.analysisStartTime - TWO_HOURS_IN_MILLISECONDS}
+            endTime={data.metadata.analysisEndTime + TWO_HOURS_IN_MILLISECONDS}
+            eventTime={data.metadata.analysisStartTime}
             eventType={data.type}
           />
         </>

@@ -14,17 +14,18 @@ import { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHe
 import HealthScoreChart from '@cv/pages/monitored-service/components/ServiceHealth/components/HealthScoreChart/HealthScoreChart'
 import { TimelineBar } from '@cv/components/TimelineView/TimelineBar'
 import ServiceDependenciesLegend from '@cv/components/ServiceDependenciesLegend/ServiceDependenciesLegend'
-import { getColorForChangeEventType } from '@cv/components/ChangeTimeline/ChangeTimeline.utils'
 import VerificationStatusCard from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
 import type { VerifyStepSummary } from 'services/cv'
 import type { ChangeEventServiceHealthProps } from './ChangeEventServiceHealth.types'
 import { TWO_HOURS_IN_MILLISECONDS, COLUMN_CHART_PROPS } from './ChangeEventServiceHealth.constants'
+import { getMarkerProps } from './ChangeEventsServiceHealth.utils'
 import css from './ChangeEventServiceHealth.module.scss'
 
 export default function ChangeEventServiceHealth(props: ChangeEventServiceHealthProps): JSX.Element {
   const {
     monitoredServiceIdentifier,
     startTime: propsStartTime,
+    endTime: propsEndTime,
     eventType,
     timeStamps,
     setTimestamps,
@@ -32,6 +33,9 @@ export default function ChangeEventServiceHealth(props: ChangeEventServiceHealth
     verifyStepSummaries
   } = props
   const { getString } = useStrings()
+
+  const markerProps = getMarkerProps(eventType, propsStartTime, propsEndTime)
+  const startTimeProp = markerProps?.multiTimeStampMarker ? { startTime: propsStartTime } : {}
   return (
     <Container className={css.main}>
       <Text data-testid="changeEventServiceHealth_title" className={css.status}>
@@ -59,12 +63,10 @@ export default function ChangeEventServiceHealth(props: ChangeEventServiceHealth
         duration={{ value: TimePeriodEnum.FOUR_HOURS, label: getString('cv.monitoredServices.serviceHealth.last4Hrs') }}
         columChartProps={{
           ...COLUMN_CHART_PROPS,
-          timestampMarker: {
-            timestamp: propsStartTime,
-            color: getColorForChangeEventType(eventType)
-          }
+          ...markerProps
         }}
-        endTime={propsStartTime + TWO_HOURS_IN_MILLISECONDS}
+        {...startTimeProp}
+        endTime={propsEndTime ? propsEndTime : propsStartTime + TWO_HOURS_IN_MILLISECONDS}
         setHealthScoreData={riskData => {
           if (!riskData?.length) {
             return

@@ -27,14 +27,17 @@ export default function DeploymentTimeDuration({
   const { getString } = useStrings()
   const durationString = durationAsString(startTime, endTime)
   const timePassed = durationAsString(endTime, moment().valueOf())
-  const marginals = type === ChangeSourceTypes.HarnessCDNextGen ? { right: 'medium' } : undefined
+  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.SrmStepAnalysis].includes(
+    type as ChangeSourceTypes
+  )
+  const marginals = isDeploymentType ? { right: 'medium' } : undefined
 
   return (
     <Container>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        {type === ChangeSourceTypes.HarnessCDNextGen && (
+        {isDeploymentType && (
           <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
-            Start:&nbsp;
+            Started:&nbsp;
             <Text tag="span" font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
               {moment(startTime).format(TIME_FORMAT)}
             </Text>
@@ -52,7 +55,7 @@ export default function DeploymentTimeDuration({
             {durationString}
           </Text>
         </Text>
-        {type !== ChangeSourceTypes.HarnessCDNextGen && (
+        {!isDeploymentType && (
           <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
             {timePassed || 0} &nbsp;
             {getString('cv.changeSource.changeSourceCard.ago')}

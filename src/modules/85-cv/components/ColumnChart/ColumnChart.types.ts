@@ -34,4 +34,14 @@ export interface ColumnChartProps {
     timestamp: number
     color: string
   }
+  multiTimeStampMarker?: {
+    markerStartTime: {
+      timestamp: number
+      color: string
+    }
+    markerEndTime?: {
+      timestamp: number
+      color: string
+    }
+  }
 }

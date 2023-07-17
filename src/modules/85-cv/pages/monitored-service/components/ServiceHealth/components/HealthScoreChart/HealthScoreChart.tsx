@@ -26,6 +26,7 @@ export default function HealthScoreChart(props: HealthScoreChartProps): JSX.Elem
     duration,
     setHealthScoreData,
     endTime,
+    startTime,
     columChartProps,
     hasTimelineIntegration,
     isChangeEventView
@@ -35,14 +36,15 @@ export default function HealthScoreChart(props: HealthScoreChartProps): JSX.Elem
   const [seriesData, setSeriesData] = useState<ColumnData[]>([])
 
   const queryParams = useMemo(() => {
+    const durationOrStartTime = startTime ? { startTime } : { duration: duration?.value as TimePeriodEnum }
     return {
       accountId,
       projectIdentifier,
       orgIdentifier,
-      duration: duration?.value as TimePeriodEnum,
+      ...durationOrStartTime,
       endTime: endTime || Date.now()
     }
-  }, [duration?.value, endTime])
+  }, [duration?.value, endTime, startTime])
 
   const {
     data: healthScoreDataWithMSIdentifier,

@@ -8857,6 +8857,10 @@ export interface StringsMap {
   'cv.affectedServices': string
   'cv.allMetrics': string
   'cv.analysisScreens.totalClusters': string
+  'cv.analyzeDeploymentImpact.duration': string
+  'cv.analyzeDeploymentImpact.redirectLabel': string
+  'cv.analyzeDeploymentImpact.remaining': string
+  'cv.analyzeDeploymentImpact.stopAnalysis': string
   'cv.analyzeStep.healthSources.healthSourceNotPresent': string
   'cv.analyzeStep.monitoredService.createMonitoredService': string
   'cv.analyzeStep.monitoredService.fetchingMonitoredService': string
@@ -8875,6 +8879,7 @@ export interface StringsMap {
   'cv.bottom': string
   'cv.burnRatePerDay': string
   'cv.cURLCopied': string
+  'cv.changeSource.DeploymentImpactAnalysis': string
   'cv.changeSource.FeatureFlag.label': string
   'cv.changeSource.FeatureFlag.noDataAvailableForYAMLDiff': string
   'cv.changeSource.HarnessCDCurrentGen.applicationId': string
@@ -8884,6 +8889,7 @@ export interface StringsMap {
   'cv.changeSource.PageDuty.pagerDutyEmptyService': string
   'cv.changeSource.PageDuty.pagerDutyService': string
   'cv.changeSource.PageDuty.selectPagerDutyService': string
+  'cv.changeSource.SrmStepAnalysis.label': string
   'cv.changeSource.addChangeSource': string
   'cv.changeSource.alertText': string
   'cv.changeSource.changeSourceCard.ago': string

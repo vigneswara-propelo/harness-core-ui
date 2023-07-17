@@ -722,6 +722,9 @@ changeSource:
     label: Harness CE
     event: Chaos Event
     events: Chaos Events
+  SrmStepAnalysis:
+    label: Step Analysis
+  DeploymentImpactAnalysis: Deployment Impact Analysis
 Dependency:
   serviceList: Service list
   noData: No Data For Dependency Graph
@@ -1327,3 +1330,8 @@ analyzeStep:
     monitoredServiceNotPresent: Monitored service has not been set up. You can create them directly within the SRM
     fetchingMonitoredService: Fetching monitored service details ...
     createMonitoredService: Create Monitored Service
+analyzeDeploymentImpact:
+  duration: Analysis duration
+  remaining: Remaining
+  redirectLabel: View Monitored Service details
+  stopAnalysis: Stop the analysis and send the report

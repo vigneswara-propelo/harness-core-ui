@@ -16,12 +16,12 @@ import {
   CustomChangeSourceList
 } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { EXECUTED_BY, UPDATED_BY } from '@cv/constants'
-import type { ChangeEventDTO } from 'services/cv'
 import { getDetailsLabel } from '@cv/utils/CommonUtils'
 import { getOnClickOptions, getSourceLabel, statusToColorMapping } from './ChangeDetails.utils'
 import type { ChangeDetailsDataInterface } from '../../ChangeEventCard.types'
 import StatusChip from './components/StatusChip/StatusChip'
 import { ExternalLinkToEntity } from './ChangeDetails.constant'
+import { DeploymentImpactAnalysis } from '../EventCards/SRMStepAnalysis/SRMStepAnalysis.constants'
 import css from './ChangeDetails.module.scss'
 
 export default function ChangeDetails({
@@ -30,15 +30,33 @@ export default function ChangeDetails({
   ChangeDetailsData: ChangeDetailsDataInterface
 }): JSX.Element {
   const { getString } = useStrings()
-  const { type, status, executedBy } = ChangeDetailsData
+  const { type, status, executedBy, deploymentImpactAnalysis } = ChangeDetailsData
   let { details } = ChangeDetailsData
   const { color, backgroundColor } = statusToColorMapping(status, type) || {}
-  if ([ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster].includes(type as ChangeSourceTypes)) {
-    details = { source: type as string, ...details, executedBy: (executedBy as any) || null }
+  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.SrmStepAnalysis].includes(
+    type as ChangeSourceTypes
+  )
+  if (
+    [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster, ChangeSourceTypes.SrmStepAnalysis].includes(
+      type as ChangeSourceTypes
+    )
+  ) {
+    details = {
+      source: type as string,
+      ...details,
+      executedBy: (executedBy as any) || null
+    }
   } else if ([ChangeSourceTypes.HarnessFF, ChangeSourceTypes.HarnessCE].includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
   } else if (CustomChangeSourceList.includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
+  }
+
+  if (type === ChangeSourceTypes.SrmStepAnalysis) {
+    details = {
+      ...details,
+      deploymentImpactAnalysis: deploymentImpactAnalysis
+    } as unknown as ChangeDetailsDataInterface['details']
   }
 
   return (
@@ -47,24 +65,23 @@ export default function ChangeDetails({
         {getString('details')}
       </Text>
       <div className={css.gridContainer}>{getChanges(details)}</div>
-      {status && type !== ChangeSourceTypes.HarnessCDNextGen ? (
+      {status && !isDeploymentType ? (
         <StatusChip status={status} color={color} backgroundColor={backgroundColor} />
       ) : null}
     </Container>
   )
 }
 
-export const getChanges = (details: {
-  [key: string]: string | { name: string | ChangeEventDTO['type']; url?: string } | string[]
-}) => {
+export const getChanges = (details: ChangeDetailsDataInterface['details']) => {
   return _map(_entries(details), item => {
     const isExecutedBy = item[0] === EXECUTED_BY
     const isUpdatedBy = item[0] === UPDATED_BY
+    const isDeploymentImpactAnalysis = item[0] === DeploymentImpactAnalysis
     const { getString } = useStrings()
     let value: any = null
     let shouldVisible = true
 
-    if (isExecutedBy || isUpdatedBy) {
+    if (isExecutedBy || isUpdatedBy || isDeploymentImpactAnalysis) {
       shouldVisible = (item[1] as any).shouldVisible ?? true
       value = (item[1] as any).component
     } else if (Array.isArray(item[1])) {
@@ -100,18 +117,18 @@ export const getChanges = (details: {
 
     return value ? (
       <>
-        <Text className={css.gridItem} font={{ size: 'small' }}>
+        <Text className={css.gridItem} font={{ size: 'small', weight: 'semi-bold' }}>
           {shouldVisible ? getDetailsLabel(item[0], getString) : ''}
         </Text>
         {isExecutedBy ? (
-          <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
+          <Text font={{ size: 'small' }} color={Color.BLACK_100}>
             {value}
           </Text>
         ) : Array.isArray(item[1]) ? (
-          <Layout.Vertical width="max-content">
+          <Layout.Vertical width="100%">
             {value.map((action: string, idx: number) => (
               <Layout.Horizontal key={idx} spacing="small">
-                <Text key={idx} font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
+                <Text key={idx} font={{ size: 'small' }} color={Color.BLACK_100}>
                   {action}
                 </Text>
               </Layout.Horizontal>
