@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -28,8 +28,8 @@ describe('Test Revert PR Step', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render edit view as edit step', () => {
-    const { container } = render(
+  test('should render edit view as edit step', async () => {
+    const { container, getByText } = render(
       <TestStepWidget
         initialValues={{
           type: StepType.RevertPR,
@@ -42,6 +42,7 @@ describe('Test Revert PR Step', () => {
       />
     )
 
+    await fireEvent.click(getByText('common.optionalConfig'))
     expect(container).toMatchSnapshot()
   })
 

@@ -12,6 +12,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 export interface RevertPRStepData extends StepElementConfig {
   spec: {
     commitId: string
+    prTitle?: string
   }
 }
 

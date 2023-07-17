@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Accordion, Formik, FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -18,7 +18,7 @@ import {
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import OptionalConfiguration from './OptionalConfiguration'
 import type { GitOpsRevertPRProps, RevertPRStepData } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -69,7 +69,7 @@ function GitOpsRevertPRWidget(
                 />
               </div>
 
-              <div className={stepCss.formGroup}>
+              <div className={stepCss.formGroup} style={{ paddingRight: 'var(--spacing-xlarge)' }}>
                 <FormInput.MultiTextInput
                   name="spec.commitId"
                   placeholder={getString('common.commitId')}
@@ -77,22 +77,19 @@ function GitOpsRevertPRWidget(
                   disabled={readonly}
                   multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
                 />
-                {
-                  /* istanbul ignore next */ getMultiTypeFromValue(formik.values.spec.commitId) ===
-                    MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      value={formik.values.spec.commitId}
-                      type="String"
-                      variableName="spec.commitId"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => formik.setFieldValue('spec.commitId', value)}
-                      isReadonly={readonly}
-                      allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                    />
-                  )
-                }
               </div>
+
+              <div className={stepCss.divider} />
+
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="optional-config"
+                  summary={getString('common.optionalConfig')}
+                  details={
+                    <OptionalConfiguration formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
+                  }
+                />
+              </Accordion>
             </>
           )
         }}

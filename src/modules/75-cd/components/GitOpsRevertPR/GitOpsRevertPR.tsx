@@ -101,7 +101,7 @@ export class GitOpsRevertPR extends PipelineStep<RevertPRStepData> {
 
   protected type = StepType.RevertPR
   protected stepName = 'Revert PR'
-  protected stepIcon: IconName = 'gitops-application'
+  protected stepIcon: IconName = 'canvas-reset'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.revertPR'
 
   protected defaultValues: RevertPRStepData = {

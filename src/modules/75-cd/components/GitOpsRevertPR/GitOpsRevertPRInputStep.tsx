@@ -61,6 +61,19 @@ function GitOpsRevertPRInputStep({
           />
         </div>
       )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.prTitle) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.lg)}>
+          <FormInput.MultiTextInput
+            name={`${prefix}spec.prTitle`}
+            placeholder={getString('pipeline.prTitle')}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipeline.prTitle')}
+          />
+        </div>
+      )}
     </>
   )
 }
