@@ -24,6 +24,7 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { MetadataMapObject } from '@common/components/TextWithExpressions/TextWithExpression'
 import { getRegexForSearch } from '../LogsContent/LogsState/utils'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
@@ -52,6 +53,11 @@ export interface PipelineVariablesData {
   searchText?: string
   searchIndex?: number | null
   searchResults?: SearchResult[]
+  isCompiledMode?: boolean
+  setIsCompiledMode?: React.Dispatch<React.SetStateAction<boolean>>
+  compiledModeMetadataMap?: MetadataMapObject
+  setCompiledModeMetadataMap?: React.Dispatch<React.SetStateAction<MetadataMapObject>>
+  storeMetadata?: StoreMetadata
   setPipeline: (pipeline: PipelineInfoConfig) => void
   setResolvedPipeline: (pipeline: PipelineInfoConfig) => void
   setSelectedInputSetsContext?: (inputSets?: InputSetValue[]) => void
@@ -131,6 +137,8 @@ export function PipelineVariablesContextProvider(
   const { accountId, orgIdentifier, projectIdentifier } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>(originalPipeline)
+  const [isCompiledMode, setIsCompiledMode] = React.useState<boolean>(false)
+  const [compiledModeMetadataMap, setCompiledModeMetadataMap] = React.useState<MetadataMapObject>({})
   const [selectedInputSetsContext, setSelectedInputSetsContext] = React.useState<InputSetValue[]>()
   const [{ searchText, searchResults, searchIndex, pipelineValues, pipelineFqns, pipelineMetaKeys }, setSearchMeta] =
     React.useState<SearchMeta>({
@@ -288,6 +296,11 @@ export function PipelineVariablesContextProvider(
         searchResults,
         searchText,
         searchIndex,
+        isCompiledMode,
+        setIsCompiledMode,
+        compiledModeMetadataMap,
+        setCompiledModeMetadataMap,
+        storeMetadata,
         goToPrevSearchResult,
         goToNextSearchResult,
         setPipeline: setOriginalPipeline,

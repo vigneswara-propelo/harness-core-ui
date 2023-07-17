@@ -17,11 +17,13 @@ interface CopyToClipboardProps {
   content: string
   showFeedback?: boolean
   iconSize?: number
+  hidePopover?: boolean
 }
 
 const CopyToClipboard: React.FC<CopyToClipboardProps> = props => {
   const { showSuccess } = useToaster()
   const { getString } = useStrings()
+  const { hidePopover = false } = props
   const getPopoverContent = (): JSX.Element => {
     return (
       <div className={css.popoverContent}>
@@ -35,7 +37,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = props => {
         minimal
         position={Position.BOTTOM}
         interactionKind={PopoverInteractionKind.HOVER}
-        content={getPopoverContent()}
+        content={!hidePopover ? getPopoverContent() : <></>}
       >
         <div>
           <Icon

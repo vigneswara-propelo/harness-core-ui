@@ -1922,3 +1922,4 @@ downloadLogs:
   downloadSuccessful: 'Download successful'
   downloadRequestFailed: 'Download failed with: {{ errorMsg }}'
 infrastructurePropagatedFrom: 'Infrastructure Propagated From:'
+viewInCompiledMode: 'View in Compiled Mode'

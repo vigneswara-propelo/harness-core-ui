@@ -62,7 +62,10 @@ export function PipelineVariablesWithRef(
     error,
     initLoading,
     setPipeline,
-    searchIndex = 0
+    searchIndex = 0,
+    isCompiledMode,
+    compiledModeMetadataMap,
+    setIsCompiledMode
   } = usePipelineVariables()
   const { getString } = useStrings()
   const [pipelineAsState, setPipelineAsState] = React.useState(pipeline)
@@ -138,13 +141,24 @@ export function PipelineVariablesWithRef(
 
   const readOnly = isReadonly || !!pipeline.template
 
+  const handleCompiledModeChange = (checked: boolean): void => {
+    setIsCompiledMode?.(checked)
+  }
+
   return (
     <div className={css.pipelineVariables}>
       {error ? (
         <PageError message={(error?.data as Error)?.message || error?.message} />
       ) : (
         <div className={css.content}>
-          <VariablesHeader applyChanges={applyChanges} discardChanges={discardChanges} isReadonly={readOnly} />
+          <VariablesHeader
+            applyChanges={applyChanges}
+            discardChanges={discardChanges}
+            isReadonly={readOnly}
+            handleCompiledModeChange={handleCompiledModeChange}
+            isCompiledMode={isCompiledMode}
+            enableSearch={!isCompiledMode}
+          />
           <div className={css.variableList} ref={pipelineVariablesRef as any}>
             <GitSyncStoreProvider>
               <NestedAccordionPanel
@@ -170,6 +184,8 @@ export function PipelineVariablesWithRef(
                     metadataMap={metadataMap}
                     readonly={readOnly}
                     allowableTypes={allowableTypes}
+                    isCompiledMode={isCompiledMode}
+                    compiledModeMetadataMap={compiledModeMetadataMap}
                   />
                 }
               />

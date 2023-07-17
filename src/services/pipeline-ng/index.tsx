@@ -1119,6 +1119,64 @@ export type ConnectorFilterProperties = FilterProperties & {
   )[]
 }
 
+export type ConnectorInternalFilterProperties = FilterProperties & {
+  accountIdentifiers?: string[]
+  ccmConnectorFilter?: CcmConnectorFilter
+  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  types?: (
+    | 'K8sCluster'
+    | 'Git'
+    | 'Splunk'
+    | 'AppDynamics'
+    | 'Prometheus'
+    | 'Dynatrace'
+    | 'Vault'
+    | 'AzureKeyVault'
+    | 'DockerRegistry'
+    | 'Local'
+    | 'AwsKms'
+    | 'GcpKms'
+    | 'AwsSecretManager'
+    | 'Gcp'
+    | 'Aws'
+    | 'Azure'
+    | 'Artifactory'
+    | 'Jira'
+    | 'Nexus'
+    | 'Github'
+    | 'Gitlab'
+    | 'Bitbucket'
+    | 'Codecommit'
+    | 'CEAws'
+    | 'CEAzure'
+    | 'GcpCloudCost'
+    | 'CEK8sCluster'
+    | 'HttpHelmRepo'
+    | 'NewRelic'
+    | 'Datadog'
+    | 'SumoLogic'
+    | 'PagerDuty'
+    | 'CustomHealth'
+    | 'ServiceNow'
+    | 'ErrorTracking'
+    | 'Pdc'
+    | 'AzureRepo'
+    | 'Jenkins'
+    | 'OciHelmRepo'
+    | 'CustomSecretManager'
+    | 'ElasticSearch'
+    | 'GcpSecretManager'
+    | 'AzureArtifacts'
+    | 'Tas'
+    | 'Spot'
+    | 'Bamboo'
+    | 'TerraformCloud'
+    | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
+  )[]
+}
+
 export interface ConnectorWrapperResponse {
   checkResponses?: ConnectorCheckResponse[]
   label?: string
@@ -6539,6 +6597,7 @@ export interface StepData {
     | 'TEMPLATE_SERVICE'
     | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
+    | 'ANALYZE_DEPLOYMENT_STEP'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -13393,91 +13452,6 @@ export const getExecutionDetailV2Promise = (
     GetExecutionDetailV2PathParams
   >(getConfig('pipeline/api'), `/pipelines/execution/v2/${planExecutionId}`, props, signal)
 
-export interface GetExpressionEvaluatedQueryParams {
-  accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-}
-
-export interface GetExpressionEvaluatedPathParams {
-  pipelineIdentifier: string
-}
-
-export type GetExpressionEvaluatedProps = Omit<
-  GetProps<
-    ResponseExpressionEvaluationDetail,
-    Failure | Error,
-    GetExpressionEvaluatedQueryParams,
-    GetExpressionEvaluatedPathParams
-  >,
-  'path'
-> &
-  GetExpressionEvaluatedPathParams
-
-/**
- * Gets Execution Expression evaluated
- */
-export const GetExpressionEvaluated = ({ pipelineIdentifier, ...props }: GetExpressionEvaluatedProps) => (
-  <Get<
-    ResponseExpressionEvaluationDetail,
-    Failure | Error,
-    GetExpressionEvaluatedQueryParams,
-    GetExpressionEvaluatedPathParams
-  >
-    path={`/pipelines/execution/${pipelineIdentifier}/evaluateExpression`}
-    base={getConfig('pipeline/api')}
-    {...props}
-  />
-)
-
-export type UseGetExpressionEvaluatedProps = Omit<
-  UseGetProps<
-    ResponseExpressionEvaluationDetail,
-    Failure | Error,
-    GetExpressionEvaluatedQueryParams,
-    GetExpressionEvaluatedPathParams
-  >,
-  'path'
-> &
-  GetExpressionEvaluatedPathParams
-
-/**
- * Gets Execution Expression evaluated
- */
-export const useGetExpressionEvaluated = ({ pipelineIdentifier, ...props }: UseGetExpressionEvaluatedProps) =>
-  useGet<
-    ResponseExpressionEvaluationDetail,
-    Failure | Error,
-    GetExpressionEvaluatedQueryParams,
-    GetExpressionEvaluatedPathParams
-  >(
-    (paramsInPath: GetExpressionEvaluatedPathParams) =>
-      `/pipelines/execution/${paramsInPath.pipelineIdentifier}/evaluateExpression`,
-    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
-  )
-
-/**
- * Gets Execution Expression evaluated
- */
-export const getExpressionEvaluatedPromise = (
-  {
-    pipelineIdentifier,
-    ...props
-  }: GetUsingFetchProps<
-    ResponseExpressionEvaluationDetail,
-    Failure | Error,
-    GetExpressionEvaluatedQueryParams,
-    GetExpressionEvaluatedPathParams
-  > & { pipelineIdentifier: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ResponseExpressionEvaluationDetail,
-    Failure | Error,
-    GetExpressionEvaluatedQueryParams,
-    GetExpressionEvaluatedPathParams
-  >(getConfig('pipeline/api'), `/pipelines/execution/${pipelineIdentifier}/evaluateExpression`, props, signal)
-
 export interface GetExecutionDetailQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -13553,6 +13527,100 @@ export const getExecutionDetailPromise = (
     GetExecutionDetailQueryParams,
     GetExecutionDetailPathParams
   >(getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}`, props, signal)
+
+export interface GetExpressionEvaluatedQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+}
+
+export interface GetExpressionEvaluatedPathParams {
+  planExecutionId: string
+}
+
+export type GetExpressionEvaluatedProps = Omit<
+  MutateProps<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedBodyRequestBody,
+    GetExpressionEvaluatedPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetExpressionEvaluatedPathParams
+
+/**
+ * Gets Execution Expression evaluated
+ */
+export const GetExpressionEvaluated = ({ planExecutionId, ...props }: GetExpressionEvaluatedProps) => (
+  <Mutate<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedBodyRequestBody,
+    GetExpressionEvaluatedPathParams
+  >
+    verb="POST"
+    path={`/pipelines/execution/${planExecutionId}/evaluateExpression`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExpressionEvaluatedProps = Omit<
+  UseMutateProps<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedBodyRequestBody,
+    GetExpressionEvaluatedPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetExpressionEvaluatedPathParams
+
+/**
+ * Gets Execution Expression evaluated
+ */
+export const useGetExpressionEvaluated = ({ planExecutionId, ...props }: UseGetExpressionEvaluatedProps) =>
+  useMutate<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedBodyRequestBody,
+    GetExpressionEvaluatedPathParams
+  >(
+    'POST',
+    (paramsInPath: GetExpressionEvaluatedPathParams) =>
+      `/pipelines/execution/${paramsInPath.planExecutionId}/evaluateExpression`,
+    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
+  )
+
+/**
+ * Gets Execution Expression evaluated
+ */
+export const getExpressionEvaluatedPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedBodyRequestBody,
+    GetExpressionEvaluatedPathParams
+  > & { planExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseExpressionEvaluationDetail,
+    Failure | Error,
+    GetExpressionEvaluatedQueryParams,
+    GetExpressionEvaluatedBodyRequestBody,
+    GetExpressionEvaluatedPathParams
+  >('POST', getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/evaluateExpression`, props, signal)
 
 export interface GetInputsetYamlQueryParams {
   accountIdentifier: string

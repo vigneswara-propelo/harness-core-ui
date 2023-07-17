@@ -51,6 +51,9 @@
       -moz-appearance: textfield;
     }
   }
+  .compiledModeGrid {
+    grid-template-columns: 1fr 2fr !important;
+  }
 
   .variable-list-table {
     padding-block: var(--spacing-small);

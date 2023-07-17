@@ -9,6 +9,10 @@
   display: grid;
   align-items: baseline;
 
+  .compiledModeGrid {
+    grid-template-columns: 1fr 2fr !important;
+  }
+
   .variable-list-row {
     display: grid;
     grid-template-columns: 1fr 1fr 2fr;
@@ -17,7 +21,6 @@
     border-bottom: solid 1px;
     border-color: var(--grey-200);
     position: relative;
-    height: 39px;
 
     .nameSection {
       font-size: var(--font-size-normal);

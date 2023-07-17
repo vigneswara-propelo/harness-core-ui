@@ -17,6 +17,9 @@ declare const styles: {
   readonly addVariableL2: string
   readonly closed: string
   readonly collapse: string
+  readonly compiledModeExecutionId: string
+  readonly compiledModeGridTemplate: string
+  readonly compiledModeHeader: string
   readonly content: string
   readonly customVarPadL1: string
   readonly customVarPadL2: string

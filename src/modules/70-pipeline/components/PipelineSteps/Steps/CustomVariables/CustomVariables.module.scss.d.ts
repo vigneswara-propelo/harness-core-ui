@@ -10,6 +10,7 @@ declare const styles: {
   readonly actionButtons: string
   readonly addVariable: string
   readonly buttonsActions: string
+  readonly compiledModeGrid: string
   readonly configureButton: string
   readonly copyTextInput: string
   readonly copyTextPopoverWrapper: string

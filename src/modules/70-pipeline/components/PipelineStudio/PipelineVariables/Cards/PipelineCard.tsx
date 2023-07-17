@@ -23,6 +23,8 @@ import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import VariableListTagRow from '@pipeline/components/VariablesListTable/VariableListTagRow'
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { MetadataMapObject } from '@common/components/TextWithExpressions/TextWithExpression'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import type { PipelineVariablesData } from '../types'
 import css from '../PipelineVariables.module.scss'
@@ -36,6 +38,8 @@ export interface PipelineCardProps {
   updatePipeline(pipeline: PipelineInfoConfig): void
   readonly?: boolean
   allowableTypes: AllowedTypes
+  isCompiledMode?: boolean
+  compiledModeMetadataMap?: MetadataMapObject
 }
 
 export default function PipelineCard(props: PipelineCardProps): React.ReactElement {
@@ -50,7 +54,7 @@ export default function PipelineCard(props: PipelineCardProps): React.ReactEleme
     allowableTypes
   } = props
   const { getString } = useStrings()
-
+  const { isCompiledMode } = usePipelineVariables()
   return (
     <Card className={css.variableCard} id="Pipeline-panel">
       <VariablesListTable
@@ -87,7 +91,10 @@ export default function PipelineCard(props: PipelineCardProps): React.ReactEleme
         details={
           <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
             factory={stepsFactory}
-            initialValues={{ variables: (originalPipeline.variables || []) as AllNGVariables[], canAddVariable: true }}
+            initialValues={{
+              variables: (originalPipeline.variables || []) as AllNGVariables[],
+              canAddVariable: !isCompiledMode
+            }}
             type={StepType.CustomVariable}
             stepViewType={StepViewType.InputVariable}
             readonly={readonly}

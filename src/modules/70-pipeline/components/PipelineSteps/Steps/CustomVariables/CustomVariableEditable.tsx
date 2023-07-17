@@ -42,6 +42,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import TextWithExpressions, { MetadataMapObject } from '@common/components/TextWithExpressions/TextWithExpression'
 import AddEditCustomVariable from './AddEditCustomVariable'
 import type { VariableState } from './AddEditCustomVariable'
 import { VariableType } from './CustomVariableUtils'
@@ -124,7 +125,13 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
   }
   const { expressions } = useVariablesExpression()
 
-  const { searchText, searchIndex, searchResults = [] } = usePipelineVariables()
+  const {
+    searchText,
+    searchIndex,
+    searchResults = [],
+    isCompiledMode,
+    compiledModeMetadataMap
+  } = usePipelineVariables()
   const searchedEntity = searchResults[searchIndex || 0] || {}
   const updatedPath = path?.replace('pipeline.', '')
   const tableRef = React.useRef()
@@ -190,16 +197,18 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                 {values.canAddVariable ? (
                   <div className={css.headerRow}>
                     {heading ? heading : <div />}
-                    <Button
-                      className="add-variable"
-                      variation={ButtonVariation.LINK}
-                      icon="plus"
-                      onClick={addNew}
-                      size={ButtonSize.SMALL}
-                      disabled={readonly}
-                    >
-                      <String stringID={defaultTo(addVariableLabel, 'common.addVariable')} />
-                    </Button>
+                    {!isCompiledMode && (
+                      <Button
+                        className="add-variable"
+                        variation={ButtonVariation.LINK}
+                        icon="plus"
+                        onClick={addNew}
+                        size={ButtonSize.SMALL}
+                        disabled={readonly}
+                      >
+                        <String stringID={defaultTo(addVariableLabel, 'common.addVariable')} />
+                      </Button>
+                    )}
                   </div>
                 ) : /* istanbul ignore next */ null}
                 {headerComponent
@@ -231,7 +240,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                       className={cx(
                         css.variableListTable,
                         'variable-list-row',
-                        hoveredVariable[index] ? css.hoveredRow : ''
+                        hoveredVariable[index] ? css.hoveredRow : '',
+                        isCompiledMode ? css.compiledModeGrid : ''
                       )}
                       onMouseLeave={() => setHoveredVariable({ [index]: false })}
                     >
@@ -268,9 +278,11 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                           />
                         </Text>
                       )}
-                      <Text color={Color.GREY_500} lineClamp={3} font={{ variation: FontVariation.BODY }}>
-                        {isEmpty(variable?.description) ? '-' : variable?.description}
-                      </Text>
+                      {!isCompiledMode && (
+                        <Text color={Color.GREY_500} lineClamp={3} font={{ variation: FontVariation.BODY }}>
+                          {isEmpty(variable?.description) ? '-' : variable?.description}
+                        </Text>
+                      )}
                       <div
                         className={cx(css.valueRow, {
                           [css.selectedSearchTextValueRow]: searchText?.length && isValidValueMatch,
@@ -278,7 +290,15 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                         })}
                       >
                         <div>
-                          {(variable?.type as unknown) === VariableType.Connector ? (
+                          {isCompiledMode ? (
+                            <TextWithExpressions
+                              inputString={variable.value as string}
+                              metadataMap={compiledModeMetadataMap as MetadataMapObject}
+                              fqnPath={yamlData?.fqn}
+                              customClassName="variableInput"
+                              data-testid="variables-test"
+                            />
+                          ) : (variable?.type as unknown) === VariableType.Connector ? (
                             <FormMultiTypeConnectorField
                               name={`variables[${index}].value`}
                               label=""

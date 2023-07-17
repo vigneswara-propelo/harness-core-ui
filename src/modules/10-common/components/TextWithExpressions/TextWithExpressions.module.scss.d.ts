@@ -7,17 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly compiledModeGrid: string
-  readonly copyOptionPopoverWrapper: string
-  readonly copyOptionTextInput: string
-  readonly currentSelection: string
-  readonly hoveredRow: string
-  readonly nameSection: string
-  readonly nameSectionWithCopy: string
-  readonly selectedSearchText: string
-  readonly tagsValueSection: string
-  readonly valueSection: string
-  readonly variableListRow: string
-  readonly variablesListTable: string
+  readonly errorIcon: string
+  readonly expressionIcon: string
+  readonly expressionValue: string
+  readonly expressionWrapper: string
 }
 export default styles

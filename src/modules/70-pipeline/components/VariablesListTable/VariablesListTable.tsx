@@ -13,6 +13,7 @@ import { Text, useNestedAccordion } from '@harness/uicore'
 import type { VariableResponseMapValue } from 'services/pipeline-ng'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 
+import TextWithExpressions, { MetadataMapObject } from '@common/components/TextWithExpressions/TextWithExpression'
 import {
   getTextWithSearchMarkers,
   SearchResult,
@@ -29,7 +30,13 @@ export interface VariableListTableProps<T = Record<string, any>> {
 
 export function VariablesListTable<T>(props: VariableListTableProps<T>): React.ReactElement | null {
   const { data, metadataMap, originalData, className } = props
-  const { searchText, searchIndex, searchResults = [] } = usePipelineVariables()
+  const {
+    searchText,
+    searchIndex,
+    searchResults = [],
+    isCompiledMode,
+    compiledModeMetadataMap
+  } = usePipelineVariables()
   const searchedEntity = defaultTo(searchResults[searchIndex || 0], {} as SearchResult)
   const tableRef = React.useRef()
   const [hoveredVariable, setHoveredVariable] = useState<Record<string, boolean>>({})
@@ -101,7 +108,8 @@ export function VariablesListTable<T>(props: VariableListTableProps<T>): React.R
             className={cx(
               css.variableListRow,
               'variable-list-row',
-              hoveredVariable[variableName] ? css.hoveredRow : ''
+              hoveredVariable[variableName] ? css.hoveredRow : '',
+              isCompiledMode ? css.compiledModeGrid : ''
             )}
             onMouseLeave={() => setHoveredVariable({ [variableName]: false })}
           >
@@ -138,29 +146,37 @@ export function VariablesListTable<T>(props: VariableListTableProps<T>): React.R
               />
             )}
             {/* this span is added to act as the grid column for description */}
-            <span />
+            {!isCompiledMode && <span />}
 
-            <Text
-              className={css.valueSection}
-              font={{ variation: FontVariation.BODY, weight: 'semi-bold' }}
-              color={Color.BLACK_100}
-              lineClamp={1}
-            >
-              <span
-                className={cx({
-                  'selected-search-text': searchedEntityType === 'value' && hasSameMetaKeyId
-                })}
-                dangerouslySetInnerHTML={{
-                  __html: getTextWithSearchMarkers({
-                    searchText: escape(searchText),
-                    txt: escape(formattedValue),
-                    className: cx(css.selectedSearchText, {
-                      [css.currentSelection]: searchedEntityType === 'value' && hasSameMetaKeyId && isValidValueMatch
-                    })
-                  })
-                }}
+            {isCompiledMode ? (
+              <TextWithExpressions
+                inputString={formattedValue}
+                metadataMap={compiledModeMetadataMap as MetadataMapObject}
+                fqnPath={yamlProps?.fqn}
               />
-            </Text>
+            ) : (
+              <Text
+                className={css.valueSection}
+                font={{ variation: FontVariation.BODY, weight: 'semi-bold' }}
+                color={Color.BLACK_100}
+                lineClamp={1}
+              >
+                <span
+                  className={cx({
+                    'selected-search-text': searchedEntityType === 'value' && hasSameMetaKeyId
+                  })}
+                  dangerouslySetInnerHTML={{
+                    __html: getTextWithSearchMarkers({
+                      searchText: escape(searchText),
+                      txt: escape(formattedValue),
+                      className: cx(css.selectedSearchText, {
+                        [css.currentSelection]: searchedEntityType === 'value' && hasSameMetaKeyId && isValidValueMatch
+                      })
+                    })
+                  }}
+                />
+              </Text>
+            )}
           </div>
         )
       })}

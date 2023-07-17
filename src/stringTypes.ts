@@ -5422,6 +5422,7 @@ export interface StringsMap {
   'pipeline.verificationResult': string
   'pipeline.viewExecution': string
   'pipeline.viewFreeze': string
+  'pipeline.viewInCompiledMode': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.violationDetails': string

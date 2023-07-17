@@ -25,6 +25,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 
 import VariableListTagRow from '@pipeline/components/VariablesListTable/VariableListTagRow'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { ServiceCardPanel } from './ServiceCard'
 import { ExecutionCardPanel } from './ExecutionCard'
 import { EnvironmentCardPanel } from './EnvironmentCard'
@@ -59,6 +60,7 @@ export default function StageCard(props: StageCardProps): React.ReactElement {
   const { getString } = useStrings()
   const stageSpec = stage.spec as DeploymentStageConfig
   const originalSpec = originalStage.spec as DeploymentStageConfig
+  const { isCompiledMode } = usePipelineVariables()
 
   const onUpdateVariables = React.useCallback(
     ({ variables }: CustomVariablesData) => {
@@ -159,7 +161,7 @@ export default function StageCard(props: StageCardProps): React.ReactElement {
                 factory={stepsFactory}
                 initialValues={{
                   variables: defaultTo(originalStage.variables, []) as AllNGVariables[],
-                  canAddVariable: true
+                  canAddVariable: !isCompiledMode
                 }}
                 allowableTypes={allowableTypes}
                 readonly={readonly}

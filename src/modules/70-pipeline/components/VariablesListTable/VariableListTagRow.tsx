@@ -25,7 +25,7 @@ export interface VariableRowProps {
   valueSectionClassName?: string
 }
 export default function VariableListTagRow(props: VariableRowProps): React.ReactElement {
-  const { searchText, searchIndex, searchResults = [] } = usePipelineVariables()
+  const { searchText, searchIndex, searchResults = [], isCompiledMode } = usePipelineVariables()
   const searchedEntity = searchResults[searchIndex || 0] || {}
   const tableRef = React.useRef()
   const { openNestedPath } = useNestedAccordion()
@@ -51,7 +51,12 @@ export default function VariableListTagRow(props: VariableRowProps): React.React
     <div ref={tableRef as any} className={cx(css.variablesListTable, props.className)}>
       <div
         onMouseLeave={() => setHovered(false)}
-        className={cx(css.variableListRow, 'variable-list-row', hovered ? css.hoveredRow : '')}
+        className={cx(
+          css.variableListRow,
+          'variable-list-row',
+          hovered ? css.hoveredRow : '',
+          isCompiledMode ? css.compiledModeGrid : ''
+        )}
       >
         {hovered ? (
           <div className={cx(css.nameSection, props.nameSectionClassName, css.nameSectionWithCopy)}>
@@ -83,7 +88,7 @@ export default function VariableListTagRow(props: VariableRowProps): React.React
             }}
           />
         )}
-        <span></span>
+        {!isCompiledMode && <span />}
 
         <div className={cx(css.tagsValueSection, props.valueSectionClassName)}>
           {!isEmpty(props?.tags) && (

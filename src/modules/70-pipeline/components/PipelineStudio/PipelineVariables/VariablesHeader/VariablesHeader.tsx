@@ -8,9 +8,12 @@
 import React from 'react'
 import { Button, ButtonSize, ButtonVariation, ExpandingSearchInput, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { VariablesCompiledModeHeader } from './VariablesCompiledModeHeader'
 import css from '../PipelineVariables.module.scss'
 
 export interface VariablesHeaderProps {
@@ -18,10 +21,19 @@ export interface VariablesHeaderProps {
   enableSearch?: boolean
   applyChanges(): void
   discardChanges(): void
+  handleCompiledModeChange?: (checked: boolean) => void
+  isCompiledMode?: boolean
 }
 
 export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
-  const { enableSearch = true, isReadonly, applyChanges, discardChanges } = props
+  const {
+    enableSearch = true,
+    isReadonly,
+    applyChanges,
+    discardChanges,
+    handleCompiledModeChange,
+    isCompiledMode
+  } = props
   const {
     onSearchInputChange,
     searchIndex = 0,
@@ -29,6 +41,8 @@ export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
     goToNextSearchResult,
     goToPrevSearchResult
   } = usePipelineVariables()
+
+  const { PIE_EXPRESSION_PLAYGROUND } = useFeatureFlags()
 
   const { getString } = useStrings()
   return (
@@ -68,13 +82,21 @@ export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
           <Button minimal size={ButtonSize.SMALL} text={getString('pipeline.discard')} onClick={discardChanges} />
         </div>
       </div>
-      <div className={css.variableListHeader}>
+      {PIE_EXPRESSION_PLAYGROUND && (
+        <VariablesCompiledModeHeader
+          handleCompiledModeChange={handleCompiledModeChange}
+          isCompiledMode={isCompiledMode}
+        />
+      )}
+      <div className={cx(css.variableListHeader, isCompiledMode ? css.compiledModeGridTemplate : '')}>
         <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
           {getString('variableLabel')}
         </Text>
-        <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
-          {getString('description')}
-        </Text>
+        {!isCompiledMode && (
+          <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
+            {getString('description')}
+          </Text>
+        )}
         <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
           {getString('valueLabel')}
         </Text>
