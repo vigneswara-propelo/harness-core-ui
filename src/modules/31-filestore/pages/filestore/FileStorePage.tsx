@@ -26,6 +26,7 @@ import cx from 'classnames'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page, StringUtils, useToaster } from '@common/exports'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import EmptyNodeView from '@filestore/components/EmptyNodeView/EmptyNodeView'
 import StoreExplorer from '@filestore/components/StoreExplorer/StoreExplorer'
@@ -144,6 +145,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
   const resizerStyle = navigator.userAgent.match(/firefox/i)
     ? { display: 'flow-root list-item' }
     : { display: 'inline-table' }
+
+  useDocumentTitle(getString('resourcePage.fileStore'))
 
   React.useEffect(() => {
     if (isModalView) {

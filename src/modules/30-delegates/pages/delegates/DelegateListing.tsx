@@ -53,6 +53,7 @@ import type { FilterDTO, ResponsePageFilterDTO, Failure, DelegateFilterPropertie
 import useCreateDelegateModal from '@delegates/modals/DelegateModal/useCreateDelegateModal'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 import { useToaster, StringUtils } from '@common/exports'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -95,6 +96,8 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   const [troubleshoterOpen, setOpenTroubleshoter] = useState<
     { isConnected: boolean | undefined; delegateType: string | undefined } | undefined
   >(undefined)
+
+  useDocumentTitle(getString('delegates.delegatesTitle'))
 
   const queryParams: GetDelegateGroupsNGV2WithFilterQueryParams = useMemo(
     () =>

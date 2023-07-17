@@ -24,6 +24,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { SettingType } from '@common/constants/Utils'
 import type { SettingCategory, SettingYupValidation } from '../interfaces/SettingType.types'
 import SettingsCategorySection from '../components/SettingsCategorySection'
@@ -39,6 +40,9 @@ const SettingsList = () => {
   const { showError } = useToaster()
   const [savedSettings, updateSavedSettings] = useState<Map<SettingType, SettingDTO>>(new Map())
   const { module } = useModuleInfo()
+
+  useDocumentTitle(getString('common.defaultSettings'))
+
   if (module) {
     const refinedSettingsCategory: SettingCategory[] = []
     const categoriesToBeDisplayedAtAModule = DefaultSettingsFactory.getCategoriesToBeDisplayedInAModule(module)
