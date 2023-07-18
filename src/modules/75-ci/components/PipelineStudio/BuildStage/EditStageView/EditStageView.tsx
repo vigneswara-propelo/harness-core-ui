@@ -50,7 +50,8 @@ import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStud
 
 import {
   renderConnectorAndRepoName,
-  CodebaseRuntimeInputsInterface
+  CodebaseRuntimeInputsInterface,
+  blankspacesRegex
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
 import css from './EditStageView.module.scss'
 
@@ -179,7 +180,9 @@ export const EditStageView: React.FC<EditStageView> = ({
           values.cloneCodebase && {
             connectorRef: Yup.mixed().required(getString('fieldRequired', { field: getString('connector') })),
             ...(connectionType === 'Account' && {
-              repoName: Yup.string().required(getString('fieldRequired', { field: repositoryNameLabel }))
+              repoName: Yup.string()
+                .required(getString('fieldRequired', { field: repositoryNameLabel }))
+                .matches(blankspacesRegex, getString('common.validation.blankRepositoryName'))
             })
           })
       })

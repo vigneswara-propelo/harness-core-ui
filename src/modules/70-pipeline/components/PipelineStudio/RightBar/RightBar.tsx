@@ -61,13 +61,14 @@ import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { PipelineContextType, usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import { RightDrawer } from '../RightDrawer/RightDrawer'
-import { renderConnectorAndRepoName, validateCIForm } from './RightBarUtils'
+import { blankspacesRegex, renderConnectorAndRepoName, validateCIForm } from './RightBarUtils'
 import css from './RightBar.module.scss'
 
 export interface CodebaseRuntimeInputsInterface {
   connectorRef?: boolean
   repoName?: boolean
 }
+
 interface CodebaseValues {
   connectorRef?: ConnectorReferenceFieldProps['selected']
   repoName?: string
@@ -499,7 +500,9 @@ export function RightBar(): JSX.Element {
               connectorRef: Yup.mixed().required(getString('fieldRequired', { field: getString('connector') })),
               ...(connectionType === ConnectionType.Account &&
                 !codebaseRuntimeInputs.repoName && {
-                  repoName: Yup.string().required(getString('common.validation.repositoryName'))
+                  repoName: Yup.string()
+                    .required(getString('common.validation.repositoryName'))
+                    .matches(blankspacesRegex, getString('common.validation.blankRepositoryName'))
                 })
             })}
             validate={values => validateCIForm({ values, getString })}

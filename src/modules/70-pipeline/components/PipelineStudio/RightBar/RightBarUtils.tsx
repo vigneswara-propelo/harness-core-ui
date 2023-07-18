@@ -39,6 +39,8 @@ export interface CodebaseRuntimeInputsInterface {
 
 export const runtimeInputGearWidth = 58
 
+export const blankspacesRegex = /^(?!\s+$).*/
+
 const getConnectorWidth = ({
   connectorWidth,
   connectorRef

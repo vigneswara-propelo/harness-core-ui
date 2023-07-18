@@ -1323,6 +1323,7 @@ export interface StringsMap {
   'common.userGroups': string
   'common.userGroupsWarningMessage': string
   'common.userLabel': string
+  'common.validation.blankRepositoryName': string
   'common.validation.clientIdIsRequired': string
   'common.validation.clientSecretRequired': string
   'common.validation.connectorRef': string
