@@ -137,6 +137,8 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.nexusServerUrl))
     case Connectors.ARTIFACTORY:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.artifactoryServerUrl))
+    case Connectors.Bamboo:
+      return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.bambooUrl))
     case Connectors.AWS:
       return getAWSDisplaySummary(connector)
     case Connectors.GCP:
