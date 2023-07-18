@@ -6,7 +6,7 @@ exports[`<ExecutionMetadata.test /> tests Branch type 1`] = `
     class="main"
   >
     <div
-      class="metaContainer"
+      class=""
     />
     <div
       class="trigger"
@@ -28,18 +28,16 @@ exports[`<ExecutionMetadata.test /> tests Branch type 1`] = `
           />
         </svg>
       </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--margin-right-xsmall"
+      >
+        pipeline.triggerBy
+      </p>
       <a
         href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger/detail"
       >
         trigger
       </a>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-      >
-        (
-        execution.triggerType.WEBHOOK
-        )
-      </p>
     </div>
   </div>
 </div>
@@ -51,7 +49,7 @@ exports[`<ExecutionMetadata.test /> tests Pull Request type 1`] = `
     class="main"
   >
     <div
-      class="metaContainer"
+      class=""
     />
     <div
       class="trigger"
@@ -73,18 +71,16 @@ exports[`<ExecutionMetadata.test /> tests Pull Request type 1`] = `
           />
         </svg>
       </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--margin-right-xsmall"
+      >
+        pipeline.triggerBy
+      </p>
       <a
         href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger/detail"
       >
         trigger
       </a>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-      >
-        (
-        execution.triggerType.WEBHOOK
-        )
-      </p>
     </div>
   </div>
 </div>
@@ -96,7 +92,7 @@ exports[`<ExecutionMetadata.test /> tests Tag type 1`] = `
     class="main"
   >
     <div
-      class="metaContainer"
+      class=""
     />
     <div
       class="userLabelContainer"

@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
+
 import { Text, Icon, Tag, Popover } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { HTMLTable, Position } from '@blueprintjs/core'
@@ -16,7 +18,6 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { hasCDStage, hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import factory from '@pipeline/factories/ExecutionFactory'
 import type { ExecutorInfoDTO, PipelineStageInfo } from 'services/pipeline-ng'
-import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { UserLabel } from '@common/components/UserLabel/UserLabel'
 
 import type {
@@ -82,15 +83,18 @@ function ExecutionMetadataTrigger(): React.ReactElement {
           margin={{ right: 'small' }}
         />
         {triggerType && triggerIdentifier ? (
-          <Link to={triggersWizardPageLinkUrl}>{triggerIdentifier}</Link>
+          <>
+            <Text font={{ size: 'small' }} margin={{ right: 'xsmall' }}>
+              {getString('pipeline.triggerBy')}
+            </Text>
+            <Link to={triggersWizardPageLinkUrl}>{triggerIdentifier}</Link>
+          </>
         ) : (
           <Text font={{ size: 'small' }} margin={{ right: 'xsmall' }}>
+            {getString('pipeline.triggerBy')}
             {triggerIdentifier}
           </Text>
         )}
-        <Text font={{ size: 'small' }} color="grey500">
-          ({getString(mapTriggerTypeToStringID(triggerType))})
-        </Text>
       </div>
     )
   } else {
@@ -146,6 +150,9 @@ export default function ExecutionMetadata(): React.ReactElement {
   const ciData = factory.getSummary(StageType.BUILD)
   const cdData = factory.getSummary(StageType.DEPLOY)
 
+  const ciInfo = HAS_CI && ciData
+  const cdInfo = HAS_CD && cdData
+
   const renderSingleStageExecutionInfo = (): React.ReactElement | null => {
     const stagesExecutedCount = defaultTo(pipelineExecutionSummary?.stagesExecuted?.length, 0)
     const shouldShowPopover = stagesExecutedCount > LIMIT
@@ -198,9 +205,16 @@ export default function ExecutionMetadata(): React.ReactElement {
     ) : null
     return visible
   }
+  const cicdInfo = ciInfo || cdInfo
+  const additionalAttrs = cicdInfo
+    ? {
+        'data-has-sibling': true
+      }
+    : {}
+
   return (
     <div className={css.main}>
-      <div className={css.metaContainer}>
+      <div {...additionalAttrs} className={cx({ [css.metaContainer]: cicdInfo }, { [css.lhs]: cicdInfo })}>
         {renderSingleStageExecutionInfo()}
         {HAS_CI && ciData
           ? React.createElement(ciData.component, {
@@ -219,6 +233,7 @@ export default function ExecutionMetadata(): React.ReactElement {
             })
           : null}
       </div>
+
       <ExecutionMetadataTrigger />
     </div>
   )

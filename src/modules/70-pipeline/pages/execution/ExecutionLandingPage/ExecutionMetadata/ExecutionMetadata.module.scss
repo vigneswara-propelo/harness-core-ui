@@ -6,16 +6,14 @@
  */
 
 .main {
-  overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-top: var(--spacing-4);
-  width: 100%;
+  width: 450px;
 
   .trigger {
     display: flex;
-    align-items: center;
+    width: 100%;
+    margin-left: 5px;
   }
 }
 
@@ -29,16 +27,36 @@
     display: inline-flex !important;
   }
 }
+
+.separator {
+  border-left: 1px solid;
+}
 .userLabelContainer {
   display: flex;
-  flex-shrink: 0;
-  align-items: center;
+  width: 100%;
+  margin-left: 5px;
 }
 
 .meta-container {
   display: flex;
   gap: var(--spacing-small);
   width: 100%;
+}
+
+.lhs {
+  position: relative;
+
+  &[data-has-sibling='true']::after {
+    content: '';
+    position: absolute;
+    height: calc(var(--execution-stage-details-height) / 3);
+    width: 1px;
+    background: var(--grey-400);
+    opacity: 0.2;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+  }
 }
 
 .popover {

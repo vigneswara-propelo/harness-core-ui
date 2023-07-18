@@ -8,11 +8,13 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly cdExecutionContainer: string
+  readonly lhs: string
   readonly main: string
   readonly metaContainer: string
   readonly overflowScroll: string
   readonly parentPipelineDetails: string
   readonly popover: string
+  readonly separator: string
   readonly singleExecutionTag: string
   readonly trigger: string
   readonly userLabelContainer: string

@@ -359,7 +359,7 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
           class="main"
         >
           <div
-            class="metaContainer"
+            class=""
           />
           <div
             class="userLabelContainer"
@@ -986,7 +986,7 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
           class="main"
         >
           <div
-            class="metaContainer"
+            class=""
           />
           <div
             class="userLabelContainer"
