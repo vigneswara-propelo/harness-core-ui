@@ -103,14 +103,14 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
         getServiceNowTicketTypesV2Query.refetch({
           queryParams: {
             ...commonParams,
-            connectorRef: connectorRefFixedValue.toString()
+            connectorRef: connectorRefFixedValue?.toString()
           }
         })
       } else {
         getServiceNowTicketTypesQuery.refetch({
           queryParams: {
             ...commonParams,
-            connectorRef: connectorRefFixedValue.toString()
+            connectorRef: connectorRefFixedValue?.toString()
           }
         })
       }
@@ -122,7 +122,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
       getServiceNowIssueCreateMetadataQuery.refetch({
         queryParams: {
           ...commonParams,
-          connectorRef: connectorRefFixedValue.toString(),
+          connectorRef: connectorRefFixedValue?.toString(),
           ticketType: runTimeTicketType?.toString() || fixedTicketType?.toString()
         }
       })
