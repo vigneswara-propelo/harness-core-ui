@@ -73,6 +73,7 @@ interface LeftViewProps {
 interface KVPair {
   [key: string]: any
 }
+
 const stripePromise = window.stripeApiKey ? loadStripe(window.stripeApiKey) : Promise.resolve(null)
 
 const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, countries, states }) => {

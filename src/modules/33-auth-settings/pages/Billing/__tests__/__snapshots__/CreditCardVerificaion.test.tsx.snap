@@ -75,29 +75,22 @@ exports[`billing page payment method render payment method card with undefined p
           </div>
         </div>
         <div
-          class="Layout--vertical StyledProps--main"
+          class="Layout--horizontal StyledProps--main"
         >
+          <label
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+          >
+            <input
+              data-testid="row-checkbox"
+              type="checkbox"
+            />
+            <span
+              class="bp3-control-indicator"
+            />
+          </label>
           <p
             class="StyledProps--font StyledProps--main warning StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--padding-small"
-            style="display: flex; align-items: center;"
           >
-            <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
-              data-icon="info"
-            >
-              <svg
-                height="16"
-                viewBox="0 0 12 12"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
             authSettings.billingInfo.saveCardWarning
           </p>
         </div>
@@ -107,7 +100,9 @@ exports[`billing page payment method render payment method card with undefined p
       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
         type="button"
       >
         <span
@@ -206,29 +201,22 @@ exports[`billing page payment method render payment method card: credit card ver
           </div>
         </div>
         <div
-          class="Layout--vertical StyledProps--main"
+          class="Layout--horizontal StyledProps--main"
         >
+          <label
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+          >
+            <input
+              data-testid="row-checkbox"
+              type="checkbox"
+            />
+            <span
+              class="bp3-control-indicator"
+            />
+          </label>
           <p
             class="StyledProps--font StyledProps--main warning StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--padding-small"
-            style="display: flex; align-items: center;"
           >
-            <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
-              data-icon="info"
-            >
-              <svg
-                height="16"
-                viewBox="0 0 12 12"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
             authSettings.billingInfo.saveCardWarning
           </p>
         </div>
@@ -238,7 +226,9 @@ exports[`billing page payment method render payment method card: credit card ver
       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
         type="button"
       >
         <span

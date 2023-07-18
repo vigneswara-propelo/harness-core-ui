@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout } from '@harness/uicore'
 import type { SubscribeViews, SubscriptionProps } from '@common/constants/SubscriptionTypes'
 import { CreditCard, Category } from '@common/constants/TrackingConstants'
@@ -29,7 +29,7 @@ export default function CreditCardVerification({
   clientSecret
 }: CreditCardVerificationProp): JSX.Element {
   const { trackEvent } = useTelemetry()
-
+  const [savechecked, setSaveChecked] = useState<boolean>(false)
   useEffect(() => {
     trackEvent(CreditCard.CalculatorStripeElementLoaded, {
       category: Category.CREDIT_CARD,
@@ -46,6 +46,9 @@ export default function CreditCardVerification({
   return (
     <Layout.Vertical>
       <PaymentMethod
+        setSaveChecked={(value: boolean) => {
+          setSaveChecked(value)
+        }}
         nameOnCard={subscriptionProps.paymentMethodInfo.nameOnCard}
         setNameOnCard={(value: string) => {
           setSubscriptionProps({
@@ -65,7 +68,7 @@ export default function CreditCardVerification({
       />
       <FooterCreditCard
         onClose={onClose}
-        isValid={subscriptionProps.isValid}
+        isValid={subscriptionProps.isValid && savechecked}
         nameOnCard={subscriptionProps.paymentMethodInfo.nameOnCard}
         subscriptionId={subscriptionProps.subscriptionId}
         clientSecret={clientSecret}

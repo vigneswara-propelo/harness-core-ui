@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Layout, Text, TextInput, Card } from '@harness/uicore'
+import React, { useState } from 'react'
+import { Layout, Text, TextInput, Card, Checkbox } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { CardElement } from '@stripe/react-stripe-js'
 import { useStrings } from 'framework/strings'
+import { killEvent } from '@common/utils/eventUtils'
 import PowerByStripe from './img/powered_by_stripe.svg'
 import css from '../BillingInfo/BillingInfo.module.scss'
 
@@ -17,10 +18,12 @@ interface PaymentMethodProps {
   nameOnCard: string
   setNameOnCard: (value: string) => void
   setValidCard: (value: boolean) => void
+  setSaveChecked: (value: boolean) => void
 }
 
-const PaymentMethod: React.FC<PaymentMethodProps> = ({ nameOnCard, setNameOnCard, setValidCard }) => {
+const PaymentMethod: React.FC<PaymentMethodProps> = ({ nameOnCard, setNameOnCard, setValidCard, setSaveChecked }) => {
   const { getString } = useStrings()
+  const [saveCardChecked, setsaveCardChecked] = useState<boolean>()
   const setValid = (data: { complete: boolean }): void => {
     setValidCard(data.complete)
   }
@@ -57,17 +60,25 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ nameOnCard, setNameOnCard
             </div>
           </Layout.Vertical>
         </Layout.Horizontal>
-        <Layout.Vertical>
+        <Layout.Horizontal>
+          <Checkbox
+            checked={saveCardChecked}
+            data-testid="row-checkbox"
+            onClick={e => {
+              killEvent(e)
+              setsaveCardChecked(!saveCardChecked)
+              setSaveChecked(!saveCardChecked)
+            }}
+          ></Checkbox>
           <Text
             font={{ size: 'small', weight: 'bold' }}
-            icon="info"
             iconProps={{ color: Color.PRIMARY_7 }}
             padding="small"
             className={css.warning}
           >
             {getString('authSettings.billingInfo.saveCardWarning')}
           </Text>
-        </Layout.Vertical>
+        </Layout.Horizontal>
       </Layout.Vertical>
     </Card>
   )

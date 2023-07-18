@@ -285,7 +285,7 @@ billingInfo:
   paymentMethod: Payment Method
   paymentMethods: Payment Methods
   billingAdmin: '{{$.common.billing}} Admin'
-  saveCardWarning: By providing your card information, you allow Harness Inc. to charge your card for future payments in accordance with our Terms of Use.
+  saveCardWarning: By checking this box, you allow Harness Inc. to charge your card and save it for the future module license charges in accordance with our Terms of Use.
   emailWarning: This billing email will receive notifications, which can be configured in the Billing page.
   nobills: There are no Team / Enterprise subscriptions in your Account
   firstSubscription: Let’s get started with your first subscription.
@@ -361,6 +361,7 @@ yesIamSure: Yes, I am very sure
 jitProvisioning: JIT Provisioning
 jitValidationKey: JIT Validation Key
 jitValidationValue: JIT Validation Value
+cardIsValidatedAndSaved: Card is validated and saved
 setAsDefaultCard: Set as Default Card
 updateCard: Update Card
 addCard: Add Card

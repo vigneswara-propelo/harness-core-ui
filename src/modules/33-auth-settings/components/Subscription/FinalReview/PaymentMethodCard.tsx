@@ -15,7 +15,7 @@ import { SubscribeViews, PaymentMethodProps } from '@common/constants/Subscripti
 import { useStrings } from 'framework/strings'
 interface PaymentMethodCardProps {
   paymentMethodInfo: PaymentMethodProps
-  setView: (view: SubscribeViews) => void
+  setView?: (view: SubscribeViews) => void
   module: Module
 }
 
@@ -37,7 +37,7 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo
                 category: Category.CREDIT_CARD,
                 module
               })
-              setView(SubscribeViews.PAYMENT_METHOD)
+              setView?.(SubscribeViews.PAYMENT_METHOD)
             }}
           >
             {getString('edit')}

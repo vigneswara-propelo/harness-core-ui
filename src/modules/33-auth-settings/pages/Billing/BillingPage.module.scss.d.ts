@@ -21,6 +21,7 @@ declare const styles: {
   readonly fullWidth: string
   readonly lastCol: string
   readonly leftGrid: string
+  readonly loading: string
   readonly mangeButton: string
   readonly paymentMethodBody: string
   readonly planTitle: string

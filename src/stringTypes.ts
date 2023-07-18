@@ -2173,6 +2173,7 @@ export interface StringsMap {
   'authSettings.billingInfo.priceBreakdown': string
   'authSettings.billingInfo.saveCardWarning': string
   'authSettings.billingInfo.selectPaymentMethod': string
+  'authSettings.cardIsValidatedAndSaved': string
   'authSettings.cdCommunityPlan.communityLinkText': string
   'authSettings.cdCommunityPlan.communityPlanStrings.item1': string
   'authSettings.cdCommunityPlan.communityPlanStrings.item2': string

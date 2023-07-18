@@ -20,7 +20,8 @@ describe('PaymentMethod', () => {
   const props = {
     nameOnCard: 'Jane Doe',
     setNameOnCard: jest.fn(),
-    setValidCard: jest.fn()
+    setValidCard: jest.fn(),
+    setSaveChecked: jest.fn()
   }
   test('render', async () => {
     const { container } = render(
