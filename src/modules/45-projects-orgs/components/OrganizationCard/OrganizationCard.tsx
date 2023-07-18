@@ -100,6 +100,9 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = props => {
         disableDeleteBtn={loading}
         inputLabel={getString('projectsOrgs.toConfirmOrg')}
         inputPlaceholder={getString('projectsOrgs.toDelete', { name: getString('orgLabel') })}
+        confirmBtnLabel={getString('projectsOrgs.confirmDeleteProjectOrg', {
+          type: getString('orgLabel').toLowerCase()
+        })}
       />
     ),
     onCloseDialog: async (isConfirmed: boolean) => {

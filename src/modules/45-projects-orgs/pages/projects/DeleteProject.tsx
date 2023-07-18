@@ -37,6 +37,7 @@ interface DeleteProjectOrgButtonsProps {
   disableDeleteBtn?: boolean
   inputPlaceholder: string
   inputLabel: string
+  confirmBtnLabel: string
 }
 
 export const DeleteProjectOrgButtons: React.FC<DeleteProjectOrgButtonsProps> = ({
@@ -45,7 +46,8 @@ export const DeleteProjectOrgButtons: React.FC<DeleteProjectOrgButtonsProps> = (
   name,
   disableDeleteBtn,
   inputLabel,
-  inputPlaceholder
+  inputPlaceholder,
+  confirmBtnLabel
 }) => {
   const { getString } = useStrings()
   const [inputText, setInputText] = useState<string>('')
@@ -56,7 +58,7 @@ export const DeleteProjectOrgButtons: React.FC<DeleteProjectOrgButtonsProps> = (
       {!doubleCheckDelete ? (
         <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'flex-start' }}>
           <Button
-            text={getString('projectsOrgs.confirmDeleteProject')}
+            text={confirmBtnLabel}
             intent={Intent.DANGER}
             size={ButtonSize.LARGE}
             onClick={() => {
@@ -159,6 +161,9 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
         disableDeleteBtn={loading}
         inputLabel={getString('projectsOrgs.toConfirmProject')}
         inputPlaceholder={getString('projectsOrgs.toDelete', { name: getString('projectLabel') })}
+        confirmBtnLabel={getString('projectsOrgs.confirmDeleteProjectOrg', {
+          type: getString('projectLabel').toLowerCase()
+        })}
       />
     ),
     onCloseDialog: async (isConfirmed: boolean) => {

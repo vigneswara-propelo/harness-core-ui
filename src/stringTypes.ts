@@ -3597,7 +3597,7 @@ export interface StringsMap {
   'projectsOrgs.collaborator': string
   'projectsOrgs.collaboratorsTitle': string
   'projectsOrgs.confirmDelete': string
-  'projectsOrgs.confirmDeleteProject': string
+  'projectsOrgs.confirmDeleteProjectOrg': string
   'projectsOrgs.confirmDeleteTitle': string
   'projectsOrgs.createANewProject': string
   'projectsOrgs.createAProject': string

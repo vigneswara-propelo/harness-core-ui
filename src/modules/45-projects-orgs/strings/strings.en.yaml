@@ -49,7 +49,7 @@ collaboratorsTitle: 'Invite Members'
 saveAndClose: '{{$.common.saveAndClose}}'
 confirmDelete: Deleting the Organization <b>'{{name}}'</b> will also permanently delete all the projects and the resources associated with it. Are you sure you want to delete the Organization?
 deleteProjectText: Deleting the Project <b>'{{name}}'</b> will also permanently delete all the modules data & resources like pipelines, templates, connectors, secrets etc. within this Project. Are you sure you want to proceed with this project's deletion?
-confirmDeleteProject: Yes, I want to delete this project
+confirmDeleteProjectOrg: Yes, I want to delete this {{type}}
 toDelete: '{{name}} to delete'
 toConfirmProject: To confirm, type the project's name
 toConfirmOrg: To confirm, type the organization's name

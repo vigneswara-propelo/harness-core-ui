@@ -111,7 +111,7 @@ describe('Project List', () => {
         const form = findDialogContainer()
         expect(form).toBeTruthy()
 
-        const confirmBtn = queryByText(form as HTMLElement, 'projectsOrgs.confirmDeleteProject')
+        const confirmBtn = queryByText(form as HTMLElement, 'projectsOrgs.confirmDeleteProjectOrg')
         act(() => {
           fireEvent.click(confirmBtn!)
         })
