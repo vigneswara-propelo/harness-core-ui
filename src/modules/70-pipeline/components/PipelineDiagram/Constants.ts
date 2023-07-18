@@ -66,3 +66,5 @@ export const DiagramDrag = {
   AllowDropOnLink: 'allow-drop-on-link',
   AllowDropOnNode: 'allow-drop-on-node'
 } as const
+
+export const IS_NODE_TOGGLE_DISABLED = false

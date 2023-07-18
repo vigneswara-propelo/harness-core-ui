@@ -12,7 +12,12 @@ import { Icon, Text, Button, ButtonVariation, IconName, Container } from '@harne
 import { Color } from '@harness/design-system'
 import { Switch } from '@blueprintjs/core'
 import produce from 'immer'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
+import {
+  DiagramDrag,
+  DiagramType,
+  Event,
+  IS_NODE_TOGGLE_DISABLED
+} from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
@@ -91,7 +96,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   }, 300)
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
   const isTemplateNode = props?.data?.isTemplateNode
-  const isToggleAllowed = props?.data?.isInComplete || stageStatus || isTemplateNode
+  const isToggleAllowed = props?.data?.isInComplete || stageStatus || isTemplateNode || !IS_NODE_TOGGLE_DISABLED
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
@@ -167,7 +172,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             [defaultCss.runningNode]: stageStatus === ExecutionStatusEnum.Running,
             [defaultCss.skipped]: stageStatus === ExecutionStatusEnum.Skipped,
             [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted,
-            [defaultCss.disabled]: whenCondition
+            [defaultCss.disabled]: whenCondition && IS_NODE_TOGGLE_DISABLED
           })}
           style={{
             width: 90,

@@ -5,7 +5,7 @@ import {
   stepLibrary
 } from '../../support/70-pipeline/constants'
 
-describe('Enable/disable stage/step execution', () => {
+describe.skip('Enable/disable stage/step execution', () => {
   const visitExecutionStageWithAssertion = (): void => {
     cy.visit(pipelineStudioRoute, {
       timeout: 30000

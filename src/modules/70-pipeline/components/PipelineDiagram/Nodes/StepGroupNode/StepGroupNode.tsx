@@ -37,7 +37,7 @@ import SVGMarker from '../SVGMarker'
 import { getBaseFqnWithoutEntityIdentifier, getPositionOfAddIcon } from '../utils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
-import { DiagramDrag, DiagramType, Event } from '../../Constants'
+import { DiagramDrag, DiagramType, Event, IS_NODE_TOGGLE_DISABLED } from '../../Constants'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -175,6 +175,8 @@ export function StepGroupNode(props: any): JSX.Element {
     }
   }
 
+  const isToggleAllowed = stepStatus || !IS_NODE_TOGGLE_DISABLED
+
   return (
     <>
       {isNodeCollapsed && DefaultNode ? (
@@ -267,7 +269,7 @@ export function StepGroupNode(props: any): JSX.Element {
               parentMatrix: isParentMatrix,
               [css.templateStepGroup]: !!props?.data?.isTemplateNode,
               [css.rollbackGroup]: StageType.PIPELINE_ROLLBACK === props?.type,
-              [defaultCss.disabled]: whenCondition
+              [defaultCss.disabled]: whenCondition && IS_NODE_TOGGLE_DISABLED
             })}
           >
             <div
@@ -318,7 +320,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 </Text>
               </div>
             )}
-            {!stepStatus && (
+            {!isToggleAllowed && (
               <div className={defaultCss.switch} onClick={onToggleClick}>
                 <Switch aria-label="Global Freeze Toggle" checked={!whenCondition} />
               </div>

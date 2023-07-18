@@ -12,7 +12,12 @@ import { HarnessIcons, Icon, Text, Button, ButtonVariation, IconName, Utils } fr
 import { Color } from '@harness/design-system'
 import { Switch } from '@blueprintjs/core'
 import produce from 'immer'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
+import {
+  DiagramDrag,
+  DiagramType,
+  Event,
+  IS_NODE_TOGGLE_DISABLED
+} from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import stepsfactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
@@ -116,7 +121,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   }, 300)
   // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
   const isTemplateNode = props?.data?.isTemplateNode || props?.data?.step?.template || props?.data?.stepGroup?.template
-  const isToggleAllowed = props?.data?.isInComplete || stepStatus || isTemplateNode
+  const isToggleAllowed = props?.data?.isInComplete || stepStatus || isTemplateNode || !IS_NODE_TOGGLE_DISABLED
 
   return (
     <div
@@ -180,7 +185,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           [defaultCss.runningNode]: stepStatus === ExecutionStatusEnum.Running,
           [defaultCss.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
           [defaultCss.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted,
-          [defaultCss.disabled]: whenCondition
+          [defaultCss.disabled]: whenCondition && IS_NODE_TOGGLE_DISABLED
         })}
         style={{
           width: 64,
