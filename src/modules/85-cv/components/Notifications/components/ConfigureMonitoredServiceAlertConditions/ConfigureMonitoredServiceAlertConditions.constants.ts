@@ -11,7 +11,8 @@ export enum Condition {
   CHANGE_IMPACT = 'ChangeImpact',
   HEALTH_SCORE = 'HealthScore',
   CHANGE_OBSERVED = 'ChangeObserved',
-  CODE_ERRORS = 'CodeErrors'
+  CODE_ERRORS = 'CodeErrors',
+  DEPLOYMENT_IMPACT_REPORT = 'DeploymentImpactReport'
 }
 
 export enum ChangeType {
@@ -41,6 +42,7 @@ export const conditionOptions: SelectOption[] = [
   { label: 'Change Impact', value: Condition.CHANGE_IMPACT },
   { label: 'Health Score', value: Condition.HEALTH_SCORE },
   { label: 'Change Observed', value: Condition.CHANGE_OBSERVED },
+  { label: 'Deployment Impact Report', value: Condition.DEPLOYMENT_IMPACT_REPORT },
   { label: 'Code Errors', value: Condition.CODE_ERRORS }
 ]
 
