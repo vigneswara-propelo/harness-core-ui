@@ -36,8 +36,6 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './JiraConnector.module.scss'
 
@@ -79,7 +77,6 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
   const [loadConnector] = React.useState(false)
 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
-  const isJiraPatAuthEnabled = useFeatureFlag(FeatureFlag.CDS_JIRA_PAT_AUTH)
 
   const { getString } = useStrings()
   const authOptions: SelectOption[] = React.useMemo(
@@ -187,11 +184,7 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
                   </Text>
                   <FormInput.Select
                     name="authType"
-                    items={
-                      isJiraPatAuthEnabled
-                        ? authOptions
-                        : authOptions.filter(authOption => authOption.value !== AuthTypes.PERSONAL_ACCESS_TOKEN)
-                    }
+                    items={authOptions}
                     disabled={false}
                     className={commonStyles.authTypeSelectLarge}
                   />
@@ -206,7 +199,7 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
                     <SecretInput name={'passwordRef'} label={getString('connectors.apiKey')} scope={scope} />
                   </>
                 ) : null}
-                {formik.values.authType === AuthTypes.PERSONAL_ACCESS_TOKEN && isJiraPatAuthEnabled ? (
+                {formik.values.authType === AuthTypes.PERSONAL_ACCESS_TOKEN ? (
                   <SecretInput name={'patRef'} label={getString('personalAccessToken')} isMultiTypeSelect />
                 ) : null}
               </Layout.Vertical>
