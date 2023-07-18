@@ -20,6 +20,7 @@ import {
   mockSecret,
   usernameTokenWithAPIAccessGithubApp,
   usernameTokenWithAPIAccessToken,
+  githubAppConnector,
   backButtonMock,
   usernameTokenWithAPIAccessGithubAppManager,
   oAuthConnector
@@ -429,5 +430,54 @@ describe('Create Github connector Wizard', () => {
     ])
 
     expect(queryByAttribute('placeholder', container, 'common.git.gitHubRepoUrlPlaceholderSSH')).toBeInTheDocument()
+  })
+
+  test('should render form for edit http and authtype github app', async () => {
+    const { container, getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/resources/connectors"
+        pathParams={{ accountId: 'dummy' }}
+        defaultFeatureFlagValues={{ CDS_GITHUB_APP_AUTHENTICATION: true }}
+      >
+        <CreateGithubConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={githubAppConnector}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // step 3
+    expect(getByText('common.git.installationId')).toBeInTheDocument()
+    expect(getByText('common.git.applicationId')).toBeInTheDocument()
+    expect(getByText('common.git.privateKey')).toBeInTheDocument()
+
+    // connectivity Mode
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // test Connection
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: githubAppConnector
+      },
+      { queryParams: {} } // gitSync disabled for account level
+    )
   })
 })

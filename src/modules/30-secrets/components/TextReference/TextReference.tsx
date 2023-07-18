@@ -57,16 +57,16 @@ const TextReference: React.FC<FormikTextReference> = props => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { showError } = useToaster()
-  const { formik, name, allowSelection, privateSecret } = props
+  const { formik, name, allowSelection, privateSecret, type } = props
   const hasError = errorCheck(props.name, formik)
 
   useEffect(() => {
-    if (props.type) {
-      formik.setFieldValue(`${name}fieldType`, props.type)
+    if (type) {
+      formik.setFieldValue(`${name}fieldType`, type)
     } else {
       formik.setFieldValue(`${name}fieldType`, ValueType.TEXT)
     }
-  }, [props.type])
+  }, [name, type])
 
   useEffect(() => {
     if (formik.values[`${name}secretField`]) {
@@ -104,10 +104,10 @@ const TextReference: React.FC<FormikTextReference> = props => {
     return val
   }
   useEffect(() => {
-    const type = get(formik.values, `${props.name}.type`)
-    if (type === ValueType.TEXT) {
+    const valueType = get(formik.values, `${props.name}.type`)
+    if (valueType === ValueType.TEXT) {
       formik.setFieldValue(`${name}textField`, get(formik.values, `${props.name}.value`))
-    } else if (type === ValueType.ENCRYPTED) {
+    } else if (valueType === ValueType.ENCRYPTED) {
       getSecretInfo(get(formik.values, `${props.name}.value`)).then(data => {
         formik.setFieldValue(`${name}secretField`, data)
       })

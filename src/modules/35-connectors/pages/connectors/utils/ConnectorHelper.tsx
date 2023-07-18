@@ -31,7 +31,8 @@ export enum GitAuthTypes {
   USER_PASSWORD = 'UsernamePassword',
   USER_TOKEN = 'UsernameToken',
   KERBEROS = 'Kerberos',
-  OAUTH = 'OAuth'
+  OAUTH = 'OAuth',
+  GITHUB_APP = 'GithubApp'
 }
 
 export const GitAPIAuthTypes = {

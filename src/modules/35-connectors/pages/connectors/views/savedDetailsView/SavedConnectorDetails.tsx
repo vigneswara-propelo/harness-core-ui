@@ -275,11 +275,19 @@ const getGithubSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
     },
     {
       label: 'common.git.installationId',
-      value: connector?.spec?.apiAccess?.spec?.installationId || connector?.spec?.apiAccess?.spec?.installationIdRef
+      value:
+        connector?.spec?.authentication?.spec?.spec?.installationId ||
+        connector?.spec?.authentication?.spec?.spec?.installationIdRef ||
+        connector?.spec?.apiAccess?.spec?.installationId ||
+        connector?.spec?.apiAccess?.spec?.installationIdRef
     },
     {
       label: 'common.git.applicationId',
-      value: connector?.spec?.apiAccess?.spec?.applicationId || connector?.spec?.apiAccess?.spec?.applicationIdRef
+      value:
+        connector?.spec?.authentication?.spec?.spec?.applicationId ||
+        connector?.spec?.authentication?.spec?.spec?.applicationIdRef ||
+        connector?.spec?.apiAccess?.spec?.applicationId ||
+        connector?.spec?.apiAccess?.spec?.applicationIdRef
     },
     {
       label: 'common.git.privateKey',

@@ -115,6 +115,37 @@ export const usernameTokenWithAPIAccessToken: ConnectorInfoDTO = {
   }
 }
 
+export const githubAppConnector: ConnectorInfoDTO = {
+  name: 'GitHub App Connector',
+  identifier: 'GitHub_App_Connector',
+  description: 'Connector using GitHub App authentication',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'Github',
+  spec: {
+    executeOnDelegate: false,
+    url: 'https://github.com/dev',
+    authentication: {
+      type: 'Http',
+      spec: {
+        type: 'GithubApp',
+        spec: {
+          installationId: '1234',
+          applicationId: '1234',
+          privateKeyRef: tokenRef
+        }
+      }
+    },
+    apiAccess: {
+      type: 'GithubApp',
+      spec: { installationId: '1234', applicationId: '1234', privateKeyRef: tokenRef }
+    },
+    type: 'Account',
+    validationRepo: 'test'
+  }
+}
+
 export const mockSecret = {
   status: 'SUCCESS',
   data: {

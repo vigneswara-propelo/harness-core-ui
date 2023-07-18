@@ -48,6 +48,7 @@ import { ConnectViaOAuth } from '@common/components/ConnectViaOAuth/ConnectViaOA
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { handleOAuthEventProcessing, OAuthEventProcessingResponse } from '@common/components/ConnectViaOAuth/OAuthUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGithubAuthentication.module.scss'
@@ -106,6 +107,7 @@ const RenderGithubAuthForm: React.FC<{
 }> = props => {
   const { formikProps, gitAuthType, scope } = props
   const { getString } = useStrings()
+
   switch (gitAuthType) {
     case GitAuthTypes.USER_TOKEN:
       return (
@@ -116,6 +118,22 @@ const RenderGithubAuthForm: React.FC<{
             type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
           />
           <SecretInput name="accessToken" label={getString('personalAccessToken')} scope={scope} />
+        </>
+      )
+    case GitAuthTypes.GITHUB_APP:
+      return (
+        <>
+          <TextReference
+            name="installationId"
+            stringId="common.git.installationId"
+            type={formikProps?.values?.installationId ? formikProps.values.installationId?.type : ValueType.TEXT}
+          />
+          <TextReference
+            name="applicationId"
+            stringId="common.git.applicationId"
+            type={formikProps?.values?.applicationId ? formikProps.values.applicationId?.type : ValueType.TEXT}
+          />
+          <MultiTypeSecretInput name="privateKey" label={getString('common.git.privateKey')} />
         </>
       )
     default:
@@ -205,6 +223,8 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
     const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
 
+    const { CDS_GITHUB_APP_AUTHENTICATION } = useFeatureFlags()
+
     const scope: ScopedObjectDTO | undefined = props.isEditMode
       ? {
           orgIdentifier: prevStepData?.orgIdentifier,
@@ -221,8 +241,17 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
         value: GitAuthTypes.USER_TOKEN
       }
     ]
-    enabledHostedBuildsForFreeUsers &&
+
+    if (enabledHostedBuildsForFreeUsers) {
       authOptions.push({ label: getString('common.oAuthLabel'), value: GitAuthTypes.OAUTH })
+    }
+
+    if (CDS_GITHUB_APP_AUTHENTICATION) {
+      authOptions.push({
+        label: getString('common.git.gitHubApp'),
+        value: GitAuthTypes.GITHUB_APP
+      })
+    }
 
     //#region  OAuth setup and processing
 
@@ -310,10 +339,16 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepGithubAuthenticationProps)
     }
 
-    const getValidationSchema = useCallback((): Yup.ObjectSchema<Record<string, any> | undefined> => {
-      return gitAuthType === GitAuthTypes.OAUTH
-        ? Yup.object().shape({})
-        : Yup.object().shape({
+    const getValidationSchema = useCallback((): Yup.ObjectSchema<
+      Yup.Shape<object | undefined, Record<string, any>>
+    > => {
+      let validationSchema: Yup.ObjectSchema<Yup.Shape<object | undefined, Record<string, any>>>
+      switch (gitAuthType) {
+        case GitAuthTypes.OAUTH:
+          validationSchema = Yup.object().shape({})
+          break
+        case GitAuthTypes.USER_TOKEN:
+          validationSchema = Yup.object().shape({
             username: Yup.string()
               .nullable()
               .when('connectionType', {
@@ -332,7 +367,6 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
             accessToken: Yup.object().when(['connectionType', 'authType'], {
               is: (connectionType, authType) =>
                 connectionType === GitConnectionType.HTTP && authType === GitAuthTypes.USER_TOKEN,
-
               then: Yup.object().required(getString('validation.accessToken')),
               otherwise: Yup.object().nullable()
             }),
@@ -359,6 +393,19 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
               then: Yup.string().trim().required(getString('validation.applicationId'))
             })
           })
+          break
+        case GitAuthTypes.GITHUB_APP:
+          validationSchema = Yup.object().shape({
+            installationId: Yup.string().trim().required(getString('validation.installationId')),
+            applicationId: Yup.string().trim().required(getString('validation.applicationId')),
+            privateKey: Yup.string().trim().required(getString('validation.privateKey'))
+          })
+          break
+        default:
+          validationSchema = Yup.object().shape({})
+          break
+      }
+      return validationSchema
     }, [gitAuthType])
 
     return loadingConnectorSecrets ||
@@ -388,7 +435,14 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
               props.getCurrentStepData,
               Object.assign(formikProps.values, {
                 authType: gitAuthType,
-                ...(gitAuthType === GitAuthTypes.OAUTH && { apiAuthType: GitAPIAuthTypes.OAUTH, enableAPIAccess: true })
+                ...(gitAuthType === GitAuthTypes.OAUTH && {
+                  apiAuthType: GitAPIAuthTypes.OAUTH,
+                  enableAPIAccess: true
+                }),
+                ...(gitAuthType === GitAuthTypes.GITHUB_APP && {
+                  apiAuthType: GitAPIAuthTypes.GITHUB_APP,
+                  enableAPIAccess: true
+                })
               }) as unknown as ConnectorInfoDTO
             )
             formikRef.current = formikProps
@@ -442,7 +496,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                     </Container>
                   )}
 
-                  {gitAuthType === GitAuthTypes.OAUTH && enabledHostedBuildsForFreeUsers ? (
+                  {gitAuthType === GitAuthTypes.OAUTH && enabledHostedBuildsForFreeUsers && (
                     <ConnectViaOAuth
                       gitProviderType={Connectors.GITHUB}
                       accountId={accountId}
@@ -456,7 +510,9 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                       orgIdentifier={props.orgIdentifier}
                       projectIdentifier={props.projectIdentifier}
                     />
-                  ) : (
+                  )}
+
+                  {gitAuthType === GitAuthTypes.USER_TOKEN && (
                     <>
                       <FormInput.CheckBox
                         name="enableAPIAccess"
@@ -466,13 +522,13 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                       <Text font="small" className={commonCss.bottomMargin4}>
                         {getString('common.git.APIAccessDescription')}
                       </Text>
-                      {formikProps.values.enableAPIAccess ? (
+                      {formikProps.values.enableAPIAccess && (
                         <RenderAPIAccessFormWrapper
                           {...formikProps}
                           orgIdentifier={prevStepData?.orgIdentifier}
                           projectIdentifier={prevStepData?.projectIdentifier}
                         />
-                      ) : null}
+                      )}
                     </>
                   )}
                 </Container>

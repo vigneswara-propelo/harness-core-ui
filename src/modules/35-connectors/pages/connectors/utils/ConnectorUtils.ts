@@ -308,6 +308,16 @@ const getGitAuthSpec = (formData: FormData) => {
           refreshTokenRef: oAuthRefreshTokenRef
         })
       }
+    case GitAuthTypes.GITHUB_APP:
+      return {
+        installationId: formData.installationId?.type === ValueType.TEXT ? formData.installationId?.value : undefined,
+        installationIdRef:
+          formData.installationId?.type === ValueType.ENCRYPTED ? formData.installationId?.value : undefined,
+        applicationId: formData.applicationId?.type === ValueType.TEXT ? formData.applicationId?.value : undefined,
+        applicationIdRef:
+          formData.applicationId?.type === ValueType.ENCRYPTED ? formData.applicationId?.value : undefined,
+        privateKeyRef: formData.privateKey
+      }
     default:
       return {}
   }
@@ -630,10 +640,12 @@ export const setupGithubFormData = async (connectorInfo: ConnectorInfoDTO, accou
   }
 
   const authData = connectorInfo?.spec?.authentication
-  const installationId = connectorInfo?.spec?.apiAccess?.spec?.installationId
-  const installationIdRef = connectorInfo?.spec?.apiAccess?.spec?.installationIdRef
-  const applicationId = connectorInfo?.spec?.apiAccess?.spec?.applicationId
-  const applicationIdRef = connectorInfo?.spec?.apiAccess?.spec?.applicationIdRef
+  const installationId = authData?.spec?.spec?.installationId || connectorInfo?.spec?.apiAccess?.spec?.installationId
+  const installationIdRef =
+    authData?.spec?.spec?.installationIdRef || connectorInfo?.spec?.apiAccess?.spec?.installationIdRef
+  const applicationId = authData?.spec?.spec?.applicationId || connectorInfo?.spec?.apiAccess?.spec?.applicationId
+  const applicationIdRef =
+    authData?.spec?.spec?.applicationIdRef || connectorInfo?.spec?.apiAccess?.spec?.applicationIdRef
   return {
     sshKey: await setSecretField(authData?.spec?.sshKeyRef, scopeQueryParams),
     authType: authData?.spec?.type,
@@ -669,7 +681,7 @@ export const setupGithubFormData = async (connectorInfo: ConnectorInfoDTO, accou
           }
         : undefined,
 
-    privateKey: connectorInfo?.spec?.apiAccess?.spec?.privateKeyRef,
+    privateKey: authData?.spec?.spec?.privateKeyRef || connectorInfo?.spec?.apiAccess?.spec?.privateKeyRef,
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 }
