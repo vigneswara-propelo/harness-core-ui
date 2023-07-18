@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, ButtonVariation, Button, Text } from '@harness/uicore'
@@ -18,7 +25,7 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
   const { stepsProgress } = useOnboardingStore()
 
   const pipelineStepsdata = React.useMemo((): PipelineSetupState => {
-    return stepsProgress[CDOnboardingSteps.DEPLOYMENT_STEPS].stepData
+    return stepsProgress[CDOnboardingSteps.DEPLOYMENT_STEPS]?.stepData
   }, [stepsProgress])
   const { data, refetch, error } = useGetPipeline({
     pipelineIdentifier: PIPELINE_TO_STRATEGY_MAP[pipelineStepsdata?.strategy?.id as string] || '',
@@ -50,7 +57,7 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
             {getString('verify')}
           </Button>
           <Layout.Horizontal padding={{ left: 'large' }}>
-            <String stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.verifyPipeline"></String>
+            <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.verifyPipeline"></String>
           </Layout.Horizontal>
         </Layout.Horizontal>
       )}
@@ -69,7 +76,7 @@ function PipelineSuccess(): JSX.Element {
         iconProps={{ color: Color.GREEN_900, padding: { right: 'large' } }}
         color={Color.GREEN_900}
       >
-        {getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.pipelinesuccess')}
+        {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.pipelinesuccess')}
       </Text>
     </Layout.Vertical>
   )
@@ -85,10 +92,10 @@ function TroubleShootPipeline({ refetchPipeline }: { refetchPipeline: () => Prom
         iconProps={{ color: Color.ERROR, padding: { right: 'large' } }}
         color={Color.ERROR}
       >
-        {getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.pipelinenotfound')}
+        {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.pipelinenotfound')}
       </Text>
       <Text padding={{ bottom: 'xlarge' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.recheckpipeline')}
+        {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.recheckpipeline')}
       </Text>
       <Layout.Horizontal spacing="large">
         <Button variation={ButtonVariation.SECONDARY} onClick={refetchPipeline}>{`${getString('retry')} ${getString(

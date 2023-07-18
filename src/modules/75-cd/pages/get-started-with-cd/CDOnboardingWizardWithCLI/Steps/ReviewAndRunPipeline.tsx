@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@harness/uicore'
@@ -80,14 +87,14 @@ export default function ReviewAndRunPipeline({ saveProgress }: ReviewAndRunPipel
             iconProps={{ color: Color.GREEN_900, padding: { right: 'large' } }}
             color={Color.GREEN_900}
           >
-            {getString('cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.delegateSuccess')}
+            {getString('cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.delegateSuccess')}
           </Text>
         </Layout.Vertical>
       )
     } else if (delegateStepData?.delegateName && delegateStepData?.delegateType && !isDrawerOpen) {
       return (
         <VerifyDelegateConnection
-          verificationInProgressLabel="cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.delegateLoading"
+          verificationInProgressLabel="cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.delegateLoading"
           delegateType={delegateStepData.delegateType}
           name={delegateStepData.delegateName as string}
           onSuccessHandler={onDelegateSuccess}
@@ -113,14 +120,14 @@ export default function ReviewAndRunPipeline({ saveProgress }: ReviewAndRunPipel
             variation={ButtonVariation.SECONDARY}
             size={ButtonSize.SMALL}
           >
-            {getString('cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.checkDelegate')}
+            {getString('cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.checkDelegate')}
           </Button>
-          <Text>{getString('cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.continueWithoutDelegate')}</Text>
+          <Text>{getString('cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.continueWithoutDelegate')}</Text>
         </Layout.Vertical>
       )}
 
       <Button
-        width={isDelegatePending ? 350 : 300}
+        width={isDelegatePending ? 380 : 300}
         variation={isDelegatePending ? ButtonVariation.SECONDARY : ButtonVariation.PRIMARY}
         size={ButtonSize.MEDIUM}
         onClick={gotoPipelineStudio}
@@ -128,8 +135,8 @@ export default function ReviewAndRunPipeline({ saveProgress }: ReviewAndRunPipel
       >
         {getString(
           isDelegatePending
-            ? 'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.runWithoutDelegate'
-            : 'cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.runPipeline'
+            ? 'cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.runWithoutDelegate'
+            : 'cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.runPipeline'
         )}
       </Button>
       <Layout.Vertical margin={{ bottom: 'large' }}>

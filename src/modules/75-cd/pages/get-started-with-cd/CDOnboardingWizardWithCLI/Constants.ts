@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import BlueGreenVideo from '@pipeline/components/PipelineStudio/ExecutionStrategy/resources/Blue-Green-deployment.mp4'
 import CanaryVideo from '@pipeline/components/PipelineStudio/ExecutionStrategy/resources/Canary-deployment.mp4'
 import RollingUpdateVideo from '@pipeline/components/PipelineStudio/ExecutionStrategy/resources/Rolling-Update-deployment.mp4'
@@ -39,46 +46,52 @@ export const DEPLOYMENT_STRATEGY_TYPES: {
     id: 'Canary',
     label: 'Canary',
     icon: 'canary-icon',
-    subtitle: 'Gradually release updates to minimize risks',
+    subtitle:
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.deploymentStrategies.canary.subtitle',
     steps: [
-      { title: 'Canary deployment', description: 'Add canary pods until they guarantee you their safety' },
-      { title: 'Canary delete', description: 'Update 50% new instances in phase 2 and verify it.' },
-      { title: 'Rolling Update', description: 'Update all new instances in phase 3 and verify it.' }
+      {
+        title: 'Canary deployment',
+        description: 'pipeline.executionStrategy.strategies.canary.steps.step1.description'
+      },
+      { title: 'Canary delete', description: 'pipeline.executionStrategy.strategies.canary.steps.step2.description' },
+      { title: 'Rolling Update', description: 'pipeline.executionStrategy.strategies.canary.steps.step3.description' }
     ],
     pipelineCommand:
-      'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createpipeline.createcanarycmd'
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createpipeline.createcanarycmd'
   },
   BlueGreen: {
     id: 'BlueGreen',
     label: 'Blue Green',
     icon: 'blue-green',
-    subtitle: 'Seamlessly switch between identical environments',
+    subtitle:
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.deploymentStrategies.blueGreen.subtitle',
     steps: [
-      { title: 'Step 1', description: 'Maintain two identical fleets of servers.' },
-      { title: 'Step 2', description: 'Verify the services in blue environment.' },
+      { title: 'Step 1', description: 'pipeline.executionStrategy.strategies.rolling.steps.step1.description' },
+      { title: 'Step 2', description: 'pipeline.executionStrategy.strategies.rolling.steps.step2.description' },
       {
         title: 'Step 3',
-        description: 'After verification, switch the load balancer to point to newly-deployed fleet.'
+        description: 'pipeline.executionStrategy.strategies.rolling.steps.step3.description'
       }
     ],
     pipelineCommand:
-      'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createpipeline.createbluegreencmd'
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createpipeline.createbluegreencmd'
   },
   Rolling: {
     id: 'Rolling',
     label: 'Rolling Update',
     icon: 'rolling-update',
-    subtitle: 'Continuously roll out updates without downtime',
+    subtitle:
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.deploymentStrategies.rolling.subtitle',
     steps: [
-      { title: 'Step 1', description: 'Test the new version.' },
-      { title: 'Step 2', description: 'Approve the new version.' },
+      { title: 'Step 1', description: 'pipeline.executionStrategy.strategies.blueGreen.steps.step1.description' },
+      { title: 'Step 2', description: 'pipeline.executionStrategy.strategies.blueGreen.steps.step2.description' },
       {
-        title: 'Step  3',
-        description: 'Replace new version.'
+        title: 'Step 3',
+        description: 'pipeline.executionStrategy.strategies.blueGreen.steps.step3.description'
       }
     ],
     pipelineCommand:
-      'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.createpipeline.createrollingcmd'
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createpipeline.createrollingcmd'
   }
 }
 export const DEPLOYMENT_FLOW_TYPES: { [key in DEPLOYMENT_FLOW_ENUMS]: DeploymentFlowType } = {
@@ -115,3 +128,8 @@ export const DEFAULT_IDENTIFIER = 'default'
 export const API_KEY_TYPE = 'USER'
 export const DEFAULT_TOKEN_IDENTIFIER = 'default-token'
 export const TOKEN_MASK = 'XXXXXXX.XXXX.XXXXXX'
+
+export const SYSTEM_ARCH_TYPES: { [key: string]: string } = {
+  ARM: 'ARM',
+  AMD: 'AMD'
+}

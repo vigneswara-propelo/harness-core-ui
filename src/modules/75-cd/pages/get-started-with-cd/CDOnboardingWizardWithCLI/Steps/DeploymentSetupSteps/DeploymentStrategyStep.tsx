@@ -1,7 +1,15 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
+import { StringsMap } from 'stringTypes'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 import { String, useStrings } from 'framework/strings'
 import { DEPLOYMENT_STRATEGY_TYPES, StrategyVideoByType } from '../../Constants'
@@ -40,18 +48,14 @@ export default function DeploymentStrategySelection({
   }
   return (
     <Layout.Vertical>
-      <Text color={Color.BLACK} padding={{ top: 'xlarge', bottom: 'large' }}>
-        <String
-          color={Color.BLACK}
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.title"
-        />
+      <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }} margin={{ bottom: 'large' }}>
+        <String color={Color.BLACK} stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.title" />
       </Text>
       <Text color={Color.BLACK} padding={{ bottom: 'xlarge' }}>
         <String
           color={Color.BLACK}
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step5.description"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.description"
         />
       </Text>
 
@@ -78,7 +82,7 @@ export default function DeploymentStrategySelection({
               }}
               color={Color.GREY_800}
             >
-              {item.subtitle}
+              {getString(item.subtitle as keyof StringsMap)}
             </Text>
           </Layout.Vertical>
         )}
@@ -103,7 +107,7 @@ export default function DeploymentStrategySelection({
                     <Text color={Color.BLACK} className={css.bold}>
                       {stepText.title}:
                     </Text>
-                    <Text color={Color.BLACK}>{stepText.description}</Text>
+                    <Text color={Color.BLACK}>{getString(stepText.description as keyof StringsMap)}</Text>
                   </Layout.Vertical>
                 )
               })}

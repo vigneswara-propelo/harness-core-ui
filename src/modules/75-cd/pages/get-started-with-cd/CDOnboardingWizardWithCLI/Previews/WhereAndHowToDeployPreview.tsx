@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect } from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { capitalize } from 'lodash-es'
@@ -60,7 +67,7 @@ const DelegateLoadingLabel = ({ data }: { data: WhereAndHowToDeployType }): JSX.
       </Layout.Horizontal>
       <Layout.Horizontal margin={{ bottom: 'small' }}>
         <Text icon="loading" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
-          {getString('cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.delegateLoading')}
+          {getString('cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.delegateLoading')}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -99,7 +106,7 @@ const DelegateSuccessLabel = ({
         </Text>{' '}
         -
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
-          {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegateInstalled')}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateInstalled')}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -134,7 +141,7 @@ const DelegateFailedLabel = ({
       </Layout.Horizontal>
       <Layout.Horizontal margin={{ bottom: 'small' }}>
         <Text icon="circle-cross" iconProps={{ color: Color.ERROR }} color={Color.BLACK}>
-          {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegateFailed')}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateFailed')}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>

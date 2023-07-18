@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
@@ -83,10 +90,10 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
     <Layout.Vertical>
       <Layout.Vertical>
         <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-          {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.title')}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title')}
         </Text>
         <Text color={Color.BLACK} margin={{ bottom: 'xlarge' }}>
-          {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.description')}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.description')}
         </Text>
         <CardSelect<DeploymentFlowType>
           data={deploymentTypes}
@@ -98,7 +105,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
               <Layout.Vertical>
                 <Text
                   padding={{ bottom: 'small' }}
-                  font={{ variation: state?.type?.id === item.id ? FontVariation.FORM_TITLE : FontVariation.BODY }}
+                  font={{ variation: FontVariation.BODY }}
                   color={state?.type?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
                 >
                   {item.label}

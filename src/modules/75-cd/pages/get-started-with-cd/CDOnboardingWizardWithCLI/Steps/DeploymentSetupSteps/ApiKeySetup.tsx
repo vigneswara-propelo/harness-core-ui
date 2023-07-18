@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect } from 'react'
 import cx from 'classnames'
 import { Text, TextInput, Button, ButtonVariation, Icon, Layout } from '@harness/uicore'
@@ -141,7 +148,7 @@ export default function ApiKeySetup({
         <Icon size={16} name="steps-spinner" color={Color.BLUE_800} style={{ marginRight: '12px' }} />
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.fetchingApiKeys"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.fetchingApiKeys"
         />
       </Layout.Horizontal>
     )
@@ -151,7 +158,7 @@ export default function ApiKeySetup({
       <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.title"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.title"
         />
       </Text>
       {token ? (
@@ -171,8 +178,8 @@ export default function ApiKeySetup({
             className={css.marginBottomLarge}
             stringID={
               existingToken
-                ? 'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.regenerateButton'
-                : 'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.generateButton'
+                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.regenerateButton'
+                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.generateButton'
             }
           />
         </Button>

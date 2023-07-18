@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { get } from 'lodash-es'
 import { Layout, Text } from '@harness/uicore'
@@ -27,7 +34,7 @@ export default function WhatToDeployPreview(): JSX.Element {
       </Layout.Horizontal>
       <Layout.Horizontal>
         <Text icon="main-tick" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
-          {getString('cd.getStartedWithCD.flowbyquestions.what.svcrep')}:
+          {getString('cd.getStartedWithCD.flowByQuestions.what.svcrep')}:
         </Text>
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
           {artfiactType}

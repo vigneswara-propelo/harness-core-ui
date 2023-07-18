@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import produce from 'immer'
@@ -63,14 +70,14 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
           stepList={[
             {
               id: CDOnboardingSteps.WHAT_TO_DEPLOY,
-              title: getString('cd.getStartedWithCD.flowbyquestions.what.title'),
+              title: getString('cd.getStartedWithCD.flowByQuestions.what.title'),
               panel: <WhatToDeploy saveProgress={saveProgress} />,
               preview: <WhatToDeployPreview />,
               disableNext: () => !isStepValid(CDOnboardingSteps.WHAT_TO_DEPLOY)
             },
             {
               id: CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY,
-              title: getString('cd.getStartedWithCD.flowbyquestions.howNwhere.title'),
+              title: getString('cd.getStartedWithCD.flowByQuestions.howNwhere.title'),
               panel: <WhereAndHowToDeploy saveProgress={saveProgress} />,
               preview: <WhereAndHowToDeployPreview saveProgress={saveProgress} />,
               disableNext: () => !isStepValid(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY),
@@ -78,14 +85,14 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
             },
             {
               id: CDOnboardingSteps.DEPLOYMENT_STEPS,
-              title: getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.title'),
+              title: getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.title'),
               panel: <DeploymentSetupSteps saveProgress={saveProgress} />,
               preview: <PipelineSetupPreview />,
               disableNext: () => !isStepValid(CDOnboardingSteps.DEPLOYMENT_STEPS)
             },
             {
               id: CDOnboardingSteps.REVIEW_AND_RUN_PIPELINE,
-              title: getString('cd.getStartedWithCD.flowbyquestions.reviewAndRunStep.title'),
+              title: getString('cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.title'),
               panel: <ReviewAndRunPipeline saveProgress={saveProgress} />
             }
           ]}

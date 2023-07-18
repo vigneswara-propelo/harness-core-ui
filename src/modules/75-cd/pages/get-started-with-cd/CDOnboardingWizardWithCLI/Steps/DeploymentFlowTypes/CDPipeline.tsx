@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { Color } from '@harness/design-system'
 import { Layout, Text, Button, ButtonVariation } from '@harness/uicore'
@@ -27,17 +34,17 @@ export default function CDPipeline({
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.title')}
+        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.title')}
       </Text>
       <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description1')}
+        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.description1')}
       </Text>
       <Text color={Color.BLACK} margin={{ bottom: 'xxlarge' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.delegateDescription2')}
+        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateDescription2')}
       </Text>
       {!state.isDelegateVerified && (
         <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
-          {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.installButton')}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.installButton')}
         </Button>
       )}
       <Layout.Vertical margin={{ bottom: 'large' }}>

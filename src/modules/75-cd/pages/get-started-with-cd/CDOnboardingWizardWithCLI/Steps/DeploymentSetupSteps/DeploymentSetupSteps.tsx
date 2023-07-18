@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import CLISetupStep from './CLISetupStep'
@@ -13,23 +20,14 @@ export default function DeploymentSetupSteps({ saveProgress }: DeploymentSetupSt
   const { stepsProgress } = useOnboardingStore()
   const [state, setState] = React.useState<PipelineSetupState>(() => {
     const defaultState = {
-      apiKey: getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.apiKeyPlacholder'),
-      githubUsername: getString(
-        'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.gitusernamePlaceholder'
-      ),
-      githubPat: getString(
-        'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.gitpatPlaceholder'
-      )
+      apiKey: getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.apiKeyPlacholder')
     }
     return stepsProgress?.[CDOnboardingSteps.DEPLOYMENT_STEPS]?.stepData || defaultState
   })
   React.useEffect(() => {
     saveProgress(CDOnboardingSteps.DEPLOYMENT_STEPS, {
       ...state,
-      apiKey: getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.apiKeyPlacholder'),
-      githubPat: getString(
-        'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step4.commands.gitpatPlaceholder'
-      )
+      pipelineVerified: stepsProgress?.pipelineVerified
     })
   }, [state])
 

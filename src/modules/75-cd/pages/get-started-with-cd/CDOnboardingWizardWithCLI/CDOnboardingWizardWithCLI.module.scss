@@ -109,3 +109,11 @@
     display: flex;
   }
 }
+
+.tabsLine {
+  border-bottom: solid 1px var(--grey-100);
+}
+.alignTitle {
+  display: flex;
+  align-items: baseline;
+}

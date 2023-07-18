@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -9,10 +16,10 @@ export default function GitopsFlow(): JSX.Element {
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdGitops.title')}
+        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.title')}
       </Text>
       <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdGitops.description')}
+        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.description')}
       </Text>
     </Layout.Vertical>
   )

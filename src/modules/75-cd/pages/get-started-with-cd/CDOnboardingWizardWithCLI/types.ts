@@ -7,8 +7,8 @@ export interface EntityType {
   icon?: IconName
 }
 export interface DeploymentStrategyTypes extends EntityType {
-  subtitle?: string
-  steps?: { title: string; description: string }[]
+  subtitle?: keyof StringsMap
+  steps?: { title: string; description: keyof StringsMap }[]
   pipelineCommand: keyof StringsMap
 }
 export interface EntityMap {
@@ -41,8 +41,8 @@ export interface WhereAndHowToDeployType {
 
 export interface PipelineSetupState {
   apiKey: string
-  githubUsername: string
-  githubPat: string
+  githubUsername?: string
+  githubPat?: string
   strategy?: DeploymentStrategyTypes
   pipelineVerified?: boolean
 }

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
@@ -48,10 +55,10 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} font={{ size: 'medium' }} margin={{ bottom: 'xlarge' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.what.samplesvc')}
+        {getString('cd.getStartedWithCD.flowByQuestions.what.samplesvc')}
       </Text>
       <Text color={Color.BLACK} className={css.bold} font={{ size: 'medium' }} margin={{ bottom: 'xxlarge' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.what.aboutSvc')}
+        {getString('cd.getStartedWithCD.flowByQuestions.what.aboutSvc')}
       </Text>
 
       <CardSelect<EntityType>
@@ -62,9 +69,8 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
           <Layout.Vertical flex spacing={'xlarge'}>
             <Icon name={item?.icon as IconName} size={30} />
             <Text
-              className={cx({ [css.bold]: state.svcType?.id === item.id })}
               font={{
-                variation: state.artifactType?.id === item.id ? FontVariation.FORM_TITLE : FontVariation.BODY
+                variation: FontVariation.BODY
               }}
               color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
             >
@@ -78,10 +84,10 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
       {state.svcType && !isEmpty(infraTypes) && (
         <>
           <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-            {getString('cd.getStartedWithCD.flowbyquestions.what.K8sSteps.k8sSvcRep')}
+            {getString('cd.getStartedWithCD.flowByQuestions.what.K8sSteps.k8sSvcRep')}
           </Text>
           <Text color={Color.BLACK} margin={{ bottom: 'xxlarge' }}>
-            {getString('cd.getStartedWithCD.flowbyquestions.what.K8sSteps.artifact')}
+            {getString('cd.getStartedWithCD.flowByQuestions.what.K8sSteps.artifact')}
           </Text>
           <CardSelect<EntityType>
             data={infraTypes}
@@ -91,9 +97,8 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
               <Layout.Vertical flex spacing={'xlarge'}>
                 <Icon name={item?.icon as IconName} size={30} />
                 <Text
-                  className={cx({ [css.bold]: state.svcType?.id === item.id })}
                   font={{
-                    variation: state.artifactType?.id === item.id ? FontVariation.FORM_TITLE : FontVariation.BODY
+                    variation: FontVariation.BODY
                   }}
                   color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
                 >

@@ -648,7 +648,7 @@ k8sDryRunStepDescription: Perform a dry run on the manifests configured for this
 getStartedWithCD:
   title: Get started with comprehensive deployments
   description: Set up a Harness CD pipeline or a GitOps app to automate deployment of your service to your infrastructure
-  flowbyquestions:
+  flowByQuestions:
     what:
       title: What do you want to deploy?
       samplesvc: We will start you with a sample service. You can add your own by editing the yaml later.
@@ -679,12 +679,16 @@ getStartedWithCD:
           title: GitOps Workflow
           subtitle: Connect with a GitOps agent
           description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster. You have the Hosted GitOps and Self-Managed GitOps options to get started with Harness GitOps.
-    deplopymentSteps:
+    deploymentSteps:
+      headsteps:
+        preparation: '1. Preparation'
+        createEntities: '2. Create the required Harness entities'
+        verifyPipeline: '2. Verify that pipeline has been created'
+      createEntitytitle: Run these commands to create the Harness entities necessary to deploy your pipeline. Learn more
       title: Here are the steps to deploy!
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
       stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" href="{{sampleAppURL}}"">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
-      forkRepo: Fork the harnesscd-example-apps repository through the GitHub web interface. This enables personal experimentation and modifications without impacting the original codebase.
       steps:
         step1:
           title: '1. Create an API key for CLI authentication.'
@@ -694,38 +698,60 @@ getStartedWithCD:
           fetchingApiKeys: Fetching Api Keys
         step2:
           title: 2. Download the Harness CLI.
-          arm: https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-linux-arm64.tar.gz
-          amd: https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-linux-amd64.tar.gz
-          mac: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-darwin-amd64.tar.gz
-          linux: lincurl -L0 https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-linux-arm64.tar.gz
-          win: https://github.com/harness/harness-cli/releases/download/v0.0.3-alpha/harness-v0.0.3-alpha-windows-amd64.zip
+          arm: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-linux-arm64.tar.gz
+          amd: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-linux-amd64.tar.gz
+          mac: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-darwin-amd64.tar.gz
+          win: https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-windows-amd64.zip
+          mvharness: 'mv harness /usr/local/bin/'
+          chmod: 'chmod +x /usr/local/bin/harness'
+
         step3:
-          title: '3. Provide GitHub access details.'
+          title: '3. Fork <a href="https://github.com/harness-community/harnesscd-example-apps">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
+        step4:
+          title: '4. Provide GitHub access details.'
           githubusername: 'GitHub username'
           githubpat: 'GitHub Personal Access Token (PAT)'
+          whereToFindGitPat: How do I find this?
           githubHint: As you’ll eventually control deployment configuration by editing YAML definitions, Harness CD needs to read from your repository.
-        step4:
-          title: '4. Pipeline Setup'
+        step5:
+          title: '5. Pipeline Setup'
           description1: 'Run the steps to deploy the sample guestbook application located at <a target="_blank" href="{{guestBookURL}}">{{guestBookURL}}</a>.'
           description2: You will first create a Harness Service representing this application and a Harness Environment representing the infrastructure where you are deploying (and already identified by the Delegate installed in the previous step).
           commands:
             gitpatPlaceholder: GITHUB-PAT
-            gitusernamePlaceholder: GITHUB_USERNAME
+            gitusernamePlaceholder: GITHUB-USERNAME
             clonecmd: 'git clone https://github.com/{{gitUser}}/harnesscd-example-apps.git'
             cddir: cd harnesscd-example-apps
             logincmd: 'harness login --api-key {{apiKey}} --account-id {{accId}}'
             createsecret: 'harness secret  --token {{gitPat}} apply'
-            creategithubcon: 'harness connector --file guestbook/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '
+            createGithubIcon: 'harness connector --file guestbook/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '
             createk8scon: 'harness connector --file guestbook/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name {{delegateName}}'
             createsvccmd: harness service --file guestbook/harnesscd-pipeline/service.yml apply
             createenvcmd: harness environment --file guestbook/harnesscd-pipeline/environment.yml apply
             createinfracmd: harness infrastructure  --file guestbook/harnesscd-pipeline/infrastructure-definition.yml apply
+            comments:
+              cloneRepo: '# Clone the repository'
+              cdDir: '# Change the directory'
+              login: '# Login to harness cli'
+              createSecret: '# Create a Secret for GitHub PAT: This securely stores the token.'
+              createGitIcon: '# Create a GiHub Connector: Access to YAMLs.'
+              createK8scon: '# Create a Kubernetes Cluster Connector: Access to the deployment target.'
+              createSvc: '# Create a Service: Represents your application.'
+              createEnv: '# Create an Environment: Represents the production or non-production infrastructure.'
+              createInfra: '# Create an Infrastructure Definition: Specifies the target cluster for the infrastructure. '
+            deploymentStrategies:
+              canary:
+                subtitle: 'Gradually release updates to minimize risks'
+              rolling:
+                subtitle: 'Seamlessly switch between identical environments'
+              blueGreen:
+                subtitle: 'Continuously roll out updates without downtime'
             createpipeline:
               createcanarycmd: harness pipeline --file guestbook/harnesscd-pipeline/canary-pipeline.yml apply
               createbluegreencmd: harness pipeline --file guestbook/harnesscd-pipeline/bluegreen-pipeline.yml apply
               createrollingcmd: harness pipeline --file guestbook/harnesscd-pipeline/rolling-pipeline.yml apply
-        step5:
-          title: 5. Pick deployment strategy
+        step6:
+          title: 3. Pick deployment strategy
           description: Create a pipeline with your preferred deployment strategy. We recommend starting with the Canary strategy as it reduces the probability of failed changes.
           verifyPipeline: Verify once you have complete the steps above to make sure they were successfully executed.
           pipelinenotfound: Pipeline not created

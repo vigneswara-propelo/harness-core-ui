@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly alignTitle: string
   readonly almostFullScreenCloseBtn: string
   readonly bold: string
   readonly buttons: string
@@ -26,6 +27,7 @@ declare const styles: {
   readonly rotateButton: string
   readonly secretInput: string
   readonly serviceTypeCards: string
+  readonly tabsLine: string
   readonly textbox: string
   readonly verifyPipeline: string
   readonly verifyPipelineText: string
