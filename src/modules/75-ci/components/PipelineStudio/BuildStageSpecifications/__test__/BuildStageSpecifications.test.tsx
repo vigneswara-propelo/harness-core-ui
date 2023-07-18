@@ -106,4 +106,37 @@ describe('BuildStageSpecifications tests', () => {
 
     expect(enableCacheIntelSwitch).not.toHaveAttribute('checked')
   })
+
+  test('Switch infrastructure to verify Cache intelligence section behaviour', async () => {
+    const { container, rerender } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={mockedPipelineContextValueForNonCloudInfra}>
+          <BuildStageSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const switchSelector = 'label.bp3-switch'
+    const checkBoxSelector = 'input[type="checkbox"]'
+
+    expect(container.querySelectorAll(switchSelector)?.[1]).toBeDefined()
+    expect(container.querySelectorAll(switchSelector)[1]).toHaveClass('bp3-disabled')
+    expect(container.querySelectorAll(checkBoxSelector)[1]).toHaveAttribute('disabled')
+
+    rerender(
+      <TestWrapper>
+        <PipelineContext.Provider value={mockedPipelineContextValueForCloudInfra}>
+          <BuildStageSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      fireEvent.click(container.querySelectorAll(switchSelector)[1])
+    })
+
+    expect(container.querySelectorAll(switchSelector)[1]).not.toHaveClass('bp3-disabled')
+    expect(container.querySelectorAll(checkBoxSelector)[1]).not.toHaveAttribute('disabled')
+    expect(container.querySelectorAll(checkBoxSelector)[1]).toHaveAttribute('checked')
+  })
 })

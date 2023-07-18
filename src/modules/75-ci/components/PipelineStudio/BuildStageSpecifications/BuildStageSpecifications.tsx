@@ -159,7 +159,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
     if (stage?.stage) {
       const prevStageData = cloneDeep(stage.stage)
       const newStageData = produce(stage.stage, (stageData: any) => {
-        const spec = stageData.spec
+        let spec = stageData.spec
 
         stageData.identifier = values.identifier
         stageData.name = values.name
@@ -187,7 +187,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
           delete spec.sharedPaths
         }
 
-        spec.caching = set(spec.caching, 'enabled', values.cacheIntelligenceEnabled)
+        spec = set(spec, 'caching.enabled', values.cacheIntelligenceEnabled)
 
         if (values.variables && values.variables.length > 0) {
           stageData.variables = values.variables
