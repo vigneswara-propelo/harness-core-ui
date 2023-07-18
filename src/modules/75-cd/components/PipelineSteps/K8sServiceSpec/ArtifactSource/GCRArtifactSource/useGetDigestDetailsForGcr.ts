@@ -95,6 +95,7 @@ export function useGetDigestDetailsForGcrArtifact(params: Params) {
   } = useMutateAsGet(useGetLastSuccessfulBuildForGcrV2, {
     body: {
       tag: tag,
+      registryHostname,
       runtimeInputYaml: getYamlData(formik?.values, stepViewType as StepViewType, path as string)
     },
     requestOptions: {
@@ -110,7 +111,6 @@ export function useGetDigestDetailsForGcrArtifact(params: Params) {
       branch,
       connectorRef,
       imagePath,
-      registryHostname,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId,
       fqnPath: getFqnPath(
