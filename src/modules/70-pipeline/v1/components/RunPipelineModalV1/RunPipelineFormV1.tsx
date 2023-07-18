@@ -243,7 +243,11 @@ function RunPipelineFormV1Basic({
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      moduleType: module || ''
+      moduleType: module || '',
+      repoIdentifier,
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier,
     originalExecutionId: defaultTo(pipelineExecutionId, ''),
