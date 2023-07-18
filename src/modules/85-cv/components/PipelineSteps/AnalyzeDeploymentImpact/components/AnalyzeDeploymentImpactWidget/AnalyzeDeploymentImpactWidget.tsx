@@ -28,9 +28,9 @@ export function AnalyzeDeploymentImpactWidget(
   const { getString } = useStrings()
 
   const validateForm = (formData: AnalyzeDeploymentImpactData): FormikErrors<AnalyzeDeploymentImpactData> => {
-    const { healthSources, monitoredService } = formData.spec
+    const { healthSources, monitoredService, isMonitoredServiceDefaultInput } = formData.spec
     const monitoredServiceRef = monitoredService.spec.monitoredServiceRef as string
-    return validateMonitoredService(monitoredServiceRef, getString, healthSources)
+    return validateMonitoredService(monitoredServiceRef, getString, healthSources, isMonitoredServiceDefaultInput)
   }
 
   const defaultAnalyzeSchema = Yup.object().shape({

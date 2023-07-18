@@ -133,3 +133,85 @@ describe('isAnExpression', () => {
     expect(result).toBe(false)
   })
 })
+
+describe('validateMonitoredService', () => {
+  test('should return empty errors if monitoredServiceRef is valid and healthSources are provided', () => {
+    const monitoredServiceRef = 'validRef'
+    const getString = jest.fn()
+    const healthSources = [{ identifier: 'source1' }, { identifier: 'source2' }]
+    const isMonitoredServiceDefaultInput = false
+
+    const result = validateMonitoredService(
+      monitoredServiceRef,
+      getString,
+      healthSources,
+      isMonitoredServiceDefaultInput
+    )
+
+    expect(result).toEqual({})
+  })
+
+  test('should return errors if monitoredServiceRef is empty', () => {
+    const monitoredServiceRef = ''
+    const getString = jest.fn()
+    const healthSources = [{ identifier: 'source1' }, { identifier: 'source2' }]
+    const isMonitoredServiceDefaultInput = false
+
+    const result = validateMonitoredService(
+      monitoredServiceRef,
+      getString,
+      healthSources,
+      isMonitoredServiceDefaultInput
+    )
+
+    expect(result).toEqual({
+      spec: {
+        monitoredService: {
+          spec: {
+            monitoredServiceRef: 'Monitored service is required'
+          }
+        }
+      }
+    })
+  })
+
+  test('should return errors if healthSources are empty', () => {
+    const monitoredServiceRef = 'validRef'
+    const getString = jest.fn()
+    const healthSources: { identifier: string }[] = [{ identifier: 'healthsource-1' }]
+    const isMonitoredServiceDefaultInput = false
+
+    const result = validateMonitoredService(
+      monitoredServiceRef,
+      getString,
+      healthSources,
+      isMonitoredServiceDefaultInput
+    )
+
+    expect(result).toEqual({})
+  })
+
+  test('should return empty errors if monitoredServiceRef is empty and isMonitoredServiceDefaultInput is true', () => {
+    const monitoredServiceRef = ''
+    const getString = jest.fn()
+    const healthSources = [{ identifier: 'source1' }, { identifier: 'source2' }]
+    const isMonitoredServiceDefaultInput = true
+
+    const result = validateMonitoredService(
+      monitoredServiceRef,
+      getString,
+      healthSources,
+      isMonitoredServiceDefaultInput
+    )
+
+    expect(result).toEqual({
+      spec: {
+        monitoredService: {
+          spec: {
+            monitoredServiceRef: 'Monitored service is required'
+          }
+        }
+      }
+    })
+  })
+})

@@ -18,6 +18,7 @@ import {
   AnalyzeStepMonitoredService
 } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
 import { MONITORED_SERVICE_TYPE } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
+import { DEFAULT_VALUE } from './ConfiguredMonitoredService.constants'
 
 export function isMonitoredServiceFixedInput(monitoredServiceRef: string): boolean {
   return !!(monitoredServiceRef !== RUNTIME_INPUT_VALUE && monitoredServiceRef && !isAnExpression(monitoredServiceRef))
@@ -61,15 +62,8 @@ export function isServiceAndEnvNotFixed(serviceIdentifier: string, environmentId
   )
 }
 
-export function isMonitoredServiceValidFixedInput(
-  monitoredServiceRef: string,
-  serviceIdentifier: string,
-  environmentIdentifier: string
-): boolean {
-  return (
-    isMonitoredServiceFixedInput(monitoredServiceRef) &&
-    !isServiceAndEnvNotFixed(serviceIdentifier, environmentIdentifier)
-  )
+export function isMonitoredServiceValidFixedInput(monitoredServiceRef: string): boolean {
+  return isMonitoredServiceFixedInput(monitoredServiceRef)
 }
 
 export function getMonitoredServiceIdentifier(
@@ -120,4 +114,12 @@ function getHealthSourcesSpecs(monitoredServiceData: MonitoredServiceDTO | undef
       return { identifier: (el as HealthSource)?.identifier as string }
     }) || []
   )
+}
+
+export function getIsMonitoredServiceDefaultInput(
+  monitoredServiceRef: string,
+  serviceIdentifier: string,
+  environmentIdentifier: string
+): boolean {
+  return monitoredServiceRef === DEFAULT_VALUE && isServiceAndEnvNotFixed(serviceIdentifier, environmentIdentifier)
 }

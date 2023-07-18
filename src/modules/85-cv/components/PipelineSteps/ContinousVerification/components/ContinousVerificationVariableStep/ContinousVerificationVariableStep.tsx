@@ -12,6 +12,7 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import type { ContinousVerificationData } from '../../types'
 import type { ContinousVerificationVariableStepProps } from './types'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+
 export function ContinousVerificationVariableStep(props: ContinousVerificationVariableStepProps): React.ReactElement {
   const {
     variablesData = {} as ContinousVerificationData,
@@ -30,7 +31,6 @@ export function ContinousVerificationVariableStep(props: ContinousVerificationVa
 
   return (
     <VariablesListTable
-      // className={stepCss.topSpacingLarge}
       className={pipelineVariableCss.variablePaddingL2}
       data={data}
       originalData={originalData?.spec?.spec}

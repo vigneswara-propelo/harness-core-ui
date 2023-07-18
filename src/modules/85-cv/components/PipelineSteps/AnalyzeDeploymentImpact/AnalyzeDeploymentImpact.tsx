@@ -7,19 +7,27 @@
 
 import React from 'react'
 import type { IconName } from '@harness/uicore'
-import { FormikErrors } from 'formik'
+import { connect, FormikErrors } from 'formik'
 import { omit } from 'lodash-es'
-import { StepViewType, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { StringsMap } from 'stringTypes'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { AnalyzeDeploymentImpactWidgetWithRef } from './components/AnalyzeDeploymentImpactWidget/AnalyzeDeploymentImpactWidget'
-import { getMonitoredServiceYamlData, getSpecFormData } from './AnalyzeDeploymentImpact.utils'
+import {
+  getMonitoredServiceYamlData,
+  getSpecFormData,
+  validateField,
+  validateMonitoredServiceForRunTimeView
+} from './AnalyzeDeploymentImpact.utils'
 import { ANALYSE_DEFAULT_VALUES } from './AnalyzeDeploymentImpact.constants'
-import { AnalyzeDeploymentImpactData } from './AnalyzeDeploymentImpact.types'
+import { AnalyzeDeploymentImpactData, AnalyzeDeploymentImpactVariableStepProps } from './AnalyzeDeploymentImpact.types'
+import AnalyzeDeploymentImpactVariableStep from './components/AnalyzeDeploymentImpactVariableStep/AnalyzeDeploymentImpactVariableStep'
+import AnalyzeDeploymentImpactInputSetStep from './components/AnalyzeDeploymentImpactInputSetStep/AnalyzeDeploymentImpactInputSetStep'
 
+const AnalyzeDeploymentImpactInputSetStepFormik = connect(AnalyzeDeploymentImpactInputSetStep)
 export class AnalyzeDeploymentImpact extends PipelineStep<AnalyzeDeploymentImpactData> {
   constructor() {
     super()
@@ -38,20 +46,33 @@ export class AnalyzeDeploymentImpact extends PipelineStep<AnalyzeDeploymentImpac
       initialValues,
       onUpdate,
       stepViewType,
-      // inputSetData,
+      inputSetData,
       formikRef,
-      // customStepProps,
+      customStepProps,
       isNewStep,
       allowableTypes,
       onChange
     } = props
 
     if (this.isTemplatizedView(stepViewType)) {
-      // Todo - define the view here
-      return <></>
+      return (
+        <AnalyzeDeploymentImpactInputSetStepFormik
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          readonly={!!inputSetData?.readonly}
+          template={inputSetData?.template}
+          path={inputSetData?.path || ''}
+          allowableTypes={allowableTypes}
+        />
+      )
     } else if (stepViewType === StepViewType.InputVariable) {
-      // Todo - define the view here
-      return <></>
+      return (
+        <AnalyzeDeploymentImpactVariableStep
+          {...(customStepProps as AnalyzeDeploymentImpactVariableStepProps)}
+          originalData={initialValues}
+        />
+      )
     }
     return (
       <AnalyzeDeploymentImpactWidgetWithRef
@@ -66,11 +87,19 @@ export class AnalyzeDeploymentImpact extends PipelineStep<AnalyzeDeploymentImpac
     )
   }
 
-  /* istanbul ignore next */
-  // This will be removed when other views are implemented
-  validateInputSet(): FormikErrors<AnalyzeDeploymentImpactData> {
+  validateInputSet({
+    data,
+    template,
+    getString,
+    viewType
+  }: ValidateInputSetProps<AnalyzeDeploymentImpactData>): FormikErrors<AnalyzeDeploymentImpactData> {
     const errors: FormikErrors<AnalyzeDeploymentImpactData> = {}
-    // Todo - this has to be implemented.
+    const { monitoredService, duration } = template?.spec || {}
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    if (getString) {
+      validateField({ fieldValue: duration as string, fieldKey: 'duration', data, errors, getString, isRequired })
+      validateMonitoredServiceForRunTimeView({ monitoredService, data, errors, getString, isRequired })
+    }
     return errors
   }
 
@@ -81,14 +110,13 @@ export class AnalyzeDeploymentImpact extends PipelineStep<AnalyzeDeploymentImpac
     }
   }
 
-  /* istanbul ignore next */
   processFormData(data: AnalyzeDeploymentImpactData): AnalyzeDeploymentImpactData {
     return {
       ...data,
       spec: {
-        ...omit(data?.spec, ['monitoredServiceRef', 'healthSources']),
+        ...omit(data?.spec, ['monitoredServiceRef', 'healthSources', 'isMonitoredServiceDefaultInput']),
         monitoredService: getMonitoredServiceYamlData(data?.spec)
-      }
+      } as AnalyzeDeploymentImpactData['spec']
     }
   }
 }

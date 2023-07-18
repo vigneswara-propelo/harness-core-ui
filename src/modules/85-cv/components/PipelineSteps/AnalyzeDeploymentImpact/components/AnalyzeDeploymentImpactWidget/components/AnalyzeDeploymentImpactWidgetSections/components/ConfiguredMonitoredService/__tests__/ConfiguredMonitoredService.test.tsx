@@ -17,7 +17,8 @@ import {
   isMonitoredServiceValidFixedInput,
   getMonitoredServiceIdentifier,
   getMonitoredServiceNotPresentErrorMessage,
-  getUpdatedSpecs
+  getUpdatedSpecs,
+  getIsMonitoredServiceDefaultInput
 } from '../ConfiguredMonitoredService.utils'
 import ConfiguredMonitoredService from '../ConfiguredMonitoredService'
 import { mockedMonitoredService } from './ConfiguredMonitoredService.mock'
@@ -418,21 +419,65 @@ describe('isServiceAndEnvNotFixed', () => {
 })
 
 describe('isMonitoredServiceValidFixedInput', () => {
-  test('returns true when monitoredServiceRef is fixed and both serviceIdentifier and environmentIdentifier are fixed', () => {
-    const monitoredServiceRef = 'example'
-    const serviceIdentifier = 'service1'
-    const environmentIdentifier = 'env1'
-    const result = isMonitoredServiceValidFixedInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+  test('should return true if monitoredServiceRef is a valid fixed input', () => {
+    const monitoredServiceRef = 'fixedInput1'
+
+    const result = isMonitoredServiceValidFixedInput(monitoredServiceRef)
+
     expect(result).toBe(true)
   })
 
-  test('returns false when monitoredServiceRef is not fixed', () => {
-    const monitoredServiceRef = '<+ example >'
-    const serviceIdentifier = 'service1'
-    const environmentIdentifier = 'env1'
-    const result = isMonitoredServiceValidFixedInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+  test('should return false if monitoredServiceRef is not a valid fixed input', () => {
+    const monitoredServiceRef = '<+input>'
+
+    const result = isMonitoredServiceValidFixedInput(monitoredServiceRef)
+
     expect(result).toBe(false)
   })
+})
+
+describe('getIsMonitoredServiceDefaultInput', () => {
+  test('should return true if monitoredServiceRef is DEFAULT_VALUE and serviceIdentifier and environmentIdentifier are not fixed', () => {
+    const monitoredServiceRef = 'Default'
+    const serviceIdentifier = 'service1'
+    const environmentIdentifier = '<+input>'
+
+    const result = getIsMonitoredServiceDefaultInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+
+    expect(result).toBe(true)
+  })
+
+  test('should return false if monitoredServiceRef is not DEFAULT_VALUE', () => {
+    const monitoredServiceRef = '<+input>'
+    const serviceIdentifier = 'service1'
+    const environmentIdentifier = 'env1'
+
+    const result = getIsMonitoredServiceDefaultInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+
+    expect(result).toBe(false)
+  })
+
+  test('should return false if serviceIdentifier is fixed', () => {
+    const monitoredServiceRef = 'DEFAULT_VALUE'
+    const serviceIdentifier = 'fixedService'
+    const environmentIdentifier = 'env1'
+
+    const result = getIsMonitoredServiceDefaultInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+
+    expect(result).toBe(false)
+  })
+
+  test('should return false if environmentIdentifier is fixed', () => {
+    const monitoredServiceRef = 'DEFAULT_VALUE'
+    const serviceIdentifier = 'service1'
+    const environmentIdentifier = 'fixedEnv'
+
+    const result = getIsMonitoredServiceDefaultInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+
+    expect(result).toBe(false)
+  })
+
+  // Add more test cases as needed
 })
 
 describe('getMonitoredServiceIdentifier', () => {

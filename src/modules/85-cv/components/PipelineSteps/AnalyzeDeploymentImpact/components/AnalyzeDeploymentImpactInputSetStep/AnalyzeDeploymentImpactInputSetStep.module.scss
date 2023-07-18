@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.itemRuntimeSetting {
+  min-width: 47%;
+  margin: var(--spacing-small) !important;
+  :global {
+    .bp3-menu {
+      position: relative !important;
+    }
+  }
+}

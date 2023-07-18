@@ -44,5 +44,6 @@ export interface AnalyzeDeploymentImpactData extends StepElementConfig {
       identifier: string
     }[]
     monitoredService: AnalyzeStepMonitoredService
+    isMonitoredServiceDefaultInput?: boolean
   }
 }

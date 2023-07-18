@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { FormikErrors } from 'formik'
+import { isEmpty, set } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { UseStringsReturn } from 'framework/strings'
 import { defaultMonitoredServiceSpec, MONITORED_SERVICE_TYPE } from './AnalyzeDeploymentImpact.constants'
 import { AnalyzeDeploymentImpactData, AnalyzeStepMonitoredService } from './AnalyzeDeploymentImpact.types'
 
@@ -44,4 +48,54 @@ export function getSpecFormData(spec: AnalyzeDeploymentImpactData['spec']): Anal
     monitoredService = { ...monitoredService, spec: { monitoredServiceRef: MONITORED_SERVICE_TYPE.DEFAULT } }
   }
   return { ...spec, monitoredService }
+}
+
+export function checkIfRunTimeInput(field: string | SelectOption | number | undefined): boolean {
+  return getMultiTypeFromValue(field as string) === MultiTypeInputType.RUNTIME
+}
+
+export function validateField({
+  fieldValue,
+  fieldKey,
+  data,
+  errors,
+  getString,
+  isRequired = true
+}: {
+  fieldValue: string
+  fieldKey: string
+  data: AnalyzeDeploymentImpactData
+  errors: FormikErrors<AnalyzeDeploymentImpactData>
+  getString: UseStringsReturn['getString']
+  isRequired: boolean
+}): void {
+  if (checkIfRunTimeInput(fieldValue) && isRequired && isEmpty((data?.spec as any)?.[fieldKey])) {
+    set(errors, `spec.${fieldKey}`, getString('fieldRequired', { field: fieldKey }))
+  }
+}
+
+export function validateMonitoredServiceForRunTimeView({
+  monitoredService,
+  data,
+  errors,
+  getString,
+  isRequired = true
+}: {
+  monitoredService: AnalyzeStepMonitoredService | undefined
+  data: AnalyzeDeploymentImpactData
+  errors: FormikErrors<AnalyzeDeploymentImpactData>
+  getString: UseStringsReturn['getString']
+  isRequired: boolean
+}): void {
+  if (
+    checkIfRunTimeInput(monitoredService?.spec?.monitoredServiceRef) &&
+    isRequired &&
+    isEmpty(data?.spec?.monitoredService?.spec?.monitoredServiceRef)
+  ) {
+    set(
+      errors,
+      `spec.monitoredService.spec.monitoredServiceRef`,
+      getString('fieldRequired', { field: 'Monitored Service' })
+    )
+  }
 }

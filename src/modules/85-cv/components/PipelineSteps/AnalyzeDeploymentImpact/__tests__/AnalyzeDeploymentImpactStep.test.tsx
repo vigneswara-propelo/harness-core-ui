@@ -16,8 +16,16 @@ import {
   PipelineResponse,
   ANALYZE_STEP_INITIAL_VALUES
 } from './AnalyzeDeploymentImpactMocks'
-import { getMonitoredServiceYamlData, getMonitoredServiceRef, getSpecFormData } from '../AnalyzeDeploymentImpact.utils'
+import {
+  getMonitoredServiceYamlData,
+  getMonitoredServiceRef,
+  getSpecFormData,
+  validateField,
+  validateMonitoredServiceForRunTimeView,
+  checkIfRunTimeInput
+} from '../AnalyzeDeploymentImpact.utils'
 import { AnalyzeDeploymentImpactData } from '../AnalyzeDeploymentImpact.types'
+import { MONITORED_SERVICE_TYPE } from '../AnalyzeDeploymentImpact.constants'
 
 jest.mock('services/cv', () => ({
   useGetMonitoredServiceFromServiceAndEnvironment: jest
@@ -88,6 +96,68 @@ describe('Test AnalyzeDeploymentImpact Step', () => {
         stepViewType={StepViewType.InputSet}
         onChange={jest.fn()}
         onUpdate={jest.fn()}
+      />
+    )
+
+    expect(getByText('Errors')).toBeInTheDocument()
+  })
+
+  test('should render InputSet view when current step is rendered in InputSet mode with correct template data', () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={ANALYZE_STEP_INITIAL_VALUES}
+        type={StepType.AnalyzeDeploymentImpact}
+        stepViewType={StepViewType.InputSet}
+        onChange={jest.fn()}
+        onUpdate={jest.fn()}
+        template={{
+          spec: {
+            duration: '<+input>',
+            monitoredService: { type: MONITORED_SERVICE_TYPE.CONFIGURED, monitoredServiceRef: '<+input>' }
+          },
+          timeout: '<+input>'
+        }}
+        path={'pipeline'}
+      />
+    )
+
+    expect(getByText('Errors')).toBeInTheDocument()
+  })
+
+  test('should render InputSet view when current step is rendered in InputSet mode with incorrect template data', () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={ANALYZE_STEP_INITIAL_VALUES}
+        type={StepType.AnalyzeDeploymentImpact}
+        stepViewType={StepViewType.InputSet}
+        onChange={jest.fn()}
+        onUpdate={jest.fn()}
+        template={{
+          spec: {
+            duration: '<+input>',
+            monitoredService: { monitoredServiceRef: '<+input>' }
+          },
+          timeout: '<+input>'
+        }}
+        path={''}
+      />
+    )
+
+    expect(getByText('Errors')).toBeInTheDocument()
+  })
+
+  test('should render InputSet view when current step is rendered in InputSet mode when no template spec is present', () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={ANALYZE_STEP_INITIAL_VALUES}
+        type={StepType.AnalyzeDeploymentImpact}
+        stepViewType={StepViewType.InputSet}
+        onChange={jest.fn()}
+        onUpdate={jest.fn()}
+        template={{
+          timeout: '<+input>'
+        }}
+        path={''}
       />
     )
 
@@ -237,5 +307,109 @@ describe('getSpecFormData', () => {
     }
     const result = getSpecFormData(spec)
     expect(result).toEqual(expectedResult)
+  })
+})
+
+describe('checkIfRunTimeInput', () => {
+  test('should return true if field is of type RUNTIME', () => {
+    const result = checkIfRunTimeInput('<+input>')
+    expect(result).toBe(true)
+  })
+
+  test('should return false if field is not of type RUNTIME', () => {
+    const result = checkIfRunTimeInput('OTHER')
+    expect(result).toBe(false)
+  })
+
+  test('should return false if field is undefined', () => {
+    const result = checkIfRunTimeInput(undefined)
+    expect(result).toBe(false)
+  })
+})
+
+describe('validateField', () => {
+  test('should not set error message if field is not empty', () => {
+    const fieldValue = 'someValue'
+    const fieldKey = 'fieldName'
+    const data = {
+      spec: {
+        monitoredService: { spec: { monitoredServiceRef: 'someValue' }, type: MONITORED_SERVICE_TYPE.CONFIGURED },
+        duration: '1D'
+      },
+      failureStrategies: [],
+      identifier: 'analyze',
+      name: 'analyze',
+      type: StepType.AnalyzeDeploymentImpact
+    }
+    const isRequired = true
+    const errors = {}
+    const getString = jest.fn().mockReturnValue('Field is required')
+
+    validateField({ fieldValue, fieldKey, data, errors, getString, isRequired })
+
+    expect(errors).toEqual({})
+  })
+})
+
+describe('validateMonitoredServiceForRunTimeView', () => {
+  test('should set error message if monitored service is required and value is empty', () => {
+    const monitoredService = { spec: { monitoredServiceRef: '<+input>' }, type: MONITORED_SERVICE_TYPE.CONFIGURED }
+    const data = {
+      spec: {
+        monitoredService: { spec: { monitoredServiceRef: '' }, type: MONITORED_SERVICE_TYPE.CONFIGURED },
+        duration: '1D'
+      },
+      failureStrategies: [],
+      identifier: 'analyze',
+      name: 'analyze',
+      type: StepType.AnalyzeDeploymentImpact
+    }
+    const errors = {}
+    const isRequired = true
+    const getString = jest.fn().mockReturnValue('Field is required')
+
+    validateMonitoredServiceForRunTimeView({ monitoredService, data, errors, getString, isRequired })
+
+    expect(errors).toEqual({ spec: { monitoredService: { spec: { monitoredServiceRef: 'Field is required' } } } })
+  })
+
+  test('should not set error message if monitored service is not required', () => {
+    const monitoredService = { spec: { monitoredServiceRef: '' }, type: MONITORED_SERVICE_TYPE.CONFIGURED }
+    const data = {
+      spec: {
+        monitoredService: { spec: { monitoredServiceRef: '' }, type: MONITORED_SERVICE_TYPE.CONFIGURED },
+        duration: '1D'
+      },
+      failureStrategies: [],
+      identifier: 'analyze',
+      name: 'analyze',
+      type: StepType.AnalyzeDeploymentImpact
+    }
+    const errors = {}
+    const getString = jest.fn().mockReturnValue('Field is required')
+
+    validateMonitoredServiceForRunTimeView({ monitoredService, data, errors, getString, isRequired: false })
+
+    expect(errors).toEqual({})
+  })
+
+  test('should not set error message if monitored service value is not empty', () => {
+    const monitoredService = { spec: { monitoredServiceRef: 'someValue' }, type: MONITORED_SERVICE_TYPE.CONFIGURED }
+    const data = {
+      spec: {
+        monitoredService: { spec: { monitoredServiceRef: 'someValue' }, type: MONITORED_SERVICE_TYPE.CONFIGURED },
+        duration: '1D'
+      },
+      failureStrategies: [],
+      identifier: 'analyze',
+      name: 'analyze',
+      type: StepType.AnalyzeDeploymentImpact
+    }
+    const errors = {}
+    const isRequired = true
+    const getString = jest.fn().mockReturnValue('Field is required')
+    validateMonitoredServiceForRunTimeView({ monitoredService, data, errors, getString, isRequired })
+
+    expect(errors).toEqual({})
   })
 })

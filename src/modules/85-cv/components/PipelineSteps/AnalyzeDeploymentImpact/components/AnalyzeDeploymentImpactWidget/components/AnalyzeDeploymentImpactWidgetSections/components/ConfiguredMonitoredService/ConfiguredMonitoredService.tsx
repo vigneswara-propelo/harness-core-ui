@@ -28,6 +28,7 @@ import {
 } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import { AnalyzeDeploymentImpactData } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
 import {
+  getIsMonitoredServiceDefaultInput,
   getMonitoredServiceIdentifier,
   getMonitoredServiceNotPresentErrorMessage,
   getMonitoredServiceOptions,
@@ -113,13 +114,32 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
 
   const monitoredService = monitoredServiceData?.data?.monitoredService
 
-  useEffect(() => {
+  const shouldFetchMonitoredServiceDetails = useMemo(() => {
     //when monitoredServiceData is selected from the dropdown
-    if (isMonitoredServiceValidFixedInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)) {
+    const isMonitoredServiceDefaultInput = getIsMonitoredServiceDefaultInput(
+      monitoredServiceRef,
+      serviceIdentifier,
+      environmentIdentifier
+    )
+    // storing if monitored service is default input inside formik
+    if (isMonitoredServiceDefaultInput) {
+      let newSpecs = getUpdatedSpecs(monitoredService, formValues, monitoredServiceRef)
+      newSpecs = { ...newSpecs, isMonitoredServiceDefaultInput: true } as AnalyzeDeploymentImpactData['spec']
+      setFieldValue('spec', newSpecs)
+      return false
+    } else {
+      setFieldValue('spec.isMonitoredServiceDefaultInput', false)
+      return isMonitoredServiceValidFixedInput(monitoredServiceRef)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environmentIdentifier, monitoredServiceRef, serviceIdentifier])
+
+  useEffect(() => {
+    if (shouldFetchMonitoredServiceDetails) {
       fetchMonitoredServiceData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [monitoredServiceRef])
+  }, [shouldFetchMonitoredServiceDetails, environmentIdentifier, monitoredServiceRef, serviceIdentifier])
 
   useEffect(() => {
     if (monitoredService) {
@@ -177,7 +197,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
           {getString('cv.analyzeStep.monitoredService.fetchingMonitoredService')}
         </Container>
       )
-    } else if (isMonitoredServiceValidFixedInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)) {
+    } else if (shouldFetchMonitoredServiceDetails) {
       return (
         <>
           <AnalyseStepHealthSourcesList
@@ -211,15 +231,15 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
                 monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
               }
               selectItems={monitoredServicesOptions}
-              multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+              multiTypeInputProps={{
+                ...getMultiTypeInputProps(expressions, allowableTypes)
+              }}
             />
           </Container>
           {renderConfiguredMonitoredService()}
         </>
       </Card>
-      {isMonitoredServiceValidFixedInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier) ? (
-        <AnalyseStepNotifications identifier={monitoredServiceIdentifier} />
-      ) : null}
+      {shouldFetchMonitoredServiceDetails ? <AnalyseStepNotifications identifier={monitoredServiceIdentifier} /> : null}
     </>
   )
 }

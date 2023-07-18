@@ -14,10 +14,12 @@ export function healthSourcesValidation(
   monitoredServiceRef: string | undefined,
   healthSources: { identifier: string }[] | undefined,
   getString: (key: StringKeys) => string,
-  errors: FormikErrors<AnalyzeDeploymentImpactData>
+  errors: FormikErrors<AnalyzeDeploymentImpactData>,
+  isMonitoredServiceDefaultInput?: boolean
 ): FormikErrors<AnalyzeDeploymentImpactData> {
   if (
     monitoredServiceRef !== RUNTIME_INPUT_VALUE &&
+    !isMonitoredServiceDefaultInput &&
     !isAnExpression(monitoredServiceRef as string) &&
     monitoredServiceRef &&
     !healthSources?.length
@@ -49,11 +51,12 @@ export function monitoredServiceRefValidation(
 export function validateMonitoredService(
   monitoredServiceRef: string,
   getString: (key: StringKeys) => string,
-  healthSources?: { identifier: string }[]
+  healthSources?: { identifier: string }[],
+  isMonitoredServiceDefaultInput?: boolean
 ): FormikErrors<AnalyzeDeploymentImpactData> {
   let errors: FormikErrors<AnalyzeDeploymentImpactData> = {}
   errors = monitoredServiceRefValidation(monitoredServiceRef)
-  errors = healthSourcesValidation(monitoredServiceRef, healthSources, getString, errors)
+  healthSourcesValidation(monitoredServiceRef, healthSources, getString, errors, isMonitoredServiceDefaultInput)
   return errors
 }
 
