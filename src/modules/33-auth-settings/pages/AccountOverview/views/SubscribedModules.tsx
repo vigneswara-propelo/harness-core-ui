@@ -100,7 +100,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
 const SubscribedModules: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { CVNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED } = useFeatureFlags()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const { shouldVisible: shouldCIBeVisible } = useNavModuleInfo(ModuleName.CI)
   function isModuleEnabled(moduleLicense: ModuleLicenseDTO): boolean | undefined {
@@ -113,7 +113,7 @@ const SubscribedModules: React.FC = () => {
         return shouldVisible
       }
       case ModuleName.CE: {
-        return CENG_ENABLED
+        return licenseStatus === LICENSE_STATE_VALUES.ACTIVE
       }
       case ModuleName.CI: {
         return shouldCIBeVisible

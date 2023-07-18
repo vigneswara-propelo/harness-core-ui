@@ -100,8 +100,7 @@ moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
   BUILD_CREDITS_VIEW: true,
-  CVNG_ENABLED: true,
-  CENG_ENABLED: true
+  CVNG_ENABLED: true
 }
 const useGetUsageAndLimitReturnMock = {
   limitData: {
@@ -172,7 +171,8 @@ describe('Subscriptions Page', () => {
         defaultLicenseStoreValues={{
           licenseInformation: {
             CD: { edition: 'FREE', status: 'ACTIVE' },
-            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
+            CE: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -218,7 +218,8 @@ describe('Subscriptions Page', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
+            CE: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
         pathParams={{ module: ModuleName.CI }}

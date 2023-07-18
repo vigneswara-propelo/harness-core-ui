@@ -47,7 +47,7 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   const [ribbonImg, setRibbonImg] = useState<string>(ribbon_ci)
   useTelemetry({ pageName: PageNames.Purpose })
 
-  const { CVNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED } = useFeatureFlags()
 
   const CDNG_OPTIONS: ModuleProps = {
     enabled: true, // Continous delivery is enabled in CG
@@ -74,7 +74,7 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   }
 
   const CENG_OPTIONS: ModuleProps = {
-    enabled: !!CENG_ENABLED, // Continous efficiency is enabled in CG
+    enabled: true, // Continous efficiency is enabled in CG
     titleIcon: 'ccm-with-text',
     bodyIcon: 'ccm-sketch',
     module: 'ce',

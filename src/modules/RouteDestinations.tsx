@@ -55,7 +55,6 @@ export const AccountSideNavProps: SidebarContext = {
 export default function RouteDestinations(): React.ReactElement {
   const {
     CVNG_ENABLED,
-    CENG_ENABLED,
     CODE_ENABLED,
     IACM_ENABLED,
     SSCA_ENABLED,
@@ -106,11 +105,9 @@ export default function RouteDestinations(): React.ReactElement {
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>
-      {CENG_ENABLED ? (
-        <Route path="/account/:accountId/:module(ce)">
-          <CERoutes />
-        </Route>
-      ) : null}
+      <Route path="/account/:accountId/:module(ce)">
+        <CERoutes />
+      </Route>
       {CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
       {CFRoutes({})?.props.children}
       {IACM_ENABLED ? IACMRoutes().props.children : null}

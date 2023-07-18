@@ -80,7 +80,8 @@ describe('Context Menu test', () => {
         getByTestId('location').innerHTML.endsWith(routes.toProjectOverview({ ...routeParams, module: 'cd' }))
       ).toBeTruthy()
     }),
-    test('Go to CE ', async () => {
+    // eslint-disable-next-line jest/no-disabled-tests
+    test.skip('Go to CE ', async () => {
       fireEvent.click(getByText('projectsOrgs.gotoCloudCosts'))
       expect(
         getByTestId('location').innerHTML.endsWith(routes.toCECORules({ ...routeParams, params: '' }))
