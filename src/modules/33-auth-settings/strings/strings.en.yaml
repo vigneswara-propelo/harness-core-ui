@@ -297,7 +297,6 @@ billingInfo:
   annualTotal: 'Annual Total: '
   endingIn: ending in
   expires: Expires
-  updateCard: Update Card
   monthlySubscriptions: Monthly Subscriptions
   annualSubscriptions: Annual Subscriptions
   selectPaymentMethod: Select Payment Method
@@ -362,3 +361,6 @@ yesIamSure: Yes, I am very sure
 jitProvisioning: JIT Provisioning
 jitValidationKey: JIT Validation Key
 jitValidationValue: JIT Validation Value
+setAsDefaultCard: Set as Default Card
+updateCard: Update Card
+addCard: Add Card

@@ -2133,6 +2133,7 @@ export interface StringsMap {
   'authSettings.WhitelistedDomainsUpdated': string
   'authSettings.accountOrOAuthLogin': string
   'authSettings.accountOrOAuthLoginEnabledSuccessfully': string
+  'authSettings.addCard': string
   'authSettings.addSAMLProvider': string
   'authSettings.allowLoginFromTheseDomains': string
   'authSettings.allowUsersWithEmails': string
@@ -2171,7 +2172,6 @@ export interface StringsMap {
   'authSettings.billingInfo.priceBreakdown': string
   'authSettings.billingInfo.saveCardWarning': string
   'authSettings.billingInfo.selectPaymentMethod': string
-  'authSettings.billingInfo.updateCard': string
   'authSettings.cdCommunityPlan.communityLinkText': string
   'authSettings.cdCommunityPlan.communityPlanStrings.item1': string
   'authSettings.cdCommunityPlan.communityPlanStrings.item2': string
@@ -2447,6 +2447,7 @@ export interface StringsMap {
   'authSettings.sessionTimeOut': string
   'authSettings.sessionTimeOutErrorMaxMessage': string
   'authSettings.sessionTimeOutErrorMessage': string
+  'authSettings.setAsDefaultCard': string
   'authSettings.success.msg': string
   'authSettings.success.title': string
   'authSettings.success.woohoo': string
@@ -2460,6 +2461,7 @@ export interface StringsMap {
   'authSettings.twoFactorAuthSupport': string
   'authSettings.typeAndPressEnterToAddADomain': string
   'authSettings.unitPrice': string
+  'authSettings.updateCard': string
   'authSettings.updating': string
   'authSettings.uploadIdentityProvider': string
   'authSettings.urlIdentityProvider': string

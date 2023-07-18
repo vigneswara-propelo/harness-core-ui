@@ -7,16 +7,18 @@
 
 import React from 'react'
 import { capitalize, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Text, Card, Layout, OverlaySpinner, ButtonVariation, Button } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useListPaymentMethods } from 'services/cd-ng'
+import { useGetDefaultCard } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import amex from './images/amex.svg'
 import visa from './images/visa.svg'
 import discover from './images/discover.svg'
 import mastercard from './images/mastercard.svg'
+import { useCreditCardWidget } from './CreditCardWidget'
 import css from './BillingPage.module.scss'
 
 const cardByImageMap: { [key: string]: string } = {
@@ -28,9 +30,21 @@ const cardByImageMap: { [key: string]: string } = {
 function PaymentMethods(): JSX.Element {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { data, loading } = useListPaymentMethods({
+  const {
+    data,
+    loading,
+    refetch: refetchCards
+  } = useGetDefaultCard({
     queryParams: { accountIdentifier: accountId }
   })
+  const history = useHistory()
+  const { openSubscribeModal } = useCreditCardWidget({
+    onClose: () => {
+      history.push(routes.toBilling({ accountId }))
+      refetchCards()
+    }
+  })
+
   return (
     <OverlaySpinner show={loading}>
       <Card className={css.card}>
@@ -38,42 +52,56 @@ function PaymentMethods(): JSX.Element {
           <Text color={Color.GREY_500} font={{ variation: FontVariation.CARD_TITLE }}>
             {getString('authSettings.billingInfo.paymentMethods')}
           </Text>
-          {!isEmpty(data?.data?.paymentMethods) && (
-            <Button
-              disabled
-              tooltip={getString('common.featureComingSoon')}
-              tooltipProps={{ isDark: true }}
-              variation={ButtonVariation.LINK}
-              text={getString('authSettings.billingInfo.updateCard')}
-            />
-          )}
+          {
+            /* istanbul ignore next */
+            !isEmpty(data?.data) ? (
+              <Button
+                onClick={() => {
+                  openSubscribeModal()
+                }}
+                variation={ButtonVariation.LINK}
+                text={getString('authSettings.updateCard')}
+              />
+            ) : (
+              <Button
+                variation={ButtonVariation.LINK}
+                text={getString('authSettings.addCard')}
+                onClick={() => {
+                  openSubscribeModal()
+                }}
+              />
+            )
+          }
         </div>
 
-        {!isEmpty(data?.data?.paymentMethods) && (
-          <Layout.Horizontal
-            className={css.paymentMethodBody}
-            padding={{ top: 'medium', right: 'medium', bottom: 'medium' }}
-          >
-            <div className={css.brandImage}>
-              <img
-                src={cardByImageMap[data?.data?.paymentMethods?.[0]?.brand as string]}
-                alt={cardByImageMap[data?.data?.paymentMethods?.[0]?.brand as string]}
-              />
-            </div>
-            <Layout.Vertical>
-              <Text color={Color.BLACK} padding={{ bottom: 'xsmall' }}>
-                {`${capitalize(data?.data?.paymentMethods?.[0]?.brand)}
-            ${getString('authSettings.billingInfo.endingIn')} ${data?.data?.paymentMethods?.[0]?.last4}
+        {
+          /* istanbul ignore next */
+          !isEmpty(data?.data) && (
+            <Layout.Horizontal
+              className={css.paymentMethodBody}
+              padding={{ top: 'medium', right: 'medium', bottom: 'medium' }}
+            >
+              <div className={css.brandImage}>
+                <img
+                  src={cardByImageMap[data?.data?.brand as string]}
+                  alt={cardByImageMap[data?.data?.brand as string]}
+                />
+              </div>
+              <Layout.Vertical>
+                <Text color={Color.BLACK} padding={{ bottom: 'xsmall' }}>
+                  {`${capitalize(data?.data?.brand)}
+            ${getString('authSettings.billingInfo.endingIn')} ${data?.data?.last4}
             `}
-              </Text>
-              <Text color={Color.GREY_700} font={{ size: 'xsmall' }}>
-                {`${getString('authSettings.billingInfo.expires')} ${data?.data?.paymentMethods?.[0]?.expireMonth}/${
-                  data?.data?.paymentMethods?.[0]?.expireYear
-                }`}
-              </Text>
-            </Layout.Vertical>
-          </Layout.Horizontal>
-        )}
+                </Text>
+                <Text color={Color.GREY_700} font={{ size: 'xsmall' }}>
+                  {`${getString('authSettings.billingInfo.expires')} ${data?.data?.expireMonth}/${
+                    data?.data?.expireYear
+                  }`}
+                </Text>
+              </Layout.Vertical>
+            </Layout.Horizontal>
+          )
+        }
         {/* add card experience to be enabled later */}
         {/* <div className={css.centerText}>
         <Text font={{ variation: FontVariation.BODY }}>{getString('authSettings.billingInfo.addCC')}</Text>
