@@ -379,10 +379,30 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (suggestionsPromise) {
         suggestionsPromise.then(suggestions => {
           // @ts-ignore
+          const currentCursorPosition = editor.getPosition() as IPosition
+          const startRange = editor
+            .getModel()
+            ?.findPreviousMatch('+', currentCursorPosition, false, true, null, false)?.range
+          const endRange = editor.getModel()?.findNextMatch('>', currentCursorPosition, false, true, null, false)?.range
+          const range = new monaco.Range(
+            startRange?.startLineNumber,
+            startRange?.endColumn,
+            endRange?.endLineNumber,
+            endRange?.endColumn ? endRange?.endColumn + 1 : endRange?.endColumn
+          )
+          const shallUseRange =
+            startRange?.startLineNumber === currentCursorPosition.lineNumber &&
+            endRange?.startLineNumber === currentCursorPosition.lineNumber
+          const rangeSuggestions = suggestions.map(suggestion => {
+            return {
+              ...suggestion,
+              ...(shallUseRange && { range: range })
+            }
+          })
           expressionCompletionDisposer = monaco?.languages?.registerCompletionItemProvider('yaml', {
             triggerCharacters,
             provideCompletionItems: () => {
-              return { suggestions }
+              return { suggestions: rangeSuggestions }
             }
           })
         })
