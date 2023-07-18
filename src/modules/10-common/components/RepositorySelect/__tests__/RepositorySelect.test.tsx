@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, findByText, act } from '@testing-library/react'
+import { render, waitFor, fireEvent, findByText, act, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
-import { useGetListOfReposByRefConnector } from 'services/cd-ng'
-import RepositorySelect from '../RepositorySelect'
+import { useGetListOfReposByRefConnector, validateRepoPromise } from 'services/cd-ng'
+import RepositorySelect, { getRepoSelectOptions } from '../RepositorySelect'
 
 const mockRepos = {
   status: 'SUCCESS',
@@ -48,7 +49,8 @@ const setErrorResponse = jest.fn()
 jest.mock('services/cd-ng', () => ({
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
     return { data: mockRepos, refetch: fetchRepos }
-  })
+  }),
+  validateRepoPromise: jest.fn()
 }))
 
 describe('RepositorySelect test', () => {
@@ -195,5 +197,67 @@ describe('RepositorySelect test', () => {
         { label: 'repotest2', value: 'repotest2' }
       ])
     })
+  })
+
+  test('should validate the manually entered repo and add it if it is valid', async () => {
+    const mockValidateRepoPromise = jest.fn(() =>
+      Promise.resolve({
+        data: {
+          isValid: true
+        }
+      })
+    )
+    ;(validateRepoPromise as jest.Mock).mockImplementation(mockValidateRepoPromise)
+    const onChange = jest.fn()
+    render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <RepositorySelect connectorRef="connectorId" onChange={onChange} />
+      </TestWrapper>
+    )
+
+    const input = screen.getByPlaceholderText('common.git.selectRepositoryPlaceholder', {
+      exact: false
+    })
+    await userEvent.type(input, 'new-repo')
+
+    const addButton = await screen.findByRole('button', { name: 'new-repo' })
+    await userEvent.click(addButton)
+
+    await waitFor(() => expect(mockValidateRepoPromise).toBeCalled())
+    expect(onChange).toBeCalledWith(
+      {
+        label: 'new-repo',
+        value: 'new-repo'
+      },
+      getRepoSelectOptions(mockRepos.data)
+    )
+  })
+
+  test('should not add a repo if it is invalid', async () => {
+    const mockValidateRepoPromise = jest.fn(() =>
+      Promise.resolve({
+        responseMessages: []
+      })
+    )
+    ;(validateRepoPromise as jest.Mock).mockImplementation(mockValidateRepoPromise)
+    const onChange = jest.fn()
+    const setErrorResponseMock = jest.fn()
+    render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <RepositorySelect connectorRef="connectorId" onChange={onChange} setErrorResponse={setErrorResponseMock} />
+      </TestWrapper>
+    )
+
+    const input = screen.getByPlaceholderText('common.git.selectRepositoryPlaceholder', {
+      exact: false
+    })
+    await userEvent.type(input, 'new-repo')
+
+    const addButton = await screen.findByRole('button', { name: 'new-repo' })
+    await userEvent.click(addButton)
+
+    await waitFor(() => expect(mockValidateRepoPromise).toBeCalled())
+    expect(onChange).not.toBeCalled()
+    await waitFor(() => expect(setErrorResponseMock).toBeCalled())
   })
 })

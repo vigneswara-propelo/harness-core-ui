@@ -22,6 +22,9 @@ export type ACRStepInfo = StepSpecType & {
   buildArgs?: {
     [key: string]: string
   }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
   connectorRef: string
   context?: string
   dockerfile?: string
@@ -2912,6 +2915,7 @@ export type ConnectorFilterProperties = FilterProperties & {
 }
 
 export interface ConnectorInfoDTO {
+  accountIdentifier?: string
   description?: string
   identifier: string
   name: string
@@ -2972,6 +2976,64 @@ export interface ConnectorInfoDTO {
     | 'SignalFX'
     | 'Harness'
     | 'Rancher'
+}
+
+export type ConnectorInternalFilterProperties = FilterProperties & {
+  accountIdentifiers?: string[]
+  ccmConnectorFilter?: CcmConnectorFilter
+  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  types?: (
+    | 'K8sCluster'
+    | 'Git'
+    | 'Splunk'
+    | 'AppDynamics'
+    | 'Prometheus'
+    | 'Dynatrace'
+    | 'Vault'
+    | 'AzureKeyVault'
+    | 'DockerRegistry'
+    | 'Local'
+    | 'AwsKms'
+    | 'GcpKms'
+    | 'AwsSecretManager'
+    | 'Gcp'
+    | 'Aws'
+    | 'Azure'
+    | 'Artifactory'
+    | 'Jira'
+    | 'Nexus'
+    | 'Github'
+    | 'Gitlab'
+    | 'Bitbucket'
+    | 'Codecommit'
+    | 'CEAws'
+    | 'CEAzure'
+    | 'GcpCloudCost'
+    | 'CEK8sCluster'
+    | 'HttpHelmRepo'
+    | 'NewRelic'
+    | 'Datadog'
+    | 'SumoLogic'
+    | 'PagerDuty'
+    | 'CustomHealth'
+    | 'ServiceNow'
+    | 'ErrorTracking'
+    | 'Pdc'
+    | 'AzureRepo'
+    | 'Jenkins'
+    | 'OciHelmRepo'
+    | 'CustomSecretManager'
+    | 'ElasticSearch'
+    | 'GcpSecretManager'
+    | 'AzureArtifacts'
+    | 'Tas'
+    | 'Spot'
+    | 'Bamboo'
+    | 'TerraformCloud'
+    | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
+  )[]
 }
 
 export interface ConnectorResponse {
@@ -4574,6 +4636,7 @@ export interface EntityDetail {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
 }
 
 export interface EntityDetailProtoDTO {
@@ -7349,6 +7412,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   )[]
   moduleType?:
     | 'CD'
@@ -7594,6 +7658,7 @@ export interface GitEntityFilterProperties {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7918,6 +7983,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8155,6 +8221,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8513,6 +8580,7 @@ export interface GitSyncEntityDTO {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8744,6 +8812,7 @@ export interface GitSyncEntityListDTO {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8992,6 +9061,7 @@ export interface GitSyncErrorDTO {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9491,6 +9561,7 @@ export type HelmChartManifest = ManifestAttributes & {
   chartVersion?: string
   commandFlags?: HelmManifestCommandFlag[]
   enableDeclarativeRollback?: ParameterFieldBoolean
+  fetchHelmChartMetadata?: boolean
   helmVersion?: 'V2' | 'V3' | 'V380'
   metadata?: string
   skipResourceVersioning?: boolean
@@ -10716,7 +10787,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -10724,6 +10795,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11486,9 +11558,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -13033,6 +13106,7 @@ export interface ReferencedByDTO {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
 }
 
 export interface RefreshResponse {
@@ -13079,6 +13153,10 @@ export type RemoveOperation = PatchOperation & {
 
 export type ReplaceOperation = PatchOperation & {
   value?: JsonNode
+}
+
+export interface RepoValidationResponse {
+  isValid?: boolean
 }
 
 export interface ResourceDTO {
@@ -14483,6 +14561,7 @@ export interface ResponseListEntityType {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15672,6 +15751,13 @@ export interface ResponseRefreshResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseRepoValidationResponse {
+  correlationId?: string
+  data?: RepoValidationResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseRoleAssignmentAggregateResponse {
   correlationId?: string
   data?: RoleAssignmentAggregateResponse
@@ -16453,6 +16539,12 @@ export interface RetryFailureSpecConfig {
 export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
   spec: RetryFailureSpecConfig
   type: 'RetryStepGroup'
+}
+
+export type RevertPRStepInfo = StepSpecType & {
+  commitId: string
+  delegateSelectors?: string[]
+  prTitle?: string
 }
 
 export interface Role {
@@ -18208,6 +18300,7 @@ export interface StepData {
   name?: string
   type?:
     | 'MergePR'
+    | 'RevertPR'
     | 'GitOpsSync'
     | 'APPLY'
     | 'SCALE'
@@ -18342,7 +18435,7 @@ export interface StepGroupInfra {
 }
 
 export interface StepInstanceInfo {
-  [key: string]: any
+  instanceName?: string
 }
 
 export interface StepSpecType {
@@ -20173,7 +20266,6 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
 export type DeleteManyFreezesBodyRequestBody = string[]
 
-export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
@@ -21024,6 +21116,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21247,6 +21340,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -21575,6 +21669,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21798,6 +21893,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -40491,6 +40587,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -40775,6 +40872,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   searchTerm?: string
 }
 
@@ -44361,6 +44459,7 @@ export interface GetReferencedByQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   searchTerm?: string
 }
 
@@ -47302,6 +47401,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -47593,6 +47693,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServerlessAwsLambdaDeployV2'
       | 'AnalyzeDeploymentImpact'
       | 'ServerlessAwsLambdaPackageV2'
+      | 'RevertPR'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -54234,6 +54335,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   yamlGroup?: string
 }
 
@@ -54585,6 +54687,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -57773,6 +57876,58 @@ export const getRepoURLPromise = (
   getUsingFetch<ResponseString, Failure | Error, GetRepoURLQueryParams, void>(
     getConfig('ng/api'),
     `/scm/repo-url`,
+    props,
+    signal
+  )
+
+export interface ValidateRepoQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorRef?: string
+  repoName?: string
+}
+
+export type ValidateRepoProps = Omit<
+  GetProps<ResponseRepoValidationResponse, Failure | Error, ValidateRepoQueryParams, void>,
+  'path'
+>
+
+/**
+ * Validates repos on the basis of repoAllowList in default settings
+ */
+export const ValidateRepo = (props: ValidateRepoProps) => (
+  <Get<ResponseRepoValidationResponse, Failure | Error, ValidateRepoQueryParams, void>
+    path={`/scm/validate-repo`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateRepoProps = Omit<
+  UseGetProps<ResponseRepoValidationResponse, Failure | Error, ValidateRepoQueryParams, void>,
+  'path'
+>
+
+/**
+ * Validates repos on the basis of repoAllowList in default settings
+ */
+export const useValidateRepo = (props: UseValidateRepoProps) =>
+  useGet<ResponseRepoValidationResponse, Failure | Error, ValidateRepoQueryParams, void>(`/scm/validate-repo`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Validates repos on the basis of repoAllowList in default settings
+ */
+export const validateRepoPromise = (
+  props: GetUsingFetchProps<ResponseRepoValidationResponse, Failure | Error, ValidateRepoQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseRepoValidationResponse, Failure | Error, ValidateRepoQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/validate-repo`,
     props,
     signal
   )
@@ -67914,6 +68069,31 @@ export const updateUserNamePromise = (
     UpdateUserNamePathParams
   >('PUT', getConfig('ng/api'), `/user/${userId}`, props, signal)
 
+export type GetCurrentIPProps = Omit<GetProps<ResponseString, Failure | Error, void, void>, 'path'>
+
+/**
+ * Get current-ip
+ */
+export const GetCurrentIP = (props: GetCurrentIPProps) => (
+  <Get<ResponseString, Failure | Error, void, void> path={`/v1/current-ip`} base={getConfig('ng/api')} {...props} />
+)
+
+export type UseGetCurrentIPProps = Omit<UseGetProps<ResponseString, Failure | Error, void, void>, 'path'>
+
+/**
+ * Get current-ip
+ */
+export const useGetCurrentIP = (props: UseGetCurrentIPProps) =>
+  useGet<ResponseString, Failure | Error, void, void>(`/v1/current-ip`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get current-ip
+ */
+export const getCurrentIPPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) => getUsingFetch<ResponseString, Failure | Error, void, void>(getConfig('ng/api'), `/v1/current-ip`, props, signal)
+
 export interface ListDelegateConfigsNgV2QueryParams {
   offset?: string
   limit?: string
@@ -70504,6 +70684,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
   subtype?:
     | 'K8sCluster'
     | 'Git'
