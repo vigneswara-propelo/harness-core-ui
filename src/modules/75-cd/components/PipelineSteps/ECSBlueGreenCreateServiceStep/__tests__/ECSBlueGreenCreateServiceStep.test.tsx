@@ -11,6 +11,8 @@ import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { queryByNameAttribute } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
+import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -37,6 +39,15 @@ jest.mock('services/cd-ng', () => ({
     })
   })
 }))
+
+const PATH = routes.toPipelineStudio({ ...projectPathProps, ...modulePathProps, ...pipelinePathProps })
+const PATH_PARAMS = {
+  accountId: 'testAccountId',
+  orgIdentifier: 'testOrg',
+  projectIdentifier: 'testProject',
+  pipelineIdentifier: 'Pipeline_1',
+  module: 'cd'
+}
 
 factory.registerStep(new ECSBlueGreenCreateServiceStep())
 
@@ -337,7 +348,11 @@ describe('ECSRollingDeployStep tests', () => {
   test('DeploymentForm view renders fine when Service / Env V2 FF is OFF', async () => {
     const { container, getByText, findByText, debug } = render(
       <TestStepWidget
-        testWrapperProps={{ defaultFeatureFlagValues: { NG_SVC_ENV_REDESIGN: false } }}
+        testWrapperProps={{
+          defaultFeatureFlagValues: { NG_SVC_ENV_REDESIGN: false },
+          path: PATH,
+          pathParams: PATH_PARAMS
+        }}
         initialValues={{
           identifier: 'Step_1',
           name: 'Step 1',
@@ -371,14 +386,13 @@ describe('ECSRollingDeployStep tests', () => {
           selectedStage: {
             stage: {
               spec: {
-                infrastructure: {
+                environment: {
                   environmentRef: 'Env_1',
-                  infrastructureDefinition: {
-                    spec: {
-                      connectorRef: 'testConnRef',
-                      region: 'region1'
+                  infrastructureDefinitions: [
+                    {
+                      identifier: 'Infra_Def_1'
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -414,6 +428,20 @@ describe('ECSRollingDeployStep tests', () => {
     const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn', container) as HTMLInputElement
     const prodListenerDropdownIcon = dropdownIcons[1].parentElement
     await userEvent.click(prodListenerDropdownIcon!)
+    await waitFor(() =>
+      expect(fetchListeners).toHaveBeenLastCalledWith({
+        queryParams: {
+          accountIdentifier: 'testAccountId',
+          awsConnectorRef: undefined,
+          elasticLoadBalancer: 'Load_Balancer_1',
+          envId: 'Env_1',
+          infraDefinitionId: 'Infra_Def_1',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'testProject',
+          region: undefined
+        }
+      })
+    )
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const listenerOption1 = await findByText('HTTP 80')
     expect(listenerOption1).toBeInTheDocument()

@@ -202,7 +202,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
     }
   }, [initialElasticLoadBalancer, initialStageListener])
 
-  const fetchLoadBalancers = (e: React.FocusEvent<HTMLInputElement>) => {
+  const fetchLoadBalancers = (e: React.FocusEvent<HTMLInputElement>): void => {
     if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
       return
     }
@@ -213,7 +213,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
     }
   }
 
-  const fetchListeners = (e: React.FocusEvent<HTMLInputElement>, selectedLoadBalancer: string) => {
+  const fetchListeners = (e: React.FocusEvent<HTMLInputElement>, selectedLoadBalancer: string): void => {
     if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
       return
     }
@@ -231,14 +231,14 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             infraDefinitionId: infrastructureRef,
             awsConnectorRef: initialAwsConnectorRef,
             region: initialRegion,
-            elasticLoadBalancer: selectedLoadBalancer
+            elasticLoadBalancer: defaultTo(defaultTo(selectedLoadBalancer, initialElasticLoadBalancer), '')
           }
         })
       }
     }
   }
 
-  const fetchProdListenerRules = (selectedLoadBalancer: string, selectedProdListener: string) => {
+  const fetchProdListenerRules = (selectedLoadBalancer: string, selectedProdListener: string): void => {
     if (
       (initialAwsConnectorRef && initialRegion && selectedLoadBalancer && selectedProdListener) ||
       (environmentRef && infrastructureRef && selectedLoadBalancer && selectedProdListener)
@@ -273,7 +273,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
     }
   }
 
-  const fetchStageListenerRules = (selectedLoadBalancer: string, selectedStageListener: string) => {
+  const fetchStageListenerRules = (selectedLoadBalancer: string, selectedStageListener: string): void => {
     if (
       (initialAwsConnectorRef && initialRegion && selectedLoadBalancer && selectedStageListener) ||
       (environmentRef && infrastructureRef && selectedLoadBalancer && selectedStageListener)
@@ -308,7 +308,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
     }
   }
 
-  const onLoadBalancerChange = (selectedLoadBalancer: string) => {
+  const onLoadBalancerChange = (selectedLoadBalancer: string): void => {
     const updatedValues = produce(formik?.values, draft => {
       if (draft) {
         set(draft, `${prefix}spec.loadBalancer`, selectedLoadBalancer)
@@ -350,7 +350,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             selectProps: {
               items: loadBalancerOptions,
               popoverClassName: css.dropdownMenu,
-              loadingItems: loadingLoadBalancers
+              loadingItems: loadingLoadBalancers,
+              allowCreatingNewItems: true
             },
             allowableTypes,
             expressions,
@@ -378,7 +379,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             selectProps: {
               items: listenerOptions,
               popoverClassName: css.dropdownMenu,
-              loadingItems: loadingListeners
+              loadingItems: loadingListeners,
+              allowCreatingNewItems: true
             },
             allowableTypes,
             expressions,
@@ -421,7 +423,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             selectProps: {
               items: prodListenerRules,
               popoverClassName: css.dropdownMenu,
-              loadingItems: prodListenerRulesLoading
+              loadingItems: prodListenerRulesLoading,
+              allowCreatingNewItems: true
             },
             allowableTypes,
             expressions
@@ -443,7 +446,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             selectProps: {
               items: listenerOptions,
               popoverClassName: css.dropdownMenu,
-              loadingItems: loadingListeners
+              loadingItems: loadingListeners,
+              allowCreatingNewItems: true
             },
             allowableTypes,
             expressions,
@@ -487,7 +491,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             selectProps: {
               items: stageListenerRules,
               popoverClassName: css.dropdownMenu,
-              loadingItems: stageListenerRulesLoading
+              loadingItems: stageListenerRulesLoading,
+              allowCreatingNewItems: true
             },
             allowableTypes,
             expressions
