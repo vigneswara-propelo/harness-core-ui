@@ -28,15 +28,14 @@ import {
   useToaster,
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
-
 import { PageSpinner } from '@common/components'
-
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useGetDelegateTokens, GetDelegateTokensQueryParams, DelegateTokenDetails } from 'services/cd-ng'
-
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
-
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useRevokeTokenModal } from './modals/useRevokeTokenModal'
 import { useCreateTokenModal } from './modals/useCreateTokenModal'
 import { useMoreTokenInfoModalModal } from './modals/useMoreTokenInfoModal'
@@ -192,9 +191,20 @@ export const DelegateListing: React.FC = () => {
                 openMoreTokenInfoModal(row.original.name || '')
               }}
             />
-            <MenuItem
+            <RbacMenuItem
               icon="clipboard"
               text={getString('delegates.tokens.copytoken')}
+              permission={{
+                resource: {
+                  resourceType: ResourceType.DELEGATE
+                },
+                resourceScope: {
+                  accountIdentifier: accountId,
+                  orgIdentifier,
+                  projectIdentifier
+                },
+                permission: PermissionIdentifier.UPDATE_DELEGATE
+              }}
               onClick={(event: React.MouseEvent<HTMLElement>) => {
                 event.stopPropagation()
                 getTokenForCopy({
