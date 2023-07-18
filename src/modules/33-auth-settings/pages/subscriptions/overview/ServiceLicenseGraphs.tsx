@@ -187,12 +187,18 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
   useEffect(() => {
     const currentMonth = currentDate.getMonth() + 1
     const currentYear = currentDate.getFullYear()
+    const todayDate = currentDate.getDate() - 1
+    const todayDateString = todayDate < 10 ? `0${todayDate}` : todayDate.toString()
     let formatMonth = false
     if (currentMonth !== 10 && currentMonth !== 11 && currentMonth !== 12) {
       formatMonth = true
     }
     setFromDate(formatMonth ? `${currentYear}-0${currentMonth}-01` : `${currentYear}-${currentMonth}-01`)
-    setToDate(formatMonth ? `${currentYear}-0${currentMonth}-31` : `${currentYear}-${currentMonth}-31`)
+    setToDate(
+      formatMonth
+        ? `${currentYear}-0${currentMonth}-${todayDateString}`
+        : `${currentYear}-${currentMonth}-${todayDateString}`
+    )
 
     if (props.licenseType === 'SERVICES') {
       setLicenseTypeSelected(CDLicenseType.SERVICES)
@@ -268,9 +274,9 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
       labels: {
         formatter: function (this) {
           const dataKeys = Object.keys(data?.data?.licenseUsage || {})
-          if (dataKeys.length > 12) {
-            return dataKeys[this.pos]
-          } else return moment(dataKeys[this.pos]).format('YYYY-MM')
+          if (dataKeys.length === 12) {
+            return moment(dataKeys[this.pos]).format('YYYY-MM')
+          } else return dataKeys[this.pos]
         }
       }
     },
@@ -301,6 +307,8 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
                 const currentMonth = currentDate.getMonth() + 1
                 const currentYear = currentDate.getFullYear()
                 const previousYear = currentDate.getFullYear() - 1
+                const todayDate = currentDate.getDate() - 1
+                const todayDateString = todayDate < 10 ? `0${todayDate}` : todayDate.toString()
                 const yearPassed = currentYear
                 let year2Passed = currentYear
                 let year3Passed = currentYear
@@ -337,7 +345,11 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
                   }
                   setFetchType('DAILY')
                   setFromDate(formatMonth ? `${yearPassed}-0${monthPassed}-01` : `${yearPassed}-${monthPassed}-01`)
-                  setToDate(formatMonth ? `${yearPassed}-0${monthPassed}-31` : `${yearPassed}-${monthPassed}-31`)
+                  setToDate(
+                    formatMonth
+                      ? `${yearPassed}-0${monthPassed}-${todayDateString}`
+                      : `${yearPassed}-${monthPassed}-${todayDateString}`
+                  )
                 }
                 if (selected.value === filterOptions[1].value) {
                   let formatMonth = false
