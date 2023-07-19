@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, Container, Layout, Page, Tabs, Text } from '@harness/uicore'
+import { Container, Layout, Page, Tabs, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -34,8 +34,8 @@ const DiscoveryDetails: React.FC = () => {
     }
   })
 
-  const date = discoveryAgentData?.updatedAt
-    ? moment(discoveryAgentData.updatedAt).format('MMM DD, YYYY hh:mm A')
+  const date = discoveryAgentData?.installationDetails
+    ? moment(discoveryAgentData?.installationDetails?.createdAt).format('MMM DD, YYYY hh:mm A')
     : getString('na')
 
   return (
@@ -85,13 +85,13 @@ const DiscoveryDetails: React.FC = () => {
             <Text font={{ size: 'small' }}>
               {getString('discovery.discoveryDetails.lastDiscovery')}: {date}
             </Text>
-            <Button
+            {/* <Button
               margin={{ left: 'medium' }}
               icon="edit"
               rightIcon="chevron-down"
               variation={ButtonVariation.SECONDARY}
               text="Edit"
-            />
+            /> */}
           </Layout.Horizontal>
         }
       />

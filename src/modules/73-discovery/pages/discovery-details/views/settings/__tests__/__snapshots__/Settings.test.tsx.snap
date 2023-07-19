@@ -33,13 +33,13 @@ exports[`Overview tab tests should match snapshot 1`] = `
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
               style="width: 40%;"
             >
               name
             </p>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-variation-body2"
             >
               local-1
             </p>
@@ -48,13 +48,13 @@ exports[`Overview tab tests should match snapshot 1`] = `
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
               style="width: 40%;"
             >
               description
             </p>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-variation-body2"
             >
               
             </p>
@@ -63,7 +63,7 @@ exports[`Overview tab tests should match snapshot 1`] = `
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
               style="width: 40%;"
             >
               discovery.discoveryDetails.lastDiscovery
@@ -72,10 +72,10 @@ exports[`Overview tab tests should match snapshot 1`] = `
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--padding-right-small StyledProps--font-variation-body2"
               >
                 Jun 19, 07:02 AM
-                -
+                 -
                  
               </p>
               <div
@@ -103,7 +103,7 @@ exports[`Overview tab tests should match snapshot 1`] = `
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
               style="width: 40%;"
             >
               connectors.name
@@ -159,7 +159,7 @@ exports[`Overview tab tests should match snapshot 1`] = `
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
               style="width: 40%;"
             >
               ce.cloudIntegration.connectorStatus
@@ -189,33 +189,10 @@ exports[`Overview tab tests should match snapshot 1`] = `
             class="Layout--horizontal StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
               style="width: 40%;"
             >
               discovery.discoveryDetails.settings.detectNetwork
-            </p>
-            <label
-              class="Toggle--toggle StyledProps--main"
-            >
-              <input
-                class="Toggle--input"
-                type="checkbox"
-                value=""
-              />
-              <span
-                class="Toggle--toggleIcon"
-              />
-              
-            </label>
-          </div>
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
-              style="width: 40%;"
-            >
-              discovery.discoveryDetails.settings.enableEBPF
             </p>
             <label
               class="Toggle--toggle StyledProps--main"
@@ -239,7 +216,7 @@ exports[`Overview tab tests should match snapshot 1`] = `
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-form-message-danger StyledProps--color StyledProps--color-red500 StyledProps--padding-top-medium"
-              style="cursor: pointer; display: flex; align-items: center;"
+              style="cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center;"
             >
               <span
                 class="bp3-icon bp3-icon-trash StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"

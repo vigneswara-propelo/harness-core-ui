@@ -60,7 +60,7 @@ exports[`<DiscoveryServices /> tests should match snapshot 1`] = `
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 15%;"
+              style="width: 20%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -97,8 +97,8 @@ exports[`<DiscoveryServices /> tests should match snapshot 1`] = `
                   style="width: 25%;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-left-medium StyledProps--color StyledProps--color-primary7"
-                    style="cursor: pointer;"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-semi-bold StyledProps--margin-left-medium StyledProps--color StyledProps--color-primary7"
+                    style="cursor: pointer; width: 200px; --text-line-clamp: 1;"
                   >
                     access-control
                   </p>
@@ -152,38 +152,84 @@ exports[`<DiscoveryServices /> tests should match snapshot 1`] = `
                   <div
                     class="Layout--vertical StyledProps--main"
                   >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
+                    <div
+                      class="Layout--horizontal StyledProps--main"
                     >
-                      ce.co.gatewayAccess.ip
-                      : 
-                      10.104.11.160
-                    </p>
-                    <p
-                      class="StyledProps--font StyledProps--main networkDetailsPort StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+                      >
+                        ce.co.gatewayAccess.ip
+                        :
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--padding-left-small StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-primary5"
+                      >
+                        10.104.11.160
+                      </p>
+                    </div>
+                    <div
+                      class="Layout--horizontal StyledProps--main"
                     >
-                      discovery.discoveryDetails.discoveredService.portNumber
-                      :
-                       
-                      9006
-                    </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+                      >
+                        discovery.discoveryDetails.discoveredService.portNumber
+                        :
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--padding-left-small StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-primary5"
+                      >
+                        9006
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 15%;"
+                  style="width: 20%;"
                 >
                   <div
                     class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main"
-                      style="--text-line-clamp: 1;"
+                    <div
+                      class="Layout--horizontal StyledProps--main"
                     >
-                      harness-manager 
-                      redis-sentinel-harness-announce-0 
-                    </p>
+                      <div
+                        class="tag"
+                      >
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag bp3-intent-primary"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              harness-manager
+                            </span>
+                          </span>
+                        </span>
+                      </div>
+                      <div
+                        class="tag"
+                      >
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag bp3-intent-primary"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              redis-sentinel-harness-announce-0
+                            </span>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -454,7 +500,7 @@ exports[`<DiscoveryServices /> tests should render error view correctly 1`] = `
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 15%;"
+              style="width: 20%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"

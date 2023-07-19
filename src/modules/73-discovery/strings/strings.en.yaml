@@ -55,6 +55,7 @@ createNetworkMap: Create Network Map
 createNewNetworkMap: Create New Network Map
 allDiscoveredServices: All Discovered Services
 forADurationOf: For a duration of (in mins)
+blackListedNamespaces: Blacklisted Namespaces
 discoveryDetails:
   id: ID
   lastDiscovery: Last Discovery
@@ -85,6 +86,7 @@ serviceDrawer:
   selector: Selector
   workloads: Workload Information
 detectNetworkTrace: Detect network trace connectivity
+notDetected: Not detected
 blacklistedNamespaces: Backlisted Namespaces
 nodeAgentSelector: Add Node Selector
 newNetworkMap: New Network Map

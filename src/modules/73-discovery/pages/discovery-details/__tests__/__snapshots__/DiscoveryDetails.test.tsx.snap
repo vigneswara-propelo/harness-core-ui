@@ -204,55 +204,6 @@ exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
         : 
         Jun 21, 2023 01:17 PM
       </p>
-      <button
-        aria-label="Edit"
-        class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-secondary"
-        type="button"
-      >
-        <span
-          class="bp3-icon bp3-icon-edit StyledProps--main StyledProps--padding-right-xsmall"
-          icon="edit"
-        >
-          <svg
-            data-icon="edit"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              edit
-            </desc>
-            <path
-              d="M3.25 10.26l2.47 2.47 6.69-6.69-2.46-2.48-6.7 6.7zM.99 14.99l3.86-1.39-2.46-2.44-1.4 3.83zm12.25-14c-.48 0-.92.2-1.24.51l-1.44 1.44 2.47 2.47 1.44-1.44c.32-.32.51-.75.51-1.24.01-.95-.77-1.74-1.74-1.74z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-        <span
-          class="bp3-button-text"
-        >
-          Edit
-        </span>
-        <span
-          class="bp3-icon bp3-icon-chevron-down StyledProps--main"
-          icon="chevron-down"
-        >
-          <svg
-            data-icon="chevron-down"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              chevron-down
-            </desc>
-            <path
-              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </button>
     </div>
   </div>
   <div
@@ -556,55 +507,6 @@ exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
         : 
         na
       </p>
-      <button
-        aria-label="Edit"
-        class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-secondary"
-        type="button"
-      >
-        <span
-          class="bp3-icon bp3-icon-edit StyledProps--main StyledProps--padding-right-xsmall"
-          icon="edit"
-        >
-          <svg
-            data-icon="edit"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              edit
-            </desc>
-            <path
-              d="M3.25 10.26l2.47 2.47 6.69-6.69-2.46-2.48-6.7 6.7zM.99 14.99l3.86-1.39-2.46-2.44-1.4 3.83zm12.25-14c-.48 0-.92.2-1.24.51l-1.44 1.44 2.47 2.47 1.44-1.44c.32-.32.51-.75.51-1.24.01-.95-.77-1.74-1.74-1.74z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-        <span
-          class="bp3-button-text"
-        >
-          Edit
-        </span>
-        <span
-          class="bp3-icon bp3-icon-chevron-down StyledProps--main"
-          icon="chevron-down"
-        >
-          <svg
-            data-icon="chevron-down"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              chevron-down
-            </desc>
-            <path
-              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </button>
     </div>
   </div>
   <div
@@ -908,55 +810,6 @@ exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
         : 
         na
       </p>
-      <button
-        aria-label="Edit"
-        class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-secondary"
-        type="button"
-      >
-        <span
-          class="bp3-icon bp3-icon-edit StyledProps--main StyledProps--padding-right-xsmall"
-          icon="edit"
-        >
-          <svg
-            data-icon="edit"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              edit
-            </desc>
-            <path
-              d="M3.25 10.26l2.47 2.47 6.69-6.69-2.46-2.48-6.7 6.7zM.99 14.99l3.86-1.39-2.46-2.44-1.4 3.83zm12.25-14c-.48 0-.92.2-1.24.51l-1.44 1.44 2.47 2.47 1.44-1.44c.32-.32.51-.75.51-1.24.01-.95-.77-1.74-1.74-1.74z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-        <span
-          class="bp3-button-text"
-        >
-          Edit
-        </span>
-        <span
-          class="bp3-icon bp3-icon-chevron-down StyledProps--main"
-          icon="chevron-down"
-        >
-          <svg
-            data-icon="chevron-down"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              chevron-down
-            </desc>
-            <path
-              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </button>
     </div>
   </div>
   <div

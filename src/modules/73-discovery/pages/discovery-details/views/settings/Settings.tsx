@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Page, PageSpinner, Text, Toggle } from '@harness/uicore'
+import { Container, Layout, Page, PageSpinner, Text, Toggle } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -16,6 +16,7 @@ import { useGetAgent } from 'services/servicediscovery'
 import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import { getConnectorPromise, ResponseConnectorResponse } from 'services/cd-ng'
 import { DiscoveryAgentStatus } from '@discovery/components/DelegateAgentStatus/DelegateAgentStatus'
+import TagCount from '@discovery/components/TagCount/TagCount'
 import ListItems from './ListItems'
 import { RenderConnectorStatus } from './ConnectorStatus'
 
@@ -85,7 +86,7 @@ const Settings: React.FC = () => {
               <ListItems
                 title={getString('name')}
                 content={
-                  <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+                  <Text color={Color.GREY_900} font={{ variation: FontVariation.BODY2 }}>
                     {dAgentData?.name}
                   </Text>
                 }
@@ -94,7 +95,7 @@ const Settings: React.FC = () => {
               <ListItems
                 title={getString('description')}
                 content={
-                  <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+                  <Text color={Color.GREY_900} font={{ variation: FontVariation.BODY2 }}>
                     {dAgentData?.description}
                   </Text>
                 }
@@ -104,8 +105,8 @@ const Settings: React.FC = () => {
                 title={getString('discovery.discoveryDetails.lastDiscovery')}
                 content={
                   <Layout.Horizontal flex={{ alignItems: 'center' }}>
-                    <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                      {updateTime(dAgentData?.installationDetails?.createdAt)}-{' '}
+                    <Text color={Color.GREY_900} padding={{ right: 'small' }} font={{ variation: FontVariation.BODY2 }}>
+                      {updateTime(dAgentData?.installationDetails?.createdAt)} -{' '}
                     </Text>
                     <DiscoveryAgentStatus status={dAgentData?.installationDetails?.delegateTaskStatus} />
                   </Layout.Horizontal>
@@ -146,14 +147,25 @@ const Settings: React.FC = () => {
             >
               <ListItems
                 title={getString('discovery.discoveryDetails.settings.detectNetwork')}
-                content={<Toggle checked={dAgentData?.config?.data?.enableBatchResources} />} //TODO: Updated this wrt design
-              />
-              <ListItems
-                title={getString('discovery.discoveryDetails.settings.enableEBPF')}
-                content={<Toggle checked={dAgentData?.config?.data?.enableStorageResources} />} //TODO: Updated this wrt design
-                padding={{ top: 'medium' }}
+                content={<Toggle checked={dAgentData?.config?.data?.enableNodeAgent} />}
               />
               <Divider />
+              {dAgentData?.config?.data?.blacklistedNamespaces && (
+                <Container>
+                  <ListItems
+                    title={getString('discovery.blackListedNamespaces')}
+                    content={
+                      <TagCount
+                        tagItems={dAgentData?.config?.data?.blacklistedNamespaces}
+                        tagCount={2}
+                        tooltipHeader={getString('discovery.blackListedNamespaces')}
+                      />
+                    }
+                    padding={{ bottom: 'medium' }}
+                  />
+                  <Divider />
+                </Container>
+              )}
               <Layout.Vertical>
                 <Text
                   icon="trash"
@@ -161,7 +173,7 @@ const Settings: React.FC = () => {
                   font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}
                   color={Color.RED_500}
                   padding={{ top: 'medium' }}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', fontWeight: 600, fontSize: '14px' }}
                 >
                   {getString('discovery.discoveryDetails.settings.disable')}
                 </Text>

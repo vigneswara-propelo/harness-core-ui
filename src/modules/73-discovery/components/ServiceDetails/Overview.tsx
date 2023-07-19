@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Icon, Layout, Text } from '@harness/uicore'
+import { Layout, PageSpinner, Text } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -24,7 +24,7 @@ interface OverviewProps {
 export default function Overview({ infraId, serviceId }: OverviewProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
   const { getString } = useStrings()
-  const { data: serviceData, loading: getServiceLoader } = useGetServiceFromK8SCustomService({
+  const { data: serviceData, loading: getServiceLoading } = useGetServiceFromK8SCustomService({
     agentIdentity: infraId,
     kcs_id: serviceId,
     queryParams: {
@@ -53,20 +53,14 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
 
   return (
     <Layout.Horizontal spacing="medium" flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-      <Layout.Vertical style={{ width: '48%' }}>
-        <Text color={Color.GREY_700} font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
-          {getString('common.serviceDetails')}
-        </Text>
-        {getServiceLoader ? (
-          <Container height={'100%'} width={'100%'} flex={{ align: 'center-center' }}>
-            <Layout.Vertical spacing={'medium'} style={{ alignItems: 'center' }}>
-              <Icon name="steps-spinner" size={32} color={Color.GREY_600} />
-              <Text font={{ size: 'medium', align: 'center' }} color={Color.GREY_600}>
-                {getString('loading')}
-              </Text>
-            </Layout.Vertical>
-          </Container>
-        ) : (
+      {(getServiceLoading || getServiceWorkloadLoading) && <PageSpinner />}
+
+      {serviceData && (
+        <Layout.Vertical style={{ width: '48%' }}>
+          <Text color={Color.GREY_700} font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
+            {getString('common.serviceDetails')}
+          </Text>
+
           <Layout.Vertical background={Color.WHITE} spacing="medium" className={css.serviceDetails}>
             <ListItems
               title={getString('common.namespace')}
@@ -143,22 +137,14 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               <></>
             )}
           </Layout.Vertical>
-        )}
-      </Layout.Vertical>
-      <Layout.Vertical style={{ width: '48%' }}>
-        <Text color={Color.GREY_700} font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
-          {getString('discovery.serviceDrawer.workloads')}
-        </Text>
-        {getServiceWorkloadLoading ? (
-          <Container height={'100%'} width={'100%'} flex={{ align: 'center-center' }}>
-            <Layout.Vertical spacing={'medium'} style={{ alignItems: 'center' }}>
-              <Icon name="steps-spinner" size={32} color={Color.GREY_600} />
-              <Text font={{ size: 'medium', align: 'center' }} color={Color.GREY_600}>
-                {getString('loading')}
-              </Text>
-            </Layout.Vertical>
-          </Container>
-        ) : (
+        </Layout.Vertical>
+      )}
+      {serviceWorkloadData && (
+        <Layout.Vertical style={{ width: '48%' }}>
+          <Text color={Color.GREY_700} font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
+            {getString('discovery.serviceDrawer.workloads')}
+          </Text>
+
           <Layout.Vertical
             spacing="medium"
             background={Color.WHITE}
@@ -169,12 +155,28 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
             }}
           >
             <ListItems
+              title={getString('name')}
+              content={
+                <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+                  {serviceWorkloadData?.workloads?.[0]?.owner?.name ?? ''}
+                </Text>
+              }
+            />
+            <ListItems
+              title={getString('common.namespace')}
+              content={
+                <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+                  {serviceWorkloadData?.workloads?.[0]?.owner?.namespace ?? ''}
+                </Text>
+              }
+              padding={{ top: 'medium' }}
+            />
+            <Divider />
+            <ListItems
               title={getString('kind')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceWorkloadData &&
-                    serviceWorkloadData?.workloads &&
-                    serviceWorkloadData?.workloads[0].owner?.kind}
+                  {serviceWorkloadData?.workloads?.[0]?.owner?.kind ?? ''}
                 </Text>
               }
             />
@@ -246,8 +248,8 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               <></>
             )}
           </Layout.Vertical>
-        )}
-      </Layout.Vertical>
+        </Layout.Vertical>
+      )}
     </Layout.Horizontal>
   )
 }

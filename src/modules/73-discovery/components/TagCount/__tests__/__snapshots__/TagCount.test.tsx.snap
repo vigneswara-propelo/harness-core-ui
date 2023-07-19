@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TagCount component test should match snapshot with mock data 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main"
+  >
+    <div
+      class="tag"
+    >
+      <span
+        class="Tag--main"
+      >
+        <span
+          class="bp3-tag bp3-intent-primary"
+        >
+          <span
+            class="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            Test1
+          </span>
+        </span>
+      </span>
+    </div>
+    <div
+      class="tag"
+    >
+      <span
+        class="Tag--main"
+      >
+        <span
+          class="bp3-tag bp3-intent-primary"
+        >
+          <span
+            class="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            Test2
+          </span>
+        </span>
+      </span>
+    </div>
+    <span
+      class="bp3-popover-wrapper"
+    >
+      <span
+        class="bp3-popover-target"
+      >
+        <span
+          class="Tag--main"
+        >
+          <span
+            class="bp3-tag"
+            style="margin-right: 10px;"
+          >
+            <span
+              class="bp3-text-overflow-ellipsis bp3-fill"
+            >
+              +3
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>
+  </div>
+</div>
+`;

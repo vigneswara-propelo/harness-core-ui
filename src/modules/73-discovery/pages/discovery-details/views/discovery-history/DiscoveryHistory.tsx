@@ -7,8 +7,8 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Container, Layout, Text, CardSelect, Page, PageSpinner } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Button, Container, Layout, Text, CardSelect, Page, PageSpinner, Tabs } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { DatabaseInstallationCollection, useListInstallation } from 'services/servicediscovery'
 import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
@@ -81,7 +81,35 @@ const DiscoveryHistory: React.FC = () => {
             />
           </Layout.Vertical>
           <Layout.Vertical width={'70%'}>
-            <SimpleLogViewer className={css.logContainer} data={JSON.stringify(selected, null, '\t')} />
+            <Container background={Color.BLACK} width={'100%'} height={'100%'} style={{ overflowY: 'scroll' }}>
+              <Tabs
+                id={'DiscoveredHistoryTab'}
+                defaultSelectedTabId={'cluster'}
+                tabList={[
+                  {
+                    id: 'cluster',
+                    title: getString('common.cluster'),
+                    panel: (
+                      <SimpleLogViewer
+                        className={css.logContainer}
+                        data={JSON.stringify(selected?.agentDetails?.cluster, null, '\t')}
+                      />
+                    )
+                  },
+                  {
+                    id: 'node',
+                    // eslint-disable-next-line strings-restrict-modules
+                    title: getString('ce.perspectives.workloadDetails.fieldNames.node'),
+                    panel: (
+                      <SimpleLogViewer
+                        className={css.logContainer}
+                        data={JSON.stringify(selected?.agentDetails?.node, null, '\t')}
+                      />
+                    )
+                  }
+                ]}
+              />
+            </Container>
           </Layout.Vertical>
         </Container>
       )}

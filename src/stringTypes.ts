@@ -5706,6 +5706,7 @@ export interface StringsMap {
   'discovery.agentName': string
   'discovery.allDiscoveredServices': string
   'discovery.approxTime': string
+  'discovery.blackListedNamespaces': string
   'discovery.blacklistedNamespaces': string
   'discovery.createDiscoveryAgent': string
   'discovery.createNetworkMap': string
@@ -5764,6 +5765,7 @@ export interface StringsMap {
   'discovery.newNetworkMap': string
   'discovery.noDiscoveryData': string
   'discovery.nodeAgentSelector': string
+  'discovery.notDetected': string
   'discovery.permissions.confirmDeleteDAgent': string
   'discovery.permissions.confirmDeleteNetworkMap': string
   'discovery.permissions.confirmDeleteTitleDAgent': string

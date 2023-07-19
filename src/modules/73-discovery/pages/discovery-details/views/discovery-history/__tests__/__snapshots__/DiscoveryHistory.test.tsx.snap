@@ -109,155 +109,83 @@ exports[`<DiscoveryHistory /> tests should match snapshot 1`] = `
         style="width: 70%;"
       >
         <div
-          class="logViewer logContainer"
-          style="--char-size: 2ch;"
+          class="StyledProps--font StyledProps--main StyledProps--background-black"
+          style="overflow-y: scroll; width: 100%; height: 100%;"
         >
-          <pre>
+          <div
+            class="bp3-tabs Tabs--main Tabs--horizontal"
+          >
             <div
-              class="line"
+              class="bp3-tab-list"
+              role="tablist"
             >
-              <span
-                class="lineNumber"
+              <div
+                class="bp3-tab-indicator-wrapper"
+                style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
               >
-                1
-              </span>
-              <span
-                class="logLine"
+                <div
+                  class="bp3-tab-indicator"
+                />
+              </div>
+              <div
+                aria-controls="bp3-tab-panel_DiscoveredHistoryTab_cluster"
+                aria-disabled="false"
+                aria-expanded="true"
+                aria-selected="true"
+                class="bp3-tab"
+                data-tab-id="cluster"
+                id="bp3-tab-title_DiscoveredHistoryTab_cluster"
+                role="tab"
+                tabindex="0"
               >
-                <span
-                  class=""
-                >
-                  {
-                </span>
-              </span>
+                common.cluster
+              </div>
+              <div
+                aria-controls="bp3-tab-panel_DiscoveredHistoryTab_node"
+                aria-disabled="false"
+                aria-expanded="false"
+                aria-selected="false"
+                class="bp3-tab"
+                data-tab-id="node"
+                id="bp3-tab-title_DiscoveredHistoryTab_node"
+                role="tab"
+                tabindex="0"
+              >
+                ce.perspectives.workloadDetails.fieldNames.node
+              </div>
             </div>
             <div
-              class="line"
+              aria-hidden="false"
+              aria-labelledby="bp3-tab-title_DiscoveredHistoryTab_cluster"
+              class="bp3-tab-panel"
+              id="bp3-tab-panel_DiscoveredHistoryTab_cluster"
+              role="tabpanel"
             >
-              <span
-                class="lineNumber"
+              <div
+                class="logViewer logContainer"
+                style="--char-size: 2ch;"
               >
-                2
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
-                >
-                  	"agentID": "",
-                </span>
-              </span>
+                <pre>
+                  <div
+                    class="line"
+                  >
+                    <span
+                      class="lineNumber"
+                    >
+                      1
+                    </span>
+                    <span
+                      class="logLine"
+                    >
+                      <span
+                        class=""
+                      />
+                    </span>
+                  </div>
+                </pre>
+              </div>
             </div>
-            <div
-              class="line"
-            >
-              <span
-                class="lineNumber"
-              >
-                3
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
-                >
-                  	"createdAt": "2023-06-21T13:17:41.491Z",
-                </span>
-              </span>
-            </div>
-            <div
-              class="line"
-            >
-              <span
-                class="lineNumber"
-              >
-                4
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
-                >
-                  	"createdBy": "VgWXxi_6TdqAyplTQMg4CQ",
-                </span>
-              </span>
-            </div>
-            <div
-              class="line"
-            >
-              <span
-                class="lineNumber"
-              >
-                5
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
-                >
-                  	"updatedAt": "2023-06-21T13:17:41.491Z",
-                </span>
-              </span>
-            </div>
-            <div
-              class="line"
-            >
-              <span
-                class="lineNumber"
-              >
-                6
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
-                >
-                  	"delegateID": "",
-                </span>
-              </span>
-            </div>
-            <div
-              class="line"
-            >
-              <span
-                class="lineNumber"
-              >
-                7
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
-                >
-                  	"updatedBy": ""
-                </span>
-              </span>
-            </div>
-            <div
-              class="line"
-            >
-              <span
-                class="lineNumber"
-              >
-                8
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
-                >
-                  }
-                </span>
-              </span>
-            </div>
-          </pre>
+          </div>
         </div>
       </div>
     </div>
@@ -348,27 +276,83 @@ exports[`<DiscoveryHistory /> tests should render error view correctly 1`] = `
         style="width: 70%;"
       >
         <div
-          class="logViewer logContainer"
-          style="--char-size: 2ch;"
+          class="StyledProps--font StyledProps--main StyledProps--background-black"
+          style="overflow-y: scroll; width: 100%; height: 100%;"
         >
-          <pre>
+          <div
+            class="bp3-tabs Tabs--main Tabs--horizontal"
+          >
             <div
-              class="line"
+              class="bp3-tab-list"
+              role="tablist"
             >
-              <span
-                class="lineNumber"
+              <div
+                class="bp3-tab-indicator-wrapper"
+                style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
               >
-                1
-              </span>
-              <span
-                class="logLine"
-              >
-                <span
-                  class=""
+                <div
+                  class="bp3-tab-indicator"
                 />
-              </span>
+              </div>
+              <div
+                aria-controls="bp3-tab-panel_DiscoveredHistoryTab_cluster"
+                aria-disabled="false"
+                aria-expanded="true"
+                aria-selected="true"
+                class="bp3-tab"
+                data-tab-id="cluster"
+                id="bp3-tab-title_DiscoveredHistoryTab_cluster"
+                role="tab"
+                tabindex="0"
+              >
+                common.cluster
+              </div>
+              <div
+                aria-controls="bp3-tab-panel_DiscoveredHistoryTab_node"
+                aria-disabled="false"
+                aria-expanded="false"
+                aria-selected="false"
+                class="bp3-tab"
+                data-tab-id="node"
+                id="bp3-tab-title_DiscoveredHistoryTab_node"
+                role="tab"
+                tabindex="0"
+              >
+                ce.perspectives.workloadDetails.fieldNames.node
+              </div>
             </div>
-          </pre>
+            <div
+              aria-hidden="false"
+              aria-labelledby="bp3-tab-title_DiscoveredHistoryTab_cluster"
+              class="bp3-tab-panel"
+              id="bp3-tab-panel_DiscoveredHistoryTab_cluster"
+              role="tabpanel"
+            >
+              <div
+                class="logViewer logContainer"
+                style="--char-size: 2ch;"
+              >
+                <pre>
+                  <div
+                    class="line"
+                  >
+                    <span
+                      class="lineNumber"
+                    >
+                      1
+                    </span>
+                    <span
+                      class="logLine"
+                    >
+                      <span
+                        class=""
+                      />
+                    </span>
+                  </div>
+                </pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

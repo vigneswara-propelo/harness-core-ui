@@ -28,6 +28,7 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filt
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import TagCount from '@discovery/components/TagCount/TagCount'
 import css from './DiscoveryServices.module.scss'
 
 export interface ConnectionMap {
@@ -106,10 +107,11 @@ export default function DiscoveredServices({
           font={{ size: 'normal', weight: 'semi-bold' }}
           margin={{ left: 'medium' }}
           color={Color.PRIMARY_7}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', width: 200 }}
           onClick={() => {
             setDrawerOpen(true)
           }}
+          lineClamp={1}
         >
           {row.original.name}
         </Text>
@@ -133,26 +135,44 @@ export default function DiscoveredServices({
   )
   const NetworkDetails: Renderer<CellProps<K8SCustomService>> = ({ row }) => (
     <Layout.Vertical>
-      <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
-        {getString('ce.co.gatewayAccess.ip')}: {row.original.service?.clusterIP}
-      </Text>
-      <Text className={css.networkDetailsPort} font={{ size: 'small', weight: 'semi-bold' }}>
-        {getString('discovery.discoveryDetails.discoveredService.portNumber')}:{' '}
-        {row.original.service &&
-          row.original.service?.ports &&
-          row.original.service?.ports.map(value => value.port).join(', ')}
-      </Text>
+      <Layout.Horizontal>
+        <Text font={{ size: 'small' }} color={Color.GREY_500}>
+          {getString('ce.co.gatewayAccess.ip')}:
+        </Text>
+        <Text padding={{ left: 'small' }} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_5}>
+          {row.original.service?.clusterIP}
+        </Text>
+      </Layout.Horizontal>
+
+      <Layout.Horizontal>
+        <Text font={{ size: 'small' }} color={Color.GREY_500}>
+          {getString('discovery.discoveryDetails.discoveredService.portNumber')}:
+        </Text>
+        <Text padding={{ left: 'small' }} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_5}>
+          {row?.original?.service?.ports?.map(value => value.port).join(', ')}
+        </Text>
+      </Layout.Horizontal>
     </Layout.Vertical>
   )
   const LastModified: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
-    const relatedServices = row.original
+    const relatedServices: string[] = []
+    row.original.relatedServices?.map(services => {
+      if (services.destinationName) {
+        relatedServices.push(services.destinationName)
+      }
+    })
     return (
       <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
-        <Text lineClamp={1}>
-          {relatedServices.relatedServices?.map(services => {
-            return `${services.destinationName} `
-          })}
-        </Text>
+        {relatedServices.length ? (
+          <TagCount
+            tagItems={relatedServices}
+            icon={'code-settings'}
+            tagCount={2}
+            tooltipHeader={getString('discovery.relatedService')}
+          />
+        ) : (
+          <Text color={Color.GREY_300}>{getString('discovery.notDetected')}</Text>
+        )}
       </Layout.Horizontal>
     )
   }
@@ -212,7 +232,7 @@ export default function DiscoveredServices({
       },
       {
         Header: getString('discovery.relatedService'),
-        width: '15%',
+        width: '20%',
         Cell: LastModified
       },
       {
