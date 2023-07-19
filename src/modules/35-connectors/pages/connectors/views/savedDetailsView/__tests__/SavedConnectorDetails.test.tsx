@@ -25,7 +25,9 @@ import {
   PDC,
   GithubRepo,
   serviceNowADFS,
-  jiraPAT
+  jiraPAT,
+  SplunkConnectorDetails,
+  SignalFXConnectorDetails
 } from '../../../__tests__/mockData'
 
 const renderSavedConnectorDetailsComponent = (connector: ConnectorInfoDTO): RenderResult => {
@@ -198,5 +200,22 @@ describe('Saved Connector Details', () => {
     const patText = await screen.findByText('personalAccessToken')
     expect(patText).toBeInTheDocument()
     expect(container).toMatchSnapshot()
+  })
+
+  test('render for Splunk schema', async () => {
+    renderSavedConnectorDetailsComponent(SplunkConnectorDetails.connector as ConnectorInfoDTO)
+
+    const usernameText = await screen.findByText('myUsername')
+    expect(usernameText).toBeInTheDocument()
+
+    const passwordText = await screen.findByText('account.cvng_appd_secret_CWEU')
+    expect(passwordText).toBeInTheDocument()
+  })
+
+  test('render for SignalFX schema', async () => {
+    renderSavedConnectorDetailsComponent(SignalFXConnectorDetails)
+
+    const apiTokenText = await screen.findByText('org.awscwsecretkeysecret')
+    expect(apiTokenText).toBeInTheDocument()
   })
 })

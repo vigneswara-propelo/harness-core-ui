@@ -118,6 +118,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.appdynamics'
     case Connectors.SPLUNK:
       return 'connectors.title.splunk'
+    case Connectors.SignalFX:
+      return 'connectors.signalFXLabel'
     case Connectors.DOCKER:
       return 'dockerRegistry'
     case Connectors.JENKINS:
@@ -335,6 +337,7 @@ export const getLabelForAuthType = (type: string) => {
     case AuthTypes.CLIENT_KEY_CERT:
       return 'Client Key Certificate'
     case AuthTypes.BEARER_TOKEN_RANCHER:
+    case AuthTypes.BEARER_TOKEN:
       return 'Bearer Token'
     default:
       return ''

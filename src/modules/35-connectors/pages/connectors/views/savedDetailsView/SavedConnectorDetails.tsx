@@ -919,6 +919,44 @@ const getDataDogSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRow
   ]
 }
 
+const getSplunkSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'UrlLabel',
+      value: connector?.spec?.splunkUrl
+    },
+    {
+      label: 'credType',
+      value: getLabelForAuthType(connector?.spec?.type)
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.username
+    },
+    {
+      label: 'connectors.jenkins.passwordAPIToken',
+      value: connector?.spec?.passwordRef
+    },
+    {
+      label: 'connectors.bearerToken',
+      value: connector?.spec?.tokenRef
+    }
+  ]
+}
+
+const getSignalFXSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'UrlLabel',
+      value: connector?.spec?.url
+    },
+    {
+      label: 'connectors.apiToken',
+      value: connector?.spec?.apiTokenRef
+    }
+  ]
+}
+
 const getSumologicSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -1062,6 +1100,8 @@ const getSchemaByType = (
       return getGcpKmsSchema(connector)
     case Connectors.DATADOG:
       return getDataDogSchema(connector)
+    case Connectors.SPLUNK:
+      return getSplunkSchema(connector)
     case Connectors.AZURE_KEY_VAULT:
       return getAzureKeyVaultSchema(connector)
     case Connectors.SUMOLOGIC:
@@ -1085,6 +1125,8 @@ const getSchemaByType = (
       return getTasSchema(connector)
     case Connectors.TERRAFORM_CLOUD:
       return getTerraformCloudSchema(connector)
+    case Connectors.SignalFX:
+      return getSignalFXSchema(connector)
     default:
       return []
   }
@@ -1326,6 +1368,7 @@ const SavedConnectorDetails: React.FC<SavedConnectorDetailsProps> = props => {
   }
 
   const sectionList: SectionType[] = [SectionType.overview]
+
   if (props.connector?.type !== Connectors.PDC) {
     sectionList.push(SectionType.credentials)
   }

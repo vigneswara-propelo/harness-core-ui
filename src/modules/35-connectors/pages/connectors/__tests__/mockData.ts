@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { ConnectorInfoDTO } from 'services/cd-ng'
+
 export const connectorsData = {
   status: 'SUCCESS',
   data: {
@@ -914,5 +916,41 @@ export const jiraPAT = {
         }
       }
     }
+  }
+}
+
+export const SplunkConnectorDetails = {
+  connector: {
+    name: 'splunk',
+    identifier: 'splunk',
+    description: '',
+    accountIdentifier: '-k53qRQAQ1O7DBLb9ACnjQ',
+    orgIdentifier: 'cvng',
+    projectIdentifier: 'SRM_QA_Sign_Off_Automation',
+    tags: {},
+    type: 'Splunk',
+    spec: {
+      splunkUrl: 'https://splunk.dev.harness.io:8089/',
+      username: 'myUsername',
+      accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
+      delegateSelectors: ['qa-automation-cv-chiplay'],
+      type: 'UsernamePassword',
+      passwordRef: 'account.cvng_appd_secret_CWEU',
+      tokenRef: null
+    }
+  }
+}
+
+export const SignalFXConnectorDetails: ConnectorInfoDTO = {
+  name: 'SignalFX Test',
+  identifier: 'SignalFX_Test',
+  orgIdentifier: 'cvng',
+  projectIdentifier: 'SignalFX',
+  tags: {},
+  type: 'SignalFX',
+  spec: {
+    url: 'https://stream.us1.signalfx.com/',
+    apiTokenRef: 'org.awscwsecretkeysecret',
+    delegateSelectors: ['qa-automation-cv-chiplay']
   }
 }
