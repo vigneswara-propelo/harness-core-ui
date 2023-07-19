@@ -92,7 +92,7 @@ const ResolvedValueComponent = ({ metadataMap, word, fqnPath }: ResolvedValueCom
         position: Position.TOP
       }}
       background={hasError ? Color.RED_100 : Color.PRIMARY_1}
-      color={hasError ? Color.RED_800 : Color.GREY_700}
+      color={hasError ? Color.RED_800 : Color.BLACK}
       inline
       lineClamp={1}
       alwaysShowTooltip
@@ -106,6 +106,8 @@ const ResolvedValueComponent = ({ metadataMap, word, fqnPath }: ResolvedValueCom
 const TextWithExpressions = (props: TextWithExpressionsProps): JSX.Element => {
   const { inputString, metadataMap, fqnPath, customClassName } = props
 
+  const [isHovered, setIsHovered] = React.useState<boolean>(false)
+
   const replacedString = inputString.split(VAR_REGEX).map(word => {
     if (VAR_REGEX.test(word)) {
       // Word matches the regex, render the Popover component
@@ -116,10 +118,24 @@ const TextWithExpressions = (props: TextWithExpressionsProps): JSX.Element => {
     }
   })
 
+  function getReplacementWord(match: string): string {
+    const valueObject = metadataMap?.[`${fqnPath}+${match}`]
+    return defaultTo(valueObject?.resolvedValue, match)
+  }
+
+  function getCopyContent(): string {
+    const stringToCopy = inputString
+
+    return stringToCopy.replace(VAR_REGEX, getReplacementWord)
+  }
+
   return (
-    <Text inline className={cx(customClassName, css.expressionWrapper)} style={{ display: 'flex' }}>
-      {replacedString}
-    </Text>
+    <div className={css.wrapper} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+      <Text inline className={cx(customClassName, css.expressionWrapper)} style={{ display: 'flex' }}>
+        {replacedString}
+      </Text>
+      <div style={{ width: '24px' }}>{isHovered && <CopyToClipBoard content={getCopyContent()} />}</div>
+    </div>
   )
 }
 

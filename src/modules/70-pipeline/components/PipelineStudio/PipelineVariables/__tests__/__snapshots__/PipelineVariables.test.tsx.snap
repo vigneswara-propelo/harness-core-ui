@@ -616,7 +616,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                 -
                               </p>
                               <div
-                                class="valueRow"
+                                class="valueRow nonCompiledModeGridValueRow"
                               >
                                 <div>
                                   <div
@@ -783,7 +783,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                 -
                               </p>
                               <div
-                                class="valueRow"
+                                class="valueRow nonCompiledModeGridValueRow"
                               >
                                 <div>
                                   <div
@@ -1241,7 +1241,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                         -
                                       </p>
                                       <div
-                                        class="valueRow"
+                                        class="valueRow nonCompiledModeGridValueRow"
                                       >
                                         <div>
                                           <div
@@ -1408,7 +1408,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                         -
                                       </p>
                                       <div
-                                        class="valueRow"
+                                        class="valueRow nonCompiledModeGridValueRow"
                                       >
                                         <div>
                                           <div

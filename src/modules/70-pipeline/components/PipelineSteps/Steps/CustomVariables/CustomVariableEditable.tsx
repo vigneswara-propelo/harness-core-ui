@@ -286,7 +286,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                       <div
                         className={cx(css.valueRow, {
                           [css.selectedSearchTextValueRow]: searchText?.length && isValidValueMatch,
-                          'selected-search-text': searchedEntityType === 'value' && hasSameMetaPath
+                          'selected-search-text': searchedEntityType === 'value' && hasSameMetaPath,
+                          [css.nonCompiledModeGridValueRow]: !isCompiledMode
                         })}
                       >
                         <div>

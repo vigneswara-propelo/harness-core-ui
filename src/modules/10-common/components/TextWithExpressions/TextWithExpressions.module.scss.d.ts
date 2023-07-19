@@ -11,5 +11,6 @@ declare const styles: {
   readonly expressionIcon: string
   readonly expressionValue: string
   readonly expressionWrapper: string
+  readonly wrapper: string
 }
 export default styles

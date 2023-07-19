@@ -15,6 +15,10 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  max-height: 100px !important;
+  overflow: auto;
+  font-weight: 500 !important;
+  color: var(--black) !important;
 }
 
 .expressionIcon {
@@ -25,4 +29,9 @@
 .errorIcon {
   color: var(--red-500) !important;
   margin-right: 2px !important;
+}
+
+.wrapper {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
 }

@@ -61,7 +61,7 @@ exports[`Custom Variables can add a string variable 1`] = `
         -
       </p>
       <div
-        class="valueRow"
+        class="valueRow nonCompiledModeGridValueRow"
       >
         <div>
           <div

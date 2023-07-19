@@ -26,6 +26,7 @@ declare const styles: {
   readonly icon: string
   readonly inputSetValueRow: string
   readonly nameTypeColumn: string
+  readonly nonCompiledModeGridValueRow: string
   readonly requiredCheckboxLabel: string
   readonly runtimeInputButton: string
   readonly secretContainer: string
