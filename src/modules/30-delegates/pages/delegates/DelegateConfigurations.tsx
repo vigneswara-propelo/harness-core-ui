@@ -69,7 +69,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import css from './DelegatesPage.module.scss'
 
 const formatProfileList = (data: any) => {
@@ -601,7 +601,11 @@ export const DelegateConfigurations: React.FC<DelegatesListProps> = ({ filtersMo
           ) : delegateFetchError && shouldShowError(delegateFetchError) ? (
             <div style={{ paddingTop: '200px' }}>
               <PageError
-                message={(delegateFetchError?.data as Error)?.message || delegateFetchError?.message}
+                message={
+                  getRBACErrorMessage(delegateFetchError as RBACError) ||
+                  (delegateFetchError?.data as Error)?.message ||
+                  delegateFetchError?.message
+                }
                 onClick={(e: React.MouseEvent<Element, MouseEvent>) => {
                   e.preventDefault()
                   e.stopPropagation()

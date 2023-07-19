@@ -25,8 +25,7 @@ import {
   Icon,
   NoDataCard,
   Utils,
-  useToaster,
-  getErrorInfoFromErrorObject
+  useToaster
 } from '@harness/uicore'
 import { PageSpinner } from '@common/components'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -36,6 +35,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useRevokeTokenModal } from './modals/useRevokeTokenModal'
 import { useCreateTokenModal } from './modals/useCreateTokenModal'
 import { useMoreTokenInfoModalModal } from './modals/useMoreTokenInfoModal'
@@ -55,7 +55,7 @@ export const DelegateListing: React.FC = () => {
   const [searchString, setSearchString] = useState<string>('')
   const { showError, showSuccess } = useToaster()
   const [page, setPage] = useState(0)
-
+  const { getRBACErrorMessage } = useRBACError()
   const {
     data: tokensResponse,
     refetch: getDelegateTokens,
@@ -116,7 +116,7 @@ export const DelegateListing: React.FC = () => {
   })
   useEffect(() => {
     if (singleTokenError) {
-      showError(getErrorInfoFromErrorObject(singleTokenError))
+      showError(getRBACErrorMessage(singleTokenError as RBACError))
     }
   }, [singleTokenError])
 
@@ -342,7 +342,11 @@ export const DelegateListing: React.FC = () => {
           </div>
         ) : tokenFetchError && shouldShowError(tokenFetchError) ? (
           <PageError
-            message={(tokenFetchError?.data as Error)?.message || tokenFetchError?.message}
+            message={
+              getRBACErrorMessage(tokenFetchError as RBACError) ||
+              (tokenFetchError?.data as Error)?.message ||
+              tokenFetchError?.message
+            }
             onClick={() => {
               getTokens()
             }}

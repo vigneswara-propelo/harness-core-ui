@@ -23,6 +23,7 @@ import type { DelegateProfileDetailsNg } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLocalStorage } from '@common/hooks'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import css from './DelegatesPage.module.scss'
 
 const DelegatesPage: React.FC = ({ children }) => {
@@ -32,6 +33,7 @@ const DelegatesPage: React.FC = ({ children }) => {
   const { pathname } = useLocation()
   const [profiles, setProfiles] = useState<DelegateProfileDetailsNg[]>([])
   const { PL_HELM2_DELEGATE_BANNER } = useFeatureFlags()
+  const { getRBACErrorMessage } = useRBACError()
   const [isBannerDismissed, setIsBannerDismissed] = useLocalStorage<boolean | undefined>(
     'helmv2_deprecation_banner_dismissed',
     !PL_HELM2_DELEGATE_BANNER,
@@ -42,11 +44,10 @@ const DelegatesPage: React.FC = ({ children }) => {
       routes.toDelegateTokens({ accountId: params.accountId, orgIdentifier, projectIdentifier, module })
     ) !== -1
 
-  const { mutate: getDelegateProfiles } = useListDelegateConfigsNgV2WithFilter({
+  const { mutate: getDelegateProfiles, error: delegateFetchingError } = useListDelegateConfigsNgV2WithFilter({
     accountId,
     queryParams: { orgId: orgIdentifier, projectId: projectIdentifier }
   })
-
   const getDelegates = async () => {
     const delProfilesResponse = await getDelegateProfiles(
       {
@@ -132,7 +133,7 @@ const DelegatesPage: React.FC = ({ children }) => {
         }
         toolbar={<TabNavigation size={'small'} links={links} />}
       />
-      <Page.Body>{children}</Page.Body>
+      <Page.Body error={getRBACErrorMessage(delegateFetchingError as RBACError)}>{children}</Page.Body>
     </>
   )
 }
