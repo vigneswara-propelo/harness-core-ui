@@ -34,7 +34,7 @@ import {
   ProjectAggregateDTO,
   useGetOrganizationList,
   useGetProjectAggregateDTOList,
-  useGetSettingValue
+  useGetSettingsList
 } from 'services/cd-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -52,6 +52,7 @@ import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 import type { Evaluation } from 'services/pm'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { SettingType } from '@common/constants/Utils'
+import { getDefaultStoreType, getSettingValue } from '@default-settings/utils/utils'
 import { getValidationSchema, FormState, getInitialValues, processFormData } from './ClonePipelineFormUtils'
 
 import css from './ClonePipelineForm.module.scss'
@@ -114,12 +115,12 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   })
 
   const {
-    data: enforceGitXSetting,
-    error: enforceGitXSettingError,
+    data: gitXSetting,
+    error: gitXSettingError,
     loading: loadingSetting
-  } = useGetSettingValue({
-    identifier: SettingType.ENFORCE_GIT_EXPERIENCE,
+  } = useGetSettingsList({
     queryParams: {
+      category: 'GIT_EXPERIENCE',
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
@@ -128,12 +129,10 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   })
 
   React.useEffect(() => {
-    if (!loadingSetting) {
-      if (enforceGitXSettingError) {
-        showError(getRBACErrorMessage(enforceGitXSettingError))
-      }
+    if (!loadingSetting && gitXSettingError) {
+      showError(getRBACErrorMessage(gitXSettingError))
     }
-  }, [enforceGitXSettingError, showError, loadingSetting])
+  }, [gitXSettingError, showError, loadingSetting])
 
   const organizations: SelectOption[] = React.useMemo(() => {
     const data: OrganizationResponse[] = get(orgData, 'data.content', [])
@@ -224,21 +223,25 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     }
   }
 
-  const isGitXEnforced = (): boolean => enforceGitXSetting?.data?.value === 'true'
+  const isGitXEnforced = (): boolean => getSettingValue(gitXSetting, SettingType.ENFORCE_GIT_EXPERIENCE) === 'true'
 
   const initialvalues: FormState = React.useMemo(
     () => {
-      isGitXEnforced() && formikRef.current?.setFieldValue('storeType', StoreType.REMOTE)
+      if (isGitXEnforced() || getDefaultStoreType(gitXSetting) === StoreType.REMOTE) {
+        formikRef.current?.setFieldValue('storeType', StoreType.REMOTE)
+      }
+
       return getInitialValues({
         originalPipeline,
         orgIdentifier,
         projectIdentifier,
         supportingGitSimplification,
-        isGitXEnforced: isGitXEnforced()
+        isGitXEnforced: isGitXEnforced(),
+        defaultStoreTypeSetting: getDefaultStoreType(gitXSetting)
       })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [originalPipeline, orgIdentifier, projectIdentifier, supportingGitSimplification, enforceGitXSetting?.data?.value]
+    [originalPipeline, orgIdentifier, projectIdentifier, supportingGitSimplification, gitXSetting?.data]
   )
 
   return (

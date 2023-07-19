@@ -16,7 +16,7 @@ import type {
   ClonePipelineQueryParams,
   PMSPipelineSummaryResponse
 } from 'services/pipeline-ng'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 
 export type OriginalPipeline = Pick<
   PMSPipelineSummaryResponse,
@@ -73,12 +73,20 @@ export interface GetInitialValuesProps {
   originalPipeline: OriginalPipeline
   supportingGitSimplification?: boolean
   isGitXEnforced?: boolean
+  defaultStoreTypeSetting?: StoreMetadata['storeType']
   orgIdentifier: string
   projectIdentifier: string
 }
 
 export function getInitialValues(props: GetInitialValuesProps): FormState {
-  const { originalPipeline, supportingGitSimplification, isGitXEnforced, orgIdentifier, projectIdentifier } = props
+  const {
+    originalPipeline,
+    defaultStoreTypeSetting,
+    supportingGitSimplification,
+    isGitXEnforced,
+    orgIdentifier,
+    projectIdentifier
+  } = props
   return {
     name: `${originalPipeline.name} - Clone`,
     identifier: `${originalPipeline.identifier}_Clone`,
@@ -87,7 +95,7 @@ export function getInitialValues(props: GetInitialValuesProps): FormState {
     storeType: supportingGitSimplification
       ? isGitXEnforced
         ? StoreType.REMOTE
-        : (defaultTo(originalPipeline.storeType, StoreType.INLINE) as StoreType)
+        : (defaultTo(originalPipeline.storeType, defaultStoreTypeSetting) as StoreType)
       : StoreType.INLINE,
     sourceConfig: {
       orgIdentifier,

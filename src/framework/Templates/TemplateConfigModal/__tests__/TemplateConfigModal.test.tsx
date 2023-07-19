@@ -14,6 +14,7 @@ import routes from '@common/RouteDefinitions'
 import { templatePathProps } from '@common/utils/routeUtils'
 import { gitConnectorMock, mockBranches, mockRepos } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
 import { ConfigModalProps, Intent, TemplateConfigModalWithRef } from '../TemplateConfigModal'
+import { defaultGitXSettingmock } from './mockdata'
 
 jest.useFakeTimers()
 
@@ -75,6 +76,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSettingValue: jest.fn().mockImplementation(() => {
     return { data: { data: { value: 'false' } } }
+  }),
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: defaultGitXSettingmock }
   })
 }))
 

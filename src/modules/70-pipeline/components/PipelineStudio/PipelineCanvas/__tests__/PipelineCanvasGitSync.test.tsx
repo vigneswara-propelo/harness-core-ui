@@ -70,7 +70,10 @@ jest.mock('services/cd-ng', () => ({
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitSyncListResponse, refetch: getListGitSync }
   }),
-  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { data: { value: 'true' } } }))
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { data: { value: 'true' } } })),
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({

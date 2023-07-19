@@ -73,6 +73,7 @@ export enum SettingType {
   TEST_SETTING_ID = 'test_setting_id',
   ENABLE_GIT_COMMANDS = 'enable_git_commands',
   ENFORCE_GIT_EXPERIENCE = 'enforce_git_experience',
+  DEFAULT_STORE_TYPE_FOR_ENTITIES = 'default_store_type_for_entities',
   DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE = 'default_connector_for_git_experience',
   ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS = 'allow_different_repo_for_pipeline_and_input_sets',
   GIT_EXPERIENCE_REPO_ALLOWLIST = 'git_experience_repo_allowlist',

@@ -59,9 +59,10 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
 import { SettingType } from '@common/constants/Utils'
-import { useGetSettingValue } from 'services/cd-ng'
+import { useGetSettingsList } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getPipelineUrl } from '@common/hooks/useGetEntityMetadata'
+import { getDefaultStoreType, getSettingValue } from '@default-settings/utils/utils'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -289,12 +290,12 @@ export function PipelineCanvas({
   useSaveTemplateListener()
 
   const {
-    data: enforceGitXSetting,
-    error: enforceGitXSettingError,
+    data: gitXSetting,
+    error: gitXSettingError,
     loading: loadingSetting
-  } = useGetSettingValue({
-    identifier: SettingType.ENFORCE_GIT_EXPERIENCE,
+  } = useGetSettingsList({
     queryParams: {
+      category: 'GIT_EXPERIENCE',
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
@@ -303,18 +304,20 @@ export function PipelineCanvas({
   })
 
   const getPipelineStoreType = (): StoreMetadata['storeType'] => {
-    if (enforceGitXSetting?.data?.value === 'true') {
+    if (getSettingValue(gitXSetting, SettingType.ENFORCE_GIT_EXPERIENCE) === 'true') {
       return StoreType.REMOTE // Createing new with GitX enforced
     } else {
-      return defaultTo(storeType, StoreType.INLINE) //Handle rest all use cases
+      // Handling rest all use cases
+      // Retaining previous storeType for editing while creating
+      return pipeline?.identifier === DefaultNewPipelineId ? getDefaultStoreType(gitXSetting) : storeType
     }
   }
 
   React.useEffect(() => {
-    if (!loadingSetting && enforceGitXSettingError) {
-      showError(getRBACErrorMessage(enforceGitXSettingError))
+    if (!loadingSetting && gitXSettingError) {
+      showError(getRBACErrorMessage(gitXSettingError))
     }
-  }, [enforceGitXSettingError, showError, loadingSetting])
+  }, [gitXSettingError, showError, loadingSetting])
 
   const dialogWidth = React.useMemo<number | undefined>(() => {
     if (supportingGitSimplification) {
@@ -356,7 +359,7 @@ export function PipelineCanvas({
             gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
             primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
             isReadonly={isReadonly}
-            isGitXEnforced={enforceGitXSetting?.data?.value === 'true'}
+            isGitXEnforced={getSettingValue(gitXSetting, SettingType.ENFORCE_GIT_EXPERIENCE) === 'true'}
           />
         </ModalDialog>
       )
@@ -365,7 +368,8 @@ export function PipelineCanvas({
     supportingGitSimplification,
     isGitSyncEnabled,
     loadingSetting,
-    enforceGitXSetting?.data?.value,
+    getSettingValue(gitXSetting, SettingType.DEFAULT_STORE_TYPE_FOR_ENTITIES),
+    getSettingValue(gitXSetting, SettingType.ENFORCE_GIT_EXPERIENCE),
     pipeline,
     pipelineIdentifier,
     repoName,

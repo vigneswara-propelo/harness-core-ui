@@ -33,6 +33,9 @@ const getProps = (): PipelineCanvasProps => ({
 jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => {
   return { data: { data: { value: 'false' } } } as any
 })
+jest.spyOn(cdngServices, 'useGetSettingsList').mockImplementation(() => {
+  return { data: { data: [] } } as any
+})
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({
   validateJSONWithSchema: jest.fn().mockReturnValue({ error: { size: 2 } })

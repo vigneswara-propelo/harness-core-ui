@@ -265,6 +265,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENFORCE_GIT_EXPERIENCE
   settingCategory: 'GIT_EXPERIENCE'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_STORE_TYPE_FOR_ENTITIES, {
+  label: 'defaultSettings.defaultStoreType',
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
+  settingCategory: 'GIT_EXPERIENCE'
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.GIT_EXPERIENCE_REPO_ALLOWLIST, {
   label: 'defaultSettings.allowedRepositories',
   settingRenderer: props => {

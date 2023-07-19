@@ -1734,6 +1734,7 @@ export interface StringsMap {
   'defaultSettings.concurrentActivePipelineExecutions': string
   'defaultSettings.defaultGitConnector': string
   'defaultSettings.defaultImagePullPolicyForAddOnContainer': string
+  'defaultSettings.defaultStoreType': string
   'defaultSettings.emailToNonHarnessUsers': string
   'defaultSettings.enableExpressionsJsonSupport': string
   'defaultSettings.enableForceDelete': string

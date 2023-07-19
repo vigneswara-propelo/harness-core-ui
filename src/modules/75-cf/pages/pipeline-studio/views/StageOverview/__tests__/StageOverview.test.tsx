@@ -42,7 +42,9 @@ jest.mock('services/cd-ng', () => ({
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
-  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { data: { value: 'false' } } }))
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
+  })
 }))
 
 jest.mock('services/pipeline-ng', () => ({

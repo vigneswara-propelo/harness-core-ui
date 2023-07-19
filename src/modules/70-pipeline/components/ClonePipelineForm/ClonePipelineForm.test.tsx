@@ -62,6 +62,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSettingValue: jest.fn().mockImplementation(() => {
     return { data: { data: { value: 'false' } } }
+  }),
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
   })
 }))
 

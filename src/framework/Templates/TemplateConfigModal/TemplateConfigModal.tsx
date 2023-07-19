@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useMemo, useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, isEqual, omit, omitBy, pick, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -55,8 +55,10 @@ import templateFactory from '@templates-library/components/Templates/TemplatesFa
 import { parse } from '@common/utils/YamlHelperMethods'
 import { toBase64 } from '@common/utils/utils'
 import LogoInput from '@common/components/LogoInput/LogoInput'
-import { useGetSettingValue } from 'services/cd-ng'
+import { useGetSettingsList } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
+import { getDefaultStoreType, getSettingValue } from '@default-settings/utils/utils'
+import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import {
   DefaultNewTemplateId,
   DefaultNewVersionLabel,
@@ -246,7 +248,6 @@ const BasicTemplateDetails = (
           draft.repo = gitDetails?.repoIdentifier
           draft.branch = gitDetails?.branch
         } else if (supportingTemplatesGitx) {
-          isGitXEnforced && formikRef.current?.setFieldValue('storeType', GitStoreType.REMOTE)
           draft.connectorRef = defaultTo(storeMetadata?.connectorRef, '')
           draft.repo = defaultTo(storeMetadata?.repoName, '')
           draft.branch = defaultTo(storeMetadata?.branch, '')
@@ -254,6 +255,7 @@ const BasicTemplateDetails = (
             ? GitStoreType.REMOTE
             : defaultTo(storeMetadata?.storeType, GitStoreType.INLINE)
           draft.filePath = intent === Intent.SAVE ? '' : defaultTo(storeMetadata?.filePath, '')
+          formikRef.current?.setFieldValue('storeType', draft.storeType)
           if (saveAsType && saveAsType === SaveTemplateAsType.NEW_LABEL_VERSION && intent === Intent.SAVE) {
             const paths = defaultTo(storeMetadata?.filePath, '').split('/')
             if (paths.length > 1) {
@@ -669,7 +671,7 @@ const TemplateConfigModal = (
   props: ConfigModalProps,
   ref: React.ForwardedRef<TemplateConfigModalHandle>
 ): JSX.Element => {
-  const { initialValues, ...rest } = props
+  const { initialValues, storeMetadata, ...rest } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const isInlineRemoteSelectionApplicable = templateFactory.getTemplateIsRemoteEnabled(initialValues.type)
   const { showError } = useToaster()
@@ -693,34 +695,48 @@ const TemplateConfigModal = (
   )
 
   const {
-    data: enforceGitXSetting,
-    error: enforceGitXSettingError,
+    data: gitXSetting,
+    error: gitXSettingError,
     loading: loadingSetting
-  } = useGetSettingValue({
-    identifier: SettingType.ENFORCE_GIT_EXPERIENCE,
+  } = useGetSettingsList({
     queryParams: {
+      category: 'GIT_EXPERIENCE',
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
     },
-    lazy: !isInlineRemoteSelectionApplicable
+    lazy: !(isInlineRemoteSelectionApplicable && isNewTemplate(initialValues?.identifier))
   })
 
   React.useEffect(() => {
-    if (!loadingSetting) {
-      if (enforceGitXSettingError) {
-        showError(enforceGitXSettingError.message)
-      }
+    if (!loadingSetting && gitXSettingError) {
+      showError(gitXSettingError.message)
     }
-  }, [enforceGitXSettingError, showError, loadingSetting])
+  }, [gitXSettingError, showError, loadingSetting])
+
+  const isGitXEnforced = getSettingValue(gitXSetting, SettingType.ENFORCE_GIT_EXPERIENCE) === 'true'
+
+  const defaultStoreType = getDefaultStoreType(gitXSetting)
+
+  const modifiedStoreMetadata = useMemo(
+    () =>
+      isNewTemplate(initialValues?.identifier) && !isGitXEnforced
+        ? {
+            ...storeMetadata,
+            storeType: defaultStoreType
+          }
+        : storeMetadata,
+    [isGitXEnforced, defaultStoreType, storeMetadata, initialValues?.identifier]
+  )
 
   const content = (
     <Layout.Horizontal>
       <BasicTemplateDetailsWithRef
         initialValues={initialValues}
         setPreviewValues={setPreviewValues}
-        isGitXEnforced={enforceGitXSetting?.data?.value === 'true'}
+        isGitXEnforced={isGitXEnforced}
         ref={basicTemplateDetailsHandle}
+        storeMetadata={modifiedStoreMetadata}
         {...rest}
       />
       <TemplatePreview previewValues={previewValues} />

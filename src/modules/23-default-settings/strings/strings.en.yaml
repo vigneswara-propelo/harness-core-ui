@@ -12,6 +12,7 @@ allowDifferentRepoForInputSets: Allow different repo for Pipeline and InputSets
 defaultGitConnector: Default Connector For Git Experience with Entities - Pipelines/InputSets/Templates
 fetchingDefaultConnector: Checking for default connector
 enforceGitExperience: Enforce git experience for pipelines and templates
+defaultStoreType: Default Store Type For Entities- Pipelines/InputSets/Templates
 allowedRepositories: Allowed Repositories
 allowedRepositoriesPlaceholder: Type and press enter to add a repository
 pipelineTimeout: Pipeline Timeout
