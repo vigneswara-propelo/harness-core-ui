@@ -698,10 +698,10 @@ getStartedWithCD:
           fetchingApiKeys: Fetching Api Keys
         step2:
           title: 2. Download the Harness CLI.
-          arm: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-linux-arm64.tar.gz
-          amd: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-linux-amd64.tar.gz
-          mac: curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-darwin-amd64.tar.gz
-          win: https://github.com/harness/harness-cli/releases/download/v0.0.7-alpha/harness-v0.0.7-alpha-windows-amd64.zip
+          arm: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-arm64.tar.gz'
+          amd: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-amd64.tar.gz'
+          mac: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-darwin-amd64.tar.gz'
+          win: 'https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-windows-amd64.zip'
           mvharness: 'mv harness /usr/local/bin/'
           chmod: 'chmod +x /usr/local/bin/harness'
 

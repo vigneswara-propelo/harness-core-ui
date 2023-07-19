@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Layout, RadioButtonGroup, Tab, Tabs, Text } from '@harness/uicore'
-import { once } from 'lodash-es'
+import React, { useEffect, useState } from 'react'
+import { Layout, OverlaySpinner, RadioButtonGroup, Tab, Tabs, Text } from '@harness/uicore'
+import { isEmpty, once } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
@@ -67,55 +67,74 @@ export default function CLISetupStep({
 }
 
 function InstallCLIInfo(): JSX.Element {
+  const [version, setLatestVersion] = useState('')
+  const getLatestVersion = async (): Promise<string> => {
+    const { tag_name }: { tag_name: string } = await fetch(
+      'https://api.github.com/repos/harness/harness-cli/releases/latest'
+    ).then(resp => resp.json())
+
+    return tag_name
+  }
   const { getString } = useStrings()
+  useEffect(() => {
+    getLatestVersion().then((tag: string) => setLatestVersion(tag))
+  }, [])
   return (
-    <Layout.Vertical>
-      <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.title"
-        />
-      </Text>
-      <Tabs id="selectedOS" className={css.tabsLine}>
-        <Tab
-          id="mac"
-          title="macOs"
-          panel={
-            <CommandBlock
-              darkmode
-              allowCopy={true}
-              commandSnippet={getCommandStrWithNewline([
-                getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac'),
-                getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
-                getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
-              ])}
-              ignoreWhiteSpaces={false}
-              downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
-              copyButtonText={getString('common.copy')}
-            />
-          }
-        />
-        <Tab id="linux" title={getString('delegate.cardData.linux.name')} panel={<CLIDownloadLinux />} />
-        <Tab
-          id="win"
-          title="Windows"
-          panel={
-            <CommandBlock
-              darkmode
-              allowCopy={true}
-              commandSnippet={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win')}
-              ignoreWhiteSpaces={true}
-              downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
-              copyButtonText={getString('common.copy')}
-            />
-          }
-        />
-      </Tabs>
-    </Layout.Vertical>
+    <OverlaySpinner show={isEmpty(version)}>
+      <Layout.Vertical>
+        <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
+          <String
+            className={css.marginBottomLarge}
+            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.title"
+          />
+        </Text>
+        <Tabs id="selectedOS" className={css.tabsLine}>
+          <Tab
+            id="mac"
+            title={getString('pipeline.infraSpecifications.osTypes.macos')}
+            panel={
+              <CommandBlock
+                darkmode
+                allowCopy={true}
+                commandSnippet={getCommandStrWithNewline([
+                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac', { version }),
+                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
+                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
+                ])}
+                ignoreWhiteSpaces={false}
+                downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
+                copyButtonText={getString('common.copy')}
+              />
+            }
+          />
+          <Tab
+            id="linux"
+            title={getString('delegate.cardData.linux.name')}
+            panel={<CLIDownloadLinux version={version} />}
+          />
+          <Tab
+            id="win"
+            title={getString('pipeline.infraSpecifications.osTypes.windows')}
+            panel={
+              <CommandBlock
+                darkmode
+                allowCopy={true}
+                commandSnippet={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win', {
+                  version
+                })}
+                ignoreWhiteSpaces={true}
+                downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
+                copyButtonText={getString('common.copy')}
+              />
+            }
+          />
+        </Tabs>
+      </Layout.Vertical>
+    </OverlaySpinner>
   )
 }
 
-const CLIDownloadLinux = (): JSX.Element => {
+const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
   const { getString } = useStrings()
   const [selectedValue, setSelectedValue] = React.useState<string>('ARM')
   const getOptions = once(
@@ -132,7 +151,8 @@ const CLIDownloadLinux = (): JSX.Element => {
       getString(
         selectedValue === SYSTEM_ARCH_TYPES.ARM
           ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.arm'
-          : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd'
+          : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd',
+        { version }
       ),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
