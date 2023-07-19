@@ -224,7 +224,7 @@ export function MultiSelectEntityReference<T extends Identifier>(
         <div className={cx(css.referenceList, { [css.referenceListOverflow]: data.length > 5 })}>
           {data.map((item: EntityReferenceResponse<T>) => {
             const checked = !!checkedItems.find(el => {
-              return isEqual(el.identifier, item.identifier)
+              return isEqual(el.identifier, item.identifier) && isEqual(el.scope, selectedScope)
             })
             return (
               <Layout.Horizontal
