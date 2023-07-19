@@ -103,7 +103,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
     }
   }, [currentNode, setErrorMessage, isCachedNode])
 
-  const { mutate: createNode } = useCreate({
+  const { mutate: createNode, loading: createLoading } = useCreate({
     queryParams
   })
 
@@ -214,7 +214,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
 
   return (
     <Container style={{ width: '100%', height: '100%' }} className={css.fileDetails} ref={detailsRef}>
-      {downloadLoading && !isCachedNode(currentNode.identifier) ? (
+      {(downloadLoading && !isCachedNode(currentNode.identifier)) || saveLoading || createLoading ? (
         <Container flex={{ justifyContent: 'center', alignItems: 'center' }} style={{ width: '100%', height: '100%' }}>
           <Spinner />
         </Container>
