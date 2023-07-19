@@ -52,6 +52,7 @@ export interface ReferenceSelectDialogTitleProps {
   createNewBtnComponent?: JSX.Element
   isNewConnectorLabelVisible?: boolean
   title?: string
+  isSortingEnabled?: boolean
 }
 export interface ReferenceSelectProps<T extends MinimalObject>
   extends Omit<EntityReferenceProps<T>, 'onSelect' | 'onMultiSelect' | 'selectedRecords'>,
@@ -84,7 +85,14 @@ export interface ReferenceSelectProps<T extends MinimalObject>
 
 export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProps): JSX.Element => {
   const { getString } = useStrings()
-  const { componentName, createNewHandler, createNewLabel, createNewBtnComponent, isNewConnectorLabelVisible } = props
+  const {
+    componentName,
+    createNewHandler,
+    createNewLabel,
+    createNewBtnComponent,
+    isNewConnectorLabelVisible,
+    isSortingEnabled
+  } = props
   return (
     <Layout.Horizontal flex={{ distribution: 'space-between' }}>
       <Layout.Vertical spacing="xsmall">
@@ -94,9 +102,11 @@ export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProp
               compName: componentName
             })}
         </Text>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
-          {getString('common.sortedByCreatedTime')}
-        </Text>
+        {!isSortingEnabled && (
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+            {getString('common.sortedByCreatedTime')}
+          </Text>
+        )}
       </Layout.Vertical>
 
       {createNewBtnComponent
@@ -256,7 +266,8 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
           createNewLabel,
           createNewHandler,
           createNewBtnComponent,
-          isNewConnectorLabelVisible
+          isNewConnectorLabelVisible,
+          isSortingEnabled: Boolean(props.sortProps)
         })}
       >
         <div className={cx(css.contentContainer)}>
