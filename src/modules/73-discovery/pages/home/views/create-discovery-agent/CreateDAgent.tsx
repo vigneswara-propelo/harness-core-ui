@@ -34,17 +34,16 @@ import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ExpressionBreakdownInterface, getBreakdownValues } from '@common/components/SchedulePanel/components/utils'
 import css from './CreateDAgent.module.scss'
 
-interface FormValues {
+interface FormValues extends ExpressionBreakdownInterface {
   discoveryAgentName: string
   discoveryNamespace: string
   nodeAgentSelector: string
   detectNetworkTrace?: boolean
   blacklistedNamespaces?: string[]
-  expression?: string
   duration: number | undefined
-  minutes?: number | undefined
   connectorRef: string | undefined
   identifier: string | undefined
 }
@@ -69,15 +68,18 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
     }
   })
 
+  const initialCronExpression = '0/15 * * * *'
+
   const inputValues: FormValues = {
     discoveryAgentName: '',
     discoveryNamespace: '',
     nodeAgentSelector: '',
     connectorRef: undefined,
     identifier: undefined,
-    expression: undefined,
+    expression: initialCronExpression,
+    ...getBreakdownValues(initialCronExpression),
     duration: undefined,
-    minutes: 15,
+    minutes: '15',
     blacklistedNamespaces: ['kube-node-lease', 'kube-public', 'kube-system'],
     detectNetworkTrace: isNetworkTraceDetected
   }
@@ -90,6 +92,10 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
           return dAgentFormRef.current.validateForm().then(errors => {
             Object.values(errors).map(err => showError(err))
           })
+        }
+        if (dAgentFormRef.current.values.minutes && parseInt(dAgentFormRef.current.values.minutes) < 15) {
+          showError(getString('discovery.dAgentCronError'))
+          return
         }
         await infraMutate({
           k8sConnectorID: dAgentFormRef.current?.values.connectorRef,
@@ -175,8 +181,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
               duration: Yup.number()
                 .min(1, getString('discovery.dAgentValidation.durationMaxMin'))
                 .max(10, getString('discovery.dAgentValidation.durationMaxMin')),
-              nodeAgentSelector: Yup.string().trim(),
-              minutes: Yup.number().moreThan(14, getString('discovery.dAgentCronError'))
+              nodeAgentSelector: Yup.string().trim()
             })}
             onSubmit={() => void 0}
           >
