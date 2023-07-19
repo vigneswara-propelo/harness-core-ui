@@ -29,7 +29,7 @@ import {
   StepCommandsProps,
   Values
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategyPanel } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategyPanel'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
@@ -59,12 +59,13 @@ export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTempla
   stepType?: StepType
   stageType?: StageType
   deploymentType?: string
+  stepViewType?: StepViewType
 }
 
 type Step = StepElementConfig | StepGroupElementConfig
 
 export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: StepFormikFowardRef): React.ReactElement {
-  const { step, onChange } = props
+  const { step, onChange, stepsFactory, stepType, stepViewType } = props
   const { getString } = useStrings()
 
   const onChangeRef = useRef(onChange)
@@ -80,29 +81,40 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
     []
   )
 
+  const defaultValues = stepsFactory.getStep?.(stepType)?.getDefaultValues({}, stepViewType as StepViewType) as
+    | StepElementConfig
+    | undefined
+
   const failureStrategies =
     ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.failureStrategies ||
-    (step as Step)?.failureStrategies
+    defaultTo((step as Step)?.failureStrategies, defaultValues?.failureStrategies)
 
   const delegateSelectors =
     ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.spec?.delegateSelectors ||
-    (step as StepElementConfig)?.spec?.delegateSelectors ||
-    (step as StepGroupElementConfig)?.delegateSelectors
+    defaultTo((step as StepElementConfig)?.spec?.delegateSelectors, defaultValues?.spec?.delegateSelectors) ||
+    defaultTo(
+      (step as StepGroupElementConfig)?.delegateSelectors,
+      (defaultValues as StepGroupElementConfig)?.delegateSelectors
+    )
 
   const policySets =
     ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.enforce?.policySets ||
-    (step as StepElementConfig)?.enforce?.policySets
+    defaultTo((step as StepElementConfig)?.enforce?.policySets, defaultValues?.enforce?.policySets)
 
-  const when = ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when || (step as Step)?.when
+  const when =
+    ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when ||
+    defaultTo((step as Step)?.when, defaultValues?.when)
 
-  const strategy = (step as any)?.strategy
+  const strategy = defaultTo((step as any)?.strategy, defaultValues?.strategy)
+
+  const commandFlags = defaultTo((step as StepElementConfig)?.spec?.commandFlags, defaultValues?.spec?.commandFlags)
 
   return (
     <Formik<FormValues>
       initialValues={{
         failureStrategies: defaultTo(failureStrategies, []) as AllFailureStrategyConfig[],
         delegateSelectors: defaultTo(delegateSelectors, []),
-        commandFlags: defaultTo((step as StepElementConfig)?.spec?.commandFlags, []),
+        commandFlags: defaultTo(commandFlags, []),
         policySets: defaultTo(policySets, []),
         when,
         strategy

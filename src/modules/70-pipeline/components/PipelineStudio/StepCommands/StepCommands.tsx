@@ -316,6 +316,7 @@ export function StepCommands(
                       (selectedStage?.stage?.spec as DeploymentStageConfig)?.deploymentType,
                       ServiceDeploymentType.Kubernetes
                     )}
+                    stepViewType={stepViewType}
                   />
                 }
               />
