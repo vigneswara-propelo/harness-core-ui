@@ -28,6 +28,7 @@ import type { JsonNode } from 'services/cd-ng'
 import type { SaveTemplateButtonProps } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -55,13 +56,13 @@ export function useSaveAsTemplate({
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const { supportingTemplatesGitx } = React.useContext(AppStoreContext)
-  const { showSuccess, clear } = useToaster()
+  const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
   const { openTemplateReconcileErrorsModal, openSelectedTemplateErrorsModal } = useTemplateErrors({
     entity: TemplateErrorEntity.TEMPLATE
   })
-
+  const { getRBACErrorMessage } = useRBACError()
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
       <Dialog
@@ -144,7 +145,13 @@ export function useSaveAsTemplate({
       })
     } else {
       clear()
-      openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors, latestTemplate)
+      if ((error as any)?.metadata?.schemaErrors) {
+        openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors, latestTemplate)
+      }
+      // when case like -  propagated stage is tried to save as template , the error toast below is shown
+      else {
+        showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+      }
       hideConfigModal()
     }
   }

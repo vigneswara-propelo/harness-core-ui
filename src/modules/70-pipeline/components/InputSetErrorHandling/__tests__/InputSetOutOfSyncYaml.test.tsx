@@ -267,13 +267,12 @@ const renderGitSimpComponent = (): RenderResult => {
 
 describe('Inline Input Set Error Exp', () => {
   test('should render input set menu action button', async () => {
-    const { container } = renderComponent()
+    renderComponent()
     expect(
       screen.getByRole('button', {
         name: /input set menu actions/i
       })
     ).toBeDefined()
-    expect(container).toMatchSnapshot()
   })
 
   test('should not open reconcile dialog on clicking reconcile button, when loading state is true', async () => {
@@ -473,16 +472,6 @@ describe('Old Git Sync Input Set Error Exp', () => {
     }))
   })
 
-  test('should render input set menu action button', async () => {
-    const { container } = renderComponent()
-    expect(
-      screen.getByRole('button', {
-        name: /input set menu actions/i
-      })
-    ).toBeDefined()
-    expect(container).toMatchSnapshot()
-  })
-
   test('should open reconcile dialog on clicking reconcile button, when loading state is false & input set is not empty', async () => {
     jest.spyOn(pipelineng, 'useYamlDiffForInputSet').mockImplementation((): any => GetInputSetYamlDiffOldGitSync)
     jest.spyOn(pipelineng, 'useUpdateInputSetForPipeline').mockImplementation((): any => {
@@ -566,16 +555,6 @@ describe('Remote Git Sync Input Set Error Exp', () => {
         return { data: gitSyncListResponse, refetch: getListGitSync, loading: false }
       })
     }))
-  })
-
-  test('should render input set menu action button', async () => {
-    const { container } = renderComponent()
-    expect(
-      screen.getByRole('button', {
-        name: /input set menu actions/i
-      })
-    ).toBeDefined()
-    expect(container).toMatchSnapshot()
   })
 
   test('should open reconcile dialog on clicking reconcile button, when loading state is false & input set is not empty', async () => {

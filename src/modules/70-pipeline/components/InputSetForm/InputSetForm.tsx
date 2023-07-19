@@ -69,6 +69,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useDiffDialog from '@common/hooks/useDiffDialog'
+import { usePermission } from '@rbac/hooks/usePermission'
 
 import GitPopover from '../GitPopover/GitPopover'
 import { FormikInputSetForm } from './FormikInputSetForm'
@@ -695,8 +696,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     onBranchChange,
     handleReloadFromCache = noop,
     onCancel,
-    isFormDirty = false,
-    isSaveEnabled = false
+    isFormDirty = false
   } = props
 
   const history = useHistory()
@@ -715,6 +715,30 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
   function handleReloadFromGitClick(): void {
     inputCachedCopyRef.current?.showConfirmationModal()
   }
+
+  const [hasEditPermission] = usePermission(
+    {
+      resourceScope: {
+        projectIdentifier,
+        orgIdentifier,
+        accountIdentifier: accountId
+      },
+      resource: {
+        resourceType: ResourceType.PIPELINE,
+        resourceIdentifier: pipelineIdentifier
+      },
+      permissions: [PermissionIdentifier.EDIT_PIPELINE],
+      options: {
+        skipCache: true
+      }
+    },
+    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
+  )
+
+  const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType
+
+  const isEditable =
+    hasEditPermission && (isGitSyncEnabled ? true : !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit))
 
   return (
     <React.Fragment>
@@ -792,7 +816,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"
-                  disabled={!isSaveEnabled}
+                  disabled={!isEditable}
                   text={getString('save')}
                   onClick={async e => {
                     e.preventDefault()

@@ -178,7 +178,7 @@ describe('Input Set - error scenarios', () => {
     expect(container).toMatchSnapshot()
     await waitFor(() => getAllByText('tesa1'))
 
-    expect(saveBtn).toBeDisabled()
+    expect(saveBtn).not.toBeDisabled()
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
