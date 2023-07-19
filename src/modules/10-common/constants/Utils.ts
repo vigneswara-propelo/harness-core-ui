@@ -79,6 +79,7 @@ export enum SettingType {
   DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER = 'disable_harness_built_in_secret_manager',
   WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION = 'mandate_webhook_secrets_for_github_triggers',
   MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION = 'mandate_custom_webhook_authorization',
+  TRIGGER_FOR_ALL_ARTIFACTS_OR_MANIFESTS = 'trigger_for_all_artifacts_or_manifests',
   ENABLE_FORCE_DELETE = 'enable_force_delete',
   PIPELINE_TIMEOUT = 'pipeline_timeout',
   STAGE_TIMEOUT = 'stage_timeout',

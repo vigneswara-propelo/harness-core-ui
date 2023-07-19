@@ -341,6 +341,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGER
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.TRIGGER_FOR_ALL_ARTIFACTS_OR_MANIFESTS, {
+  label: 'defaultSettings.executeTriggersWithAllCollectedArtifactsOrManifests',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
+})
+
 export default function DefaultSettingsRoutes(): React.ReactElement {
   const { PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT } = useFeatureFlags()
   const { getString } = useStrings()
