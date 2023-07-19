@@ -79,7 +79,7 @@ const KubernetesManifestCommands: React.FC<KubernetesManifestCommandsProps> = ({
                 const content = new Blob([yaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
                 if (linkRef?.current) {
                   linkRef.current.href = window.URL.createObjectURL(content)
-                  linkRef.current.download = `harness-delegate.yaml`
+                  linkRef.current.download = `harness-delegate.yml`
                   linkRef.current.click()
                 }
                 trackEvent(DelegateActions.DelegateCommandLineKubernetesManifestDownloadYaml, {
@@ -139,7 +139,7 @@ const KubernetesManifestCommands: React.FC<KubernetesManifestCommandsProps> = ({
                       allowCopy={true}
                       ignoreWhiteSpaces={false}
                       allowDownload={true}
-                      downloadFileProps={{ downloadFileExtension: 'yaml', downloadFileName: 'harness-delegate' }}
+                      downloadFileProps={{ downloadFileExtension: 'yml', downloadFileName: 'harness-delegate' }}
                     />
                   )}
                 </OverlaySpinner>
@@ -221,7 +221,11 @@ const KubernetesManifestCommands: React.FC<KubernetesManifestCommandsProps> = ({
             properties: { category: Category.DELEGATE }
           }
         }}
-        commandSnippet={getString('delegates.commandLineCreation.lastCommandKubernetesLastLine')}
+        commandSnippet={
+          basicMode
+            ? getString('delegates.commandLineCreation.lastCommandKubernetesLastLine')
+            : getString('delegates.commandLineCreation.lastCommandKubernetesLastLineWithYaml')
+        }
         allowCopy={true}
       />
     </Layout.Vertical>

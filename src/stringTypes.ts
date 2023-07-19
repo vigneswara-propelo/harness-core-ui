@@ -1819,6 +1819,7 @@ export interface StringsMap {
   'delegates.commandLineCreation.kubernetesThirdDirectionPartOne': string
   'delegates.commandLineCreation.kubernetesThirdDirectionPartTwo': string
   'delegates.commandLineCreation.lastCommandKubernetesLastLine': string
+  'delegates.commandLineCreation.lastCommandKubernetesLastLineWithYaml': string
   'delegates.commandLineCreation.learnWatch': string
   'delegates.commandLineCreation.numberOfParallel': string
   'delegates.commandLineCreation.oldWayToCreateDelegate': string
