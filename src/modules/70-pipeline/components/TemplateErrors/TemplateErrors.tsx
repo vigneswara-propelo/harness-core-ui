@@ -390,6 +390,7 @@ function TemplateErrorContent({
                 `${getString('pipeline.execution.stepGroupTitlePrefix')} ${get(template, 'identifier')}`
               )}
           <SelectedTemplateErrors gotoViewWithDetails={gotoViewWithDetails} errors={stageErrors} template={template} />
+
           {stepIds.map((stepId: string) => {
             return (
               <StepErrors key={stepId} gotoViewWithDetails={gotoViewWithDetails} errors={updatedErrorsByStep[stepId]} />

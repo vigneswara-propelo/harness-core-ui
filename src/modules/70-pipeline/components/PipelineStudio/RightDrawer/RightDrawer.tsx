@@ -9,6 +9,7 @@ import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, noop, set } from 'lodash-es'
+import { validate as isValidUuid } from 'uuid'
 import cx from 'classnames'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -32,7 +33,7 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { PolicyManagementPipelineView } from '@governance/GovernanceApp'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline-ng'
+import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import {
@@ -44,12 +45,24 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { usePrevious } from '@common/hooks/usePrevious'
 import type { K8sDirectInfraStepGroupElementConfig } from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupUtil'
+import { NodeStateMetadata, useNodeMetadata } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
+import {
+  NodeWrapperEntity,
+  getBaseDotNotationWithoutEntityIdentifier
+} from '@pipeline/components/PipelineDiagram/Nodes/utils'
+import { getStepsPathWithoutStagePath } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
 import { StepCommandsViews, StepOrStepGroupOrTemplateStepData, Values } from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
-import { addService, addStepOrGroup, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
+import {
+  addService,
+  addStepOrGroup,
+  getClosestParentStepGroupPath,
+  getNodeAndParent,
+  getStepFromId
+} from '../ExecutionGraph/ExecutionGraphUtil'
 import PipelineVariables, { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables'
 import { PipelineNotifications, PipelineNotificationsRef } from '../PipelineNotifications/PipelineNotifications'
 import { PipelineTemplates } from '../PipelineTemplates/PipelineTemplates'
@@ -62,6 +75,7 @@ import { RightDrawerTitle } from './RightDrawerTitle'
 import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
 import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
+import { SampleJSON, findDotNotationByRelativePath, generateCombinedPaths } from '../PipelineContext/helpers'
 import css from './RightDrawer.module.scss'
 
 export const FullscreenDrawers: DrawerTypes[] = [
@@ -77,18 +91,23 @@ type TrackEvent = (eventName: string, properties: Record<string, string>) => voi
 const checkDuplicateStep = (
   formikRef: React.MutableRefObject<StepFormikRef | null>,
   data: DrawerData['data'],
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  stepsDotNotationPaths: NodeStateMetadata[]
 ): boolean => {
   const values = formikRef.current?.getValues() as Values
+
   if (values && data?.stepConfig?.stepsMap && formikRef.current?.setFieldError) {
-    const stepsMap = data.stepConfig.stepsMap
-    let duplicate = false
-    stepsMap.forEach((_step, key) => {
-      if (key === values.identifier && values.identifier !== data?.stepConfig?.node?.identifier) {
-        duplicate = true
-      }
-    })
-    if (duplicate) {
+    const relativePath = getBaseDotNotationWithoutEntityIdentifier(data?.stepConfig?.relativeBasePath)
+    const isStepGroup = data?.stepConfig?.isStepGroup
+    const currentNodeRelativePath = `${relativePath}.${
+      isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+    }.${values.identifier}`
+
+    const isDuplicate = stepsDotNotationPaths.some(
+      item =>
+        currentNodeRelativePath === item.relativeBasePath && values.identifier !== data?.stepConfig?.node?.identifier
+    )
+    if (isDuplicate) {
       setTimeout(() => {
         formikRef.current?.setFieldError('identifier', getString('pipelineSteps.duplicateStep'))
       }, 300)
@@ -98,66 +117,49 @@ const checkDuplicateStep = (
   return false
 }
 
-export const updateStepWithinStage = (
+export const updateStepWithinStageViaPath = (
   execution: ExecutionElementConfig | StepGroupElementConfig,
-  processingNodeIdentifier: string,
   processedNode: StepElementConfig | TemplateStepNode,
-  isRollback: boolean
+  stepRelativePath: string,
+  stepFullPath: string
 ): void => {
-  // Finds the step in the stage, and updates with the processed node
-  const executionSteps = get(execution, isRollback ? 'rollbackSteps' : 'steps') as ExecutionWrapperConfig[]
-  executionSteps?.forEach((stepWithinStage: ExecutionWrapperConfig) => {
-    if (stepWithinStage.stepGroup) {
-      // If stage has a step group, loop over the step group steps and update the matching identifier with node
-      if (stepWithinStage.stepGroup?.identifier === processingNodeIdentifier) {
-        stepWithinStage.stepGroup = processedNode as any
-      } else {
-        // For current Step Group, go through all steps and find out if all steps are of Command type
-        // If yes, and new step is also of Command type then add repeat looping strategy to Step Group
-        const allSteps = stepWithinStage.stepGroup.steps
-        const allFlattenedSteps = getFlattenedSteps(allSteps)
-        if (!isEmpty(allFlattenedSteps)) {
-          const commandSteps = allFlattenedSteps.filter(
-            (currStep: StepElementConfig) => currStep.type === StepType.Command
-          )
-          if (
-            (commandSteps.length === allFlattenedSteps.length &&
-              (processedNode as StepElementConfig)?.type === StepType.Command &&
-              !isEmpty(stepWithinStage.stepGroup.strategy) &&
-              !stepWithinStage.stepGroup.strategy?.repeat) ||
-            (commandSteps.length === allFlattenedSteps.length &&
-              (processedNode as StepElementConfig)?.type === StepType.Command &&
-              isEmpty(stepWithinStage.stepGroup.strategy))
-          ) {
-            stepWithinStage.stepGroup['strategy'] = {
-              repeat: {
-                items: '<+stage.output.hosts>' as any, // used any because BE needs string variable while they can not change type
-                maxConcurrency: 1,
-                start: 0,
-                end: 1,
-                unit: 'Count'
-              }
-            }
-          }
-        }
-        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, false)
-      }
-    } else if (stepWithinStage.parallel) {
-      // If stage has a parallel steps, loop over and update the matching identifier with node
-      stepWithinStage.parallel.forEach(parallelStep => {
-        if (parallelStep?.stepGroup?.identifier === processingNodeIdentifier) {
-          parallelStep.stepGroup = processedNode as any
-        } else if (parallelStep.step?.identifier === processingNodeIdentifier) {
-          parallelStep.step = processedNode as any
-        } else if (parallelStep?.stepGroup) {
-          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, false)
+  const dotNotationObjects = generateCombinedPaths(execution as SampleJSON)
+
+  const relativePath = getStepsPathWithoutStagePath(stepRelativePath)
+  const fullPath = getStepsPathWithoutStagePath(stepFullPath)
+  const completeNodePathFqn = findDotNotationByRelativePath(dotNotationObjects, relativePath, fullPath)
+  const parentStepGroupPath = getClosestParentStepGroupPath(completeNodePathFqn)
+
+  // For current Step Group, go through all steps and find out if all steps are of Command type
+  // If yes, and new step is also of Command type then add repeat looping strategy to Step Group
+  const stepGroupData = get(execution, parentStepGroupPath)
+  const allSteps = get(execution, `${parentStepGroupPath}.steps`)
+  //stepWithinStage.stepGroup.steps
+  const allFlattenedSteps = getFlattenedSteps(allSteps)
+  if (!isEmpty(allFlattenedSteps)) {
+    const commandSteps = allFlattenedSteps.filter((currStep: StepElementConfig) => currStep.type === StepType.Command)
+    if (
+      (commandSteps.length === allFlattenedSteps.length &&
+        (processedNode as StepElementConfig)?.type === StepType.Command &&
+        !isEmpty(stepGroupData.strategy) &&
+        !stepGroupData.strategy?.repeat) ||
+      (commandSteps.length === allFlattenedSteps.length &&
+        (processedNode as StepElementConfig)?.type === StepType.Command &&
+        isEmpty(stepGroupData.strategy))
+    ) {
+      set(execution, `${parentStepGroupPath}.strategy`, {
+        repeat: {
+          items: '<+stage.output.hosts>' as any, // used any because BE needs string variable while they can not change type
+          maxConcurrency: 1,
+          start: 0,
+          end: 1,
+          unit: 'Count'
         }
       })
-    } else if (stepWithinStage.step?.identifier === processingNodeIdentifier) {
-      // Else simply find the matching step ad update the node
-      stepWithinStage.step = processedNode as any
     }
-  })
+  }
+
+  set(execution, getBaseDotNotationWithoutEntityIdentifier(completeNodePathFqn), processedNode)
 }
 
 const addReplace = (item: Partial<Values>, node: any): void => {
@@ -307,15 +309,35 @@ const updateWithNodeIdentifier = async (
   updateStage: (stage: StageElementConfig) => Promise<void>,
   data: any,
   pipelineView: PipelineViewData,
-  isRollback: boolean,
-  provisionerPath: string
+  provisionerPath: string,
+  removeStepByDotNotationPath: (fqnPathIdentifierToRemove: string) => void
 ): Promise<void> => {
   const provisioner = get(selectedStage?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
   if (drawerType === DrawerTypes.StepConfig && selectedStage?.stage?.spec?.execution) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
+
+    // if identifier is uuid and is being updated remove entry from nodeMetaDataContext
+    isValidUuid(processingNodeIdentifier) && removeStepByDotNotationPath(processingNodeIdentifier)
+
+    // Construct relative path - update step/stepGroup
+    const relativePath = getBaseDotNotationWithoutEntityIdentifier(data?.stepConfig?.relativeBasePath)
+    const fullPath = getBaseDotNotationWithoutEntityIdentifier(data?.stepConfig?.nodeStateMetadata?.dotNotationPath)
+    const isStepGroup = data?.stepConfig?.isStepGroup
+    const stepRelativePath = relativePath
+      ? `${relativePath}.${
+          isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+        }.${processingNodeIdentifier}`
+      : data?.stepConfig?.nodeStateMetadata?.relativeBasePath
+
+    const stepFullPath = fullPath
+      ? `${getBaseDotNotationWithoutEntityIdentifier(fullPath)}.${
+          isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+        }.${processingNodeIdentifier}`
+      : ''
+
     const stageData = produce(selectedStage, draft => {
       if (draft.stage?.spec?.execution) {
-        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
+        updateStepWithinStageViaPath(draft.stage.spec.execution, processNode, stepRelativePath, stepFullPath)
       }
     })
     // update view data before updating pipeline because its async
@@ -329,13 +351,33 @@ const updateWithNodeIdentifier = async (
       await updateStage(stageData.stage)
     }
 
-    data?.stepConfig?.onUpdate?.(processNode)
+    data?.stepConfig?.onUpdate?.(processNode, data?.isUnderStepGroup, data?.stepConfig?.isUnderStepGroup)
   } else if (drawerType === DrawerTypes.ProvisionerStepConfig && provisioner) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
+
+    // if identifier is uuid and is being updated remove entry from nodeMetaDataContext
+    isValidUuid(processingNodeIdentifier) && removeStepByDotNotationPath(processingNodeIdentifier)
+
+    // Construct relative path - update step/stepGroup
+    const relativePath = getBaseDotNotationWithoutEntityIdentifier(data?.stepConfig?.relativeBasePath)
+    const fullPath = getBaseDotNotationWithoutEntityIdentifier(data?.stepConfig?.nodeStateMetadata?.dotNotationPath)
+    const isStepGroup = data?.stepConfig?.isStepGroup
+    const stepRelativePath = relativePath
+      ? `${relativePath}.${
+          isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+        }.${processingNodeIdentifier}`
+      : data?.stepConfig?.nodeStateMetadata?.relativeBasePath
+
+    const stepFullPath = fullPath
+      ? `${getBaseDotNotationWithoutEntityIdentifier(fullPath)}.${
+          isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+        }.${processingNodeIdentifier}`
+      : ''
+
     const stageData = produce(selectedStage, draft => {
       const provisionerInternal = get(draft?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
       if (provisionerInternal) {
-        updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
+        updateStepWithinStageViaPath(provisionerInternal, processNode, stepRelativePath, stepFullPath)
       }
     })
     // update view data before updating pipeline because its async
@@ -347,7 +389,7 @@ const updateWithNodeIdentifier = async (
     if (stageData?.stage) {
       await updateStage(stageData.stage)
     }
-    data?.stepConfig?.onUpdate?.(processNode)
+    data?.stepConfig?.onUpdate?.(processNode, data?.stepConfig?.isUnderStepGroup)
   }
 }
 
@@ -360,8 +402,8 @@ const onSubmitStep = async (
   updatePipelineView: (data: PipelineViewData) => void,
   updateStage: (stage: StageElementConfig) => Promise<void>,
   pipelineView: PipelineViewData,
-  isRollback: boolean,
-  provisionerPath: string
+  provisionerPath: string,
+  removeStepByDotNotationPath: (fqnPathIdentifierToRemove: string) => void
 ): Promise<void> => {
   if (data?.stepConfig?.node) {
     const processNode = processNodeImpl(item, data, trackEvent)
@@ -375,8 +417,8 @@ const onSubmitStep = async (
         updateStage,
         data,
         pipelineView,
-        isRollback,
-        provisionerPath
+        provisionerPath,
+        removeStepByDotNotationPath
       )
     }
   }
@@ -390,12 +432,13 @@ const applyChanges = async (
   pipelineView: PipelineViewData,
   setSelectedStepId: (selectedStepId: string | undefined) => void,
   trackEvent: TrackEvent,
-  isRollback: boolean,
   selectedStage: StageElementWrapper<StageElementConfig> | undefined,
   updateStage: (stage: StageElementConfig) => Promise<void>,
-  provisionerPath: string
+  provisionerPath: string,
+  removeStepByDotNotationPath: (fqnPathIdentifierToRemove: string) => void,
+  stepsDotNotationPaths: NodeStateMetadata[]
 ): Promise<void> => {
-  if (checkDuplicateStep(formikRef, data, getString)) {
+  if (checkDuplicateStep(formikRef, data, getString, stepsDotNotationPaths)) {
     return
   }
   await formikRef?.current?.submitForm()
@@ -418,8 +461,8 @@ const applyChanges = async (
           })
         }
       }),
-      isRollback,
-      provisionerPath
+      provisionerPath,
+      removeStepByDotNotationPath
     )
 
     setSelectedStepId(undefined)
@@ -451,6 +494,7 @@ export interface CloseDrawerArgs {
   variablesRef: React.MutableRefObject<PipelineVariablesRef | null>
   flowControlRef: React.MutableRefObject<FlowControlRef | null>
   notificationsRef: React.MutableRefObject<PipelineNotificationsRef | null>
+  stepsDotNotationPaths: NodeStateMetadata[]
 }
 
 const closeDrawer = (args: CloseDrawerArgs): void => {
@@ -468,10 +512,11 @@ const closeDrawer = (args: CloseDrawerArgs): void => {
     executionStrategyRef,
     variablesRef,
     flowControlRef,
-    notificationsRef
+    notificationsRef,
+    stepsDotNotationPaths
   } = args
   e?.persist()
-  if (checkDuplicateStep(formikRef, data, getString)) {
+  if (checkDuplicateStep(formikRef, data, getString, stepsDotNotationPaths)) {
     return
   }
   if (formikRef.current?.isDirty?.()) {
@@ -524,6 +569,7 @@ export function RightDrawer(): React.ReactElement {
     stepsFactory,
     setSelectedStepId
   } = usePipelineContext()
+  const { removeStepByDotNotationPath, stepsDotNotationPaths } = useNodeMetadata()
   const { getTemplate } = useTemplateSelector()
   const [helpPanelVisible, setHelpPanel] = useState(false)
   const { type, data, ...restDrawerProps } = drawerData
@@ -595,10 +641,11 @@ export function RightDrawer(): React.ReactElement {
             pipelineView,
             setSelectedStepId,
             trackEvent,
-            !!isRollbackToggled,
             selectedStage,
             updateStage,
-            provisionerPath
+            provisionerPath,
+            removeStepByDotNotationPath,
+            stepsDotNotationPaths
           )
         }
       ></RightDrawerTitle>
@@ -610,13 +657,16 @@ export function RightDrawer(): React.ReactElement {
       let step
       let drawerType = DrawerTypes.StepConfig
       // 1. search for step in execution
-      const execStep = getStepFromId(
-        selectedStage?.stage?.spec?.execution,
-        selectedStepId,
-        false,
-        false,
-        Boolean(pipelineView.isRollbackToggled)
-      )
+      const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(selectedStepId))
+      const execStep = getNodeAndParent(selectedStage?.stage?.spec?.execution, stepNodePath)
+      const dotNotationObjects = generateCombinedPaths(selectedStage?.stage?.spec?.execution as SampleJSON)
+
+      const stepNodeStateMetadata = dotNotationObjects.find(obj => obj.dotNotation === selectedStepId)
+
+      if (!stepNodeStateMetadata) {
+        // Step path not found
+        return
+      }
       step = execStep.node
       if (!step) {
         drawerType = DrawerTypes.ConfigureService
@@ -641,7 +691,12 @@ export function RightDrawer(): React.ReactElement {
                 onUpdate: data?.paletteData?.onUpdate,
                 isStepGroup: false,
                 addOrEdit: 'edit',
-                hiddenAdvancedPanels: data?.paletteData?.hiddenAdvancedPanels
+                relativeBasePath: data?.paletteData?.relativeBasePath,
+                hiddenAdvancedPanels: data?.paletteData?.hiddenAdvancedPanels,
+                nodeStateMetadata: {
+                  dotNotationPath: stepNodeStateMetadata.dotNotation,
+                  relativeBasePath: stepNodeStateMetadata.relativePath
+                }
               }
             }
           }
@@ -754,10 +809,11 @@ export function RightDrawer(): React.ReactElement {
           pipelineView,
           setSelectedStepId,
           trackEvent,
-          !!isRollbackToggled,
           selectedStage,
           updateStage,
-          provisionerPath
+          provisionerPath,
+          removeStepByDotNotationPath,
+          stepsDotNotationPaths
         )
       }
     },
@@ -842,6 +898,7 @@ export function RightDrawer(): React.ReactElement {
       if (pipelineStage?.stage) {
         await updateStage(pipelineStage?.stage)
       }
+
       updatePipelineView({
         ...pipelineView,
         isDrawerOpened: true,
@@ -851,6 +908,7 @@ export function RightDrawer(): React.ReactElement {
             stepConfig: {
               node: newStepData.step,
               stepsMap: paletteData.stepsMap,
+              relativeBasePath: paletteData?.relativeBasePath,
               onUpdate: data?.paletteData?.onUpdate,
               isStepGroup: false,
               addOrEdit: 'edit',
@@ -867,21 +925,40 @@ export function RightDrawer(): React.ReactElement {
 
   const updateNode = async (
     processNode: StepElementConfig | TemplateStepNode,
-    drawerType: DrawerTypes,
-    isRollback: boolean
+    drawerType: DrawerTypes
   ): Promise<void> => {
     const newPipelineView = produce(pipelineView, draft => {
       set(draft, 'drawerData.data.stepConfig.node', processNode)
     })
     updatePipelineView(newPipelineView)
     const processingNodeIdentifier = defaultTo(drawerData.data?.stepConfig?.node?.identifier, '')
+
+    // if identifier is uuid and is being updated remove entry from nodeMetaDataContext
+    isValidUuid(processingNodeIdentifier) && removeStepByDotNotationPath(processingNodeIdentifier)
+
+    // Construct relative path - update step/stepGroup
+    const relativePath = getBaseDotNotationWithoutEntityIdentifier(data?.stepConfig?.relativeBasePath)
+    const fullPath = getBaseDotNotationWithoutEntityIdentifier(data?.stepConfig?.nodeStateMetadata?.dotNotationPath)
+    const isStepGroup = data?.stepConfig?.isStepGroup
+    const stepRelativePath = relativePath
+      ? `${relativePath}.${
+          isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+        }.${processingNodeIdentifier}`
+      : (data?.stepConfig?.nodeStateMetadata?.relativeBasePath as string)
+
+    const stepFullPath = fullPath
+      ? `${getBaseDotNotationWithoutEntityIdentifier(fullPath)}.${
+          isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+        }.${processingNodeIdentifier}`
+      : ''
+
     const stageData = produce(selectedStage, draft => {
       if (drawerType === DrawerTypes.StepConfig && draft?.stage?.spec?.execution) {
-        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
+        updateStepWithinStageViaPath(draft.stage.spec.execution, processNode, stepRelativePath, stepFullPath)
       } else if (drawerType === DrawerTypes.ProvisionerStepConfig) {
         const provisionerInternal = get(draft?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
         if (provisionerInternal) {
-          updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
+          updateStepWithinStageViaPath(provisionerInternal, processNode, stepRelativePath, stepFullPath)
         }
       }
     })
@@ -892,11 +969,7 @@ export function RightDrawer(): React.ReactElement {
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
-  const addOrUpdateTemplate = async (
-    selectedTemplate: PreSelectedTemplate,
-    drawerType: DrawerTypes,
-    isRollback: boolean
-  ): Promise<void> => {
+  const addOrUpdateTemplate = async (selectedTemplate: PreSelectedTemplate, drawerType: DrawerTypes): Promise<void> => {
     try {
       const childType = selectedTemplate.childType || (stageType as string)
 
@@ -919,20 +992,20 @@ export function RightDrawer(): React.ReactElement {
             }
           )
         : createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, template)
-      await updateNode(processNode, drawerType, isRollback)
+      await updateNode(processNode, drawerType)
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }
   }
 
-  const removeTemplate = async (drawerType: DrawerTypes, isRollback: boolean): Promise<void> => {
+  const removeTemplate = async (drawerType: DrawerTypes): Promise<void> => {
     const node = drawerData.data?.stepConfig?.node as TemplateStepNode
     const processNode = produce({} as StepElementConfig, draft => {
       draft.name = node.name
       draft.identifier = node.identifier
       draft.type = get(templateTypes, node.template.templateRef)
     })
-    await updateNode(processNode, drawerType, isRollback)
+    await updateNode(processNode, drawerType)
   }
 
   const previousStepId = usePrevious(selectedStepId)
@@ -952,7 +1025,7 @@ export function RightDrawer(): React.ReactElement {
     }
   }, [previousStepId, selectedStepId, onDiscard])
 
-  const showHelpPanel = () => {
+  const showHelpPanel = (): void => {
     setHelpPanel(!helpPanelVisible)
   }
 
@@ -972,7 +1045,8 @@ export function RightDrawer(): React.ReactElement {
       executionStrategyRef,
       variablesRef,
       flowControlRef,
-      notificationsRef
+      notificationsRef,
+      stepsDotNotationPaths
     })
   }
 
@@ -1008,17 +1082,15 @@ export function RightDrawer(): React.ReactElement {
           step={data.stepConfig.node as StepElementConfig | StepGroupElementConfig}
           isReadonly={isReadonly}
           ref={formikRef}
-          checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString)}
-          isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
+          checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString, stepsDotNotationPaths)}
+          isNewStep={!data.stepConfig.stepsMap?.get(data.stepConfig.node.identifier)?.isSaved}
           stepsFactory={stepsFactory}
           hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
           onUpdate={noop}
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
-          onUseTemplate={(selectedTemplate: PreSelectedTemplate) =>
-            addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
-          }
-          onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
+          onUseTemplate={(selectedTemplate: PreSelectedTemplate) => addOrUpdateTemplate(selectedTemplate, type)}
+          onRemoveTemplate={() => removeTemplate(type)}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           selectedStage={selectedStage}
@@ -1080,7 +1152,7 @@ export function RightDrawer(): React.ReactElement {
           step={data.stepConfig.node as StepElementConfig}
           isReadonly={isReadonly}
           ref={formikRef}
-          isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
+          isNewStep={!data.stepConfig.stepsMap?.get(data.stepConfig.node.identifier)?.isSaved}
           stepsFactory={stepsFactory}
           onUpdate={onServiceDependencySubmit}
           isStepGroup={false}
@@ -1155,6 +1227,7 @@ export function RightDrawer(): React.ReactElement {
                       onUpdate: data?.paletteData?.onUpdate,
                       isStepGroup: false,
                       addOrEdit: 'edit',
+                      relativeBasePath: paletteData?.relativeBasePath,
                       hiddenAdvancedPanels: data.paletteData?.hiddenAdvancedPanels
                     }
                   }
@@ -1175,8 +1248,8 @@ export function RightDrawer(): React.ReactElement {
           ref={formikRef}
           isReadonly={isReadonly}
           allowableTypes={allowableTypes}
-          checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString)}
-          isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
+          checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString, stepsDotNotationPaths)}
+          isNewStep={!data.stepConfig.stepsMap?.get(data.stepConfig.node.identifier)?.isSaved}
           stepsFactory={stepsFactory}
           hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
           onUpdate={noop}
@@ -1184,10 +1257,8 @@ export function RightDrawer(): React.ReactElement {
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           selectedStage={selectedStage}
-          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
-            addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
-          }
-          onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
+          onRemoveTemplate={() => removeTemplate(type)}
           storeMetadata={storeMetadata}
         />
       )}

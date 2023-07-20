@@ -9,16 +9,21 @@ import React from 'react'
 import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { getStepsPathWithoutStagePath } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
-import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'
+import {
+  getPositionOfAddIcon,
+  attachDragImageToEventHandler,
+  getBaseDotNotationWithoutEntityIdentifier
+} from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
@@ -30,8 +35,12 @@ interface PipelineStepNodeProps extends BaseReactComponentProps {
 
 export function DiamondNodeWidget(props: any): JSX.Element {
   const { getString } = useStrings()
-  const isSelected = props?.isSelected || props?.selectedNodeId === props?.id
+  const stepFQNPath = getStepsPathWithoutStagePath(props?.data?.nodeStateMetadata?.dotNotationPath)
   const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
+  const relativeFQNPath = getBaseDotNotationWithoutEntityIdentifier(props?.data?.nodeStateMetadata?.relativeBasePath)
+  const nodeSelectedId = isEmpty(stepStatus) ? stepFQNPath : props.id
+  const isSelected = props?.isSelected || props?.selectedNodeId === nodeSelectedId
+
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
     stepStatus as ExecutionStatus,
     ExecutionPipelineNodeType.DIAMOND
@@ -265,6 +274,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           identifier={props?.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}
           style={{ left: getPositionOfAddIcon(props) }}
+          relativeBasePath={relativeFQNPath}
           className={cx(
             cssDefault.addNodeIcon,
             {
@@ -289,6 +299,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             identifier={props?.identifier}
             prevNodeIdentifier={props.prevNodeIdentifier as string}
             style={{ right: getPositionOfAddIcon(props, true) }}
+            relativeBasePath={relativeFQNPath}
             isRightAddIcon={true}
             className={cx(
               cssDefault.addNodeIcon,

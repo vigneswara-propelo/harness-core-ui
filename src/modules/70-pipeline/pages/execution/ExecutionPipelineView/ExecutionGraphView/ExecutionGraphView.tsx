@@ -22,6 +22,7 @@ import ExecutionLayoutFloatingView from '@pipeline/components/ExecutionLayout/Ex
 
 import { ExecutionNodeList } from '@pipeline/components/ExecutionNodeList/ExecutionNodeList'
 import { CollapsedNodeProvider } from '@pipeline/components/ExecutionNodeList/CollapsedNodeStore'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { ExecutionStageDetailsHeader } from './ExecutionStageDetailsHeader/ExecutionStageDetailsHeader'
 import ExecutionGraph from './ExecutionGraph/ExecutionGraph'
 import ExecutionStageDetails from './ExecutionStageDetails/ExecutionStageDetails'
@@ -239,45 +240,47 @@ export default function ExecutionGraphView(): React.ReactElement {
       }}
     >
       <CollapsedNodeProvider>
-        <div className={css.main} id={EXECUTION_LAYOUT_DOM_ID}>
-          <SplitPane
-            split="horizontal"
-            className={css.splitPane1}
-            minSize={MIN_PANEL_SIZE}
-            size={primaryPaneSize}
-            onChange={handleStageResize}
-            pane1Style={omit(styles, 'height')}
-            pane2Style={styles}
-            style={styles}
-          >
-            {executionGraph}
-            <div className={css.stageDetails}>
-              <ExecutionStageDetailsHeader />
-              {isThirdPaneVisible &&
-              (layoutState === ExecutionLayoutState.BOTTOM || layoutState === ExecutionLayoutState.RIGHT) ? (
-                <SplitPane
-                  className={css.splitPane2}
-                  {...splitPaneProps[layoutState]}
-                  size={tertiaryPaneSize}
-                  onChange={setStepSplitPaneSizeDebounce}
-                  pane1Style={stageGraphPaneStyles}
-                  pane2Style={styles}
-                  style={styles}
-                >
-                  {executionStageDetails}
-                  {nodeListOrStepdetails}
-                </SplitPane>
-              ) : (
-                <React.Fragment>
-                  {executionStageDetails}
-                  {isThirdPaneVisible ? (
-                    <ExecutionLayoutFloatingView>{nodeListOrStepdetails}</ExecutionLayoutFloatingView>
-                  ) : null}
-                </React.Fragment>
-              )}
-            </div>
-          </SplitPane>
-        </div>
+        <NodeMetadataProvider>
+          <div className={css.main} id={EXECUTION_LAYOUT_DOM_ID}>
+            <SplitPane
+              split="horizontal"
+              className={css.splitPane1}
+              minSize={MIN_PANEL_SIZE}
+              size={primaryPaneSize}
+              onChange={handleStageResize}
+              pane1Style={omit(styles, 'height')}
+              pane2Style={styles}
+              style={styles}
+            >
+              {executionGraph}
+              <div className={css.stageDetails}>
+                <ExecutionStageDetailsHeader />
+                {isThirdPaneVisible &&
+                (layoutState === ExecutionLayoutState.BOTTOM || layoutState === ExecutionLayoutState.RIGHT) ? (
+                  <SplitPane
+                    className={css.splitPane2}
+                    {...splitPaneProps[layoutState]}
+                    size={tertiaryPaneSize}
+                    onChange={setStepSplitPaneSizeDebounce}
+                    pane1Style={stageGraphPaneStyles}
+                    pane2Style={styles}
+                    style={styles}
+                  >
+                    {executionStageDetails}
+                    {nodeListOrStepdetails}
+                  </SplitPane>
+                ) : (
+                  <React.Fragment>
+                    {executionStageDetails}
+                    {isThirdPaneVisible ? (
+                      <ExecutionLayoutFloatingView>{nodeListOrStepdetails}</ExecutionLayoutFloatingView>
+                    ) : null}
+                  </React.Fragment>
+                )}
+              </div>
+            </SplitPane>
+          </div>
+        </NodeMetadataProvider>
       </CollapsedNodeProvider>
     </ExecutionLayoutContext.Provider>
   )

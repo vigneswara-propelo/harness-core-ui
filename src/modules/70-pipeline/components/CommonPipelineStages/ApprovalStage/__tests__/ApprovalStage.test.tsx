@@ -11,6 +11,7 @@ import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as services from 'services/pipeline-ng'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { ApprovalStageSetupShellMode } from '../ApprovalStageSetupShellMode'
 import { ApprovalStage } from '../ApprovalStage'
 import {
@@ -293,7 +294,9 @@ describe('Approval Stage shell view', () => {
     const { getByDisplayValue, getByText, getAllByText } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextMockValue}>
-          <ApprovalStageSetupShellMode />
+          <NodeMetadataProvider>
+            <ApprovalStageSetupShellMode />
+          </NodeMetadataProvider>
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -359,7 +362,9 @@ describe('Jira Approval Stage shell view', () => {
     const { getByDisplayValue, getByText, getAllByText } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextMockValue}>
-          <ApprovalStageSetupShellMode />
+          <NodeMetadataProvider>
+            <ApprovalStageSetupShellMode />
+          </NodeMetadataProvider>
         </PipelineContext.Provider>
       </TestWrapper>
     )

@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n  name: testPipeline_Cypress\n  identifier: testPipeline_Cypress\n  projectIdentifier: project1\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: testStage_Cypress\n        identifier: testStage_Cypress\n        description: \"\"\n        type: Approval\n        spec:\n          execution:\n            steps:\n              - step:\n                  type: Wait\n                  name: Wait_1\n                  identifier: Wait_1\n                  spec:\n                    duration: 10m\n        tags: {}\n",
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "modules": ["pms"],
+    "validationUuid": "64b58fef998397643f12531b",
+    "storeType": "INLINE"
+  },
+  "metaData": null,
+  "correlationId": "d5708fae-459e-442c-838a-62a841795a3b"
+}

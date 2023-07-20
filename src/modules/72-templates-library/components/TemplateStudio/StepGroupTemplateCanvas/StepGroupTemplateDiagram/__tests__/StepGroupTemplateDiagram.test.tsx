@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
@@ -7,11 +14,13 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { ExecutionGraphProp } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { StepGroupEventMock, EditEventMock } from './mock'
 
 const stepGroupTemplateContextMock = getTemplateContextMock(TemplateType.StepGroup)
 
 jest.mock('@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph', () => {
+  // eslint-disable-next-line react/display-name
   return (props: ExecutionGraphProp<any>) => {
     const { onAddStep, onEditStep } = props
     const { setSelection } = usePipelineContext()
@@ -42,7 +51,9 @@ describe('<StepGroupTemplateDiagram /> ', () => {
     const { getByText } = render(
       <TestWrapper>
         <TemplateContext.Provider value={stepGroupTemplateContextMock}>
-          <StepGroupTemplateDiagram />
+          <NodeMetadataProvider>
+            <StepGroupTemplateDiagram />
+          </NodeMetadataProvider>
         </TemplateContext.Provider>
       </TestWrapper>
     )

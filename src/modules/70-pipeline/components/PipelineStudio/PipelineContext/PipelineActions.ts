@@ -23,6 +23,7 @@ import type {
 import type { DependencyElement } from 'services/ci'
 import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
 import type { TemplateIcons } from '@pipeline/utils/types'
+import type { NodeStateMetadata } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import type { StepState } from '../ExecutionGraph/ExecutionGraphUtil'
 import type { AdvancedPanels, StepOrStepGroupOrTemplateStepData } from '../StepCommands/StepCommandTypes'
 
@@ -101,6 +102,7 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
       onUpdate?: (stepOrGroup: StepOrStepGroupOrTemplateStepData | DependencyElement) => void
       entity: any
       stepsMap: Map<string, StepState>
+      relativeBasePath?: string
       hiddenAdvancedPanels?: AdvancedPanels[]
     }
     stepConfig?: {
@@ -110,7 +112,9 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
       stepsMap: Map<string, StepState>
       onUpdate?: (stepOrGroup: StepOrStepGroupOrTemplateStepData | DependencyElement) => void
       isUnderStepGroup?: boolean
+      relativeBasePath?: string
       hiddenAdvancedPanels?: AdvancedPanels[]
+      nodeStateMetadata?: NodeStateMetadata
     }
   }
 }

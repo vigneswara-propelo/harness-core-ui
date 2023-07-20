@@ -79,6 +79,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
       if (node.status === ExecutionStatusEnum.Failed) {
         setFailedNode(true)
       }
+      // TODO:: StepId logic is missing, since Node Resize Observer is disabled for steps graph
       const isSelectedNode = node.identifier === props.selectedNodeId || node.id === props.selectedNodeId
       if (isSelectedNode) {
         isNodeSelected = isSelectedNode

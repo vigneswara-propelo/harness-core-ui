@@ -16,11 +16,15 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import { useStrings } from 'framework/strings'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
-import { getStepFromId } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import {
+  getNodeAndParent,
+  getStepsPathWithoutStagePath
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { useTemplateVariables } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 // eslint-disable-next-line no-restricted-imports
 import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { getBaseDotNotationWithoutEntityIdentifier } from '@pipeline/components/PipelineDiagram/Nodes/utils'
 import { StepGroupFormikValues } from '../StepGroupUtil'
 import { CustomVariablesEditableStage } from '../../CustomVariables/CustomVariablesEditableStage'
 
@@ -50,10 +54,11 @@ const getExecutionPathFromTemplate = /* istanbul ignore next */ (
 }
 
 export default function StepGroupVariables(props: StepGroupVariablesProps): JSX.Element | null {
-  const { readonly, formikRef, isRollback = false, isProvisionerStep = false } = props
+  const { readonly, formikRef, isProvisionerStep = false } = props
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      pipelineView: { drawerData }
     },
     allowableTypes,
     getStageFromPipeline
@@ -62,7 +67,6 @@ export default function StepGroupVariables(props: StepGroupVariablesProps): JSX.
   const { templateType } = useParams<TemplateStudioPathProps>()
   const { variablesPipeline, metadataMap: pipelineMetaDataMap } = usePipelineVariables()
   const { variablesTemplate, metadataMap: templateMetaDataMap } = useTemplateVariables()
-
   const stepsData = React.useMemo(() => {
     // Template studio
     /* istanbul ignore next */
@@ -85,7 +89,10 @@ export default function StepGroupVariables(props: StepGroupVariablesProps): JSX.
 
   const getYamlPropertiesForVariables = (): AllNGVariables[] => {
     // search for step in execution of variable pipeline to fetch uuid
-    const execStep = getStepFromId(stepsData, formikRef.values?.identifier, false, false, Boolean(isRollback))
+    const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(
+      getStepsPathWithoutStagePath(drawerData?.data?.stepConfig?.nodeStateMetadata?.dotNotationPath)
+    )
+    const execStep = getNodeAndParent(stepsData, stepNodePath)
     return execStep.node?.variables || []
   }
 

@@ -207,7 +207,6 @@ function StageBuilder(): JSX.Element {
       gitDetails,
       storeMetadata
     },
-    // contextType = 'Pipeline',
     isReadonly,
     updatePipeline,
     updatePipelineView,
@@ -285,7 +284,7 @@ function StageBuilder(): JSX.Element {
   const selectedStage = getStageFromPipeline(selectedStageId || '')
   const openSplitView = isSplitViewOpen && !!selectedStage?.stage
 
-  const updateDeleteId = (id: string | undefined) => {
+  const updateDeleteId = (id: string | undefined): void => {
     setDeleteId(id)
   }
 

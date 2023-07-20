@@ -26,6 +26,7 @@ import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps
 
 import type { DeploymentStageConfig } from 'services/cd-ng'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { NodeWrapperEntity } from '@pipeline/components/PipelineDiagram/Nodes/utils'
 
 interface AddStepTemplateReturnType {
   addTemplate: (event: ExecutionGraphAddStepEvent) => Promise<void>
@@ -120,7 +121,10 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         gitDetails,
         storeMetadata
       })
-      const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
+      const stepType =
+        template.templateEntityType === PipelineStepType.StepGroup
+          ? NodeWrapperEntity.stepGroup
+          : NodeWrapperEntity.step
       const newStepData = {
         [stepType]: createStepNodeFromTemplate(template, isCopied, gitDetails?.branch, gitDetails?.repoName)
       }
@@ -160,7 +164,9 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
               onUpdate: executionRef?.stepGroupUpdated,
               isStepGroup: template?.templateEntityType === PipelineStepType.StepGroup,
               addOrEdit: 'edit',
-              hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+              hiddenAdvancedPanels: [AdvancedPanels.PreRequisites],
+              relativeBasePath: event.entity?.relativeBasePath,
+              nodeStateMetadata: event?.nodeStateMetadata
             }
           }
         }

@@ -1,0 +1,65 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "accountId": "accountId",
+        "orgIdentifier": "default",
+        "projectIdentifier": "project1",
+        "identifier": "Cypress_Step_Template",
+        "name": "Cypress_Step_Template",
+        "description": "",
+        "tags": {},
+        "versionLabel": "1",
+        "stableTemplate": true,
+        "templateEntityType": "Step",
+        "childType": "Wait",
+        "templateScope": "project",
+        "version": 0,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null,
+          "parentEntityConnectorRef": null,
+          "parentEntityRepoName": null
+        },
+        "lastUpdatedAt": 1689451011246,
+        "createdAt": 1689451011246,
+        "storeType": "INLINE"
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "sorted": true,
+        "unsorted": false,
+        "empty": false
+      },
+      "pageSize": 100,
+      "pageNumber": 0,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "totalPages": 1,
+    "totalElements": 1,
+    "last": true,
+    "first": true,
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "number": 0,
+    "numberOfElements": 1,
+    "size": 100,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "3af8421b-c1dc-4df3-9ce0-7b6e125f509b"
+}

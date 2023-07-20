@@ -87,6 +87,7 @@ export const RolloutStrategy: React.FC<RolloutStrategyProps> = ({ selectedStageI
                   // isAddStepOverride: true,
                   isRollback: event.isRollback,
                   isParallelNodeClicked: event.isParallel,
+                  relativeBasePath: event.entity?.relativeBasePath,
                   hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors]
                 }
               }
@@ -108,7 +109,9 @@ export const RolloutStrategy: React.FC<RolloutStrategyProps> = ({ selectedStageI
                 isStepGroup: event.isStepGroup,
                 isUnderStepGroup: event.isUnderStepGroup,
                 addOrEdit: event.addOrEdit,
-                hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors]
+                hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors],
+                nodeStateMetadata: event?.nodeStateMetadata,
+                relativeBasePath: event.entity?.relativeBasePath
               }
             }
           }

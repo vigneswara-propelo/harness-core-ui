@@ -10,9 +10,15 @@ import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { Text, IconName, Icon, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { getStepsPathWithoutStagePath } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
-import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'
+import {
+  getPositionOfAddIcon,
+  attachDragImageToEventHandler,
+  getBaseDotNotationWithoutEntityIdentifier
+} from '../utils'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
@@ -38,7 +44,12 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
   const debounceHideVisibility = debounce(() => {
     setVisibilityOfAdd(false)
   }, 300)
-  const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
+  // Execution view only has status
+  const stepStatus = props?.data?.step?.status as ExecutionStatus
+  const stepFQNPath = getStepsPathWithoutStagePath(props?.data?.nodeStateMetadata?.dotNotationPath)
+  const nodeSelectedId = isEmpty(stepStatus) ? stepFQNPath : props.id
+  const relativeFQNPath = getBaseDotNotationWithoutEntityIdentifier(props?.data?.nodeStateMetadata?.relativeBasePath)
+  const isSelectedNode = (): boolean => props.isSelected || nodeSelectedId === props?.selectedNodeId
   const onDropEvent = (event: React.DragEvent): void => {
     event.stopPropagation()
 
@@ -199,7 +210,8 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
                 identifier: props?.identifier,
                 parentIdentifier: props?.parentIdentifier,
                 entityType: DiagramType.Default,
-                node: props
+                node: props,
+                relativeBasePath: relativeFQNPath
               }
             })
           }}
@@ -228,6 +240,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           fireEvent={props?.fireEvent}
           identifier={props?.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}
+          relativeBasePath={relativeFQNPath}
           className={cx(
             cssDefault.addNodeIcon,
             cssDefault.left,
@@ -254,6 +267,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
             identifier={props?.identifier}
             prevNodeIdentifier={props.prevNodeIdentifier as string}
             isRightAddIcon={true}
+            relativeBasePath={relativeFQNPath}
             className={cx(
               cssDefault.addNodeIcon,
               cssDefault.right,

@@ -9,7 +9,7 @@ import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
@@ -22,6 +22,7 @@ import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRe
 import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
 import { DiagramType, Event } from '../../Constants'
+import { NodeStateMetadata, useNodeMetadata } from '../NodeMetadataContext'
 import css from './StepGroupGraph.module.scss'
 
 interface StepGroupGraphProps {
@@ -47,6 +48,7 @@ interface StepGroupGraphProps {
   type?: string
   baseFqn?: string
   isContainerStepGroup?: boolean
+  relativeBasePath?: string
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -66,8 +68,10 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   const {
     state: { templateTypes, templateIcons }
   } = usePipelineContext()
+  const { setStepsDotNotationPaths } = useNodeMetadata()
 
-  const baseFQN = `${props?.baseFqn}.steps`
+  const baseFQN = `${props?.baseFqn || ''}.steps`
+  const relativeBasePath = `${props?.relativeBasePath || ''}.steps`
   useLayoutEffect(() => {
     if (stageGroupTypes.includes(props?.type as StageType)) setState(props.data as PipelineGraphState[])
     else if (props?.data?.length) {
@@ -80,7 +84,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
           errorMap: errorMap,
           parentPath: baseFQN,
           isNestedGroup: true,
-          isContainerStepGroup: props.isContainerStepGroup
+          isContainerStepGroup: props.isContainerStepGroup,
+          relativeBasePath
         })
       )
     }
@@ -132,6 +137,12 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   useEffect(() => {
     updateTreeRect()
   }, [])
+
+  React.useEffect(() => {
+    const allFqn = findAllByKey('nodeStateMetadata', state) as unknown as NodeStateMetadata[]
+    setStepsDotNotationPaths(allFqn)
+  }, [setStepsDotNotationPaths, state])
+
   return (
     <div
       className={css.main}
@@ -178,7 +189,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
                   identifier: props?.identifier,
                   parentIdentifier: props?.identifier,
                   entityType: DiagramType.CreateNew,
-                  node: props
+                  node: props,
+                  relativeBasePath: `${relativeBasePath}.steps`
                 }
               })
             }}

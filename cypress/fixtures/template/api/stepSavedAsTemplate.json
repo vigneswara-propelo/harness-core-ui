@@ -1,0 +1,58 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "templateResponseDTO": {
+      "accountId": "accountId",
+      "orgIdentifier": "default",
+      "projectIdentifier": "project1",
+      "identifier": "Cypress_Step_Template",
+      "name": "Cypress_Step_Template",
+      "description": "",
+      "tags": {},
+      "yaml": "template:\n  name: Cypress_Step_Template\n  type: Step\n  projectIdentifier: project1\n  orgIdentifier: default\n  spec:\n    type: K8sDryRun\n    spec: {}\n    timeout: 10m\n  identifier: Cypress_Step_Template\n  versionLabel: \"1\"\n",
+      "versionLabel": "1",
+      "templateEntityType": "Step",
+      "childType": "K8sDryRun",
+      "templateScope": "project",
+      "version": 0,
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null,
+        "commitId": null,
+        "fileUrl": null,
+        "repoUrl": null,
+        "parentEntityConnectorRef": null,
+        "parentEntityRepoName": null
+      },
+      "entityValidityDetails": {
+        "valid": true,
+        "invalidYaml": null
+      },
+      "lastUpdatedAt": 1689453922015,
+      "storeType": "INLINE",
+      "stableTemplate": true
+    },
+    "governanceMetadata": {
+      "id": "0",
+      "deny": false,
+      "details": [],
+      "message": "",
+      "timestamp": "1689453921792",
+      "status": "pass",
+      "accountId": "accountId",
+      "orgId": "default",
+      "projectId": "project1",
+      "entity": "Cypress_Step_Template",
+      "type": "template",
+      "action": "onsave",
+      "created": "1689453921792"
+    },
+    "valid": true
+  },
+  "metaData": null,
+  "correlationId": "2e9aee85-fe96-476d-8de2-8396b31979b7"
+}

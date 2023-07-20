@@ -47,6 +47,7 @@ import type { DeployServiceEntityData } from '../PipelineInputSetForm/ServicesIn
 import { validateOutputPanelInputSet } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 import { getFailureStrategiesValidationSchema } from '../PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
 import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
+import { NodeWrapperEntity } from '../PipelineDiagram/Nodes/utils'
 
 interface childPipelineMetadata {
   pipelineId: string
@@ -54,22 +55,25 @@ interface childPipelineMetadata {
   projectId: string
 }
 
-export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
-  let responseStep: ExecutionWrapperConfig | undefined = undefined
-  steps?.forEach(item => {
-    if (item.step?.identifier === stepId) {
-      responseStep = item
-    } else if (item.stepGroup?.identifier === stepId) {
-      responseStep = item
-    } else if (item.parallel) {
-      return item.parallel.forEach(node => {
-        if (node.step?.identifier === stepId || node.stepGroup?.identifier === stepId) {
-          responseStep = node
-        }
-      })
+export function getStepFromStage(
+  stepId = '',
+  steps?: ExecutionWrapperConfig[],
+  nodeType: NodeWrapperEntity = NodeWrapperEntity.step
+): ExecutionWrapperConfig | undefined {
+  for (const item of steps || []) {
+    if (item?.stepGroup?.identifier === stepId && nodeType === NodeWrapperEntity.stepGroup) {
+      return item
+    } else if (item?.step?.identifier === stepId && nodeType === NodeWrapperEntity.step) {
+      return item
+    } else if (item?.parallel) {
+      const result = getStepFromStage(stepId, item.parallel, nodeType)
+      if (result !== undefined) {
+        return result
+      }
     }
-  })
-  return responseStep
+  }
+
+  return undefined
 }
 
 export function getStageFromPipeline(
@@ -249,7 +253,7 @@ export const validateSteps = ({
       const errorResponse = validateStep({
         step: stepObj.step,
         template: template?.[index].step,
-        originalStep: getStepFromStage(stepObj.step.identifier, originalSteps),
+        originalStep: getStepFromStage(stepObj.step.identifier, originalSteps, NodeWrapperEntity.step),
         getString,
         viewType
       })
@@ -262,7 +266,7 @@ export const validateSteps = ({
           const errorResponse = validateStep({
             step: stepParallel.step,
             template: template?.[index]?.parallel?.[indexP]?.step,
-            originalStep: getStepFromStage(stepParallel.step.identifier, originalSteps),
+            originalStep: getStepFromStage(stepParallel.step.identifier, originalSteps, NodeWrapperEntity.step),
             getString,
             viewType
           })
@@ -275,8 +279,11 @@ export const validateSteps = ({
             const errorResponse = validateSteps({
               steps: stepParallel?.stepGroup?.template?.templateInputs?.steps,
               template: template?.[index]?.parallel?.[indexP]?.stepGroup?.template?.templateInputs?.steps,
-              originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.template
-                ?.templateInputs?.steps,
+              originalSteps: getStepFromStage(
+                stepParallel.stepGroup.identifier,
+                originalSteps,
+                NodeWrapperEntity.stepGroup
+              )?.stepGroup?.template?.templateInputs?.steps,
               getString,
               viewType
             })
@@ -295,7 +302,11 @@ export const validateSteps = ({
             const errorResponse = validateStep({
               step: stepParallel.stepGroup,
               template: template?.[index]?.parallel?.[indexP]?.stepGroup,
-              originalStep: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps),
+              originalStep: getStepFromStage(
+                stepParallel.stepGroup.identifier,
+                originalSteps,
+                NodeWrapperEntity.stepGroup
+              ),
               getString,
               viewType
             })
@@ -303,7 +314,11 @@ export const validateSteps = ({
               const stepsErrorResponse = validateSteps({
                 steps: stepParallel?.stepGroup?.steps,
                 template: template?.[index]?.parallel?.[indexP]?.stepGroup?.steps,
-                originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.steps,
+                originalSteps: getStepFromStage(
+                  stepParallel.stepGroup.identifier,
+                  originalSteps,
+                  NodeWrapperEntity.stepGroup
+                )?.stepGroup?.steps,
                 getString,
                 viewType
               })
@@ -324,7 +339,11 @@ export const validateSteps = ({
         }
       })
     } else if (stepObj.stepGroup) {
-      const originalStepGroup = getStepFromStage(stepObj.stepGroup.identifier, originalSteps)
+      const originalStepGroup = getStepFromStage(
+        stepObj.stepGroup.identifier,
+        originalSteps,
+        NodeWrapperEntity.stepGroup
+      )
       if (stepObj.stepGroup?.template?.templateInputs?.steps) {
         const errorResponse = validateSteps({
           steps: stepObj.stepGroup?.template?.templateInputs?.steps,
@@ -348,7 +367,7 @@ export const validateSteps = ({
         const errorResponse = validateStep({
           step: stepObj.stepGroup,
           template: template?.[index]?.stepGroup,
-          originalStep: getStepFromStage(stepObj.stepGroup.identifier, originalSteps),
+          originalStep: getStepFromStage(stepObj.stepGroup.identifier, originalSteps, NodeWrapperEntity.stepGroup),
           getString,
           viewType
         })

@@ -57,6 +57,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
 import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO } from 'services/cd-ng'
 import { DefaultNewVersionLabel } from 'framework/Templates/templates'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType, isNewTemplate } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -457,7 +458,7 @@ export function TemplateStudioInternal(): React.ReactElement {
                   onGitBranchChange={onGitBranchChange}
                   onReconcile={handleReconcile}
                 />
-                {studioCanvasUI}
+                <NodeMetadataProvider>{studioCanvasUI}</NodeMetadataProvider>
               </>
             )}
             {templateType !== TemplateType.Pipeline && <RightBar />}

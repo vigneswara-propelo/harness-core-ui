@@ -8,6 +8,7 @@
 import type { IconName } from '@harness/uicore'
 import type { CSSProperties } from 'react'
 import type { ExecutionGraph } from 'services/pipeline-ng'
+import { StepType } from '../PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 
 export interface ListenerHandle {
   deregister: () => any
@@ -133,6 +134,7 @@ export type FireEventMethod = (arg0: {
     destination?: any
     nodesInfo?: NodeInfo[]
     isRightAddIcon?: boolean
+    relativeBasePath?: string
   }
 }) => void
 
@@ -185,4 +187,10 @@ export interface BaseReactComponentProps {
 export interface Position {
   x: number
   y: number
+}
+
+export interface NodeStateMetadata {
+  dotNotationPath: string
+  relativeBasePath: string
+  nodeType: StepType
 }

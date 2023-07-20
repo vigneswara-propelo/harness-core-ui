@@ -12,12 +12,19 @@ import { defaultTo, set } from 'lodash-es'
 import produce from 'immer'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import { useGlobalEventListener } from '@common/hooks'
-import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { getStepFromId } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import {
+  getNodeAndParent,
+  getStepsPathWithoutStagePath
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import type { TemplateStepNode } from 'services/pipeline-ng'
+import {
+  NodeWrapperEntity,
+  getBaseDotNotationWithoutEntityIdentifier
+} from '@pipeline/components/PipelineDiagram/Nodes/utils'
+import { findDotNotationByRelativePath, generateCombinedPaths } from '../PipelineContext/helpers'
 
 export function useSaveTemplateListener(): void {
   const [savedTemplate, setSavedTemplate] = React.useState<TemplateSummaryResponse>()
@@ -26,7 +33,7 @@ export function useSaveTemplateListener(): void {
     state,
     state: {
       selectionState: { selectedStageId = '' },
-      pipelineView: { drawerData, isRollbackToggled }
+      pipelineView: { drawerData }
     },
     updatePipeline,
     updateStage,
@@ -45,7 +52,7 @@ export function useSaveTemplateListener(): void {
     await updatePipeline(processNode)
   }
 
-  const updateStageTemplate = async () => {
+  const updateStageTemplate = async (): Promise<void> => {
     if (selectedStage?.stage) {
       const processNode = createTemplate(selectedStage.stage, savedTemplate)
       await updateStage(processNode)
@@ -54,22 +61,40 @@ export function useSaveTemplateListener(): void {
 
   const updateStepTemplate = async (): Promise<void> => {
     const selectedStepId = defaultTo(drawerData.data?.stepConfig?.node.identifier, '')
-    const selectedStep = getStepFromId(
-      selectedStage?.stage?.spec?.execution,
-      selectedStepId,
-      false,
-      false,
-      Boolean(pipelineView.isRollbackToggled)
-    )
+    const nodeDotNotationPath = drawerData.data?.stepConfig?.nodeStateMetadata?.dotNotationPath
+    const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+    const selectedStep = getNodeAndParent(selectedStage?.stage?.spec?.execution, stepNodePath)
+
     if (selectedStep?.node) {
       const processNode = createTemplate(selectedStep.node as TemplateStepNode, savedTemplate)
       const newPipelineView = produce(pipelineView, draft => {
         set(draft, 'drawerData.data.stepConfig.node', processNode)
       })
       updatePipelineView(newPipelineView)
+
+      // Construct relative path - update step/stepGroup
+      const relativePath = getBaseDotNotationWithoutEntityIdentifier(drawerData.data?.stepConfig?.relativeBasePath)
+      const fullPath = getBaseDotNotationWithoutEntityIdentifier(
+        drawerData.data?.stepConfig?.nodeStateMetadata?.dotNotationPath
+      )
+      const isStepGroup = drawerData.data?.stepConfig?.isStepGroup
+      const stepRelativePath = `${relativePath}.${
+        isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+      }.${selectedStepId}`
+      const stepFullPath = `${getBaseDotNotationWithoutEntityIdentifier(fullPath)}.${
+        isStepGroup ? NodeWrapperEntity.stepGroup : NodeWrapperEntity.step
+      }.${selectedStepId}`
+
       const stageData = produce(selectedStage, draft => {
         if (draft?.stage?.spec?.execution) {
-          updateStepWithinStage(draft.stage.spec.execution, selectedStepId, processNode, Boolean(isRollbackToggled))
+          const dotNotationObjects = generateCombinedPaths(draft.stage.spec.execution)
+
+          const completeNodePathFqn = findDotNotationByRelativePath(
+            dotNotationObjects,
+            getStepsPathWithoutStagePath(stepRelativePath),
+            getStepsPathWithoutStagePath(stepFullPath)
+          )
+          set(draft.stage.spec.execution, getBaseDotNotationWithoutEntityIdentifier(completeNodePathFqn), processNode)
         }
       })
       if (stageData?.stage) {

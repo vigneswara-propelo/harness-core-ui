@@ -6,8 +6,10 @@
  */
 
 import stableStringify from 'fast-json-stable-stringify'
+import { filter, isEmpty } from 'lodash-es'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import { ExecutionWrapperConfig } from 'services/cd-ng'
 
 export function getStageFromPipeline<T extends StageElementConfig = StageElementConfig>(
   stageId: string,
@@ -68,4 +70,85 @@ export function comparePipelines(
   pipeline2: PipelineInfoConfig | undefined
 ): boolean {
   return stableStringify(pipeline1) !== stableStringify(pipeline2)
+}
+
+export type SampleJSON = {
+  steps: ExecutionWrapperConfig[]
+  rollbackSteps?: ExecutionWrapperConfig[]
+}
+
+interface DotNotationObject {
+  dotNotation: string
+  relativePath: string
+}
+
+function generatePaths(
+  config: ExecutionWrapperConfig[],
+  baseDotNotation = 'steps',
+  baseRelativePath = 'steps'
+): DotNotationObject[] {
+  // Filter out null and undefined elements from the array
+  const filteredConfig = filter(config, Boolean)
+  if (isEmpty(filteredConfig)) {
+    return []
+  }
+
+  const paths: DotNotationObject[] = []
+
+  config.forEach((item, index) => {
+    const dotNotation = `${baseDotNotation}.${index}`
+
+    if (item.step) {
+      paths.push({
+        dotNotation: `${dotNotation}.step.${item.step.identifier}`,
+        relativePath: `${baseRelativePath}.step.${item.step.identifier}`
+      })
+    } else if (item.stepGroup) {
+      const relativePath = `${baseRelativePath}.stepGroup.${item.stepGroup.identifier}`
+      paths.push({
+        dotNotation: `${dotNotation}.stepGroup.${item.stepGroup.identifier}`,
+        relativePath
+      })
+
+      const nestedPaths = generatePaths(
+        item.stepGroup.steps || [],
+        `${dotNotation}.stepGroup.steps`,
+        `${relativePath}.steps`
+      )
+      paths.push(...nestedPaths)
+    } else if (item.parallel) {
+      const nestedPaths = generatePaths(item.parallel, `${dotNotation}.parallel`, `${baseRelativePath}`)
+      paths.push(...nestedPaths)
+    }
+  })
+
+  return paths
+}
+
+export function generateCombinedPaths(json: SampleJSON): DotNotationObject[] {
+  const paths: DotNotationObject[] = []
+
+  if (json?.steps) {
+    const stepPaths = generatePaths(json.steps)
+    paths.push(...stepPaths)
+  }
+
+  if (json?.rollbackSteps) {
+    const rollbackPaths = generatePaths(json.rollbackSteps, 'rollbackSteps', 'rollbackSteps')
+    paths.push(...rollbackPaths)
+  }
+
+  return paths
+}
+
+export function findDotNotationByRelativePath(
+  dotNotationObjects: DotNotationObject[],
+  relativePath: string,
+  fullPath?: string
+): string {
+  const foundItem = dotNotationObjects.find(
+    item => item.relativePath === relativePath && (!fullPath || item.dotNotation === fullPath)
+  )
+
+  return foundItem ? foundItem.dotNotation : ''
 }

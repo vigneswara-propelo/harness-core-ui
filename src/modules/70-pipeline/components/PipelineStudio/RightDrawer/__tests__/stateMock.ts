@@ -160,7 +160,13 @@ const stateMock = {
             ]
           ]),
           isStepGroup: false,
-          addOrEdit: 'edit'
+          addOrEdit: 'edit',
+          relativeBasePath: 'pipeline.stages.0.execution.steps.step',
+          nodeStateMetadata: {
+            dotNotationPath: 'pipeline.stages.0.stage.spec.execution.steps.0.step.step1',
+            relativeBasePath: 'pipeline.stages.0.execution.steps.step.step1',
+            nodeType: 'STEP'
+          }
         }
       }
     }

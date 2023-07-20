@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import CreateNode from './CreateNode'
 import type { FireEventMethod } from '../../types'
+import { useNodeMetadata } from '../NodeMetadataContext'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './CreateNode.module.scss'
 
@@ -29,9 +30,11 @@ interface CreateNodeStepProps {
   className?: string
   wrapperClassname?: string
   hidden?: boolean
+  relativeBasePath: string
 }
 
 function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
+  const { baseCreateNodeRelativePath } = useNodeMetadata()
   return (
     <div
       data-testid="create-node-step"
@@ -79,7 +82,8 @@ function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
           target: event.target,
           data: {
             entityType: DiagramType.CreateNew,
-            identifier: props.identifier
+            identifier: props.identifier,
+            relativeBasePath: props?.relativeBasePath || baseCreateNodeRelativePath
           }
         })
       }}

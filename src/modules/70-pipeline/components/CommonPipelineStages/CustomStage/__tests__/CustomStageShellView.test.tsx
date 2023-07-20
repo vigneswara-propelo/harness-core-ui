@@ -8,7 +8,11 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import {
+  PipelineContext,
+  PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { CustomStage } from '../CustomStage'
 import { getDummyPipelineContextValue } from './CustomStageHelper'
 
@@ -58,12 +62,11 @@ jest.mock('resize-observer-polyfill', () => {
   return ResizeObserver
 })
 
-describe('Custom stage shell view', () => {
-  test('Setup shell view tests', async () => {
-    const pipelineContextMockValue = getDummyPipelineContextValue()
-    const { container, getByDisplayValue, getByText, getAllByText } = render(
-      <TestWrapper>
-        <PipelineContext.Provider value={pipelineContextMockValue}>
+function WrapperComponent({ mockData }: { mockData: PipelineContextInterface }): JSX.Element {
+  return (
+    <TestWrapper>
+      <PipelineContext.Provider value={mockData}>
+        <NodeMetadataProvider>
           <CustomStage
             minimal={false}
             stageProps={{}}
@@ -75,8 +78,17 @@ describe('Custom stage shell view', () => {
             title="My custom stage"
             description={''}
           />
-        </PipelineContext.Provider>
-      </TestWrapper>
+        </NodeMetadataProvider>
+      </PipelineContext.Provider>
+    </TestWrapper>
+  )
+}
+
+describe('Custom stage shell view', () => {
+  test('Setup shell view tests', async () => {
+    const pipelineContextMockValue = getDummyPipelineContextValue()
+    const { container, getByDisplayValue, getByText, getAllByText } = render(
+      <WrapperComponent mockData={pipelineContextMockValue} />
     )
 
     act(() => {
@@ -135,21 +147,7 @@ describe('Custom stage shell view', () => {
   test('readonly view should work', () => {
     const pipelineContextMockValue = getDummyPipelineContextValue()
     const { container, getByText } = render(
-      <TestWrapper>
-        <PipelineContext.Provider value={{ ...pipelineContextMockValue, isReadonly: true }}>
-          <CustomStage
-            minimal={false}
-            stageProps={{}}
-            name={''}
-            type={''}
-            icon={'nav-harness'}
-            isDisabled={false}
-            isApproval={false}
-            title="My custom stage"
-            description={''}
-          />
-        </PipelineContext.Provider>
-      </TestWrapper>
+      <WrapperComponent mockData={{ ...pipelineContextMockValue, isReadonly: true }} />
     )
 
     act(() => {

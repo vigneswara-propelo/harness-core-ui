@@ -13,9 +13,16 @@ import CreateNodeStage from '../CreateNode/CreateNodeStage'
 import CreateNodeStep from '../CreateNode/CreateNodeStep'
 import EndNodeStage from '../EndNode/EndNodeStage'
 import EndNodeStep from '../EndNode/EndNodeStep'
+import { NodeMetadataProvider } from '../NodeMetadataContext'
 
 const callback = jest.fn()
-const genericProps = { identifier: 'identifier', name: 'create-node', className: 'sampleClass', id: 'id' }
+const genericProps = {
+  identifier: 'identifier',
+  name: 'create-node',
+  className: 'sampleClass',
+  id: 'id',
+  relativeBasePath: ''
+}
 
 const eventProps = {
   onMouseOver: callback,
@@ -72,7 +79,9 @@ describe('Rendering nodes', () => {
     const props = { ...eventProps, ...genericProps }
     const { container } = render(
       <TestWrapper>
-        <CreateNodeStep {...props} />
+        <NodeMetadataProvider>
+          <CreateNodeStep {...props} />
+        </NodeMetadataProvider>
       </TestWrapper>
     )
     expect(container.getElementsByClassName('sampleClass')[0]).toBeInTheDocument()

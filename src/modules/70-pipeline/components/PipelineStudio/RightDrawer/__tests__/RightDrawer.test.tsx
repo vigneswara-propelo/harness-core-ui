@@ -15,7 +15,10 @@ import * as pipelineng from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import {
+  PipelineContext,
+  PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { setFormikRef, Step, StepProps, StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -24,6 +27,7 @@ import {
   Types as TransformValuesTypes
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import * as PipelineVariablesContext from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { RightDrawer } from '../RightDrawer'
 import {
   closeDrawerPayload,
@@ -414,17 +418,23 @@ jest.mock('../../PiplineHooks/useVariablesExpression', () => ({
   })
 }))
 
+function WrapperComponent({ mockData }: { mockData: PipelineContextInterface }): JSX.Element {
+  return (
+    <PipelineContext.Provider value={mockData}>
+      <TestWrapper>
+        <NodeMetadataProvider>
+          <RightDrawer />
+        </NodeMetadataProvider>
+      </TestWrapper>
+    </PipelineContext.Provider>
+  )
+}
+
 describe('Right Drawer tests', () => {
   describe('StepConfig tests', () => {
     test('Edit step works as expected', async () => {
       const pipelineContextMock = getPipelineContextMock()
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
       const applyBtn = await findByText('applyChanges')
 
       fireEvent.click(applyBtn)
@@ -434,13 +444,8 @@ describe('Right Drawer tests', () => {
 
     test('Step save succeeds with allowed key values in step configuration', async () => {
       const pipelineContextMock = getPipelineContextMock()
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
+
       const applyBtn = await findByText('applyChanges')
 
       fireEvent.click(applyBtn)
@@ -450,13 +455,7 @@ describe('Right Drawer tests', () => {
 
     test('discard changes works as expected', async () => {
       const pipelineContextMock = getPipelineContextMock()
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
       const discardBtn = await findByText('pipeline.discard')
 
       fireEvent.click(discardBtn)
@@ -468,13 +467,7 @@ describe('Right Drawer tests', () => {
 
     test('clicking on close button should close drawer', async () => {
       const pipelineContextMock = getPipelineContextMock()
-      const { container } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { container } = render(<WrapperComponent mockData={pipelineContextMock} />)
       const closeBtn = getByRole(container, 'button', { name: 'cross' })
 
       fireEvent.click(closeBtn)
@@ -486,13 +479,7 @@ describe('Right Drawer tests', () => {
     test('Apply Changes button should be disabled if isReadOnly is true', async () => {
       const pipelineContextMock = getPipelineContextMock()
       pipelineContextMock.isReadonly = true
-      render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      render(<WrapperComponent mockData={pipelineContextMock} />)
 
       expect(screen.getByRole('button', { name: 'applyChanges' })).toBeDisabled()
     })
@@ -508,13 +495,7 @@ describe('Right Drawer tests', () => {
           isParallelNodeClicked: false
         } as any)
 
-      const { getByText, getAllByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { getByText, getAllByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
 
       const stepLibraryHeader = getByText('stepPalette.title')
       expect(stepLibraryHeader).toBeInTheDocument()
@@ -536,13 +517,7 @@ describe('Right Drawer tests', () => {
           entity: {}
         } as any)
 
-      const { getByText, getAllByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { getByText, getAllByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
 
       const stepLibraryHeader = getByText('stepPalette.title')
       expect(stepLibraryHeader).toBeInTheDocument()
@@ -588,13 +563,7 @@ describe('Right Drawer tests', () => {
           isRollback: false,
           isParallelNodeClicked: false
         } as any)
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
       const variablesHeader = await findByText('common.variables')
       expect(variablesHeader).toBeInTheDocument()
     })
@@ -612,7 +581,9 @@ describe('Right Drawer tests', () => {
         <PipelineContext.Provider value={pipelineContextMock}>
           <PipelineVariablesContext.PipelineVariablesContext.Provider value={pipelineVariablesContextMock}>
             <TestWrapper>
-              <RightDrawer />
+              <NodeMetadataProvider>
+                <RightDrawer />
+              </NodeMetadataProvider>
             </TestWrapper>
           </PipelineVariablesContext.PipelineVariablesContext.Provider>
         </PipelineContext.Provider>
@@ -638,13 +609,7 @@ describe('Right Drawer tests', () => {
           isParallelNodeClicked: false
         } as any)
 
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
 
       const templatesHeader = await findByText('common.templates')
       expect(templatesHeader).toBeInTheDocument()
@@ -661,13 +626,7 @@ describe('Right Drawer tests', () => {
           isRollback: false,
           isParallelNodeClicked: false
         } as any)
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
       const executionStrategyHeader = await findByText('pipeline.executionStrategy.executionStrategies')
       expect(executionStrategyHeader).toBeInTheDocument()
     })
@@ -684,13 +643,7 @@ describe('Right Drawer tests', () => {
           isParallelNodeClicked: false
         } as any)
 
-      const { findAllByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findAllByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
 
       const notificationHeader = await findAllByText('rbac.notifications.name')
       expect(notificationHeader).toHaveLength(1)
@@ -713,13 +666,7 @@ describe('Right Drawer tests', () => {
           isParallelNodeClicked: false
         } as any)
 
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
 
       const configServiceHeader = await findByText('Configure Service Dependency')
       expect(configServiceHeader).toBeInTheDocument()
@@ -753,13 +700,7 @@ describe('Right Drawer tests', () => {
         ;(pipelineContextMock as any).state.pipelineView.drawerData.data.stepConfig.addOrEdit = 'add'
       }
 
-      const { findByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { findByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
 
       const configServiceHeader = await findByText('Configure Service Dependency')
       expect(configServiceHeader).toBeInTheDocument()
@@ -787,13 +728,7 @@ describe('Right Drawer tests', () => {
           isParallelNodeClicked: false
         } as any)
 
-      const { getByText, getAllByText } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper>
-            <RightDrawer />
-          </TestWrapper>
-        </PipelineContext.Provider>
-      )
+      const { getByText, getAllByText } = render(<WrapperComponent mockData={pipelineContextMock} />)
 
       const stepLibraryHeader = getByText('stepPalette.title')
       expect(stepLibraryHeader).toBeInTheDocument()
@@ -813,7 +748,9 @@ describe('Right Drawer tests', () => {
       const { findByText } = render(
         <TestWrapper defaultFeatureFlagValues={{ NG_SVC_ENV_REDESIGN: true }}>
           <PipelineContext.Provider value={context}>
-            <RightDrawer />
+            <NodeMetadataProvider>
+              <RightDrawer />
+            </NodeMetadataProvider>
           </PipelineContext.Provider>
         </TestWrapper>
       )

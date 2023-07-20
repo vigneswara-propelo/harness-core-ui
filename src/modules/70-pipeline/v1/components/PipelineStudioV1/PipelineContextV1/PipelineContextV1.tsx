@@ -346,7 +346,7 @@ export interface FetchPipelineUnboundProps {
   loadFromCache?: boolean
 }
 
-export const findAllByKey = (keyToFind: string, obj?: PipelineInfoConfig): string[] => {
+export function findAllByKey<T>(keyToFind: string, obj?: T): string[] {
   return obj
     ? Object.entries(obj).reduce(
         (acc: string[], [key, value]) =>

@@ -1,0 +1,40 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "accountId": "accountId",
+    "orgIdentifier": "default",
+    "projectIdentifier": "project1",
+    "identifier": "Cypress_Step_Template",
+    "name": "Cypress_Step_Template",
+    "description": "",
+    "tags": {},
+    "yaml": "template:\n  name: Cypress_Step_Template\n  identifier: Cypress_Step_Template\n  versionLabel: \"1\"\n  type: Step\n  projectIdentifier: project1\n  orgIdentifier: default\n  tags: {}\n  spec:\n    type: Wait\n    spec:\n      duration: 10m\n",
+    "versionLabel": "1",
+    "templateEntityType": "Step",
+    "childType": "Wait",
+    "templateScope": "project",
+    "version": 0,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null,
+      "commitId": null,
+      "fileUrl": null,
+      "repoUrl": null,
+      "parentEntityConnectorRef": null,
+      "parentEntityRepoName": null
+    },
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "lastUpdatedAt": 1689451011246,
+    "storeType": "INLINE",
+    "stableTemplate": true
+  },
+  "metaData": null,
+  "correlationId": "26b4c15a-6189-4c44-99a0-a448dccb6d86"
+}

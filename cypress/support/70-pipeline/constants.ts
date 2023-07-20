@@ -148,6 +148,24 @@ export const environmentsCallRunPipeline =
 export const connectorsCall =
   '/ng/api/connectors?accountIdentifier=accountId&type=K8sCluster&searchTerm=&projectIdentifier=project1&orgIdentifier=default'
 
+export const templateMetadataUpdatedCall = `/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true`
+
+export const templateValueCall = `/template/api/templates/Cypress_Step_Template?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=1&getDefaultFromOtherRepo=true`
+
+export const templateInputsCall =
+  '/template/api/templates/templateInputs/Cypress_Step_Template?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=1&getDefaultFromOtherRepo=true'
+
+export const templateMetadataCallAfterSelection =
+  '/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All&size=100'
+
+export const selectedTemplateCall =
+  '/template/api/templates/Cypress_Step_Template?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true'
+
+export const saveStepAsTemplateCall =
+  '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&isNewTemplate=true&storeType=INLINE'
+
+export const shellScriptProvisionerYamlSnippetsCall =
+  '/ng/api/pipelines/configuration/strategies/provisioner-yaml-snippets?provisionerType=SHELL_SCRIPT_PROVISIONER&routingId=accountId'
 export interface ValidObject {
   resourceName: StepResourceObject[]
   warningCheck?: boolean
@@ -571,4 +589,31 @@ export const afterFinalSaveConnectorsListResponse = {
   },
   metaData: null,
   correlationId: 'cea537e0-859e-43ee-93fd-224f3259c6c2'
+}
+
+//function to drag element vertically
+export function dragElementVerticallyBy(el, pageYDragAmount): void {
+  const rect = el[0].getBoundingClientRect()
+
+  cy.window().then(window => {
+    const pageY = rect.top + window.pageYOffset
+
+    cy.wrap(el)
+      .trigger('mousedown', {
+        which: 1,
+        clientX: rect.left,
+        clientY: pageY,
+        force: true
+      })
+      .trigger('mousemove', {
+        clientX: rect.left,
+        clientY: pageY + pageYDragAmount,
+        force: true
+      })
+      .trigger('mousemove', { force: true })
+      .trigger('mouseup', {
+        which: 1,
+        force: true
+      })
+  })
 }

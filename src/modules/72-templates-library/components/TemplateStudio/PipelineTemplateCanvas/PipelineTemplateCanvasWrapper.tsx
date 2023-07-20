@@ -18,6 +18,7 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 import { DrawerTypes as PipelineDrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { DrawerTypes as TemplateDrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 import { PipelineTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvas'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 
 export const DefaultNewPipelineName = 'Pipeline Name'
 export const DefaultNewPipelineId = 'pipeline_name'
@@ -79,7 +80,9 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
       renderPipelineStage={renderPipelineStage}
       setIntermittentLoading={setIntermittentLoading}
     >
-      <PipelineTemplateCanvasWithRef />
+      <NodeMetadataProvider>
+        <PipelineTemplateCanvasWithRef />
+      </NodeMetadataProvider>
     </TemplatePipelineProvider>
   )
 }

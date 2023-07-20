@@ -10,6 +10,7 @@ import type { IconName } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import {
   isCustomGeneratedString,
+  StepType,
   StepTypeToPipelineIconMap
 } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { stageTypeToIconMap } from '@pipeline/utils/constants'
@@ -24,8 +25,9 @@ import type {
 import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { TemplateIcons } from '@pipeline/utils/types'
+import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
 import { NodeType, PipelineGraphState, SVGPathRecord, PipelineGraphType, KVPair } from '../types'
-import { NodeWrapperEntity, getEntityIdentifierBasedFqnPath } from '../Nodes/utils'
+import { NodeWrapperEntity, getEntityIdentifierBasedDotNotationPath } from '../Nodes/utils'
 
 const INITIAL_ZOOM_LEVEL = 1
 const ZOOM_INC_DEC_LEVEL = 0.1
@@ -42,6 +44,7 @@ const getScaledValue = (value: number, scalingFactor: number): number => {
   }
   return toFixed(finalValue)
 }
+
 interface DrawSVGPathOptions {
   isParallelNode?: boolean
   parentElement?: HTMLDivElement
@@ -431,6 +434,7 @@ interface GetPipelineGraphDataParams {
   graphDataType?: PipelineGraphType
   isNestedGroup?: boolean
   isContainerStepGroup?: boolean
+  relativeBasePath?: string
 }
 const getPipelineGraphData = ({
   data = [],
@@ -441,7 +445,8 @@ const getPipelineGraphData = ({
   parentPath,
   graphDataType,
   isNestedGroup,
-  isContainerStepGroup
+  isContainerStepGroup,
+  relativeBasePath
 }: GetPipelineGraphDataParams): PipelineGraphState[] => {
   let graphState: PipelineGraphState[] = []
   const pipGraphDataType = graphDataType ? graphDataType : getPipelineGraphDataType(data)
@@ -465,7 +470,8 @@ const getPipelineGraphData = ({
       parentPath,
       offsetIndex: 0,
       isNestedGroup,
-      isContainerStepGroup
+      isContainerStepGroup,
+      relativeBasePath
     })
 
     if (Array.isArray(serviceDependencies) && serviceDependencies.length > 0) {
@@ -484,7 +490,7 @@ const transformStageData = ({
   templateTypes,
   templateIcons,
   errorMap,
-  parentPath,
+  parentPath = '',
   offsetIndex = 0
 }: {
   stages: StageElementWrapperConfig[]
@@ -498,9 +504,10 @@ const transformStageData = ({
   const finalData: PipelineGraphState[] = []
   stages.forEach((stage: any, index: number) => {
     if (stage?.stage) {
-      const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
+      const identifier = stage.stage.identifier as string
+      const updatedStagePath = `${parentPath}.${index + offsetIndex}`
       const hasErrors =
-        errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
+        errorMap && [...errorMap.keys()].some(key => updatedStagePath && key.startsWith(updatedStagePath))
       const templateRef = stage.stage?.template?.templateRef
       const iconUrl = get(templateIcons, templateRef) as string | undefined
       const type = (templateRef ? get(templateTypes, templateRef) : stage.stage.type) as string
@@ -508,7 +515,7 @@ const transformStageData = ({
 
       finalData.push({
         id: uuid() as string,
-        identifier: stage.stage.identifier as string,
+        identifier: identifier,
         name: stage.stage.name as string,
         type: type,
         nodeType: nodeType as string,
@@ -517,7 +524,12 @@ const transformStageData = ({
         data: {
           graphType,
           ...stage,
-          isInComplete: isCustomGeneratedString(stage.stage.identifier) || hasErrors,
+          dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+            baseDotNotation: updatedStagePath,
+            identifier,
+            entityType: NodeWrapperEntity.stage
+          }),
+          isInComplete: isCustomGeneratedString(identifier) || hasErrors,
           loopingStrategyEnabled: !!stage.stage?.strategy,
           conditionalExecutionEnabled: stage.stage.when
             ? stage.stage.when?.pipelineStatus !== 'Success' || !!stage.stage.when?.condition?.trim()
@@ -526,20 +538,21 @@ const transformStageData = ({
         }
       })
     } else if (stage?.parallel?.length) {
-      const updatedStagetPath = `${parentPath}.${index}.parallel`
-      const currentStagetPath = `${updatedStagetPath}.0`
+      const updatedStagePath = `${parentPath}.${index}.parallel`
+      const currentStagePath = `${updatedStagePath}.0`
 
       const hasErrors =
-        errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(currentStagetPath))
+        errorMap && [...errorMap.keys()].some(key => updatedStagePath && key.startsWith(currentStagePath))
 
       const [first, ...rest] = stage.parallel
       const templateRef = first.stage?.template?.templateRef
       const iconUrl = get(templateIcons, templateRef) as string | undefined
       const type = (templateRef ? get(templateTypes, templateRef) : first?.stage?.type) as string
       const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+      const identifier = first?.stage?.identifier as string
       finalData.push({
         id: uuid() as string,
-        identifier: first?.stage?.identifier as string,
+        identifier: identifier,
         name: first?.stage?.name as string,
         nodeType: nodeType as string,
         type,
@@ -548,7 +561,12 @@ const transformStageData = ({
         data: {
           graphType,
           ...stage,
-          isInComplete: isCustomGeneratedString(first?.stage?.identifier as string) || hasErrors,
+          dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+            baseDotNotation: currentStagePath,
+            entityType: NodeWrapperEntity.stage,
+            identifier
+          }),
+          isInComplete: isCustomGeneratedString(identifier) || hasErrors,
           loopingStrategyEnabled: !!first.stage?.strategy,
           conditionalExecutionEnabled: first?.stage?.when
             ? first?.stage?.when?.pipelineStatus !== 'Success' || !!first?.stage.when?.condition?.trim()
@@ -561,21 +579,22 @@ const transformStageData = ({
           templateTypes,
           templateIcons,
           errorMap,
-          parentPath: updatedStagetPath,
+          parentPath: updatedStagePath,
           offsetIndex: 1
         })
       })
     } else {
-      const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
+      const updatedStagePath = `${parentPath}.${index + offsetIndex}`
       const hasErrors =
-        errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
+        errorMap && [...errorMap.keys()].some(key => updatedStagePath && key.startsWith(updatedStagePath))
       const templateRef = stage.stage?.template?.templateRef
       const iconUrl = get(templateIcons, templateRef) as string | undefined
       const type = (templateRef ? get(templateTypes, templateRef) : stage?.type) as string
       const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+      const identifier = stage.identifier as string
       finalData.push({
         id: stage.id, //uuid() as string
-        identifier: stage.identifier as string,
+        identifier: identifier,
         name: stage.name as string,
         type: type,
         nodeType: nodeType as string,
@@ -585,7 +604,12 @@ const transformStageData = ({
         data: {
           graphType,
           ...stage,
-          isInComplete: isCustomGeneratedString(stage.identifier) || hasErrors,
+          dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+            baseDotNotation: updatedStagePath,
+            entityType: NodeWrapperEntity.stage,
+            identifier
+          }),
+          isInComplete: isCustomGeneratedString(identifier) || hasErrors,
           loopingStrategyEnabled: !!stage?.strategy,
           conditionalExecutionEnabled: stage.when
             ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
@@ -626,7 +650,8 @@ const transformStepsData = ({
   parentPath,
   offsetIndex = 0,
   isNestedGroup = false,
-  isContainerStepGroup = false
+  isContainerStepGroup = false,
+  relativeBasePath
 }: {
   steps: ExecutionWrapperConfig[]
   graphType: PipelineGraphType
@@ -637,16 +662,17 @@ const transformStepsData = ({
   offsetIndex?: number
   isNestedGroup?: boolean
   isContainerStepGroup?: boolean
+  relativeBasePath?: string
 }): PipelineGraphState[] => {
   const finalData: PipelineGraphState[] = []
 
   steps.forEach((step: ExecutionWrapperConfig, index: number) => {
     if (step?.step) {
       const identifier = step.step?.identifier as string
-      const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
+      const updatedStagePath = `${parentPath}.${index + offsetIndex}`
 
       const hasErrors =
-        errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
+        errorMap && [...errorMap.keys()].some(key => updatedStagePath && key.startsWith(updatedStagePath))
 
       const templateRef = (step?.step as unknown as TemplateStepNode)?.template?.templateRef
       const iconUrl = get(templateIcons, templateRef) as string | undefined
@@ -665,11 +691,21 @@ const transformStepsData = ({
         data: {
           graphType,
           ...step,
-          fqnPath: getEntityIdentifierBasedFqnPath({ baseFqn: updatedStagetPath, identifier }),
+          nodeStateMetadata: {
+            dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+              baseDotNotation: updatedStagePath,
+              identifier
+            }),
+            relativeBasePath: getEntityIdentifierBasedDotNotationPath({
+              baseDotNotation: relativeBasePath,
+              identifier
+            }),
+            nodeType: type === PipelineStepType.Dependency ? StepType.SERVICE : StepType.STEP
+          },
           isInComplete: isCustomGeneratedString(step.step.identifier) || hasErrors,
           loopingStrategyEnabled: !!step.step?.strategy,
           conditionalExecutionEnabled: getConditionalExecutionEnabled(step, isExecutionView),
-          isTemplateNode: Boolean(templateRef),
+          isTemplateNode: Boolean(templateRef), // `${relativeBasePath}.${identifier}`,
           isNestedGroup,
           isContainerStepGroup
         },
@@ -681,16 +717,17 @@ const transformStepsData = ({
               templateIcons,
               errorMap,
               parentPath: parentPath,
-              offsetIndex: 1
+              offsetIndex: 1,
+              relativeBasePath: relativeBasePath
             })
           : []
       })
     } else if (step?.parallel?.length) {
-      const updatedStagetPath = `${parentPath}.${index}.parallel`
-      const currentStagetPath = `${updatedStagetPath}.0`
+      const updatedStagePath = `${parentPath}.${index}.parallel`
+      const currentStagePath = `${updatedStagePath}.0`
 
       const hasErrors =
-        errorMap && [...errorMap.keys()].some(key => currentStagetPath && key.startsWith(currentStagetPath))
+        errorMap && [...errorMap.keys()].some(key => currentStagePath && key.startsWith(currentStagePath))
 
       const [first, ...rest] = step.parallel
       if (first.stepGroup) {
@@ -706,11 +743,19 @@ const transformStepsData = ({
           icon: iconName,
           data: {
             ...first,
-            fqnPath: getEntityIdentifierBasedFqnPath({
-              baseFqn: currentStagetPath,
-              entityType: NodeWrapperEntity.stepGroup,
-              identifier
-            }),
+            nodeStateMetadata: {
+              dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: currentStagePath,
+                entityType: NodeWrapperEntity.stepGroup,
+                identifier
+              }),
+              relativeBasePath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: relativeBasePath,
+                entityType: NodeWrapperEntity.stepGroup,
+                identifier
+              }),
+              nodeType: StepType.STEP_GROUP
+            },
             isNestedGroup,
             isContainerStepGroup,
             isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || hasErrors,
@@ -724,8 +769,9 @@ const transformStepsData = ({
             templateTypes,
             templateIcons,
             errorMap,
-            parentPath: updatedStagetPath,
-            offsetIndex: 1
+            parentPath: updatedStagePath,
+            offsetIndex: 1,
+            relativeBasePath: relativeBasePath
           })
         })
       } else {
@@ -746,7 +792,17 @@ const transformStepsData = ({
           iconUrl,
           data: {
             ...first,
-            fqnPath: getEntityIdentifierBasedFqnPath({ baseFqn: currentStagetPath, identifier }),
+            nodeStateMetadata: {
+              dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: currentStagePath,
+                identifier
+              }),
+              relativeBasePath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: relativeBasePath,
+                identifier
+              }),
+              nodeType: type === PipelineStepType.Dependency ? StepType.SERVICE : StepType.STEP
+            },
             isInComplete: isCustomGeneratedString(identifier) || hasErrors,
             loopingStrategyEnabled: !!first.step?.strategy,
             conditionalExecutionEnabled: getConditionalExecutionEnabled(first, isExecutionView),
@@ -761,17 +817,18 @@ const transformStepsData = ({
             templateTypes,
             templateIcons,
             errorMap,
-            parentPath: updatedStagetPath,
-            offsetIndex: 1
+            parentPath: updatedStagePath,
+            offsetIndex: 1,
+            relativeBasePath: relativeBasePath
           })
         })
       }
     } else {
       const type = (step as any)?.type as string
       const { iconName } = getNodeInfo(defaultTo(type, ''), graphType)
-      const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
+      const updatedStagePath = `${parentPath}.${index + offsetIndex}`
       const hasErrors =
-        errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
+        errorMap && [...errorMap.keys()].some(key => updatedStagePath && key.startsWith(updatedStagePath))
       if (step?.stepGroup) {
         const identifier = step.stepGroup?.identifier as string
         const isExecutionView = get(step, 'stepGroup.status', false)
@@ -784,11 +841,19 @@ const transformStepsData = ({
           icon: iconName,
           data: {
             ...step,
-            fqnPath: getEntityIdentifierBasedFqnPath({
-              baseFqn: updatedStagetPath,
-              entityType: NodeWrapperEntity.stepGroup,
-              identifier
-            }),
+            nodeStateMetadata: {
+              dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: updatedStagePath,
+                entityType: NodeWrapperEntity.stepGroup,
+                identifier
+              }),
+              relativeBasePath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: relativeBasePath,
+                entityType: NodeWrapperEntity.stepGroup,
+                identifier
+              }),
+              nodeType: StepType.STEP_GROUP
+            },
             isNestedGroup,
             isContainerStepGroup,
             type: 'StepGroup',
@@ -815,9 +880,19 @@ const transformStepsData = ({
           icon: stepIcon,
           status: get(stepData, 'status', ''),
           data: {
-            fqnPath: getEntityIdentifierBasedFqnPath({ baseFqn: updatedStagetPath, identifier }),
             step: {
               ...get(stepData, 'data.step', stepData)
+            },
+            nodeStateMetadata: {
+              dotNotationPath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: updatedStagePath,
+                identifier
+              }),
+              relativeBasePath: getEntityIdentifierBasedDotNotationPath({
+                baseDotNotation: relativeBasePath,
+                identifier
+              }),
+              nodeType: StepType.STEP
             },
             type: stepData?.name as string,
             nodeType: stepData?.name as string,

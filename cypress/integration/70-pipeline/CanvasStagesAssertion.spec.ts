@@ -10,36 +10,11 @@ import {
   testParallelNodesPipelineRoute,
   featureFlagsCall,
   canvasExecutionPipelineCall,
-  canvasExecutionStageNodeCall
+  canvasExecutionStageNodeCall,
+  dragElementVerticallyBy
 } from '../../support/70-pipeline/constants'
 
 describe('Canvas Stages Assertion', () => {
-  //function to drag element vertically
-  function dragElementVerticallyBy(el, pageYDragAmount) {
-    const rect = el[0].getBoundingClientRect()
-
-    cy.window().then(window => {
-      const pageY = rect.top + window.pageYOffset
-
-      cy.wrap(el)
-        .trigger('mousedown', {
-          which: 1,
-          clientX: rect.left,
-          clientY: pageY,
-          force: true
-        })
-        .trigger('mousemove', {
-          clientX: rect.left,
-          clientY: pageY + pageYDragAmount,
-          force: true
-        })
-        .trigger('mousemove', { force: true })
-        .trigger('mouseup', {
-          which: 1,
-          force: true
-        })
-    })
-  }
   beforeEach(() => {
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {

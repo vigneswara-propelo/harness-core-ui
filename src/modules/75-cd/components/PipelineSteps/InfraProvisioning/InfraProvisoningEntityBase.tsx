@@ -36,6 +36,7 @@ import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBui
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { NodeWrapperEntity } from '@pipeline/components/PipelineDiagram/Nodes/utils'
 import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
 import { transformValuesFieldsConfig } from './InfraProvisioningFunctionConfigs'
@@ -121,7 +122,10 @@ export const InfraProvisioningBase = (
         gitDetails,
         storeMetadata
       })
-      const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
+      const stepType =
+        template.templateEntityType === PipelineStepType.StepGroup
+          ? NodeWrapperEntity.stepGroup
+          : NodeWrapperEntity.step
       const newStepData = {
         [stepType]: createStepNodeFromTemplate(template, isCopied, gitDetails?.branch, gitDetails?.repoName)
       }
@@ -160,7 +164,9 @@ export const InfraProvisioningBase = (
               onUpdate: executionRef.current?.stepGroupUpdated,
               isStepGroup: template?.templateEntityType === PipelineStepType.StepGroup,
               addOrEdit: 'edit',
-              hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+              hiddenAdvancedPanels: [AdvancedPanels.PreRequisites],
+              nodeStateMetadata: event?.nodeStateMetadata,
+              relativeBasePath: event.entity?.relativeBasePath
             }
           }
         }
@@ -268,6 +274,7 @@ export const InfraProvisioningBase = (
                                     onUpdate: executionRef.current?.stepGroupUpdated,
                                     isRollback: event.isRollback,
                                     isParallelNodeClicked: event.isParallel,
+                                    relativeBasePath: event.entity?.relativeBasePath,
                                     hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
                                   }
                                 }
@@ -290,7 +297,9 @@ export const InfraProvisioningBase = (
                                   isStepGroup: event.isStepGroup,
                                   isUnderStepGroup: event.isUnderStepGroup,
                                   addOrEdit: event.addOrEdit,
-                                  hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+                                  relativeBasePath: event.entity?.relativeBasePath,
+                                  hiddenAdvancedPanels: [AdvancedPanels.PreRequisites],
+                                  nodeStateMetadata: event?.nodeStateMetadata
                                 }
                               }
                             }

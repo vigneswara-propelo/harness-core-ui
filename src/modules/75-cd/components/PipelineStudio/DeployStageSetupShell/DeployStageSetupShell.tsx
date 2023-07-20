@@ -617,6 +617,7 @@ export default function DeployStageSetupShell(): JSX.Element {
                       // isAddStepOverride: true,
                       isRollback: event.isRollback,
                       isParallelNodeClicked: event.isParallel,
+                      relativeBasePath: event.entity?.relativeBasePath,
                       hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
                     }
                   }
@@ -638,7 +639,9 @@ export default function DeployStageSetupShell(): JSX.Element {
                     isStepGroup: event.isStepGroup,
                     isUnderStepGroup: event.isUnderStepGroup,
                     addOrEdit: event.addOrEdit,
-                    hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+                    relativeBasePath: event.entity?.relativeBasePath,
+                    hiddenAdvancedPanels: [AdvancedPanels.PreRequisites],
+                    nodeStateMetadata: event?.nodeStateMetadata
                   }
                 }
               }

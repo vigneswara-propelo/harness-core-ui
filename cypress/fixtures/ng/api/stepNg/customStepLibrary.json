@@ -1,0 +1,365 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "name": "Library",
+    "stepsData": [],
+    "stepCategories": [
+      {
+        "name": "Continuous Deployment",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Utilities",
+            "stepsData": [],
+            "stepCategories": [
+              {
+                "name": "Scripted",
+                "stepsData": [
+                  {
+                    "name": "Shell Script",
+                    "type": "ShellScript",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  },
+                  {
+                    "name": "Container Step",
+                    "type": "Container",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              },
+              {
+                "name": "Non-Scripted",
+                "stepsData": [
+                  {
+                    "name": "HTTP",
+                    "type": "Http",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  },
+                  {
+                    "name": "Email",
+                    "type": "Email",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  },
+                  {
+                    "name": "Wait",
+                    "type": "Wait",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              }
+            ]
+          },
+          {
+            "name": "Approval",
+            "stepsData": [
+              {
+                "name": "Harness Approval",
+                "type": "HarnessApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_HARNESS_UI"
+              },
+              {
+                "name": "Custom Approval",
+                "type": "CustomApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT"
+              },
+              {
+                "name": "Jira Approval",
+                "type": "JiraApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              },
+              {
+                "name": "ServiceNow Approval",
+                "type": "ServiceNowApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Jira",
+            "stepsData": [
+              {
+                "name": "Jira Create",
+                "type": "JiraCreate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              },
+              {
+                "name": "Jira Update",
+                "type": "JiraUpdate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "FlowControl",
+            "stepsData": [],
+            "stepCategories": [
+              {
+                "name": "Barrier",
+                "stepsData": [
+                  {
+                    "name": "Barrier",
+                    "type": "Barrier",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              },
+              {
+                "name": "Queue",
+                "stepsData": [
+                  {
+                    "name": "Queue",
+                    "type": "Queue",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              }
+            ]
+          },
+          {
+            "name": "Governance",
+            "stepsData": [
+              {
+                "name": "Policy",
+                "type": "Policy",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "ServiceNow",
+            "stepsData": [
+              {
+                "name": "ServiceNow Create",
+                "type": "ServiceNowCreate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              },
+              {
+                "name": "ServiceNow Update",
+                "type": "ServiceNowUpdate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              },
+              {
+                "name": "ServiceNow Import Set",
+                "type": "ServiceNowImportSet",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      },
+      {
+        "name": "Continuous Deployment",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Builds",
+            "stepsData": [
+              {
+                "name": "Jenkins Build",
+                "type": "JenkinsBuild",
+                "disabled": false,
+                "featureRestrictionName": "JENKINS_BUILD"
+              },
+              {
+                "name": "Bamboo Build",
+                "type": "BambooBuild",
+                "disabled": false,
+                "featureRestrictionName": "BAMBOO_BUILD"
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      },
+      {
+        "name": "Continuous Deployment",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Terragrunt",
+            "stepsData": [
+              {
+                "name": "Terragrunt Plan",
+                "type": "TerragruntPlan",
+                "disabled": false,
+                "featureRestrictionName": "TERRAGRUNT_PLAN"
+              },
+              {
+                "name": "Terragrunt Apply",
+                "type": "TerragruntApply",
+                "disabled": false,
+                "featureRestrictionName": "TERRAGRUNT_APPLY"
+              },
+              {
+                "name": "Terragrunt Destroy",
+                "type": "TerragruntDestroy",
+                "disabled": false,
+                "featureRestrictionName": "TERRAGRUNT_DESTROY"
+              },
+              {
+                "name": "Terragrunt Rollback",
+                "type": "TerragruntRollback",
+                "disabled": false,
+                "featureRestrictionName": "TERRAGRUNT_ROLLBACK"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Terraform",
+            "stepsData": [
+              {
+                "name": "Terraform Rollback",
+                "type": "TerraformRollback",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_ROLLBACK"
+              },
+              {
+                "name": "Terraform Plan",
+                "type": "TerraformPlan",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_PLAN"
+              },
+              {
+                "name": "Terraform Apply",
+                "type": "TerraformApply",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_APPLY"
+              },
+              {
+                "name": "Terraform Destroy",
+                "type": "TerraformDestroy",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_DESTROY"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Azure Provisioner",
+            "stepsData": [
+              {
+                "name": "Create Azure ARM Resources",
+                "type": "AzureCreateARMResource",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_CREATE_ARM_RESOURCE"
+              },
+              {
+                "name": "Create Azure BP Resources",
+                "type": "AzureCreateBPResource",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_CREATE_BP_RESOURCE"
+              },
+              {
+                "name": "Rollback Azure ARM Resources",
+                "type": "AzureARMRollback",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_ROLLBACK_ARM_RESOURCE"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Terraform Cloud",
+            "stepsData": [
+              {
+                "name": "Terraform Cloud Rollback",
+                "type": "TerraformCloudRollback",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_CLOUD_ROLLBACK"
+              },
+              {
+                "name": "Terraform Cloud Run",
+                "type": "TerraformCloudRun",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_CLOUD_RUN"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Cloudformation",
+            "stepsData": [
+              {
+                "name": "CloudFormation Rollback",
+                "type": "RollbackStack",
+                "disabled": false,
+                "featureRestrictionName": "ROLLBACK_STACK"
+              },
+              {
+                "name": "CloudFormation Create Stack",
+                "type": "CreateStack",
+                "disabled": false,
+                "featureRestrictionName": "CREATE_STACK"
+              },
+              {
+                "name": "CloudFormation Delete Stack",
+                "type": "DeleteStack",
+                "disabled": false,
+                "featureRestrictionName": "DELETE_STACK"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Shell Script Provisioner",
+            "stepsData": [
+              {
+                "name": "Shell Script Provision",
+                "type": "ShellScriptProvision",
+                "disabled": false,
+                "featureRestrictionName": "SHELL_SCRIPT_PROVISION"
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      },
+      {
+        "name": "Continuous Deployment",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Chaos",
+            "stepsData": [
+              {
+                "name": "Chaos",
+                "type": "Chaos",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "da94cc30-39ba-4bb1-9a86-e41482bf6c42"
+}

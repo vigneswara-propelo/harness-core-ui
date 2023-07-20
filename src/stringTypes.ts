@@ -4939,6 +4939,7 @@ export interface StringsMap {
   'pipeline.runtimeInputNotSupported': string
   'pipeline.runtimeInputs': string
   'pipeline.runtimeInputsSubmittedMsg': string
+  'pipeline.sameNodeExistsAtDropLocation': string
   'pipeline.savingInProgress': string
   'pipeline.scriptInputVariables': string
   'pipeline.scriptOutputVariables': string

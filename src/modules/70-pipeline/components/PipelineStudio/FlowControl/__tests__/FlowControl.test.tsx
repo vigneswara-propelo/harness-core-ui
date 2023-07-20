@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import type * as pipelineng from 'services/pipeline-ng'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { RightDrawer } from '../../RightDrawer/RightDrawer'
 import pipelineContextMock, { mockBarriers } from '../../RightDrawer/__tests__/stateMock'
 import { DrawerTypes } from '../../PipelineContext/PipelineActions'
@@ -44,6 +45,18 @@ jest.mock('@common/hooks', () => ({
   })
 }))
 
+function WrapperComponent(): JSX.Element {
+  return (
+    <PipelineContext.Provider value={pipelineContextMock}>
+      <TestWrapper>
+        <NodeMetadataProvider>
+          <RightDrawer />
+        </NodeMetadataProvider>
+      </TestWrapper>
+    </PipelineContext.Provider>
+  )
+}
+
 const initial = () => {
   pipelineContextMock.stepsFactory.getStepData = () => undefined
   pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.FlowControl
@@ -58,13 +71,7 @@ describe('FlowControl tests', () => {
   test('should render fine', async () => {
     initial()
 
-    const { findByText, container } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper>
-          <RightDrawer />
-        </TestWrapper>
-      </PipelineContext.Provider>
-    )
+    const { findByText, container } = render(<WrapperComponent />)
 
     expect(container).toMatchSnapshot()
     const flowControlHeader = await findByText('pipeline.barriers.syncBarriers')
@@ -75,13 +82,7 @@ describe('FlowControl tests', () => {
     initial()
     pipelineContextMock.updatePipeline = jest.fn()
 
-    const { container, findByText, getByText } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper>
-          <RightDrawer />
-        </TestWrapper>
-      </PipelineContext.Provider>
-    )
+    const { container, findByText, getByText } = render(<WrapperComponent />)
 
     const addBarrierButton = await findByText('pipeline.barriers.addBarrier')
     expect(addBarrierButton).toBeTruthy()
@@ -105,13 +106,7 @@ describe('FlowControl tests', () => {
       barriers: mockBarriers
     }
 
-    const { container } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper>
-          <RightDrawer />
-        </TestWrapper>
-      </PipelineContext.Provider>
-    )
+    const { container } = render(<WrapperComponent />)
 
     //delete
     const listTrash = container.querySelectorAll('[data-icon="main-trash"]')
@@ -127,13 +122,7 @@ describe('FlowControl tests', () => {
     initial()
     pipelineContextMock.updatePipeline = jest.fn()
 
-    const { container } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper>
-          <RightDrawer />
-        </TestWrapper>
-      </PipelineContext.Provider>
-    )
+    const { container } = render(<WrapperComponent />)
 
     const editBarrierButtons = await screen.findAllByRole('button', { name: /edit/i })
     expect(editBarrierButtons[0]).toBeTruthy()
@@ -149,13 +138,7 @@ describe('FlowControl tests', () => {
   test('discard button should exist', async () => {
     initial()
 
-    const { findByText } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper>
-          <RightDrawer />
-        </TestWrapper>
-      </PipelineContext.Provider>
-    )
+    const { findByText } = render(<WrapperComponent />)
 
     const discardButton = await findByText('pipeline.discard')
     expect(discardButton).toBeTruthy()
@@ -178,13 +161,7 @@ describe('FlowControl tests', () => {
         }
       ]
     }
-    const { container } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper>
-          <RightDrawer />
-        </TestWrapper>
-      </PipelineContext.Provider>
-    )
+    const { container } = render(<WrapperComponent />)
 
     //delete
     const listTrash = container.querySelectorAll('[data-icon="main-trash"]')
@@ -218,13 +195,7 @@ describe('FlowControl tests', () => {
         } as any
       ]
     }
-    const { container, getByText } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper>
-          <RightDrawer />
-        </TestWrapper>
-      </PipelineContext.Provider>
-    )
+    const { container, getByText } = render(<WrapperComponent />)
     //delete
     const listTrash = container.querySelectorAll('[data-icon="main-trash"]')
     fireEvent.click(listTrash[1])

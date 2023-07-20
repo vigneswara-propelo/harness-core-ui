@@ -235,7 +235,7 @@ describe('PipelineErrors', () => {
     })
     expect(fn).toHaveBeenCalledWith({
       stageId: STEP_ERROR_1.stageInfo.identifier,
-      stepId: STEP_ERROR_1.stepInfo.identifier
+      stepId: 'steps.0.step.1ss'
     })
   })
   test('should render multiple step errors in same stage', () => {

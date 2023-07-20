@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n  name: testPipeline_Cypress\n  identifier: testPipeline_Cypress\n  projectIdentifier: project1\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: testStage_Cypress\n        identifier: testStage_Cypress\n        description: \"\"\n        type: SecurityTests\n        spec:\n          cloneCodebase: false\n          platform:\n            os: Linux\n            arch: Amd64\n          runtime:\n            type: Cloud\n            spec: {}\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Run_1\n                  identifier: Run_1\n                  spec:\n                    shell: Sh\n                    command: test\n                  description: test\n",
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "modules": ["pms", "sto"],
+    "validationUuid": "64b590aa998397643f1254a5",
+    "storeType": "INLINE"
+  },
+  "metaData": null,
+  "correlationId": "4ccd4005-68d2-45fc-841b-49e01eb94a57"
+}

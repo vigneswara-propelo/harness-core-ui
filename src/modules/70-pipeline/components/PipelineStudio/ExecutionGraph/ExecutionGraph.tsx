@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { cloneDeep, set, isEmpty, get, defaultTo, omit } from 'lodash-es'
 import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Layout, Text, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -41,21 +41,25 @@ import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndN
 import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
 import { CIDependencyNode } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/CIDependencyNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
-import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
+import { NodeStateMetadata, useNodeMetadata } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { StepType as ExecutionStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { TemplateIcons } from '@pipeline/utils/types'
 import { DiagramType, Event, StepsType } from '@pipeline/components/PipelineDiagram/Constants'
 import { RollbackToggleSwitch } from '@pipeline/components/PipelineDiagram/RollbackToggleSwitch/RollbackToggleSwitch'
+import { getBaseDotNotationWithoutEntityIdentifier } from '@pipeline/components/PipelineDiagram/Nodes/utils'
+import { ParallelStepElementConfig } from 'services/pipeline-ng'
+import {
+  getStepsPathWithoutStagePath,
+  getParentPath
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
 import {
   addStepOrGroup,
   ExecutionGraphState,
   StepState,
   getStepsState,
-  removeStepOrGroup,
-  getStepFromNode,
   generateRandomString,
   getDependenciesState,
   StepType,
@@ -70,13 +74,15 @@ import {
   STATIC_SERVICE_GROUP_NAME,
   getDependencyFromNodeV1,
   isServiceDependenciesSupported,
-  getStepFromId
+  getClosestParentStepGroupPath,
+  getNodeAndParent,
+  removeStepOrGroupViaPath,
+  getNodeAndParentForDestinationDrop
 } from './ExecutionGraphUtil'
 import { EmptyStageName } from '../PipelineConstants'
 
-import { usePipelineContext } from '../PipelineContext/PipelineContext'
+import { findAllByKey, usePipelineContext } from '../PipelineContext/PipelineContext'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
-import { getParentPath } from '../PipelineUtils'
 import css from './ExecutionGraph.module.scss'
 
 const diagram = new DiagramFactory('graph')
@@ -179,6 +185,7 @@ const renderPopover = ({
               icon="step-group"
               text={labels.addStepGroup}
               onClick={() => onPopoverSelection?.(true, isParallelNodeClicked, event)}
+              data-testid="addStepGroup"
             />
           )}
           {labels.useTemplate && (
@@ -205,6 +212,7 @@ const renderPopover = ({
 
 export interface ExecutionGraphAddStepEvent {
   entity: any //NOTE: this is a graph element
+  nodeStateMetadata?: NodeStateMetadata
   isParallel: boolean
   stepsMap: Map<string, StepState>
   isRollback: boolean
@@ -215,6 +223,8 @@ export interface ExecutionGraphAddStepEvent {
 
 export interface ExecutionGraphEditStepEvent {
   /** step or dependency model */
+  nodeStateMetadata?: NodeStateMetadata
+  entity?: any
   node: ExecutionWrapper | DependenciesWrapper
   isStepGroup: boolean
   stepsMap: Map<string, StepState>
@@ -276,10 +286,13 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     getStagePathFromPipeline,
     updatePipelineView
   } = usePipelineContext()
+
+  const { setStepsDotNotationPaths, updateBaseCreateNodeRelativePath, resetStepsDotNotationPath } = useNodeMetadata()
   // NOTE: we are using ref as DynamicPopover use memo
   const stageCloneRef = React.useRef<StageElementWrapper<T>>({})
   stageCloneRef.current = cloneDeep(stage)
   const { trackEvent } = useTelemetry()
+  const { showWarning } = useToaster()
 
   const updateStageWithNewData = (stateToApply: ExecutionGraphState): void => {
     set(stageCloneRef.current, 'stage.spec.execution', stateToApply.stepsData)
@@ -343,13 +356,17 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       )
       editStep({
         node,
+        entity: event.entity,
         isStepGroup: true,
         stepsMap: state.states,
+        isUnderStepGroup: event?.entity?.parentIdentifier,
         addOrEdit: 'edit',
-        stepType: StepType.STEP
+        stepType: StepType.STEP,
+        nodeStateMetadata: event?.data?.data?.nodeStateMetadata
       })
       stepGroupUpdated(node)
       updateStageWithNewData(state)
+      resetStepsDotNotationPath()
     }
     dynamicPopoverHandler?.hide()
   }
@@ -389,31 +406,27 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   const dropNodeListenerNew = (event: any): void => {
     event = { ...event, ...event?.data }
     if (event?.node?.identifier && event?.node?.data) {
-      const drop = getStepFromNode({
-        stepData: state.stepsData,
-        isComplete: true,
-        isFindParallelNode: false,
-        nodeId: event?.node?.identifier,
-        parentId: event?.node?.parentIdentifier,
-        isRollback: state.isRollback
-      })
+      const nodeDotNotationPath = event?.node?.data?.nodeStateMetadata?.dotNotationPath
+      const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+      const drop = getNodeAndParent(state.stepsData, getBaseDotNotationWithoutEntityIdentifier(stepNodePath), true)
+
+      const currentnodeDotNotationPath = event?.destination?.data?.nodeStateMetadata?.dotNotationPath
+      const currentStepNodePath = getBaseDotNotationWithoutEntityIdentifier(
+        getStepsPathWithoutStagePath(currentnodeDotNotationPath)
+      )
+
       const dropNode = drop?.node as ExecutionWrapperConfig
-      const current = getStepFromNode({
-        stepData: state.stepsData,
-        node: event?.entity,
-        isComplete: true,
-        isFindParallelNode: true,
-        nodeId: event?.destination?.identifier,
-        parentId: event?.destination?.parentIdentifier,
-        isRollback: state.isRollback
-      }) as {
-        node: ExecutionWrapperConfig
-        parent?: ExecutionWrapperConfig[]
-      }
+
+      const current = getNodeAndParentForDestinationDrop(state.stepsData, currentStepNodePath, state.isRollback)
+
       const skipFlattenIfSameParallel = drop.parent === current.node?.parallel
       // Check Drop Node and Current node should not be same
-      if (event.node?.identifier !== event?.destination?.identifier && dropNode) {
-        const isRemove = removeStepOrGroup({
+      if (
+        event.node?.data?.nodeStateMetadata?.relativeBasePath !==
+          (event?.destination?.relativeBasePath || event.destination?.data?.nodeStateMetadata?.relativeBasePath) &&
+        dropNode
+      ) {
+        const isRemove = removeStepOrGroupViaPath({
           state,
           entity: event,
           skipFlatten: skipFlattenIfSameParallel,
@@ -429,7 +442,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             ) {
               if (current.node.stepGroup) current.node.stepGroup.steps?.push(dropNode)
               else if (current.node.parallel) {
-                const index = current.node.parallel.findIndex(
+                const index = (current.node.parallel as ParallelStepElementConfig).findIndex(
                   obj => obj?.stepGroup?.identifier === event?.destination?.identifier
                 )
                 if (index > -1) {
@@ -441,13 +454,11 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               if (index > -1) {
                 // Remove current Stage also and make it parallel
                 current.parent?.splice(index, 1, { parallel: [current.node, dropNode] })
-                // updateStageWithNewData(state)
               }
             } else if (current.node.stepGroup && current.node.stepGroup?.steps?.length === 0) {
               current.node.stepGroup.steps.push(dropNode)
             } else if (current.node.parallel && (current.node.parallel?.length || 0) > 0) {
               current.node.parallel?.push?.(dropNode)
-              // updateStageWithNewData(state)
             }
             updateStageWithNewData(state)
           } else {
@@ -456,15 +467,14 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               state.stepsData,
               dropNode,
               false,
-              state.isRollback
+              state.isRollback,
+              true
             )
             updateStageWithNewData(state)
           }
+          resetStepsDotNotationPath()
         }
       }
-      // const dropEntity = model.getNodeFromId(event.node.id)
-      // if (dropEntity) {
-      // }
     }
   }
   const dragStart = (event: any): void => {
@@ -476,13 +486,10 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     const eventTemp = event as any
     eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
-    const node = getStepFromNode({
-      stepData: state.stepsData,
-      node: eventTemp.entity,
-      isComplete: false,
-      isFindParallelNode: false,
-      isRollback: state.isRollback
-    }).node as StepElementConfig
+    const nodeDotNotationPath = event?.data?.data?.nodeStateMetadata?.dotNotationPath
+    const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+    const node = get(state.stepsData, stepNodePath) as StepElementConfig
+
     const stepCondition = get(eventTemp, 'data.data.step.when')
     const stepGroupCondition = get(eventTemp, 'data.data.stepGroup.when')
     const whenCondition = defaultTo(stepCondition || stepGroupCondition, node?.when)
@@ -515,6 +522,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     [Event.ClickNode]: (event: any) => {
       event = { ...event, ...event?.data }
       const stepState = state?.states?.get(event?.identifier)
+      const nodeDotNotationPath = event?.data?.nodeStateMetadata?.dotNotationPath
+      const nodeType = event?.data?.nodeStateMetadata?.nodeType
       dynamicPopoverHandler?.hide()
       const nodeRender = document.querySelector(`[data-nodeid="${event?.identifier}"]`)
 
@@ -538,29 +547,32 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         setState(prev => ({ ...prev, states: stepStates }))
       } else {
         let node: ExecutionWrapper | DependencyElement | undefined
-        if (stepState?.stepType === StepType.STEP) {
-          node = getStepFromNode({
-            stepData: state.stepsData,
-            isComplete: false,
-            isFindParallelNode: false,
-            nodeId: event?.identifier,
-            parentId: event?.parentIdentifier,
-            isRollback: state.isRollback
-          }).node
-        } else if (stepState?.stepType === StepType.SERVICE) {
+        if ((nodeType || stepState?.stepType) === StepType.STEP) {
+          const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(
+            getStepsPathWithoutStagePath(nodeDotNotationPath)
+          )
+          node = getNodeAndParent(state.stepsData, stepNodePath).node
+        } else if ((nodeType || stepState?.stepType) === StepType.SERVICE) {
           node = getDependencyFromNodeV1(state.dependenciesData, event?.identifier).node
         }
         /* istanbul ignore else */ if (node) {
           editStep({
+            entity: {
+              relativeBasePath: getBaseDotNotationWithoutEntityIdentifier(
+                event?.data?.nodeStateMetadata?.relativeBasePath
+              )
+            },
             node: node,
             isUnderStepGroup: event?.parentIdentifier,
             isStepGroup: false,
             stepsMap: state.states,
             addOrEdit: 'edit',
-            stepType: stepState?.stepType
+            stepType: nodeType || stepState?.stepType,
+            nodeStateMetadata: event?.data?.nodeStateMetadata
           })
 
-          onSelectStep?.((node as DependencyElement).identifier)
+          const stepFqn = getStepsPathWithoutStagePath(nodeDotNotationPath)
+          onSelectStep?.(stepFqn)
         }
       }
     },
@@ -568,11 +580,12 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       event = { ...event, ...event?.data }
       dynamicPopoverHandler?.hide()
 
-      const isRemoved = removeStepOrGroup({
+      const isRemoved = removeStepOrGroupViaPath({
         state,
         entity: event,
         isRollback: state.isRollback
       })
+
       if (isRemoved) {
         const newStateMap = new Map<string, StepState>([...state.states])
         newStateMap.delete(event?.identifier)
@@ -584,14 +597,14 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         // If after removing step, all steps in step group are of Command type
         // then add repeat looping strategy for the step group
         if (event?.node?.parentIdentifier) {
-          const parentStepGroupNode = getStepFromId(
-            state.stepsData,
-            defaultTo(event?.node?.parentIdentifier, ''),
-            false,
-            false,
-            state.isRollback
-          ).node
-          if (parentStepGroupNode) {
+          const nodeDotNotationPath = event?.node?.data?.nodeStateMetadata?.dotNotationPath
+          const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(
+            getStepsPathWithoutStagePath(nodeDotNotationPath)
+          )
+          const parentStepGroupPath = getClosestParentStepGroupPath(stepNodePath)
+          const parentStepGroupNode = get(state.stepsData, parentStepGroupPath)
+
+          if (parentStepGroupNode && parentStepGroupNode?.identifier === event?.node?.parentIdentifier) {
             const allSteps = parentStepGroupNode.steps
             const allFlattenedSteps = getFlattenedSteps(allSteps)
             if (!isEmpty(allFlattenedSteps)) {
@@ -620,6 +633,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
 
         updateStageWithNewData(state)
         trackEvent(StepActions.DeleteStep, { type: event?.entityType || '' })
+        resetStepsDotNotationPath()
       }
     },
     [Event.AddParallelNode]: (event: any) => {
@@ -627,14 +641,11 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       // event.stopPropagation()
       const layer = event?.parentIdentifier
       if (layer) {
-        const node = getStepFromNode({
-          stepData: state.stepsData,
-          isComplete: false,
-          isFindParallelNode: false,
-          nodeId: event?.identifier,
-          parentId: event?.parentIdentifier,
-          isRollback: state.isRollback
-        }).node
+        const nodeDotNotationPath = event?.node?.data?.nodeStateMetadata?.dotNotationPath
+        const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(
+          getStepsPathWithoutStagePath(nodeDotNotationPath)
+        )
+        const node = getNodeAndParent(state.stepsData, stepNodePath)
         if (node) {
           handleAdd(true, event.target, true, { entity: { ...event } }, event.callback)
         }
@@ -662,7 +673,11 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     },
     [Event.DropLinkEvent]: (event: any) => {
       event = { ...event, ...event?.data }
-      if (event.node?.identifier === event.destination?.identifier) {
+      if (
+        event.node?.data?.nodeStateMetadata?.relativeBasePath ===
+        (event?.destination?.relativeBasePath || event.destination?.data?.nodeStateMetadata?.relativeBasePath)
+      ) {
+        showWarning(getString('pipeline.sameNodeExistsAtDropLocation'))
         return
       }
       const stepDetails = omit(event.node.data, [
@@ -675,22 +690,28 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         'nodeType',
         'type',
         'fqnPath',
+        'dotNotationPath',
+        'relativeBasePath',
+        'nodeStateMetadata',
         'isContainerStepGroup'
       ])
-      const isRemove = removeStepOrGroup({
+      const isRemove = removeStepOrGroupViaPath({
         state,
         entity: event,
         isRollback: state.isRollback
       })
+
       if (isRemove) {
         addStepOrGroup(
           { ...event, node: { ...event?.destination } },
           state.stepsData,
           stepDetails,
           false,
-          state.isRollback
+          state.isRollback,
+          true
         )
         updateStageWithNewData(state)
+        resetStepsDotNotationPath()
       }
     }
   }
@@ -743,14 +764,15 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   }, [stage, ref])
 
   const stepGroupUpdated = React.useCallback(
-    stepOrGroup => {
-      if (stepOrGroup.identifier) {
+    (stepOrGroup, _baseFqnPath?: string) => {
+      const identifier = stepOrGroup?.identifier
+      if (identifier) {
         const newStateMap = new Map<string, StepState>([...state.states])
         if (stepOrGroup.steps) {
-          newStateMap.set(stepOrGroup.identifier, getDefaultStepGroupState())
+          newStateMap.set(identifier, getDefaultStepGroupState())
         } else {
           newStateMap.set(
-            stepOrGroup.identifier,
+            identifier,
             stepOrGroup.type === PipelineStepType.Dependency
               ? getDefaultDependencyServiceState()
               : getDefaultStepState()
@@ -790,23 +812,24 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     [Event.MouseLeaveNode]: mouseLeaveNodeListener,
     [Event.DragStart]: dragStart,
     [Event.StepGroupClicked]: (event: any) => {
-      const eventTemp = event
-      // state.stepsData, eventTemp.data, undefined, undefined, event.data.identifier
-      const node = getStepFromNode({
-        stepData: state.stepsData,
-        node: eventTemp.data,
-        isComplete: false,
-        isFindParallelNode: false,
-        nodeId: event.data.identifier,
-        isRollback: state.isRollback
-      }).node
+      const nodeDotNotationPath = event?.data?.data?.nodeStateMetadata?.dotNotationPath
+      const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+
+      const node = getNodeAndParent(state.stepsData, stepNodePath).node
       if (node) {
         editStep({
+          entity: {
+            relativeBasePath: getBaseDotNotationWithoutEntityIdentifier(
+              event?.data?.data?.nodeStateMetadata?.relativeBasePath
+            )
+          },
           node: node,
           isStepGroup: true,
+          isUnderStepGroup: event?.data?.parentIdentifier,
           addOrEdit: 'edit',
           stepsMap: state.states,
-          stepType: StepType.STEP
+          stepType: StepType.STEP,
+          nodeStateMetadata: event?.data?.data?.nodeStateMetadata
         })
       }
     }
@@ -829,7 +852,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
-          parentPath: `${stagePath}.${getParentPath(isProvisioner)}.rollbackSteps`
+          parentPath: `${stagePath}.${getParentPath(isProvisioner)}.rollbackSteps`,
+          relativeBasePath: `${stagePath}.${getParentPath(isProvisioner)}.rollbackSteps`
         })
       : getPipelineGraphData({
           data: stage?.stage?.spec?.execution?.steps as ExecutionWrapperConfig[],
@@ -837,9 +861,25 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           templateIcons,
           serviceDependencies: serviceDependencies,
           errorMap: errorMap,
-          parentPath: `${stagePath}.${getParentPath(isProvisioner)}.steps`
+          parentPath: `${stagePath}.${getParentPath(isProvisioner)}.steps`,
+          relativeBasePath: `${stagePath}.${getParentPath(isProvisioner)}.steps`
         })
-  }, [stage, state?.isRollback, templateTypes, templateIcons, errorMap])
+  }, [stage, state?.isRollback, templateTypes, templateIcons, errorMap, isProvisioner])
+
+  React.useEffect(() => {
+    // Update context with new paths on steps/stepGroup CRUD
+    const allFqn = findAllByKey('nodeStateMetadata', stepsData) as unknown as NodeStateMetadata[]
+    setStepsDotNotationPaths(allFqn)
+  }, [setStepsDotNotationPaths, stepsData])
+
+  React.useEffect(() => {
+    //
+    const stagePath = getStagePathFromPipeline(stage?.stage?.identifier || '', 'pipeline.stages')
+    updateBaseCreateNodeRelativePath(
+      `${stagePath}.${getParentPath(isProvisioner)}.${state?.isRollback ? 'rollbackSteps' : 'steps'}.dummy_step_name`
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage?.stage?.identifier, state?.isRollback])
 
   return (
     <div
@@ -859,26 +899,24 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         )}
 
         <>
-          <NodeDimensionProvider>
-            <CDPipelineStudioNew
-              readonly={isReadonly}
-              parentSelector=".Pane2"
-              selectedNodeId={selectedStepId}
-              loaderComponent={DiagramLoader}
-              data={stepsData}
-              createNodeTitle={getString('addStep')}
-              graphActionsLayout={canvasButtonsLayout}
-              graphLinkClassname={css.graphLink}
-              optimizeRender={false}
+          <CDPipelineStudioNew
+            readonly={isReadonly}
+            parentSelector=".Pane2"
+            selectedNodeId={selectedStepId}
+            loaderComponent={DiagramLoader}
+            data={stepsData}
+            createNodeTitle={getString('addStep')}
+            graphActionsLayout={canvasButtonsLayout}
+            graphLinkClassname={css.graphLink}
+            optimizeRender={false}
+          />
+          {hasRollback && (
+            <RollbackToggleSwitch
+              style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
+              active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
+              onChange={type => onRollbackToggleSwitchClick(type)}
             />
-            {hasRollback && (
-              <RollbackToggleSwitch
-                style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
-                active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
-                onChange={type => onRollbackToggleSwitchClick(type)}
-              />
-            )}
-          </NodeDimensionProvider>
+          )}
         </>
 
         <DynamicPopover

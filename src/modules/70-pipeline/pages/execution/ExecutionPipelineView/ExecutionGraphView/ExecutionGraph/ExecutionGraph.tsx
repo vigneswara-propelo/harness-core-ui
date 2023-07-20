@@ -42,7 +42,7 @@ import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
 import type { ExecutionGraph as IExecutionGraph } from 'services/pipeline-ng'
-import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
 
@@ -295,7 +295,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
         </Layout.Horizontal>
       ) : null}
       {!isEmpty(pipelineExecutionDetail?.pipelineExecutionSummary?.pipelineIdentifier) && data.items?.length > 0 && (
-        <NodeDimensionProvider>
+        <NodeMetadataProvider>
           <CDPipelineStudioNew
             readonly
             loaderComponent={DiagramLoader}
@@ -317,7 +317,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
             bind={setDynamicPopoverHandler as any}
             closeOnMouseOut
           />
-        </NodeDimensionProvider>
+        </NodeMetadataProvider>
       )}
     </div>
   )

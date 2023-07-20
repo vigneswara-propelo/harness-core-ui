@@ -16,6 +16,10 @@ import type { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'
 import stepFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import {
+  convertToDotNotation,
+  getStepsPathWithoutStagePath
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { stageTypeToIconMap } from '@pipeline/utils/constants'
 import PipelineErrorCard from './PipelineErrorCard'
 import css from './PipelineErrors.module.scss'
@@ -172,9 +176,11 @@ function StepErrorCard({
         errors={stepErrors.map(err => err.message).filter(e => e) as string[]}
         icon={stepFactory.getStepIcon(get(stepErrors[0], 'stepInfo.type', ''))}
         onClick={() => {
+          const { fqn = '', identifier = '' } = stepErrors[0]?.stepInfo as NodeErrorInfo
+          const errorStepId = `${getStepsPathWithoutStagePath(convertToDotNotation(fqn))}.${identifier}`
           gotoViewWithDetails({
             stageId: stepErrors[0]?.stageInfo?.identifier || '',
-            stepId: stepErrors[0]?.stepInfo?.identifier || ''
+            stepId: errorStepId
           })
         }}
         buttonText={getString('pipeline.errorFramework.fixStep')}

@@ -391,6 +391,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                             onUpdate: executionRef.current?.stepGroupUpdated,
                             addOrEdit: 'add',
                             isStepGroup: false,
+                            relativeBasePath: event.entity?.relativeBasePath,
                             hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors]
                           }
                         }
@@ -413,6 +414,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                               // isAddStepOverride: true,
                               isRollback: event.isRollback,
                               isParallelNodeClicked: event.isParallel,
+                              relativeBasePath: event.entity?.relativeBasePath,
                               hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors]
                             }
                           }
@@ -435,7 +437,9 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                           isStepGroup: event.isStepGroup,
                           isUnderStepGroup: event.isUnderStepGroup,
                           addOrEdit: event.addOrEdit,
-                          hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors]
+                          hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors],
+                          nodeStateMetadata: event?.nodeStateMetadata,
+                          relativeBasePath: event.entity?.relativeBasePath
                         }
                       }
                     }

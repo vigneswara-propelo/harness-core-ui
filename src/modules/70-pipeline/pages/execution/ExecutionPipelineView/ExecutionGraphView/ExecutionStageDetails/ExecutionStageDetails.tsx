@@ -39,7 +39,6 @@ import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndN
 import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixStepNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixStepNode/MatrixStepNode'
-import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import BarrierStepTooltip from './components/BarrierStepTooltip/BarrierStepTooltip'
 import ResourceConstraintTooltip from './components/ResourceConstraints/ResourceConstraints'
 import VerifyStepTooltip from './components/VerifyStepTooltip/VerifyStepTooltip'
@@ -253,18 +252,16 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
   return (
     <div className={cx(css.main, css.stepGroup, { [css.disabled]: isDisabled })} data-layout={props.layout}>
       {!isEmpty(selectedStageId) && data.items?.length > 0 && (
-        <NodeDimensionProvider>
-          <CDPipelineStudioNew
-            readonly
-            loaderComponent={DiagramLoader}
-            data={data.items}
-            selectedNodeId={selectedStepId}
-            panZoom={false}
-            showEndNode={showEndNode}
-            graphLinkClassname={css.graphLink}
-            optimizeRender={false}
-          />
-        </NodeDimensionProvider>
+        <CDPipelineStudioNew
+          readonly
+          loaderComponent={DiagramLoader}
+          data={data.items}
+          selectedNodeId={selectedStepId}
+          panZoom={false}
+          showEndNode={showEndNode}
+          graphLinkClassname={css.graphLink}
+          optimizeRender={false}
+        />
       )}
       {loading && !isDataLoadedForSelectedStage && pipelineExecutionDetail && <PageSpinner fixed={false} />}
       <DynamicPopover

@@ -20,6 +20,7 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { usePipelineTemplateActions } from '@pipeline/utils/usePipelineTemplateActions'
 import { TemplatePipelineCanvas } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineCanvas/TemplatePipelineCanvas'
 import { TemplatePipelineSpecifications } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineSpecifications/TemplatePipelineSpecifications'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import css from './TemplatePipelineBuilder.module.scss'
 
 export function TemplatePipelineBuilder(): React.ReactElement {
@@ -55,23 +56,25 @@ export function TemplatePipelineBuilder(): React.ReactElement {
           />
         )}
         <Container className={cx(css.canvasContainer)}>
-          <SplitPane
-            size={splitPaneSize}
-            split="horizontal"
-            minSize={MinimumSplitPaneSize}
-            maxSize={MaximumSplitPaneSize}
-            style={{ overflow: 'auto' }}
-            pane2Style={{ overflow: 'initial', zIndex: 2 }}
-            resizerStyle={resizerStyle}
-            onChange={handleStageResize}
-            allowResize={true}
-          >
-            <TemplatePipelineCanvas />
-            <TemplatePipelineSpecifications
-              isTemplateUpdated={isTemplateUpdated}
-              setIsTemplateUpdated={setIsTemplateUpdated}
-            />
-          </SplitPane>
+          <NodeMetadataProvider>
+            <SplitPane
+              size={splitPaneSize}
+              split="horizontal"
+              minSize={MinimumSplitPaneSize}
+              maxSize={MaximumSplitPaneSize}
+              style={{ overflow: 'auto' }}
+              pane2Style={{ overflow: 'initial', zIndex: 2 }}
+              resizerStyle={resizerStyle}
+              onChange={handleStageResize}
+              allowResize={true}
+            >
+              <TemplatePipelineCanvas />
+              <TemplatePipelineSpecifications
+                isTemplateUpdated={isTemplateUpdated}
+                setIsTemplateUpdated={setIsTemplateUpdated}
+              />
+            </SplitPane>
+          </NodeMetadataProvider>
         </Container>
       </Layout.Vertical>
     </Container>

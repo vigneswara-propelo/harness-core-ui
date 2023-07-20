@@ -91,6 +91,7 @@ declare global {
       createKubernetesDeploymentStage(): void
       selectRuntimeInputForInfrastructure(): void
       visitCreatePipeline(): void
+      pipelineStudioType(name: string, prefix?: string): void
       visitPipelinesList(): void
       visitExecutionsList(): void
       visitChangeIntelligence(): void
@@ -167,6 +168,11 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
   cy.get('[data-id="password-1"] input').clear().type(password)
   cy.clickSubmit()
   cy.initializeRoute()
+})
+
+Cypress.Commands.add('pipelineStudioType', { prevSubject: 'element' }, (subject, name: string, prefix = '') => {
+  const modifiedName = `${prefix}${name}`
+  cy.wrap(subject).type(modifiedName)
 })
 
 /**

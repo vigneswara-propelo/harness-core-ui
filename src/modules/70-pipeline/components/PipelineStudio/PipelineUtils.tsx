@@ -7,19 +7,13 @@
 
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
-export const isContextTypeNotStageTemplate = (contextType?: string) => contextType !== PipelineContextType.StageTemplate
-export const isContextTypeNotStepGroupTemplate = (contextType?: string) =>
+export const isContextTypeNotStageTemplate = (contextType?: string): boolean =>
+  contextType !== PipelineContextType.StageTemplate
+export const isContextTypeNotStepGroupTemplate = (contextType?: string): boolean =>
   contextType !== PipelineContextType.StepGroupTemplate
 
-export const isContextTypeStageOrStepGroupTemplate = (contextType?: string) =>
+export const isContextTypeStageOrStepGroupTemplate = (contextType?: string): boolean =>
   contextType === PipelineContextType.StageTemplate || contextType === PipelineContextType.StepGroupTemplate
 
-export const isContextTypeTemplateType = (contextType?: string) =>
+export const isContextTypeTemplateType = (contextType?: string): boolean =>
   contextType === PipelineContextType.PipelineTemplate || contextType === PipelineContextType.StageTemplate
-
-export const getParentPath = (isProvisioner?: boolean): string => {
-  if (isProvisioner) {
-    return 'stage.spec.environment.provisioner'
-  }
-  return 'stage.spec.execution'
-}

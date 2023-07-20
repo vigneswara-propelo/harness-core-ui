@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { cloneDeep, debounce, defaultTo, get, set, unset } from 'lodash-es'
+import { cloneDeep, debounce, defaultTo, get, set, unset, isEmpty } from 'lodash-es'
 import { HarnessIcons, Icon, Text, Button, ButtonVariation, IconName, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Switch } from '@blueprintjs/core'
@@ -25,12 +25,19 @@ import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDi
 import { useStrings } from 'framework/strings'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/CommonUtils/CommonUtils'
-import { getParentPath } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { updateStepWithinStageViaPath } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
+import {
+  getStepsPathWithoutStagePath,
+  getParentPath
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
-import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../../utils'
+import {
+  getPositionOfAddIcon,
+  attachDragImageToEventHandler,
+  getBaseDotNotationWithoutEntityIdentifier
+} from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
@@ -50,7 +57,6 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const {
     state: {
-      pipelineView: { isRollbackToggled },
       pipelineView,
       selectionState: { selectedStageId }
     },
@@ -78,7 +84,12 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
     stepStatus as ExecutionStatus,
     ExecutionPipelineNodeType.NORMAL
   )
-  const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
+
+  const isStepUsedInProvisioner = props?.data?.nodeStateMetadata?.dotNotationPath?.includes('provisioner')
+  const stepFQNPath = getStepsPathWithoutStagePath(props?.data?.nodeStateMetadata?.dotNotationPath)
+  const relativeFQNPath = getBaseDotNotationWithoutEntityIdentifier(props?.data?.nodeStateMetadata?.relativeBasePath)
+  const nodeSelectedId = isEmpty(stepStatus) ? stepFQNPath : props.id
+  const isSelectedNode = (): boolean => props.isSelected || nodeSelectedId === props?.selectedNodeId
   const isServiceStep = stepType === 'Service'
   const setAddVisibility = (visibility: boolean): void => {
     if (!allowAdd) {
@@ -251,6 +262,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         {!isToggleAllowed && (
           <div
             className={cx(defaultCss.switch, { [defaultCss.stageSelectedSwitch]: isSelectedNode() })}
+            data-testid="toggle-step-node"
             onClick={e => {
               if (props?.onToggleClick) {
                 props?.onToggleClick(e)
@@ -267,13 +279,12 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 const processingNodeIdentifier = props.identifier
                 if (processingNodeIdentifier) {
                   const stageData = produce(selectedStage, draft => {
-                    const isProvisioner = props?.data?.fqnPath?.includes('provisioner')
-                    if (get(draft, getParentPath(isProvisioner))) {
-                      updateStepWithinStage(
-                        get(draft, getParentPath(isProvisioner)),
-                        processingNodeIdentifier,
+                    if (get(draft, getParentPath(isStepUsedInProvisioner))) {
+                      updateStepWithinStageViaPath(
+                        get(draft, getParentPath(isStepUsedInProvisioner)),
                         originalStepData,
-                        !!isRollbackToggled
+                        props?.data?.nodeStateMetadata?.relativeBasePath,
+                        props?.data?.nodeStateMetadata?.dotNotationPath
                       )
                     }
                   })
@@ -429,13 +440,15 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 identifier: props?.identifier,
                 parentIdentifier: props?.parentIdentifier,
                 entityType: DiagramType.Default,
-                node: props
+                node: props,
+                relativeBasePath: relativeFQNPath
               }
             })
           }}
           className={cx(defaultCss.addNode, defaultCss.stepAddNode, { [defaultCss.visible]: showAddNode })}
           wrapperClassname={defaultCss.floatingAddNodeWrapper}
           data-nodeid="add-parallel"
+          relativeBasePath={relativeFQNPath}
         />
       )}
       {!props.isParallelNode && !isServiceStep && !props.readonly && (
@@ -449,6 +462,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           identifier={props.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}
           style={{ left: getPositionOfAddIcon(props) }}
+          relativeBasePath={relativeFQNPath}
           className={cx(
             defaultCss.addNodeIcon,
             // { [defaultCss.left]: !isPrevNodeParallel, [defaultCss.stepGroupLeft]: isPrevNodeParallel },
@@ -469,6 +483,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           isRightAddIcon={true}
           identifier={props.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}
+          relativeBasePath={relativeFQNPath}
           className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
         />
       )}

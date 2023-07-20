@@ -30,24 +30,28 @@ import { CollapseForm } from './CollapseForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
 import { StepForm } from './StepInputSetForm'
 import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
+import { NodeWrapperEntity } from '../PipelineDiagram/Nodes/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
-  let responseStep: ExecutionWrapperConfig | undefined = undefined
-  steps?.forEach(item => {
-    if (item?.step?.identifier === stepId) {
-      responseStep = item
-    } else if (item?.stepGroup?.identifier === stepId) {
-      responseStep = item
+export function getStepFromStage(
+  stepId = '',
+  steps?: ExecutionWrapperConfig[],
+  nodeType: NodeWrapperEntity = NodeWrapperEntity.step
+): ExecutionWrapperConfig | undefined {
+  for (const item of steps || []) {
+    if (item?.stepGroup?.identifier === stepId && nodeType === NodeWrapperEntity.stepGroup) {
+      return item
+    } else if (item?.step?.identifier === stepId && nodeType === NodeWrapperEntity.step) {
+      return item
     } else if (item?.parallel) {
-      return item.parallel.forEach(node => {
-        if (node?.step?.identifier === stepId || node?.stepGroup?.identifier === stepId) {
-          responseStep = node
-        }
-      })
+      const result = getStepFromStage(stepId, item.parallel, nodeType)
+      if (result !== undefined) {
+        return result
+      }
     }
-  })
-  return responseStep
+  }
+
+  return undefined
 }
 
 function HeaderComponent({
@@ -123,8 +127,8 @@ export function ExecutionWrapperInputSetForm(props: {
     <>
       {stepsTemplate?.map((item, index) => {
         /* istanbul ignore else */ if (item.step) {
-          const originalStep = getStepFromStage(item.step?.identifier || /* istanbul ignore next */ '', allValues)
-          const initialValues = getStepFromStage(item.step?.identifier || /* istanbul ignore next */ '', values)
+          const originalStep = getStepFromStage(item.step?.identifier, allValues, NodeWrapperEntity.step)
+          const initialValues = getStepFromStage(item.step?.identifier, values, NodeWrapperEntity.step)
           return originalStep && /* istanbul ignore next */ originalStep.step ? (
             /* istanbul ignore next */ <StepForm
               key={item.step.identifier || index}
@@ -169,8 +173,8 @@ export function ExecutionWrapperInputSetForm(props: {
         } else if (item.parallel) {
           return item.parallel.map((nodep, indexp) => {
             if (nodep.step) {
-              const originalStep = getStepFromStage(nodep.step?.identifier || '', allValues)
-              const initialValues = getStepFromStage(nodep.step?.identifier || '', values)
+              const originalStep = getStepFromStage(nodep.step?.identifier, allValues, NodeWrapperEntity.step)
+              const initialValues = getStepFromStage(nodep.step?.identifier, values, NodeWrapperEntity.step)
               return originalStep && originalStep.step ? (
                 <StepForm
                   key={nodep.step.identifier || index}
@@ -208,8 +212,8 @@ export function ExecutionWrapperInputSetForm(props: {
               ) : null
             } else if (nodep.stepGroup) {
               const isTemplateStepGroup = !isEmpty(nodep.stepGroup?.template?.templateInputs)
-              const stepGroup = getStepFromStage(nodep.stepGroup.identifier, allValues)
-              const initialValues = getStepFromStage(nodep.stepGroup?.identifier || '', values)
+              const stepGroup = getStepFromStage(nodep.stepGroup?.identifier, allValues, NodeWrapperEntity.stepGroup)
+              const initialValues = getStepFromStage(nodep.stepGroup?.identifier, values, NodeWrapperEntity.stepGroup)
               const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
                 ? isValueRuntimeInput(nodep.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
                 : isValueRuntimeInput(nodep.stepGroup?.failureStrategies as unknown as string)
@@ -339,8 +343,8 @@ export function ExecutionWrapperInputSetForm(props: {
           })
         } else if (item.stepGroup) {
           const isTemplateStepGroup = !isEmpty(item?.stepGroup?.template?.templateInputs)
-          const stepGroup = getStepFromStage(item.stepGroup.identifier, allValues)
-          const initialValues = getStepFromStage(item.stepGroup?.identifier || '', values)
+          const stepGroup = getStepFromStage(item.stepGroup.identifier, allValues, NodeWrapperEntity.stepGroup)
+          const initialValues = getStepFromStage(item.stepGroup?.identifier, values, NodeWrapperEntity.stepGroup)
           const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
             ? isValueRuntimeInput(item?.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
             : isValueRuntimeInput(item?.stepGroup?.failureStrategies as unknown as string)

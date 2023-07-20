@@ -6,7 +6,7 @@
  */
 
 import { v4 as nameSpace, v5 as uuid, version } from 'uuid'
-import { defaultTo, isNil } from 'lodash-es'
+import { get, isNil, isObject, set } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
 import type {
   ExecutionElementConfig,
@@ -19,8 +19,12 @@ import type { DependencyElement } from 'services/ci'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { DiagramType } from '@pipeline/components/PipelineDiagram/Constants'
+import {
+  NodeWrapperEntity,
+  getBaseDotNotationWithoutEntityIdentifier
+} from '@pipeline/components/PipelineDiagram/Nodes/utils'
+import { SampleJSON, findDotNotationByRelativePath, generateCombinedPaths } from '../PipelineContext/helpers'
 
-// TODO: have to be auto generated from swagger/API
 export interface DependenciesWrapper {
   [key: string]: any
 }
@@ -77,7 +81,8 @@ export const getDefaultDependencyServiceState = (): StepState => ({
   isStepGroup: false,
   stepType: StepType.SERVICE
 })
-interface GetStepFromNodeProps {
+
+export interface GetStepFromNodeProps {
   stepData: ExecutionWrapper | undefined
   node?: any
   isComplete: boolean
@@ -92,48 +97,10 @@ interface RemoveStepOrGroupProps {
   entity: any
   skipFlatten?: boolean
   isRollback?: boolean
+  nodeDotNotationPath?: string
 }
 
 export type StepStateMap = Map<string, StepState>
-
-export const calculateDepthPS = (
-  node: ExecutionWrapperConfig,
-  stepStates: StepStateMap,
-  spaceAfterGroup: number,
-  SPACE_AFTER_GROUP: number
-): number => {
-  const depth = 1
-  let groupMaxDepth = 0
-  if (node.stepGroup) {
-    const stepState = stepStates.get(node.stepGroup.identifier)
-    // collapsed group
-    if (stepState && stepState.isStepGroupCollapsed) {
-      return 1
-    }
-    // expanded group
-    if (node.stepGroup.steps && node.stepGroup.steps.length > 0) {
-      groupMaxDepth = 0
-      node.stepGroup.steps?.forEach(nodeG => {
-        let depthInner = 0
-        if (nodeG?.parallel) {
-          // parallel
-          nodeG?.parallel.forEach(nodeP => {
-            depthInner += calculateDepthPS(nodeP, stepStates, SPACE_AFTER_GROUP, SPACE_AFTER_GROUP)
-          })
-        } else {
-          // step
-          depthInner = 1
-        }
-        groupMaxDepth = Math.max(groupMaxDepth, depthInner)
-      })
-    } else {
-      groupMaxDepth = 1
-    }
-    groupMaxDepth += spaceAfterGroup
-  }
-
-  return Math.max(groupMaxDepth, depth)
-}
 
 export const getDependencyFromNode = (
   servicesData: DependencyElement[] | undefined,
@@ -151,31 +118,74 @@ export const getDependencyFromNodeV1 = (
   return { node: _service, parent: servicesData }
 }
 
-export const getStepFromNode = ({
-  stepData,
-  node,
-  isComplete = false,
-  isFindParallelNode = false,
-  nodeId,
-  parentId,
-  isRollback
-}: GetStepFromNodeProps): { node: ExecutionWrapper | undefined; parent: ExecutionWrapper[] } => {
-  let data = stepData
-  if (parentId) {
-    const group = getStepFromId(data, defaultTo(parentId, ''), false, false, Boolean(isRollback)).node
-    if (group) {
-      data = group
+export function getNodeAndParent(
+  stepData: ExecutionWrapper | undefined,
+  dotNotation: string,
+  isComplete = false
+): { node: ExecutionWrapper | undefined; parent: ExecutionWrapper[] } {
+  const node = get(stepData, dotNotation)
+  let parent = []
+
+  const dotNotationWithEntityTypeRemoved = getBaseDotNotationWithoutEntityIdentifier(dotNotation)
+
+  const path = dotNotationWithEntityTypeRemoved.split('.')
+  const lastIndex = path.length - 1
+
+  for (let i = lastIndex; i >= 0; i--) {
+    const currentPath = path.slice(0, i).join('.') || dotNotationWithEntityTypeRemoved // for base level if splice returns "", use dotNotationWithEntityTypeRemoved ( for steps or rollbackSteps)
+    const currentObject = get(stepData, currentPath) as ExecutionWrapperConfig
+
+    if (currentObject) {
+      if (isComplete) {
+        parent = currentObject?.parallel || (currentObject as any)?.steps || currentObject
+        break
+      }
+      if (Array.isArray(currentObject)) {
+        parent = currentObject
+        break
+      } else if (isObject(currentObject)) {
+        if (currentObject?.parallel || currentObject?.stepGroup) {
+          parent = currentObject as any
+          break
+        }
+      }
     }
   }
-  return getStepFromId(
-    data,
-    nodeId || node?.getIdentifier() || '',
-    isComplete,
-    isFindParallelNode,
-    data?.rollbackSteps && isRollback ? isRollback : false
-  )
+
+  return { node, parent: parent || [] }
 }
 
+export function getNodeAndParentForDestinationDrop(
+  stepData: ExecutionWrapper,
+  dotNotation: string,
+  isRollback = false
+): {
+  node: ExecutionWrapper | undefined
+  parent: ExecutionWrapper[]
+} {
+  // Split the path into an array of parts
+  const paths = dotNotation.split('.')
+
+  let stepsPathIndex = paths.lastIndexOf('steps')
+  if (isRollback) {
+    // For rollback steps, it could be nested stepGroup steps or base path is rollbackSteps instead of steps
+    if (stepsPathIndex === -1) {
+      stepsPathIndex = paths.lastIndexOf('rollbackSteps')
+    }
+  }
+  // While dropping destination nodePath would be till last steps.{index} path
+  const nodePaths = paths.slice(0, stepsPathIndex + 2).join('.')
+  // While dropping destination parent would be till last steps path
+  const parentPaths = paths.slice(0, stepsPathIndex + 1).join('.')
+
+  const node = get(stepData, nodePaths)
+  const parent = get(stepData, parentPaths, [])
+
+  return { node, parent }
+}
+
+// Used for only stepSuffix
+/** @deprecated use getNodeAndParent() */
 export const getStepFromId = (
   stageData: ExecutionWrapper | undefined,
   id: string,
@@ -194,45 +204,31 @@ export const getStepFromId = (
     id,
     isComplete,
     isFindParallelNode,
-    undefined,
-    undefined,
-    undefined,
     Boolean(isRollback)
   )
 }
 
+/** @deprecated use getNodeAndParent() */
 const getStepFromIdInternal = (
   stepData: ExecutionWrapperConfig[] | undefined,
   id: string,
   isComplete = false,
   isFindParallelNode = false,
-  _parallelParent: ExecutionWrapperConfig | undefined = undefined,
-  _parallelParentIdx: number | undefined = undefined,
-  _parallelParentParent: ExecutionWrapperConfig[] | undefined = undefined,
   isRollback = false
 ): {
   node: ExecutionWrapper | undefined
   parent: ExecutionWrapper[]
-  parallelParent?: ExecutionWrapper
-  parallelParentIdx?: number
-  parallelParentParent?: ExecutionWrapper[]
 } => {
   let stepResp: ExecutionWrapper | StepElementConfig | ParallelStepElementConfig | StepGroupElementConfig | undefined =
     undefined
   let parent: ExecutionWrapper[] = []
-  let parallelParent: ExecutionWrapper | undefined = undefined
-  let parallelParentIdx: number | undefined
-  let parallelParentParent: ExecutionWrapper[] | undefined = undefined
-  stepData?.every((node, idx) => {
+  stepData?.every((node, _idx) => {
     if (node.step && node.step.identifier === id) {
       if (isComplete) {
         stepResp = node
       } else {
         stepResp = node.step
       }
-      parallelParent = _parallelParent
-      parallelParentParent = _parallelParentParent
-      parallelParentIdx = _parallelParentIdx
       parent = stepData
       return false
     } else if (node.parallel) {
@@ -254,18 +250,12 @@ const getStepFromIdInternal = (
                 stepResp = node.parallel
               }
               parent = stepData
-              parallelParent = _parallelParent
-              parallelParentParent = _parallelParentParent
-              parallelParentIdx = _parallelParentIdx
               return false
             } else {
               const response = getStepFromId(nodeP.stepGroup, id, isComplete, isFindParallelNode, isRollback)
               if (response.node) {
                 parent = response.parent
                 stepResp = response.node
-                parallelParent = response.parallelParent
-                parallelParentIdx = response.parallelParentIdx
-                parallelParentParent = response.parallelParentParent
                 return false
               }
             }
@@ -276,13 +266,10 @@ const getStepFromIdInternal = (
           return false
         }
       } else {
-        const response = getStepFromIdInternal(node.parallel, id, isComplete, false, node, idx, stepData, isRollback)
+        const response = getStepFromIdInternal(node.parallel, id, isComplete, false, isRollback)
         if (response.node) {
           stepResp = response.node
           parent = response.parent
-          parallelParent = response.parallelParent
-          parallelParentIdx = response.parallelParentIdx
-          parallelParentParent = response.parallelParentParent
           return false
         }
       }
@@ -294,25 +281,22 @@ const getStepFromIdInternal = (
           stepResp = node.stepGroup
         }
         parent = stepData
-        parallelParent = _parallelParent
-        parallelParentParent = _parallelParentParent
-        parallelParentIdx = _parallelParentIdx
         return false
       } else {
         const response = getStepFromId(node.stepGroup, id, isComplete, isFindParallelNode)
         if (response.node) {
           parent = response.parent
           stepResp = response.node
-          parallelParent = response.parallelParent
-          parallelParentIdx = response.parallelParentIdx
-          parallelParentParent = response.parallelParentParent
           return false
         }
       }
     }
     return true
   })
-  return { parent, node: stepResp, parallelParent, parallelParentIdx, parallelParentParent }
+  return {
+    parent,
+    node: stepResp
+  }
 }
 
 // identifier for Dependencies/Services group that is always present
@@ -439,12 +423,71 @@ export const updateStepsState = (
   }
 }
 
-export const removeStepOrGroup = ({
-  state,
-  entity,
-  skipFlatten = false,
-  isRollback = false
-}: RemoveStepOrGroupProps): boolean => {
+export function removeEntityByDotNotation(
+  modifiedJSON: ExecutionWrapper,
+  dotNotation: string
+): { data: ExecutionWrapper; isRemoved: boolean } {
+  const keys = dotNotation.split('.')
+  const nodePath = keys.slice(0, -1)
+  const parentNodePath = nodePath.slice(0, -1)
+  const lastKey = keys[keys.length - 1]
+
+  const currentNode = get(modifiedJSON, nodePath)
+  if (!currentNode) {
+    // Invalid node path, return the original JSON
+    return {
+      isRemoved: false,
+      data: modifiedJSON
+    }
+  }
+
+  if (Array.isArray(currentNode)) {
+    const index = Number(lastKey) // Convert lastKey to a number
+    currentNode.splice(index, 1) // Remove the specified index
+    const parentNode = get(modifiedJSON, parentNodePath)
+    if (currentNode.length === 1 && parentNode && parentNode.parallel && Array.isArray(parentNode.parallel)) {
+      // If the parallel array contains only one element and it has a parallel property,
+      // replace parallel with its contents
+      const parallelContents = currentNode[0]
+      set(modifiedJSON, parentNodePath, parallelContents)
+    }
+  } else if (typeof currentNode === 'object') {
+    delete currentNode[lastKey]
+  }
+
+  return {
+    isRemoved: true,
+    data: modifiedJSON
+  }
+}
+
+export function getClosestParentStepGroupPath(dotNotation: string): string {
+  const steps = dotNotation.split('.')
+  let parentPath = ''
+
+  for (let i = 0; i < steps.length; i++) {
+    if (steps[i] === NodeWrapperEntity.stepGroup) {
+      parentPath = steps.slice(0, i + 1).join('.')
+    }
+  }
+
+  return parentPath
+}
+
+export function getClosestParallelPath(dotNotation: string): string {
+  const steps = dotNotation.split('.')
+  let parentPath = ''
+
+  for (let i = 0; i < steps.length; i++) {
+    if (steps[i] === 'parallel') {
+      parentPath = steps.slice(0, i + 1).join('.')
+    }
+  }
+
+  return parentPath
+}
+
+export const removeStepOrGroupViaPath = ({ state, entity }: RemoveStepOrGroupProps): boolean => {
   // 1. services
   const servicesData = state.dependenciesData
   if (servicesData) {
@@ -461,43 +504,14 @@ export const removeStepOrGroup = ({
   }
 
   // 2. steps
-  let isRemoved = false
-  let data: ExecutionWrapper = state.stepsData
-  // const layer = entity.getParent()
-  if (entity?.node?.parentIdentifier) {
-    const node = getStepFromId(data, defaultTo(entity?.node?.parentIdentifier, ''), false, false, isRollback).node
-    if (node) {
-      data = node
-    }
-  }
-  const response = getStepFromId(
-    data,
-    entity?.node?.identifier,
-    true,
-    false,
-    data?.rollbackSteps && isRollback ? isRollback : false
-  )
-  if (response.node) {
-    const index = response.parent.indexOf(response.node)
-    if (index > -1) {
-      response.parent.splice(index, 1)
-      // NOTE: if there is one item in parallel array, we are removing parallel array
-      if (
-        !skipFlatten &&
-        response.parallelParent &&
-        (response.parallelParent as ExecutionWrapperConfig).parallel?.length === 1
-      ) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const stepToReAttach = (response.parallelParent as ExecutionWrapperConfig).parallel![0]
-        // reattach step
-        if (response.parallelParentParent && response.parallelParentIdx !== undefined) {
-          response.parallelParentParent[response.parallelParentIdx] = stepToReAttach
-        }
-      }
-      isRemoved = true
-    }
-  }
-  return isRemoved
+  // const isRemoved = false
+  const data: ExecutionWrapper = state.stepsData
+  const nodeDotNotationPath = entity?.node?.data?.nodeStateMetadata?.dotNotationPath
+  const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+  const nodePathWithoutEntity = getBaseDotNotationWithoutEntityIdentifier(stepNodePath)
+  const { isRemoved: isRemovedSuccessful } = removeEntityByDotNotation(data, nodePathWithoutEntity)
+
+  return isRemovedSuccessful
 }
 
 export const addService = (data: DependencyElement[], service: DependencyElement): void => {
@@ -509,33 +523,64 @@ export const addStepOrGroup = (
   data: ExecutionWrapper,
   step: ExecutionWrapperConfig,
   isParallel: boolean,
-  isRollback: boolean
+  isRollback: boolean,
+  isDropped?: boolean
 ): void => {
+  // Drop node works only for Link and CreateNew - Drop on node has inline logic
+  // Drop node recalculate paths and relativePath due to json changed
+  const dotNotationObjects = generateCombinedPaths(data as SampleJSON)
+
   if (entity?.entityType === DiagramType.Link) {
     const sourceNode = entity?.isRightAddIcon ? entity?.node : entity?.node?.prevNode
     const targetNode = entity?.isRightAddIcon ? entity?.node?.nextNode : entity?.node
-    if (entity?.node?.parentIdentifier) {
-      const node = getStepFromId(data, defaultTo(entity?.node?.parentIdentifier, ''), false, false, isRollback).node
-      if (node) {
-        data = node
-      }
+    let response
+    const nodeDotNotationPath1 = sourceNode?.data?.nodeStateMetadata?.dotNotationPath
+
+    // Drop node recalculate paths and relativePath due to json changed
+
+    const dropNodePath =
+      findDotNotationByRelativePath(
+        dotNotationObjects,
+        getStepsPathWithoutStagePath(sourceNode?.data?.nodeStateMetadata?.relativeBasePath),
+        getStepsPathWithoutStagePath(nodeDotNotationPath1)
+      ) ||
+      findDotNotationByRelativePath(
+        dotNotationObjects,
+        getStepsPathWithoutStagePath(sourceNode?.data?.nodeStateMetadata?.relativeBasePath)
+      )
+
+    const stepNodePath1 = isDropped
+      ? getBaseDotNotationWithoutEntityIdentifier(dropNodePath)
+      : getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath1))
+
+    if (sourceNode?.children?.length) {
+      response = getNodeAndParentForDestinationDrop(data, stepNodePath1, isRollback)
+    } else {
+      response = getNodeAndParent(data, getBaseDotNotationWithoutEntityIdentifier(stepNodePath1), true)
     }
-    let response = getStepFromId(
-      data,
-      defaultTo(sourceNode?.identifier, ''),
-      true,
-      sourceNode?.children?.length,
-      data?.rollbackSteps && isRollback ? isRollback : false
-    )
+
     let next = 1
     if (!response.node) {
-      response = getStepFromId(
-        data,
-        defaultTo(targetNode?.identifier, ''),
-        true,
-        targetNode?.children?.length,
-        data?.rollbackSteps && isRollback ? isRollback : false
+      const nodeDotNotationPath = targetNode?.data?.nodeStateMetadata?.dotNotationPath
+
+      // Drop case
+      const targetPath = findDotNotationByRelativePath(
+        dotNotationObjects,
+        getStepsPathWithoutStagePath(targetNode?.data?.nodeStateMetadata?.relativeBasePath),
+        getStepsPathWithoutStagePath(nodeDotNotationPath)
       )
+
+      const stepNodePath = isDropped
+        ? getBaseDotNotationWithoutEntityIdentifier(targetPath)
+        : getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+
+      if (targetNode?.children?.length) {
+        //isFindParallelNode case
+        response = getNodeAndParentForDestinationDrop(data, stepNodePath, isRollback)
+      } else {
+        response = getNodeAndParent(data, getBaseDotNotationWithoutEntityIdentifier(stepNodePath), true)
+      }
+
       next = 0
     }
     if (response.node) {
@@ -546,8 +591,23 @@ export const addStepOrGroup = (
     }
   } else if (entity?.entityType === DiagramType.CreateNew) {
     // Steps if you are under step group
-    const groupId = entity?.identifier
-    const node = getStepFromId(data, groupId, false, false, isRollback).node
+    const nodeDotNotationPath =
+      entity?.data?.nodeStateMetadata?.dotNotationPath ||
+      entity?.data?.destination?.baseFqn ||
+      entity?.data?.node?.baseFqn || // stepGroup on extreme left case
+      entity?.data?.node?.data?.nodeStateMetadata?.dotNotationPath // for stepGroup empty state
+
+    const relativePath = entity?.data?.destination?.relativeBasePath
+    const dropNodePath = findDotNotationByRelativePath(dotNotationObjects, getStepsPathWithoutStagePath(relativePath))
+
+    const stepNodePath = isDropped ? dropNodePath : getStepsPathWithoutStagePath(nodeDotNotationPath)
+    let node = getNodeAndParent(data, getBaseDotNotationWithoutEntityIdentifier(stepNodePath), false).node
+
+    if (node?.stepGroup) {
+      // dropping in empty stepGroup
+      node = node.stepGroup
+    }
+
     if (entity?.node?.parentIdentifier) {
       if (isExecutionElementConfig(node) && node?.steps) {
         node.steps.push(step)
@@ -570,10 +630,9 @@ export const addStepOrGroup = (
     }
   } else if (entity?.entityType === DiagramType.Default) {
     if (isParallel) {
-      const response = getStepFromId(data, entity.identifier, true, true, isRollback) as {
-        node: ExecutionWrapperConfig
-        parent: ExecutionWrapperConfig[]
-      }
+      const nodeDotNotationPath = entity?.node?.data?.nodeStateMetadata?.dotNotationPath
+      const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+      const response = getNodeAndParentForDestinationDrop(data, stepNodePath, isRollback)
       if (response.node) {
         if (response.node.parallel && response.node.parallel.length > 0) {
           response.node.parallel.push(step)
@@ -593,10 +652,10 @@ export const addStepOrGroup = (
     }
   } else if (entity?.entityType === DiagramType.StepGroupNode) {
     if (isParallel) {
-      const response = getStepFromId(data, defaultTo(entity.identifier, ''), true, true, isRollback) as {
-        node: ExecutionWrapperConfig
-        parent: ExecutionWrapperConfig[]
-      }
+      const nodeDotNotationPath = entity?.node?.data?.nodeStateMetadata?.dotNotationPath
+      const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(nodeDotNotationPath))
+      const response = getNodeAndParentForDestinationDrop(data, stepNodePath, isRollback)
+
       if (response.node) {
         if (response.node.parallel && response.node.parallel.length > 0) {
           response.node.parallel.push(step)
@@ -629,4 +688,49 @@ export const isServiceDependenciesSupported = (stageType: string): boolean => {
     return true
   }
   return false
+}
+
+/**
+ * Get the parent path for YAML data structure based on whether it belongs to the provisioner or execution steps.
+ *
+ * @param {boolean} isProvisioner - A boolean flag to indicate if the path belongs to the dynamic provisioner steps.
+ * @returns {string} The parent path for the specified type of steps.
+ */
+export const getParentPath = (isProvisioner?: boolean): string => {
+  if (isProvisioner) {
+    return 'stage.spec.environment.provisioner'
+  }
+  return 'stage.spec.execution'
+}
+
+/**
+ *
+ * @param {string} path - The input path to extract the node path from "steps" or "rollbackSteps".
+ * @returns {string} The node path from "steps" or "rollbackSteps" under "execution" or "provisioners".
+ *
+ * @example
+ * // Returns "steps.1.step.0.stepGroup.steps.3.steps.7.step"
+ * const path = "stage.execution.steps.1.step.0.stepGroup.steps.3.steps.7.step";
+ */
+export const getStepsPathWithoutStagePath = (path = ''): string => {
+  const isProvisioner = path?.includes('.provisioner.')
+
+  if (isProvisioner) {
+    return path.replace(/.*?(\.provisioner\.)/, '')
+  } else {
+    return path.replace(/.*?(\.execution\.)/, '')
+  }
+}
+
+/**
+ * Converts a string containing square brackets with numeric indices into dot notation.
+ * @param {string} path - The input string containing square brackets with numeric indices.
+ * @returns {string} The input string converted to dot notation path.
+ *
+ * @example
+ * const path = "steps[1].step[0].stepGroup.steps[3].steps[7].step";
+ * // Returns "steps.1.step.0.stepGroup.steps.3.steps.7.step"
+ */
+export const convertToDotNotation = (path = ''): string => {
+  return path.replace(/\[(\d+)\]/g, '.$1')
 }

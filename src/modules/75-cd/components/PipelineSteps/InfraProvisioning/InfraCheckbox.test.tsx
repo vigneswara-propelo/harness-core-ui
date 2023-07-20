@@ -10,6 +10,7 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { InfraProvisioning } from './InfraProvisioning'
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
@@ -42,15 +43,17 @@ describe('InfraProvisioning', () => {
 
   test(' click on checkbox- should open up prov popup', async () => {
     const { container } = render(
-      <TestStepWidget
-        initialValues={{
-          provisioner: {},
-          provisionerEnabled: false,
-          provisionerSnippetLoading: false
-        }}
-        type={StepType.InfraProvisioning}
-        stepViewType={StepViewType.Edit}
-      />
+      <NodeMetadataProvider>
+        <TestStepWidget
+          initialValues={{
+            provisioner: {},
+            provisionerEnabled: false,
+            provisionerSnippetLoading: false
+          }}
+          type={StepType.InfraProvisioning}
+          stepViewType={StepViewType.Edit}
+        />
+      </NodeMetadataProvider>
     )
 
     await act(async () => {

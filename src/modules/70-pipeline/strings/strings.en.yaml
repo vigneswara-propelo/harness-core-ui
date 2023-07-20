@@ -593,6 +593,7 @@ selectOrCreatePipeline:
   pipelineNameRequired: Please select a pipeline
   setupHeader: Create or Select a Pipeline
   selectAPipeline: Select an existing Pipeline
+sameNodeExistsAtDropLocation: A node with same identifier already exists at drop location
 createANewPipeline: Create a new pipeline
 createPipeline:
   setupHeader: Setup Pipeline

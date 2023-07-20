@@ -30,11 +30,12 @@ import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/CommonUtils/CommonUtils'
+import { updateStepWithinStageViaPath } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
+import { getParentPath } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
-import { getBaseFqnWithoutEntityIdentifier, getPositionOfAddIcon } from '../utils'
+import { getBaseDotNotationWithoutEntityIdentifier, getPositionOfAddIcon } from '../utils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { DiagramDrag, DiagramType, Event, IS_NODE_TOGGLE_DISABLED } from '../../Constants'
@@ -54,7 +55,6 @@ export function StepGroupNode(props: any): JSX.Element {
   )
   const {
     state: {
-      pipelineView: { isRollbackToggled },
       pipelineView,
       selectionState: { selectedStageId: selectedStageIdentifier }
     },
@@ -131,8 +131,11 @@ export function StepGroupNode(props: any): JSX.Element {
 
   const nodeType = Object.keys(props?.data?.stepGroup?.strategy || {})[0]
   const showExecutionMetaDataForChainedPipeline = props?.type === StageType.PIPELINE && !!executionMetaData
-  const baseFqn = getBaseFqnWithoutEntityIdentifier(props?.data?.fqnPath)
-
+  const isSGUsedInProvisioner = props?.data?.nodeStateMetadata?.dotNotationPath?.includes('provisioner')
+  // To be used for empty state stepGroup create-node
+  const baseFqn = getBaseDotNotationWithoutEntityIdentifier(props?.data?.nodeStateMetadata?.dotNotationPath)
+  const relativeBasePath = props?.data?.nodeStateMetadata?.relativeBasePath || ''
+  const relativeFQNPath = getBaseDotNotationWithoutEntityIdentifier(props?.data?.nodeStateMetadata?.relativeBasePath)
   React.useEffect(() => {
     // collapse stepGroup template
     if (!isEmpty(props?.data?.stepGroup?.template)) {
@@ -153,12 +156,12 @@ export function StepGroupNode(props: any): JSX.Element {
     const processingNodeIdentifier = props.identifier
     if (processingNodeIdentifier) {
       const stageData = produce(selectedStage, draft => {
-        if (draft?.stage?.spec?.execution) {
-          updateStepWithinStage(
-            draft.stage.spec.execution,
-            processingNodeIdentifier,
+        if (get(draft, getParentPath(isSGUsedInProvisioner))) {
+          updateStepWithinStageViaPath(
+            get(draft, getParentPath(isSGUsedInProvisioner)),
             originalStepData,
-            !!isRollbackToggled
+            props?.data?.nodeStateMetadata?.relativeBasePath,
+            props?.data?.nodeStateMetadata?.dotNotationPath
           )
         }
       })
@@ -321,7 +324,7 @@ export function StepGroupNode(props: any): JSX.Element {
               </div>
             )}
             {!isToggleAllowed && (
-              <div className={defaultCss.switch} onClick={onToggleClick}>
+              <div className={defaultCss.switch} data-testid="toggle-stepGroup-node" onClick={onToggleClick}>
                 <Switch aria-label="Global Freeze Toggle" checked={!whenCondition} />
               </div>
             )}
@@ -369,6 +372,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   <Text
                     data-nodeid={props.id}
                     className={css.cursor}
+                    data-test-id="step-group-name"
                     onMouseEnter={event => {
                       event.stopPropagation()
                       props?.fireEvent?.({
@@ -453,6 +457,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 setVisibilityOfAdd={setVisibilityOfAdd}
                 type={props?.type}
                 baseFqn={baseFqn}
+                relativeBasePath={relativeBasePath}
               />
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (
@@ -486,6 +491,7 @@ export function StepGroupNode(props: any): JSX.Element {
               fireEvent={props.fireEvent}
               identifier={props.identifier}
               prevNodeIdentifier={props.prevNodeIdentifier as string}
+              relativeBasePath={relativeFQNPath}
               style={{ left: getPositionOfAddIcon(props), top: isNestedStepGroup ? '48px' : '22px' }}
               className={cx(defaultCss.addNodeIcon, 'stepAddIcon', defaultCss.stepGroupAddIcon)}
             />
@@ -501,6 +507,7 @@ export function StepGroupNode(props: any): JSX.Element {
               fireEvent={props.fireEvent}
               isRightAddIcon={true}
               identifier={props.identifier}
+              relativeBasePath={relativeFQNPath}
               prevNodeIdentifier={props.prevNodeIdentifier as string}
               className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
             />
@@ -535,7 +542,8 @@ export function StepGroupNode(props: any): JSX.Element {
                     identifier: props?.identifier,
                     parentIdentifier: props?.parentIdentifier,
                     entityType: DiagramType.StepGroupNode,
-                    node: props
+                    node: props,
+                    relativeBasePath: relativeFQNPath
                   }
                 })
               }}

@@ -58,6 +58,7 @@ import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hoo
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
+import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { SettingType } from '@common/constants/Utils'
 import { useGetSettingsList } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -764,97 +765,99 @@ export function PipelineCanvas({
 
   return (
     <PipelineVariablesContextProvider pipeline={pipeline} storeMetadata={storeMetadata}>
-      <div
-        className={cx(Classes.POPOVER_DISMISS, css.content)}
-        onClick={e => {
-          e.stopPropagation()
-        }}
-      >
-        <NavigationCheck
-          when={getOtherModal && pipeline.identifier !== ''}
-          shouldBlockNavigation={nextLocation => {
-            let localUpdated = isUpdated
-            const matchDefault = matchPath(nextLocation.pathname, {
-              path: toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
-              exact: true
-            })
+      <NodeMetadataProvider>
+        <div
+          className={cx(Classes.POPOVER_DISMISS, css.content)}
+          onClick={e => {
+            e.stopPropagation()
+          }}
+        >
+          <NavigationCheck
+            when={getOtherModal && pipeline.identifier !== ''}
+            shouldBlockNavigation={nextLocation => {
+              let localUpdated = isUpdated
+              const matchDefault = matchPath(nextLocation.pathname, {
+                path: toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
+                exact: true
+              })
 
-            // This is special handler when user update yaml and immediately click on run
-            // With the new flow  (where user can not run without saving) this block may not be required at all
-            if (isYaml && yamlHandler && isYamlEditable && !localUpdated) {
-              try {
-                const parsedYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
-                if (!parsedYaml) {
-                  clear()
-                  showError(getString('invalidYamlText'), undefined, 'pipeline.parse.yaml.error')
-                  return true
-                }
-                if (yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+              // This is special handler when user update yaml and immediately click on run
+              // With the new flow  (where user can not run without saving) this block may not be required at all
+              if (isYaml && yamlHandler && isYamlEditable && !localUpdated) {
+                try {
+                  const parsedYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
+                  if (!parsedYaml) {
+                    clear()
+                    showError(getString('invalidYamlText'), undefined, 'pipeline.parse.yaml.error')
+                    return true
+                  }
+                  if (yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+                    setYamlError(true)
+                    return true
+                  }
+                  localUpdated = !isEqual(omit(originalPipeline, 'repo', 'branch'), parsedYaml.pipeline)
+                  // If selected branch and branch are not equal, then fetching is in progress,
+                  // and below code will call updatePipeline with older data and set loading as false while fetching
+                  selectedBranch === branch && updatePipeline(parsedYaml.pipeline)
+                } catch (e) {
                   setYamlError(true)
                   return true
                 }
-                localUpdated = !isEqual(omit(originalPipeline, 'repo', 'branch'), parsedYaml.pipeline)
-                // If selected branch and branch are not equal, then fetching is in progress,
-                // and below code will call updatePipeline with older data and set loading as false while fetching
-                selectedBranch === branch && updatePipeline(parsedYaml.pipeline)
-              } catch (e) {
-                setYamlError(true)
-                return true
               }
-            }
-            setYamlError(false)
-            const shouldBlockNavigation =
-              !matchDefault?.isExact &&
-              localUpdated &&
-              !isReadonly &&
-              !(pipelineIdentifier === DefaultNewPipelineId && isEmpty(pipeline?.name)) &&
-              !(useTemplate && isEmpty(pipeline?.template))
-            if (!shouldBlockNavigation) {
-              !matchDefault?.isExact && deletePipelineCache(gitDetails)
-            }
-            return shouldBlockNavigation
-          }}
-          textProps={{
-            contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),
-            titleText: isYamlError ? getString('navigationYamlErrorTitle') : getString('navigationCheckTitle')
-          }}
-          navigate={newPath => {
-            const isPipeline = matchPath(newPath, {
-              path: toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
-              exact: true
-            })
-            !isPipeline?.isExact && deletePipelineCache(gitDetails)
-            history.push(newPath)
-          }}
-        />
-        <Layout.Vertical height={'100%'}>
-          <PipelineCanvasHeader
-            isPipelineRemote={!!isPipelineRemote}
-            isGitSyncEnabled={!!isGitSyncEnabled}
-            onGitBranchChange={onGitBranchChange}
-            setModalMode={setModalMode}
-            setYamlError={setYamlError}
-            showModal={showModal}
-            disableVisualView={disableVisualView}
-            toPipelineStudio={toPipelineStudio}
-            openRunPipelineModal={openRunPipelineModal}
+              setYamlError(false)
+              const shouldBlockNavigation =
+                !matchDefault?.isExact &&
+                localUpdated &&
+                !isReadonly &&
+                !(pipelineIdentifier === DefaultNewPipelineId && isEmpty(pipeline?.name)) &&
+                !(useTemplate && isEmpty(pipeline?.template))
+              if (!shouldBlockNavigation) {
+                !matchDefault?.isExact && deletePipelineCache(gitDetails)
+              }
+              return shouldBlockNavigation
+            }}
+            textProps={{
+              contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),
+              titleText: isYamlError ? getString('navigationYamlErrorTitle') : getString('navigationCheckTitle')
+            }}
+            navigate={newPath => {
+              const isPipeline = matchPath(newPath, {
+                path: toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
+                exact: true
+              })
+              !isPipeline?.isExact && deletePipelineCache(gitDetails)
+              history.push(newPath)
+            }}
           />
-          {remoteFetchError ? (
-            handleFetchFailure(
-              'pipeline',
-              pipelineIdentifier,
-              !isGitSyncEnabled && storeType !== StoreType.REMOTE,
-              remoteFetchError as unknown as Error
-            )
-          ) : (
-            <Container className={css.builderContainer}>
-              {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
-            </Container>
-          )}
-        </Layout.Vertical>
-      </div>
-      <RightBar />
-      {CDS_PIPELINE_STUDIO_UPGRADES && <StageConfigurationDrawer />}
+          <Layout.Vertical height={'100%'}>
+            <PipelineCanvasHeader
+              isPipelineRemote={!!isPipelineRemote}
+              isGitSyncEnabled={!!isGitSyncEnabled}
+              onGitBranchChange={onGitBranchChange}
+              setModalMode={setModalMode}
+              setYamlError={setYamlError}
+              showModal={showModal}
+              disableVisualView={disableVisualView}
+              toPipelineStudio={toPipelineStudio}
+              openRunPipelineModal={openRunPipelineModal}
+            />
+            {remoteFetchError ? (
+              handleFetchFailure(
+                'pipeline',
+                pipelineIdentifier,
+                !isGitSyncEnabled && storeType !== StoreType.REMOTE,
+                remoteFetchError as unknown as Error
+              )
+            ) : (
+              <Container className={css.builderContainer}>
+                {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
+              </Container>
+            )}
+          </Layout.Vertical>
+        </div>
+        <RightBar />
+        {CDS_PIPELINE_STUDIO_UPGRADES && <StageConfigurationDrawer />}
+      </NodeMetadataProvider>
     </PipelineVariablesContextProvider>
   )
 }

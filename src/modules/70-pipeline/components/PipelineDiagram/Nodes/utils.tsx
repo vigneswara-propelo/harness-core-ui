@@ -9,12 +9,11 @@ import { isNumber } from 'lodash-es'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { dragPlaceholderImageBase64 } from './assets/dragImageBase64'
 import { dragStagePlaceholderImageBase64 } from './assets/dragStageImageBase64'
-import type { Dimension } from './NodeDimensionStore'
 
-interface FqnPathProps {
+interface DotNotationPathProps {
   identifier: string
   entityType?: string
-  baseFqn?: string
+  baseDotNotation?: string
 }
 
 export enum NodeEntity {
@@ -23,10 +22,8 @@ export enum NodeEntity {
 }
 export enum NodeWrapperEntity {
   step = 'step',
-  stepGroup = 'stepGroup'
-}
-export interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
-  marginLeft?: string
+  stepGroup = 'stepGroup',
+  stage = 'stage'
 }
 
 export const COLLAPSED_MATRIX_NODE_LENGTH = 8
@@ -69,38 +66,6 @@ export const transformMatrixLabels = (nodeData: string): string => {
   }
 }
 
-export function getSGDimensions(nodeDimensionMetaData: Dimension, index: number): LayoutStyles {
-  if (nodeDimensionMetaData?.isNodeCollapsed) {
-    return {
-      height: 118,
-      width: 134
-    }
-  }
-  const height = nodeDimensionMetaData?.height + 68 + (index > 0 ? 60 : 0)
-  const width = nodeDimensionMetaData?.width + 82 + (index > 0 ? 80 : 0)
-
-  return { height, width }
-}
-
-export const getMatrixHeight = (
-  nodeHeight: number,
-  maxChildLength: number,
-  parallelism: number,
-  showAllNodes: boolean
-): number => {
-  if (parallelism === 0 || maxChildLength === parallelism) {
-    // parallel case
-    return maxChildLength * nodeHeight
-  } else if (!showAllNodes && maxChildLength < parallelism) {
-    // collapsed mode, single row
-    return nodeHeight
-  } else {
-    return (
-      (Math.floor(maxChildLength / parallelism) + Math.ceil((maxChildLength % parallelism) / parallelism)) * nodeHeight
-    )
-  }
-}
-
 export const attachDragImageToEventHandler = (event: React.DragEvent<HTMLDivElement>, type?: NodeEntity): void => {
   // set drag image preview to custom icon in case of safari browser, as safari blocks image preview if dom tree have transform property on any parent
   if (navigator.userAgent.search('Safari') >= 0 && navigator.userAgent.search('Chrome') < 0) {
@@ -116,15 +81,15 @@ export const attachDragImageToEventHandler = (event: React.DragEvent<HTMLDivElem
   }
 }
 
-export const getEntityIdentifierBasedFqnPath = ({
-  baseFqn,
+export const getEntityIdentifierBasedDotNotationPath = ({
+  baseDotNotation,
   identifier,
   entityType = NodeWrapperEntity.step
-}: FqnPathProps): string => {
-  return `${baseFqn}.${entityType}.${identifier}`
+}: DotNotationPathProps): string => {
+  return `${baseDotNotation}.${entityType}.${identifier}`
 }
 
-export const getBaseFqnWithoutEntityIdentifier = (fqn = ''): string => {
-  const lastDotIndex = fqn.lastIndexOf('.')
-  return lastDotIndex !== -1 ? fqn.substring(0, lastDotIndex) : fqn
+export const getBaseDotNotationWithoutEntityIdentifier = (dotNotation = ''): string => {
+  const lastDotIndex = dotNotation.lastIndexOf('.')
+  return lastDotIndex !== -1 ? dotNotation.substring(0, lastDotIndex) : dotNotation
 }
