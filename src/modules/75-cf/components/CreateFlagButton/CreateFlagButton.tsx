@@ -11,6 +11,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -26,6 +27,7 @@ const CreateFlagButton: FC<CreateFlagButtonProps> = ({ disabled, showModal, isLi
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
   const { trackEvent } = useTelemetry()
+  const { activeEnvironment } = useActiveEnvironment()
 
   const planEnforcementProps = isPlanEnforcementEnabled
     ? {
@@ -54,7 +56,9 @@ const CreateFlagButton: FC<CreateFlagButtonProps> = ({ disabled, showModal, isLi
       margin={isLinkVariation ? { top: 'xlarge' } : {}}
       permission={{
         permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-        resource: { resourceType: ResourceType.ENVIRONMENT }
+        resource: activeEnvironment
+          ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+          : { resourceType: ResourceType.FEATUREFLAG }
       }}
       {...planEnforcementProps}
     />
