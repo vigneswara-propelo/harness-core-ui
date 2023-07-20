@@ -75,12 +75,7 @@ exports[`Remote Git Sync Input Set Error Exp should open delete input set modal 
         <div
           class="Layout--vertical StyledProps--main ConfirmationDialog--body StyledProps--font StyledProps--font-variation-body StyledProps--color StyledProps--color-black StyledProps--margin-top-large StyledProps--margin-bottom-xxlarge"
         >
-          <p
-            class="StyledProps--font Text--lineclamp StyledProps--main"
-            style="--text-line-clamp: 5;"
-          >
-            pipeline.inputSets.invalidOverlayISDesc1
-          </p>
+          pipeline.inputSets.invalidOverlayISDesc1
         </div>
         <div
           class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
