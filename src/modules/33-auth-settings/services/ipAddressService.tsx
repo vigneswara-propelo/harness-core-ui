@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { getRequestOptions } from 'framework/app/App'
+
 export const getBugsnagCallback = (username: string, url: string, response: Response, accountId: string) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return function (event: any) {
@@ -19,15 +21,16 @@ export const getBugsnagCallback = (username: string, url: string, response: Resp
 }
 
 export const fetchCurrentIp = async (username: string, accountId: string): Promise<string | undefined> => {
-  const url = 'https://api.ipify.org/'
+  const url = window.location.origin + window.getApiBaseUrl('v1/current-ip')
   let response: Response
-  const currentIpPromise = await fetch(url)
+  const { headers } = getRequestOptions()
+  const currentIpPromise = await fetch(url, { headers })
     .then((res: Response) => {
       response = res.clone()
-      return res.text()
+      return res.json()
     })
-    .then(ip => {
-      return ip
+    .then(resJson => {
+      return resJson?.resource?.ipAddress
     })
     .catch(error => {
       const bugsnagCallback = getBugsnagCallback(username, url, response, accountId)

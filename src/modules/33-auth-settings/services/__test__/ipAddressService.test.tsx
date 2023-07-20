@@ -7,15 +7,19 @@
 
 import fetchMock from 'jest-fetch-mock'
 import { fetchCurrentIp, getBugsnagCallback } from '../ipAddressService'
+import { fetchCurrentIpMock } from '../mocks/ipAddressService.mock'
 fetchMock.enableMocks()
 
 describe('fetchCurrentIp', () => {
   beforeEach(() => {
     fetchMock.resetMocks()
+    window.getApiBaseUrl = jest.fn().mockImplementationOnce(str => {
+      return `/prefix/${str}`
+    })
   })
 
   test('should return the current IP address', async () => {
-    fetchMock.mockResponseOnce('192.168.0.1')
+    fetchMock.mockResponseOnce(JSON.stringify(fetchCurrentIpMock))
 
     const username = 'testUser'
     const accountId = '123'
@@ -23,7 +27,7 @@ describe('fetchCurrentIp', () => {
     const currentIp = await fetchCurrentIp(username, accountId)
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
-    expect(fetchMock).toHaveBeenCalledWith('https://api.ipify.org/')
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost/prefix/v1/current-ip', { headers: {} })
 
     expect(currentIp).toBe('192.168.0.1')
   })
@@ -38,7 +42,7 @@ describe('fetchCurrentIp', () => {
     const currentIp = await fetchCurrentIp(username, accountId)
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
-    expect(fetchMock).toHaveBeenCalledWith('https://api.ipify.org/')
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost/prefix/v1/current-ip', { headers: {} })
 
     expect(currentIp).toBeUndefined()
   })
@@ -61,7 +65,7 @@ describe('fetchCurrentIp', () => {
     const currentIp = await fetchCurrentIp(username, accountId)
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
-    expect(fetchMock).toHaveBeenCalledWith('https://api.ipify.org/')
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost/prefix/v1/current-ip', { headers: {} })
 
     expect(currentIp).toBeUndefined()
     expect(notifiedCalled).toBeTruthy()
@@ -72,7 +76,7 @@ describe('fetchCurrentIp', () => {
 describe('getBugsnagCallback', () => {
   test('should return a function with the correct event settings', () => {
     const username = 'testUser'
-    const url = 'https://api.ipify.org/'
+    const url = 'http://localhost/prefix/v1/current-ip'
     const response = { status: 500 }
     const accountId = '123'
 
