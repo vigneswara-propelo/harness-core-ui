@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { lazy } from 'react'
 import { Redirect, Route, useParams } from 'react-router-dom'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -16,9 +16,15 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
-import SSCASideNav from './components/SSCASideNav'
-import { SSCAApp } from './components/SSCAApp'
 import './components/PipelineSteps'
+import { Duration } from '@common/exports'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import SSCASideNav from './components/SSCASideNav'
+import { SSCACustomMicroFrontendProps } from './interfaces/SSCACustomMicroFrontendProps.types'
+
+// eslint-disable-next-line import/no-unresolved
+const RemoteSSCAApp = lazy(() => import('ssca/MicroFrontendApp'))
 
 const SSCASideNavProps: SidebarContext = {
   navComponent: SSCASideNav,
@@ -64,7 +70,11 @@ export default (
         routes.toProjectOverview({ ...projectPathProps, ...moduleParams })
       ]}
     >
-      <SSCAApp />
+      <ChildAppMounter<SSCACustomMicroFrontendProps>
+        ChildApp={RemoteSSCAApp}
+        customHooks={{ useQueryParams, useUpdateQueryParams }}
+        customComponents={{ Duration }}
+      />
     </RouteWithLayout>
 
     <Route path="/account/:accountId/:module(ssca)">

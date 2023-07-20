@@ -24,7 +24,7 @@ module.exports = {
       base: `{getConfig("api")}`
     }
   },
-  'servicediscovery': {
+  servicediscovery: {
     output: 'src/services/servicediscovery/index.tsx',
     url: 'http://104.198.104.46/servicediscovery/swagger/doc.json',
     transformer: 'scripts/swagger-transform.js',
@@ -32,7 +32,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("servicediscovery")}`
     },
-    customGenerator: arg => customGenerator(arg, "getConfig('servicediscovery')"),
+    customGenerator: arg => customGenerator(arg, "getConfig('servicediscovery')")
   },
   'cd-ng': {
     output: 'src/services/cd-ng/index.tsx',
@@ -247,15 +247,6 @@ module.exports = {
     customImport: `import { getConfig } from "../config";`,
     customProps: {
       base: `{getConfig("pm/api/v1")}`
-    }
-  },
-  ssca: {
-    output: 'src/services/ssca/index.tsx',
-    file: 'src/services/ssca/swagger.json',
-    transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig } from "../config";`,
-    customProps: {
-      base: `{getConfig("ssca")}`
     }
   }
 }
