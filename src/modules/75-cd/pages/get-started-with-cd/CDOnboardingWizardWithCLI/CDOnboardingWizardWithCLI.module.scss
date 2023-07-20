@@ -111,7 +111,9 @@
 }
 
 .tabsLine {
-  border-bottom: solid 1px var(--grey-100);
+  :global(.bp3-tab-list) {
+    border-bottom: solid 1px var(--grey-100);
+  }
 }
 .alignTitle {
   display: flex;

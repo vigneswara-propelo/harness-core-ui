@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, ButtonVariation, Button, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetPipeline } from 'services/pipeline-ng'
@@ -51,14 +51,17 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
   }
   return (
     <Layout.Vertical className={css.verifyPipeline} margin={{ top: 'xlarge', bottom: 'xlarge' }}>
+      <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }} margin={{ bottom: 'large' }}>
+        <String
+          color={Color.BLACK}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.verifyPipeline"
+        />
+      </Text>
       {!pipelineStepsdata?.pipelineVerified && !data?.data && !error && (
         <Layout.Horizontal className={css.verifyPipelineText}>
           <Button width={80} onClick={refetchPipeline} variation={ButtonVariation.PRIMARY}>
             {getString('verify')}
           </Button>
-          <Layout.Horizontal padding={{ left: 'large' }}>
-            <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.verifyPipeline"></String>
-          </Layout.Horizontal>
         </Layout.Horizontal>
       )}
       {error && !pipelineStepsdata?.pipelineVerified && <TroubleShootPipeline refetchPipeline={refetchPipeline} />}
@@ -101,10 +104,10 @@ function TroubleShootPipeline({ refetchPipeline }: { refetchPipeline: () => Prom
         <Button variation={ButtonVariation.SECONDARY} onClick={refetchPipeline}>{`${getString('retry')} ${getString(
           'common.purpose.cv.verification'
         )}`}</Button>
-
-        <Button variation={ButtonVariation.LINK}>{`${getString('retry')} ${getString(
+        {/* to be enabled later */}
+        {/* <Button variation={ButtonVariation.LINK}>{`${getString('retry')} ${getString(
           'delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot'
-        )}`}</Button>
+        )}`}</Button> */}
       </Layout.Horizontal>
     </Layout.Vertical>
   )

@@ -683,11 +683,11 @@ getStartedWithCD:
       headsteps:
         preparation: '1. Preparation'
         createEntities: '2. Create the required Harness entities'
-        verifyPipeline: '2. Verify that pipeline has been created'
+        verifyPipeline: '4. Verify that pipeline has been created'
       createEntitytitle: Run these commands to create the Harness entities necessary to deploy your pipeline. Learn more
       title: Here are the steps to deploy!
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
-      stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" href="{{sampleAppURL}}"">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
+      stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" href="{{sampleAppURL}}">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
       steps:
         step1:
@@ -701,9 +701,17 @@ getStartedWithCD:
           arm: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-arm64.tar.gz'
           amd: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-amd64.tar.gz'
           mac: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-darwin-amd64.tar.gz'
-          win: 'https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-windows-amd64.zip'
+          win: 'Invoke-WebRequest -Uri https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-windows-amd64.zip -OutFile ./harness.zip'
+          extract: '# Extract the downloaded zip file and change directory to extracted file location'
           mvharness: 'mv harness /usr/local/bin/'
           chmod: 'chmod +x /usr/local/bin/harness'
+          wininstall:
+            description1: '1. Open Windows Powershell and run the command below to download the Harness CLI'
+            description2: Extract the zip file and run commands below to install Harness CLI
+            description3: '# Set Path variables by running commands below'
+            description4: '2. Restart Terminal.'
+            winpathsetup1: '$currentPath = Get-Location'
+            winpathsetup2: '[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$currentPath", [EnvironmentVariableTarget]::Machine)'
 
         step3:
           title: '3. Fork <a href="https://github.com/harness-community/harnesscd-example-apps">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'

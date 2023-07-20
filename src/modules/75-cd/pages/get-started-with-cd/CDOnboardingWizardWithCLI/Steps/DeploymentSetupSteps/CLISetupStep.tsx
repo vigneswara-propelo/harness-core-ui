@@ -81,14 +81,14 @@ function InstallCLIInfo(): JSX.Element {
   }, [])
   return (
     <OverlaySpinner show={isEmpty(version)}>
-      <Layout.Vertical>
+      <Layout.Vertical className={css.tabsLine}>
         <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
           <String
             className={css.marginBottomLarge}
             stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.title"
           />
         </Text>
-        <Tabs id="selectedOS" className={css.tabsLine}>
+        <Tabs id="selectedOS">
           <Tab
             id="mac"
             title={getString('pipeline.infraSpecifications.osTypes.macos')}
@@ -98,6 +98,7 @@ function InstallCLIInfo(): JSX.Element {
                 allowCopy={true}
                 commandSnippet={getCommandStrWithNewline([
                   getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac', { version }),
+                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract'),
                   getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
                   getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
                 ])}
@@ -115,18 +116,7 @@ function InstallCLIInfo(): JSX.Element {
           <Tab
             id="win"
             title={getString('pipeline.infraSpecifications.osTypes.windows')}
-            panel={
-              <CommandBlock
-                darkmode
-                allowCopy={true}
-                commandSnippet={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win', {
-                  version
-                })}
-                ignoreWhiteSpaces={true}
-                downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
-                copyButtonText={getString('common.copy')}
-              />
-            }
+            panel={<CLIDownloadWin version={version} />}
           />
         </Tabs>
       </Layout.Vertical>
@@ -154,6 +144,7 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
           : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd',
         { version }
       ),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract'),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
     ])
@@ -177,6 +168,41 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
+    </Layout.Vertical>
+  )
+}
+
+const CLIDownloadWin = ({ version }: { version: string }): JSX.Element => {
+  const { getString } = useStrings()
+
+  return (
+    <Layout.Vertical>
+      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description1"
+        />
+      </Text>
+      <CommandBlock
+        darkmode
+        allowCopy
+        ignoreWhiteSpaces={false}
+        commandSnippet={getCommandStrWithNewline([
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win', { version }),
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract'),
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description3'),
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup1'),
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup2')
+        ])}
+        downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+        copyButtonText={getString('common.copy')}
+      />
+      <Text color={Color.BLACK} padding={{ top: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description4"
+        />
+      </Text>
     </Layout.Vertical>
   )
 }

@@ -6120,10 +6120,17 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.arm': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.title': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description1': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description2': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description3': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description4': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup1': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step3.title': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubHint': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubpat': string

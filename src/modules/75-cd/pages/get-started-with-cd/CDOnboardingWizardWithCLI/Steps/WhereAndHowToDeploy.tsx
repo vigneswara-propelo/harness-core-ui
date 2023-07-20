@@ -37,7 +37,8 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
       stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData || {
         isDelegateVerified: false,
         delegateStatus: 'PENDING',
-        delegateProblemType: deploymentTypeDetails.artifactType?.id
+        delegateProblemType: deploymentTypeDetails.artifactType?.id,
+        type: DEPLOYMENT_FLOW_TYPES['cd-pipeline']
       }
     )
   })
