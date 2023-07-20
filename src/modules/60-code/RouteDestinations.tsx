@@ -12,6 +12,8 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import SideNav from '@code/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { projectPathProps } from '@common/utils/routeUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ModuleName } from 'framework/types/ModuleName'
 import { String as LocaleString } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -79,6 +81,7 @@ const RedirectToDefaultSCMRoute: React.FC = () => {
 }
 
 export default function CODERouteDestinations(): React.ReactElement {
+  const isCODEEnabled = useFeatureFlag(FeatureFlag.CODE_ENABLED)
   const repoPath = [
     codePathProps.accountId,
     codePathProps.orgIdentifier,
@@ -86,24 +89,26 @@ export default function CODERouteDestinations(): React.ReactElement {
     codePathProps.repoName
   ].join('/')
 
-  RbacFactory.registerResourceCategory(ResourceCategory.CODE, {
-    icon: 'code',
-    label: 'common.purpose.code.name'
-  })
+  if (isCODEEnabled) {
+    RbacFactory.registerResourceCategory(ResourceCategory.CODE, {
+      icon: 'code',
+      label: 'common.purpose.code.name'
+    })
 
-  RbacFactory.registerResourceTypeHandler(ResourceType.CODE_REPOSITORY, {
-    icon: 'code',
-    label: 'repository',
-    labelSingular: 'repository',
-    category: ResourceCategory.CODE,
+    RbacFactory.registerResourceTypeHandler(ResourceType.CODE_REPOSITORY, {
+      icon: 'code',
+      label: 'repository',
+      labelSingular: 'repository',
+      category: ResourceCategory.CODE,
 
-    permissionLabels: {
-      [PermissionIdentifier.CODE_REPO_VIEW]: <LocaleString stringID="rbac.permissionLabels.view" />,
-      [PermissionIdentifier.CODE_REPO_EDIT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-      [PermissionIdentifier.CODE_REPO_DELETE]: <LocaleString stringID="delete" />,
-      [PermissionIdentifier.CODE_REPO_PUSH]: <LocaleString stringID="rbac.permissionLabels.push" />
-    }
-  })
+      permissionLabels: {
+        [PermissionIdentifier.CODE_REPO_VIEW]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.CODE_REPO_EDIT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.CODE_REPO_DELETE]: <LocaleString stringID="delete" />,
+        [PermissionIdentifier.CODE_REPO_PUSH]: <LocaleString stringID="rbac.permissionLabels.push" />
+      }
+    })
+  }
   return (
     <Route path={routes.toCODE(codePathProps)}>
       <Route path={routes.toCODE(codePathProps)} exact>
