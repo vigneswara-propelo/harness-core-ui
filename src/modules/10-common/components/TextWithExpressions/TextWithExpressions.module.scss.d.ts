@@ -11,6 +11,7 @@ declare const styles: {
   readonly expressionIcon: string
   readonly expressionValue: string
   readonly expressionWrapper: string
+  readonly popoverMaxWidth: string
   readonly wrapper: string
 }
 export default styles

@@ -35,3 +35,7 @@
   display: grid !important;
   grid-template-columns: 1fr auto;
 }
+
+.popoverMaxWidth {
+  max-width: 300px;
+}

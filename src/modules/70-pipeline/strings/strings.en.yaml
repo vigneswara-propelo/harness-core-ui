@@ -1923,3 +1923,4 @@ downloadLogs:
   downloadRequestFailed: 'Download failed with: {{ errorMsg }}'
 infrastructurePropagatedFrom: 'Infrastructure Propagated From:'
 viewInCompiledMode: 'View in Compiled Mode'
+noExecution: 'No Execution'

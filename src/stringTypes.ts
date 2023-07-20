@@ -4754,6 +4754,7 @@ export interface StringsMap {
   'pipeline.noCloudSourceRepositoriesFound': string
   'pipeline.noClustersFound': string
   'pipeline.noEnvironmentGroupsFound': string
+  'pipeline.noExecution': string
   'pipeline.noFilePathsFound': string
   'pipeline.noImages': string
   'pipeline.noImagesFound': string

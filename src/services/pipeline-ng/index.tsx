@@ -17,6 +17,9 @@ export type ACRStepInfo = StepSpecType & {
   buildArgs?: {
     [key: string]: string
   }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
   connectorRef: string
   context?: string
   dockerfile?: string
@@ -435,7 +438,9 @@ export interface AccessControlCheckError {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1845,7 +1850,9 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2225,7 +2232,9 @@ export interface ErrorMetadata {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   errorMessage?: string
 }
 
@@ -2453,6 +2462,7 @@ export interface ExpressionEvaluation {
   error?: string
   fqn?: string
   originalExpression?: string
+  resolvedByYaml?: boolean
   resolvedValue?: string
 }
 
@@ -2845,7 +2855,9 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3769,6 +3781,9 @@ export interface NGTriggerEventHistoryResponse {
   finalStatus?:
     | 'SCM_SERVICE_CONNECTION_FAILED'
     | 'INVALID_PAYLOAD'
+    | 'TRIGGER_DID_NOT_MATCH_EVENT_CONDITION'
+    | 'TRIGGER_DID_NOT_MATCH_METADATA_CONDITION'
+    | 'TRIGGER_DID_NOT_MATCH_ARTIFACT_JEXL_CONDITION'
     | 'NO_MATCHING_TRIGGER_FOR_REPO'
     | 'NO_MATCHING_TRIGGER_FOR_EVENT_ACTION'
     | 'NO_MATCHING_TRIGGER_FOR_METADATA_CONDITIONS'
@@ -4377,6 +4392,38 @@ export interface PipelineExecutionIdentifierSummary {
   planExecutionId?: string
   projectIdentifier?: string
   runSequence?: number
+  status?:
+    | 'Running'
+    | 'AsyncWaiting'
+    | 'TaskWaiting'
+    | 'TimedWaiting'
+    | 'Failed'
+    | 'Errored'
+    | 'IgnoreFailed'
+    | 'NotStarted'
+    | 'Expired'
+    | 'Aborted'
+    | 'Discontinuing'
+    | 'Queued'
+    | 'Paused'
+    | 'ResourceWaiting'
+    | 'InterventionWaiting'
+    | 'ApprovalWaiting'
+    | 'WaitStepRunning'
+    | 'QueuedLicenseLimitReached'
+    | 'QueuedExecutionConcurrencyReached'
+    | 'Success'
+    | 'Suspended'
+    | 'Skipped'
+    | 'Pausing'
+    | 'ApprovalRejected'
+    | 'InputWaiting'
+    | 'AbortedByFreeze'
+    | 'NOT_STARTED'
+    | 'INTERVENTION_WAITING'
+    | 'APPROVAL_WAITING'
+    | 'APPROVAL_REJECTED'
+    | 'WAITING'
 }
 
 export interface PipelineExecutionInfo {
@@ -4720,9 +4767,28 @@ export interface PolicyStore {
   type: 'Harness'
 }
 
+export interface PolledResponse {
+  allPolledKeys?: string[]
+}
+
+export interface PollingInfoForTriggers {
+  perpetualTaskId?: string
+  polledResponse?: PolledResponse
+}
+
 export interface PollingSubscriptionStatus {
   detailedMessage?: string
-  statusResult?: 'SUCCESS' | 'FAILED' | 'UNKNOWN'
+  lastPolled?: string[]
+  lastPollingUpdate?: number
+  statusResult?: 'SUCCESS' | 'FAILED' | 'UNKNOWN' | 'PENDING'
+}
+
+export interface PollingTriggerStatusUpdateDTO {
+  errorMessage?: string
+  lastCollectedTime?: number
+  lastCollectedVersions?: string[]
+  signatures?: string[]
+  success?: boolean
 }
 
 export interface PreFlightCause {
@@ -5637,7 +5703,9 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5878,6 +5946,13 @@ export interface ResponsePlanExecutionResponseDto {
 export interface ResponsePmsAbstractStepNode {
   correlationId?: string
   data?: PmsAbstractStepNode
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePollingInfoForTriggers {
+  correlationId?: string
+  data?: PollingInfoForTriggers
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6971,7 +7046,7 @@ export interface TriggerEventDataCondition {
 
 export interface TriggerEventStatus {
   message?: string
-  status?: 'SUCCESS' | 'FAILURE'
+  status?: 'SUCCESS' | 'FAILED'
 }
 
 export interface TriggerIssuer {
@@ -6985,8 +7060,10 @@ export interface TriggerPayload {
 
 export interface TriggerStatus {
   detailMessages?: string[]
+  lastPolled?: string[]
+  lastPollingUpdate?: number
   pollingSubscriptionStatus?: PollingSubscriptionStatus
-  status?: 'SUCCESS' | 'FAILED' | 'UNKNOWN'
+  status?: 'SUCCESS' | 'FAILED' | 'UNKNOWN' | 'PENDING'
   validationStatus?: ValidationStatus
   webhookAutoRegistrationStatus?: WebhookAutoRegistrationStatus
   webhookInfo?: WebhookInfo
@@ -7085,7 +7162,7 @@ export interface ValidationError {
 
 export interface ValidationStatus {
   detailedMessage?: string
-  statusResult?: 'SUCCESS' | 'FAILED' | 'UNKNOWN'
+  statusResult?: 'SUCCESS' | 'FAILED' | 'UNKNOWN' | 'PENDING'
 }
 
 export interface VariableMergeServiceResponse {
@@ -16586,6 +16663,98 @@ export const triggerHistoryEventCorrelationPromise = (
     TriggerHistoryEventCorrelationPathParams
   >(getConfig('pipeline/api'), `/triggers/eventHistory/eventCorrelation/${eventCorrelationId}`, props, signal)
 
+export interface PolledResponseTriggerIdentifierQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  targetIdentifier: string
+}
+
+export interface PolledResponseTriggerIdentifierPathParams {
+  triggerIdentifier: string
+}
+
+export type PolledResponseTriggerIdentifierProps = Omit<
+  GetProps<
+    ResponsePollingInfoForTriggers,
+    Failure | Error,
+    PolledResponseTriggerIdentifierQueryParams,
+    PolledResponseTriggerIdentifierPathParams
+  >,
+  'path'
+> &
+  PolledResponseTriggerIdentifierPathParams
+
+/**
+ * Get all the polled response for a given trigger
+ */
+export const PolledResponseTriggerIdentifier = ({
+  triggerIdentifier,
+  ...props
+}: PolledResponseTriggerIdentifierProps) => (
+  <Get<
+    ResponsePollingInfoForTriggers,
+    Failure | Error,
+    PolledResponseTriggerIdentifierQueryParams,
+    PolledResponseTriggerIdentifierPathParams
+  >
+    path={`/triggers/eventHistory/polledResponse/${triggerIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UsePolledResponseTriggerIdentifierProps = Omit<
+  UseGetProps<
+    ResponsePollingInfoForTriggers,
+    Failure | Error,
+    PolledResponseTriggerIdentifierQueryParams,
+    PolledResponseTriggerIdentifierPathParams
+  >,
+  'path'
+> &
+  PolledResponseTriggerIdentifierPathParams
+
+/**
+ * Get all the polled response for a given trigger
+ */
+export const usePolledResponseTriggerIdentifier = ({
+  triggerIdentifier,
+  ...props
+}: UsePolledResponseTriggerIdentifierProps) =>
+  useGet<
+    ResponsePollingInfoForTriggers,
+    Failure | Error,
+    PolledResponseTriggerIdentifierQueryParams,
+    PolledResponseTriggerIdentifierPathParams
+  >(
+    (paramsInPath: PolledResponseTriggerIdentifierPathParams) =>
+      `/triggers/eventHistory/polledResponse/${paramsInPath.triggerIdentifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { triggerIdentifier }, ...props }
+  )
+
+/**
+ * Get all the polled response for a given trigger
+ */
+export const polledResponseTriggerIdentifierPromise = (
+  {
+    triggerIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePollingInfoForTriggers,
+    Failure | Error,
+    PolledResponseTriggerIdentifierQueryParams,
+    PolledResponseTriggerIdentifierPathParams
+  > & { triggerIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePollingInfoForTriggers,
+    Failure | Error,
+    PolledResponseTriggerIdentifierQueryParams,
+    PolledResponseTriggerIdentifierPathParams
+  >(getConfig('pipeline/api'), `/triggers/eventHistory/polledResponse/${triggerIdentifier}`, props, signal)
+
 export interface TriggerEventHistoryNewQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -16675,6 +16844,77 @@ export const triggerEventHistoryNewPromise = (
     TriggerEventHistoryNewQueryParams,
     TriggerEventHistoryNewPathParams
   >(getConfig('pipeline/api'), `/triggers/eventHistory/${triggerIdentifier}`, props, signal)
+
+export interface UpdateTriggerPollingStatusQueryParams {
+  accountIdentifier: string
+}
+
+export type UpdateTriggerPollingStatusProps = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    UpdateTriggerPollingStatusQueryParams,
+    PollingTriggerStatusUpdateDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update a trigger's polling status by signature
+ */
+export const UpdateTriggerPollingStatus = (props: UpdateTriggerPollingStatusProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, UpdateTriggerPollingStatusQueryParams, PollingTriggerStatusUpdateDTO, void>
+    verb="PUT"
+    path={`/triggers/pollingTriggerStatus`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateTriggerPollingStatusProps = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    UpdateTriggerPollingStatusQueryParams,
+    PollingTriggerStatusUpdateDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update a trigger's polling status by signature
+ */
+export const useUpdateTriggerPollingStatus = (props: UseUpdateTriggerPollingStatusProps) =>
+  useMutate<
+    ResponseBoolean,
+    Failure | Error,
+    UpdateTriggerPollingStatusQueryParams,
+    PollingTriggerStatusUpdateDTO,
+    void
+  >('PUT', `/triggers/pollingTriggerStatus`, { base: getConfig('pipeline/api'), ...props })
+
+/**
+ * Update a trigger's polling status by signature
+ */
+export const updateTriggerPollingStatusPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    UpdateTriggerPollingStatusQueryParams,
+    PollingTriggerStatusUpdateDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    UpdateTriggerPollingStatusQueryParams,
+    PollingTriggerStatusUpdateDTO,
+    void
+  >('PUT', getConfig('pipeline/api'), `/triggers/pollingTriggerStatus`, props, signal)
 
 export type GenerateWebhookTokenProps = Omit<GetProps<RestResponseString, Failure | Error, void, void>, 'path'>
 
@@ -18510,6 +18750,8 @@ export interface GetSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
+    | 'AwsCdkBootstrap'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18833,6 +19075,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
+    | 'AwsCdkBootstrap'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -19154,6 +19398,8 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
+    | 'AwsCdkBootstrap'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

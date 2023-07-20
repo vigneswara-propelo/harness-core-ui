@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { FormInput, Layout, SelectOption, Toggle } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetExpressionEvaluated, useGetListOfExecutionIdentifier } from 'services/pipeline-ng'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -25,13 +25,15 @@ interface VariablesCompiledModeHeaderProps {
 
 export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderProps): JSX.Element {
   const { handleCompiledModeChange, isCompiledMode } = props
-  const [executionId, setExecutionId] = useState<string>()
+  const [executionIdOption, setExecutionIdOption] = useState<SelectOption>()
   const params = useParams<PipelinePathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { getString } = useStrings()
+
+  const noExecution = { label: getString('pipeline.noExecution'), value: '' }
 
   const { storeMetadata, originalPipeline, setCompiledModeMetadataMap } = usePipelineVariables()
-  const { getString } = useStrings()
 
   const { data } = useMutateAsGet(useGetListOfExecutionIdentifier, {
     queryParams: {
@@ -50,19 +52,33 @@ export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderPr
   const executionIdSelectOptions = defaultTo(
     data?.data?.content?.map(execId => {
       return {
-        label: execId.planExecutionId as string,
+        label: `${execId.runSequence} : ${execId.status}`,
         value: execId.planExecutionId as string
       }
     }),
     []
   )
 
+  executionIdSelectOptions.push(noExecution)
+
+  React.useEffect(() => {
+    const execId = data?.data?.content?.[0]
+    if (execId) {
+      setExecutionIdOption({
+        label: `${execId?.runSequence} : ${execId?.status}`,
+        value: execId?.planExecutionId as string
+      })
+    } else {
+      setExecutionIdOption(noExecution)
+    }
+  }, [data])
+
   const handleExecutionIdChange = (execId: SelectOption): void => {
-    setExecutionId(execId.value as string)
+    setExecutionIdOption(execId)
   }
 
   const { data: expressionEvaluatedResponse } = useMutateAsGet(useGetExpressionEvaluated, {
-    planExecutionId: executionId as string,
+    planExecutionId: !isEmpty(executionIdOption?.value) && (executionIdOption?.value as string),
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -70,7 +86,7 @@ export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderPr
       pipelineIdentifier: originalPipeline.identifier
     },
     pathParams: {
-      planExecutionId: executionId as string
+      planExecutionId: !isEmpty(executionIdOption?.value) && (executionIdOption?.value as string)
     },
     body: yamlStringify({ pipeline: originalPipeline }),
     requestOptions: { headers: { 'content-type': 'application/json' } }
@@ -93,7 +109,7 @@ export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderPr
           onChange={handleExecutionIdChange}
           name="executionId"
           placeholder="ExecutionID"
-          value={{ label: executionId as string, value: executionId as string }}
+          value={executionIdOption}
           className={css.compiledModeExecutionId}
         />
       )}

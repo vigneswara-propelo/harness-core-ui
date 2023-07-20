@@ -47,28 +47,30 @@ const ExpressionTooltipContent = ({
 }: ExpressionTooltipContentProps): JSX.Element => {
   if (hasError) {
     return (
-      <Layout.Vertical padding="medium" flex={{ alignItems: 'flex-start' }}>
+      <Layout.Vertical padding="medium" flex={{ alignItems: 'flex-start' }} className={css.popoverMaxWidth}>
         <Text
           icon="expression-input"
           color={Color.RED_200}
           iconProps={{ className: css.expressionIcon }}
-          padding={{ bottom: 'small' }}
+          margin={{ bottom: 'small' }}
+          lineClamp={1}
         >
           {defaultTo(resolvedValueObject?.originalExpression, word)}
         </Text>
-        <Text icon="error-outline" color={Color.WHITE} iconProps={{ className: css.errorIcon }}>
+        <Text icon="error-outline" color={Color.WHITE} iconProps={{ className: css.errorIcon }} lineClamp={1}>
           {resolvedValueObject?.error}
         </Text>
       </Layout.Vertical>
     )
   }
   return (
-    <Layout.Horizontal padding="medium">
+    <Layout.Horizontal padding="medium" className={css.popoverMaxWidth}>
       <Text
         color={Color.WHITE}
         icon="expression-input"
-        padding={{ right: 'small' }}
+        margin={{ right: 'small' }}
         iconProps={{ className: css.expressionIcon }}
+        lineClamp={1}
       >
         {defaultTo(resolvedValueObject?.originalExpression, word)}
       </Text>
