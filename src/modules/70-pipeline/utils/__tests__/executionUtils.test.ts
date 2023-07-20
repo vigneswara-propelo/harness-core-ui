@@ -19,6 +19,7 @@ import {
   nodeLayoutForPMS,
   pipelineExecutionDetailMock
 } from './mockJson/mockExecutionContext'
+import { nodeDataBackgroundStep, backgroundStepId } from './mockJson/mockExecutionData'
 
 jest.mock('@pipeline/components/PipelineSteps/PipelineStepFactory', () => ({}))
 
@@ -637,6 +638,18 @@ describe('ExecutionUtils tests', () => {
           StepType.Plugin
         )
       ).toBe('node')
+    })
+  })
+
+  describe('Utils for Process CI Data', () => {
+    test('background node map', () => {
+      const newNodeMap = utils.processForCIData({
+        nodeMap: { ...nodeDataBackgroundStep?.data?.executionGraph?.nodeMap },
+        data: nodeDataBackgroundStep
+      })
+      expect(newNodeMap[backgroundStepId].startTs).toBe(0)
+      expect(newNodeMap[backgroundStepId].endTs).toBe(0)
+      expect(newNodeMap[backgroundStepId].status).toBe('Running')
     })
   })
 })
