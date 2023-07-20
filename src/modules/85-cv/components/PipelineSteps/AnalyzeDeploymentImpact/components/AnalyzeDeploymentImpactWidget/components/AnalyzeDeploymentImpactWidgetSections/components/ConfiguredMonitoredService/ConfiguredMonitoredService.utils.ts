@@ -14,7 +14,7 @@ import {
   AnalyzeStepMonitoredService
 } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
 import { MONITORED_SERVICE_TYPE } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
-import { DEFAULT_VALUE } from './ConfiguredMonitoredService.constants'
+import { DEFAULT_INPUT_VALUE, DEFAULT_VALUE } from './ConfiguredMonitoredService.constants'
 
 export function isMonitoredServiceFixedInput(monitoredServiceRef: string): boolean {
   return !!(monitoredServiceRef !== RUNTIME_INPUT_VALUE && monitoredServiceRef && !isAnExpression(monitoredServiceRef))
@@ -37,9 +37,13 @@ export function getMonitoredServiceOptions(
 }
 
 export function getDefaultOption(serviceIdentifier: string, environmentIdentifier: string): SelectOption {
-  let defaultOption = { label: `Default (${serviceIdentifier}_${environmentIdentifier})`, value: 'Default' }
+  const label =
+    serviceIdentifier && environmentIdentifier
+      ? `${DEFAULT_VALUE} (${serviceIdentifier}_${environmentIdentifier})`
+      : DEFAULT_VALUE
+  let defaultOption = { label, value: DEFAULT_VALUE }
   if (isServiceAndEnvNotFixed(serviceIdentifier, environmentIdentifier)) {
-    defaultOption = { label: `Default <+input>`, value: 'Default' }
+    defaultOption = { label: `${DEFAULT_INPUT_VALUE}`, value: DEFAULT_VALUE }
   }
   return defaultOption
 }
@@ -104,9 +108,14 @@ function getHealthSourcesSpecs(monitoredServiceData: MonitoredServiceDTO | undef
 export function getIsMonitoredServiceDefaultInput(
   monitoredServiceRef: string,
   serviceIdentifier: string,
-  environmentIdentifier: string
+  environmentIdentifier: string,
+  hasMultiServiceOrEnv?: boolean
 ): boolean {
-  return monitoredServiceRef === DEFAULT_VALUE && isServiceAndEnvNotFixed(serviceIdentifier, environmentIdentifier)
+  const isDefaultMonitoredService = monitoredServiceRef === DEFAULT_VALUE
+  if (hasMultiServiceOrEnv && isDefaultMonitoredService) {
+    return true
+  }
+  return isDefaultMonitoredService && isServiceAndEnvNotFixed(serviceIdentifier, environmentIdentifier)
 }
 
 export function getShouldFetchMonitoredServiceData({

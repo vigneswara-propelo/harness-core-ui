@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { fireEvent, queryByAttribute, render } from '@testing-library/react'
+import { fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import * as cdService from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { AnalyzeDeploymentImpact } from '../AnalyzeDeploymentImpact'
 import {
@@ -26,6 +27,8 @@ import {
 } from '../AnalyzeDeploymentImpact.utils'
 import { AnalyzeDeploymentImpactData } from '../AnalyzeDeploymentImpact.types'
 import { MONITORED_SERVICE_TYPE } from '../AnalyzeDeploymentImpact.constants'
+
+import * as AnalyzeDeploymentImpactWidgetUtils from '../components/AnalyzeDeploymentImpactWidget/components/AnalyzeDeploymentImpactWidgetSections/AnalyzeDeploymentImpactWidgetSections.utils'
 
 jest.mock('services/cv', () => ({
   useGetMonitoredServiceFromServiceAndEnvironment: jest
@@ -74,7 +77,17 @@ describe('Test AnalyzeDeploymentImpact Step', () => {
     expect(getByText('AnalyzeDeploymentImpact')).toBeInTheDocument()
   })
 
-  test('should render Templatised view when current step is rendered in template mode', () => {
+  test('should render Templatised view when current step is rendered in template mode', async () => {
+    jest.spyOn(cdService, 'useGetCdDeployStageMetadata').mockImplementation(() => ({ loading: false } as any))
+    jest.spyOn(AnalyzeDeploymentImpactWidgetUtils, 'getStageServiceAndEnv').mockImplementation(
+      () =>
+        ({
+          serviceIdentifier: '',
+          environmentIdentifier: '',
+          hasMultiServiceOrEnv: false,
+          errorInfo: ''
+        } as any)
+    )
     const { getByText } = render(
       <TestStepWidget
         initialValues={ANALYZE_STEP_INITIAL_VALUES}
@@ -84,8 +97,7 @@ describe('Test AnalyzeDeploymentImpact Step', () => {
         onUpdate={jest.fn()}
       />
     )
-
-    expect(getByText('connectors.cdng.monitoredService.monitoredServiceDef')).toBeInTheDocument()
+    await waitFor(() => expect(getByText('connectors.cdng.monitoredService.monitoredServiceDef')).toBeInTheDocument())
   })
 
   test('should render InputSet view when current step is rendered in InputSet mode', () => {

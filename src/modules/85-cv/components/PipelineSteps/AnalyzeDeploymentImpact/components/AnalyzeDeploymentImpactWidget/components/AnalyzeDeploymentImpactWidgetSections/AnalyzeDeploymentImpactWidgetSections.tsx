@@ -5,10 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useToaster, Container } from '@harness/uicore'
+import { isUndefined } from 'lodash-es'
+import { useGetCdDeployStageMetadata } from 'services/cd-ng'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { useStrings } from 'framework/strings'
 import type { AnalyzeDeploymentImpactWidgetSectionsProps } from './types'
 import BaseAnalyzeDeploymentImpact from './components/BaseAnalyzeDeploymentImpact/BaseAnalyzeDeploymentImpact'
 import ConfiguredMonitoredService from './components/ConfiguredMonitoredService/ConfiguredMonitoredService'
+import { getStageServiceAndEnv } from './AnalyzeDeploymentImpactWidgetSections.utils'
 
 export function AnalyzeDeploymentImpactWidgetSections({
   formik,
@@ -16,10 +23,78 @@ export function AnalyzeDeploymentImpactWidgetSections({
   stepViewType,
   allowableTypes
 }: AnalyzeDeploymentImpactWidgetSectionsProps): JSX.Element {
+  const { showError } = useToaster()
+  const { getString } = useStrings()
+
+  const [hasMultiServiceOrEnv, setHasMultiServiceOrEnv] = useState<boolean | undefined>(undefined)
+  const [serviceAndEnvironment, setServiceAndEnvironment] = useState({
+    serviceIdentifier: '',
+    environmentIdentifier: ''
+  })
+
+  const { serviceIdentifier, environmentIdentifier } = serviceAndEnvironment
+  const isServiceEnvironmentFetched = !isUndefined(hasMultiServiceOrEnv)
+
+  const {
+    state: {
+      selectionState: { selectedStageId },
+      pipeline
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+
+  const selectedStage = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId as string)?.stage
+
+  const { mutate: getDeploymentStageMeta, loading: stageMetaLoading } = useGetCdDeployStageMetadata({})
+
+  useEffect(() => {
+    async function setStageServiceAndEnv(): Promise<void> {
+      const data = await getStageServiceAndEnv({
+        pipeline,
+        selectedStage,
+        selectedStageId,
+        getDeploymentStageMeta
+      })
+
+      const {
+        errorInfo,
+        serviceIdentifier: serviceIdentifierValue,
+        environmentIdentifier: environmentIdentifierValue,
+        hasMultiServiceOrEnv: hasMultiServiceOrEnvVaue
+      } = data
+
+      if (errorInfo) {
+        showError(errorInfo)
+      }
+      setHasMultiServiceOrEnv(hasMultiServiceOrEnvVaue)
+      setServiceAndEnvironment({
+        serviceIdentifier: serviceIdentifierValue,
+        environmentIdentifier: environmentIdentifierValue
+      })
+    }
+
+    if (!isServiceEnvironmentFetched) {
+      setStageServiceAndEnv()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pipeline, selectedStage, selectedStageId, isServiceEnvironmentFetched])
+
   return (
     <>
       <BaseAnalyzeDeploymentImpact isNewStep={isNewStep} stepViewType={stepViewType} allowableTypes={allowableTypes} />
-      <ConfiguredMonitoredService formik={formik} allowableTypes={allowableTypes} />
+      {stageMetaLoading || !isServiceEnvironmentFetched ? (
+        <Container flex padding="medium">
+          {getString('loading')}
+        </Container>
+      ) : (
+        <ConfiguredMonitoredService
+          formik={formik}
+          allowableTypes={allowableTypes}
+          serviceIdentifier={serviceIdentifier}
+          environmentIdentifier={environmentIdentifier}
+          hasMultiServiceOrEnv={Boolean(hasMultiServiceOrEnv)}
+        />
+      )}
     </>
   )
 }

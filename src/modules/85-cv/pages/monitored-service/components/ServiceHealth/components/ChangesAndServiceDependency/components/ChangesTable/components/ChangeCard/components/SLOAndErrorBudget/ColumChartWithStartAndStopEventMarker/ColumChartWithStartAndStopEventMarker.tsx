@@ -47,7 +47,7 @@ export default function ColumChartWithStartAndStopEventMarker({
           columnHeight={columnHeightDerived}
           customMarker={isStopped ? StopImage : SuccessImage}
           leftOffset={deployedOrStopMarkerPosition}
-          markerColor={isStopped ? 'var(--gray-200)' : 'var(--green-400)'}
+          markerColor={isStopped ? 'var(--grey-200)' : 'var(--green-400)'}
         />
       ) : null}
     </div>

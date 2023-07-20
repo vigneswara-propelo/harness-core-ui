@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { AllowedTypes, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import React from 'react'
 import { render, screen } from '@testing-library/react'
@@ -25,6 +32,12 @@ import {
   mockedMonitoredServiceForFetchingDetails
 } from './ConfiguredMonitoredService.mock'
 import { MONITORED_SERVICE_NOT_PRESENT_ERROR } from '../ConfiguredMonitoredService.constants'
+
+const serviceEnvironmentProps = {
+  serviceIdentifier: 'service101',
+  environmentIdentifier: 'environment101',
+  hasMultiServiceOrEnv: false
+}
 
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
@@ -81,7 +94,7 @@ describe('ConfiguredMonitoredService', () => {
 
     render(
       <MemoryRouter>
-        <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
+        <ConfiguredMonitoredService {...serviceEnvironmentProps} allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
@@ -103,7 +116,7 @@ describe('ConfiguredMonitoredService', () => {
 
     const { getAllByText } = render(
       <MemoryRouter>
-        <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
+        <ConfiguredMonitoredService {...serviceEnvironmentProps} allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
@@ -124,7 +137,7 @@ describe('ConfiguredMonitoredService', () => {
 
     render(
       <MemoryRouter>
-        <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
+        <ConfiguredMonitoredService {...serviceEnvironmentProps} allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
@@ -156,7 +169,7 @@ describe('ConfiguredMonitoredService', () => {
 
     const { getByText } = render(
       <MemoryRouter>
-        <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
+        <ConfiguredMonitoredService {...serviceEnvironmentProps} allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
@@ -193,7 +206,7 @@ describe('ConfiguredMonitoredService', () => {
 
     const { container } = render(
       <MemoryRouter>
-        <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
+        <ConfiguredMonitoredService {...serviceEnvironmentProps} allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
@@ -237,7 +250,7 @@ describe('ConfiguredMonitoredService', () => {
 
     const { getByText } = render(
       <MemoryRouter>
-        <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
+        <ConfiguredMonitoredService {...serviceEnvironmentProps} allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
@@ -274,12 +287,54 @@ describe('ConfiguredMonitoredService', () => {
 
     render(
       <MemoryRouter>
-        <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
+        <ConfiguredMonitoredService {...serviceEnvironmentProps} allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
     const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
     expect(monitoredServiceDisplay).toBeInTheDocument()
+  })
+
+  test('renders correct ux for default when we have multi services and environment', () => {
+    const allowableTypes = [
+      MultiTypeInputType.FIXED,
+      MultiTypeInputType.RUNTIME,
+      MultiTypeInputType.EXPRESSION
+    ] as AllowedTypes
+    const formik = {
+      values: {
+        spec: {
+          monitoredServiceRef: 'Default'
+        }
+      },
+      setFieldValue: jest.fn(),
+      validateForm: jest.fn()
+    } as any
+
+    ;(useGetMonitoredService as jest.Mock).mockImplementation(() => ({
+      loading: false,
+      data: {},
+      error: null,
+      refetch: jest.fn()
+    }))
+
+    const { queryByText } = render(
+      <MemoryRouter>
+        <ConfiguredMonitoredService
+          {...{
+            serviceIdentifier: '',
+            environmentIdentifier: '',
+            hasMultiServiceOrEnv: true
+          }}
+          allowableTypes={allowableTypes}
+          formik={formik}
+        />
+      </MemoryRouter>
+    )
+
+    const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    expect(monitoredServiceDisplay).toBeInTheDocument()
+    expect(queryByText('Health Source')).not.toBeInTheDocument()
   })
 })
 

@@ -16,16 +16,10 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetAllMonitoredServicesWithTimeSeriesHealthSources, useGetMonitoredService } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
-import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { RowData } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getMonitoredServiceRef } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.utils'
 import routes from '@common/RouteDefinitions'
 import { getMultiTypeInputProps } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
-import {
-  getEnvironmentIdentifierFromStage,
-  getServiceIdentifierFromStage
-} from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import { AnalyzeDeploymentImpactData } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
 import {
   checkIfMonitoredServiceIsNotPresent,
@@ -45,36 +39,26 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface ConfiguredMonitoredServiceProps {
   allowableTypes: AllowedTypes
   formik: FormikProps<AnalyzeDeploymentImpactData>
+  serviceIdentifier: string
+  environmentIdentifier: string
+  hasMultiServiceOrEnv: boolean
 }
 
 export default function ConfiguredMonitoredService(props: ConfiguredMonitoredServiceProps): JSX.Element {
   const {
     allowableTypes,
+    serviceIdentifier,
+    environmentIdentifier,
+    hasMultiServiceOrEnv,
     formik: { values: formValues, setFieldValue }
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { showError } = useToaster()
+
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [healthSourcesList, setHealthSourcesList] = useState<RowData[]>([])
   const monitoredServiceRef = getMonitoredServiceRef(formValues.spec) as string
-
-  const {
-    state: {
-      selectionState: { selectedStageId },
-      pipeline
-    },
-    getStageFromPipeline
-  } = usePipelineContext()
-  const selectedStage = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId as string)?.stage
-
-  const environmentIdentifier = useMemo(() => {
-    return getEnvironmentIdentifierFromStage(selectedStage)
-  }, [selectedStage])
-
-  const serviceIdentifier = useMemo(() => {
-    return getServiceIdentifierFromStage(selectedStage, pipeline)
-  }, [pipeline, selectedStage])
 
   const monitoredServiceIdentifier = getMonitoredServiceIdentifier(
     monitoredServiceRef,
@@ -120,7 +104,8 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
     const isMonitoredServiceDefaultInput = getIsMonitoredServiceDefaultInput(
       monitoredServiceRef,
       serviceIdentifier,
-      environmentIdentifier
+      environmentIdentifier,
+      hasMultiServiceOrEnv
     )
     return getShouldFetchMonitoredServiceData({
       isMonitoredServiceDefaultInput,
@@ -130,7 +115,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
       setFieldValue
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environmentIdentifier, monitoredService, monitoredServiceRef, serviceIdentifier])
+  }, [environmentIdentifier, monitoredService, monitoredServiceRef, serviceIdentifier, hasMultiServiceOrEnv])
 
   useEffect(() => {
     if (shouldFetchMonitoredServiceDetails) {
