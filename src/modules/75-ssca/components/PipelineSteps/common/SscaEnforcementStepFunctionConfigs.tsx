@@ -101,8 +101,7 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
   {
     name: 'spec.verifyAttestation.spec.publicKey',
     type: ValidationFieldTypes.Text,
-    label: 'ssca.publicKey',
-    isRequired: true
+    label: 'ssca.publicKey'
   },
   {
     name: 'spec.source.type',
@@ -201,8 +200,7 @@ export const getInputSetViewValidateFieldsConfig =
       {
         name: 'spec.verifyAttestation.spec.publicKey',
         type: ValidationFieldTypes.Text,
-        label: 'ssca.publicKey',
-        isRequired
+        label: 'ssca.publicKey'
       },
       ...(stepType === StepType.CdSscaEnforcement
         ? [

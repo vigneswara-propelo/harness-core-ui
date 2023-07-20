@@ -117,20 +117,17 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
   {
     name: 'spec.attestation.type',
     type: ValidationFieldTypes.Text,
-    label: 'connectors.serviceNow.privateKey',
-    isRequired: true
+    label: 'connectors.serviceNow.privateKey'
   },
   {
     name: 'spec.attestation.spec.privateKey',
     type: ValidationFieldTypes.Text,
-    label: 'connectors.serviceNow.privateKey',
-    isRequired: true
+    label: 'connectors.serviceNow.privateKey'
   },
   {
     name: 'spec.attestation.spec.password',
     type: ValidationFieldTypes.Text,
-    label: 'password',
-    isRequired: true
+    label: 'password'
   },
   {
     name: 'spec.source.type',
@@ -219,14 +216,12 @@ export const getInputSetViewValidateFieldsConfig =
       {
         name: 'spec.attestation.spec.privateKey',
         type: ValidationFieldTypes.Text,
-        label: 'connectors.serviceNow.privateKey',
-        isRequired
+        label: 'connectors.serviceNow.privateKey'
       },
       {
         name: 'spec.attestation.spec.password',
         type: ValidationFieldTypes.Text,
-        label: 'password',
-        isRequired
+        label: 'password'
       },
       ...(stepType === StepType.CdSscaOrchestration
         ? [
