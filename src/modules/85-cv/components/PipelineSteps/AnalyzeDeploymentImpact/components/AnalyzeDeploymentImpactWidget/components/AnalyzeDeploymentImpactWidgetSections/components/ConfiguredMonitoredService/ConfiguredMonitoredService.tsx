@@ -181,13 +181,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
             detailNotPresentMessage={getString('cv.analyzeStep.monitoredService.monitoredServiceNotPresent')}
           />
           <ConfigureMonitoredServiceDetails
-            linkTo={routes.toCVAddMonitoredServiceForServiceAndEnv({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              serviceIdentifier,
-              environmentIdentifier
-            })}
+            linkTo={routes.toCVAddMonitoringServicesSetup({ accountId, orgIdentifier, projectIdentifier })}
             detailToConfigureText={getString('cv.analyzeStep.monitoredService.createMonitoredService')}
             refetchDetails={fetchMonitoredServiceData}
           />

@@ -95,7 +95,8 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
       formikProps.setFieldValue('serviceRef', serviceIdentifier)
       formikProps.setFieldValue('environmentRef', environmentIdentifier)
     }
-  }, [serviceIdentifier, environmentIdentifier, formikProps])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serviceIdentifier, environmentIdentifier])
 
   return (
     <CardWithOuterTitle title={config && isEdit ? '' : getString('overview')} className={css.monitoredService}>
