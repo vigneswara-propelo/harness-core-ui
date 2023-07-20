@@ -216,7 +216,7 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
               <Accordion
                 panelClassName={css.accordionPanel}
                 detailsClassName={css.accordionDetails}
-                activeId={!isEmpty(formik.errors.releaseName) ? 'advanced' : ''}
+                activeId={'advanced'}
               >
                 <Accordion.Panel
                   id="advanced"
