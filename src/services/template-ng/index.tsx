@@ -172,6 +172,64 @@ export type ConnectorFilterProperties = FilterProperties & {
   )[]
 }
 
+export type ConnectorInternalFilterProperties = FilterProperties & {
+  accountIdentifiers?: string[]
+  ccmConnectorFilter?: CcmConnectorFilter
+  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  types?: (
+    | 'K8sCluster'
+    | 'Git'
+    | 'Splunk'
+    | 'AppDynamics'
+    | 'Prometheus'
+    | 'Dynatrace'
+    | 'Vault'
+    | 'AzureKeyVault'
+    | 'DockerRegistry'
+    | 'Local'
+    | 'AwsKms'
+    | 'GcpKms'
+    | 'AwsSecretManager'
+    | 'Gcp'
+    | 'Aws'
+    | 'Azure'
+    | 'Artifactory'
+    | 'Jira'
+    | 'Nexus'
+    | 'Github'
+    | 'Gitlab'
+    | 'Bitbucket'
+    | 'Codecommit'
+    | 'CEAws'
+    | 'CEAzure'
+    | 'GcpCloudCost'
+    | 'CEK8sCluster'
+    | 'HttpHelmRepo'
+    | 'NewRelic'
+    | 'Datadog'
+    | 'SumoLogic'
+    | 'PagerDuty'
+    | 'CustomHealth'
+    | 'ServiceNow'
+    | 'ErrorTracking'
+    | 'Pdc'
+    | 'AzureRepo'
+    | 'Jenkins'
+    | 'OciHelmRepo'
+    | 'CustomSecretManager'
+    | 'ElasticSearch'
+    | 'GcpSecretManager'
+    | 'AzureArtifacts'
+    | 'Tas'
+    | 'Spot'
+    | 'Bamboo'
+    | 'TerraformCloud'
+    | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
+  )[]
+}
+
 export interface EntityDetail {
   entityGitMetadata?: EntityGitMetadata
   entityRef?: EntityReference
@@ -399,6 +457,7 @@ export interface EntityDetail {
     | 'ServerlessAwsLambdaDeployV2'
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
 }
 
 export interface EntityDetailProtoDTO {
@@ -2778,7 +2837,7 @@ export interface TemplateSummaryResponse {
 
 export interface TemplateUpdateGitDetailsRequest {
   connectorRef?: string
-  filepath?: string
+  filePath?: string
   repoName?: string
 }
 
