@@ -9,6 +9,7 @@ import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
+import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PrometheusQueryViewer, PrometheusQueryViewerProps } from './PrometheusQueryViewer'
 
@@ -38,5 +39,15 @@ describe('Unit tests for PrometheusQueryViewer', () => {
     render(<WrapperComponent values={{} as any} onChange={onChange} />)
 
     await waitFor(() => expect(screen.getByTestId('queryLabel')).toBeInTheDocument())
+  })
+
+  test('should show proper error message from API response', async () => {
+    jest
+      .spyOn(cvService, 'useGetSampleData')
+      .mockReturnValue({ error: { data: { message: 'Error from response' } } } as any)
+    const onChange = jest.fn()
+    render(<WrapperComponent values={{} as any} onChange={onChange} />)
+
+    await waitFor(() => expect(screen.getByText('Error from response')).toBeInTheDocument())
   })
 })

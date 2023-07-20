@@ -97,7 +97,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.findByRole('button', { name: /Fetch records/i }).click()
 
-    cy.contains('p', 'We cannot perform your request at the moment. Please try again.').should('exist')
+    cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('exist')
 
     cy.intercept('GET', sampleDataAPI, { statusCode: 200, body: {} })
 

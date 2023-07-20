@@ -8,17 +8,17 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import HighchartsReact from 'highcharts-react-official'
+import { GetDataError } from 'restful-react'
 import Highcharts from 'highcharts'
 import { IDrawerProps, Position, Drawer } from '@blueprintjs/core'
 import cx from 'classnames'
 import { Container, Utils, useConfirmationDialog, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { GetMetricNamesQueryParams, ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'
+import { Failure, GetMetricNamesQueryParams, ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Records } from '@cv/components/Records/Records'
 import { QueryContent } from '@cv/components/QueryViewer/QueryViewer'
-import { getErrorMessage } from '@cv/utils/CommonUtils'
 import CVMultiTypeQuery from '@cv/components/CVMultiTypeQuery/CVMultiTypeQuery'
 import { transformPrometheusSampleData, createPrometheusQuery } from './PrometheusQueryViewer.utils'
 import {
@@ -41,7 +41,7 @@ export interface PrometheusQueryViewerProps {
 
 interface ChartAndRecordsProps {
   query?: string
-  error?: string | null
+  error?: GetDataError<Failure | Error> | null
   loading?: boolean
   data?: ResponseListPrometheusSampleData | null
   isQueryExecuted?: boolean
@@ -259,7 +259,7 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
         isQueryExecuted={isQueryExecuted}
         onChange={onChange}
         data={isQueryRuntimeOrEpression ? null : data}
-        error={getErrorMessage(error)}
+        error={error}
         loading={loading}
         isQueryRuntimeOrEpression={isQueryRuntimeOrEpression || isConnectorRuntimeOrExpression}
       />
