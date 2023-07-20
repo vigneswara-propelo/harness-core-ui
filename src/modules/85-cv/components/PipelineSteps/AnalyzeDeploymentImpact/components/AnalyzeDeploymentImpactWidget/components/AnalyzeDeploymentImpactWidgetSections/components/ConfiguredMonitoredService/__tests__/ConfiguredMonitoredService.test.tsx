@@ -2,26 +2,28 @@ import { AllowedTypes, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter, useParams } from 'react-router-dom'
-import {
-  MonitoredServiceDTO,
-  MonitoredServiceWithHealthSources,
-  ResponseMonitoredServiceResponse,
-  useGetMonitoredService
-} from 'services/cv'
+import { MonitoredServiceDTO, MonitoredServiceWithHealthSources, useGetMonitoredService } from 'services/cv'
+import { AnalyzeDeploymentImpactData } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
 import {
   isMonitoredServiceFixedInput,
-  isFirstTimeOpenForConfiguredMonitoredSvc,
   getMonitoredServiceOptions,
   getDefaultOption,
   isServiceAndEnvNotFixed,
   isMonitoredServiceValidFixedInput,
   getMonitoredServiceIdentifier,
-  getMonitoredServiceNotPresentErrorMessage,
   getUpdatedSpecs,
-  getIsMonitoredServiceDefaultInput
+  getIsMonitoredServiceDefaultInput,
+  getShouldFetchMonitoredServiceData,
+  updateAnalyseImpactFormik,
+  checkIfMonitoredServiceIsNotPresent,
+  getShouldRenderNotifications
 } from '../ConfiguredMonitoredService.utils'
 import ConfiguredMonitoredService from '../ConfiguredMonitoredService'
-import { mockedMonitoredService } from './ConfiguredMonitoredService.mock'
+import {
+  mockedAnalyseFormData,
+  mockedMonitoredService,
+  mockedMonitoredServiceForFetchingDetails
+} from './ConfiguredMonitoredService.mock'
 import { MONITORED_SERVICE_NOT_PRESENT_ERROR } from '../ConfiguredMonitoredService.constants'
 
 // eslint-disable-next-line jest-no-mock
@@ -61,7 +63,7 @@ describe('ConfiguredMonitoredService', () => {
     jest.clearAllMocks()
   })
 
-  test('renders "Monitored Service not set up" message when monitored service is not set up', () => {
+  test('renders Monitored service input box when monitored service is not set up', () => {
     const allowableTypes = [
       MultiTypeInputType.FIXED,
       MultiTypeInputType.RUNTIME,
@@ -87,7 +89,7 @@ describe('ConfiguredMonitoredService', () => {
     expect(monitoredServiceDisplay).toBeInTheDocument()
   })
 
-  test('renders AnalyseStepHealthSourcesList when monitored service is valid', () => {
+  test('renders monitored service when monitored service value in formik is valid', () => {
     const allowableTypes: AllowedTypes = []
     const formik = {
       values: {
@@ -99,14 +101,13 @@ describe('ConfiguredMonitoredService', () => {
       validateForm: jest.fn()
     } as any
 
-    render(
+    const { getAllByText } = render(
       <MemoryRouter>
         <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
     )
 
-    const healthSourcesList = screen.getByText('Health Source')
-    expect(healthSourcesList).toBeInTheDocument()
+    expect(getAllByText('cv.monitoredServices.heading').length).toEqual(2)
   })
 
   test('does not render AnalyseStepNotifications when monitored service is not valid', () => {
@@ -213,7 +214,10 @@ describe('ConfiguredMonitoredService', () => {
     const formik = {
       values: {
         spec: {
-          monitoredServiceRef: 'service_env'
+          monitoredService: {
+            type: 'Configured',
+            monitoredServiceRef: 'service_env'
+          }
         }
       },
       setFieldValue: jest.fn(),
@@ -250,8 +254,11 @@ describe('ConfiguredMonitoredService', () => {
     ] as AllowedTypes
     const formik = {
       values: {
-        spec: {
-          monitoredServiceRef: 'service_env'
+        monitoredService: {
+          type: 'Configured',
+          spec: {
+            monitoredServiceRef: 'service_env'
+          }
         }
       },
       setFieldValue: jest.fn(),
@@ -265,7 +272,7 @@ describe('ConfiguredMonitoredService', () => {
       refetch: jest.fn()
     }))
 
-    const { getByText } = render(
+    render(
       <MemoryRouter>
         <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
       </MemoryRouter>
@@ -273,7 +280,6 @@ describe('ConfiguredMonitoredService', () => {
 
     const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
     expect(monitoredServiceDisplay).toBeInTheDocument()
-    expect(getByText('Health Source')).toBeInTheDocument()
   })
 })
 
@@ -293,40 +299,6 @@ describe('isMonitoredServiceFixedInput', () => {
   test('returns false when monitoredServiceRef is an expression', () => {
     const monitoredServiceRef = '<+ example >'
     const result = isMonitoredServiceFixedInput(monitoredServiceRef)
-    expect(result).toBe(false)
-  })
-})
-
-describe('isFirstTimeOpenForConfiguredMonitoredSvc', () => {
-  test('returns true when formValues.spec.monitoredServiceRef is empty and monitoredServiceData contains identifier', () => {
-    const formValues = { spec: { monitoredServiceRef: '' } } as any
-    const monitoredServiceData = {
-      data: { monitoredService: { identifier: 'example' } }
-    } as ResponseMonitoredServiceResponse
-    const result = isFirstTimeOpenForConfiguredMonitoredSvc(formValues, monitoredServiceData)
-    expect(result).toBe(true)
-  })
-
-  test('returns false when formValues.spec.monitoredServiceRef is not empty', () => {
-    const formValues = { spec: { monitoredServiceRef: 'example' } } as any
-    const monitoredServiceData = {
-      data: { monitoredService: { identifier: 'example' } }
-    } as ResponseMonitoredServiceResponse
-    const result = isFirstTimeOpenForConfiguredMonitoredSvc(formValues, monitoredServiceData)
-    expect(result).toBe(false)
-  })
-
-  test('returns false when monitoredServiceData does not contain identifier', () => {
-    const formValues = { spec: { monitoredServiceRef: '' } } as any
-    const monitoredServiceData = { data: { monitoredService: {} } } as ResponseMonitoredServiceResponse
-    const result = isFirstTimeOpenForConfiguredMonitoredSvc(formValues, monitoredServiceData)
-    expect(result).toBe(false)
-  })
-
-  test('returns false when monitoredServiceData is null', () => {
-    const formValues = { spec: { monitoredServiceRef: '' } } as any
-    const monitoredServiceData = null
-    const result = isFirstTimeOpenForConfiguredMonitoredSvc(formValues, monitoredServiceData)
     expect(result).toBe(false)
   })
 })
@@ -507,17 +479,17 @@ describe('getUpdatedSpecs', () => {
       }
     } as MonitoredServiceDTO
     const formValues = {
-      spec: {
-        monitoredServiceRef: 'exampleRef',
-        otherField: 'otherValue'
+      monitoredService: {
+        type: 'Configured',
+        spec: {
+          monitoredServiceRef: 'exampleRef'
+        }
       }
     } as any
-    const monitoredServiceRef = 'updatedRef'
+    const monitoredServiceRef = 'exampleRef'
     const expectedResult = {
-      monitoredService: { type: 'Configured', spec: { monitoredServiceRef: 'updatedRef' } },
-      healthSources: [{ identifier: 'healthSource1' }, { identifier: 'healthSource2' }],
-      monitoredServiceRef: 'updatedRef',
-      otherField: 'otherValue'
+      monitoredService: { type: 'Configured', spec: { monitoredServiceRef: 'exampleRef' } },
+      healthSources: [{ identifier: 'healthSource1' }, { identifier: 'healthSource2' }]
     }
 
     const result = getUpdatedSpecs(monitoredServiceData, formValues, monitoredServiceRef)
@@ -527,17 +499,16 @@ describe('getUpdatedSpecs', () => {
   test('returns the updated spec with empty healthSources when monitoredServiceData is undefined', () => {
     const monitoredServiceData = undefined
     const formValues = {
-      spec: {
-        monitoredServiceRef: 'exampleRef',
-        otherField: 'otherValue'
+      monitoredService: {
+        spec: {
+          monitoredServiceRef: 'exampleRef'
+        }
       }
     } as any
-    const monitoredServiceRef = 'updatedRef'
+    const monitoredServiceRef = 'exampleRef'
     const expectedResult = {
-      monitoredService: { type: 'Configured', spec: { monitoredServiceRef: 'updatedRef' } },
-      healthSources: [],
-      monitoredServiceRef: 'updatedRef',
-      otherField: 'otherValue'
+      monitoredService: { type: 'Configured', spec: { monitoredServiceRef: 'exampleRef' } },
+      healthSources: []
     }
 
     const result = getUpdatedSpecs(monitoredServiceData, formValues, monitoredServiceRef)
@@ -545,11 +516,145 @@ describe('getUpdatedSpecs', () => {
   })
 })
 
-describe('getMonitoredServiceNotPresentErrorMessage', () => {
-  test('returns the error message with the provided monitoredServiceRef', () => {
-    const monitoredServiceRef = 'exampleRef'
-    const expectedResult = 'Invalid request: Monitored Source Entity with identifier exampleRef is not present'
-    const result = getMonitoredServiceNotPresentErrorMessage(monitoredServiceRef)
-    expect(result).toBe(expectedResult)
+describe('getShouldFetchMonitoredServiceData', () => {
+  test('should update formik and return false if isMonitoredServiceDefaultInput is true', () => {
+    const monitoredService = mockedMonitoredServiceForFetchingDetails as MonitoredServiceDTO
+    const formValues = mockedAnalyseFormData as AnalyzeDeploymentImpactData
+    const monitoredServiceRef = '<+input>'
+    const setFieldValue = jest.fn()
+    const isMonitoredServiceDefaultInput = true
+
+    const result = getShouldFetchMonitoredServiceData({
+      isMonitoredServiceDefaultInput,
+      monitoredService,
+      formValues,
+      monitoredServiceRef,
+      setFieldValue
+    })
+
+    expect(result).toBe(false)
+  })
+
+  test('should update formik and return false if monitoredServiceRef is "runtime"', () => {
+    const monitoredService = mockedMonitoredServiceForFetchingDetails as MonitoredServiceDTO
+    const formValues = mockedAnalyseFormData as AnalyzeDeploymentImpactData
+    const monitoredServiceRef = '<+input>'
+    const setFieldValue = jest.fn()
+    const isMonitoredServiceDefaultInput = false
+
+    const result = getShouldFetchMonitoredServiceData({
+      isMonitoredServiceDefaultInput,
+      monitoredService,
+      formValues,
+      monitoredServiceRef,
+      setFieldValue
+    })
+
+    expect(result).toBe(false)
+  })
+
+  test('should set isMonitoredServiceDefaultInput to false and return the result of isMonitoredServiceValidFixedInput if monitoredServiceRef is not "runtime"', () => {
+    const monitoredService = mockedMonitoredServiceForFetchingDetails as MonitoredServiceDTO
+    const formValues = mockedAnalyseFormData as AnalyzeDeploymentImpactData
+    const monitoredServiceRef = 'fixed'
+    const setFieldValue = jest.fn()
+    const isMonitoredServiceDefaultInput = false
+
+    const result = getShouldFetchMonitoredServiceData({
+      isMonitoredServiceDefaultInput,
+      monitoredService,
+      formValues,
+      monitoredServiceRef,
+      setFieldValue
+    })
+
+    expect(setFieldValue).toHaveBeenCalledWith('spec.isMonitoredServiceDefaultInput', false)
+    expect(result).toBe(true)
+  })
+})
+
+describe('updateAnalyseImpactFormik', () => {
+  test('should update the formik spec with monitoredService and isMonitoredServiceDefaultInput', () => {
+    const monitoredService = mockedMonitoredServiceForFetchingDetails as MonitoredServiceDTO
+    const formValues = mockedAnalyseFormData as AnalyzeDeploymentImpactData
+    const monitoredServiceRef = '<+input>'
+    const setFieldValue = jest.fn()
+    const isMonitoredServiceDefaultInput = true
+
+    updateAnalyseImpactFormik({
+      monitoredService,
+      formValues,
+      monitoredServiceRef,
+      setFieldValue,
+      isMonitoredServiceDefaultInput
+    })
+
+    const newSpecs = {
+      duration: '1D',
+      healthSources: [
+        {
+          identifier: 'cd'
+        }
+      ],
+      isMonitoredServiceDefaultInput: true,
+      monitoredService: {
+        spec: {
+          monitoredServiceRef: '<+input>'
+        },
+        type: 'Configured'
+      },
+      monitoredServiceRef: ''
+    }
+    expect(setFieldValue).toHaveBeenCalledWith('spec', newSpecs)
+  })
+})
+
+describe('checkIfMonitoredServiceIsNotPresent', () => {
+  test('should return true if the message includes the invalid request and is not present error', () => {
+    const message = 'Invalid request: Monitored Source Entity with identifier abc is not present'
+    const monitoredServiceRef = 'abc'
+
+    const result = checkIfMonitoredServiceIsNotPresent(message, monitoredServiceRef)
+
+    expect(result).toBe(true)
+  })
+
+  test('should return false if the message does not include the invalid request and is not present error', () => {
+    const message = 'Some other error message'
+    const monitoredServiceRef = 'abc'
+
+    const result = checkIfMonitoredServiceIsNotPresent(message, monitoredServiceRef)
+
+    expect(result).toBe(false)
+  })
+})
+
+describe('getShouldRenderNotifications', () => {
+  test('should return true if the monitored service error message does not indicate "is not present" and shouldFetchMonitoredServiceDetails is true', () => {
+    const monitoredServiceError = { data: new Error('Some other error'), message: 'Some error' }
+    const monitoredServiceIdentifier = 'abc'
+    const shouldFetchMonitoredServiceDetails = true
+
+    const result = getShouldRenderNotifications(
+      monitoredServiceError,
+      monitoredServiceIdentifier,
+      shouldFetchMonitoredServiceDetails
+    )
+
+    expect(result).toBe(true)
+  })
+
+  test('should return false if shouldFetchMonitoredServiceDetails is false', () => {
+    const monitoredServiceError = { data: { message: 'error response' }, message: 'Some error' }
+    const monitoredServiceIdentifier = 'abc'
+    const shouldFetchMonitoredServiceDetails = false
+
+    const result = getShouldRenderNotifications(
+      monitoredServiceError,
+      monitoredServiceIdentifier,
+      shouldFetchMonitoredServiceDetails
+    )
+
+    expect(result).toBe(false)
   })
 })

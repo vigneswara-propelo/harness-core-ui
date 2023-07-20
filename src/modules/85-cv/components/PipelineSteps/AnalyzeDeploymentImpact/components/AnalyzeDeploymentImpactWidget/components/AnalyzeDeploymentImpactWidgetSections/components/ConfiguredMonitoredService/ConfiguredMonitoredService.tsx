@@ -28,12 +28,13 @@ import {
 } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import { AnalyzeDeploymentImpactData } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
 import {
+  checkIfMonitoredServiceIsNotPresent,
   getIsMonitoredServiceDefaultInput,
   getMonitoredServiceIdentifier,
-  getMonitoredServiceNotPresentErrorMessage,
   getMonitoredServiceOptions,
-  getUpdatedSpecs,
-  isMonitoredServiceValidFixedInput
+  getShouldFetchMonitoredServiceData,
+  getShouldRenderNotifications,
+  getUpdatedSpecs
 } from './ConfiguredMonitoredService.utils'
 import AnalyseStepHealthSourcesList from './components/AnalyseStepHealthSourcesList/AnalyseStepHealthSourcesList'
 import ConfigureMonitoredServiceDetails from './components/ConfigureMonitoredServiceDetails/ConfigureMonitoredServiceDetails'
@@ -56,7 +57,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [healthSourcesList, setHealthSourcesList] = useState<RowData[]>([])
-  const monitoredServiceRef = (getMonitoredServiceRef(formValues.spec) || formValues.spec.monitoredServiceRef) as string
+  const monitoredServiceRef = getMonitoredServiceRef(formValues.spec) as string
 
   const {
     state: {
@@ -121,18 +122,15 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
       serviceIdentifier,
       environmentIdentifier
     )
-    // storing if monitored service is default input inside formik
-    if (isMonitoredServiceDefaultInput) {
-      let newSpecs = getUpdatedSpecs(monitoredService, formValues, monitoredServiceRef)
-      newSpecs = { ...newSpecs, isMonitoredServiceDefaultInput: true } as AnalyzeDeploymentImpactData['spec']
-      setFieldValue('spec', newSpecs)
-      return false
-    } else {
-      setFieldValue('spec.isMonitoredServiceDefaultInput', false)
-      return isMonitoredServiceValidFixedInput(monitoredServiceRef)
-    }
+    return getShouldFetchMonitoredServiceData({
+      isMonitoredServiceDefaultInput,
+      monitoredService,
+      formValues,
+      monitoredServiceRef,
+      setFieldValue
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environmentIdentifier, monitoredServiceRef, serviceIdentifier])
+  }, [environmentIdentifier, monitoredService, monitoredServiceRef, serviceIdentifier])
 
   useEffect(() => {
     if (shouldFetchMonitoredServiceDetails) {
@@ -153,10 +151,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
 
   useEffect(() => {
     const error = monitoredServicesDataError || monitoredServiceError
-    if (
-      error &&
-      (error?.data as Error)?.message !== getMonitoredServiceNotPresentErrorMessage(monitoredServiceIdentifier)
-    ) {
+    if (error && !checkIfMonitoredServiceIsNotPresent((error?.data as Error)?.message, monitoredServiceIdentifier)) {
       showError(getErrorMessage(error))
     }
 
@@ -168,10 +163,17 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
     [monitoredServicesData, serviceIdentifier, environmentIdentifier]
   )
 
+  const shouldRenderNotifications = useMemo(() => {
+    return getShouldRenderNotifications(
+      monitoredServiceError,
+      monitoredServiceIdentifier,
+      shouldFetchMonitoredServiceDetails
+    )
+  }, [monitoredServiceError, monitoredServiceIdentifier, shouldFetchMonitoredServiceDetails])
+
   const renderConfiguredMonitoredService = (): JSX.Element => {
     if (
-      (monitoredServiceError?.data as Error)?.message ===
-      getMonitoredServiceNotPresentErrorMessage(monitoredServiceIdentifier)
+      checkIfMonitoredServiceIsNotPresent((monitoredServiceError?.data as Error)?.message, monitoredServiceIdentifier)
     ) {
       return (
         <Layout.Vertical padding={{ top: 'small' }}>
@@ -239,7 +241,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
           {renderConfiguredMonitoredService()}
         </>
       </Card>
-      {shouldFetchMonitoredServiceDetails ? <AnalyseStepNotifications identifier={monitoredServiceIdentifier} /> : null}
+      {shouldRenderNotifications ? <AnalyseStepNotifications identifier={monitoredServiceIdentifier} /> : null}
     </>
   )
 }

@@ -39,7 +39,6 @@ export interface AnalyzeDeploymentImpactData extends StepElementConfig {
   failureStrategies: AllFailureStrategyConfig[]
   spec: {
     duration: string
-    monitoredServiceRef?: string
     healthSources?: {
       identifier: string
     }[]

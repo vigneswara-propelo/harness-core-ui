@@ -28,7 +28,6 @@ export const ANALYSE_DEFAULT_VALUES: AnalyzeDeploymentImpactData = {
   timeout: '15m',
   spec: {
     duration: '',
-    monitoredServiceRef: '',
     healthSources: [],
     monitoredService: {
       type: '',

@@ -6,12 +6,8 @@
  */
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
-import type {
-  HealthSource,
-  MonitoredServiceDTO,
-  MonitoredServiceWithHealthSources,
-  ResponseMonitoredServiceResponse
-} from 'services/cv'
+import { GetDataError } from 'restful-react'
+import type { HealthSource, MonitoredServiceDTO, MonitoredServiceWithHealthSources } from 'services/cv'
 import { isAnExpression } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import {
   AnalyzeDeploymentImpactData,
@@ -22,13 +18,6 @@ import { DEFAULT_VALUE } from './ConfiguredMonitoredService.constants'
 
 export function isMonitoredServiceFixedInput(monitoredServiceRef: string): boolean {
   return !!(monitoredServiceRef !== RUNTIME_INPUT_VALUE && monitoredServiceRef && !isAnExpression(monitoredServiceRef))
-}
-
-export function isFirstTimeOpenForConfiguredMonitoredSvc(
-  formValues: AnalyzeDeploymentImpactData,
-  monitoredServiceData: ResponseMonitoredServiceResponse | null
-): boolean {
-  return !!(!formValues?.spec?.monitoredServiceRef && monitoredServiceData?.data?.monitoredService?.identifier)
 }
 
 export function getMonitoredServiceOptions(
@@ -78,10 +67,6 @@ export function getMonitoredServiceIdentifier(
   return monitoredServiceIdentifier
 }
 
-export function getMonitoredServiceNotPresentErrorMessage(monitoredServiceRef: string): string {
-  return `Invalid request: Monitored Source Entity with identifier ${monitoredServiceRef} is not present`
-}
-
 export const getUpdatedSpecs = (
   monitoredServiceData: MonitoredServiceDTO | undefined,
   formValues: AnalyzeDeploymentImpactData,
@@ -89,7 +74,7 @@ export const getUpdatedSpecs = (
 ): AnalyzeDeploymentImpactData['spec'] => {
   const monitoredService = getMonitoredService(monitoredServiceRef)
   const healthSources = getHealthSourcesSpecs(monitoredServiceData)
-  return { ...formValues.spec, monitoredService, healthSources, monitoredServiceRef }
+  return { ...formValues.spec, monitoredService, healthSources }
 }
 
 function getMonitoredService(monitoredServiceRef: string): AnalyzeStepMonitoredService {
@@ -122,4 +107,72 @@ export function getIsMonitoredServiceDefaultInput(
   environmentIdentifier: string
 ): boolean {
   return monitoredServiceRef === DEFAULT_VALUE && isServiceAndEnvNotFixed(serviceIdentifier, environmentIdentifier)
+}
+
+export function getShouldFetchMonitoredServiceData({
+  isMonitoredServiceDefaultInput,
+  monitoredService,
+  formValues,
+  monitoredServiceRef,
+  setFieldValue
+}: {
+  isMonitoredServiceDefaultInput: boolean
+  monitoredService?: MonitoredServiceDTO
+  formValues: AnalyzeDeploymentImpactData
+  monitoredServiceRef: string
+  setFieldValue: (field: string, value: unknown, shouldValidate?: boolean) => void
+}): boolean {
+  let shouldFetchMonitoredServiceData = false
+  // storing if monitored service is Default Input OR RUNTIME inside formik
+  if (isMonitoredServiceDefaultInput || monitoredServiceRef === RUNTIME_INPUT_VALUE) {
+    updateAnalyseImpactFormik({
+      monitoredService,
+      formValues,
+      monitoredServiceRef,
+      setFieldValue,
+      isMonitoredServiceDefaultInput
+    })
+  }
+  // When monitored service is fixed
+  else {
+    setFieldValue('spec.isMonitoredServiceDefaultInput', false)
+    shouldFetchMonitoredServiceData = isMonitoredServiceValidFixedInput(monitoredServiceRef)
+  }
+  return shouldFetchMonitoredServiceData
+}
+
+export function updateAnalyseImpactFormik({
+  monitoredService,
+  formValues,
+  monitoredServiceRef,
+  setFieldValue,
+  isMonitoredServiceDefaultInput
+}: {
+  monitoredService: MonitoredServiceDTO | undefined
+  formValues: AnalyzeDeploymentImpactData
+  monitoredServiceRef: string
+  setFieldValue: (field: string, value: unknown, shouldValidate?: boolean | undefined) => void
+  isMonitoredServiceDefaultInput: boolean
+}): void {
+  let newSpecs = getUpdatedSpecs(monitoredService, formValues, monitoredServiceRef)
+  newSpecs = { ...newSpecs, isMonitoredServiceDefaultInput } as AnalyzeDeploymentImpactData['spec']
+  setFieldValue('spec', newSpecs)
+}
+
+export function checkIfMonitoredServiceIsNotPresent(message: string, monitoredServiceRef: string): boolean {
+  return (
+    message?.includes(`Invalid request: Monitored Source Entity with identifier ${monitoredServiceRef}`) &&
+    message?.includes('is not present')
+  )
+}
+
+export function getShouldRenderNotifications(
+  monitoredServiceError: GetDataError<unknown> | null,
+  monitoredServiceIdentifier: string,
+  shouldFetchMonitoredServiceDetails: boolean
+): boolean {
+  return (
+    !checkIfMonitoredServiceIsNotPresent((monitoredServiceError?.data as Error)?.message, monitoredServiceIdentifier) &&
+    shouldFetchMonitoredServiceDetails
+  )
 }
