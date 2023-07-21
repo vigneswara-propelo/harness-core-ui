@@ -22,7 +22,6 @@ import type {
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSecretReferencesForWinRm } from '@secrets/utils/WinRmAuthUtils'
-import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import CreateWinRmCredWizard, { WinRmCredSharedObj } from './CreateWinRmCredWizard'
 import css from './useCreateWinRmCredModal.module.scss'
 
@@ -87,16 +86,12 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
 
   const open = useCallback(
     async (_winrmData?: SecretDTOV2) => {
-      const params = getScopeBasedProjectPathParams(
-        projectPathParams,
-        getScopeFromValue((_winrmData?.spec as WinRmCredentialsSpecDTO)?.auth.spec?.spec?.password)
-      )
       showModal()
 
       if (_winrmData) {
         setView(Views.EDIT)
         setLoading(true)
-        const response = await getSecretReferencesForWinRm(_winrmData, params)
+        const response = await getSecretReferencesForWinRm(_winrmData, projectPathParams)
         setwinrmData({
           detailsData: {
             ...pick(_winrmData, 'name', 'identifier', 'description', 'tags')

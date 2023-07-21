@@ -16,8 +16,9 @@ import {
   KerberosConfigDTO,
   SecretDTOV2
 } from 'services/cd-ng'
-
+import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 function buildKerberosConfig(data: WinRmConfigFormData): KerberosWinRmConfigDTO {
   switch (data.tgtGenerationMethod) {
@@ -74,11 +75,7 @@ export function buildAuthConfig(data: WinRmConfigFormData): NTLMConfigDTO | Kerb
 
 export const getSecretReferencesForWinRm = async (
   secret: SecretDTOV2,
-  pathParams: {
-    accountIdentifier: string
-    orgIdentifier?: string
-    projectIdentifier?: string
-  }
+  projectPathParams: ProjectPathProps
 ): Promise<{
   keySecret?: SecretReference
   passwordSecret?: SecretReference
@@ -101,7 +98,7 @@ export const getSecretReferencesForWinRm = async (
     const secretId = password.indexOf('.') < 0 ? password : password.split('.')[1]
     const data = await getSecretV2Promise({
       identifier: secretId,
-      queryParams: pathParams
+      queryParams: getScopeBasedProjectPathParams(projectPathParams, getScopeFromValue(password))
     })
     passwordSecret = {
       ...data.data?.secret,
