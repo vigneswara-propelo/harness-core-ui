@@ -34,6 +34,7 @@ import { useGetDelegateTokens, GetDelegateTokensQueryParams, DelegateTokenDetail
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useRevokeTokenModal } from './modals/useRevokeTokenModal'
@@ -150,15 +151,25 @@ export const DelegateListing: React.FC = () => {
   const RenderColumnActions: Renderer<CellProps<DelegateTokenDetails>> = ({ row }) => (
     <span className={css.tokenCellText}>
       {row.original.status !== 'REVOKED' && (
-        <Button
+        <RbacButton
           variation={ButtonVariation.SECONDARY}
           onClick={e => {
             e.stopPropagation()
             openRevokeTokenModal(row.original.name || '')
           }}
-        >
-          {getString('delegates.tokens.revoke')}
-        </Button>
+          text={getString('delegates.tokens.revoke')}
+          permission={{
+            resourceScope: {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier
+            },
+            permission: PermissionIdentifier.UPDATE_DELEGATE,
+            resource: {
+              resourceType: ResourceType.DELEGATE
+            }
+          }}
+        />
       )}
     </span>
   )
@@ -298,7 +309,7 @@ export const DelegateListing: React.FC = () => {
   return (
     <Container height="100%">
       <Layout.Horizontal className={css.header}>
-        <Button
+        <RbacButton
           intent="primary"
           text={getString('rbac.token.createLabel')}
           icon="plus"
@@ -307,6 +318,17 @@ export const DelegateListing: React.FC = () => {
             trackEvent(DelegateActions.LoadCreateTokenModal, {
               category: Category.DELEGATE
             })
+          }}
+          permission={{
+            resourceScope: {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier
+            },
+            permission: PermissionIdentifier.UPDATE_DELEGATE,
+            resource: {
+              resourceType: ResourceType.DELEGATE
+            }
           }}
           id="newDelegateBtn"
           data-testid="newDelegateButton"
