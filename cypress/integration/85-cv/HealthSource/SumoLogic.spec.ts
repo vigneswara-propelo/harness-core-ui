@@ -111,7 +111,6 @@ describe('Create empty monitored service', () => {
       .click()
 
     cy.contains(
-      'p',
       'Unchecking the Continuous Verification will also remove the corresponding metric thresholds settings. This action cannot be undone.'
     ).should('exist')
 
