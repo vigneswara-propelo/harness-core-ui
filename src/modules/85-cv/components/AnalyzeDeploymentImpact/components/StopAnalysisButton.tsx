@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { Icon, Popover, useToaster, Text, Layout } from '@harness/uicore'
@@ -22,6 +22,7 @@ interface StopAnalysisButtonInterface {
 }
 export const StopAnalysisButton = ({ eventId, refetch }: StopAnalysisButtonInterface): JSX.Element => {
   const { getString } = useStrings()
+  const [loading, setLoading] = useState(false)
   const { accountId } = useParams<ProjectPathProps>()
   const { showSuccess, showError } = useToaster()
   const { mutate } = useStopSRMAnalysisStep({
@@ -29,14 +30,18 @@ export const StopAnalysisButton = ({ eventId, refetch }: StopAnalysisButtonInter
     queryParams: { accountId }
   })
 
+  const iconName = loading ? 'spinner' : 'circle-stop'
+
   const stopExecution = async (): Promise<void> => {
+    setLoading(true)
     try {
-      const data = await mutate()
-      showSuccess(getErrorMessage(data))
+      await mutate()
+      showSuccess(getString('cv.analyzeDeploymentImpact.analysisStopped'))
     } catch (error) {
       showError(getErrorMessage(error))
     }
     refetch()
+    setLoading(false)
   }
 
   return (
@@ -51,7 +56,7 @@ export const StopAnalysisButton = ({ eventId, refetch }: StopAnalysisButtonInter
       }
     >
       <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Icon data-testid="stopBtn" className={css.stopButton} name="circle-stop" onClick={() => stopExecution()} />
+        <Icon data-testid="stopBtn" className={css.stopButton} name={iconName} onClick={() => stopExecution()} />
       </Layout.Horizontal>
     </Popover>
   )

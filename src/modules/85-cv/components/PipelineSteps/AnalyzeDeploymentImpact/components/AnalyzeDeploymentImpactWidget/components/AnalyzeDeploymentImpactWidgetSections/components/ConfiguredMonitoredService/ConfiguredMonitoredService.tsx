@@ -21,6 +21,7 @@ import { getMonitoredServiceRef } from '@cv/components/PipelineSteps/AnalyzeDepl
 import routes from '@common/RouteDefinitions'
 import { getMultiTypeInputProps } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { AnalyzeDeploymentImpactData } from '@cv/components/PipelineSteps/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.types'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   checkIfMonitoredServiceIsNotPresent,
   getIsMonitoredServiceDefaultInput,
@@ -42,10 +43,12 @@ interface ConfiguredMonitoredServiceProps {
   serviceIdentifier: string
   environmentIdentifier: string
   hasMultiServiceOrEnv: boolean
+  stepViewType?: StepViewType
 }
 
 export default function ConfiguredMonitoredService(props: ConfiguredMonitoredServiceProps): JSX.Element {
   const {
+    stepViewType,
     allowableTypes,
     serviceIdentifier,
     environmentIdentifier,
@@ -60,6 +63,8 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
   const [healthSourcesList, setHealthSourcesList] = useState<RowData[]>([])
   const monitoredServiceRef = getMonitoredServiceRef(formValues.spec) as string
 
+  const isTemplate = stepViewType === StepViewType.Template
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const monitoredServiceIdentifier = getMonitoredServiceIdentifier(
     monitoredServiceRef,
     serviceIdentifier,
@@ -77,10 +82,18 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
   const {
     data: monitoredServicesData,
     loading: monitoredServicesLoading,
-    error: monitoredServicesDataError
+    error: monitoredServicesDataError,
+    refetch: monitoredServicesDataRefetch
   } = useGetAllMonitoredServicesWithTimeSeriesHealthSources({
-    queryParams
+    queryParams,
+    lazy: true
   })
+
+  useEffect(() => {
+    if (!isAccountLevel) {
+      monitoredServicesDataRefetch()
+    }
+  }, [isAccountLevel])
 
   const {
     data: monitoredServiceData,
@@ -105,9 +118,11 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
       monitoredServiceRef,
       serviceIdentifier,
       environmentIdentifier,
-      hasMultiServiceOrEnv
+      hasMultiServiceOrEnv,
+      isTemplate
     )
     return getShouldFetchMonitoredServiceData({
+      isAccountLevel,
       isMonitoredServiceDefaultInput,
       monitoredService,
       formValues,

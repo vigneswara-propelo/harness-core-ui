@@ -8912,6 +8912,7 @@ export interface StringsMap {
   'cv.affectedServices': string
   'cv.allMetrics': string
   'cv.analysisScreens.totalClusters': string
+  'cv.analyzeDeploymentImpact.analysisStopped': string
   'cv.analyzeDeploymentImpact.duration': string
   'cv.analyzeDeploymentImpact.redirectLabel': string
   'cv.analyzeDeploymentImpact.remaining': string

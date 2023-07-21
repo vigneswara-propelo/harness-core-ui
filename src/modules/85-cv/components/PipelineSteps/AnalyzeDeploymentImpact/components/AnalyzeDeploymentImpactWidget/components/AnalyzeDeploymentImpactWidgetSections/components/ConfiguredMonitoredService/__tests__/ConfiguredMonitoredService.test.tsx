@@ -57,7 +57,7 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ loading: false, data: {}, error: null, refetch: jest.fn() })),
   useGetAllMonitoredServicesWithTimeSeriesHealthSources: jest
     .fn()
-    .mockImplementation(() => ({ loading: false, data: {}, error: null })),
+    .mockImplementation(() => ({ loading: false, data: {}, error: null, refetch: jest.fn() })),
   useGetNotificationRulesForMonitoredService: jest
     .fn()
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))

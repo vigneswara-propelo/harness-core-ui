@@ -6,12 +6,12 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { useToaster, Container } from '@harness/uicore'
+import { useToaster, Icon } from '@harness/uicore'
 import { isUndefined } from 'lodash-es'
 import { useGetCdDeployStageMetadata } from 'services/cd-ng'
+import Card from '@cv/components/Card/Card'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { useStrings } from 'framework/strings'
 import type { AnalyzeDeploymentImpactWidgetSectionsProps } from './types'
 import BaseAnalyzeDeploymentImpact from './components/BaseAnalyzeDeploymentImpact/BaseAnalyzeDeploymentImpact'
 import ConfiguredMonitoredService from './components/ConfiguredMonitoredService/ConfiguredMonitoredService'
@@ -24,7 +24,6 @@ export function AnalyzeDeploymentImpactWidgetSections({
   allowableTypes
 }: AnalyzeDeploymentImpactWidgetSectionsProps): JSX.Element {
   const { showError } = useToaster()
-  const { getString } = useStrings()
 
   const [hasMultiServiceOrEnv, setHasMultiServiceOrEnv] = useState<boolean | undefined>(undefined)
   const [serviceAndEnvironment, setServiceAndEnvironment] = useState({
@@ -83,12 +82,13 @@ export function AnalyzeDeploymentImpactWidgetSections({
     <>
       <BaseAnalyzeDeploymentImpact isNewStep={isNewStep} stepViewType={stepViewType} allowableTypes={allowableTypes} />
       {stageMetaLoading || !isServiceEnvironmentFetched ? (
-        <Container flex padding="medium">
-          {getString('loading')}
-        </Container>
+        <Card>
+          <Icon name="spinner" />
+        </Card>
       ) : (
         <ConfiguredMonitoredService
           formik={formik}
+          stepViewType={stepViewType}
           allowableTypes={allowableTypes}
           serviceIdentifier={serviceIdentifier}
           environmentIdentifier={environmentIdentifier}

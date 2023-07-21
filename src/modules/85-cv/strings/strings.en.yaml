@@ -1335,3 +1335,4 @@ analyzeDeploymentImpact:
   remaining: Remaining
   redirectLabel: View Monitored Service details
   stopAnalysis: Stop the analysis and send the report
+  analysisStopped: Analysis stopped successfully

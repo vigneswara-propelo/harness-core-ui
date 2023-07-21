@@ -109,11 +109,15 @@ export function getIsMonitoredServiceDefaultInput(
   monitoredServiceRef: string,
   serviceIdentifier: string,
   environmentIdentifier: string,
-  hasMultiServiceOrEnv?: boolean
+  hasMultiServiceOrEnv?: boolean,
+  isTemplate?: boolean
 ): boolean {
   const isDefaultMonitoredService = monitoredServiceRef === DEFAULT_VALUE
   if (hasMultiServiceOrEnv && isDefaultMonitoredService) {
     return true
+  }
+  if (isTemplate && isDefaultMonitoredService) {
+    return isDefaultMonitoredService
   }
   return isDefaultMonitoredService && isServiceAndEnvNotFixed(serviceIdentifier, environmentIdentifier)
 }
@@ -123,8 +127,10 @@ export function getShouldFetchMonitoredServiceData({
   monitoredService,
   formValues,
   monitoredServiceRef,
-  setFieldValue
+  setFieldValue,
+  isAccountLevel
 }: {
+  isAccountLevel?: boolean
   isMonitoredServiceDefaultInput: boolean
   monitoredService?: MonitoredServiceDTO
   formValues: AnalyzeDeploymentImpactData
@@ -133,7 +139,7 @@ export function getShouldFetchMonitoredServiceData({
 }): boolean {
   let shouldFetchMonitoredServiceData = false
   // storing if monitored service is Default Input OR RUNTIME inside formik
-  if (isMonitoredServiceDefaultInput || monitoredServiceRef === RUNTIME_INPUT_VALUE) {
+  if (isAccountLevel || isMonitoredServiceDefaultInput || monitoredServiceRef === RUNTIME_INPUT_VALUE) {
     updateAnalyseImpactFormik({
       monitoredService,
       formValues,
