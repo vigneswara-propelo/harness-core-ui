@@ -17,9 +17,9 @@ import FolderForm, { FolderFormProps } from '../FolderForm'
 const testFolder: FolderModel = {
   id: '1',
   name: 'testName',
-  title: 'testTitle',
   type: FolderType.ACCOUNT,
   child_count: 0,
+  sub_folders: [],
   created_at: '01/01/2022'
 }
 

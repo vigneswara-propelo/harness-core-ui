@@ -75,6 +75,13 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
             </section>
           )
         }
+        if (tag === ModuleTags.CET) {
+          return (
+            <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cetTag}>
+              {getString('common.purpose.errorTracking.title')}
+            </section>
+          )
+        }
         return <></>
       })}
       {dashboard?.description &&

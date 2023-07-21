@@ -53,20 +53,22 @@ export interface CreateFolderResponse {
 export interface DashboardFolderModel {
   created_at: string
   id: string
+  parent_id: string
   title: string
 }
 
 export interface DashboardModel {
   created_at: string
-  data_source: ('CD' | 'CE' | 'CF' | 'CHAOS' | 'CI' | 'SRM' | 'STO')[]
+  data_source: ('CD' | 'CE' | 'CET' | 'CF' | 'CHAOS' | 'CI' | 'SRM' | 'STO')[]
   description: string
   favorite_count: number
   folder: DashboardFolderModel
   id: string
   last_accessed_at: string
+  models: ('CD' | 'CE' | 'CET' | 'CF' | 'CG_CD' | 'CHAOS' | 'CI' | 'CI_TI' | 'SRM' | 'STO')[]
   resourceIdentifier: string
   title: string
-  type: string
+  type: 'ACCOUNT' | 'SHARED'
   view_count: number
 }
 
@@ -89,8 +91,10 @@ export interface ErrorFolderParameters {
 }
 
 export interface ErrorResponse {
-  error?: string
-  responseMessages?: string
+  code: number
+  correlationId?: string
+  error: string
+  responseMessages: string
 }
 
 export interface FolderChildren {
@@ -99,19 +103,22 @@ export interface FolderChildren {
 }
 
 export interface FolderErrorResponse {
-  error?: string
+  code: number
+  correlationId?: string
+  error: string
   resource?: ErrorFolderParameters
-  responseMessages?: string
+  responseMessages: string
 }
 
 export interface FolderModel {
   Children?: FolderChildren[]
-  child_count: number
-  created_at: string
+  child_count?: number
+  created_at?: string
   id: string
   name: string
-  title: string
-  type: string
+  permission?: 'core_dashboards_view' | 'core_dashboards_edit'
+  sub_folders: FolderModel[]
+  type: 'ACCOUNT' | 'SHARED'
 }
 
 export interface GetAllTagsResponse {
@@ -127,6 +134,10 @@ export interface GetDashboardDetailResponse {
   title: string
 }
 
+export interface GetDashboardResponse {
+  resource: DashboardModel
+}
+
 export interface GetFolderResponse {
   items?: number
   pages?: number
@@ -140,6 +151,11 @@ export interface GetModelTagsResponse {
 
 export interface GetOotbFolderIdResponse {
   resource?: string
+}
+
+export interface ListFoldersResponse {
+  items?: number
+  resource: FolderModel
 }
 
 export interface PatchFolderRequestBody {
@@ -165,11 +181,9 @@ export interface SearchFoldersResponse {
 }
 
 export interface SearchResponse {
-  error: string
   items: number
   pages: number
   resource: DashboardModel[]
-  total: number
 }
 
 export interface SignedUrlResponse {
@@ -296,6 +310,65 @@ export const cloneDashboardPromise = (
     'POST',
     getConfig('dashboard/'),
     `/clone`,
+    props,
+    signal
+  )
+
+export interface GetDashboardQueryParams {
+  accountId: string
+}
+
+export interface GetDashboardPathParams {
+  dashboard_id: string
+}
+
+export type GetDashboardProps = Omit<
+  GetProps<GetDashboardResponse, ErrorResponse, GetDashboardQueryParams, GetDashboardPathParams>,
+  'path'
+> &
+  GetDashboardPathParams
+
+/**
+ * Get all details of a dashboard by ID.
+ */
+export const GetDashboard = ({ dashboard_id, ...props }: GetDashboardProps) => (
+  <Get<GetDashboardResponse, ErrorResponse, GetDashboardQueryParams, GetDashboardPathParams>
+    path={`/dashboards/${dashboard_id}`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetDashboardProps = Omit<
+  UseGetProps<GetDashboardResponse, ErrorResponse, GetDashboardQueryParams, GetDashboardPathParams>,
+  'path'
+> &
+  GetDashboardPathParams
+
+/**
+ * Get all details of a dashboard by ID.
+ */
+export const useGetDashboard = ({ dashboard_id, ...props }: UseGetDashboardProps) =>
+  useGet<GetDashboardResponse, ErrorResponse, GetDashboardQueryParams, GetDashboardPathParams>(
+    (paramsInPath: GetDashboardPathParams) => `/dashboards/${paramsInPath.dashboard_id}`,
+    { base: getConfig('dashboard/'), pathParams: { dashboard_id }, ...props }
+  )
+
+/**
+ * Get all details of a dashboard by ID.
+ */
+export const getDashboardPromise = (
+  {
+    dashboard_id,
+    ...props
+  }: GetUsingFetchProps<GetDashboardResponse, ErrorResponse, GetDashboardQueryParams, GetDashboardPathParams> & {
+    dashboard_id: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetDashboardResponse, ErrorResponse, GetDashboardQueryParams, GetDashboardPathParams>(
+    getConfig('dashboard/'),
+    `/dashboards/${dashboard_id}`,
     props,
     signal
   )
@@ -605,6 +678,51 @@ export const getFolderDetailPromise = (
     signal
   )
 
+export interface ListFoldersQueryParams {
+  accountId: string
+}
+
+export type ListFoldersProps = Omit<GetProps<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>, 'path'>
+
+/**
+ * Get all folders, the root node is the shared folder all other branch and leaf node folders are under the 'sub_folders' field.
+ */
+export const ListFolders = (props: ListFoldersProps) => (
+  <Get<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>
+    path={`/folders`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseListFoldersProps = Omit<
+  UseGetProps<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all folders, the root node is the shared folder all other branch and leaf node folders are under the 'sub_folders' field.
+ */
+export const useListFolders = (props: UseListFoldersProps) =>
+  useGet<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>(`/folders`, {
+    base: getConfig('dashboard/'),
+    ...props
+  })
+
+/**
+ * Get all folders, the root node is the shared folder all other branch and leaf node folders are under the 'sub_folders' field.
+ */
+export const listFoldersPromise = (
+  props: GetUsingFetchProps<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>(
+    getConfig('dashboard/'),
+    `/folders`,
+    props,
+    signal
+  )
+
 export interface GetFoldersWithHiddenQueryParams {
   accountId: string
   page?: number
@@ -823,6 +941,7 @@ export interface SearchQueryParams {
   searchTerm?: string
   customTag: string
   sortBy?: string
+  type?: 'ACCOUNT' | 'SHARED'
 }
 
 export type SearchProps = Omit<GetProps<SearchResponse, ErrorResponse, SearchQueryParams, void>, 'path'>

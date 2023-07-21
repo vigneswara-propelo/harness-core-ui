@@ -23,9 +23,11 @@ const defaultTestDashboard: DashboardModel = {
   created_at: '',
   data_source: [],
   last_accessed_at: '',
+  models: [],
   resourceIdentifier: '1',
   folder: {
     id: '',
+    parent_id: '',
     title: '',
     created_at: ''
   }

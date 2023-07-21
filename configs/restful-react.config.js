@@ -98,7 +98,7 @@ module.exports = {
   },
   'custom-dashboards': {
     output: 'src/services/custom-dashboards/index.tsx',
-    url: 'http://localhost:5000/static/swagger.yaml',
+    url: 'http://localhost:5000/dashboard/static/swagger.yaml',
     transformer: 'scripts/swagger-transform.js',
     customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from "../config";`,
     customProps: {

@@ -17,9 +17,9 @@ import FolderCard, { FolderCardProps } from '../FolderCard'
 const testFolder: FolderModel = {
   id: '1',
   name: 'testName',
-  title: 'testTitle',
   type: FolderType.ACCOUNT,
   child_count: 0,
+  sub_folders: [],
   created_at: '01/01/2022'
 }
 
@@ -62,7 +62,7 @@ describe('FolderCard', () => {
 
     await waitFor(() => expect(screen.getByText(testFolder.name)).toBeInTheDocument())
     const folderChildCount = screen.getByTestId('folder-child-count')
-    expect(folderChildCount.textContent).toBe(testFolder.child_count.toString())
+    expect(folderChildCount.textContent).toBe(testFolder.child_count?.toString())
   })
 
   test('it should show a context menu when clicking the menu button', async () => {

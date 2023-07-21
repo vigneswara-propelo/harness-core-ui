@@ -26,9 +26,9 @@ const defaultProps: DashboardsProps = {
 const mockFolderOne: customDashboardServices.FolderModel = {
   id: '1',
   name: 'testName',
-  title: 'testTitle',
   type: FolderType.ACCOUNT,
   child_count: 0,
+  sub_folders: [],
   created_at: '01/01/2022'
 }
 
@@ -36,6 +36,13 @@ const mockGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
   resource: [mockFolderOne],
   items: 1,
   pages: 1
+}
+
+const mockFolderTwo: customDashboardServices.DashboardFolderModel = {
+  id: '1',
+  parent_id: '0',
+  title: 'testTwoTitle',
+  created_at: '01/01/2022'
 }
 
 const defaultTestDashboard: DashboardModel = {
@@ -48,8 +55,9 @@ const defaultTestDashboard: DashboardModel = {
   created_at: '',
   data_source: [],
   last_accessed_at: '',
+  models: [],
   resourceIdentifier: '1',
-  folder: mockFolderOne
+  folder: mockFolderTwo
 }
 
 const renderComponent = (props: DashboardsProps): RenderResult => {
