@@ -33,19 +33,29 @@ export default function EnvironmentsInputSetForm({
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
 
+  /* istanbul ignore next */
+  const isSingleProvisionerInput = React.useMemo(() => {
+    const fieldSpec = deploymentStageTemplate.environment?.infrastructureDefinitions?.[0].inputs?.spec || {}
+    const specFields = Object.keys(fieldSpec)
+    return specFields.length === 1 && specFields.includes('provisioner')
+  }, [deploymentStageTemplate?.environment, deploymentStage?.environment])
+
   return (
     <>
-      {isSvcEnvEntityEnabled && deploymentStageTemplate.environment && (
-        <SingleEnvironmentInputSetForm
-          deploymentStage={deploymentStage}
-          deploymentStageTemplate={deploymentStageTemplate}
-          allowableTypes={allowableTypes}
-          path={path}
-          viewType={viewType}
-          readonly={readonly}
-          stageIdentifier={stageIdentifier}
-        />
-      )}
+      {isSvcEnvEntityEnabled &&
+        deploymentStageTemplate.environment &&
+        /* istanbul ignore next */
+        (isSingleProvisionerInput && !deploymentStage?.environment?.provisioner ? null : (
+          <SingleEnvironmentInputSetForm
+            deploymentStage={deploymentStage}
+            deploymentStageTemplate={deploymentStageTemplate}
+            allowableTypes={allowableTypes}
+            path={path}
+            viewType={viewType}
+            readonly={readonly}
+            stageIdentifier={stageIdentifier}
+          />
+        ))}
 
       {isSvcEnvEntityEnabled && deploymentStageTemplate.environments && (
         <div id={`Stage.${stageIdentifier}.Environments`} className={cx(css.accordionSummary)}>
