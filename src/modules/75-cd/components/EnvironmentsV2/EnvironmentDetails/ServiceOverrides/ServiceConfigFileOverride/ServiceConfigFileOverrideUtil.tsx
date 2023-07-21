@@ -38,6 +38,7 @@ export const shouldShowGitConfigStores = (deploymentType: ServiceDefinition['typ
     ServiceDeploymentType.Asg,
     ServiceDeploymentType.GoogleCloudFunctions,
     ServiceDeploymentType.ECS,
-    ServiceDeploymentType.Elastigroup
+    ServiceDeploymentType.Elastigroup,
+    ServiceDeploymentType.ServerlessAwsLambda
   ].includes(deploymentType as ServiceDeploymentType)
 }
