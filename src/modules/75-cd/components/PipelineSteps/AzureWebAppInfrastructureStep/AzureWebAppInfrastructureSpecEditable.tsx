@@ -400,7 +400,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                             connectorRef: getValue(formik.values?.connectorRef)
                           },
                           pathParams: {
-                            subscriptionId: getValue(formik.values?.subscriptionId)
+                            subscriptionId: getValue(formik.values?.subscriptionId) || undefined
                           }
                         })
                       }
