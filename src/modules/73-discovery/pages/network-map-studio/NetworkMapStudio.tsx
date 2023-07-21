@@ -21,7 +21,6 @@ import {
   useToggleOpen
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { FormikProps } from 'formik'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
 import { useStrings, String } from 'framework/strings'
@@ -30,7 +29,6 @@ import { Page } from '@common/exports'
 import type { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps } from '@common/utils/routeUtils'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import SelectService from './views/select-service/SelectService'
 import css from './NetworkMapStudio.module.scss'
@@ -54,19 +52,20 @@ const NetworkMapStudio: React.FC = () => {
   const { isOpen, open, close } = useToggleOpen()
   const history = useHistory()
   const createNetworkMapLabel = getString('discovery.createNetworkMap')
-  const networkMapFormRef = React.useRef<FormikProps<FormValues>>()
-
-  const [title, setTitle] = useState<string>('Untitled Network Map')
+  const [networkMapDetails, setNetworkMapDetails] = useState<FormValues>({
+    identifier: '',
+    name: getString('discovery.untitledNetworkMap')
+  })
 
   useDocumentTitle(createNetworkMapLabel)
 
   const handleTabChange = (tabID: StudioTabs): void => {
     switch (tabID) {
       case StudioTabs.SELECT_SERVICES:
-        history.push(routes.toCreateNetworkMap({ ...accountPathProps }))
+        history.push(routes.toCreateNetworkMap({ accountId, projectIdentifier, orgIdentifier, module: 'chaos' }))
         break
       case StudioTabs.CONFIGURE_RELATIONS:
-        history.push(routes.toCreateNetworkMap({ ...accountPathProps }))
+        // TODO: Implement once graph is added
         break
     }
   }
@@ -78,11 +77,17 @@ const NetworkMapStudio: React.FC = () => {
           <NGBreadcrumbs
             links={[
               {
-                url: routes.toDiscovery({ accountId, orgIdentifier, projectIdentifier }),
+                url: routes.toDiscovery({ accountId, orgIdentifier, projectIdentifier, module: 'chaos' }),
                 label: getString('common.discovery')
               },
               {
-                url: routes.toDiscoveryDetails({ accountId, orgIdentifier, projectIdentifier, dAgentId }),
+                url: routes.toDiscoveryDetails({
+                  accountId,
+                  orgIdentifier,
+                  projectIdentifier,
+                  dAgentId,
+                  module: 'chaos'
+                }),
                 label: dAgentId
               }
             ]}
@@ -92,8 +97,15 @@ const NetworkMapStudio: React.FC = () => {
           <React.Fragment>
             <String tagName="div" className={css.networkMapTitle} stringID="common.networkMap" />
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-              <Text color={title === 'Untitled Network Map' ? Color.GREY_200 : Color.GREY_900} font="medium">
-                {title}
+              <Text
+                color={
+                  networkMapDetails?.name === getString('discovery.untitledNetworkMap')
+                    ? Color.GREY_200
+                    : Color.GREY_900
+                }
+                font="medium"
+              >
+                {networkMapDetails?.name}
               </Text>
               <Icon data-testid="edit" name="code-edit" size={20} className={css.headerIcon} onClick={() => open()} />
             </Layout.Horizontal>
@@ -109,13 +121,13 @@ const NetworkMapStudio: React.FC = () => {
               height={400}
               className={css.dialogStyles}
             >
-              <Formik
-                innerRef={networkMapFormRef as React.Ref<FormikProps<FormValues>>}
+              <Formik<FormValues>
                 initialValues={{
-                  identifier: '',
-                  name: '',
-                  description: '',
-                  tags: []
+                  identifier: networkMapDetails?.identifier,
+                  name:
+                    networkMapDetails?.name !== getString('discovery.untitledNetworkMap') ? networkMapDetails.name : '',
+                  description: networkMapDetails?.description,
+                  tags: networkMapDetails?.tags
                 }}
                 formName="networkMapNameForm"
                 onSubmit={() => void 0}
@@ -131,7 +143,7 @@ const NetworkMapStudio: React.FC = () => {
                     <FlexExpander />
                     <Layout.Horizontal
                       flex={{ justifyContent: 'flex-start' }}
-                      padding={{ left: 'huge' }}
+                      padding={{ left: 'huge', bottom: 'medium' }}
                       spacing={'medium'}
                     >
                       <Button
@@ -139,7 +151,7 @@ const NetworkMapStudio: React.FC = () => {
                         variation={ButtonVariation.PRIMARY}
                         text={getString('confirm')}
                         onClick={() => {
-                          setTitle(formikProps.values.name)
+                          setNetworkMapDetails(formikProps.values)
                           close()
                         }}
                       />
@@ -157,7 +169,7 @@ const NetworkMapStudio: React.FC = () => {
           <Tabs id="networkMapTabs" onChange={handleTabChange} selectedTabId={StudioTabs.SELECT_SERVICES}>
             <Tab
               id={StudioTabs.SELECT_SERVICES}
-              panel={<SelectService name={title} networkMapRef={networkMapFormRef.current} />}
+              panel={<SelectService details={networkMapDetails} />}
               title={getString('discovery.tabs.selectServices')}
             />
             <Icon
@@ -168,7 +180,9 @@ const NetworkMapStudio: React.FC = () => {
               color={Color.GREY_400}
               style={{ alignSelf: 'center' }}
             />
+
             <Tab
+              disabled
               id={StudioTabs.CONFIGURE_RELATIONS}
               panel={<>Configure Relations</>}
               title={getString('discovery.tabs.configureRelations')}

@@ -5773,6 +5773,7 @@ export interface StringsMap {
   'discovery.networkDetails': string
   'discovery.networkMapCreated': string
   'discovery.networkMapDescription': string
+  'discovery.networkMapNameError': string
   'discovery.networkMapTable.noOfService': string
   'discovery.newNetworkMap': string
   'discovery.noDiscoveryData': string
@@ -5796,6 +5797,7 @@ export interface StringsMap {
   'discovery.tabs.configureRelations': string
   'discovery.tabs.selectServices': string
   'discovery.testConnector': string
+  'discovery.untitledNetworkMap': string
   'discovery.whatIsNetworkMap': string
   'discovery.whatIsServiceDiscovery': string
   'discovery.whatIsServiceDiscoveryDesc': string

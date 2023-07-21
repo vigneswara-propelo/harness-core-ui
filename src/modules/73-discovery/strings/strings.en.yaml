@@ -14,6 +14,7 @@ createDiscoveryAgent: Create Discovery Agent
 noDiscoveryData: No Discovery data yet
 dAgentCreateError: Invalid configuration, required fields were not filled
 dAgentName: Discovery Agent Name
+networkMapNameError: Netowrk Map name should not be empty
 dAgentCronError: Cron in minutes should not be less than 15, please choose a value equal to or greater than 15
 dAgentValidation:
   nameStart: Discovery Agent name can not start with -
@@ -87,6 +88,7 @@ serviceDrawer:
   workloads: Workload Information
 detectNetworkTrace: Detect network trace connectivity
 notDetected: Not detected
+untitledNetworkMap: Untitled Network Map
 blacklistedNamespaces: Backlisted Namespaces
 nodeAgentSelector: Add Node Selector
 newNetworkMap: New Network Map

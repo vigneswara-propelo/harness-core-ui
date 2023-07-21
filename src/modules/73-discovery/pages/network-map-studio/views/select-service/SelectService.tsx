@@ -10,7 +10,6 @@ import { Button, ButtonVariation, Checkbox, Container, Icon, Layout, TableV2, Te
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer, Row } from 'react-table'
-import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import {
   ApiCreateNetworkMapRequest,
@@ -28,14 +27,14 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filt
 import type { FormValues } from '../../NetworkMapStudio'
 import css from './SelectService.module.scss'
 
-interface Props {
-  name: string
-  networkMapRef: FormikProps<FormValues> | undefined
+export interface Props {
+  details: FormValues | undefined
 }
 
-const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, networkMapRef }) => {
+const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ details }) => {
   const { getString } = useStrings()
   const history = useHistory()
+  const { relatedServices } = useQueryParams<{ relatedServices?: string }>()
   const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps>()
   const [selectedServices, setSelectedServices] = useState<DatabaseServiceCollection[]>([])
   const { showError, showSuccess } = useToaster()
@@ -83,6 +82,11 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, netwo
     const connections: DatabaseConnection[] = []
     const resources: DatabaseNetworkMapEntity[] = []
 
+    if (details?.name === getString('discovery.untitledNetworkMap')) {
+      showError(`${getString('discovery.networkMapNameError')}`)
+      return
+    }
+
     // For loop to loop over connections serially, to be removed after graph is introduced
     for (let index = 0; index < selectedServices.length - 1; index++) {
       const service = selectedServices[index]
@@ -107,9 +111,9 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, netwo
     }
     const response: ApiCreateNetworkMapRequest = {
       connections: connections,
-      identity: networkMapRef?.values.identifier,
+      identity: details?.identifier,
       resources,
-      name
+      name: details?.name
     }
     try {
       await createNetworkMapMutate({
@@ -130,14 +134,32 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ name, netwo
     }
   }
 
-  const RenderSelectServiceCheckbox: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
-    <Checkbox
-      margin={{ left: 'medium' }}
-      onChange={(event: React.FormEvent<HTMLInputElement>) => {
-        handleSelectChange(event.currentTarget.checked, row)
-      }}
-    />
-  )
+  const RenderSelectServiceCheckbox: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => {
+    if (relatedServices)
+      return relatedServices.split(',').map(releatedService => {
+        if (row.original.name === releatedService)
+          return (
+            <Checkbox
+              checked
+              key={row.original.name}
+              margin={{ left: 'medium' }}
+              onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                handleSelectChange(event.currentTarget.checked, row)
+              }}
+            />
+          )
+      })
+    else
+      return (
+        <Checkbox
+          key={row.original.name}
+          margin={{ left: 'medium' }}
+          onChange={(event: React.FormEvent<HTMLInputElement>) => {
+            handleSelectChange(event.currentTarget.checked, row)
+          }}
+        />
+      )
+  }
 
   const RenderServiceName: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
     <Layout.Vertical spacing={'small'} margin={{ left: 'small' }}>

@@ -154,7 +154,7 @@ export default function DiscoveredServices({
       </Layout.Horizontal>
     </Layout.Vertical>
   )
-  const LastModified: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
+  const RelatedServices: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
     const relatedServices: string[] = []
     row.original.relatedServices?.map(services => {
       if (services.destinationName) {
@@ -177,8 +177,15 @@ export default function DiscoveredServices({
     )
   }
 
-  const ThreeDotMenu: Renderer<CellProps<K8SCustomService>> = () => {
+  const ThreeDotMenu: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
     const history = useHistory()
+    const relatedServices: string[] = []
+    row.original.relatedServices?.map(services => {
+      if (services.destinationName) {
+        relatedServices.push(services.destinationName)
+      }
+    })
+
     return (
       <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
         <RbacButton
@@ -202,8 +209,10 @@ export default function DiscoveredServices({
                 dAgentId: dAgentId,
                 accountId,
                 orgIdentifier,
-                projectIdentifier
-              })
+                projectIdentifier,
+                module: 'chaos'
+              }),
+              search: `?relatedServices=${relatedServices}`
             })
           }}
         />
@@ -217,12 +226,12 @@ export default function DiscoveredServices({
     () => [
       {
         Header: getString('common.serviceName'),
-        width: '25%',
+        width: '20%',
         Cell: Name
       },
       {
         Header: getString('common.namespace'),
-        width: '25%',
+        width: '20%',
         Cell: Namespace
       },
       {
@@ -232,8 +241,8 @@ export default function DiscoveredServices({
       },
       {
         Header: getString('discovery.relatedService'),
-        width: '20%',
-        Cell: LastModified
+        width: '30%',
+        Cell: RelatedServices
       },
       {
         Header: '',

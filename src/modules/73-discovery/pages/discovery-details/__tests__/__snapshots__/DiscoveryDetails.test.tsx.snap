@@ -87,7 +87,7 @@ exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -117,7 +117,7 @@ exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -393,7 +393,7 @@ exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -423,7 +423,7 @@ exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -696,7 +696,7 @@ exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -726,7 +726,7 @@ exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"

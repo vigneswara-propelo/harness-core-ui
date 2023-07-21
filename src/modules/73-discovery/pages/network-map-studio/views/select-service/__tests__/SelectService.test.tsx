@@ -11,10 +11,10 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as servicediscovery from 'services/servicediscovery'
 import { accountPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
+import { FormValues } from '@discovery/pages/network-map-studio/NetworkMapStudio'
 import SelectService from '../SelectService'
 
 jest.useFakeTimers({ advanceTimers: true })
-
 const createNetworkMapMutate = jest.fn()
 
 const paginationProps = {
@@ -22,6 +22,12 @@ const paginationProps = {
   index: 0,
   totalItems: 1,
   totalPages: 1
+}
+
+const mockDetails: FormValues = {
+  identifier: 'network-map-1',
+  name: 'network map 1',
+  description: 'Network map'
 }
 
 const mockDiscoveryService: servicediscovery.DatabaseServiceCollection = {
@@ -70,7 +76,7 @@ describe('<SelectService /> tests', () => {
   test('should match snapshot', async () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService name="test-service" networkMapRef={undefined} />
+        <SelectService details={mockDetails} />
       </TestWrapper>
     )
     expect(servicediscovery.useListService).toBeCalled()
@@ -88,7 +94,7 @@ describe('<SelectService /> tests', () => {
 
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService name="test-service" networkMapRef={undefined} />
+        <SelectService details={mockDetails} />
       </TestWrapper>
     )
     expect(servicediscovery.useListService).toBeCalled()
@@ -109,7 +115,7 @@ describe('<SelectService /> tests', () => {
 
     const { container, getByText } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService name="test-service" networkMapRef={undefined} />
+        <SelectService details={mockDetails} />
       </TestWrapper>
     )
     expect(servicediscovery.useListService).toBeCalled()

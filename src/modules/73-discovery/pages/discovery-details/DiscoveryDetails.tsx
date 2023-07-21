@@ -46,11 +46,17 @@ const DiscoveryDetails: React.FC = () => {
           <NGBreadcrumbs
             links={[
               {
-                url: routes.toDiscovery({ accountId, orgIdentifier, projectIdentifier }),
+                url: routes.toDiscovery({ accountId, orgIdentifier, projectIdentifier, module: 'chaos' }),
                 label: getString('common.discovery')
               },
               {
-                url: routes.toDiscoveryDetails({ accountId, orgIdentifier, projectIdentifier, dAgentId }),
+                url: routes.toDiscoveryDetails({
+                  accountId,
+                  orgIdentifier,
+                  projectIdentifier,
+                  dAgentId,
+                  module: 'chaos'
+                }),
                 label: dAgentId
               }
             ]}

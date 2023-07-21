@@ -104,7 +104,7 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
     </Layout.Vertical>
   )
 
-  const LastModified: Renderer<CellProps<DatabaseNetworkMapCollection>> = ({ row }) => {
+  const LastUpdatedBy: Renderer<CellProps<DatabaseNetworkMapCollection>> = ({ row }) => {
     return (
       <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
         <Avatar hoverCard={false} name={row.original.updatedBy} size="normal" />
@@ -217,7 +217,7 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
       {
         Header: getString('lastUpdatedBy'),
         width: '20%',
-        Cell: LastModified
+        Cell: LastUpdatedBy
       },
       {
         Header: '',
