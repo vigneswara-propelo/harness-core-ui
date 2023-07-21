@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import { get } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
@@ -17,6 +17,8 @@ import {
   getOAuthConnectorPayload,
   getPayloadForPipelineCreation,
   getPRTriggerActions,
+  getRepoNameForDefaultBranchFetch,
+  getNamespaceFromGitConnectorURL,
   getValidRepoName,
   sortConnectorsByLastConnectedAtTsDescOrder,
   updateUrlAndRepoInGitConnector
@@ -307,6 +309,127 @@ describe('Test HostedBuildsUtils methods', () => {
     expect(getValidRepoName('test-namespace/test-repo.git')).toBe('test-repo')
     expect(getValidRepoName('test-repo')).toBe('test-repo')
     expect(getValidRepoName('test-namespace/')).toBe('')
+  })
+
+  test('Test getNamespaceFromGitConnectorURL method', () => {
+    const configuredGitConnector: ConnectorInfoDTO = {
+      name: 'Github',
+      identifier: 'Github',
+      type: 'Github',
+      spec: {
+        url: 'https://github.com',
+        validationRepo: 'test-namespace/test-repo',
+        authentication: {
+          type: 'Http',
+          spec: {
+            type: 'UsernameToken',
+            spec: {
+              username: 'test-user',
+              tokenRef: 'account.pat'
+            }
+          }
+        },
+        apiAccess: {
+          type: 'Token',
+          spec: {
+            tokenRef: 'account.pat'
+          }
+        },
+        executeOnDelegate: false,
+        type: 'Account'
+      }
+    }
+    expect(getNamespaceFromGitConnectorURL(configuredGitConnector)).toBe('')
+    expect(getNamespaceFromGitConnectorURL(set(configuredGitConnector, 'spec.url', 'https://github.com/'))).toBe('')
+    expect(
+      getNamespaceFromGitConnectorURL(set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace'))
+    ).toBe('test-namespace')
+    expect(
+      getNamespaceFromGitConnectorURL(set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/'))
+    ).toBe('test-namespace')
+    expect(
+      getNamespaceFromGitConnectorURL(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/test-repo')
+      )
+    ).toBe('test-namespace')
+    expect(
+      getNamespaceFromGitConnectorURL(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/test-repo.git')
+      )
+    ).toBe('test-namespace')
+  })
+
+  test('Test getRepoNameForDefaultBranchFetch method', () => {
+    const configuredGitConnector: ConnectorInfoDTO = {
+      name: 'Github',
+      identifier: 'Github',
+      type: 'Github',
+      spec: {
+        url: 'https://github.com/test-namespace',
+        validationRepo: 'test-repo',
+        authentication: {
+          type: 'Http',
+          spec: {
+            type: 'UsernameToken',
+            spec: {
+              username: 'test-user',
+              tokenRef: 'account.pat'
+            }
+          }
+        },
+        apiAccess: {
+          type: 'Token',
+          spec: {
+            tokenRef: 'account.pat'
+          }
+        },
+        executeOnDelegate: false,
+        type: 'Account'
+      }
+    }
+    expect(getRepoNameForDefaultBranchFetch(configuredGitConnector, '')).toBe('')
+    expect(
+      getRepoNameForDefaultBranchFetch(
+        set(configuredGitConnector, 'spec.url', 'https://github.com'),
+        'test-namespace/test-repo'
+      )
+    ).toBe('test-namespace/test-repo')
+    expect(
+      getRepoNameForDefaultBranchFetch(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace'),
+        'test-namespace/test-repo'
+      )
+    ).toBe('test-repo')
+    expect(
+      getRepoNameForDefaultBranchFetch(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/'),
+        'test-namespace/test-repo'
+      )
+    ).toBe('test-repo')
+    expect(
+      getRepoNameForDefaultBranchFetch(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/test-repo'),
+        'test-namespace/test-repo'
+      )
+    ).toBe('test-repo')
+    expect(
+      getRepoNameForDefaultBranchFetch(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace'),
+        'test-repo'
+      )
+    ).toBe('test-repo')
+    expect(
+      getRepoNameForDefaultBranchFetch(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/test-repo.git'),
+        'test-repo'
+      )
+    ).toBe('test-repo')
+    expect(
+      getRepoNameForDefaultBranchFetch(
+        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/test-repo.git'),
+        'test-namespace/test-repo'
+      )
+    ).toBe('test-repo')
   })
 
   test('Test updateUrlAndRepoInGitRepoConnector method', () => {

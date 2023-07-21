@@ -11,6 +11,7 @@ import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRep
 import type { PipelineConfig } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { GitSuffixRegex } from '@common/utils/StringUtils'
 import { Connectors } from '@connectors/constants'
 import { GIT_EXTENSION, YAMLVersion } from '@pipeline/utils/CIUtils'
 import {
@@ -399,3 +400,44 @@ export const getRemoteInputSetPayload = ({
     }
   }
 }
+
+export const getNamespaceFromGitConnectorURL = (configuredGitConnector: ConnectorInfoDTO): string => {
+  /* For url https://github.com/org/repo -> "org" is namespace */
+  const gitBaseURL = GIT_PROVIDER_BASE_URL.get(configuredGitConnector?.type)
+  const gitConnectorURL: string = get(configuredGitConnector, 'spec.url', '').replace(GitSuffixRegex, '') // remove .git from the url if present
+  if (
+    !gitBaseURL ||
+    gitConnectorURL === gitBaseURL ||
+    (gitConnectorURL.endsWith('/') && gitConnectorURL.slice(0, -1) === gitBaseURL)
+  ) {
+    return ''
+  }
+  const urlSuffix = gitConnectorURL.split(gitBaseURL)?.[1]
+  if (urlSuffix.startsWith('/')) {
+    // indicates presence of namespace
+    return urlSuffix.slice(1).split('/')?.[0]
+  }
+  return ''
+}
+
+export const getRepoNameForDefaultBranchFetch = (
+  configuredGitConnector: ConnectorInfoDTO,
+  specifiedRepoName: string
+): string => {
+  const namespace = getNamespaceFromGitConnectorURL(configuredGitConnector)
+  if (!namespace) {
+    return specifiedRepoName
+  } else {
+    if (specifiedRepoName.includes('/')) {
+      return specifiedRepoName.split('/')?.[1]
+    } else {
+      return specifiedRepoName
+    }
+  }
+}
+
+const GIT_PROVIDER_BASE_URL = new Map<ConnectorInfoDTO['type'], string>([
+  [Connectors.GITHUB, 'https://github.com'],
+  [Connectors.GITLAB, 'https://gitlab.com'],
+  [Connectors.BITBUCKET, 'https://bitbucket.com']
+])

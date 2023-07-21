@@ -40,7 +40,7 @@ import { Status } from '@common/utils/Constants'
 import { isValidYAMLFilePath } from '@common/constants/Utils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { SupportedGitProvidersForCIOnboarding } from './SelectGitProvider'
-import { getValidRepoName } from '../../../utils/HostedBuildsUtils'
+import { getRepoNameForDefaultBranchFetch, getValidRepoName } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -337,7 +337,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          repoName,
+          repoName: configuredGitConnector && getRepoNameForDefaultBranchFetch(configuredGitConnector, repoName),
           size: 1
         }
       })
