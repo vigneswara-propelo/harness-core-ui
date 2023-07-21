@@ -37,7 +37,6 @@ import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import Volumes from '@pipeline/components/Volumes/Volumes'
-import { OsTypes } from '@pipeline/utils/constants'
 import type { StepGroupFormikValues } from './StepGroupUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './StepGroupStep.module.scss'
@@ -206,7 +205,6 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
 
   const renderAccordianDetailSection = (formik: FormikProps<StepGroupFormikValues>): React.ReactElement => {
     const tolerationsValue = get(formik?.values, 'tolerations')
-    const showContainerSecurityContext = get(formikRef?.values, 'os') !== OsTypes.Windows
     return (
       <>
         <Container className={stepCss.formGroup}>
@@ -281,7 +279,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'common.annotations' })}
         </Container>
 
-        {showContainerSecurityContext && renderContainerSecurityContext()}
+        {renderContainerSecurityContext()}
 
         <Container className={stepCss.formGroup}>
           <FormInput.MultiTextInput

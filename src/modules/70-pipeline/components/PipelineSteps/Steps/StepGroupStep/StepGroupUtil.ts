@@ -38,11 +38,14 @@ export interface TolerationFormik extends Toleration {
   id: string
 }
 
-export interface StepGroupFormikValues {
+export interface StepGroupFormikValues extends ContainerStepGroupFormikValues {
   identifier: string
   name: string
   variables?: NGVariable[]
   steps?: ExecutionWrapperConfig[]
+}
+
+export interface ContainerStepGroupFormikValues {
   type?: 'KubernetesDirect'
   sharedPaths?: ListUIType | string
   connectorRef?: ConnectorRef
@@ -199,4 +202,31 @@ export const getModifiedFormikValues = (
   }
 
   return values
+}
+
+// Object to extract ContainerStepGroupFormik keys
+export const dummyContainerSGValue: ContainerStepGroupFormikValues = {
+  type: 'KubernetesDirect',
+  sharedPaths: '',
+  connectorRef: '',
+  namespace: '',
+  volumes: '',
+  annotations: [],
+  labels: [],
+  nodeSelector: [],
+  serviceAccountName: '',
+  automountServiceAccountToken: false,
+  priorityClassName: '',
+  addCapabilities: '',
+  dropCapabilities: '',
+  privileged: false,
+  allowPrivilegeEscalation: false,
+  runAsNonRoot: false,
+  readOnlyRootFilesystem: false,
+  runAsUser: 0,
+  tolerations: [],
+  hostNames: '',
+  initTimeout: '',
+  harnessImageConnectorRef: '',
+  os: 'Linux'
 }

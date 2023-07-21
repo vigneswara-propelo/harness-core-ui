@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { defaultTo, isUndefined, uniqBy } from 'lodash-es'
+import { defaultTo, isUndefined, omit, uniqBy } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Switch } from '@blueprintjs/core'
 import { AllowedTypes, Formik, FormikForm, FormInput } from '@harness/uicore'
@@ -25,16 +25,19 @@ import type { MapUIType } from '@common/components/Map/Map'
 import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
-import { OsTypes } from '@pipeline/utils/constants'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { MultiTypeListType, MultiTypeListUIType } from '../StepsTypes'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import { KubernetesStepGroupInfra } from './KubernetesStepGroupInfra'
-import type { K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues, TolerationFormik } from './StepGroupUtil'
+import {
+  K8sDirectInfraStepGroupElementConfig,
+  StepGroupFormikValues,
+  TolerationFormik,
+  dummyContainerSGValue
+} from './StepGroupUtil'
 import { StepGroupCustomStepProps } from './StepGroupStep'
 import StepGroupVariables from './StepGroupVariablesSelection/StepGroupVariables'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
 interface StepGroupWidgetProps {
   initialValues: K8sDirectInfraStepGroupElementConfig
   isNewStep?: boolean
@@ -113,16 +116,13 @@ function StepGroupStepEdit(
       formikRefCurrent?.setValues({
         ...formikRefCurrent.values,
         steps: formikRefCurrent.values.steps,
-        type: 'KubernetesDirect',
-        os: OsTypes.Linux
+        type: 'KubernetesDirect'
       })
     } else {
+      const containerSGKeysToBeOmitted = Object.keys(dummyContainerSGValue)
       formikRefCurrent?.setValues({
-        identifier: formikRefCurrent.values.identifier,
-        name: formikRefCurrent.values.name,
-        steps: formikRefCurrent.values.steps,
-        variables: formikRefCurrent.values.variables
-      })
+        ...omit(formikRefCurrent.values, [...containerSGKeysToBeOmitted, 'stepGroupInfra'])
+      } as StepGroupFormikValues)
     }
   }, [isContainerBasedExecutionEnabled, formikRef])
 
