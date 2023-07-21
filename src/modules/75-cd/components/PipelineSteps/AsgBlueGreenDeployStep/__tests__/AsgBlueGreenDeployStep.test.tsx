@@ -214,7 +214,7 @@ describe('AsgBlueGreenDeploy tests', () => {
     await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
 
     expect(getByText('pipelineSteps.stepNameRequired')).toBeInTheDocument()
-    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
+    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(5)
   })
 
   test('DeploymentForm view renders fine when Service / Env V2 FF is OFF', async () => {
@@ -410,7 +410,7 @@ describe('AsgBlueGreenDeploy tests', () => {
     expect(onUpdate).not.toHaveBeenCalled()
 
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
-    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
+    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(5)
 
     await userEvent.type(timeoutInput!, '20m')
   })
@@ -627,7 +627,7 @@ describe('AsgBlueGreenDeploy tests', () => {
     await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
-    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
+    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(5)
   })
 
   test('it should make load balancers API call in runtime view when Env and Infra are marked as Runtime inputs in pipeline', async () => {

@@ -348,9 +348,19 @@ const AsgBlueGreenDeployStepEdit = (
                 name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')
               })
             ),
+            prodListenerRuleArn: Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')
+              })
+            ),
             stageListener: Yup.string().required(
               getString('common.validation.fieldIsRequired', {
                 name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
+              })
+            ),
+            stageListenerRuleArn: Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
               })
             )
           })
@@ -485,7 +495,6 @@ const AsgBlueGreenDeployStepEdit = (
                   name="spec.prodListenerRuleArn"
                   selectItems={prodListenerRules}
                   useValue
-                  isOptional={true}
                   multiTypeInputProps={{
                     selectProps: {
                       items: prodListenerRules,
@@ -580,7 +589,6 @@ const AsgBlueGreenDeployStepEdit = (
                   name="spec.stageListenerRuleArn"
                   selectItems={stageListenerRules}
                   useValue
-                  isOptional={true}
                   multiTypeInputProps={{
                     selectProps: {
                       items: stageListenerRules,

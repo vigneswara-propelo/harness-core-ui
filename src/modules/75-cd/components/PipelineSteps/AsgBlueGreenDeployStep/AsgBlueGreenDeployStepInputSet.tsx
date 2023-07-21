@@ -426,7 +426,6 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
           name={`${prefix}spec.prodListenerRuleArn`}
           selectItems={prodListenerRules}
           useValue
-          isOptional={true}
           multiTypeInputProps={{
             selectProps: {
               items: prodListenerRules,
@@ -492,7 +491,6 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
           name={`${prefix}spec.stageListenerRuleArn`}
           selectItems={stageListenerRules}
           useValue
-          isOptional={true}
           multiTypeInputProps={{
             selectProps: {
               items: stageListenerRules,
