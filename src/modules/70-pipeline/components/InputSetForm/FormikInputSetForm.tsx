@@ -8,16 +8,8 @@
 import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, omit, isUndefined, get, omitBy, isEqual } from 'lodash-es'
-import {
-  Button,
-  Container,
-  Formik,
-  FormikForm,
-  Layout,
-  ButtonVariation,
-  VisualYamlSelectedView as SelectedView
-} from '@harness/uicore'
-import { useHistory, useParams } from 'react-router-dom'
+import { Container, Formik, FormikForm, Layout, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import { Callout } from '@blueprintjs/core'
@@ -211,7 +203,6 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
     yamlHandler,
     setYamlHandler,
     className,
-    onCancel,
     filePath,
     handleFormDirty,
     setIsSaveEnabled
@@ -230,7 +221,6 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
   })
 
   const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType
-  const history = useHistory()
 
   useEffect(() => {
     if (!isUndefined(inputSet?.outdated) && yamlHandler?.setLatestYaml) {
@@ -482,40 +472,6 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
                         comparableYaml={template?.data?.inputSetTemplateYaml}
                       />
                     </Layout.Vertical>
-                    <Layout.Horizontal className={css.footer} padding="xlarge">
-                      <Button
-                        variation={ButtonVariation.PRIMARY}
-                        type="submit"
-                        disabled={!isEditable}
-                        text={getString('save')}
-                        onClick={() => {
-                          const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-                          const inputSetDto: InputSetDTO = parse<{ inputSet: InputSetDTO }>(latestYaml)?.inputSet
-                          const identifier = inputSetDto.identifier
-                          const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
-                          handleSubmit(
-                            inputSetDto,
-                            {
-                              repoIdentifier: formikProps.values.repo,
-                              branch: formikProps.values.branch
-                            },
-                            {
-                              connectorRef: formikProps.values.connectorRef,
-                              repoName: formikProps.values.repoName,
-                              branch: formikProps.values.branch,
-                              filePath: defaultTo(formikProps.values.filePath, defaultFilePath),
-                              storeType: formikProps.values.storeType
-                            }
-                          )
-                        }}
-                      />
-                      &nbsp; &nbsp;
-                      <Button
-                        variation={ButtonVariation.TERTIARY}
-                        onClick={onCancel || history.goBack}
-                        text={getString('cancel')}
-                      />
-                    </Layout.Horizontal>
                   </div>
                 )}
               </>
