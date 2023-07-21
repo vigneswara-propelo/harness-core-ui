@@ -1764,6 +1764,9 @@ export interface StringsMap {
   'defaultSettings.showUnallocatedClusterCost': string
   'defaultSettings.stageTimeout': string
   'defaultSettings.stepTimeout': string
+  'defaultSettings.ticketingPreferences': string
+  'defaultSettings.ticketingToolConnectorLabel': string
+  'defaultSettings.ticketingToolLabel': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string

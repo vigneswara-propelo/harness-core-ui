@@ -11,7 +11,8 @@ import type { SettingType } from '@common/constants/Utils'
 export type SettingCategory = SettingDTO['category']
 export enum SettingGroups {
   test_group_2 = 'test_group_2',
-  PERSPECTIVES_PREFERENCES = 'perspectives_preferences'
+  PERSPECTIVES_PREFERENCES = 'perspectives_preferences',
+  TICKETING_PREFERENCES = 'ticketing_preferences'
 }
 export type YupValidation =
   | Yup.BooleanSchema

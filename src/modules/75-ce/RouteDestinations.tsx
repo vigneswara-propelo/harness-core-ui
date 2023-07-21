@@ -38,10 +38,17 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
-import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import {
+  ConnectorReferenceField,
+  DefaultSettingConnectorField
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
+import { SettingGroups } from '@default-settings/interfaces/SettingType.types'
+import { SettingType } from '@common/constants/Utils'
+import { Connectors } from '@connectors/constants'
 import CEHomePage from './pages/home/CEHomePage'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
@@ -198,6 +205,22 @@ featureFactory.registerFeaturesByModule('ce', {
       bannerType: BannerType.LEVEL_UP
     }
   }
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.TICKETING_TOOL_CONNECTOR, {
+  label: 'defaultSettings.ticketingToolConnectorLabel',
+  settingRenderer: props => (
+    <DefaultSettingConnectorField
+      {...props}
+      type={
+        props.categoryAllSettings.get(SettingType.TICKETING_TOOL)?.value === 'Servicenow'
+          ? [Connectors.SERVICE_NOW]
+          : [Connectors.JIRA]
+      }
+    />
+  ),
+  settingCategory: 'CE',
+  groupId: SettingGroups.TICKETING_PREFERENCES
 })
 
 // eslint-disable-next-line import/no-unresolved

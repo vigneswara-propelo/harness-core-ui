@@ -26,6 +26,7 @@ emailToNonHarnessUsers: Enable Emails to be sent to non-Harness Users
 enableMatrixFieldNames: Enable Matrix Labels By Name
 enableExpressionsJsonSupport: Enable Json Support for expressions
 perspectivePreferences: PERSPECTIVES PREFERENCES
+ticketingPreferences: TICKETING PREFERENCES
 showAnomalies: Show anomalies
 showOthers: Show "others"
 showUnallocatedClusterCost: Show "unallocated" costs on Clusters
@@ -41,3 +42,5 @@ gcpIncludeTaxes: (GCP Only) Include Taxes
 showGcpCostAs: (GCP only) Show costs as
 enableServiceOverrideV2: Enable Service Override V2
 exportServiceVariablesAsEnvVariables: Export Service Variables as Env Variables
+ticketingToolLabel: Ticketing Tool
+ticketingToolConnectorLabel: Ticketing Tool Connector

@@ -77,6 +77,12 @@ DefaultSettingsFactory.registerCategory('CE', {
   modulesWhereCategoryWillBeDisplayed: ['ce']
 })
 
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.TICKETING_PREFERENCES, {
+  groupName: 'defaultSettings.ticketingPreferences',
+  settingCategory: 'CE',
+  settingsDisplayOrder: [SettingType.TICKETING_TOOL, SettingType.TICKETING_TOOL_CONNECTOR]
+})
+
 DefaultSettingsFactory.registerGroupHandler(SettingGroups.PERSPECTIVES_PREFERENCES, {
   groupName: 'defaultSettings.perspectivePreferences',
   settingCategory: 'CE',
@@ -313,6 +319,14 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_IMAGE_PULL_POL
   settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
   yupValidation: Yup.string(),
   settingCategory: 'PMS'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.TICKETING_TOOL, {
+  label: 'defaultSettings.ticketingToolLabel',
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
+  yupValidation: Yup.string(),
+  settingCategory: 'CE',
+  groupId: SettingGroups.TICKETING_PREFERENCES
 })
 
 AuditTrailFactory.registerResourceHandler('SETTING', {
