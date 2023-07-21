@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout, Tabs, Tab, Text, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 
@@ -39,7 +39,18 @@ export interface SchedulePanelPropsInterface {
 
 const FormTitle: React.FC = () => {
   const { getString } = useStrings()
-  const currentDate = new Date()
+  const [currentDate, setCurrentDate] = useState(new Date())
+
+  useEffect(() => {
+    // Update time every minute
+    const intervalId = setInterval(() => {
+      setCurrentDate(new Date())
+    }, 60 * 1000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [])
 
   return (
     <Text className={css.formContentTitle} inline={true}>
