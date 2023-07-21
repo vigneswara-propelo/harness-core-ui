@@ -19,36 +19,40 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
           cd.serviceDashboard.instancesDetails
         </p>
         <div
-          class="bp3-input-group ui-search-box ExpandingSearchInput--main searchIconStyle  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
-          data-name=""
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex"
         >
-          <span
-            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-            data-icon="thinner-search"
+          <div
+            class="bp3-input-group ui-search-box ExpandingSearchInput--main searchIconStyle  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+            data-name=""
           >
-            <svg
-              fill="none"
-              height="14"
-              viewBox="0 0 16 16"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <span
+              class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+              data-icon="thinner-search"
             >
-              <path
-                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <input
-            class="bp3-input  ExpandingSearchInput--filter"
-            dir="auto"
-            placeholder="search"
-            style="padding-right: 38px;"
-            type="search"
-            value=""
-          />
+              <svg
+                fill="none"
+                height="14"
+                viewBox="0 0 16 16"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <input
+              class="bp3-input  ExpandingSearchInput--filter"
+              dir="auto"
+              placeholder="search"
+              style="padding-right: 38px;"
+              type="search"
+              value=""
+            />
+          </div>
         </div>
       </div>
     </h4>
@@ -75,95 +79,1342 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
     class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
   >
     <div
-      class="separator"
-      style="margin-top: 14px;"
-    />
-    <div
-      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-    >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 4; text-transform: uppercase;"
-      >
-         
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 18; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.artifactVersion
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 16; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.environment
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 16; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.infrastructures
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 32; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.instances
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 24; text-transform: uppercase;"
-      >
-        auditTrail.resourceLabel.pipelineExecution
-      </p>
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main"
-      style="overflow-y: auto;"
+      class="OverlaySpinner--overlaySpinner"
     >
       <div
-        class="Collapse--main collapse"
+        class="separator"
+      />
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 4; text-transform: uppercase;"
+        >
+           
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 18; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.artifactVersion
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 16; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.environment
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 16; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.infrastructures
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 32; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.instances
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 24; text-transform: uppercase;"
+        >
+          auditTrail.resourceLabel.pipelineExecution
+        </p>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main"
+        style="overflow-y: auto;"
       >
         <div
-          class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
+          class="Collapse--main collapse"
         >
           <div
-            class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
+            class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
+          >
+            <div
+              class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                data-icon="main-chevron-down"
+              >
+                <svg
+                  height="10"
+                  viewBox="0 0 14 8"
+                  width="10"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main"
+            />
+          </div>
+          <div
+            class="Collapse--collapse"
+          >
+            <div
+              class="bp3-collapse"
+              style="height: 0px;"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(0);"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+                >
+                  <div
+                    class="TableV2--table instanceTable"
+                  >
+                    <div
+                      class="TableV2--body"
+                    >
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          >
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 200px; --text-line-clamp: 1;"
+                                  tabindex="0"
+                                >
+                                  artifact-1
+                                </p>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main StyledProps--flex"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main envContainer"
+                                >
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                    style="--text-line-clamp: 1;"
+                                  >
+                                    env-1
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-1
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                12
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
+                              >
+                                +5
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-1
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-2
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                2
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-2
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main StyledProps--flex"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main envContainer"
+                                >
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                    style="--text-line-clamp: 1;"
+                                  >
+                                    env-2
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-3
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                1
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-3
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-4
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                2
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-4
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Collapse--main collapse"
+        >
+          <div
+            class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
+          >
+            <div
+              class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                data-icon="main-chevron-down"
+              >
+                <svg
+                  height="10"
+                  viewBox="0 0 14 8"
+                  width="10"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main"
+            />
+          </div>
+          <div
+            class="Collapse--collapse"
+          >
+            <div
+              class="bp3-collapse"
+              style="height: 0px;"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(0);"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+                >
+                  <div
+                    class="TableV2--table instanceTable"
+                  >
+                    <div
+                      class="TableV2--body"
+                    >
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          >
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 200px; --text-line-clamp: 1;"
+                                  tabindex="0"
+                                >
+                                  perl
+                                </p>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main StyledProps--flex"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main envContainer"
+                                >
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                    style="--text-line-clamp: 1;"
+                                  >
+                                    NewEnv
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-5
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                1
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-5
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-6
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                2
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-6
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main StyledProps--flex"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main envContainer"
+                                >
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                    style="--text-line-clamp: 1;"
+                                  >
+                                    env-4
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-7
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                1
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-7
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--row TableV2--card"
+                        role="row"
+                      >
+                        <div
+                          class="TableV2--cells"
+                        >
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 18%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          />
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 17%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                                style="width: 100%;"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  infra-8
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 5%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                              >
+                                2
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 28%;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                            >
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                              <span
+                                class="bp3-popover-wrapper"
+                              >
+                                <span
+                                  class="bp3-popover-target"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                    style="width: 18px; height: 18px;"
+                                    tabindex="0"
+                                  />
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="TableV2--cell"
+                            role="cell"
+                            style="width: 23%;"
+                          >
+                            <div
+                              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                                data-testid="pipeline-link"
+                                style="--text-line-clamp: 1;"
+                              >
+                                Pipeline-8
+                              </p>
+                              dummy date
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;
+
+exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog padded-dialog dialogBase"
+>
+  <div
+    class="bp3-dialog-header"
+  >
+    <h4
+      class="bp3-heading"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--padding-bottom-large StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-variation-h4 StyledProps--font-weight-semi-bold"
+        >
+          cd.serviceDashboard.instancesDetails
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="bp3-input-group ui-search-box ExpandingSearchInput--main searchIconStyle  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+            data-name=""
           >
             <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-              data-icon="main-chevron-down"
+              class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+              data-icon="thinner-search"
             >
               <svg
-                height="10"
-                viewBox="0 0 14 8"
-                width="10"
+                fill="none"
+                height="14"
+                viewBox="0 0 16 16"
+                width="14"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                  fill="#4d5969"
+                  d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 />
               </svg>
             </span>
+            <input
+              class="bp3-input  ExpandingSearchInput--filter"
+              dir="auto"
+              placeholder="search"
+              style="padding-right: 38px;"
+              type="search"
+              value=""
+            />
           </div>
-          <div
-            class="StyledProps--font StyledProps--main"
-          />
         </div>
+      </div>
+    </h4>
+  </div>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <div
+        class="separator"
+      />
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 4; text-transform: uppercase;"
+        >
+           
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 18; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.artifactVersion
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 16; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.environment
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 16; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.infrastructures
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 32; text-transform: uppercase;"
+        >
+          cd.serviceDashboard.headers.instances
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          style="flex: 24; text-transform: uppercase;"
+        >
+          auditTrail.resourceLabel.pipelineExecution
+        </p>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main"
+        style="overflow-y: auto;"
+      >
         <div
-          class="Collapse--collapse"
+          class="Collapse--main collapse"
         >
           <div
-            class="bp3-collapse"
-            style="height: 0px;"
+            class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
           >
             <div
-              aria-hidden="false"
-              class="bp3-collapse-body"
-              style="transform: translateY(0);"
+              class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
             >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="10"
+                  viewBox="0 0 8 14"
+                  width="10"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
               <div
                 class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
               >
@@ -222,6 +1473,13 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                   env-1
                                 </p>
                               </div>
+                              <p
+                                class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                                style="line-height: small;"
+                              >
+                                + 
+                                1
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -238,10 +1496,17 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                               style="width: 100%;"
                             >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                class="StyledProps--font Text--lineclamp StyledProps--main infraVisible StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                                 style="--text-line-clamp: 1;"
                               >
                                 infra-1
+                              </p>
+                              <p
+                                class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                                style="line-height: small; width: 30%;"
+                              >
+                                + 
+                                3
                               </p>
                             </div>
                           </div>
@@ -257,7 +1522,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                             <p
                               class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              12
+                              17
                             </p>
                           </div>
                         </div>
@@ -363,7 +1628,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                             <p
                               class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
                             >
-                              +5
+                              +10
                             </p>
                           </div>
                         </div>
@@ -379,342 +1644,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                               class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
                               data-testid="pipeline-link"
                               style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-1
-                            </p>
-                            dummy date
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cells"
-                      >
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 18%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                              style="width: 100%;"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                                style="--text-line-clamp: 1;"
-                              >
-                                infra-2
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 5%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                            >
-                              2
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 28%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                          >
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 23%;"
-                        >
-                          <div
-                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                              data-testid="pipeline-link"
-                              style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-2
-                            </p>
-                            dummy date
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cells"
-                      >
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 18%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main StyledProps--flex"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main envContainer"
-                              >
-                                <p
-                                  class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                                  style="--text-line-clamp: 1;"
-                                >
-                                  env-2
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                              style="width: 100%;"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                                style="--text-line-clamp: 1;"
-                              >
-                                infra-3
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 5%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                            >
-                              1
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 28%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                          >
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 23%;"
-                        >
-                          <div
-                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                              data-testid="pipeline-link"
-                              style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-3
-                            </p>
-                            dummy date
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cells"
-                      >
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 18%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                              style="width: 100%;"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                                style="--text-line-clamp: 1;"
-                              >
-                                infra-4
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 5%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                            >
-                              2
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 28%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                          >
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 23%;"
-                        >
-                          <div
-                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                              data-testid="pipeline-link"
-                              style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-4
-                            </p>
+                            />
                             dummy date
                           </div>
                         </div>
@@ -724,51 +1654,49 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="Collapse--main collapse"
-      >
-        <div
-          class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
-        >
-          <div
-            class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
-          >
-            <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-              data-icon="main-chevron-down"
-            >
-              <svg
-                height="10"
-                viewBox="0 0 14 8"
-                width="10"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                  fill="#4d5969"
-                />
-              </svg>
-            </span>
+            <div
+              class="StyledProps--font StyledProps--main"
+            />
           </div>
           <div
-            class="StyledProps--font StyledProps--main"
-          />
-        </div>
-        <div
-          class="Collapse--collapse"
-        >
-          <div
-            class="bp3-collapse"
-            style="height: 0px;"
+            class="Collapse--collapse"
           >
             <div
-              aria-hidden="false"
-              class="bp3-collapse-body"
-              style="transform: translateY(0);"
+              class="bp3-collapse"
             >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="Collapse--main collapse"
+        >
+          <div
+            class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
+          >
+            <div
+              class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                data-icon="main-chevron-right"
+              >
+                <svg
+                  height="10"
+                  viewBox="0 0 8 14"
+                  width="10"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
               <div
                 class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
               >
@@ -827,6 +1755,13 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                   NewEnv
                                 </p>
                               </div>
+                              <p
+                                class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                                style="line-height: small;"
+                              >
+                                + 
+                                1
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -843,106 +1778,17 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                               style="width: 100%;"
                             >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                class="StyledProps--font Text--lineclamp StyledProps--main infraVisible StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                                 style="--text-line-clamp: 1;"
                               >
                                 infra-5
                               </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 5%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                            >
-                              1
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 28%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                          >
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 23%;"
-                        >
-                          <div
-                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                              data-testid="pipeline-link"
-                              style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-5
-                            </p>
-                            dummy date
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cells"
-                      >
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 18%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                              style="width: 100%;"
-                            >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                                style="--text-line-clamp: 1;"
+                                class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                                style="line-height: small; width: 30%;"
                               >
-                                infra-6
+                                + 
+                                3
                               </p>
                             </div>
                           </div>
@@ -958,7 +1804,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                             <p
                               class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              2
+                              6
                             </p>
                           </div>
                         </div>
@@ -970,6 +1816,58 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                           >
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                  tabindex="0"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                  tabindex="0"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                  tabindex="0"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                  tabindex="0"
+                                />
+                              </span>
+                            </span>
                             <span
                               class="bp3-popover-wrapper"
                             >
@@ -1010,233 +1908,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                               class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
                               data-testid="pipeline-link"
                               style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-6
-                            </p>
-                            dummy date
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cells"
-                      >
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 18%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main StyledProps--flex"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main envContainer"
-                              >
-                                <p
-                                  class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                                  style="--text-line-clamp: 1;"
-                                >
-                                  env-4
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                              style="width: 100%;"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                                style="--text-line-clamp: 1;"
-                              >
-                                infra-7
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 5%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                            >
-                              1
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 28%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                          >
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 23%;"
-                        >
-                          <div
-                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                              data-testid="pipeline-link"
-                              style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-7
-                            </p>
-                            dummy date
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cells"
-                      >
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 18%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        />
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 17%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                              style="width: 100%;"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                                style="--text-line-clamp: 1;"
-                              >
-                                infra-8
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 5%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                            >
-                              2
-                            </p>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 28%;"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                          >
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                            <span
-                              class="bp3-popover-wrapper"
-                            >
-                              <span
-                                class="bp3-popover-target"
-                              >
-                                <div
-                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                  style="width: 18px; height: 18px;"
-                                  tabindex="0"
-                                />
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div
-                          class="TableV2--cell"
-                          role="cell"
-                          style="width: 23%;"
-                        >
-                          <div
-                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                              data-testid="pipeline-link"
-                              style="--text-line-clamp: 1;"
-                            >
-                              Pipeline-8
-                            </p>
+                            />
                             dummy date
                           </div>
                         </div>
@@ -1246,680 +1918,22 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="StyledProps--font StyledProps--main"
+            />
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <footer />
-</div>
-`;
-
-exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
-<div
-  class="bp3-dialog Dialog--dialog padded-dialog dialogBase"
->
-  <div
-    class="bp3-dialog-header"
-  >
-    <h4
-      class="bp3-heading"
-    >
-      <div
-        class="Layout--horizontal StyledProps--main StyledProps--padding-bottom-large StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-variation-h4 StyledProps--font-weight-semi-bold"
-        >
-          cd.serviceDashboard.instancesDetails
-        </p>
-        <div
-          class="bp3-input-group ui-search-box ExpandingSearchInput--main searchIconStyle  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
-          data-name=""
-        >
-          <span
-            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-            data-icon="thinner-search"
+          <div
+            class="Collapse--collapse"
           >
-            <svg
-              fill="none"
-              height="14"
-              viewBox="0 0 16 16"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="bp3-collapse"
             >
-              <path
-                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
               />
-            </svg>
-          </span>
-          <input
-            class="bp3-input  ExpandingSearchInput--filter"
-            dir="auto"
-            placeholder="search"
-            style="padding-right: 38px;"
-            type="search"
-            value=""
-          />
-        </div>
-      </div>
-    </h4>
-  </div>
-  <span
-    class="bp3-icon StyledProps--main Dialog--close"
-    data-icon="Stroke"
-  >
-    <svg
-      fill="none"
-      height="15"
-      width="15"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
-        stroke="#8F90A6"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  </span>
-  <div
-    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
-  >
-    <div
-      class="separator"
-      style="margin-top: 14px;"
-    />
-    <div
-      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-    >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 4; text-transform: uppercase;"
-      >
-         
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 18; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.artifactVersion
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 16; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.environment
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 16; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.infrastructures
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 32; text-transform: uppercase;"
-      >
-        cd.serviceDashboard.headers.instances
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        style="flex: 24; text-transform: uppercase;"
-      >
-        auditTrail.resourceLabel.pipelineExecution
-      </p>
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main"
-      style="overflow-y: auto;"
-    >
-      <div
-        class="Collapse--main collapse"
-      >
-        <div
-          class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
-        >
-          <div
-            class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
-          >
-            <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-              data-icon="main-chevron-right"
-            >
-              <svg
-                height="10"
-                viewBox="0 0 8 14"
-                width="10"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
-                  fill="#4d5969"
-                />
-              </svg>
-            </span>
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
-            >
-              <div
-                class="TableV2--table instanceTable"
-              >
-                <div
-                  class="TableV2--body"
-                >
-                  <div
-                    class="TableV2--row TableV2--card"
-                    role="row"
-                  >
-                    <div
-                      class="TableV2--cells"
-                    >
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      >
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="max-width: 200px; --text-line-clamp: 1;"
-                              tabindex="0"
-                            >
-                              artifact-1
-                            </p>
-                          </span>
-                        </span>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main envContainer"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                                style="--text-line-clamp: 1;"
-                              >
-                                env-1
-                              </p>
-                            </div>
-                            <p
-                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                              style="line-height: small;"
-                            >
-                              + 
-                              1
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
-                        >
-                          <div
-                            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                            style="width: 100%;"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main infraVisible StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
-                            >
-                              infra-1
-                            </p>
-                            <p
-                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                              style="line-height: small; width: 30%;"
-                            >
-                              + 
-                              3
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            17
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
-                          >
-                            +10
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
-                        <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                        >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                            data-testid="pipeline-link"
-                            style="--text-line-clamp: 1;"
-                          />
-                          dummy date
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main"
-          />
-        </div>
-        <div
-          class="Collapse--collapse"
-        >
-          <div
-            class="bp3-collapse"
-          >
-            <div
-              aria-hidden="false"
-              class="bp3-collapse-body"
-              style="transform: translateY(-undefinedpx);"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="Collapse--main collapse"
-      >
-        <div
-          class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header collapseHeader"
-        >
-          <div
-            class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
-          >
-            <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-              data-icon="main-chevron-right"
-            >
-              <svg
-                height="10"
-                viewBox="0 0 8 14"
-                width="10"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
-                  fill="#4d5969"
-                />
-              </svg>
-            </span>
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
-            >
-              <div
-                class="TableV2--table instanceTable"
-              >
-                <div
-                  class="TableV2--body"
-                >
-                  <div
-                    class="TableV2--row TableV2--card"
-                    role="row"
-                  >
-                    <div
-                      class="TableV2--cells"
-                    >
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      >
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="max-width: 200px; --text-line-clamp: 1;"
-                              tabindex="0"
-                            >
-                              perl
-                            </p>
-                          </span>
-                        </span>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
-                        >
-                          <div
-                            class="StyledProps--font StyledProps--main StyledProps--flex"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main envContainer"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                                style="--text-line-clamp: 1;"
-                              >
-                                NewEnv
-                              </p>
-                            </div>
-                            <p
-                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                              style="line-height: small;"
-                            >
-                              + 
-                              1
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
-                        >
-                          <div
-                            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                            style="width: 100%;"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main infraVisible StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
-                            >
-                              infra-5
-                            </p>
-                            <p
-                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                              style="line-height: small; width: 30%;"
-                            >
-                              + 
-                              3
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            6
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                                tabindex="0"
-                              />
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
-                        <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--padding-left-small StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                        >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                            data-testid="pipeline-link"
-                            style="--text-line-clamp: 1;"
-                          />
-                          dummy date
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main"
-          />
-        </div>
-        <div
-          class="Collapse--collapse"
-        >
-          <div
-            class="bp3-collapse"
-          >
-            <div
-              aria-hidden="false"
-              class="bp3-collapse-body"
-              style="transform: translateY(-undefinedpx);"
-            />
           </div>
         </div>
       </div>

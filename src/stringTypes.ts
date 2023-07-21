@@ -6626,6 +6626,7 @@ export interface StringsMap {
   'cd.serviceDashboard.nonProd': string
   'cd.serviceDashboard.pod': string
   'cd.serviceDashboard.postProdRollback.emptyStateMsg': string
+  'cd.serviceDashboard.postProdRollback.instanceDataEmptyOrMismatch': string
   'cd.serviceDashboard.postProdRollback.rollbackConfirmationText': string
   'cd.serviceDashboard.postProdRollback.rollbackConfirmationTitle': string
   'cd.serviceDashboard.postProdRollback.rollbackTitle': string

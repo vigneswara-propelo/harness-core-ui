@@ -421,3 +421,19 @@ export const mockServiceInstanceDetailsForAsgCanaryDeployment = {
     correlationId: 'a9d67688-9100-4e38-8da6-9852a62bc422'
   }
 }
+
+export const serviceResponse = {
+  accountId: 'accountId',
+  identifier: 'Testservice',
+  orgIdentifier: 'default',
+  projectIdentifier: 'CD_Dashboards',
+  name: 'Test-service',
+  deleted: false,
+  tags: {
+    '5': '6',
+    t: '',
+    run: 'ok'
+  },
+  yaml: 'service:\n  name: Test-service\n  identifier: Testservice\n  tags:\n    "5": "6"\n    run: ok\n    t: ""\n  serviceDefinition:\n    type: Kubernetes\n    spec: {}\n  gitOpsEnabled: false\n',
+  v2Service: false
+}

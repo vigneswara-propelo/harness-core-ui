@@ -8,22 +8,33 @@
 import React, { useMemo } from 'react'
 import type { CellProps, Renderer } from 'react-table'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
-import { Container, Layout, Popover, Text, PageError, useToaster } from '@harness/uicore'
+import { Container, Layout, Popover, Text, PageError, useToaster, getErrorInfoFromErrorObject } from '@harness/uicore'
 import { HTMLTable, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import ReactTimeago from 'react-timeago'
 import { useParams } from 'react-router-dom'
 import { PageSpinner, Table } from '@common/components'
-import type { InstanceGroupedByArtifactV2, InstanceGroupedByInfrastructureV2 } from 'services/cd-ng'
+import {
+  InstanceGroupedByArtifactV2,
+  InstanceGroupedByInfrastructureV2,
+  getInstancesDetailsPromise
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import { numberFormatter } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
-import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  PipelineType,
+  PipelinePathProps,
+  ExecutionPathProps,
+  ProjectPathProps,
+  ServicePathProps
+} from '@common/interfaces/RouteInterfaces'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
+import { PostProdRollbackBtnProps } from '../ServiceDetailsSummaryV2/PostProdRollback/PostProdRollbackButton'
 import css from './ActiveServiceInstances.module.scss'
 
 let TOTAL_VISIBLE_INSTANCES = 7
@@ -64,6 +75,12 @@ export const isClusterData = (data: InstanceGroupedByArtifactV2[]): boolean => {
   })
   return isCluster
 }
+
+const makeRowKey = (rowData: TableRowData): string =>
+  `${rowData.envId}_${rowData.lastPipelineExecutionId}_${rowData.artifactVersion}_${defaultTo(
+    rowData.infraIdentifier,
+    rowData.clusterIdentifier
+  )}`
 
 // full table is the expanded table in the dialog
 export const getFullTableData = (instanceGroupedByArtifactV2?: InstanceGroupedByArtifactV2[]): TableRowData[] => {
@@ -584,11 +601,26 @@ export const ActiveServiceInstancesContentV2 = (
     data?: InstanceGroupedByArtifactV2[]
     error?: GetDataError<unknown> | null
     refetch?: () => Promise<void>
+    setPostProdBtnInfo?: React.Dispatch<React.SetStateAction<PostProdRollbackBtnProps | undefined>>
+    setSelectedRow?: React.Dispatch<React.SetStateAction<string | undefined>>
+    selectedRow?: string
+    allowPostProdRollback?: boolean
   }>
 ): React.ReactElement => {
-  const { tableType, loading = false, data, error, refetch } = props
+  const {
+    tableType,
+    loading = false,
+    data,
+    error,
+    refetch,
+    setPostProdBtnInfo,
+    selectedRow,
+    setSelectedRow,
+    allowPostProdRollback = false
+  } = props
   const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
+  const { showError, clear } = useToaster()
   const tableData: TableRowData[] = useMemo(() => {
     switch (tableType) {
       case TableType.SUMMARY:
@@ -599,6 +631,46 @@ export const ActiveServiceInstancesContentV2 = (
         return getFullTableData(data)
     }
   }, [data, tableType])
+
+  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+
+  const fetchInstanceDetailForRollback = async (rowData: TableRowData): Promise<void> => {
+    clear()
+    try {
+      const clusterId = rowData.clusterIdentifier ? rowData.clusterIdentifier : undefined
+      const infraId = rowData.infraIdentifier ? rowData.infraIdentifier : undefined
+      const pipelineExecutionId = rowData.lastPipelineExecutionId ? rowData.lastPipelineExecutionId : undefined
+
+      const response = await getInstancesDetailsPromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          serviceId: serviceId,
+          envId: defaultTo(rowData.envId, ''),
+          buildId: defaultTo(rowData.artifactVersion, ''),
+          clusterIdentifier: clusterId,
+          infraIdentifier: infraId,
+          pipelineExecutionId: pipelineExecutionId
+        }
+      })
+
+      if (response.data?.instances?.length && response.data?.buildId === rowData.artifactVersion) {
+        setPostProdBtnInfo?.({
+          artifactName: defaultTo(rowData.artifactVersion, ''),
+          infraName: defaultTo(rowData.infraName || rowData.clusterIdentifier, ''),
+          pipelineId: rowData.lastPipelineExecutionName,
+          rollbackStatus: 'NOT_STARTED', //hardcoded value until BE send this the response
+          infrastructureMappingId: response.data.instances[0].infrastructureMappingId,
+          instanceKey: response.data.instances[0].instanceKey
+        })
+      } else {
+        throw new Error(getString('cd.serviceDashboard.postProdRollback.instanceDataEmptyOrMismatch'))
+      }
+    } catch (e: any) {
+      showError(getErrorInfoFromErrorObject(e))
+    }
+  }
 
   const columns = useMemo(() => {
     const columnsArray = [
@@ -686,6 +758,10 @@ export const ActiveServiceInstancesContentV2 = (
     return component
   }
 
+  const matchRowSelected = (rowData: TableRowData, rowString?: string): boolean => {
+    return isEqual(makeRowKey(rowData), rowString)
+  }
+
   return (
     <Layout.Horizontal padding={{ top: 'medium' }}>
       <Table<TableRowData>
@@ -693,6 +769,23 @@ export const ActiveServiceInstancesContentV2 = (
         data={tableData}
         className={css.instanceTable}
         hideHeaders={tableType != TableType.PREVIEW}
+        onRowClick={
+          tableType === TableType.FULL && allowPostProdRollback
+            ? async row => {
+                if (matchRowSelected(row, selectedRow)) {
+                  setSelectedRow?.(undefined)
+                } else {
+                  setSelectedRow?.(makeRowKey(row))
+                  setPostProdBtnInfo?.({
+                    artifactName: '-',
+                    infraName: '-'
+                  })
+                  await fetchInstanceDetailForRollback(row)
+                }
+              }
+            : undefined
+        }
+        getRowClassName={row => (matchRowSelected(row.original, selectedRow) ? css.selected : '')}
       />
     </Layout.Horizontal>
   )

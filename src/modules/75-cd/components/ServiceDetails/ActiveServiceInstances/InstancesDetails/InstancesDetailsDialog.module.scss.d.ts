@@ -12,5 +12,6 @@ declare const styles: {
   readonly dialogBase: string
   readonly nonCollapseRow: string
   readonly searchIconStyle: string
+  readonly separator: string
 }
 export default styles

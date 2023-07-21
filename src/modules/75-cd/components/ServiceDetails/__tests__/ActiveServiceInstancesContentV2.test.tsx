@@ -6,12 +6,15 @@
  */
 
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
+import { serviceContextData } from '@cd/components/Services/ServiceStudio/ServiceConfiguration/__tests__/ServiceConfigHelper'
+import { ServiceContext, ServiceContextValues } from '@cd/context/ServiceContext'
 import dataMock from '../DeploymentView/dataMock.json'
 import { ActiveServiceInstancesV2 } from '../ActiveServiceInstances/ActiveServiceInstancesV2'
+import { serviceResponse } from './mocks'
 
 jest.mock('highcharts-react-official', () => () => <></>)
 
@@ -519,5 +522,40 @@ describe('DeploymentViewV2', () => {
     await userEvent.click(deploymentsTab)
 
     expect(getByText('pipeline.dashboards.noActiveDeployments')).toBeTruthy()
+  })
+})
+
+describe('Post prod rollback in Service v1 dashboard - ', () => {
+  test('Open details dialog', async () => {
+    jest.spyOn(cdngServices, 'useGetActiveServiceDeployments').mockImplementation(() => {
+      return { loading: false, error: false, data: noData, refetch: jest.fn() } as any
+    })
+    jest.spyOn(cdngServices, 'useGetActiveServiceInstances').mockImplementation(() => {
+      return { loading: false, error: false, data: mockData, refetch: jest.fn() } as any
+    })
+    const { getByText } = render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          POST_PROD_ROLLBACK: true
+        }}
+      >
+        <ServiceContext.Provider value={{ ...(serviceContextData as ServiceContextValues), serviceResponse }}>
+          <ActiveServiceInstancesV2 />
+        </ServiceContext.Provider>
+      </TestWrapper>
+    )
+
+    const moreDetailsButton = getByText('cd.serviceDashboard.moreDetails')
+    await userEvent.click(moreDetailsButton!)
+    const popup = findDialogContainer()
+    expect(popup).toBeTruthy()
+
+    const rows = screen.getAllByRole('row')
+    const rowValue = rows[1].querySelectorAll('[role="cell"]')
+    expect(rowValue[0]).toHaveTextContent('artifact-1')
+
+    //initially rollbackBtn should be disabled
+    const rollbackBtn = popup?.querySelector('#rollbackBtn')
+    expect(rollbackBtn).toBeDisabled()
   })
 })

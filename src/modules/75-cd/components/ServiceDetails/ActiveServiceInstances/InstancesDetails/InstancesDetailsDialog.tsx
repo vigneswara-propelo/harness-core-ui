@@ -7,13 +7,22 @@
 
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
+import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, OverlaySpinner, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, isUndefined } from 'lodash-es'
+import { Spinner } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import type { InstanceGroupedByArtifactV2 } from 'services/cd-ng'
+import type { InstanceGroupedByArtifactV2, NGServiceConfig } from 'services/cd-ng'
+import { useServiceContext } from '@cd/context/ServiceContext'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { DeploymentsV2 } from '../../DeploymentView/DeploymentViewV2'
 import { ActiveServiceInstancesContentV2, isClusterData, TableType } from '../ActiveServiceInstancesContentV2'
+import PostProdRollbackBtn, {
+  PostProdRollbackBtnProps
+} from '../../ServiceDetailsSummaryV2/PostProdRollback/PostProdRollbackButton'
+import { supportedDeploymentTypesForPostProdRollback } from '../../ServiceDetailsSummaryV2/PostProdRollback/PostProdRollbackUtil'
 import css from './InstancesDetailsDialog.module.scss'
 
 export interface InstancesDetailsDialogProps {
@@ -28,8 +37,45 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
   const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState('')
+  const [postProdBtnInfo, setPostProdBtnInfo] = useState<PostProdRollbackBtnProps>()
+  const [selectedRow, setSelectedRow] = React.useState<string>()
+  const [rollbackInProgress, setRollbackInProgress] = useState<boolean>(false)
+
+  React.useEffect(() => {
+    if (isUndefined(selectedRow)) {
+      setPostProdBtnInfo?.({
+        artifactName: '-',
+        infraName: '-'
+      })
+    }
+  }, [selectedRow])
+
+  // Extract service deployment type from context
+  const { serviceResponse } = useServiceContext()
+  const serviceDataParse = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
+  )
+  const serviceType = serviceDataParse?.service?.serviceDefinition?.type
+
+  // Allow rollback action or not
+  const showRollbackAction =
+    useFeatureFlag(FeatureFlag.POST_PROD_ROLLBACK) &&
+    serviceType &&
+    supportedDeploymentTypesForPostProdRollback.includes(serviceType)
 
   const deployments = defaultTo(data, [])
+
+  React.useEffect(() => {
+    const searchValue = searchTerm.toLocaleLowerCase()
+    //check if selected row is still available on search
+    if (
+      !defaultTo(postProdBtnInfo?.artifactName, '').toLocaleLowerCase().includes(searchValue) &&
+      !defaultTo(postProdBtnInfo?.infraName, '').toLocaleLowerCase().includes(searchValue)
+    ) {
+      setSelectedRow(undefined)
+    }
+  }, [searchTerm])
 
   //filter by artifactVersion envName and infraName
   const filteredDeployments = useMemo(() => {
@@ -37,6 +83,8 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
       return deployments
     }
     const searchValue = searchTerm.toLocaleLowerCase()
+
+    //istanbul ignore next
     return deployments.filter(
       deployment =>
         (deployment.artifactVersion || '').toLocaleLowerCase().includes(searchValue) ||
@@ -136,7 +184,14 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
             return (
               <Container className={css.nonCollapseRow} key={index}>
                 {isActiveInstance ? (
-                  <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
+                  <ActiveServiceInstancesContentV2
+                    tableType={TableType.FULL}
+                    data={[dataItem]}
+                    setPostProdBtnInfo={setPostProdBtnInfo}
+                    setSelectedRow={setSelectedRow}
+                    selectedRow={selectedRow}
+                    allowPostProdRollback={showRollbackAction}
+                  />
                 ) : (
                   <DeploymentsV2 tableType={TableType.FULL} data={[dataItem]} />
                 )}
@@ -164,7 +219,14 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
                 isOpen={!isEmpty(searchTerm) && !index}
               >
                 {isActiveInstance ? (
-                  <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
+                  <ActiveServiceInstancesContentV2
+                    tableType={TableType.FULL}
+                    data={[dataItem]}
+                    setPostProdBtnInfo={setPostProdBtnInfo}
+                    setSelectedRow={setSelectedRow}
+                    selectedRow={selectedRow}
+                    allowPostProdRollback={showRollbackAction}
+                  />
                 ) : (
                   <DeploymentsV2 tableType={TableType.FULL} data={[dataItem]} />
                 )}
@@ -174,7 +236,7 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
         })}
       </Container>
     )
-  }, [filteredDeployments])
+  }, [filteredDeployments, isActiveInstance, searchTerm, selectedRow])
 
   return (
     <Dialog
@@ -189,22 +251,43 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
               ? getString('cd.serviceDashboard.instancesDetails')
               : getString('cd.serviceDashboard.deploymentDetails')}
           </Text>
-          <ExpandingSearchInput
-            placeholder={getString('search')}
-            throttle={200}
-            onChange={onSearch}
-            className={css.searchIconStyle}
-            alwaysExpanded
-          />
+          <Layout.Horizontal spacing="medium" flex>
+            <ExpandingSearchInput
+              placeholder={getString('search')}
+              throttle={200}
+              onChange={onSearch}
+              className={css.searchIconStyle}
+              alwaysExpanded
+            />
+            {isActiveInstance && showRollbackAction ? (
+              <PostProdRollbackBtn
+                artifactName={defaultTo(postProdBtnInfo?.artifactName, '-')}
+                infraName={defaultTo(postProdBtnInfo?.infraName, '-')}
+                closeDailog={() => {
+                  setSelectedRow(undefined)
+                  setIsOpen(false)
+                }}
+                setRollbacking={setRollbackInProgress}
+                {...postProdBtnInfo}
+              />
+            ) : null}
+          </Layout.Horizontal>
         </Layout.Horizontal>
       }
       isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={() => {
+        setSelectedRow(undefined)
+        setIsOpen(false)
+      }}
       enforceFocus={false}
+      canEscapeKeyClose={!rollbackInProgress}
+      canOutsideClickClose={!rollbackInProgress}
     >
-      <div className="separator" style={{ marginTop: '14px', borderTop: '1px solid var(--grey-100)' }} />
-      {headers}
-      {list}
+      <OverlaySpinner show={rollbackInProgress} size={Spinner.SIZE_SMALL}>
+        <div className={css.separator} />
+        {headers}
+        {list}
+      </OverlaySpinner>
     </Dialog>
   )
 }

@@ -35,6 +35,7 @@ declare const styles: {
   readonly plusMore: string
   readonly sectionValue: string
   readonly seeMore: string
+  readonly selected: string
   readonly spinner: string
   readonly tabsStyle: string
   readonly textStyle: string
