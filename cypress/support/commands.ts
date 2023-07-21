@@ -88,6 +88,7 @@ declare global {
       login(username: string, pass: string): void
       visitPageAssertion(className?: string): void
       createDeploymentStage(): void
+      createCustomStage(): void
       createKubernetesDeploymentStage(): void
       selectRuntimeInputForInfrastructure(): void
       visitCreatePipeline(): void
@@ -132,6 +133,8 @@ declare global {
       checkIfMetricThresholdsExists(): void
       generateCIPipelineYamlDynamicFixture(dynamicValues: dynamicValueInterface[]): void
       generateCIPipelineTemplateYamlDynamicFixture(dynamicValues: dynamicValueInterface[]): void
+      copyToClipboardAssertion(text: string): void
+      grantClipboardPermission(): void
     }
   }
 }
@@ -192,6 +195,15 @@ Cypress.Commands.add('createDeploymentStage', () => {
   cy.fillName('testStage_Cypress')
   cy.clickSubmit()
 })
+
+Cypress.Commands.add('createCustomStage', () => {
+  cy.get('[icon="plus"]').click()
+  cy.findByTestId('stage-Custom').click()
+
+  cy.fillName('testStage_Cypress')
+  cy.clickSubmit()
+})
+
 Cypress.Commands.add('createKubernetesDeploymentStage', () => {
   cy.get('[icon="plus"]').click()
   cy.findByTestId('stage-Deployment').click()
@@ -200,6 +212,7 @@ Cypress.Commands.add('createKubernetesDeploymentStage', () => {
   cy.contains('p', 'Kubernetes').should('be.visible').click({ force: true })
   cy.clickSubmit()
 })
+
 Cypress.Commands.add('selectRuntimeInputForInfrastructure', () => {
   cy.get('span[data-icon="fixed-input"]').eq(1).click()
   cy.contains('span', 'Fixed value').should('be.visible')
@@ -672,4 +685,24 @@ Cypress.Commands.add('generateCIPipelineTemplateYamlDynamicFixture', (dynamicVal
     }
   })
   cy.writeFile('fixtures/ci/api/common/dynamicFixtureCIPipelineTemplate.json', fixture)
+})
+
+Cypress.Commands.add('copyToClipboardAssertion', expectedValue => {
+  cy.window().then(win => {
+    win.navigator.clipboard.readText().then(text => {
+      expect(text).equal(expectedValue)
+    })
+  })
+})
+
+Cypress.Commands.add('grantClipboardPermission', () => {
+  cy.wrap(
+    Cypress.automation('remote:debugger:protocol', {
+      command: 'Browser.grantPermissions',
+      params: {
+        permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'],
+        origin: window.location.origin
+      }
+    })
+  )
 })
