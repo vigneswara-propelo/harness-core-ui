@@ -187,6 +187,10 @@ const StepRancherClusterDetails: React.FC<StepProps<StepRancherClusterDetailsPro
           onSubmit={handleSubmit}
         >
           {formikProps => {
+            /* istanbul ignore next */
+            if (formikProps?.values?.delegateType && formikProps?.errors?.delegateType) {
+              formikProps?.setFieldError('delegateType', undefined)
+            }
             return (
               <>
                 <Container className={css.clusterWrapper}>
