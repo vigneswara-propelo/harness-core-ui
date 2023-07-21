@@ -197,6 +197,17 @@ export const formikMockValuesWithRolling: FormikProps<ContinousVerificationData>
   }
 }
 
+export const formikMockValuesWithAuto: FormikProps<ContinousVerificationData> = {
+  ...formikMockValues,
+  values: {
+    ...formikMockValues.values,
+    spec: {
+      ...formikMockValues.values.spec,
+      type: 'Auto'
+    }
+  }
+}
+
 export function MockSensitivityComponent(): JSX.Element {
   const { values } = useFormikContext<ContinousVerificationData>()
 

@@ -1,9 +1,12 @@
 import React from 'react'
+import { useFormikContext } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
 import { AllowedTypes, FormInput, Text } from '@harness/uicore'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
+import { VerificationTypes } from '../../constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import styles from './NodeFilteringFieldsDetail.module.scss'
 
@@ -16,10 +19,16 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
 
   const { expressions } = useVariablesExpression()
 
+  const { values: formikValues } = useFormikContext<ContinousVerificationData>()
+
+  const verificationType = formikValues?.spec?.type
+
   const {
     CV_UI_DISPLAY_NODE_REGEX_FILTER: isRegexNodeFilterFFEnabled,
     CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled
   } = useFeatureFlags()
+
+  const canShowRegexFields = isRegexNodeFilterFFEnabled && verificationType !== VerificationTypes.Auto
 
   return (
     <>
@@ -42,7 +51,7 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
         </>
       )}
 
-      {isRegexNodeFilterFFEnabled && (
+      {canShowRegexFields && (
         <>
           <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.BODY2 }}>
             {getString('cv.verifyStep.nodeFilteringTitle')}

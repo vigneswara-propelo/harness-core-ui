@@ -1,6 +1,11 @@
 import { VerificationTypes } from './constants'
 
-const NodeFilteringEnabledTypes = [VerificationTypes.Bluegreen, VerificationTypes.Canary, VerificationTypes.Rolling]
+const NodeFilteringEnabledTypes = [
+  VerificationTypes.Bluegreen,
+  VerificationTypes.Canary,
+  VerificationTypes.Rolling,
+  VerificationTypes.Auto
+]
 
 export function isValidNodeFilteringType(type?: string): boolean {
   if (!type) {
@@ -19,5 +24,9 @@ export function canShowNodeFilterOptions({
   isFilterFromCDEnabled?: boolean
   analysisType?: string
 }): boolean {
+  if (analysisType === VerificationTypes.Auto && !isFilterFromCDEnabled) {
+    return false
+  }
+
   return Boolean((isRegexNodeFilterFFEnabled || isFilterFromCDEnabled) && isValidNodeFilteringType(analysisType))
 }

@@ -17,6 +17,7 @@ import {
   MockSensitivityComponent,
   expectedErrorsForEmptyTemplateInputs,
   formikMockValues,
+  formikMockValuesWithAuto,
   formikMockValuesWithRolling,
   formikMockValuesWithSimpleVerification,
   mockedTemplateInputs,
@@ -391,6 +392,53 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         expect(document.querySelector('input[name="spec.spec.shouldUseCDNodes"]')).toBeInTheDocument()
       )
       await waitFor(() => expect(screen.getByPlaceholderText(/cv.verifyStep.testNodePlaceholder/)).toBeInTheDocument())
+    })
+
+    test('Should render node filtering with use nodes from CD checkbox alone and regex has to be hidden if Auto type is selected and checkbox FF is enavled', async () => {
+      render(
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: true,
+            CV_UI_DISPLAY_NODE_REGEX_FILTER: true
+          }}
+        >
+          <Formik initialValues={formikMockValuesWithAuto.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValuesWithAuto} />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument()
+
+      await userEvent.click(screen.getByText(/projectsOrgs.optional/))
+
+      await waitFor(() =>
+        expect(document.querySelector('input[name="spec.spec.shouldUseCDNodes"]')).toBeInTheDocument()
+      )
+      await waitFor(() =>
+        expect(screen.queryByPlaceholderText(/cv.verifyStep.testNodePlaceholder/)).not.toBeInTheDocument()
+      )
+    })
+
+    test('Should not render optional accordion if Auto type is selected and nodes from CD FF is disabled', async () => {
+      render(
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: false,
+            CV_UI_DISPLAY_NODE_REGEX_FILTER: true
+          }}
+        >
+          <Formik initialValues={formikMockValuesWithAuto.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType allowableTypes={[MultiTypeInputType.FIXED]} formik={formikMockValuesWithAuto} />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
     })
 
     test('Should not render node filtering if unsupported deployment type is chosen', () => {
