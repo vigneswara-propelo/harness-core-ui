@@ -45,12 +45,12 @@ const StepCredentials: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
         }
       }}
       validationSchema={Yup.object().shape({
-        username: Yup.string().trim().required(),
-        password: Yup.string().trim().required()
+        username: Yup.string().trim(),
+        password: Yup.string().trim()
       })}
       formName="smtpStepCredentialsForm"
       initialValues={{
-        username: prevStepData?.value?.username || detailsData?.value?.username || '',
+        username: prevStepData?.value?.username || detailsData?.value?.username || undefined,
         password: prevStepData?.value?.password || detailsData?.value?.password || undefined
       }}
     >
