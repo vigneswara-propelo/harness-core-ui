@@ -351,17 +351,6 @@
   }
 }
 
-.compiledModeHeader {
-  padding: var(--spacing-small) var(--spacing-xlarge) 0px var(--spacing-xlarge) !important;
-  height: 65px !important;
-  align-items: center;
-}
-
 .compiledModeGridTemplate {
   grid-template-columns: 1fr 2fr !important;
-}
-
-.compiledModeExecutionId {
-  margin-bottom: 0px !important;
-  padding-left: 10px !important;
 }

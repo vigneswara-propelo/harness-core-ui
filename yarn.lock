@@ -2012,10 +2012,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/ts-transform-paths/1.0.1/8b6ee76cefebc3d6c04f3609d4df94b5ecb15d71#8b6ee76cefebc3d6c04f3609d4df94b5ecb15d71"
   integrity sha512-ktBF6O8vRCBGjH/D7i5SUOufbUzGq+SFusNqizb1NV3g2777LhWhXu/Qb2voRBZMbL7CxxYTpyG70hh5RBwi0w==
 
-"@harness/uicore@^3.146.1":
-  version "3.146.1"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.146.1/c70864a5d901159516be0894bc62cc9507b52b3d#c70864a5d901159516be0894bc62cc9507b52b3d"
-  integrity sha512-YB12tN8SXiSQHPkIx6jKdHlIxzbrLfJG/OtUBIcN09fWNSIlVEIcRygA2GpvLcRDmadJxlS4U1veoBuzIF6IDg==
+"@harness/uicore@^3.147.0":
+  version "3.147.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.147.0/4a49480fd405ac6f008d90213dae4d4ecfbe91d5#4a49480fd405ac6f008d90213dae4d4ecfbe91d5"
+  integrity sha512-pYNFj9YBofg+TL8vZOsSHV6mHGWlf8E5pOnHsFdnubn6N/XLX0iJkFMkvJ1phceP0bTTjb+hA5+0ocTCP3j4Pg==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"

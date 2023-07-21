@@ -1,0 +1,86 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.status {
+  --execution-status-bg-color: var(--grey-350);
+  --execution-status-color: var(--white);
+  color: var(--execution-status-color) !important;
+  border: none;
+  background-color: var(--execution-status-bg-color) !important;
+  align-items: center;
+
+  &.failed,
+  &.errored,
+  &.rejected,
+  &.suspended,
+  &.approvalrejected {
+    --execution-status-bg-color: var(--red-50);
+    --execution-status-color: var(--red-900);
+  }
+
+  &.skipped,
+  &.queued,
+  &.aborted,
+  &.discontinuing,
+  &.abortedbyfreeze,
+  &.expired {
+    --execution-status-bg-color: var(--grey-200);
+    --execution-status-color: var(--grey-700);
+  }
+
+  &.success,
+  &.ignorefailed {
+    --execution-status-bg-color: var(--green-50);
+    --execution-status-color: var(--green-800);
+  }
+
+  &.running,
+  &.asyncwaiting,
+  &.taskwaiting,
+  &.timedwaiting {
+    --execution-status-bg-color: var(--primary-7);
+  }
+
+  &.resourcewaiting,
+  &.approvalwaiting,
+  &.interventionwaiting,
+  &.inputwaiting {
+    --execution-status-bg-color: var(--yellow-200);
+    --execution-status-color: var(--red-600);
+  }
+
+  &.pausing,
+  &.paused {
+    --execution-status-bg-color: var(--primary-2);
+    --execution-status-color: var(--primary-7);
+  }
+
+  &.notstarted {
+    --execution-status-bg-color: var(--grey-100);
+    --execution-status-color: var(--grey-700);
+  }
+
+  .icon {
+    margin-right: var(--spacing-2) !important;
+    color: var(--execution-status-color) !important;
+  }
+}
+
+.compiledModeHeader {
+  padding: var(--spacing-small) var(--spacing-xlarge) 0px var(--spacing-xlarge) !important;
+  height: 65px !important;
+  align-items: center;
+
+  :global(.bp3-menu) {
+    min-width: unset !important;
+  }
+}
+
+.compiledModeExecutionId {
+  margin-bottom: 0px !important;
+  padding-left: 10px !important;
+}

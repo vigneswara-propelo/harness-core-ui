@@ -4297,6 +4297,7 @@ export interface StringsMap {
   'pipeline.executionFilters.labels.Waiting': string
   'pipeline.executionFrequency': string
   'pipeline.executionId': string
+  'pipeline.executionIdLabel': string
   'pipeline.executionList.EnvironmentsText': string
   'pipeline.executionList.artifactDeployedText': string
   'pipeline.executionList.servicesDeployed': string
@@ -4949,6 +4950,7 @@ export interface StringsMap {
   'pipeline.selectApplications': string
   'pipeline.selectArtifactPathPlaceholder': string
   'pipeline.selectBambooBuildsPlaceholder': string
+  'pipeline.selectExecutionID': string
   'pipeline.selectJenkinsBuildsPlaceholder': string
   'pipeline.selectOrCreateForm.description': string
   'pipeline.selectOrCreatePipeline.pipelineNameRequired': string

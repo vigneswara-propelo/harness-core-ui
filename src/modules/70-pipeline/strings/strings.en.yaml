@@ -1925,3 +1925,5 @@ downloadLogs:
 infrastructurePropagatedFrom: 'Infrastructure Propagated From:'
 viewInCompiledMode: 'View in Compiled Mode'
 noExecution: 'No Execution'
+selectExecutionID: 'Select Execution Id'
+executionIdLabel: 'Execution ID: {{execId}}'

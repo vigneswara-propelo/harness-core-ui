@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import { FormInput, Layout, SelectOption, Toggle } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetExpressionEvaluated, useGetListOfExecutionIdentifier } from 'services/pipeline-ng'
@@ -16,7 +17,10 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { MetadataMapObject } from '@common/components/TextWithExpressions/TextWithExpression'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import css from '../PipelineVariables.module.scss'
+import { iconMap } from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import css from './VariablesCompiledModeHeader.module.scss'
 
 interface VariablesCompiledModeHeaderProps {
   handleCompiledModeChange?: (checked: boolean) => void
@@ -31,8 +35,6 @@ export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderPr
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
 
-  const noExecution = { label: getString('pipeline.noExecution'), value: '' }
-
   const { storeMetadata, originalPipeline, setCompiledModeMetadataMap } = usePipelineVariables()
 
   const { data } = useMutateAsGet(useGetListOfExecutionIdentifier, {
@@ -44,7 +46,9 @@ export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderPr
       repoIdentifier,
       branch,
       parentEntityConnectorRef: storeMetadata?.connectorRef,
-      parentEntityRepoName: storeMetadata?.repoName
+      parentEntityRepoName: storeMetadata?.repoName,
+      page: DEFAULT_PAGE_INDEX,
+      size: DEFAULT_PAGE_SIZE
     },
     requestOptions: { headers: { 'content-type': 'application/json' } }
   })
@@ -52,24 +56,21 @@ export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderPr
   const executionIdSelectOptions = defaultTo(
     data?.data?.content?.map(execId => {
       return {
-        label: `${execId.runSequence} : ${execId.status}`,
-        value: execId.planExecutionId as string
+        label: `${execId.runSequence}`,
+        value: execId.planExecutionId as string,
+        rightIcon: {
+          ...iconMap[execId.status as ExecutionStatus],
+          className: cx(css.status, css[(execId.status as ExecutionStatus).toLowerCase() as keyof typeof css], css.icon)
+        }
       }
     }),
     []
   )
 
-  executionIdSelectOptions.push(noExecution)
-
   React.useEffect(() => {
     const execId = data?.data?.content?.[0]
     if (execId) {
-      setExecutionIdOption({
-        label: `${execId?.runSequence} : ${execId?.status}`,
-        value: execId?.planExecutionId as string
-      })
-    } else {
-      setExecutionIdOption(noExecution)
+      setExecutionIdOption(executionIdSelectOptions[0])
     }
   }, [data])
 
@@ -108,9 +109,15 @@ export function VariablesCompiledModeHeader(props: VariablesCompiledModeHeaderPr
           items={executionIdSelectOptions}
           onChange={handleExecutionIdChange}
           name="executionId"
-          placeholder="ExecutionID"
-          value={executionIdOption}
+          placeholder={getString('pipeline.selectExecutionID')}
+          value={{
+            label: executionIdOption?.label
+              ? getString('pipeline.executionIdLabel', { execId: executionIdOption.label })
+              : '',
+            value: executionIdOption?.value as string
+          }}
           className={css.compiledModeExecutionId}
+          addClearButton
         />
       )}
     </Layout.Horizontal>
