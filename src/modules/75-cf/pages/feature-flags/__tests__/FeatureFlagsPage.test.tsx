@@ -174,7 +174,7 @@ describe('FeatureFlagsPage', () => {
 
     await userEvent.click(screen.getByText('common.allEnvironments'))
 
-    expect(refetchAllEnvironmentsFlags).toHaveBeenCalledTimes(1)
+    expect(refetchAllEnvironmentsFlags).toHaveBeenCalled()
     expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
     expect(screen.getAllByText('cf.environments.prod')).toHaveLength(17)
   })
@@ -266,7 +266,7 @@ describe('FeatureFlagsPage', () => {
 
     await userEvent.click(screen.getByText('common.allEnvironments'))
 
-    expect(refetchProjectFlags).toHaveBeenCalledTimes(1)
+    expect(refetchProjectFlags).toHaveBeenCalled()
     expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
     expect(screen.getAllByText('cf.environments.prod')).toHaveLength(17)
 

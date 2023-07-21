@@ -48,6 +48,7 @@ export const useEnvironmentSelectV2 = ({
     serializer: env => env,
     deserializer: env => env
   })
+  const [allEnvironments, setAllEnvironments] = useQueryParamsState('allEnvironments', false)
   const { preference: preferredEnvironment, setPreference: setPreferredEnvironment } = usePreferenceStore<string>(
     PreferenceScope.USER,
     'FF_SELECTED_ENV'
@@ -104,10 +105,19 @@ export const useEnvironmentSelectV2 = ({
   }, [preferredEnvironment, selectedEnvironment?.value])
 
   useEffect(() => {
+    if (allEnvironments) {
+      const allEnvValue = {
+        label: getString('common.allEnvironments'),
+        value: getString('common.allEnvironments')
+      }
+      setSelectedEnvironment(allEnvValue)
+      refetchProjectFlags()
+      return
+    }
+
     if (environmentList?.data?.content?.length) {
       if (selectedEnvironmentIdentifier) {
         const found = environmentList?.data?.content?.find(env => env.identifier === selectedEnvironmentIdentifier)
-
         if (found) {
           const newValue = {
             label: found.name as string,
@@ -143,7 +153,13 @@ export const useEnvironmentSelectV2 = ({
       onEmpty()
       setActiveEnvironment('')
     }
-  }, [environmentList?.data?.content?.length, environmentList?.data?.content?.find, selectedEnvironmentIdentifier]) // eslint-disable-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    environmentList?.data?.content?.length,
+    environmentList?.data?.content?.find,
+    selectedEnvironmentIdentifier,
+    allEnvironments
+  ])
 
   return {
     EnvironmentSelect: function EnvironmentSelect(props: Partial<SelectProps>) {
@@ -164,17 +180,20 @@ export const useEnvironmentSelectV2 = ({
           allowCreatingNewItems={allowCreatingNewItems}
           onChange={opt => {
             setSelectedEnvironment(opt)
+            setAllEnvironments(false)
             onChange(
               opt,
               environmentList?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
               true
             )
             if (opt.value === getString('common.allEnvironments')) {
+              setAllEnvironments(true)
               refetchProjectFlags()
               return
             }
             if (selectedEnvironment?.value !== opt.value) {
               setActiveEnvironment(opt.value as string)
+              setAllEnvironments(false)
             }
           }}
           inputProps={{
