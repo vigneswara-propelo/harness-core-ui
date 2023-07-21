@@ -1328,7 +1328,9 @@ const updateBackgroundStepNodeStatuses = ({
       node.identifier &&
       node.stepType === StepType.Background &&
       ((parentNode &&
-        (parentNode.stepType === StepNodeType.STRATEGY || parentNode.stepType === StepNodeType.FORK) &&
+        (parentNode.stepType === StepNodeType.STRATEGY ||
+          parentNode.stepType === StepNodeType.FORK ||
+          parentNode.stepType === StepType.Background) &&
         runningStepIdentifiers.includes(parentNode?.identifier ?? '')) ||
         runningStepIdentifiers.includes(node.identifier))
     ) {
