@@ -3,11 +3,11 @@
 exports[`Discovery Agent Status  render 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--background-green100"
+    class="StyledProps--font StyledProps--main StyledProps--background-green50"
     style="padding: 2px 6px; border-radius: 4px;"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-green800"
+      class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-green700"
       style="font-weight: 600;"
     >
       SUCCESS

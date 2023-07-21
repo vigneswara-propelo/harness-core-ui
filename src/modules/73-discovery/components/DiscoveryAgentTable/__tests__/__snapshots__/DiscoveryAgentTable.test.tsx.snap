@@ -13,7 +13,7 @@ exports[`Discovery Agent Status  render 1`] = `
         class="TableV2--cell TableV2--sortable"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 20%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -25,7 +25,7 @@ exports[`Discovery Agent Status  render 1`] = `
         class="TableV2--cell TableV2--sortable"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 20%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -37,7 +37,19 @@ exports[`Discovery Agent Status  render 1`] = `
         class="TableV2--cell TableV2--sortable"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 15%;"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          Discovery Schedule
+        </p>
+      </div>
+      <div
+        class="TableV2--cell TableV2--sortable"
+        colspan="1"
+        role="columnheader"
+        style="width: 15%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -49,7 +61,7 @@ exports[`Discovery Agent Status  render 1`] = `
         class="TableV2--cell TableV2--sortable"
         colspan="1"
         role="columnheader"
-        style="width: 20%;"
+        style="width: 15%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -61,7 +73,7 @@ exports[`Discovery Agent Status  render 1`] = `
         class="TableV2--cell TableV2--sortable"
         colspan="1"
         role="columnheader"
-        style="width: 20%;"
+        style="width: 15%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -73,7 +85,7 @@ exports[`Discovery Agent Status  render 1`] = `
         class="TableV2--cell TableV2--sortable"
         colspan="1"
         role="columnheader"
-        style="width: 150px;"
+        style="width: 5%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -95,7 +107,7 @@ exports[`Discovery Agent Status  render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 20%;"
           >
             <a
               href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/local-1"
@@ -126,13 +138,13 @@ exports[`Discovery Agent Status  render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 20%;"
           >
             <div
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
             >
               <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey900"
@@ -140,13 +152,35 @@ exports[`Discovery Agent Status  render 1`] = `
                 >
                   Jun 21, 2023 01:17 PM
                 </p>
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  style="padding: 2px 6px; border-radius: 4px;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey700"
+                    style="font-weight: 600;"
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 15%;"
+          >
+            <div>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey400"
+              >
+                pipeline.notAvailable
+              </p>
+            </div>
+          </div>
+          <div
+            class="TableV2--cell"
+            role="cell"
+            style="width: 15%;"
           >
             <div
               class="Layout--vertical StyledProps--main totalServiceContainer"
@@ -162,7 +196,7 @@ exports[`Discovery Agent Status  render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 20%;"
+            style="width: 15%;"
           >
             <div
               class="Layout--vertical StyledProps--main totalServiceContainer"
@@ -178,7 +212,7 @@ exports[`Discovery Agent Status  render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 20%;"
+            style="width: 15%;"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
@@ -213,7 +247,7 @@ exports[`Discovery Agent Status  render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 150px;"
+            style="width: 5%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"

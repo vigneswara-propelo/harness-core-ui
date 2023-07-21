@@ -23,6 +23,7 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer, Row } from 'react-table'
 import moment from 'moment'
 import { Link, useParams } from 'react-router-dom'
+import cronstrue from 'cronstrue'
 import { killEvent } from '@common/utils/eventUtils'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
 import { ApiGetAgentResponse, useDeleteAgent } from 'services/servicediscovery'
@@ -30,6 +31,7 @@ import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { PaginationPropsWithDefaults } from '@common/hooks/useDefaultPaginationProps'
 import { useStrings } from 'framework/strings'
+import { DiscoveryAgentStatus } from '../DelegateAgentStatus/DelegateAgentStatus'
 import css from './DiscoveryAgentTable.module.scss'
 
 interface DiscoveryAgentTableProps {
@@ -88,22 +90,41 @@ const ServiceCount: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignor
   </Layout.Vertical>
 )
 
+const DiscoverySchedule: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => {
+  const { getString } = useStrings()
+  return (
+    <div>
+      {row.original.config?.data?.cron?.expression ? (
+        <Text font={{ size: 'small' }} color={Color.BLACK}>
+          {cronstrue.toString(row.original.config?.data?.cron?.expression ?? '')}{' '}
+        </Text>
+      ) : (
+        <Text font={{ size: 'small' }} color={Color.GREY_400}>
+          {getString('pipeline.notAvailable')}
+        </Text>
+      )}
+    </div>
+  )
+}
+
 const LastServiceDiscovery: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => {
   const { getString } = useStrings()
-  const date = moment(row.original.installationDetails?.updatedAt).format('MMM DD, YYYY hh:mm A')
+  const date = moment(row.original.installationDetails?.createdAt).format('MMM DD, YYYY hh:mm A')
+  const status = row.original.installationDetails?.delegateTaskStatus
   return (
     <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
-      <Layout.Vertical spacing={'xsmall'}>
-        {!row.original.installationDetails ? (
-          <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_400} lineClamp={1}>
-            {getString('discovery.noDiscoveryData')}
-          </Text>
-        ) : (
+      {!row.original.installationDetails ? (
+        <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_400} lineClamp={1}>
+          {getString('discovery.noDiscoveryData')}
+        </Text>
+      ) : (
+        <Layout.Vertical spacing={'small'}>
           <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
             {date}
           </Text>
-        )}
-      </Layout.Vertical>
+          <DiscoveryAgentStatus status={status} />
+        </Layout.Vertical>
+      )}
     </Layout.Horizontal>
   )
 }
@@ -203,31 +224,37 @@ const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ listData, pag
     () => [
       {
         Header: 'Discovery Agent',
-        width: '25%',
+        width: '20%',
         Cell: Name
       },
       {
         Header: 'Last Discovery',
-        width: '25%',
+        width: '20%',
         Cell: LastServiceDiscovery
       },
       {
+        Header: 'Discovery Schedule',
+        width: '15%',
+        Cell: DiscoverySchedule
+      },
+      {
         Header: 'Services Discovered',
-        width: '25%',
+        width: '15%',
         Cell: ServiceCount
       },
       {
         Header: 'Network Maps',
-        width: '20%',
+        width: '15%',
         Cell: NetworkCount
       },
       {
         Header: 'Last Edited',
-        width: '20%',
+        width: '15%',
         Cell: LastModified
       },
       {
         id: 'threeDotMenu',
+        width: '5%',
         Cell: ({ row }: { row: Row<ApiGetAgentResponse> }) => <ThreeDotMenu row={row} refetch={refetch} />
       }
     ],

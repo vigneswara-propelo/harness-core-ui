@@ -23,24 +23,24 @@ describe('Discovery Agent Status ', () => {
     const { container, getByText } = render(<DiscoveryAgentStatus status="SUCCESS" />)
 
     expect(container).toHaveTextContent('SUCCESS')
-    expect(getByText('SUCCESS')).toHaveClass('StyledProps--color-green800')
+    expect(getByText('SUCCESS')).toHaveClass('StyledProps--color-green700')
   })
   test('Discovery agent status is failed', () => {
     const { container, getByText } = render(<DiscoveryAgentStatus status="FAILED" />)
 
     expect(container).toHaveTextContent('FAILED')
-    expect(getByText('FAILED')).toHaveClass('StyledProps--color-red800')
+    expect(getByText('FAILED')).toHaveClass('StyledProps--color-red700')
   })
   test('Discovery agent status is error', () => {
     const { container, getByText } = render(<DiscoveryAgentStatus status="ERROR" />)
 
     expect(container).toHaveTextContent('ERROR')
-    expect(getByText('ERROR')).toHaveClass('StyledProps--color-orange800')
+    expect(getByText('ERROR')).toHaveClass('StyledProps--color-orange700')
   })
   test('Discovery agent status is processed', () => {
     const { container, getByText } = render(<DiscoveryAgentStatus status="PROCESSED" />)
 
     expect(container).toHaveTextContent('PROCESSED')
-    expect(getByText('PROCESSED')).toHaveClass('StyledProps--color-red800')
+    expect(getByText('PROCESSED')).toHaveClass('StyledProps--color-yellow700')
   })
 })
