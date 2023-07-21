@@ -139,7 +139,6 @@ export const TemplateRouteDestinations: React.FC<{
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTemplates({ ...accountPathProps, ...projectPathProps })}
       pageName={PAGE_NAME.TemplatesPage}
@@ -157,7 +156,6 @@ export const TemplateRouteDestinations: React.FC<{
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps })}
       pageName={templateStudioPageName}

@@ -500,7 +500,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toPipelines({ ...accountPathProps, ...projectPathProps })}
         pageName={PAGE_NAME.PipelineListPage}
@@ -518,7 +517,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toDeployments({ ...accountPathProps, ...projectPathProps })}
         pageName={PAGE_NAME.DeploymentsList}
