@@ -9,6 +9,7 @@ import type { IconName } from '@harness/uicore'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
 import type { ResponseInputSetTemplateResponse } from 'services/pipeline-ng'
+import type { UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 
 class StepFactory extends AbstractStepFactory {
@@ -127,7 +128,10 @@ export const getPipelineContextMockData = (
   stagesMap
 })
 
-export const getDummyPipelineCanvasContextValue = (params: any): PipelineContextInterface => {
+export const getDummyPipelineCanvasContextValue = (
+  params: any,
+  contextOverride: Partial<PipelineContextInterface> = {}
+): PipelineContextInterface => {
   const { isLoading, gitDetails, isReadonly, isUpdated } = params
   const data = getPipelineContextMockData(isLoading, gitDetails, isReadonly, isUpdated)
   return {
@@ -146,7 +150,9 @@ export const getDummyPipelineCanvasContextValue = (params: any): PipelineContext
     setSelectedSectionId: jest.fn(),
     getStageFromPipeline: jest.fn(() => {
       return { stage: data.state.pipeline.stages[0], parent: undefined }
-    })
+    }),
+    reconcile: {} as UseReconcileReturnType,
+    ...contextOverride
   } as any
 }
 

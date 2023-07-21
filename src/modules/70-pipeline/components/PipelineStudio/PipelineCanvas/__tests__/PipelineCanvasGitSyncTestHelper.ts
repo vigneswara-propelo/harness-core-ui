@@ -7,6 +7,7 @@
 
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 import type { PipelineSelectionState } from '../../PipelineQueryParamState/usePipelineQueryParam'
 
@@ -242,7 +243,8 @@ const pipelineContextMock: PipelineContextInterface = {
   setTemplateIcons: () => undefined,
   setTemplateServiceData: () => undefined,
   setIntermittentLoading: () => undefined,
-  setValidationUuid: jest.fn()
+  setValidationUuid: jest.fn(),
+  reconcile: {} as UseReconcileReturnType
 }
 
 export const updateStageFnArg1 = {

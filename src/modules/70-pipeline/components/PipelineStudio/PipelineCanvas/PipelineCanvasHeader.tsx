@@ -17,8 +17,7 @@ import {
   Text,
   useToaster,
   VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle,
-  shouldShowError
+  VisualYamlToggle
 } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -52,11 +51,9 @@ import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Pipeline } from '@pipeline/utils/types'
 import type { Error } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
-import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
-import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+
 import { useQueryParams } from '@common/hooks'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -103,7 +100,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     updatePipeline,
     fetchPipeline,
     setSelectedStageId,
-    setSelectedSectionId
+    setSelectedSectionId,
+    reconcile: { reconcileData, reconcilePipeline, isFetchingReconcileData, outOfSync, setOutOfSync }
   } = usePipelineContext()
   const { showError, showSuccess, clear } = useToaster()
   const {
@@ -116,63 +114,25 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     remoteFetchError,
     isUpdated,
     entityValidityDetails,
-    modules,
-    storeMetadata
+    modules
   } = state
   const params = useParams<PipelineType<PipelinePathProps> & GitQueryParams>()
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
-  const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const { getRBACErrorMessage } = useRBACError()
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
-  const {
-    data: reconcileErrorData,
-    refetch: reconcilePipeline,
-    error: reconcileError,
-    isFetching: isFetchingReconcileData
-  } = useValidateTemplateInputsQuery(
-    {
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
-        identifier: pipelineIdentifier,
-        ...getGitQueryParamsWithParentScope({ storeMetadata, params })
-      }
-    },
-    {
-      enabled: false,
-      onSuccess(data) {
-        if (data?.data?.validYaml === false && data?.data.errorNodeSummary) {
-          // This is handled by <PipelineOutOfSyncErrorStrip/>
-          clear()
-        } else {
-          clear()
-          showSuccess(getString('pipeline.outOfSyncErrorStrip.noErrorText', { entity: TemplateErrorEntity.PIPELINE }))
-          setShouldShowOutOfSyncError(false)
-        }
-      }
-    }
-  )
-
-  React.useEffect(() => {
-    if (reconcileError && shouldShowError(reconcileError)) {
-      showError(getRBACErrorMessage(reconcileError as RBACError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reconcileError])
 
   const updateEntity = React.useCallback(async (entityYaml: string) => {
     await savePipelineHandleRef.current?.updatePipeline(entityYaml)
-    setShouldShowOutOfSyncError(false)
+    setOutOfSync(false)
   }, [])
 
   const onRefreshEntity = React.useCallback(() => {
     fetchPipeline({ forceFetch: true, forceUpdate: true })
-    setShouldShowOutOfSyncError(false)
+    setOutOfSync(false)
   }, [fetchPipeline])
 
   const isValidYaml = function (): boolean {
@@ -266,7 +226,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   function handleReconcile(showToast: boolean): void {
     reconcilePipeline()
     showToast && showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
-    setShouldShowOutOfSyncError(true)
   }
 
   function handleReloadFromGitClick(): void {
@@ -471,10 +430,10 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
           )}
         </div>
       )}
-      {shouldShowOutOfSyncError && !isFetchingReconcileData ? (
+      {outOfSync && !isFetchingReconcileData ? (
         <PipelineOutOfSyncErrorStrip
           updateRootEntity={updateEntity}
-          errorData={reconcileErrorData}
+          errorData={reconcileData}
           onRefreshEntity={onRefreshEntity}
         />
       ) : null}

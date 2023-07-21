@@ -256,7 +256,15 @@ export const getPipelineContextMock = (): PipelineContextInterface => ({
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
-  setValidationUuid: jest.fn()
+  setValidationUuid: jest.fn(),
+  reconcile: {
+    reconcilePipeline: jest.fn(),
+    outOfSync: false,
+    isFetchingReconcileData: false,
+    reconcileError: null,
+    setOutOfSync: jest.fn(),
+    reconcileData: undefined
+  }
 })
 
 export const updateStageFnArg1 = {

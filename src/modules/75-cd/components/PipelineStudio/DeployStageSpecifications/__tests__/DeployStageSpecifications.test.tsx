@@ -19,6 +19,7 @@ import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { CustomVariables } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariables'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import DeployStageSpecifications from '../DeployStageSpecifications'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -106,7 +107,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
-  setValidationUuid: jest.fn()
+  setValidationUuid: jest.fn(),
+  reconcile: {} as UseReconcileReturnType
 })
 
 jest.mock('../../DeployStage/EditStageView/EditStageView', () => ({

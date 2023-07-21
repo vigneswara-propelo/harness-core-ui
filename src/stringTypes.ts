@@ -5237,7 +5237,10 @@ export interface StringsMap {
   'pipeline.templateAlreadyExists.content': string
   'pipeline.templateAlreadyExists.title': string
   'pipeline.templateInputs': string
+  'pipeline.templatePipelineUpdatedWarning': string
+  'pipeline.templateReconcileWarning': string
   'pipeline.templateSaved': string
+  'pipeline.templateStageUpdatedWarning': string
   'pipeline.terraformStep.discardPendingRuns': string
   'pipeline.terraformStep.messageLabel': string
   'pipeline.terraformStep.messagePlaceholder': string
@@ -5333,6 +5336,8 @@ export interface StringsMap {
   'pipeline.uniqueIdentifier': string
   'pipeline.uniqueName': string
   'pipeline.unsupportedImagesWarning': string
+  'pipeline.updatePipeline': string
+  'pipeline.updateStage': string
   'pipeline.utilitiesStep.assertion': string
   'pipeline.utilitiesStep.cc': string
   'pipeline.utilitiesStep.certificateKey': string

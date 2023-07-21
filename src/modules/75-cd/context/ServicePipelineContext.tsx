@@ -41,6 +41,7 @@ import type {
 } from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { RefetchReturnType } from '@pipeline/hooks/useReconcile'
 import {
   initialServiceState,
   DefaultNewStageName,
@@ -304,7 +305,15 @@ export function ServicePipelineProvider({
         setTemplateIcons: noop,
         setTemplateServiceData: noop,
         setIntermittentLoading: noop,
-        setValidationUuid: noop
+        setValidationUuid: noop,
+        reconcile: {
+          isFetchingReconcileData: false,
+          outOfSync: false,
+          reconcileData: undefined,
+          reconcileError: null,
+          setOutOfSync: noop,
+          reconcilePipeline: (_showToast?: boolean) => Promise.resolve({}) as RefetchReturnType
+        }
       }}
     >
       {children}

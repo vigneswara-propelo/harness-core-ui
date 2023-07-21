@@ -41,6 +41,7 @@ import {
   ResponsePMSPipelineSummaryResponse,
   CacheResponseMetadata
 } from 'services/pipeline-ng'
+import { useReconcile, UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -311,6 +312,7 @@ export interface PipelineContextInterface {
   setIntermittentLoading: (isIntermittentLoading: boolean) => void
   setValidationUuid: (uuid: string) => void
   deleteStage?: useDeleteStageReturnType['deleteStage']
+  reconcile: UseReconcileReturnType
 }
 
 interface PipelinePayload {
@@ -1068,7 +1070,8 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   getStagePathFromPipeline: () => '',
   setIntermittentLoading: () => undefined,
   setValidationUuid: () => undefined,
-  deleteStage: (_stageId: string) => undefined
+  deleteStage: (_stageId: string) => undefined,
+  reconcile: {} as UseReconcileReturnType
 })
 
 export interface PipelineProviderProps {
@@ -1442,7 +1445,8 @@ export function PipelineProvider({
         setTemplateServiceData,
         setIntermittentLoading,
         setValidationUuid,
-        deleteStage
+        deleteStage,
+        reconcile: useReconcile({ storeMetadata: state.storeMetadata })
       }}
     >
       {children}

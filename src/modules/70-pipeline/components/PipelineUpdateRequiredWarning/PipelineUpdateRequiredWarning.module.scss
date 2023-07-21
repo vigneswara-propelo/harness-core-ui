@@ -1,0 +1,10 @@
+.templateChangedWarning {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  font-weight: 500;
+  font-size: small;
+  background: var(--red-50) !important;
+  color: var(--red-600);
+  padding: var(--spacing-small) var(--spacing-xlarge) var(--spacing-small) var(--spacing-xlarge);
+}

@@ -37,6 +37,9 @@ import { useMutateAsGet } from '@common/hooks'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { PipelineUpdateRequiredWarning } from '@pipeline/components/PipelineUpdateRequiredWarning/PipelineUpdateRequiredWarning'
+import { PipelineRequiredActionType } from '@pipeline/components/PipelineUpdateRequiredWarning/PipelineUpdateRequiredWarningHelper'
+import { useCheckTemplateChange } from './useCheckPipelineTemplateChange'
 import css from './TemplatePipelineSpecifications.module.scss'
 
 interface TemplatePipelineSpecificationsProps {
@@ -49,7 +52,7 @@ export function TemplatePipelineSpecifications({
   setIsTemplateUpdated
 }: TemplatePipelineSpecificationsProps): JSX.Element {
   const {
-    state: { pipeline, schemaErrors, gitDetails, storeMetadata },
+    state: { pipeline, schemaErrors, gitDetails, storeMetadata, isUpdated },
     allowableTypes,
     updatePipeline,
     isReadonly,
@@ -72,6 +75,7 @@ export function TemplatePipelineSpecifications({
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
   // originalEntityYaml is the reference to fetch the latest mergedResolvedPipeline
   const [originalEntityYaml, setOriginalEntityYaml] = React.useState<string>('')
+  const { checkPipelineTemplateChange, requiredAction, disableForm } = useCheckTemplateChange()
 
   const onChange = React.useCallback(
     debounce(async (values: PipelineInfoConfig): Promise<void> => {
@@ -198,12 +202,23 @@ export function TemplatePipelineSpecifications({
   }
 
   React.useEffect(() => {
+    if (disableForm && isUpdated && templateInputSetYaml?.data) {
+      const newTemplateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, ''))
+      checkPipelineTemplateChange(newTemplateInputs, pipeline, false)
+    }
+  }, [isUpdated, pipeline, disableForm])
+
+  React.useEffect(() => {
     if (templateInputSetLoading) {
       setTemplateInputs(undefined)
       setFormikErrors({})
       setAllValues(undefined)
     } else {
       const newTemplateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, '{}'))
+      if (!isTemplateUpdated) {
+        checkPipelineTemplateChange(newTemplateInputs, pipeline)
+      }
+
       setTemplateInputs(newTemplateInputs)
 
       // retain the inputs and update form values accordingly iff template has been updated
@@ -293,6 +308,16 @@ export function TemplatePipelineSpecifications({
       {!isLoading && !error && templateInputs && allValues && formValues && (
         <>
           {showFormError && formikErrors && <ErrorsStrip formErrors={formikErrors} domRef={formRefDom} />}
+          {requiredAction && (
+            <PipelineUpdateRequiredWarning
+              requiredAction={requiredAction}
+              type={PipelineRequiredActionType.PIPELINE}
+              onUpdate={() => {
+                const newTemplateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, '{}'))
+                retainInputsAndUpdateFormValues(newTemplateInputs)
+              }}
+            />
+          )}
           <Formik<PipelineInfoConfig>
             initialValues={formValues}
             formName="templateStageOverview"
@@ -318,7 +343,7 @@ export function TemplatePipelineSpecifications({
                           template={templateInputs}
                           originalPipeline={allValues}
                           path={TEMPLATE_INPUT_PATH}
-                          readonly={isReadonly}
+                          readonly={isReadonly || disableForm}
                           viewType={StepViewType.TemplateUsage}
                           allowableTypes={allowableTypes}
                           viewTypeMetadata={viewTypeMetadata}

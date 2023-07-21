@@ -37,6 +37,7 @@ import type {
   StageElementWrapperConfig
 } from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { RefetchReturnType } from '@pipeline/hooks/useReconcile'
 
 export interface InfrastructurePipelineProviderProps {
   queryParams: GetPipelineQueryParams
@@ -202,7 +203,15 @@ export function InfrastructurePipelineProvider({
         setTemplateIcons: noop,
         setTemplateServiceData: noop,
         setIntermittentLoading: noop,
-        setValidationUuid: noop
+        setValidationUuid: noop,
+        reconcile: {
+          isFetchingReconcileData: false,
+          outOfSync: false,
+          reconcileData: undefined,
+          reconcileError: null,
+          setOutOfSync: noop,
+          reconcilePipeline: (_showToast?: boolean) => Promise.resolve({}) as RefetchReturnType
+        }
       }}
     >
       {children}

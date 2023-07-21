@@ -1927,3 +1927,8 @@ viewInCompiledMode: 'View in Compiled Mode'
 noExecution: 'No Execution'
 selectExecutionID: 'Select Execution Id'
 executionIdLabel: 'Execution ID: {{execId}}'
+templateReconcileWarning: Template has been changed. Reconcile to enable editing.
+templateStageUpdatedWarning: Template has been changed. Update stage to enable editing.
+templatePipelineUpdatedWarning: Template has been changed. Update pipeline to enable editing.
+updateStage: Update stage
+updatePipeline: Update pipeline

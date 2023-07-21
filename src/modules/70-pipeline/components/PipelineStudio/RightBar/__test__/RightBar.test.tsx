@@ -12,6 +12,7 @@ import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
+import type { UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import { RightBar } from '../RightBar'
 import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 
@@ -159,7 +160,8 @@ export const pipelineContext: PipelineContextInterface = {
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
-  setValidationUuid: jest.fn()
+  setValidationUuid: jest.fn(),
+  reconcile: {} as UseReconcileReturnType
 }
 
 describe('RightBar', () => {

@@ -13,7 +13,10 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { FormikErrors, FormikProps } from 'formik'
 import { produce } from 'immer'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import {
+  PipelineContextType,
+  usePipelineContext
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { Error, StageElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -38,6 +41,9 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { getTemplateErrorMessage, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { PipelineUpdateRequiredWarning } from '@pipeline/components/PipelineUpdateRequiredWarning/PipelineUpdateRequiredWarning'
+import { PipelineRequiredActionType } from '@pipeline/components/PipelineUpdateRequiredWarning/PipelineUpdateRequiredWarningHelper'
+import { useCheckStageTemplateChange } from './useCheckStageTemplateChange'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -50,13 +56,15 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const {
     state: {
       selectionState: { selectedStageId = '' },
-      storeMetadata
+      storeMetadata,
+      isUpdated
     },
     allowableTypes,
     updateStage,
     isReadonly,
     getStageFromPipeline,
-    setIntermittentLoading
+    setIntermittentLoading,
+    contextType
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
@@ -79,6 +87,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
 
   const { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated } = useStageTemplateActions()
+  const { checkStageTemplateChange, requiredAction, disableForm } = useCheckStageTemplateChange()
 
   const onChange = React.useCallback(
     debounce(async (values: StageElementConfig): Promise<void> => {
@@ -177,11 +186,24 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   }
 
   React.useEffect(() => {
+    // NOTE: check diff only if context is PipelineContextType.Pipeline (remove after CDS-75090)
+    if (contextType === PipelineContextType.Pipeline && disableForm && isUpdated && templateInputSetYaml?.data) {
+      const newTemplateInputs = parse<StageElementConfig>(defaultTo(templateInputSetYaml?.data, ''))
+      checkStageTemplateChange(newTemplateInputs, stage ?? {}, false)
+    }
+  }, [isUpdated, stage, disableForm])
+
+  React.useEffect(() => {
     if (templateInputSetLoading) {
       setTemplateInputs(undefined)
       setAllValues(undefined)
     } else {
       const newTemplateInputs = parse<StageElementConfig>(defaultTo(templateInputSetYaml?.data, ''))
+      // NOTE: check diff only if context is PipelineContextType.Pipeline (remove after CDS-75090)
+      if (contextType === PipelineContextType.Pipeline && !isTemplateUpdated) {
+        checkStageTemplateChange(newTemplateInputs, stage ?? {})
+      }
+
       setTemplateInputs(newTemplateInputs)
 
       // istanbul ignore else
@@ -255,6 +277,16 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   return (
     <Container className={css.serviceOverrides} height={'100%'} background={Color.FORM_BG}>
       <ErrorsStripBinded domRef={formRefDom} />
+      {requiredAction && (
+        <PipelineUpdateRequiredWarning
+          requiredAction={requiredAction}
+          type={PipelineRequiredActionType.STAGE}
+          onUpdate={() => {
+            const newTemplateInputs = parse<StageElementConfig>(defaultTo(templateInputSetYaml?.data, '{}'))
+            retainInputsAndUpdateFormValues(newTemplateInputs)
+          }}
+        />
+      )}
       <Layout.Vertical
         spacing={'xlarge'}
         className={css.contentSection}
@@ -320,7 +352,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                         template={{ stage: templateInputs }}
                         allValues={{ stage: allValues }}
                         path={TEMPLATE_INPUT_PATH}
-                        readonly={isReadonly}
+                        readonly={isReadonly || disableForm}
                         viewType={StepViewType.TemplateUsage}
                         hideTitle={true}
                         stageClassName={css.stageCard}

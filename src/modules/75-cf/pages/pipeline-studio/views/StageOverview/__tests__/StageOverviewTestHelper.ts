@@ -16,6 +16,7 @@ import {
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelinePathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import type { PipelineCanvasProps } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCanvas'
+import type { UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 
 export const getPipelineContext = (): PipelineContextInterface => ({
   state: {
@@ -80,7 +81,8 @@ export const getPipelineContext = (): PipelineContextInterface => ({
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
-  setValidationUuid: jest.fn()
+  setValidationUuid: jest.fn(),
+  reconcile: {} as UseReconcileReturnType
 })
 
 export const getEditPipelineContext = (): PipelineContextInterface => ({
@@ -146,7 +148,8 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
   setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
-  setValidationUuid: jest.fn()
+  setValidationUuid: jest.fn(),
+  reconcile: {} as UseReconcileReturnType
 })
 
 export const showError = jest.fn()

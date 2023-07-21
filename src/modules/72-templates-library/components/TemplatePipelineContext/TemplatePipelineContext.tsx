@@ -42,6 +42,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import type { EntityGitDetails } from 'services/template-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { RefetchReturnType } from '@pipeline/hooks/useReconcile'
 
 export interface TemplatePipelineProviderProps {
   queryParams: GetPipelineQueryParams
@@ -260,7 +261,15 @@ export function TemplatePipelineProvider({
         setTemplateIcons: noop,
         setTemplateServiceData: noop,
         setIntermittentLoading,
-        setValidationUuid: noop
+        setValidationUuid: noop,
+        reconcile: {
+          isFetchingReconcileData: false,
+          outOfSync: false,
+          reconcileData: undefined,
+          reconcileError: null,
+          setOutOfSync: noop,
+          reconcilePipeline: (_showToast?: boolean) => Promise.resolve({}) as RefetchReturnType
+        }
       }}
     >
       {children}
