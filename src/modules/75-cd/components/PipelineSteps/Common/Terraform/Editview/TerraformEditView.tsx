@@ -22,7 +22,8 @@ import {
   ButtonVariation,
   Icon,
   AllowedTypes,
-  Checkbox
+  Checkbox,
+  Container
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -483,6 +484,12 @@ export default function TerraformEditView(
 
   const [enableCloudCli, setEnableCloudCli] = React.useState<boolean | undefined>(undefined)
 
+  const fieldNameValue = React.useMemo(() => {
+    return enableCloudCli
+      ? 'spec.cloudCliConfiguration.encryptOutput.outputSecretManagerRef'
+      : 'spec.configuration.encryptOutput.outputSecretManagerRef'
+  }, [enableCloudCli])
+
   useEffect(() => {
     setEnableCloudCli(prevEnableCloudCli => {
       if (isUndefined(prevEnableCloudCli)) {
@@ -512,22 +519,32 @@ export default function TerraformEditView(
         })
   })
 
-  const secretManagerComponent = (fieldName: string): React.ReactElement => (
-    <FormMultiTypeConnectorField
-      label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
-      category={'SECRET_MANAGER'}
-      setRefValue
-      width={280}
-      name={fieldName}
-      placeholder={getString('select')}
-      accountIdentifier={accountId}
-      projectIdentifier={projectIdentifier}
-      orgIdentifier={orgIdentifier}
-      style={{ marginBottom: 10 }}
-      multiTypeProps={{ expressions, allowableTypes }}
-      gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-      disabled={readonly}
-    />
+  const secretManagerComponent = (fieldName: string, handleClick: () => void): React.ReactElement => (
+    <Container flex width={300}>
+      <FormMultiTypeConnectorField
+        label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
+        category={'SECRET_MANAGER'}
+        setRefValue
+        width={280}
+        name={fieldName}
+        placeholder={getString('select')}
+        accountIdentifier={accountId}
+        projectIdentifier={projectIdentifier}
+        orgIdentifier={orgIdentifier}
+        style={{ marginBottom: 10 }}
+        multiTypeProps={{ expressions, allowableTypes }}
+        gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+        disabled={readonly}
+      />
+      <Icon
+        name="remove"
+        onClick={() => {
+          handleClick()
+        }}
+        margin={{ left: 'medium', top: 'xsmall' }}
+        size={24}
+      />
+    </Container>
   )
 
   return (
@@ -843,11 +860,9 @@ export default function TerraformEditView(
                           </div>
                           {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT && stepType === StepType.TerraformApply && (
                             <div className={cx(stepCss.formGroup, stepCss.md)}>
-                              {secretManagerComponent(
-                                enableCloudCli
-                                  ? 'spec.cloudCliConfiguration.encryptOutput.outputSecretManagerRef'
-                                  : 'spec.configuration.encryptOutput.outputSecretManagerRef'
-                              )}
+                              {secretManagerComponent(fieldNameValue, () => {
+                                formik.setFieldValue(fieldNameValue, undefined)
+                              })}
                             </div>
                           )}
                         </div>
@@ -883,7 +898,9 @@ export default function TerraformEditView(
                       summary={getString('common.optionalConfig')}
                       details={
                         <div className={css.optionalConfigDetails}>
-                          {secretManagerComponent('spec.configuration.encryptOutput.outputSecretManagerRef')}
+                          {secretManagerComponent('spec.configuration.encryptOutput.outputSecretManagerRef', () => {
+                            formik.setFieldValue('spec.configuration.encryptOutput.outputSecretManagerRef', undefined)
+                          })}
                         </div>
                       }
                     />

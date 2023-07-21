@@ -8,9 +8,18 @@
 import React from 'react'
 import cx from 'classnames'
 import { get, isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text, Label, FormInput } from '@harness/uicore'
+import {
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  FormikForm,
+  Text,
+  Label,
+  FormInput,
+  Container,
+  Icon
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { FormikContextType } from 'formik'
+import { FormikContextType, useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
 
 import type {
@@ -44,7 +53,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   props: TerraformProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
-  const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange, stepViewType, formik } = props
+  const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange, stepViewType } = props
   const { expressions } = useVariablesExpression()
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerraformData): void => {
@@ -54,6 +63,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   const onChangeRef = (arg: TerraformData): void => {
     onChange?.(arg as T)
   }
+  const formik = useFormikContext()
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const inputSetDataSpec = get(inputSetData?.template?.spec, `${fieldPath}`)
   const { CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
@@ -64,6 +74,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
     accountId: string
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
   return (
     <FormikForm className={stepCss.inputWidth}>
       {getMultiTypeFromValue((inputSetData?.template as TerraformData)?.spec?.provisionerIdentifier) ===
@@ -237,25 +248,38 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
 
       {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT &&
         isValueRuntimeInput((inputSetDataSpec as any).encryptOutput?.outputSecretManagerRef) && (
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            projectIdentifier={projectIdentifier}
-            category={'SECRET_MANAGER'}
-            setRefValue
-            orgIdentifier={orgIdentifier}
-            name={`${
-              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-            }spec.${fieldPath}.encryptOutput.outputSecretManagerRef`}
-            tooltipProps={{
-              dataTooltipId: 'outputSecretManagerRef'
-            }}
-            label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
-            enableConfigureOptions={false}
-            placeholder={getString('select')}
-            disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          />
+          <Container flex>
+            <FormMultiTypeConnectorField
+              accountIdentifier={accountId}
+              projectIdentifier={projectIdentifier}
+              category={'SECRET_MANAGER'}
+              setRefValue
+              orgIdentifier={orgIdentifier}
+              name={`${
+                isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+              }spec.${fieldPath}.encryptOutput.outputSecretManagerRef`}
+              tooltipProps={{
+                dataTooltipId: 'outputSecretManagerRef'
+              }}
+              label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
+              enableConfigureOptions={false}
+              placeholder={getString('select')}
+              disabled={readonly}
+              multiTypeProps={{ allowableTypes, expressions }}
+              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+            />
+            <Icon
+              name="remove"
+              onClick={() => {
+                formik?.setFieldValue(
+                  `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.encryptOutput`,
+                  undefined
+                )
+              }}
+              margin={{ left: 'medium', top: 'medium' }}
+              size={24}
+            />
+          </Container>
         )}
     </FormikForm>
   )
