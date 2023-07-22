@@ -12,6 +12,8 @@ import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import StageSelection from '@triggers/components/StageSelection/StageSelection'
 
+import { TriggerArtifactType } from '@triggers/components/Triggers/TriggerInterface'
+import { TriggerCatalogTypeToLabelMap } from '@triggers/pages/triggers/utils/TriggersListUtils'
 import ArtifactsSelection from './ArtifactsSelection/ArtifactsSelection'
 
 import css from './ArtifactTriggerConfigPanel.module.scss'
@@ -27,17 +29,11 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
   const { getString } = useStrings()
 
   const artifactText = getString('pipeline.artifactTriggerConfigPanel.artifact')
+  const artifactType = formikProps?.values?.source?.spec?.type as TriggerArtifactType
+  const artifactName = artifactType ? getString(TriggerCatalogTypeToLabelMap[artifactType]) : ''
 
   return (
     <Layout.Vertical className={css.artifactTriggerConfigContainer} padding="xxlarge">
-      <Text className={css.formContentTitle} inline={true} tooltipProps={{ dataTooltipId: 'artifactLabel' }}>
-        {getString('triggers.triggerConfigurationLabel')}
-        {isEdit
-          ? ``
-          : `: ${getString('triggers.onNewArtifactTitle', {
-              artifact: artifactText
-            })}`}
-      </Text>
       <div className={css.formContent}>
         <NameIdDescriptionTags
           className={css.nameIdDescriptionTags}
@@ -52,7 +48,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
       </div>
       <Text className={css.formContentTitle} inline={true} tooltipProps={{ dataTooltipId: 'listenNewArtifact' }}>
         {getString('pipeline.artifactTriggerConfigPanel.listenOnNewArtifact', {
-          artifact: artifactText
+          artifact: `${artifactName} ${artifactText}`
         })}
       </Text>
       <div className={css.formContent}>

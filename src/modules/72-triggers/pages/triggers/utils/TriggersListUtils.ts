@@ -321,7 +321,7 @@ const TriggerCategoryToLabelMap: Record<Required<TriggerCatalogItem>['category']
 
 type TriggerCatalogType = Required<TriggerCatalogItem>['triggerCatalogType'][number]
 
-const TriggerCatalogTypeToLabelMap: Record<TriggerCatalogType, StringKeys> = {
+export const TriggerCatalogTypeToLabelMap: Record<TriggerCatalogType, StringKeys> = {
   Github: 'common.repo_provider.githubLabel',
   Gitlab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'common.repo_provider.bitbucketLabel',
