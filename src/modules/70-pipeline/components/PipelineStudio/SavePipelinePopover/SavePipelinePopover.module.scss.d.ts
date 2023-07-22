@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly errorHandlerDialog: string
   readonly policyEvaluationDialog: string
   readonly readonlyAccessTag: string
   readonly readonlyAccessText: string

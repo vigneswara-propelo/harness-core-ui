@@ -18,6 +18,7 @@ declare const styles: {
   readonly dividerWrapper: string
   readonly editor: string
   readonly error: string
+  readonly errorHandlerDialog: string
   readonly expressionsTooltip: string
   readonly footer: string
   readonly footerCheckbox: string

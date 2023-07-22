@@ -16,7 +16,8 @@ import {
   PageSpinner,
   VisualYamlSelectedView as SelectedView,
   SelectOption,
-  OverlaySpinner
+  OverlaySpinner,
+  Dialog as ErrorHandlerDialog
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -40,7 +41,8 @@ import {
   useDebugPipelineExecuteWithInputSetYaml,
   Failure,
   Error,
-  GitErrorMetadataDTO
+  GitErrorMetadataDTO,
+  ResponseMessage
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -85,6 +87,9 @@ import { useShouldDisableDeployment } from 'services/cd-ng'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { IRemoteFetchError } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -184,6 +189,8 @@ function RunPipelineFormBasic({
   const [currentPipeline, setCurrentPipeline] = useState<PipelineInfoConfig | undefined>()
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
   const [submitCount, setSubmitCount] = useState<number>(0)
+  const [runPipelineError, setRunPipelineError] = useState<Error>({})
+  const isErrorEnhancementFFEnabled = useFeatureFlag(FeatureFlag.PIE_ERROR_ENHANCEMENTS)
   const validateFormRef = useRef<(values?: PipelineInfoConfig) => Promise<FormikErrors<PipelineInfoConfig>>>()
 
   const [canSaveInputSet, canEditYaml] = usePermission(
@@ -576,6 +583,7 @@ function RunPipelineFormBasic({
         const governanceMetadata = data?.planExecution?.governanceMetadata
 
         if (response.status === 'SUCCESS') {
+          setRunPipelineError({})
           if (onClose) {
             onClose()
           }
@@ -605,7 +613,9 @@ function RunPipelineFormBasic({
           }
         }
       } catch (error: any) {
-        showWarning(defaultTo(getRBACErrorMessage(error, true), getString('runPipelineForm.runPipelineFailed')))
+        setRunPipelineError(error?.data as Error)
+        if (!isErrorEnhancementFFEnabled)
+          showWarning(defaultTo(getRBACErrorMessage(error, true), getString('runPipelineForm.runPipelineFailed')))
       }
 
       return valuesPipeline as PipelineInfoConfig
@@ -1072,6 +1082,14 @@ function RunPipelineFormBasic({
             )
           }}
         </Formik>
+        <ErrorHandlerDialog
+          isOpen={isErrorEnhancementFFEnabled && !isEmpty(runPipelineError)}
+          enforceFocus={false}
+          onClose={() => setRunPipelineError({})}
+          className={css.errorHandlerDialog}
+        >
+          <ErrorHandler responseMessages={runPipelineError?.responseMessages as ResponseMessage[]} />
+        </ErrorHandlerDialog>
       </>
     )
   }

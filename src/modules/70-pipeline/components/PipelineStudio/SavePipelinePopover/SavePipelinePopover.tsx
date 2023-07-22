@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   Button,
   ButtonVariation,
@@ -16,13 +16,14 @@ import {
   SplitButton,
   SplitButtonOption,
   useToaster,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  Dialog
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
-import { Spinner, Dialog } from '@blueprintjs/core'
+import { Spinner, Dialog as OPAErrorDialog } from '@blueprintjs/core'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -47,9 +48,10 @@ import type {
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { GovernanceMetadata, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { Error, GovernanceMetadata, PipelineInfoConfig, ResponseMessage } from 'services/pipeline-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
@@ -59,6 +61,8 @@ import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateEr
 import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { hasChainedPipelineStage } from '@pipeline/utils/stageHelpers'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { AccessControlCheckError } from 'services/cd-ng'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 import css from './SavePipelinePopover.module.scss'
@@ -108,12 +112,14 @@ function SavePipelinePopover(
     entity: TemplateErrorEntity.PIPELINE
   })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
+  const [savePipelineError, setSavePipelineError] = React.useState<Error>({})
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const isPipelineInline = supportingGitSimplification && storeType === StoreType.INLINE
+  const isErrorEnhancementFFEnabled = useFeatureFlag(FeatureFlag.PIE_ERROR_ENHANCEMENTS)
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
     () => (
-      <Dialog
+      <OPAErrorDialog
         isOpen
         onClose={() => {
           closeOPAErrorModal()
@@ -136,7 +142,7 @@ function SavePipelinePopover(
           module={module}
           headingErrorMessage={getString('pipeline.policyEvaluations.failedToSavePipeline')}
         />
-      </Dialog>
+      </OPAErrorDialog>
     ),
     [governanceMetadata]
   )
@@ -252,6 +258,7 @@ function SavePipelinePopover(
       isEdit
     )
     setLoading(false)
+    setSavePipelineError({})
     const newPipelineId = latestPipeline?.identifier
 
     if (response && response.status === 'SUCCESS') {
@@ -311,11 +318,13 @@ function SavePipelinePopover(
           if ((response as any)?.metadata?.schemaErrors) {
             openSelectedTemplateErrorsModal?.((response as any)?.metadata?.schemaErrors)
           } else {
-            showError(
-              getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
-              undefined,
-              'pipeline.save.pipeline.error'
-            )
+            setSavePipelineError(response as Error)
+            if (!isErrorEnhancementFFEnabled)
+              showError(
+                getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
+                undefined,
+                'pipeline.save.pipeline.error'
+              )
           }
         }
       }
@@ -489,6 +498,20 @@ function SavePipelinePopover(
     [initPipelinePublish]
   )
 
+  const errorDialog = useMemo(
+    () => (
+      <Dialog
+        isOpen={isErrorEnhancementFFEnabled && !isEmpty(savePipelineError)}
+        enforceFocus={false}
+        onClose={() => setSavePipelineError({})}
+        className={css.errorHandlerDialog}
+      >
+        <ErrorHandler responseMessages={savePipelineError?.responseMessages as ResponseMessage[]} />
+      </Dialog>
+    ),
+    [savePipelineError, isErrorEnhancementFFEnabled]
+  )
+
   if (loading) {
     return (
       <Container padding={{ left: 'medium', right: 'medium' }}>
@@ -500,14 +523,17 @@ function SavePipelinePopover(
   if (!isTemplatesEnabled) {
     if (!isReadonly) {
       return (
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          text={saveText}
-          onClick={saveAndPublish}
-          icon="send-data"
-          disabled={isSaveDisabled}
-          tooltip={tooltip}
-        />
+        <>
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            text={saveText}
+            onClick={saveAndPublish}
+            icon="send-data"
+            disabled={isSaveDisabled}
+            tooltip={tooltip}
+          />
+          {errorDialog}
+        </>
       )
     } else {
       return <></>
@@ -515,20 +541,23 @@ function SavePipelinePopover(
   }
 
   return (
-    <SplitButton
-      disabled={isSaveDisabled}
-      variation={ButtonVariation.PRIMARY}
-      text={saveText}
-      loading={loading}
-      onClick={saveAndPublish}
-      tooltip={tooltip}
-    >
-      <SplitButtonOption
-        onClick={save}
-        disabled={isIntermittentLoading || _hasChainedPipelineStage}
-        text={getString('common.saveAsTemplate')}
-      />
-    </SplitButton>
+    <>
+      <SplitButton
+        disabled={isSaveDisabled}
+        variation={ButtonVariation.PRIMARY}
+        text={saveText}
+        loading={loading}
+        onClick={saveAndPublish}
+        tooltip={tooltip}
+      >
+        <SplitButtonOption
+          onClick={save}
+          disabled={isIntermittentLoading || _hasChainedPipelineStage}
+          text={getString('common.saveAsTemplate')}
+        />
+      </SplitButton>
+      {errorDialog}
+    </>
   )
 }
 
