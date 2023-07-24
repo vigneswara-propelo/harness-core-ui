@@ -30,26 +30,25 @@ exports[`Unit tests for VerifyExection Ensure content is rendered correctly base
           </p>
         </div>
         <p
-          class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-green350 StyledProps--color StyledProps--color-green700"
+          class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-green50 StyledProps--color StyledProps--color-green800"
           style="display: flex; align-items: center;"
         >
           <span
-            class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
-            data-icon="deployment-success-new"
+            class="bp3-icon bp3-icon-tick-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green800"
+            icon="tick-circle"
           >
             <svg
-              height="16"
-              viewBox="0 0 14 14"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
+              data-icon="tick-circle"
+              height="12"
+              viewBox="0 0 16 16"
+              width="12"
             >
+              <desc>
+                tick-circle
+              </desc>
               <path
-                d="M4 0h6c2.2 0 4 1.8 4 4v6c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V4c0-2.2 1.8-4 4-4z"
-                fill="#38d168"
-              />
-              <path
-                d="M5.8 9.5l4.4-4.1-.9-1-3.6 3.2-1.2-1.2-1.1 1.1 2.1 2.1.1.1z"
-                fill="#fff"
+                d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
+                fill-rule="evenodd"
               />
             </svg>
           </span>

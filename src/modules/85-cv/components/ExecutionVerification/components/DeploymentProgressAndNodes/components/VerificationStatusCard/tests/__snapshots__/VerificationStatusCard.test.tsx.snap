@@ -3,24 +3,24 @@
 exports[`VerificationStatusCard matches snapshot when status = ERROR 1`] = `
 <div>
   <p
-    class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-red200 StyledProps--color StyledProps--color-red500"
+    class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-red50 StyledProps--color StyledProps--color-red900"
     style="display: flex; align-items: center;"
   >
     <span
-      class="bp3-icon bp3-icon-error StyledProps--main Text--icon StyledProps--padding-right-xsmall"
-      icon="error"
+      class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red900"
+      icon="warning-sign"
     >
       <svg
-        data-icon="error"
-        height="16"
+        data-icon="warning-sign"
+        height="9"
         viewBox="0 0 16 16"
-        width="16"
+        width="9"
       >
         <desc>
-          error
+          warning-sign
         </desc>
         <path
-          d="M7.99-.01c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 13h-2v-2h2v2zm0-3h-2v-7h2v7z"
+          d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
           fill-rule="evenodd"
         />
       </svg>
@@ -41,9 +41,9 @@ exports[`VerificationStatusCard matches snapshot when status = IN_PROGRESS 1`] =
       data-icon="deployment-inprogress-new"
     >
       <svg
-        height="16"
+        height="12"
         viewBox="0 0 14 14"
-        width="16"
+        width="12"
         xmlns="http://www.w3.org/2000/svg"
       >
         <g
@@ -75,32 +75,26 @@ exports[`VerificationStatusCard matches snapshot when status = IN_PROGRESS 1`] =
 exports[`VerificationStatusCard matches snapshot when status = VERIFICATION_FAILED 1`] = `
 <div>
   <p
-    class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-red200 StyledProps--color StyledProps--color-red500"
+    class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-red50 StyledProps--color StyledProps--color-red900"
     style="display: flex; align-items: center;"
   >
     <span
-      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
-      data-icon="danger-icon"
+      class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red900"
+      icon="warning-sign"
     >
       <svg
-        fill="none"
-        height="16"
-        viewBox="0 0 32 32"
-        width="16"
-        xmlns="http://www.w3.org/2000/svg"
+        data-icon="warning-sign"
+        height="9"
+        viewBox="0 0 16 16"
+        width="9"
       >
-        <g
-          clip-rule="evenodd"
-          fill="#da291d"
+        <desc>
+          warning-sign
+        </desc>
+        <path
+          d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
           fill-rule="evenodd"
-        >
-          <path
-            d="M16.878 4.506a1 1 0 00-1.737 0L3.153 25.505A1 1 0 004.022 27h23.974a1 1 0 00.869-1.495zm.603 17.973c0-.823-.684-1.49-1.527-1.49s-1.527.667-1.527 1.49c0 .822.684 1.49 1.527 1.49s1.527-.668 1.527-1.49zm-1.527-3.486a1 1 0 001-1v-6.997a1 1 0 00-2 0v6.997a1 1 0 001 1z"
-          />
-          <path
-            d="M4.022 26L16.009 5.002 27.996 26zm11.832-6.01a2 2 0 01-1.9-1.997v-6.997a2 2 0 114 0v6.997a2 2 0 01-1.9 1.998c1.328.052 2.427 1.124 2.427 2.488 0 1.398-1.155 2.49-2.527 2.49s-2.527-1.092-2.527-2.49c0-1.364 1.099-2.436 2.427-2.488zM15.14 4.507a1 1 0 011.737 0l11.987 20.999A1 1 0 0127.996 27H4.022a1 1 0 01-.869-1.495L15.141 4.506zm.813 16.483c.843 0 1.527.667 1.527 1.49 0 .822-.684 1.49-1.527 1.49s-1.527-.668-1.527-1.49c0-.823.684-1.49 1.527-1.49zm1-2.996a1 1 0 01-2 0v-6.997a1 1 0 112 0z"
-          />
-        </g>
+        />
       </svg>
     </span>
     failed
@@ -112,26 +106,25 @@ exports[`VerificationStatusCard matches snapshot when status = VERIFICATION_FAIL
 exports[`VerificationStatusCard matches snapshot when status = VERIFICATION_PASSED 1`] = `
 <div>
   <p
-    class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-green350 StyledProps--color StyledProps--color-green700"
+    class="StyledProps--font StyledProps--main verificationStatusCard StyledProps--background-green50 StyledProps--color StyledProps--color-green800"
     style="display: flex; align-items: center;"
   >
     <span
-      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
-      data-icon="deployment-success-new"
+      class="bp3-icon bp3-icon-tick-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green800"
+      icon="tick-circle"
     >
       <svg
-        height="16"
-        viewBox="0 0 14 14"
-        width="16"
-        xmlns="http://www.w3.org/2000/svg"
+        data-icon="tick-circle"
+        height="12"
+        viewBox="0 0 16 16"
+        width="12"
       >
+        <desc>
+          tick-circle
+        </desc>
         <path
-          d="M4 0h6c2.2 0 4 1.8 4 4v6c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V4c0-2.2 1.8-4 4-4z"
-          fill="#38d168"
-        />
-        <path
-          d="M5.8 9.5l4.4-4.1-.9-1-3.6 3.2-1.2-1.2-1.1 1.1 2.1 2.1.1.1z"
-          fill="#fff"
+          d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
+          fill-rule="evenodd"
         />
       </svg>
     </span>

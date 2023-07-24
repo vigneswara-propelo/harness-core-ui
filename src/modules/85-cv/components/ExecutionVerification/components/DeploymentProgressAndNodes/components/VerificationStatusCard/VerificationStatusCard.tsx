@@ -27,6 +27,7 @@ export default function VerificationStatusCard({
   let backgroundColor: Color | undefined = undefined
   let icon = ''
   let iconColor = ''
+  let iconSize = 12
   const { getString } = useStrings()
   switch (status) {
     case 'IN_PROGRESS':
@@ -46,22 +47,27 @@ export default function VerificationStatusCard({
     case 'Failed':
     case 'IgnoreFailed':
       statusMessage = getString('failed')
-      color = Color.RED_500
-      backgroundColor = Color.RED_200
-      icon = 'danger-icon'
+      color = Color.RED_900
+      backgroundColor = Color.RED_50
+      icon = 'warning-sign'
+      iconColor = Color.RED_900
+      iconSize = 9
       break
     case 'ERROR':
     case 'Errored':
       statusMessage = getString('error')
-      color = Color.RED_500
-      backgroundColor = Color.RED_200
-      icon = 'error'
+      color = Color.RED_900
+      backgroundColor = Color.RED_50
+      icon = 'warning-sign'
+      iconColor = Color.RED_900
+      iconSize = 9
       break
     case 'VERIFICATION_PASSED':
       statusMessage = getString('passed')
-      color = Color.GREEN_700
-      backgroundColor = Color.GREEN_350
-      icon = 'deployment-success-new'
+      color = Color.GREEN_800
+      backgroundColor = Color.GREEN_50
+      icon = 'tick-circle'
+      iconColor = Color.GREEN_800
       break
     case AnalysisStatus.COMPLETED:
       statusMessage = getString('success')
@@ -82,14 +88,14 @@ export default function VerificationStatusCard({
     return null
   }
 
-  const iconColorProp = iconColor ? { iconProps: { color: iconColor } } : {}
+  const iconColorProp = iconColor ? { color: iconColor } : {}
   return (
     <Text
       className={css.verificationStatusCard}
       icon={icon as IconName}
       background={backgroundColor}
       color={color}
-      {...iconColorProp}
+      iconProps={{ ...iconColorProp, size: iconSize }}
     >
       {statusMessage}
     </Text>
