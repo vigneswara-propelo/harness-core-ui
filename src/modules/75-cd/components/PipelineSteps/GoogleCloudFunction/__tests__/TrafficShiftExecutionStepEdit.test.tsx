@@ -11,14 +11,9 @@ import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 
 import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
-import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import { DeployCloudFunctionTrafficShiftStep } from '../GenTwo/DeployCloudFunctionTrafficShiftStep/DeployCloudFunctionTrafficShiftStep'
 import { TrafficShiftExecutionStepEditRef } from '../TrafficShiftExecutionStepEdit'
-
-factory.registerStep(new DeployCloudFunctionTrafficShiftStep())
 
 const existingInitialValues = {
   identifier: 'Step_1',

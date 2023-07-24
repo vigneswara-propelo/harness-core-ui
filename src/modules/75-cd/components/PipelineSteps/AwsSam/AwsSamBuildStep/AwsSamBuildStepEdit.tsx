@@ -108,8 +108,8 @@ const AwsSamBuildStepEdit = (
                 id: uuid('', nameSpace()),
                 value: buildCommandOption
               })),
-        envVariables: Object.keys(defaultTo(initialValues.spec?.envVariables, {}))?.map(envKey => {
-          const envValue = initialValues.spec?.envVariables?.[envKey]
+        envVariables: Object.keys(defaultTo(initialValues.spec.envVariables, {})).map(envKey => {
+          const envValue = initialValues.spec.envVariables?.[envKey]
           return {
             id: uuid('', nameSpace()),
             key: envKey,
@@ -138,7 +138,7 @@ const AwsSamBuildStepEdit = (
           multiTypeProps={{ expressions, allowableTypes }}
           type={serverlessStepAllowedConnectorTypes}
           enableConfigureOptions={false}
-          selected={get(formik?.values, fieldName) as string}
+          selected={get(formik.values, fieldName) as string}
           setRefValue
           disabled={readonly}
           gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}

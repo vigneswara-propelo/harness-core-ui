@@ -83,7 +83,7 @@ const TEST_PATH_PARAMS: ModulePathParams & PipelinePathProps = {
   module: 'cd'
 }
 
-const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined) => {
+const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined): string => {
   return vars?.stringToAppend ? `${str}_${vars.stringToAppend}` : str
 }
 
@@ -589,7 +589,7 @@ const ecrArtifactTagListPath =
 const nexuaArtifactTagListPath =
   'pipeline.stages.0.stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars.2.sidecar.spec.tag'
 
-const params = () => ({
+const params = (): PipelinePathProps & ModulePathParams => ({
   accountId: 'accountId',
   module: 'cd',
   orgIdentifier: 'default',

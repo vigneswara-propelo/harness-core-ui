@@ -11,11 +11,9 @@ import userEvent from '@testing-library/user-event'
 
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
-import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepGroupElementConfig } from 'services/pipeline-ng'
-import { StepGroupStep } from '../StepGroupStep'
 import { StepGroupStepEditRef } from '../StepGroupStepEdit'
 import { containerStepGroupInitialValues } from './helper'
 import { awsRegions } from './mocks'
@@ -35,14 +33,6 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('StepGroupStepEdit tests', () => {
-  const stepGroupStep = new StepGroupStep()
-  beforeAll(() => {
-    factory.registerStep(stepGroupStep)
-  })
-  afterAll(() => {
-    factory.deregisterStep(stepGroupStep.getType())
-  })
-
   test('renders as expected in edit view when stepGroupInfra is NOT present', async () => {
     render(
       <TestWrapper>

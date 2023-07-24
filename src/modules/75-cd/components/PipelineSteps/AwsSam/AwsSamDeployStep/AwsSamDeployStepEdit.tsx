@@ -111,8 +111,8 @@ const AwsSamDeployStepEdit = (
                 id: uuid('', nameSpace()),
                 value: deployCommandOption
               })),
-        envVariables: Object.keys(defaultTo(initialValues.spec?.envVariables, {}))?.map(envKey => {
-          const envValue = initialValues.spec?.envVariables?.[envKey]
+        envVariables: Object.keys(defaultTo(initialValues.spec.envVariables, {})).map(envKey => {
+          const envValue = initialValues.spec.envVariables?.[envKey]
           return {
             id: uuid('', nameSpace()),
             key: envKey,
@@ -164,7 +164,7 @@ const AwsSamDeployStepEdit = (
                   multiTypeProps={{ expressions, allowableTypes }}
                   type={serverlessStepAllowedConnectorTypes}
                   enableConfigureOptions={false}
-                  selected={formik?.values?.spec.connectorRef}
+                  selected={formik.values.spec.connectorRef}
                   setRefValue
                   disabled={readonly}
                   gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
@@ -205,7 +205,7 @@ const AwsSamDeployStepEdit = (
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(formik.values.spec?.image) === MultiTypeInputType.RUNTIME && !readonly && (
+                {getMultiTypeFromValue(formik.values.spec.image) === MultiTypeInputType.RUNTIME && !readonly && (
                   <ConfigureOptions
                     value={formik.values.spec?.image as string}
                     type="String"
@@ -232,7 +232,7 @@ const AwsSamDeployStepEdit = (
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue((formik.values as AwsSamDeployStepFormikValues).spec?.stackName) ===
+                {getMultiTypeFromValue((formik.values as AwsSamDeployStepFormikValues).spec.stackName) ===
                   MultiTypeInputType.RUNTIME &&
                   !readonly && (
                     <ConfigureOptions

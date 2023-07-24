@@ -93,7 +93,7 @@ describe('AwsSamInfraSpec tests', () => {
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
     await userEvent.click(connnectorRefInput!)
-    await testConnectorRefChange()
+    await testConnectorRefChange('Aws Connector 1', 'Aws Connector 2', 'Aws Connector 2')
 
     // Choose region
     const regionDropdownIcon = allDropDownIcons[1]

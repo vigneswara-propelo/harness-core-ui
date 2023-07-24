@@ -111,6 +111,7 @@ export interface AwsSamDeployStepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
     image?: string
+    samVersion?: string
     deployCommandOptions?: string | string[]
     stackName?: string
     privileged?: boolean

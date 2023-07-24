@@ -42,7 +42,7 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HTMLInputElement) => {
+const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HTMLInputElement): Promise<void> => {
   // Type regex and submit
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
@@ -160,7 +160,7 @@ describe('GenericExecutionStepEdit tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const identifierEditIcon = queryByAttribute('data-icon', container, 'Edit')
     expect(identifierEditIcon).toBeInTheDocument()
@@ -282,7 +282,7 @@ describe('GenericExecutionStepEdit tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const identifierEditIcon = queryByAttribute('data-icon', container, 'Edit')
     expect(identifierEditIcon).toBeInTheDocument()
@@ -363,7 +363,7 @@ describe('GenericExecutionStepEdit tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const identifierEditIcon = queryByAttribute('data-icon', container, 'Edit')
     expect(identifierEditIcon).toBeInTheDocument()

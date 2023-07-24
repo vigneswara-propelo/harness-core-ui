@@ -143,7 +143,7 @@ export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> 
       set(
         errors,
         `spec.connectorRef`,
-        getString?.('fieldRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('pipelineSteps.connectorLabel') })
       )
     }
 

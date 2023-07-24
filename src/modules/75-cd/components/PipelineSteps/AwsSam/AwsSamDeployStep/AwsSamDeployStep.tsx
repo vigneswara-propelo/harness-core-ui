@@ -62,7 +62,8 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
     type: StepType.AwsSamDeploy,
     timeout: '10m',
     spec: {
-      connectorRef: ''
+      connectorRef: '',
+      stackName: ''
     }
   }
 
@@ -143,7 +144,19 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
       set(
         errors,
         `spec.connectorRef`,
-        getString?.('fieldRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('pipelineSteps.connectorLabel') })
+      )
+    }
+
+    if (
+      isEmpty(data?.spec?.stackName) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.spec?.stackName) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `spec.stackName`,
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('cd.cloudFormation.stackName') })
       )
     }
 

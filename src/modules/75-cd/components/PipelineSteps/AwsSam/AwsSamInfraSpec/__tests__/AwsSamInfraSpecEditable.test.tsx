@@ -76,7 +76,7 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   await userEvent.click(regexRadio)
   const regexTextArea = queryByNameAttribute('regExValues', cogModal) as HTMLInputElement
   act(() => {
-    fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
+    fireEvent.change(regexTextArea, { target: { value: '<+input>.includes(/test/)' } })
   })
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
   const cogSubmit = screen.getByText('submit')
@@ -111,9 +111,9 @@ describe('AwsSamInfraSpecEditable tests', () => {
     // connectorRef
     await waitFor(() => expect(getByText('Aws Connector 2')).toBeInTheDocument())
     const connnectorRefInput = getByTestId(/connectorRef/)
-    expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
-    await testConnectorRefChange()
+    expect(connnectorRefInput).toBeInTheDocument()
+    userEvent.click(connnectorRefInput)
+    await testConnectorRefChange('Aws Connector 1', 'Aws Connector 2', 'Aws Connector 2')
 
     expect(regionInput.value).toBe('GovCloud (US-East)')
   })
