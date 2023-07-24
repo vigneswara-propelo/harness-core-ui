@@ -114,7 +114,7 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
       roundValue = Math.trunc(roundValue) / 100
       return `${roundValue}K`
     }
-    if (value === -1) {
+    if (value && value < 0) {
       return getString('common.unlimited')
     }
     return value
