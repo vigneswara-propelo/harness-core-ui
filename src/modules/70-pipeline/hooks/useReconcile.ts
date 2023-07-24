@@ -62,16 +62,18 @@ export function useReconcile({ storeMetadata }: UseReconcileProps): UseReconcile
   )
 
   useEffect(() => {
-    clear()
-    if (reconcileData?.data?.validYaml === false && reconcileData?.data?.errorNodeSummary) {
-      setOutOfSync(true)
-    } else {
-      if (showToastRef?.current) {
-        showSuccess(getString('pipeline.outOfSyncErrorStrip.noErrorText', { entity: TemplateErrorEntity.PIPELINE }))
+    if (!isFetchingReconcileData && reconcileData?.data) {
+      clear()
+      if (reconcileData.data.validYaml === false && reconcileData.data.errorNodeSummary) {
+        setOutOfSync(true)
+      } else {
+        if (showToastRef?.current) {
+          showSuccess(getString('pipeline.outOfSyncErrorStrip.noErrorText', { entity: TemplateErrorEntity.PIPELINE }))
+        }
+        setOutOfSync(false)
       }
-      setOutOfSync(false)
     }
-  }, [reconcileData?.data])
+  }, [reconcileData?.data, isFetchingReconcileData])
 
   const reconcilePipeline = (showToast = true): RefetchReturnType => {
     showToastRef.current = showToast
