@@ -41,9 +41,6 @@ describe('NotificationDetails', () => {
 
     const deploymentImpactText = getByText('Deployment Impact')
     expect(deploymentImpactText).toBeInTheDocument()
-
-    const sendAnalysisReportText = getByText('Send analysis report :')
-    expect(sendAnalysisReportText).toBeInTheDocument()
   })
 
   test('renders empty when no conditions are provided', () => {

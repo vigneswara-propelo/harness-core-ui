@@ -55,12 +55,6 @@ export default function NotificationDetails(props: NotificationDetailsProps): JS
                     {'Deployment Impact'}
                   </Text>
                 </Layout.Horizontal>
-                <Layout.Horizontal>
-                  <Text color={Color.BLACK}>{'Send analysis report : '}</Text>
-                  <Text color={Color.BLACK} padding={{ left: 'small' }}>
-                    {'Yes'}
-                  </Text>
-                </Layout.Horizontal>
               </Layout.Vertical>
             )
           default:
