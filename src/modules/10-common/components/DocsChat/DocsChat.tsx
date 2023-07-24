@@ -8,14 +8,12 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import { Avatar, Button, ButtonVariation, Icon, Layout, Text, useToggleOpen } from '@harness/uicore'
-import { Color } from '@harness/design-system'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { SubmitTicketModal } from '@common/components/ResourceCenter/SubmitTicketModal/SubmitTicketModal'
-import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import css from './DocsChat.module.scss'
 
 interface Message {
@@ -100,7 +98,7 @@ function DocsChat(): JSX.Element {
 
   const getAnswer = async (oldMessages: Array<Message>, query: string): Promise<void> => {
     try {
-      const answer = await askQuestion({ question: query, model: 'chat-bison' })
+      const answer = await askQuestion({ question: query })
       if (answer?.data?.response) {
         trackEvent(AIChatActions.AnswerReceived, {
           query,
@@ -195,14 +193,13 @@ function DocsChat(): JSX.Element {
                   })}
                 >
                   {message.text === 'error' ? (
-                    <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
-                      {getString('common.csBot.errorMessage')}
-                    </a>
+                    <p>
+                      <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
+                        {getString('common.csBot.errorMessage')}
+                      </a>
+                    </p>
                   ) : (
-                    <LinkifyText
-                      content={message.text.replace(/\\n/g, '\n')}
-                      textProps={{ color: message.author === 'harness' ? Color.AI_PURPLE_900 : Color.WHITE }}
-                    />
+                    <p>{message.text}</p>
                   )}
                 </div>
                 {message.author === 'user' ? (
