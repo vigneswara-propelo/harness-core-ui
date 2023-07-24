@@ -12,7 +12,12 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForDocker, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
+import {
+  ArtifactSource,
+  SidecarArtifact,
+  useGetBuildDetailsForDocker,
+  useGetBuildDetailsForDockerWithYaml
+} from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -21,7 +26,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-
+import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -33,8 +38,7 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  getValidInitialValuePath,
-  DefaultParam
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
@@ -79,15 +83,17 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '' })
   const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
+  const { isTagRegex, isServiceLoading } = useIsTagRegex({
+    serviceIdentifier: serviceIdentifier!,
+    artifact: artifact as ArtifactSource,
+    artifactPath: artifactPath!,
+    tagOrVersionRegexKey: 'tagRegex'
+  })
   const imagePathValue = getImagePath(
     // When the runtime value is provided some fixed value in templateusage view, that field becomes part of the pipeline yaml, and the fixed data comes from the pipelines api for service v2.
     // In this scenario, we take the default value from the allvalues(artifacts) field instead of artifact path
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
-  )
-  const tagRegexValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tagRegex`, ''), artifact?.spec?.tagRegex),
-    get(initialValues, `artifacts.${artifactPath}.spec.tagRegex`, '')
   )
 
   const tagValue = getDefaultQueryParam(
@@ -235,6 +241,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     /* instanbul ignore else */
     if (
       readonly ||
+      isServiceLoading ||
       isFieldfromTriggerTabDisabled(
         fieldName,
         formik,
@@ -345,7 +352,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
           )}
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) || tagValue !== DefaultParam) &&
+            !isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <DigestField
                 {...props}
@@ -362,7 +369,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) || tagRegexValue !== DefaultParam) &&
+            isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <TextFieldInputSetView
                 tooltipProps={{

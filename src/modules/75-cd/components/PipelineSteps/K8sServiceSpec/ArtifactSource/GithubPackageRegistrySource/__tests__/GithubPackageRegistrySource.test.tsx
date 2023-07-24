@@ -52,7 +52,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetLastSuccessfulVersion: jest.fn().mockImplementation(() => {
     return { data: digestData, refetch: fetchDigest, error: null, loading: false }
-  })
+  }),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
 
 const submitForm = jest.fn()

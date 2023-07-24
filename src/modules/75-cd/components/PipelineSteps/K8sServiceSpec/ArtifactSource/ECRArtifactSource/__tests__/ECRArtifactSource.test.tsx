@@ -52,7 +52,8 @@ jest.mock('services/cd-ng', () => ({
   useGetBuildDetailsForEcr: () =>
     jest.fn().mockImplementation(() => {
       return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
-    })
+    }),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
 jest.mock('services/portal', () => ({
   useListAwsRegions: jest.fn().mockImplementation(() => {

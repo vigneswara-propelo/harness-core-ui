@@ -85,7 +85,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetRegionsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: regionData }
-  })
+  }),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
 
 const onSubmit = jest.fn()

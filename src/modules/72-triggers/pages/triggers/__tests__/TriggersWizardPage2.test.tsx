@@ -93,6 +93,10 @@ jest.spyOn(cdng, 'useGetConnector').mockImplementation((): any => {
   return { data: connectorsData, refetch: fetchConnectors, loading: false }
 })
 
+jest.spyOn(cdng, 'useGetServiceV2').mockImplementation((): any => {
+  return { loading: false, data: {}, refetch: jest.fn() }
+})
+
 jest.mock('services/cd-ng-rq', () => ({
   useListGitSyncQuery: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }

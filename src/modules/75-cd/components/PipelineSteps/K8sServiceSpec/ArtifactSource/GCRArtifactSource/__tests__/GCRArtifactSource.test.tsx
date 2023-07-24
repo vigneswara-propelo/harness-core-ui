@@ -24,6 +24,11 @@ jest.spyOn(artifactSourceUtils, 'fromPipelineInputTriggerTab')
 jest.spyOn(artifactSourceUtils, 'isFieldfromTriggerTabDisabled')
 jest.spyOn(artifactSourceUtils, 'resetTags').mockImplementation(() => jest.fn())
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+}))
+
 jest.mock('@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField', () => ({
   ...(jest.requireActual('@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField') as any),
   // eslint-disable-next-line react/display-name

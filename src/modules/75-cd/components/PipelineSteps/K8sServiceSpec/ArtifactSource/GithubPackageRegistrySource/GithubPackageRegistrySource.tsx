@@ -17,6 +17,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import {
+  ArtifactSource,
   BuildDetails,
   GithubPackageDTO,
   SidecarArtifact,
@@ -33,6 +34,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -114,6 +116,12 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
+  const { isTagRegex: isVersionRegex, isServiceLoading } = useIsTagRegex({
+    serviceIdentifier: serviceIdentifier!,
+    artifact: artifact as ArtifactSource,
+    artifactPath: artifactPath!,
+    tagOrVersionRegexKey: 'versionRegex'
+  })
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
@@ -343,6 +351,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     /* instanbul ignore else */
     if (
       readonly ||
+      isServiceLoading ||
       isFieldfromTriggerTabDisabled(
         fieldName,
         formik,
@@ -569,6 +578,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           )}
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            !isVersionRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -582,6 +592,26 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
                 />
               </div>
+            )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isVersionRegex &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <TextFieldInputSetView
+                tooltipProps={{
+                  dataTooltipId: 'artifactDigestTooltip'
+                }}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+                fieldPath={`artifacts.${artifactPath}.spec.digest`}
+                template={template}
+              />
             )}
         </Layout.Vertical>
       )}

@@ -22,6 +22,12 @@ import { KubernetesSidecarArtifacts } from '../../../KubernetesArtifacts/Kuberne
 import { template, artifacts } from './mocks'
 
 jest.spyOn(artifactSourceUtils, 'fromPipelineInputTriggerTab')
+
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+}))
+
 describe('Docker Artifact Source tests', () => {
   test('snapshot test for Primary Docker artifact source', () => {
     const { container } = render(

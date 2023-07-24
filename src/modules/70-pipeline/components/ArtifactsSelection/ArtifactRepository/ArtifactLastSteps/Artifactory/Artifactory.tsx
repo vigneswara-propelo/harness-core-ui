@@ -69,7 +69,8 @@ import {
   isAWSLambdaDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type {
+import {
+  TagTypes,
   ArtifactType,
   ImagePathProps,
   ImagePathTypes
@@ -374,9 +375,9 @@ function Artifactory({
     ) {
       artifactFormDataValues.artifactPath = getLabelValueObject(artifactFormDataValues?.artifactPath as string)
     }
-
     artifactFormDataValues.digest =
-      getMultiTypeFromValue(artifactFormDataValues.digest) === MultiTypeInputType.FIXED
+      getMultiTypeFromValue(artifactFormDataValues.digest) === MultiTypeInputType.FIXED &&
+      artifactFormDataValues.tagType === TagTypes.Value
         ? getLabelValueObject(artifactFormDataValues.digest)
         : artifactFormDataValues.digest
     return artifactFormDataValues

@@ -13,6 +13,7 @@ import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
+  ArtifactSource,
   SidecarArtifact,
   useArtifactIds,
   useGetBuildDetailsForNexusArtifactWithYaml,
@@ -40,7 +41,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-
+import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import {
   getDefaultQueryParam,
@@ -197,6 +198,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   )
 
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
+  const { isTagRegex, isServiceLoading } = useIsTagRegex({
+    serviceIdentifier: serviceIdentifier!,
+    artifact: artifact as ArtifactSource,
+    artifactPath: artifactPath!,
+    tagOrVersionRegexKey: 'tagRegex'
+  })
 
   const {
     data,
@@ -525,6 +533,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     /* instanbul ignore else */
     if (
       readonly ||
+      isServiceLoading ||
       isFieldfromTriggerTabDisabled(
         fieldName,
         formik,
@@ -952,6 +961,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           )}
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            !isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -965,6 +975,25 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
                 />
               </div>
+            )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isTagRegex &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <TextFieldInputSetView
+                tooltipProps={{
+                  dataTooltipId: 'artifactDigestTooltip'
+                }}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+                fieldPath={`artifacts.${artifactPath}.spec.digest`}
+                template={template}
+              />
             )}
         </Layout.Vertical>
       )}

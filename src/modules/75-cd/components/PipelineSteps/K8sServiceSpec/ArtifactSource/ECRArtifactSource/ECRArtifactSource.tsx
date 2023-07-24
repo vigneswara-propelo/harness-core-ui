@@ -9,8 +9,8 @@ import React, { useCallback, useMemo } from 'react'
 import { defaultTo, get, isNil, memoize } from 'lodash-es'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
-
 import {
+  ArtifactSource,
   GetImagesListForEcrQueryParams,
   SidecarArtifact,
   useGetBuildDetailsForEcr,
@@ -39,9 +39,9 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
-  DefaultParam,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
@@ -106,6 +106,13 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const { getRBACErrorMessage } = useRBACError()
   const { NG_SVC_ENV_REDESIGN, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
+  const { isTagRegex, isServiceLoading } = useIsTagRegex({
+    serviceIdentifier: serviceIdentifier!,
+    artifact: artifact as ArtifactSource,
+    artifactPath: artifactPath!,
+    tagOrVersionRegexKey: 'tagRegex'
+  })
+
   const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const imagePathValue = getImagePath(
@@ -131,10 +138,6 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
 
-  const tagRegexValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tagRegex`, ''), artifact?.spec?.tagRegex),
-    get(initialValues, `artifacts.${artifactPath}.spec.tagRegex`, '')
-  )
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
 
   // Image Path
@@ -385,6 +388,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     /* instanbul ignore else */
     if (
       readonly ||
+      isServiceLoading ||
       isFieldfromTriggerTabDisabled(
         fieldName,
         formik,
@@ -608,7 +612,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) || tagValue !== DefaultParam) &&
+            !isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -625,7 +629,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
             )}
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) || tagRegexValue !== DefaultParam) &&
+            isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <TextFieldInputSetView
                 tooltipProps={{

@@ -29,6 +29,11 @@ jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+}))
+
 const props = (withNewProp = false): any => ({
   deploymentStageTemplate: {
     serviceConfig: {

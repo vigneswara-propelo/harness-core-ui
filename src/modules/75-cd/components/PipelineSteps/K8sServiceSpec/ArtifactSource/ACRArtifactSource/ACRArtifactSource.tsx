@@ -22,6 +22,7 @@ import type { IItemRendererProps } from '@blueprintjs/select'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import {
+  ArtifactSource,
   SidecarArtifact,
   useGetACRRegistriesForServiceWithYaml,
   useGetACRRepositoriesForServiceWithYaml
@@ -45,9 +46,9 @@ import { getValue } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
-  DefaultParam,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
@@ -160,10 +161,13 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
     get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
-  const tagRegexValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tagRegex`, ''), artifact?.spec?.tagRegex),
-    get(initialValues, `artifacts.${artifactPath}.spec.tagRegex`, '')
-  )
+
+  const { isTagRegex, isServiceLoading } = useIsTagRegex({
+    serviceIdentifier: serviceIdentifier!,
+    artifact: artifact as ArtifactSource,
+    artifactPath: artifactPath!,
+    tagOrVersionRegexKey: 'tagRegex'
+  })
 
   const { fetchTags, fetchingTags, fetchTagsError, acrTagsData } = useGetBuildDetailsForAcrArtifact({
     connectorRef: getFinalQueryParamValue(connectorRefValue),
@@ -400,6 +404,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     if (
       readonly ||
+      isServiceLoading ||
       isFieldfromTriggerTabDisabled(
         fieldName,
         formik,
@@ -709,7 +714,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) || tagValue !== DefaultParam) &&
+            !isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -726,7 +731,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
             )}
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) || tagRegexValue !== DefaultParam) &&
+            isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <TextFieldInputSetView
                 tooltipProps={{

@@ -11,7 +11,12 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForGcr, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
+import {
+  ArtifactSource,
+  SidecarArtifact,
+  useGetBuildDetailsForGcr,
+  useGetBuildDetailsForGcrWithYaml
+} from 'services/cd-ng'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
@@ -21,6 +26,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   gcrUrlList,
@@ -33,8 +39,7 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  getValidInitialValuePath,
-  DefaultParam
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
@@ -90,10 +95,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
     get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
-  const tagRegexValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tagRegex`, ''), artifact?.spec?.tagRegex),
-    get(initialValues, `artifacts.${artifactPath}.spec.tagRegex`, '')
-  )
+
   const registryHostnameValue = getDefaultQueryParam(
     getValidInitialValuePath(
       get(artifacts, `${artifactPath}.spec.registryHostname`, ''),
@@ -101,6 +103,12 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     ),
     get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
   )
+  const { isTagRegex, isServiceLoading } = useIsTagRegex({
+    serviceIdentifier: serviceIdentifier!,
+    artifact: artifact as ArtifactSource,
+    artifactPath: artifactPath!,
+    tagOrVersionRegexKey: 'tagRegex'
+  })
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
@@ -235,6 +243,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     /* instanbul ignore else */
     if (
       readonly ||
+      isServiceLoading ||
       isFieldfromTriggerTabDisabled(
         fieldName,
         formik,
@@ -360,7 +369,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
           )}
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) || tagValue !== DefaultParam) &&
+            !isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -376,7 +385,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
             )}
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) || tagRegexValue !== DefaultParam) &&
+            isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <TextFieldInputSetView
                 tooltipProps={{

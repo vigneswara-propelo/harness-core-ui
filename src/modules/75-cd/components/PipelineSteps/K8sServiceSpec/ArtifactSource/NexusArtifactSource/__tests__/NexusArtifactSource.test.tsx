@@ -43,6 +43,11 @@ jest.mock('@connectors/components/ConnectorReferenceField/FormMultiTypeConnector
   }
 }))
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+}))
+
 describe('Nexus Artifact Source tests', () => {
   test('snapshot test for Primary Nexus artifact source', () => {
     const { container } = render(

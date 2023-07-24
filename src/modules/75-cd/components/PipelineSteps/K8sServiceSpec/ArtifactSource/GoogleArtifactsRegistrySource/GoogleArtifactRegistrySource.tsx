@@ -11,12 +11,12 @@ import { defaultTo, get, memoize } from 'lodash-es'
 import { Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
+  ArtifactSource,
   GARBuildDetailsDTO,
   RegionGar,
   SidecarArtifact,
@@ -33,9 +33,9 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
-  DefaultParam,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
@@ -112,17 +112,18 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repositoryName`, ''), artifact?.spec?.repositoryName),
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryName`)
   )
-  const versionRegexValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.versionRegex`, ''), artifact?.spec?.versionRegex),
-    get(initialValues?.artifacts, `${artifactPath}.spec.versionRegex`)
-  )
 
   const versionValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.version`, ''), artifact?.spec?.version),
     get(initialValues?.artifacts, `${artifactPath}.spec.version`)
   )
-  // const isVersionRegexPresent = versionRegexValue !== DefaultParam
 
+  const { isTagRegex: isVersionRegex, isServiceLoading } = useIsTagRegex({
+    serviceIdentifier: serviceIdentifier!,
+    artifact: artifact as ArtifactSource,
+    artifactPath: artifactPath!,
+    tagOrVersionRegexKey: 'versionRegex'
+  })
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
@@ -272,6 +273,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     /* instanbul ignore else */
     if (
       readonly ||
+      isServiceLoading ||
       isFieldfromTriggerTabDisabled(
         fieldName,
         formik,
@@ -451,7 +453,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) || versionValue !== DefaultParam) &&
+            !isVersionRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -469,8 +471,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            (isFieldRuntime(`artifacts.${artifactPath}.spec.versionRegex`, template) ||
-              versionRegexValue !== DefaultParam) &&
+            isVersionRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <TextFieldInputSetView
                 tooltipProps={{

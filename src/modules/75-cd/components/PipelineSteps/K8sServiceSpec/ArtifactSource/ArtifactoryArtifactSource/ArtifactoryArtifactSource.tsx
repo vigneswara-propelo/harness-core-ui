@@ -219,6 +219,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const { expressions } = useVariablesExpression()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
+  const [isTagRegex, setIsTagRegex] = useState<boolean>(false)
+
   const { data: service, loading: serviceLoading } = useGetServiceV2({
     serviceIdentifier: serviceIdentifier as string,
     queryParams: {
@@ -282,11 +284,16 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             artifactInfo => artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier
           )
         : get(artifactsList, `${artifactPath}`)
-
       const serviceRepoFormat = artifactDetailsFromServiceYaml?.spec?.repositoryFormat
       if (serviceRepoFormat) {
         setRepoFormat(serviceRepoFormat)
       }
+      // find TagType to evaluate kind of component to show for Digest
+      setIsTagRegex(!!artifactDetailsFromServiceYaml?.spec?.tagRegex)
+    }
+    // when FF is off we take regex data from passed artifact
+    if (!NG_SVC_ENV_REDESIGN) {
+      setIsTagRegex(!!artifact?.spec?.tagRegex)
     }
   }, [service, artifact, selectedDeploymentType])
 
@@ -512,7 +519,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     isMultiService
   ])
 
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
@@ -827,6 +834,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
           />
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            !isTagRegex &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -840,6 +848,25 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
                 />
               </div>
+            )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isTagRegex &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <TextFieldInputSetView
+                tooltipProps={{
+                  dataTooltipId: 'artifactDigestTooltip'
+                }}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+                fieldPath={`artifacts.${artifactPath}.spec.digest`}
+                template={template}
+              />
             )}
         </Layout.Vertical>
       )}

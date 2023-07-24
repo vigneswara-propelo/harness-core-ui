@@ -62,7 +62,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetLastSuccessfulBuildForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
     return { data: regionData }
-  })
+  }),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
 
 const submitForm = jest.fn()
