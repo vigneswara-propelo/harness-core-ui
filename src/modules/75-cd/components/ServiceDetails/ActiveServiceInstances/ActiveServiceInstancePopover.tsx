@@ -108,7 +108,7 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
                         width={206}
                         lineClamp={1}
                       >
-                        {itemValue.value}
+                        {typeof itemValue.value !== 'string' ? '' : itemValue.value}
                       </Text>
                     </Layout.Horizontal>
                   ) : (
@@ -455,7 +455,6 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     },
     lazy: !isEnvDetail
   })
-
   if ((!isEnvDetail && loading) || (isEnvDetail && envLoading)) {
     return (
       <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
