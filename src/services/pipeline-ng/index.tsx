@@ -63,6 +63,7 @@ export type AbortFailureActionConfig = FailureStrategyActionConfig & {
 }
 
 export interface AbortedBy {
+  createdAt?: number
   email?: string
   userName?: string
 }
@@ -6176,7 +6177,7 @@ export interface RetryLatestExecutionResponseDto {
 }
 
 export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
-  spec: RetryFailureSpecConfig
+  spec: RetryStepGroupFailureSpecConfig
   type: 'RetryStepGroup'
 }
 
@@ -6223,6 +6224,11 @@ export interface RetryStageInfo {
 export interface RetryStagesMetadataDTO {
   retryStagesIdentifier?: string[]
   skipStagesIdentifier?: string[]
+}
+
+export interface RetryStepGroupFailureSpecConfig {
+  retryCount: number
+  retryIntervals: string[]
 }
 
 export interface RunStageRequestDTO {
@@ -18752,6 +18758,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19077,6 +19084,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -19400,6 +19408,7 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

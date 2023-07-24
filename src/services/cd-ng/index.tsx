@@ -1368,6 +1368,20 @@ export type AwsCdkBootstrapStepInfo = StepSpecType & {
   runAsUser?: number
 }
 
+export type AwsCdkSynthStepInfo = StepSpecType & {
+  appPath?: string
+  commandOptions?: string[]
+  connectorRef?: string
+  delegateSelectors?: string[]
+  exportTemplate?: boolean
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  stackNames?: string[]
+}
+
 export type AwsCloudProviderBasicConfig = CloudProviderSpec & {
   connectorRef: string
   region: string
@@ -4653,6 +4667,7 @@ export interface EntityDetail {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
 }
 
 export interface EntityDetailProtoDTO {
@@ -7436,6 +7451,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   )[]
   moduleType?:
     | 'CD'
@@ -7683,6 +7699,7 @@ export interface GitEntityFilterProperties {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -8009,6 +8026,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8248,6 +8266,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8608,6 +8627,7 @@ export interface GitSyncEntityDTO {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8841,6 +8861,7 @@ export interface GitSyncEntityListDTO {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9091,6 +9112,7 @@ export interface GitSyncErrorDTO {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10700,6 +10722,10 @@ export type K8sScaleStepInfo = StepSpecType & {
 export interface K8sStepCommandFlag {
   commandType: 'Apply'
   flag?: string
+}
+
+export type K8sStepInstanceInfo = StepInstanceInfo & {
+  podName?: string
 }
 
 export type KerberosConfigDTO = BaseSSHSpecDTO & {
@@ -13137,6 +13163,7 @@ export interface ReferencedByDTO {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
 }
 
 export interface RefreshResponse {
@@ -14593,6 +14620,7 @@ export interface ResponseListEntityType {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -16570,8 +16598,13 @@ export interface RetryFailureSpecConfig {
 }
 
 export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
-  spec: RetryFailureSpecConfig
+  spec: RetryStepGroupFailureSpecConfig
   type: 'RetryStepGroup'
+}
+
+export interface RetryStepGroupFailureSpecConfig {
+  retryCount: number
+  retryIntervals: string[]
 }
 
 export type RevertPRStepInfo = StepSpecType & {
@@ -18425,6 +18458,7 @@ export interface StepData {
     | 'ServerlessAwsLambdaDeployV2'
     | 'ServerlessAwsLambdaPackageV2'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
 }
 
 export interface StepElementConfig {
@@ -20304,9 +20338,9 @@ export type ListTagsForAMIArtifactBodyRequestBody = string
 
 export type UpdateFreezeStatusBodyRequestBody = string[]
 
-export type UpdateSamlMetaDataForSamlSSOIdRequestBody = void
-
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
+
+export type UploadSamlMetaDataRequestBody = void
 
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
@@ -21152,6 +21186,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21377,6 +21412,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -21707,6 +21743,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21932,6 +21969,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -31156,13 +31194,7 @@ export interface UploadSamlMetaDataQueryParams {
 }
 
 export type UploadSamlMetaDataProps = Omit<
-  MutateProps<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >,
+  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -31170,13 +31202,7 @@ export type UploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
-  <Mutate<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >
+  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>
     verb="POST"
     path={`/authentication-settings/saml-metadata-upload`}
     base={getConfig('ng/api')}
@@ -31185,13 +31211,7 @@ export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
 )
 
 export type UseUploadSamlMetaDataProps = Omit<
-  UseMutateProps<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >,
+  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -31199,13 +31219,11 @@ export type UseUploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
-  useMutate<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >('POST', `/authentication-settings/saml-metadata-upload`, { base: getConfig('ng/api'), ...props })
+  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
+    'POST',
+    `/authentication-settings/saml-metadata-upload`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * Create SAML Config
@@ -31215,18 +31233,18 @@ export const uploadSamlMetaDataPromise = (
     RestResponseSSOConfig,
     unknown,
     UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload`, props, signal)
+  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/authentication-settings/saml-metadata-upload`,
+    props,
+    signal
+  )
 
 export interface UpdateSamlMetaDataQueryParams {
   accountId: string
@@ -31292,7 +31310,7 @@ export type UpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -31307,7 +31325,7 @@ export const UpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UpdateSa
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >
     verb="PUT"
@@ -31322,7 +31340,7 @@ export type UseUpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -31337,7 +31355,7 @@ export const useUpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseUp
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >(
     'PUT',
@@ -31357,7 +31375,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   > & { samlSSOId: string },
   signal?: RequestInit['signal']
@@ -31366,7 +31384,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
 
@@ -40647,6 +40665,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -40933,6 +40952,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   searchTerm?: string
 }
 
@@ -44522,6 +44542,7 @@ export interface GetReferencedByQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   searchTerm?: string
 }
 
@@ -47465,6 +47486,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -47758,6 +47780,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServerlessAwsLambdaPackageV2'
       | 'RevertPR'
       | 'AwsCdkBootstrap'
+      | 'AwsCdkSynth'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -54401,6 +54424,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   yamlGroup?: string
 }
 
@@ -54754,6 +54778,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -58382,6 +58407,91 @@ export const updateServiceOverrideV2Promise = (
     ServiceOverrideRequestDTOV2RequestBody,
     void
   >('PUT', getConfig('ng/api'), `/serviceOverrides`, props, signal)
+
+export interface GetWithYamlServiceOverridesV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetWithYamlServiceOverridesV2PathParams {
+  identifier: string
+}
+
+export type GetWithYamlServiceOverridesV2Props = Omit<
+  GetProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetWithYamlServiceOverridesV2QueryParams,
+    GetWithYamlServiceOverridesV2PathParams
+  >,
+  'path'
+> &
+  GetWithYamlServiceOverridesV2PathParams
+
+/**
+ * Gets Service Overrides by Identifier including the yaml of spec also in response
+ */
+export const GetWithYamlServiceOverridesV2 = ({ identifier, ...props }: GetWithYamlServiceOverridesV2Props) => (
+  <Get<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetWithYamlServiceOverridesV2QueryParams,
+    GetWithYamlServiceOverridesV2PathParams
+  >
+    path={`/serviceOverrides/get-with-yaml/${identifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetWithYamlServiceOverridesV2Props = Omit<
+  UseGetProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetWithYamlServiceOverridesV2QueryParams,
+    GetWithYamlServiceOverridesV2PathParams
+  >,
+  'path'
+> &
+  GetWithYamlServiceOverridesV2PathParams
+
+/**
+ * Gets Service Overrides by Identifier including the yaml of spec also in response
+ */
+export const useGetWithYamlServiceOverridesV2 = ({ identifier, ...props }: UseGetWithYamlServiceOverridesV2Props) =>
+  useGet<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetWithYamlServiceOverridesV2QueryParams,
+    GetWithYamlServiceOverridesV2PathParams
+  >(
+    (paramsInPath: GetWithYamlServiceOverridesV2PathParams) =>
+      `/serviceOverrides/get-with-yaml/${paramsInPath.identifier}`,
+    { base: getConfig('ng/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Gets Service Overrides by Identifier including the yaml of spec also in response
+ */
+export const getWithYamlServiceOverridesV2Promise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetWithYamlServiceOverridesV2QueryParams,
+    GetWithYamlServiceOverridesV2PathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetWithYamlServiceOverridesV2QueryParams,
+    GetWithYamlServiceOverridesV2PathParams
+  >(getConfig('ng/api'), `/serviceOverrides/get-with-yaml/${identifier}`, props, signal)
 
 export interface GetServiceOverrideListV2QueryParams {
   page?: number
@@ -70715,6 +70825,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
     | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
   subtype?:
     | 'K8sCluster'
     | 'Git'

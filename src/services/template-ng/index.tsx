@@ -458,6 +458,8 @@ export interface EntityDetail {
     | 'AnalyzeDeploymentImpact'
     | 'ServerlessAwsLambdaPackageV2'
     | 'RevertPR'
+    | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
 }
 
 export interface EntityDetailProtoDTO {
@@ -895,7 +897,9 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1275,7 +1279,9 @@ export interface ErrorMetadata {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   errorMessage?: string
 }
 
@@ -1661,7 +1667,9 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2396,7 +2404,9 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
