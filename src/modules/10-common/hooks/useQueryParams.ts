@@ -74,6 +74,11 @@ export const queryParamDecodeAll: CustomQsDecoder =
     return decoder(value)
   }
 
+// list of params that should be converted back to strings
+// if searchTerm is '123', queryParamDecodeAll converts it to a number, but searchTerm should remain a string
+const ignoreList = ['searchTerm']
+
+// This uses queryParamDecodeAll as the decoder and assigns the value from default params if the processed param's value is null/undefined.
 export const useQueryParamsOptions = <Q extends object, DKey extends keyof Q>(
   defaultParams: { [K in DKey]: NonNullable<Q[K]> }
 ): UseQueryParamsOptions<RequiredPick<Q, DKey>> => {
@@ -88,11 +93,11 @@ export const useQueryParamsOptions = <Q extends object, DKey extends keyof Q>(
       processQueryParams: (params: Q) => {
         const processedParams = { ...params }
 
-        // if searchTerm is '123', queryParamDecodeAll converts it to the number 123
-        // but searchTerm should remain a string
-        if (!isNil(get(processedParams, 'searchTerm'))) {
-          set(processedParams, 'searchTerm', get(processedParams, 'searchTerm').toString())
-        }
+        ignoreList.forEach(param => {
+          if (!isNil(get(processedParams, param))) {
+            set(processedParams, param, get(processedParams, param).toString())
+          }
+        })
 
         return assignWith(processedParams, defaultParamsRef.current, (objValue, srcValue) =>
           isNil(objValue) ? srcValue : objValue

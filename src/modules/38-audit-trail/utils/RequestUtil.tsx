@@ -391,7 +391,7 @@ export type AuditTrailQueryParamsWithDefaults = RequiredPick<
 >
 
 export const AUDIT_TRAIL_PAGE_INDEX = 0
-export const AUDIT_TRAIL_PAGE_SIZE = 25
+export const AUDIT_TRAIL_PAGE_SIZE = 20
 
 export const useAuditTrailQueryParamOptions = (): UseQueryParamsOptions<AuditTrailQueryParamsWithDefaults> => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
