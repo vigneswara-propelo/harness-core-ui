@@ -146,12 +146,16 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
     return (
       <Button
         onClick={handleSwitchAccount}
-        text={account.accountName}
         loading={switchAccountLoading && switchAccountId === account.uuid}
         disabled={account.uuid === accountId}
         minimal={account.uuid === accountId}
         variation={ButtonVariation.LINK}
-      />
+        className={css.accountName}
+      >
+        <Text inline lineClamp={1}>
+          {account.accountName}
+        </Text>
+      </Button>
     )
   }
 

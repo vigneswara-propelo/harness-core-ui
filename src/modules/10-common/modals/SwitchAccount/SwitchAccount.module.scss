@@ -37,3 +37,10 @@
   padding-left: var(--spacing-medium) !important;
   padding-right: var(--spacing-medium) !important;
 }
+
+.accountName {
+  span {
+    font-weight: inherit !important;
+    color: inherit !important;
+  }
+}
