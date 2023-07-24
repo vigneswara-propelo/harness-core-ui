@@ -44,6 +44,7 @@ describe('Artifactory Digest Wrapper Component', () => {
     const { container } = render(
       <TestWrapper>
         <ArtifactoryArtifactDigestField
+          repositoryFormat={'docker'}
           formik={initialValues}
           isTagDetailsLoading={false}
           expressions={[]}

@@ -825,6 +825,7 @@ function Artifactory({
                 ) : null}
                 {CD_NG_DOCKER_ARTIFACT_DIGEST && !isGenericArtifactory && (
                   <ArtifactoryArtifactDigestField
+                    repositoryFormat={repositoryFormat as string}
                     formik={formik}
                     expressions={expressions}
                     allowableTypes={allowableTypes}

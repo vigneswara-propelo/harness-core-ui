@@ -34,6 +34,7 @@ interface ArtifactoryDigestFieldWrapperProps {
   allowableTypes: AllowedTypes
   isReadonly: boolean
   connectorRefValue: string
+  repositoryFormat: string
 }
 export function ArtifactoryArtifactDigestField({
   formik,
@@ -41,7 +42,8 @@ export function ArtifactoryArtifactDigestField({
   allowableTypes,
   isReadonly,
   connectorRefValue,
-  isTagDetailsLoading
+  isTagDetailsLoading,
+  repositoryFormat
 }: ArtifactoryDigestFieldWrapperProps): React.ReactElement {
   const artifactType = ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -57,7 +59,7 @@ export function ArtifactoryArtifactDigestField({
     get(formik?.values, 'repository'),
     get(formik?.values, 'artifactPath'),
     get(formik?.values, 'repositoryUrl'),
-    get(formik?.values, 'repositoryFormat')
+    repositoryFormat
   )
 
   const tagValue = defaultTo(formik?.values?.tag?.value, formik?.values?.tag)
@@ -99,7 +101,7 @@ export function ArtifactoryArtifactDigestField({
       connectorRef: connectorRefValue,
       repository: defaultTo(formik?.values?.repository?.value, formik?.values?.repository),
       artifactPath: defaultTo(formik?.values?.artifactPath?.value, formik?.values?.artifactPath),
-      repositoryFormat: defaultTo(formik?.values?.repositoryFormat?.value, formik?.values?.repositoryFormat),
+      repositoryFormat: repositoryFormat,
       repositoryUrl: defaultTo(formik?.values?.repositoryUrl?.value, formik?.values?.repositoryUrl)
     },
     requestOptions: {
