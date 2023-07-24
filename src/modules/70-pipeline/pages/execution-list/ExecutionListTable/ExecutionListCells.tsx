@@ -280,8 +280,9 @@ export const ExecutionCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
   const useExecutionTriggerInfo =
-    ['MANUAL', 'SCHEDULER_CRON', 'WEBHOOK', 'WEBHOOK_CUSTOM'].includes(data?.executionTriggerInfo?.triggerType) &&
-    !!data?.executionTriggerInfo?.triggeredBy?.identifier
+    ['MANUAL', 'SCHEDULER_CRON', 'WEBHOOK', 'WEBHOOK_CUSTOM', 'ARTIFACT', 'MANIFEST'].includes(
+      data?.executionTriggerInfo?.triggerType
+    ) && !!data?.executionTriggerInfo?.triggeredBy?.identifier
 
   const name = useExecutionTriggerInfo
     ? data?.executionTriggerInfo?.triggeredBy?.identifier || 'Anonymous'
