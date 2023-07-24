@@ -10,9 +10,11 @@ import { defaultTo } from 'lodash-es'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import type { EntityDetail, EntityReference } from 'services/cd-ng'
+import type { EntityDetail, NGTemplateReference } from 'services/cd-ng'
 import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { getTemplateMetadataListPromise, TemplateMetadataSummaryResponse } from 'services/template-ng'
+import { getScopeBasedProjectPathParams } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
 export interface EntityScope {
   accountIdentifier?: string
@@ -20,10 +22,13 @@ export interface EntityScope {
   projectIdentifier?: string
   branch?: string
   versionLabel?: string
+  entityScope?: NGTemplateReference['scope']
 }
 
 export interface UseGetEntityUrlProp {
-  entityInfo?: EntityDetail & { entityRef?: EntityReference & { envIdentifier?: string; pipelineIdentifier?: string } }
+  entityInfo?: EntityDetail & {
+    entityRef?: NGTemplateReference & { envIdentifier?: string; pipelineIdentifier?: string }
+  }
 }
 
 export const getPipelineMetadataByIdentifier = (
@@ -60,9 +65,14 @@ export const getTemplateMetadataByIdentifier = (
   return getTemplateMetadataListPromise(
     {
       queryParams: {
-        accountIdentifier: scope.accountIdentifier || '',
-        orgIdentifier: scope.orgIdentifier || '',
-        projectIdentifier: scope.projectIdentifier || '',
+        ...getScopeBasedProjectPathParams(
+          {
+            accountId: defaultTo(scope.accountIdentifier, ''),
+            projectIdentifier: defaultTo(scope.projectIdentifier, ''),
+            orgIdentifier: defaultTo(scope.orgIdentifier, '')
+          },
+          scope?.entityScope as Scope
+        ),
         templateListType: 'All'
       },
       body: {
@@ -258,7 +268,8 @@ export const useGetEntityMetadata = (
               orgIdentifier,
               projectIdentifier,
               branch,
-              versionLabel: (entityInfo?.entityRef as any)?.versionLabel
+              versionLabel: entityInfo?.entityRef?.versionLabel,
+              entityScope: entityInfo?.entityRef?.scope
             },
             identifier
           )
