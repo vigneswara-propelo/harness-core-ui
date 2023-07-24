@@ -62,7 +62,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
   const { getString } = useStrings()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
-  const { withActiveEnvironment } = useActiveEnvironment()
+  const { withActiveEnvironment, activeEnvironment } = useActiveEnvironment()
   const { FFM_7921_ARCHIVING_FEATURE_FLAGS } = useFeatureFlags()
 
   const featureFlagListURL = withActiveEnvironment(
@@ -151,7 +151,9 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
       onClick: openEditDetailsModal,
       permission: {
         permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-        resource: { resourceType: ResourceType.ENVIRONMENT }
+        resource: activeEnvironment
+          ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+          : { resourceType: ResourceType.FEATUREFLAG }
       },
       ...planEnforcementProps
     }

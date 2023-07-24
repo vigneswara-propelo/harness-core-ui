@@ -39,6 +39,7 @@ import { usePatchFeature } from 'services/cf'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { NoData } from '../NoData/NoData'
 import ServicesFooter from './ServicesFooter'
 import NoServices from './images/NoServices.svg'
@@ -207,6 +208,7 @@ export interface ServicesListProps {
 
 const ServicesList: FC<ServicesListProps> = ({ featureFlag, refetchFlag }) => {
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const { activeEnvironment } = useActiveEnvironment()
 
   const { handleResponseError } = useResponseError()
   const { showSuccess } = useToaster()
@@ -408,7 +410,9 @@ const ServicesList: FC<ServicesListProps> = ({ featureFlag, refetchFlag }) => {
           aria-label="edit-services"
           permission={{
             permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
-            resource: { resourceType: ResourceType.ENVIRONMENT }
+            resource: activeEnvironment
+              ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+              : { resourceType: ResourceType.FEATUREFLAG }
           }}
         />
         {showModal && (
