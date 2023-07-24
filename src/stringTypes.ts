@@ -4613,10 +4613,12 @@ export interface StringsMap {
   'pipeline.loopingStrategy.warningText': string
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string
   'pipeline.manifestType.InheritFromManifest': string
+  'pipeline.manifestType.addAdditionalOverride': string
   'pipeline.manifestType.addAutoScalerYAMLPath': string
   'pipeline.manifestType.addManifestLabel': string
   'pipeline.manifestType.addValuesYamlPath': string
   'pipeline.manifestType.addVarsYAMLPath': string
+  'pipeline.manifestType.associatedValues': string
   'pipeline.manifestType.attachPath': string
   'pipeline.manifestType.autoScalerPathRequired': string
   'pipeline.manifestType.autoScalerYAMLPath': string
@@ -6523,6 +6525,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.manifest.googleCloudFunctionDefinitionLearnMore': string
   'cd.pipelineSteps.serviceTab.manifest.manifestFirstStepTitle': string
   'cd.pipelineSteps.serviceTab.manifest.manifestSecondStepTitle': string
+  'cd.pipelineSteps.serviceTab.manifest.primaryManifest': string
   'cd.pipelineSteps.serviceTab.manifest.scalableTarget': string
   'cd.pipelineSteps.serviceTab.manifest.scalingPolicy': string
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string

@@ -24,6 +24,8 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -135,6 +137,10 @@ const TEST_PATH_PARAMS: ModulePathParams & PipelinePathProps = {
 }
 
 describe('GoogleCloudFunctionServiceSpecEditable tests', () => {
+  jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+    CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG: false
+  })
+
   test('for GCF deployment type, add Gen2 Deployment type  manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextGcf.updateStage = updateStage

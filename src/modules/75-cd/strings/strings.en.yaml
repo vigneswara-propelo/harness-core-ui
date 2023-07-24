@@ -323,6 +323,7 @@ pipelineSteps:
     manifest:
       taskDefinition: Task Definition
       taskDefinitionARNPlaceholder: Enter Task Definition ARN
+      primaryManifest: Primary Manifest
       serviceDefinition: Service Definition
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target

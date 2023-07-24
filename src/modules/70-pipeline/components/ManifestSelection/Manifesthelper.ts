@@ -372,6 +372,11 @@ export enum GitFetchTypes {
   Commit = 'Commit'
 }
 
+export enum MultiManifestsTypes {
+  MANIFESTS = 'manifests',
+  PARAMS = 'params'
+}
+
 export const gitFetchTypeList = [
   { label: 'Latest from Branch', value: 'Branch' },
   { label: 'Specific Commit Id / Git Tag', value: 'Commit' }
@@ -535,3 +540,94 @@ export const allowedManifestForDeclarativeRollback = (selectedManifest?: Manifes
   [ManifestDataType.K8sManifest, ManifestDataType.HelmChart, ManifestDataType.OpenshiftTemplate].includes(
     selectedManifest as ManifestTypes
   )
+
+interface MultiManifest {
+  manifests: ManifestTypes[]
+  params: ManifestTypes[]
+}
+
+export enum PathType {
+  PATH = 'PATH',
+  VALUE = 'VALUE'
+}
+
+export const allowedMultiManifestTypes: Record<ServiceDefinition['type'], MultiManifest> = {
+  Kubernetes: {
+    manifests: [
+      ManifestDataType.K8sManifest,
+      ManifestDataType.HelmChart,
+      ManifestDataType.OpenshiftTemplate,
+      ManifestDataType.Kustomize
+    ],
+    params: [ManifestDataType.Values, ManifestDataType.OpenshiftParam, ManifestDataType.KustomizePatches]
+  },
+  NativeHelm: {
+    manifests: [ManifestDataType.HelmChart],
+    params: [ManifestDataType.Values]
+  },
+
+  ServerlessAwsLambda: { manifests: [ManifestDataType.ServerlessAwsLambda], params: [] },
+
+  Ssh: {
+    manifests: [],
+    params: []
+  },
+  WinRm: {
+    manifests: [],
+    params: []
+  },
+  AzureWebApp: {
+    manifests: [],
+    params: []
+  },
+  ECS: {
+    manifests: [
+      ManifestDataType.EcsTaskDefinition,
+      ManifestDataType.EcsServiceDefinition,
+      ManifestDataType.EcsScalingPolicyDefinition,
+      ManifestDataType.EcsScalableTargetDefinition
+    ],
+    params: []
+  },
+
+  TAS: {
+    manifests: TASManifestTypes,
+    params: []
+  },
+  Asg: {
+    manifests: [
+      ManifestDataType.AsgLaunchTemplate,
+      ManifestDataType.AsgConfiguration,
+      ManifestDataType.AsgScalingPolicy,
+      ManifestDataType.AsgScheduledUpdateGroupAction
+    ],
+    params: []
+  },
+  CustomDeployment: {
+    manifests: [],
+    params: []
+  },
+  Elastigroup: {
+    manifests: [],
+    params: []
+  },
+  GoogleCloudFunctions: {
+    manifests: [ManifestDataType.GoogleCloudFunctionDefinition],
+    params: []
+  },
+  AwsLambda: {
+    manifests: [ManifestDataType.AwsLambdaFunctionDefinition, ManifestDataType.AwsLambdaFunctionAliasDefinition],
+    params: []
+  },
+  AWS_SAM: {
+    manifests: [ManifestDataType.AwsSamDirectory, ManifestDataType.Values],
+    params: []
+  }
+}
+
+export const getMultiManifestType = (allowedTypes: MultiManifest, manifestType: ManifestTypes): MultiManifestsTypes => {
+  if (allowedTypes.params.includes(manifestType)) {
+    return MultiManifestsTypes.PARAMS
+  }
+  return MultiManifestsTypes.MANIFESTS
+}

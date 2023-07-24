@@ -1,13 +1,6 @@
-/*
- * Copyright 2021 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
 import React, { useCallback, useEffect, useState } from 'react'
-import { get, isEmpty, noop } from 'lodash-es'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import { get, isEmpty, noop, isArray } from 'lodash-es'
+import { Dialog, Classes } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
@@ -71,7 +64,9 @@ import {
   isECSTypeManifest,
   TASManifestAllowedPaths,
   TASManifestTypes,
-  getManifestStoresByDeploymentType
+  getManifestStoresByDeploymentType,
+  allowedMultiManifestTypes,
+  MultiManifestsTypes
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -129,32 +124,12 @@ import TasManifest from '../ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '../ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
 import { AwsSamDirectoryManifest } from '../ManifestWizardSteps/AwsSamDirectoryManifest/AwsSamDirectoryManifest'
 import { LocationValue } from '../../ConfigFilesSelection/ConfigFilesListView/LocationValue'
+import ManifestMultiAttach from './ManifestMultiAttach'
+import { DIALOG_PROPS, getManifestTypeToSelect } from './ManifestListView'
 import css from '../ManifestSelection.module.scss'
+import cssMulti from './ManifestListViewMultiple.module.scss'
 
-export const DIALOG_PROPS: IDialogProps = {
-  isOpen: true,
-  usePortal: true,
-  autoFocus: true,
-  canEscapeKeyClose: false,
-  canOutsideClickClose: false,
-  enforceFocus: false,
-  style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
-}
-
-export const getManifestTypeToSelect = (
-  availableManifestTypes: ManifestTypes[],
-  preSelectedManifestType?: ManifestTypes
-): ManifestTypes | null => {
-  if (preSelectedManifestType) {
-    return preSelectedManifestType
-  }
-  if (availableManifestTypes?.length === 1) {
-    return availableManifestTypes[0]
-  }
-  return null
-}
-
-function ManifestListView({
+function ManifestListViewMultiple({
   connectors,
   listOfManifests,
   deploymentType,
@@ -180,14 +155,15 @@ function ManifestListView({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
+  const [multiManifestType, setMultiManifestType] = useState<MultiManifestsTypes>(MultiManifestsTypes.MANIFESTS)
   const { CDS_SERVERLESS_V2 } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < listOfManifests.length)
   }, [listOfManifests, listOfManifests.length, manifestIndex])
 
-  const addNewManifest = (): void => {
+  const addNewManifest = (typeManifestMulti: MultiManifestsTypes): void => {
+    setMultiManifestType(typeManifestMulti)
     setEditIndex(listOfManifests.length)
     setSelectedManifest(getManifestTypeToSelect(availableManifestTypes, preSelectedManifestType))
     showConnectorModal()
@@ -577,6 +553,7 @@ function ManifestListView({
     ...gitTypeStoreAuthenticationProps,
     identifier: CONNECTOR_CREDENTIALS_STEP_IDENTIFIER
   }
+
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(ManifestToConnectorMap[manifestStore])
     switch (manifestStore) {
@@ -653,7 +630,7 @@ function ManifestListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            types={availableManifestTypes}
+            types={allowedMultiManifestTypes[deploymentType]?.[multiManifestType]}
             manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest, {
               CDS_SERVERLESS_V2
             })}
@@ -687,7 +664,9 @@ function ManifestListView({
     allowableTypes,
     isManifestEditMode,
     lastSteps,
-    CDS_SERVERLESS_V2
+    CDS_SERVERLESS_V2,
+    multiManifestType,
+    deploymentType
   ])
 
   const renderConnectorField = useCallback(
@@ -712,167 +691,146 @@ function ManifestListView({
   return (
     <Layout.Vertical style={{ width: '100%' }}>
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }} margin={{ top: 'medium' }}>
-        {!!listOfManifests?.length && (
-          <div className={cx(css.manifestList, css.listHeader)}>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {getString('pipelineSteps.serviceTab.manifestList.manifestType')}
-            </Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {getString('pipelineSteps.serviceTab.manifestList.manifestStore')}
-            </Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
-            <span></span>
-          </div>
-        )}
         <Layout.Vertical style={{ flexShrink: 'initial' }}>
           <section>
-            {listOfManifests?.map((data: ManifestConfigWrapper, index: number) => {
-              const manifest = data['manifest']
-              const { color } = getStatus(
-                getConnectorPath(manifest?.spec?.store?.type, manifest),
-                connectors,
-                accountId
+            {listOfManifests
+              ?.filter((data: ManifestConfigWrapper) =>
+                allowedMultiManifestTypes[deploymentType]?.[MultiManifestsTypes.MANIFESTS].includes(
+                  data?.manifest?.type as ManifestTypes
+                )
               )
-              const connectorName = getConnectorNameFromValue(
-                getConnectorPath(manifest?.spec?.store?.type, manifest),
-                connectors
-              )
-              const manifestLocation = get(
-                manifest?.spec,
-                getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
-              )
+              ?.map((data: ManifestConfigWrapper, index: number) => {
+                const manifest = data['manifest']
+                const store = manifest?.spec?.store
+                const id = manifest?.identifier
+                const storeType = store?.type
+                const manifestType = manifest?.type
+                const { color } = getStatus(getConnectorPath(storeType, manifest), connectors, accountId)
+                const connectorName = getConnectorNameFromValue(getConnectorPath(storeType, manifest), connectors)
+                const manifestLocation = get(
+                  manifest?.spec,
+                  getManifestLocation(manifest?.type as ManifestTypes, storeType)
+                )
 
-              const isManifestLocationString = typeof manifestLocation === 'string'
-              const isHarnessStore = manifest?.spec?.store.type === ManifestStoreMap.Harness
-              return (
-                <div className={css.rowItem} key={`${manifest?.identifier}-${index}`}>
-                  <section className={css.manifestList}>
-                    <div className={css.columnId}>
-                      <Icon inline name={manifestTypeIcons[manifest?.type as ManifestTypes]} size={20} />
-                      <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
-                        {manifest?.identifier}
-                      </Text>
-                    </div>
-                    <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div>
-                    {renderConnectorField(
-                      manifest?.spec?.store.type,
-                      getConnectorPath(manifest?.spec?.store?.type, manifest),
-                      connectorName,
-                      color
-                    )}
-
-                    {!isEmpty(manifestLocation) && (
-                      <span>
-                        <Text
-                          width={200}
-                          lineClamp={1}
-                          tooltip={
-                            <LocationValue
-                              isTooltip
-                              locations={isManifestLocationString ? [manifestLocation] : manifestLocation}
-                              isHarnessStore={isHarnessStore}
-                              onClick={(path: string, scope: string) => FileStoreModal.openFileStoreModal(path, scope)}
+                return (
+                  <div className={cx(css.rowItem)} key={`${id}-${index}`}>
+                    <section className={cssMulti.multiManifestList}>
+                      <div className={cx(cssMulti.multiManifestContainer)}>
+                        <div className={cx(cssMulti.columnId)}>
+                          <Text margin={{ right: 'small' }} inline color={Color.GREY_400} lineClamp={1}>
+                            {getString('common.ID').toUpperCase()}
+                          </Text>
+                          <Icon inline name={manifestTypeIcons[manifestType as ManifestTypes]} size={24} />
+                          <Text
+                            margin={{ left: 'small' }}
+                            inline
+                            className={css.type}
+                            color={Color.GREY_900}
+                            lineClamp={1}
+                          >
+                            {id}
+                          </Text>
+                        </div>
+                        <div className={cx(cssMulti.manifestType, cssMulti.manifestItem)}>
+                          <Text
+                            margin={{ left: 'small' }}
+                            inline
+                            className={cssMulti.type}
+                            color={Color.GREY_400}
+                            lineClamp={1}
+                          >
+                            {getString('pipelineSteps.serviceTab.manifestList.manifestType')}
+                          </Text>
+                          <Text
+                            margin={{ left: 'small' }}
+                            inline
+                            className={cssMulti.type}
+                            color={Color.GREY_900}
+                            lineClamp={1}
+                          >
+                            {getString(manifestTypeLabels[manifest?.type as ManifestTypes])}
+                          </Text>
+                        </div>
+                        <div className={cx(cssMulti.storeType, cssMulti.manifestItem)}>
+                          <Text
+                            margin={{ right: 'medium' }}
+                            inline
+                            className={cssMulti.type}
+                            color={Color.GREY_400}
+                            lineClamp={1}
+                          >
+                            {getString('store')}
+                          </Text>
+                          {renderConnectorField(storeType, getConnectorPath(storeType, manifest), connectorName, color)}
+                        </div>
+                      </div>
+                      {!isReadonly && (
+                        <span>
+                          <Layout.Horizontal>
+                            <Button
+                              icon="Edit"
+                              iconProps={{ size: 18 }}
+                              onClick={() => {
+                                editManifest(
+                                  manifestType as ManifestTypes,
+                                  storeType as ManifestStores,
+                                  listOfManifests.findIndex(
+                                    (item: ManifestConfigWrapper) => item.manifest?.type === manifestType
+                                  )
+                                )
+                              }}
+                              minimal
                             />
-                          }
-                        >
-                          <LocationValue
-                            locations={isManifestLocationString ? [manifestLocation] : manifestLocation}
-                            isHarnessStore={isHarnessStore}
-                            onClick={(path: string, scope: string) => FileStoreModal.openFileStoreModal(path, scope)}
-                          />
-                        </Text>
-                      </span>
-                    )}
-                    {!isReadonly && (
-                      <span>
-                        <Layout.Horizontal>
-                          <Button
-                            icon="Edit"
-                            iconProps={{ size: 18 }}
-                            onClick={() =>
-                              editManifest(
-                                manifest?.type as ManifestTypes,
-                                manifest?.spec?.store?.type as ManifestStores,
-                                index
-                              )
-                            }
-                            minimal
-                          />
-                          <Button
-                            iconProps={{ size: 18 }}
-                            icon="main-trash"
-                            onClick={() => removeManifestConfig(index)}
-                            minimal
-                          />
-                        </Layout.Horizontal>
-                      </span>
-                    )}
-                  </section>
-                  {ManifestToPathMap[manifest?.type as PrimaryManifestType] &&
-                    !TASManifestTypes.includes(manifest?.type as PrimaryManifestType) && (
-                      <AttachPathYamlFlow
-                        renderConnectorField={renderConnectorField(
-                          manifest?.spec?.store.type,
-                          manifest?.spec?.store?.spec.connectorRef,
-                          connectorName,
-                          color
-                        )}
-                        manifestType={manifest?.type as PrimaryManifestType}
-                        manifestStore={manifest?.spec?.store?.type}
-                        valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifest?.type as PrimaryManifestType]]}
-                        expressions={expressions}
-                        allowableTypes={allowableTypes}
-                        isReadonly={isReadonly}
-                        attachPathYaml={formData =>
-                          attachPathYaml(
-                            formData,
-                            manifest?.identifier as string,
-                            manifest?.type as PrimaryManifestType
-                          )
-                        }
-                        removeValuesYaml={valuesYamlIndex =>
-                          removeValuesYaml(
-                            valuesYamlIndex,
-                            manifest?.identifier as string,
-                            manifest?.type as PrimaryManifestType
-                          )
-                        }
-                      />
-                    )}
-                  {manifest?.type === ManifestDataType.TasManifest &&
-                    TASManifestAllowedPaths.map(type => (
-                      <Container key={type} margin={{ bottom: 'medium' }}>
-                        <AttachPathYamlFlow
-                          renderConnectorField={renderConnectorField(
-                            manifest?.spec?.store.type,
-                            manifest?.spec?.store?.spec.connectorRef,
-                            connectorName,
-                            color
-                          )}
-                          manifestType={type as PrimaryManifestType}
-                          manifestStore={manifest?.spec?.store?.type}
-                          valuesIcon={manifestTypeIcons[type]}
-                          valuesPaths={manifest?.spec[ManifestToPathKeyMap[type as PrimaryManifestType]]}
-                          expressions={expressions}
-                          allowableTypes={allowableTypes}
-                          isReadonly={isReadonly}
-                          attachPathYaml={formData =>
-                            attachPathYaml(formData, manifest?.identifier as string, type as PrimaryManifestType)
-                          }
-                          removeValuesYaml={valuesYamlIndex =>
-                            removeValuesYaml(
-                              valuesYamlIndex,
-                              manifest?.identifier as string,
-                              type as PrimaryManifestType
-                            )
-                          }
+                            <Button
+                              iconProps={{ size: 18 }}
+                              icon="main-trash"
+                              onClick={() => removeManifestConfig(index)}
+                              minimal
+                            />
+                          </Layout.Horizontal>
+                        </span>
+                      )}
+                    </section>
+                    {ManifestToPathMap[manifestType as PrimaryManifestType] &&
+                      !TASManifestTypes.includes(manifestType as PrimaryManifestType) && (
+                        <ManifestMultiAttach
+                          manifestType={manifestType as PrimaryManifestType}
+                          manifestStore={storeType}
+                          valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifestType as PrimaryManifestType]]}
+                          paths={isArray(manifestLocation) ? manifestLocation : []}
                         />
-                      </Container>
-                    ))}
-                </div>
-              )
-            })}
+                      )}
+                    {manifestType === ManifestDataType.TasManifest &&
+                      TASManifestAllowedPaths.map(type => {
+                        return (
+                          <Container key={type} margin={{ bottom: 'medium' }}>
+                            <AttachPathYamlFlow
+                              renderConnectorField={renderConnectorField(
+                                store.type,
+                                store.spec.connectorRef,
+                                connectorName,
+                                color
+                              )}
+                              manifestType={type as PrimaryManifestType}
+                              manifestStore={storeType}
+                              valuesIcon={manifestTypeIcons[type]}
+                              valuesPaths={manifest?.spec[ManifestToPathKeyMap[type as PrimaryManifestType]]}
+                              expressions={expressions}
+                              allowableTypes={allowableTypes}
+                              isReadonly={isReadonly}
+                              attachPathYaml={formData =>
+                                attachPathYaml(formData, id as string, type as PrimaryManifestType)
+                              }
+                              removeValuesYaml={valuesYamlIndex =>
+                                removeValuesYaml(valuesYamlIndex, id as string, type as PrimaryManifestType)
+                              }
+                            />
+                          </Container>
+                        )
+                      })}
+                  </div>
+                )
+              })}
           </section>
         </Layout.Vertical>
       </Layout.Vertical>
@@ -885,12 +843,191 @@ function ManifestListView({
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
             data-test-id="addManifest"
-            onClick={addNewManifest}
+            onClick={() => addNewManifest(MultiManifestsTypes.MANIFESTS)}
             text={addManifestBtnText ?? getString('pipeline.manifestType.addManifestLabel')}
+          />
+        )}
+      </Layout.Vertical>
+      <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }} margin={{ top: 'medium' }}>
+        {!!listOfManifests?.filter((data: ManifestConfigWrapper) =>
+          allowedMultiManifestTypes[deploymentType]?.[MultiManifestsTypes.PARAMS].includes(
+            data?.manifest?.type as ManifestTypes
+          )
+        ).length && (
+          <Container flex className={cssMulti.overrideHeader} padding={{ bottom: 'medium' }}>
+            <Text
+              margin={{ left: 'medium' }}
+              className={cssMulti.columnIdOverride}
+              font={{ variation: FontVariation.TABLE_HEADERS }}
+            >
+              {getString('common.ID')}
+            </Text>
+            <Text className={cssMulti.overrideFilePath} font={{ variation: FontVariation.TABLE_HEADERS }}>
+              {getString('common.git.filePath')}
+            </Text>
+            <Text className={cssMulti.overrideStoreType} font={{ variation: FontVariation.TABLE_HEADERS }}>
+              {getString('pipelineSteps.serviceTab.manifestList.manifestStore')}
+            </Text>
+
+            <span></span>
+          </Container>
+        )}
+        <Layout.Vertical style={{ flexShrink: 'initial' }} className={cssMulti.manifestOverridesContainer}>
+          <section>
+            {listOfManifests
+              ?.filter((data: ManifestConfigWrapper) =>
+                allowedMultiManifestTypes[deploymentType]?.[MultiManifestsTypes.PARAMS].includes(
+                  data?.manifest?.type as ManifestTypes
+                )
+              )
+              .map((data: ManifestConfigWrapper, index: number) => {
+                const manifest = data['manifest']
+                const store = manifest?.spec?.store
+                const id = manifest?.identifier
+                const storeType = store?.type
+                const manifestType = manifest?.type
+                const { color } = getStatus(getConnectorPath(storeType, manifest), connectors, accountId)
+                const connectorName = getConnectorNameFromValue(getConnectorPath(storeType, manifest), connectors)
+                const manifestLocation = get(
+                  manifest?.spec,
+                  getManifestLocation(manifestType as ManifestTypes, storeType)
+                )
+                const isManifestLocationString = typeof manifestLocation === 'string'
+                const isHarnessStore = storeType === ManifestStoreMap.Harness
+                return (
+                  <Container className={cx(css.rowItem, cssMulti.wrapper)} key={`${id}-${index}`}>
+                    <section className={cssMulti.multiOverrideWrapper}>
+                      <div className={cx(cssMulti.manifestOverrideItem)}>
+                        <Container
+                          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+                          className={cx(cssMulti.columnIdOverride, cssMulti.manifestOverrideWrapperItem)}
+                        >
+                          <Icon inline name={manifestTypeIcons[manifestType as ManifestTypes]} size={24} />
+                          <Text
+                            margin={{ left: 'small' }}
+                            inline
+                            className={css.type}
+                            color={Color.GREY_900}
+                            lineClamp={1}
+                          >
+                            {id}
+                          </Text>
+                        </Container>
+                        <Container className={cx(cssMulti.overrideFilePath, cssMulti.manifestOverrideWrapperItem)}>
+                          {!isEmpty(manifestLocation) && (
+                            <span>
+                              <Text
+                                flex
+                                tooltip={
+                                  <LocationValue
+                                    isTooltip
+                                    locations={isManifestLocationString ? [manifestLocation] : manifestLocation}
+                                    isHarnessStore={isHarnessStore}
+                                    onClick={(path: string, scope: string) =>
+                                      FileStoreModal.openFileStoreModal(path, scope)
+                                    }
+                                  />
+                                }
+                              >
+                                <LocationValue
+                                  locations={isManifestLocationString ? [manifestLocation] : manifestLocation}
+                                  isHarnessStore={isHarnessStore}
+                                  onClick={(path: string, scope: string) =>
+                                    FileStoreModal.openFileStoreModal(path, scope)
+                                  }
+                                />
+                              </Text>
+                            </span>
+                          )}
+                        </Container>
+                        <div className={cx(cssMulti.overrideStoreType, cssMulti.manifestOverrideWrapperItem)}>
+                          {renderConnectorField(storeType, getConnectorPath(storeType, manifest), connectorName, color)}
+                        </div>
+                      </div>
+                      {!isReadonly && (
+                        <div className={cssMulti.overrideBtns}>
+                          <Layout.Horizontal>
+                            <Button
+                              icon="Edit"
+                              iconProps={{ size: 18 }}
+                              onClick={() => {
+                                editManifest(
+                                  manifestType as ManifestTypes,
+                                  storeType as ManifestStores,
+                                  listOfManifests.findIndex(
+                                    (item: ManifestConfigWrapper) => item.manifest?.type === manifestType
+                                  )
+                                )
+                              }}
+                              minimal
+                            />
+                            <Button
+                              iconProps={{ size: 18 }}
+                              icon="main-trash"
+                              onClick={() => removeManifestConfig(index)}
+                              minimal
+                            />
+                          </Layout.Horizontal>
+                        </div>
+                      )}
+                    </section>
+
+                    {ManifestToPathMap[manifestType as PrimaryManifestType] &&
+                      !TASManifestTypes.includes(manifestType as PrimaryManifestType) && (
+                        <ManifestMultiAttach
+                          manifestType={manifestType as PrimaryManifestType}
+                          manifestStore={storeType}
+                          valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifestType as PrimaryManifestType]]}
+                          paths={manifestLocation}
+                        />
+                      )}
+                    {manifestType === ManifestDataType.TasManifest &&
+                      TASManifestAllowedPaths.map(type => (
+                        <Container key={type} margin={{ bottom: 'medium' }}>
+                          <AttachPathYamlFlow
+                            renderConnectorField={renderConnectorField(
+                              storeType,
+                              manifest?.spec?.store?.spec.connectorRef,
+                              connectorName,
+                              color
+                            )}
+                            manifestType={type as PrimaryManifestType}
+                            manifestStore={storeType}
+                            valuesIcon={manifestTypeIcons[type]}
+                            valuesPaths={manifest?.spec[ManifestToPathKeyMap[type as PrimaryManifestType]]}
+                            expressions={expressions}
+                            allowableTypes={allowableTypes}
+                            isReadonly={isReadonly}
+                            attachPathYaml={formData =>
+                              attachPathYaml(formData, id as string, type as PrimaryManifestType)
+                            }
+                            removeValuesYaml={valuesYamlIndex =>
+                              removeValuesYaml(valuesYamlIndex, id as string, type as PrimaryManifestType)
+                            }
+                          />
+                        </Container>
+                      ))}
+                  </Container>
+                )
+              })}
+          </section>
+        </Layout.Vertical>
+      </Layout.Vertical>
+      <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
+        {showAddManifestBtn(isReadonly, allowOnlyOneManifest, listOfManifests, deploymentType) && (
+          <Button
+            className={css.addManifest}
+            id="add-manifest-override"
+            icon="plus"
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.LINK}
+            data-test-id="addManifestOverride"
+            onClick={() => addNewManifest(MultiManifestsTypes.PARAMS)}
+            text={getString('pipeline.manifestType.addAdditionalOverride')}
           />
         )}
       </Layout.Vertical>
     </Layout.Vertical>
   )
 }
-export default ManifestListView
+export default ManifestListViewMultiple

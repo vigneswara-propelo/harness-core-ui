@@ -6,11 +6,12 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Layout, shouldShowError, useToaster } from '@harness/uicore'
+import { Layout, RUNTIME_INPUT_VALUE, shouldShowError, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
 import { useGetConnectorListV2, PageConnectorResponse, StageElementConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -21,9 +22,12 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { ManifestSelectionProps, PrimaryManifestType } from './ManifestInterface'
 import ManifestListView from './ManifestListView/ManifestListView'
+import ManifestListViewMultiple from './ManifestListView/ManifestListViewMultiple'
+
 import { getConnectorPath } from './ManifestWizardSteps/ManifestUtils'
 import ReleaseRepoListView from './GitOps/ReleaseRepoListView/ReleaseRepoListView'
 import { ManifestToPathKeyMap, ReleaseRepoPipeline } from './Manifesthelper'
+import { isK8sOrNativeHelmDeploymentType } from './ManifestWizardSteps/CommonManifestDetails/utils'
 
 export default function ManifestSelection({
   isPropagating,
@@ -51,6 +55,7 @@ export default function ManifestSelection({
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG } = useFeatureFlags()
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -105,6 +110,9 @@ export default function ManifestSelection({
         }))
       : []
   }
+  const isKubernetesOrNativeHelm = React.useMemo(() => {
+    return isK8sOrNativeHelmDeploymentType(deploymentType)
+  }, [deploymentType])
 
   const refetchConnectorList = async (): Promise<void> => {
     try {
@@ -127,11 +135,19 @@ export default function ManifestSelection({
     const path = isPropagating
       ? 'stage.spec.serviceConfig.stageOverrides.manifests'
       : 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
+    const multiManifestPath = isPropagating
+      ? 'stage.spec.serviceConfig.stageOverrides.manifestConfigurations'
+      : 'stage.spec.serviceConfig.serviceDefinition.spec.manifestConfigurations'
 
     if (stage) {
       updateStage(
         produce(stage, draft => {
           set(draft, path, listOfManifests)
+          if (!get(draft, multiManifestPath) && CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm) {
+            set(draft, multiManifestPath, {
+              primaryManifestRef: RUNTIME_INPUT_VALUE
+            })
+          }
         }).stage as StageElementConfig
       )
     }
@@ -163,6 +179,13 @@ export default function ManifestSelection({
         if (stage) {
           const newStage = produce(stage, draft => {
             set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', listOfManifests)
+            if (
+              CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG &&
+              isKubernetesOrNativeHelm &&
+              (!listOfManifests || defaultTo(listOfManifests, [])?.length === 0)
+            ) {
+              set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifestConfigurations', undefined)
+            }
           }).stage
           if (newStage) {
             updateStage(newStage)
@@ -209,21 +232,39 @@ export default function ManifestSelection({
     listOfManifests,
     allowableTypes
   }
+
   return (
     <Layout.Vertical>
       {!isGitOpsEnabled ? (
-        <ManifestListView
-          {...manifestListViewCommonProps}
-          pipeline={pipeline}
-          updateManifestList={updateListOfManifests}
-          removeManifestConfig={removeManifestConfig}
-          attachPathYaml={attachPathYaml}
-          removeValuesYaml={removeValuesYaml}
-          allowOnlyOneManifest={allowOnlyOneManifest}
-          addManifestBtnText={addManifestBtnText}
-          preSelectedManifestType={preSelectedManifestType}
-          availableManifestTypes={availableManifestTypes}
-        />
+        <>
+          {CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm ? (
+            <ManifestListViewMultiple
+              {...manifestListViewCommonProps}
+              pipeline={pipeline}
+              updateManifestList={updateListOfManifests}
+              removeManifestConfig={removeManifestConfig}
+              attachPathYaml={attachPathYaml}
+              removeValuesYaml={removeValuesYaml}
+              allowOnlyOneManifest={allowOnlyOneManifest}
+              addManifestBtnText={addManifestBtnText}
+              preSelectedManifestType={preSelectedManifestType}
+              availableManifestTypes={availableManifestTypes}
+            />
+          ) : (
+            <ManifestListView
+              {...manifestListViewCommonProps}
+              pipeline={pipeline}
+              updateManifestList={updateListOfManifests}
+              removeManifestConfig={removeManifestConfig}
+              attachPathYaml={attachPathYaml}
+              removeValuesYaml={removeValuesYaml}
+              allowOnlyOneManifest={allowOnlyOneManifest}
+              addManifestBtnText={addManifestBtnText}
+              preSelectedManifestType={preSelectedManifestType}
+              availableManifestTypes={availableManifestTypes}
+            />
+          )}
+        </>
       ) : (
         <ReleaseRepoListView
           {...manifestListViewCommonProps}

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { get, set, isEmpty, isArray } from 'lodash-es'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -15,6 +15,7 @@ import type { FormikErrors } from 'formik'
 import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceSpec,
+  KubernetesServiceSpec,
   getConnectorListV2Promise,
   getBuildDetailsForDockerPromise,
   getBuildDetailsForGcrPromise,
@@ -67,9 +68,13 @@ const allowedArtifactTypes: Array<ArtifactType> = [
   ENABLED_ARTIFACT_TYPES.Ecr
 ]
 
-export class GenericServiceSpec extends Step<ServiceSpec> {
+export class GenericServiceSpec extends Step<KubernetesServiceSpec & ServiceSpec> {
   protected type = StepType.K8sServiceSpec
-  protected defaultValues: ServiceSpec = {}
+  protected defaultValues: KubernetesServiceSpec = {
+    manifestConfigurations: {
+      primaryManifestRef: RUNTIME_INPUT_VALUE
+    }
+  }
 
   protected stepIcon: IconName = 'service-kubernetes'
   protected stepName = 'Deplyment Service'

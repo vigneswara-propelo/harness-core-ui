@@ -17,14 +17,16 @@ import type {
   ServiceHook,
   ServiceHookWrapper,
   ServiceSpec,
-  SidecarArtifact
+  SidecarArtifact,
+  KubernetesServiceSpec
 } from 'services/cd-ng'
 import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import type { ServiceHookSourceBaseFactory } from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceFactory'
 
-export interface K8SDirectServiceStep extends ServiceSpec {
+type KubernetesService = ServiceSpec & KubernetesServiceSpec
+export interface K8SDirectServiceStep extends ServiceSpec, KubernetesServiceSpec {
   stageIndex?: number
   setupModeType?: string
   handleTabChange?: (tab: string) => void
@@ -36,8 +38,8 @@ export interface KubernetesServiceInputFormProps {
   initialValues: K8SDirectServiceStep
   onUpdate?: ((data: ServiceSpec) => void) | undefined
   stepViewType?: StepViewType
-  template?: ServiceSpec
-  allValues?: ServiceSpec
+  template?: KubernetesService
+  allValues?: KubernetesService
   readonly?: boolean
   factory: AbstractStepFactory
   path?: string

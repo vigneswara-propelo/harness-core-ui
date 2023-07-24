@@ -8,7 +8,7 @@
 import React from 'react'
 import { Container, Text, Icon, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { ManifestIconByType } from '../Manifesthelper'
+import { ManifestIconByType, ManifestStoreMap } from '../Manifesthelper'
 import type { ManifestStores } from '../ManifestInterface'
 import css from '../ManifestSelection.module.scss'
 
@@ -54,7 +54,12 @@ function ConnectorField({
           )}
         </>
       ) : (
-        <Text>{manifestStore}</Text>
+        <>
+          {manifestStore === ManifestStoreMap.Harness ? (
+            <Icon padding={{ right: 'small' }} name={ManifestIconByType[manifestStore]} size={18} />
+          ) : null}
+          <Text>{manifestStore}</Text>
+        </>
       )}
     </div>
   )

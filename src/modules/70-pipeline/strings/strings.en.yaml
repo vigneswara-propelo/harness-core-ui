@@ -447,6 +447,8 @@ manifestType:
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: OpenShift Parameters
+  associatedValues: Associated Values YAML File
+  addAdditionalOverride: Add Additional Override File
   helmRepoOverride:
     locationText: Chart Location Referenced From Service
     allowedLimitForEnvironment: You cannot configure multiple Helm Repo Overrides at the Environment Level.

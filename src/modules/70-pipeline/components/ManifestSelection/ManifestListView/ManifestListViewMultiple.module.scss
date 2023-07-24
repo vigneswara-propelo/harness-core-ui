@@ -1,0 +1,165 @@
+.multiManifestId {
+  border: 1px solid var(--grey-300);
+  border-right: none;
+  padding: var(--spacing-small);
+  border-top-left-radius: var(--spacing-small);
+  border-bottom-left-radius: var(--spacing-small);
+  height: 40px;
+}
+
+.multiManifestType {
+  border: 1px solid var(--grey-300);
+  padding: var(--spacing-small);
+}
+
+.manifestItem {
+  border-left: 1px solid var(--grey-200);
+  height: 100%;
+  width: 33%;
+}
+
+.multiManifestList {
+  display: grid;
+  grid-template-columns: 880px 80px;
+  column-gap: var(--spacing-medium);
+  align-items: center;
+  &.list-header {
+    border-bottom: solid 1px var(--grey-100);
+    padding-bottom: var(--spacing-medium);
+    text-transform: uppercase;
+  }
+  .manifestLocation {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .storeType {
+    display: flex;
+    align-items: center;
+    padding-left: var(--spacing-medium);
+  }
+  span.type {
+    font-weight: 900;
+    display: grid;
+    grid-template-columns: 1fr 10px;
+  }
+}
+.multiManifestContainer {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--grey-200);
+  padding: 0px var(--spacing-small);
+  border-radius: var(--spacing-small);
+  padding-left: var(--spacing-medium);
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  .columnId {
+    display: flex;
+    align-items: center;
+    width: 33%;
+  }
+}
+
+.manifestType {
+  display: flex;
+  align-items: center;
+  padding-left: var(--spacing-medium);
+}
+.type {
+  font-weight: 900;
+  display: grid;
+  grid-template-columns: 1fr 10px;
+}
+
+.manifestAttachItem {
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-small);
+  height: 40px;
+  width: 850px;
+  position: relative;
+  margin-top: var(--spacing-medium);
+}
+.pathLine {
+  position: absolute;
+  width: 20px;
+  height: 35px;
+  left: -25px;
+  top: -15px;
+  border: 0px solid var(--grey-200);
+  border-left: 1px solid var(--grey-300);
+  border-bottom: 1px solid var(--grey-300);
+}
+.manifestAttachItem {
+  margin-top: var(--spacing-medium);
+  display: flex;
+  align-items: center;
+}
+
+.multiOverrideWrapper {
+  position: relative;
+}
+
+.overrideBtns {
+  position: absolute;
+  right: -100px;
+  top: 5px;
+}
+.columnIdOverride {
+  width: 15%;
+  justify-content: flex-start;
+}
+
+.overrideFilePath {
+  width: 60%;
+}
+
+.manifestOverridesContainer {
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-small);
+  width: 880px !important;
+  .connectorNameField {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.overrideStoreType {
+  width: 25%;
+}
+.wrapper {
+  padding: none !important;
+}
+
+.overrideHeader {
+  width: 880px;
+  padding-bottom: var(--spacing-small);
+  text-transform: uppercase;
+  > p {
+    color: var(--grey-300) !important;
+  }
+}
+
+.manifestOverrideWrapperItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.manifestOverrideItem {
+  display: flex;
+  width: 100%;
+  padding-left: var(--spacing-medium);
+  height: 40px;
+  .connectorNameField {
+    display: flex !important;
+    align-items: center;
+
+    .connectorName {
+      display: inline-flex;
+      color: var(--grey-500);
+      max-width: 236px;
+      text-overflow: ellipsis;
+    }
+  }
+}

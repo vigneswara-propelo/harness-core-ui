@@ -18,10 +18,20 @@ interface ILocationValueItem {
   onClick: (path: string, scope: string) => void
   isFileStore?: boolean
   isTooltip?: boolean
+  isManifest?: boolean
+  directPath?: string
 }
 
 export function LocationValue(props: ILocationValueItem): React.ReactElement {
-  const { locations, isHarnessStore, onClick, isFileStore = true, isTooltip = false } = props
+  const {
+    locations,
+    isHarnessStore,
+    onClick,
+    isFileStore = true,
+    isTooltip = false,
+    isManifest = false,
+    directPath = ''
+  } = props
 
   const isHarnessFileStore = React.useMemo(() => {
     return isHarnessStore && isFileStore
@@ -35,7 +45,14 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
     }
   }
 
-  return (
+  return isManifest ? (
+    <Container key={`${directPath}`} onClick={() => handleClick(directPath)} flex>
+      {isHarnessFileStore && <Icon name="main-view" margin={{ right: 'xsmall' }} />}
+      <Text color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''} lineClamp={1}>
+        {directPath}
+      </Text>
+    </Container>
+  ) : (
     <>
       {locations.map((locationValue: string, i: number) => {
         if (isTooltip) {
@@ -54,7 +71,7 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
           )
         }
         return (
-          <Container key={`${locationValue}${i}`} onClick={() => handleClick(locationValue)}>
+          <Container flex key={`${locationValue}${i}`} onClick={() => handleClick(locationValue)}>
             {isHarnessFileStore && <Icon name="main-view" margin={{ right: 'xsmall' }} />}
             <Text color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''} lineClamp={1}>
               {locationValue}

@@ -139,7 +139,7 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
                   style="--text-line-clamp: 1; width: 200px;"
                 >
                   <div
-                    class="StyledProps--font StyledProps--main"
+                    class="StyledProps--font StyledProps--main StyledProps--flex"
                   >
                     <p
                       class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -464,7 +464,7 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
                   style="--text-line-clamp: 1; width: 200px;"
                 >
                   <div
-                    class="StyledProps--font StyledProps--main"
+                    class="StyledProps--font StyledProps--main StyledProps--flex"
                   >
                     <p
                       class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -890,7 +890,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -901,7 +901,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                       </p>
                     </div>
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1078,7 +1078,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1089,7 +1089,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                       </p>
                     </div>
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1266,7 +1266,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1443,7 +1443,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1705,7 +1705,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1716,7 +1716,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                       </p>
                     </div>
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1893,7 +1893,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -1904,7 +1904,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                       </p>
                     </div>
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -2081,7 +2081,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -2258,7 +2258,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                     style="--text-line-clamp: 1; width: 200px;"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"

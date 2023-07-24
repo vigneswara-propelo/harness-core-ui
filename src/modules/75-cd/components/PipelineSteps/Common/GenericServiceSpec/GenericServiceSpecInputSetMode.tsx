@@ -16,7 +16,8 @@ import type {
   ApplicationSettingsConfiguration,
   ConnectionStringsConfiguration,
   ServiceHookWrapper,
-  ServiceSpec
+  ServiceSpec,
+  KubernetesServiceSpec
 } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
@@ -39,6 +40,8 @@ import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecIn
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
 import PrimaryArtifactRef from '../../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
+import PrimaryManifestRef from '../../K8sServiceSpec/PrimaryManifest/PrimaryManifestRef'
+
 import { ConfigFiles } from '../../SshServiceSpec/SshConfigFiles/ConfigFiles'
 import { ApplicationConfigType } from '../../AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
 import { ServiceHooksConfig } from './RuntimeServiceHookConfig/ServiceHooksConfig'
@@ -50,16 +53,17 @@ export interface KubernetesInputSetProps {
   }
   onUpdate?: ((data: ServiceSpec) => void) | undefined
   stepViewType?: StepViewType
-  template?: ServiceSpec & {
-    applicationSettings?: ApplicationSettingsConfiguration
-    connectionStrings?: ConnectionStringsConfiguration
-    hooks?: ServiceHookWrapper[]
-  }
-  allValues?: ServiceSpec & {
-    applicationSettings?: ApplicationSettingsConfiguration
-    connectionStrings?: ConnectionStringsConfiguration
-    hooks?: ServiceHookWrapper[]
-  }
+  template?: KubernetesServiceSpec &
+    ServiceSpec & {
+      applicationSettings?: ApplicationSettingsConfiguration
+      connectionStrings?: ConnectionStringsConfiguration
+    }
+  allValues?: KubernetesServiceSpec &
+    ServiceSpec & {
+      applicationSettings?: ApplicationSettingsConfiguration
+      connectionStrings?: ConnectionStringsConfiguration
+      hooks?: ServiceHookWrapper[]
+    }
   readonly?: boolean
   factory?: AbstractStepFactory
   path?: string
@@ -104,7 +108,13 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
       {!!template?.artifacts?.primary?.primaryArtifactRef && (
         <PrimaryArtifactRef primaryArtifact={allValues?.artifacts?.primary} template={template} {...commonProps} />
       )}
-
+      {template?.manifestConfigurations?.primaryManifestRef ? (
+        <PrimaryManifestRef
+          primaryManifest={allValues?.manifestConfigurations?.primaryManifestRef}
+          template={template}
+          {...commonProps}
+        />
+      ) : null}
       {!!(
         template?.artifacts?.primary?.type ||
         (Array.isArray(template?.artifacts?.primary?.sources) && template?.artifacts?.primary?.sources?.length) ||

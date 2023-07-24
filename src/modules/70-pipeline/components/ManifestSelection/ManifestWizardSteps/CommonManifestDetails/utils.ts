@@ -40,3 +40,7 @@ export const shouldAllowOnlyOneFilePath = (
  * @description List of manifests which are restricted to single addition
  */
 export const allowedManifestForSingleAddition = [ManifestDataType.TasManifest, ManifestDataType.TasAutoScaler]
+
+export const isK8sOrNativeHelmDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+}
