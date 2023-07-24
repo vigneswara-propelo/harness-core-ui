@@ -930,7 +930,7 @@ export const SplunkConnectorDetails = {
     tags: {},
     type: 'Splunk',
     spec: {
-      splunkUrl: 'https://splunk.dev.harness.io:8089/',
+      splunkUrl: 'https://splunk.test.harness.io:8089/',
       username: 'myUsername',
       accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
       delegateSelectors: ['qa-automation-cv-chiplay'],
@@ -949,8 +949,74 @@ export const SignalFXConnectorDetails: ConnectorInfoDTO = {
   tags: {},
   type: 'SignalFX',
   spec: {
-    url: 'https://stream.us1.signalfx.com/',
+    url: 'https://test.signalfx.com/',
     apiTokenRef: 'org.awscwsecretkeysecret',
     delegateSelectors: ['qa-automation-cv-chiplay']
+  }
+}
+
+export const ELKConnectorDetails = {
+  name: 'elk mtls',
+  identifier: 'elk_mtls',
+  description: '',
+  accountIdentifier: 'aaa',
+  orgIdentifier: 'cvng',
+  projectIdentifier: 'SRM_QA_Sign_Off_Automation',
+  tags: {},
+  type: 'ElasticSearch',
+  spec: {
+    url: 'https://test.com/health-source/elk/',
+    delegateSelectors: ['cv-mtls-delegate'],
+    username: null,
+    apiKeyId: 'testAPI',
+    passwordRef: null,
+    apiKeyRef: 'org.dtapriltoken',
+    authType: 'ApiClientToken'
+  }
+}
+
+export const AppDConnectorDetails = {
+  name: 'Appd',
+  identifier: 'Appd',
+  description: '',
+  accountIdentifier: 'aaa',
+  orgIdentifier: 'cvng',
+  projectIdentifier: 'SRM_QA_Sign_Off_Automation',
+  tags: {},
+  type: 'AppDynamics',
+  spec: {
+    username: 'abc',
+    accountname: 'harness-test',
+    controllerUrl: 'http://elk6.dev',
+    delegateSelectors: [],
+    passwordRef: 'appdpassword',
+    clientSecretRef: null,
+    clientId: null,
+    authType: 'UsernamePassword'
+  }
+}
+
+export const PrometheusConnectorDetails = {
+  name: 'prometheus-public',
+  identifier: 'prometheuspublic',
+  description: null,
+  accountIdentifier: 'aaa',
+  orgIdentifier: 'cvng',
+  projectIdentifier: 'SRM_QA_Sign_Off_Automation',
+  tags: {},
+  type: 'Prometheus',
+  spec: {
+    url: 'https://prometheus.test.io/',
+    username: 'testUN',
+    passwordRef: 'appdtestsecret',
+    headers: [
+      {
+        key: 'key1',
+        encryptedValueRef: null,
+        value: 'value1',
+        valueEncrypted: false
+      }
+    ],
+    delegateSelectors: []
   }
 }

@@ -957,6 +957,81 @@ const getSignalFXSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRo
   ]
 }
 
+const getAppDSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.appD.controllerURL',
+      value: connector?.spec?.controllerUrl
+    },
+    {
+      label: 'credType',
+      value: getLabelForAuthType(connector?.spec?.authType)
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.username
+    },
+    {
+      label: 'connectors.jenkins.passwordAPIToken',
+      value: connector?.spec?.passwordRef
+    },
+    {
+      label: 'common.clientId',
+      value: connector?.spec?.clientId
+    },
+    {
+      label: 'common.clientSecret',
+      value: connector?.spec?.clientSecretRef
+    }
+  ]
+}
+
+const getPrometheusSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'UrlLabel',
+      value: connector?.spec?.url
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.username
+    },
+    {
+      label: 'connectors.jenkins.passwordAPIToken',
+      value: connector?.spec?.passwordRef
+    }
+  ]
+}
+
+const getELKSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'UrlLabel',
+      value: connector?.spec?.url
+    },
+    {
+      label: 'credType',
+      value: getLabelForAuthType(connector?.spec?.authType)
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.username
+    },
+    {
+      label: 'connectors.jenkins.passwordAPIToken',
+      value: connector?.spec?.passwordRef
+    },
+    {
+      label: 'connectors.elk.apiId',
+      value: connector?.spec?.apiKeyId
+    },
+    {
+      label: 'common.apikey',
+      value: connector?.spec?.apiKeyRef
+    }
+  ]
+}
+
 const getSumologicSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -1127,6 +1202,12 @@ const getSchemaByType = (
       return getTerraformCloudSchema(connector)
     case Connectors.SignalFX:
       return getSignalFXSchema(connector)
+    case Connectors.APP_DYNAMICS:
+      return getAppDSchema(connector)
+    case Connectors.PROMETHEUS:
+      return getPrometheusSchema(connector)
+    case Connectors.ELK:
+      return getELKSchema(connector)
     default:
       return []
   }

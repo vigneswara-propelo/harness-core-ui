@@ -23,6 +23,7 @@ export const AuthTypes = {
   PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken',
   ADFS: 'AdfsClientCredentialsWithCertificate',
   API_TOKEN: 'ApiToken',
+  API_CLIENT_TOKEN: 'ApiClientToken',
   BEARER_TOKEN_RANCHER: 'BearerToken',
   REFRESH_TOKEN: 'RefreshTokenGrantType'
 }
@@ -339,6 +340,8 @@ export const getLabelForAuthType = (type: string) => {
     case AuthTypes.BEARER_TOKEN_RANCHER:
     case AuthTypes.BEARER_TOKEN:
       return 'Bearer Token'
+    case AuthTypes.API_CLIENT_TOKEN:
+      return 'API Client'
     default:
       return ''
   }

@@ -27,7 +27,10 @@ import {
   serviceNowADFS,
   jiraPAT,
   SplunkConnectorDetails,
-  SignalFXConnectorDetails
+  SignalFXConnectorDetails,
+  ELKConnectorDetails,
+  AppDConnectorDetails,
+  PrometheusConnectorDetails
 } from '../../../__tests__/mockData'
 
 const renderSavedConnectorDetailsComponent = (connector: ConnectorInfoDTO): RenderResult => {
@@ -217,5 +220,44 @@ describe('Saved Connector Details', () => {
 
     const apiTokenText = await screen.findByText('org.awscwsecretkeysecret')
     expect(apiTokenText).toBeInTheDocument()
+  })
+
+  test('render for ELK schema', async () => {
+    renderSavedConnectorDetailsComponent(ELKConnectorDetails as ConnectorInfoDTO)
+
+    const apiTokenText = await screen.findByText('org.dtapriltoken')
+    expect(apiTokenText).toBeInTheDocument()
+
+    const apiKey = await screen.findByText('testAPI')
+    expect(apiKey).toBeInTheDocument()
+
+    const credType = await screen.findByText('API Client')
+    expect(credType).toBeInTheDocument()
+  })
+
+  test('render for AppD schema', async () => {
+    renderSavedConnectorDetailsComponent(AppDConnectorDetails as ConnectorInfoDTO)
+
+    const apiTokenText = await screen.findByText('appdpassword')
+    expect(apiTokenText).toBeInTheDocument()
+
+    const username = await screen.findByText('abc')
+    expect(username).toBeInTheDocument()
+
+    const credType = await screen.findByText('Username and Password')
+    expect(credType).toBeInTheDocument()
+  })
+
+  test('render for Prometheus schema', async () => {
+    renderSavedConnectorDetailsComponent(PrometheusConnectorDetails as unknown as ConnectorInfoDTO)
+
+    const passwordText = await screen.findByText('appdtestsecret')
+    expect(passwordText).toBeInTheDocument()
+
+    const username = await screen.findByText('testUN')
+    expect(username).toBeInTheDocument()
+
+    const url = await screen.findByText('https://prometheus.test.io/')
+    expect(url).toBeInTheDocument()
   })
 })
