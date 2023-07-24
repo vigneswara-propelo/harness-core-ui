@@ -174,7 +174,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
             )}
             <FormInput.CheckBox
               name="required"
-              label={getString('pipeline.required')}
+              label={getString('pipeline.setVariableRequiredDuringRuntime')}
               className={css.requiredCheckboxLabel}
             />
             <FormInput.TextArea

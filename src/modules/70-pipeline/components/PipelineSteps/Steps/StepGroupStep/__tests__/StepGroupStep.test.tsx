@@ -448,7 +448,7 @@ describe('StepGroupStep tests', () => {
   test('renders variables in edit view ', async () => {
     const onChange = jest.fn()
     const onUpdate = jest.fn()
-    const { container, getByText, findByText } = render(
+    const { container, getByText, findByText, getAllByText } = render(
       <TestStepWidget
         type={StepType.StepGroup}
         initialValues={stepGroupWithVariablesInitialValues}
@@ -469,7 +469,7 @@ describe('StepGroupStep tests', () => {
       />
     )
     expect(() => getByText('common.variables')).toBeDefined()
-    const requiredPropertyIcon = container.querySelectorAll('[data-icon="asterisk"]')
+    const requiredPropertyIcon = getAllByText('pipeline.requiredFieldDuringRuntime')
     expect(requiredPropertyIcon.length).toBe(2)
     const descriptionIcon = container.querySelectorAll('[data-icon="description"]')
     expect(descriptionIcon.length).toBe(3)

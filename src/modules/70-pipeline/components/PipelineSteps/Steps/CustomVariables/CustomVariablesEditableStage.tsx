@@ -183,25 +183,11 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                             localName={yamlData.localName}
                             fullName={yamlData.fqn}
                           />
-                          <Layout.Horizontal
-                            flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                            padding={{ top: 'small' }}
-                          >
-                            <String
-                              className={css.valueString}
-                              stringID={labelStringMap[variable.type as VariableType]}
-                              data-testid={`variables[${index}].type`}
-                            />
-                            {!!variable?.required && (
-                              <Text
-                                icon="asterisk"
-                                iconProps={{ size: 12, color: Color.RED_500 }}
-                                padding={{ left: 'small' }}
-                                tooltip={getString('pipeline.required')}
-                                tooltipProps={{ position: Position.BOTTOM, isDark: true }}
-                              />
-                            )}
-                          </Layout.Horizontal>
+                          <String
+                            className={css.valueString}
+                            stringID={labelStringMap[variable.type as VariableType]}
+                            data-testid={`variables[${index}].type`}
+                          />
                         </Layout.Vertical>
                         {!isEmpty(variable?.description) ? (
                           <Text
@@ -219,101 +205,112 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                         ) : (
                           <span />
                         )}
-
-                        <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
-                          {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
-                            <FormMultiTypeConnectorField
-                              name={`variables[${index}].value`}
-                              label=""
-                              placeholder={getString('common.entityPlaceholderText')}
-                              disabled={readonly}
-                              accountIdentifier={accountId}
-                              multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
-                              projectIdentifier={projectIdentifier}
-                              orgIdentifier={orgIdentifier}
-                              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                              setRefValue
-                              connectorLabelClass="connectorVariableField"
-                              enableConfigureOptions={false}
-                              isDrawerMode={isDrawerMode}
-                              type={[]}
-                            />
-                          ) : variable.type === VariableType.Secret ? (
-                            <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />
-                          ) : (
-                            <FormInput.MultiTextInput
-                              className="variableInput"
-                              name={`variables[${index}].value`}
-                              label=""
-                              disabled={readonly}
-                              multiTextInputProps={{
-                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
-                                defaultValueToReset: '',
-                                expressions,
-                                textProps: {
-                                  disabled: !initialValues.canAddVariable || readonly,
-                                  type: variable.type === VariableType.Number ? 'number' : 'text'
-                                },
-                                allowableTypes
-                              }}
-                            />
-                          )}
-                          {getMultiTypeFromValue(variable.value as string) === MultiTypeInputType.RUNTIME &&
-                            (variable.type === VariableType.Secret ? (
-                              <SecretConfigureOptions
-                                value={variable.value as string}
-                                defaultValue={variable.default}
-                                type={variable.type || /* istanbul ignore next */ 'String'}
-                                variableName={variable.name || /* istanbul ignore next */ ''}
-                                onChange={(value, defaultValue) => {
-                                  setFieldValue(`variables[${index}].value`, value)
-                                  setFieldValue(`variables[${index}].default`, defaultValue)
-                                }}
-                                isReadonly={readonly}
-                                secretInputProps={{
-                                  disabled: readonly
-                                }}
+                        <Layout.Vertical>
+                          <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
+                            {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
+                              <FormMultiTypeConnectorField
+                                name={`variables[${index}].value`}
+                                label=""
+                                placeholder={getString('common.entityPlaceholderText')}
+                                disabled={readonly}
+                                accountIdentifier={accountId}
+                                multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                                projectIdentifier={projectIdentifier}
+                                orgIdentifier={orgIdentifier}
+                                gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                                setRefValue
+                                connectorLabelClass="connectorVariableField"
+                                enableConfigureOptions={false}
+                                isDrawerMode={isDrawerMode}
+                                type={[]}
                               />
+                            ) : variable.type === VariableType.Secret ? (
+                              <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />
                             ) : (
-                              <ConfigureOptions
-                                value={variable.value as string}
-                                defaultValue={variable.default}
-                                type={variable.type || /* istanbul ignore next */ 'String'}
-                                variableName={variable.name || /* istanbul ignore next */ ''}
-                                onChange={(value, defaultValue) => {
-                                  setFieldValue(`variables[${index}].value`, value)
-                                  setFieldValue(`variables[${index}].default`, defaultValue)
+                              <FormInput.MultiTextInput
+                                className="variableInput"
+                                name={`variables[${index}].value`}
+                                label=""
+                                disabled={readonly}
+                                multiTextInputProps={{
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                                  defaultValueToReset: '',
+                                  expressions,
+                                  textProps: {
+                                    disabled: !initialValues.canAddVariable || readonly,
+                                    type: variable.type === VariableType.Number ? 'number' : 'text'
+                                  },
+                                  allowableTypes
                                 }}
-                                isReadonly={readonly}
-                                allowedValuesType={
-                                  variable.type === VariableType.Number ? ALLOWED_VALUES_TYPE.NUMBER : undefined
-                                }
-                                tagsInputSeparator={
-                                  commasInAllowedValues && variable.type === 'String' ? '/[\n\r]/' : undefined
-                                }
                               />
-                            ))}
-                          <div className={css.actionButtons}>
-                            {initialValues.canAddVariable && !readonly ? (
-                              <React.Fragment>
-                                <Button
-                                  icon="Edit"
-                                  tooltip={<String className={css.tooltip} stringID="common.editVariableType" />}
-                                  data-testid={`edit-variable-${index}`}
-                                  onClick={() => setSelectedVariable({ variable, index })}
-                                  minimal
+                            )}
+                            {getMultiTypeFromValue(variable.value as string) === MultiTypeInputType.RUNTIME &&
+                              (variable.type === VariableType.Secret ? (
+                                <SecretConfigureOptions
+                                  value={variable.value as string}
+                                  defaultValue={variable.default}
+                                  type={variable.type || /* istanbul ignore next */ 'String'}
+                                  variableName={variable.name || /* istanbul ignore next */ ''}
+                                  onChange={(value, defaultValue) => {
+                                    setFieldValue(`variables[${index}].value`, value)
+                                    setFieldValue(`variables[${index}].default`, defaultValue)
+                                  }}
+                                  isReadonly={readonly}
+                                  secretInputProps={{
+                                    disabled: readonly
+                                  }}
                                 />
-                                <Button
-                                  icon="main-trash"
-                                  data-testid={`delete-variable-${index}`}
-                                  tooltip={<String className={css.tooltip} stringID="common.removeThisVariable" />}
-                                  onClick={() => handleRemove(index)}
-                                  minimal
+                              ) : (
+                                <ConfigureOptions
+                                  value={variable.value as string}
+                                  defaultValue={variable.default}
+                                  type={variable.type || /* istanbul ignore next */ 'String'}
+                                  variableName={variable.name || /* istanbul ignore next */ ''}
+                                  onChange={(value, defaultValue) => {
+                                    setFieldValue(`variables[${index}].value`, value)
+                                    setFieldValue(`variables[${index}].default`, defaultValue)
+                                  }}
+                                  isReadonly={readonly}
+                                  allowedValuesType={
+                                    variable.type === VariableType.Number ? ALLOWED_VALUES_TYPE.NUMBER : undefined
+                                  }
+                                  tagsInputSeparator={
+                                    commasInAllowedValues && variable.type === 'String' ? '/[\n\r]/' : undefined
+                                  }
                                 />
-                              </React.Fragment>
-                            ) : /* istanbul ignore next */ null}
+                              ))}
+                            <div className={css.actionButtons}>
+                              {initialValues.canAddVariable && !readonly ? (
+                                <React.Fragment>
+                                  <Button
+                                    icon="Edit"
+                                    tooltip={<String className={css.tooltip} stringID="common.editVariableType" />}
+                                    data-testid={`edit-variable-${index}`}
+                                    onClick={() => setSelectedVariable({ variable, index })}
+                                    minimal
+                                  />
+                                  <Button
+                                    icon="main-trash"
+                                    data-testid={`delete-variable-${index}`}
+                                    tooltip={<String className={css.tooltip} stringID="common.removeThisVariable" />}
+                                    onClick={() => handleRemove(index)}
+                                    minimal
+                                  />
+                                </React.Fragment>
+                              ) : /* istanbul ignore next */ null}
+                            </div>
                           </div>
-                        </div>
+                          {!!variable?.required && (
+                            <Text
+                              font={{ size: 'small' }}
+                              color={Color.GREY_700}
+                              padding={{ top: 'small' }}
+                              style={{ fontWeight: 400 }}
+                            >
+                              {getString('pipeline.requiredFieldDuringRuntime')}
+                            </Text>
+                          )}
+                        </Layout.Vertical>
                       </div>
                     )
                   })}

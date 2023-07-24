@@ -4913,6 +4913,7 @@ export interface StringsMap {
   'pipeline.repositoryUrlPlaceholder': string
   'pipeline.requireInput': string
   'pipeline.required': string
+  'pipeline.requiredFieldDuringRuntime': string
   'pipeline.requiredToFetch': string
   'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string
@@ -5052,6 +5053,7 @@ export interface StringsMap {
   'pipeline.serviceNowImportSetStep.validations.stagingTableRequired': string
   'pipeline.serviceNowUpdateStep.fieldType.applyFromTemplate': string
   'pipeline.serviceNowUpdateStep.fieldType.updateFields': string
+  'pipeline.setVariableRequiredDuringRuntime': string
   'pipeline.singleStageExecution': string
   'pipeline.skipInstances.title': string
   'pipeline.sslVerify': string
