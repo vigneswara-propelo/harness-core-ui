@@ -39,7 +39,7 @@ describe('SRMStepAnalysis', () => {
       refetch: jest.fn() as unknown
     } as UseGetReturn<any, any, any, any>)
 
-    const { getByText } = render(
+    const { getByText, getByTestId, container } = render(
       <TestWrapper>
         <SRMStepAnalysis data={ImpactAnalysis.resource as ChangeEventDTO} />
       </TestWrapper>
@@ -54,11 +54,14 @@ describe('SRMStepAnalysis', () => {
     await waitFor(() => expect(getByText(ImpactAnalysis.resource.metadata.analysisStatus)).toBeInTheDocument())
 
     expect(getByText('cv.changeSource.DeploymentImpactAnalysis')).toBeInTheDocument()
-    expect(getByText('07/13/2023 09:41 am')).toBeInTheDocument()
+    expect(getByTestId('analysisDuration')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="analysisDuration"]')?.textContent).toEqual(
+      'timeJuly 13th 2023, 9:41 am to July 15th 2023, 9:41 am'
+    )
     expect(getByText('cv.changeSource.changeSourceCard.viewDeployment')).toBeInTheDocument()
   })
 
-  test('should render SRMStepAnalysis with no edxection data', async () => {
+  test('should render SRMStepAnalysis with no exection data', async () => {
     jest.spyOn(pipelineNgService, 'useGetExecutionDetailV2').mockReturnValue({
       data: {},
       loading: false,
@@ -75,7 +78,7 @@ describe('SRMStepAnalysis', () => {
       refetch: jest.fn() as unknown
     } as UseGetReturn<any, any, any, any>)
 
-    const { getByText } = render(
+    const { getByText, container } = render(
       <TestWrapper>
         <SRMStepAnalysis data={ImpactAnalysis.resource as ChangeEventDTO} />
       </TestWrapper>
@@ -86,7 +89,9 @@ describe('SRMStepAnalysis', () => {
     await waitFor(() => expect(getByText(ImpactAnalysis.resource.metadata.analysisStatus)).toBeInTheDocument())
 
     expect(getByText('cv.changeSource.DeploymentImpactAnalysis')).toBeInTheDocument()
-    expect(getByText('07/13/2023 09:41 am')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="analysisDuration"]')?.textContent).toEqual(
+      'timeJuly 13th 2023, 9:41 am to July 15th 2023, 9:41 am'
+    )
     expect(getByText('cv.changeSource.changeSourceCard.viewDeployment')).toBeInTheDocument()
   })
 })

@@ -43,5 +43,7 @@ export interface ColumnChartProps {
       timestamp: number
       color: string
     }
+    eventEndTime?: number
+    eventStatus?: string
   }
 }

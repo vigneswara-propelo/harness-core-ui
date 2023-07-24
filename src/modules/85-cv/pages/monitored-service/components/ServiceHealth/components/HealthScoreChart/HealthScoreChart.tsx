@@ -85,7 +85,7 @@ export default function HealthScoreChart(props: HealthScoreChartProps): JSX.Elem
           hasTimelineIntegration={hasTimelineIntegration}
           data={seriesData}
           duration={duration}
-          leftOffset={90}
+          leftOffset={columChartProps?.multiTimeStampMarker ? 0 : 90}
           {...columChartProps}
           isLoading={healthScoreDataWithMSIdentifierLoading}
           error={healthScoreDataWithMSIdentifierError}

@@ -20,9 +20,16 @@ import {
   getColumnPositions,
   getLoadingColumnPositions
 } from './ColumnChart.utils'
-import { COLUMN_WIDTH, COLUMN_HEIGHT, TOTAL_COLUMNS, LOADING_COLUMN_HEIGHTS } from './ColumnChart.constants'
+import {
+  COLUMN_WIDTH,
+  COLUMN_HEIGHT,
+  TOTAL_COLUMNS,
+  LOADING_COLUMN_HEIGHTS,
+  multiMarkerBufferOffset
+} from './ColumnChart.constants'
 import ColumnChartPopoverContent from './components/ColumnChartPopoverContent/ColumnChartPopoverContent'
 import ColumnChartEventMarker from './components/ColummnChartEventMarker/ColumnChartEventMarker'
+import { AnalysisStatus } from '../AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
 import css from './ColumnChart.module.scss'
 
 export default function ColumnChart(props: ColumnChartProps): JSX.Element {
@@ -69,9 +76,18 @@ export default function ColumnChart(props: ColumnChartProps): JSX.Element {
         endTime: multiTimeStampMarker?.markerEndTime?.timestamp || 0,
         startTime: multiTimeStampMarker.markerStartTime.timestamp,
         endOfTimestamps: data[data.length - 1].timeRange.endTime,
-        startOfTimestamps: data[0].timeRange.startTime
+        startOfTimestamps: data[0].timeRange.startTime,
+        eventEndTime: multiTimeStampMarker?.eventEndTime
       })
-      setMultipleMarkerPosition({ startMarker: startPosition, endMarker: endPosition })
+      let updatedEndPosition = endPosition
+      if (endPosition && startPosition) {
+        const shouldAddOffset = endPosition > startPosition && endPosition - startPosition > multiMarkerBufferOffset
+        if (shouldAddOffset) {
+          updatedEndPosition = endPosition + multiMarkerBufferOffset
+        }
+      }
+
+      setMultipleMarkerPosition({ startMarker: startPosition, endMarker: updatedEndPosition })
     }
   }, [containerRef?.current, data, isLoading])
 
@@ -133,8 +149,9 @@ export default function ColumnChart(props: ColumnChartProps): JSX.Element {
       {multiMarkerPosition && (
         <ColumChartWithStartAndStopEventMarker
           columnHeight={columnHeight}
-          startMarkerPosition={multiMarkerPosition?.startMarker || 0}
-          deployedOrStopMarkerPosition={multiMarkerPosition?.endMarker || 0}
+          startMarkerPosition={multiMarkerPosition?.startMarker}
+          deployedOrStopMarkerPosition={multiMarkerPosition?.endMarker}
+          isStopped={multiTimeStampMarker?.eventStatus === AnalysisStatus.ABORTED}
           containerWidth={(containerRef?.current?.parentElement?.getBoundingClientRect().width || 0) - leftOffset}
         />
       )}

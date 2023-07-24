@@ -15,6 +15,7 @@ import { ExecutionNode } from 'services/pipeline-ng'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetSRMAnalysisSummary } from 'services/cv'
+import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { getActivityId } from '../ExecutionVerification/ExecutionVerificationView.utils'
 import CVProgressBar from '../ExecutionVerification/components/DeploymentProgressAndNodes/components/CVProgressBar/CVProgressBar'
 import VerificationStatusCard from '../ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
@@ -36,6 +37,7 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
   const params = useParams<ProjectPathProps>()
 
   const { accountId } = params
+  const { status, failureInfo } = step
   const activityId = useMemo(() => getActivityId(step), [step])
 
   const { error, data, loading, refetch } = useGetSRMAnalysisSummary({
@@ -76,6 +78,13 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
   }, [activityId, analysisStatus])
 
   if (error) {
+    if (status === ExecutionStatusEnum.Skipped) {
+      return (
+        <Container margin={'xlarge'} data-testid={'errorContainer'}>
+          <PageError message={failureInfo?.responseMessages?.[0]?.message} onClick={() => refetch()} />
+        </Container>
+      )
+    }
     return (
       <Container margin={'xlarge'} data-testid={'errorContainer'}>
         <PageError message={getErrorMessage(error)} onClick={() => refetch()} />

@@ -16,4 +16,6 @@ export interface ChangeEventServiceHealthProps {
   setTimestamps: (timeStamps: [number, number]) => void
   title?: string
   verifyStepSummaries?: VerifyStepSummary[]
+  eventEndTime?: number
+  eventStatus?: string
 }

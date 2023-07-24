@@ -6,3 +6,7 @@
  */
 
 export const DeploymentImpactAnalysis = 'deploymentImpactAnalysis'
+
+export const ONE_DAY_DURATION = 86400
+
+export const HOUR_IN_MILLISECONDS = 1000 * 60 * 60

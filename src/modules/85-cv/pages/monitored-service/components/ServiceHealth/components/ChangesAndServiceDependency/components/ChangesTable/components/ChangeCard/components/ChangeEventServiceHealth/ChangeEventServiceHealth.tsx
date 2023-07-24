@@ -30,11 +30,13 @@ export default function ChangeEventServiceHealth(props: ChangeEventServiceHealth
     timeStamps,
     setTimestamps,
     title,
-    verifyStepSummaries
+    verifyStepSummaries,
+    eventEndTime,
+    eventStatus
   } = props
   const { getString } = useStrings()
 
-  const markerProps = getMarkerProps(eventType, propsStartTime, propsEndTime)
+  const markerProps = getMarkerProps(eventType, propsStartTime, eventEndTime, eventStatus)
   const startTimeProp = markerProps?.multiTimeStampMarker ? { startTime: propsStartTime } : {}
   return (
     <Container className={css.main}>

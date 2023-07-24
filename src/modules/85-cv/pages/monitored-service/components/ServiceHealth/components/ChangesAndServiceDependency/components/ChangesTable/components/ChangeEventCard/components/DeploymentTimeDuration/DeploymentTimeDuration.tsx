@@ -13,7 +13,7 @@ import { useStrings } from 'framework/strings'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { ChangeEventDTO } from 'services/cv'
 import { durationAsString } from './DeploymentTimeDuration.utils'
-import { TIME_FORMAT } from './DeploymentTimeDuration.constant'
+import { TIME_FORMAT_STRING } from './DeploymentTimeDuration.constant'
 
 export default function DeploymentTimeDuration({
   startTime,
@@ -38,20 +38,20 @@ export default function DeploymentTimeDuration({
         {isDeploymentType && (
           <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
             Started:&nbsp;
-            <Text tag="span" font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
-              {moment(startTime).format(TIME_FORMAT)}
+            <Text tag="span" font={{ size: 'small' }} color={Color.BLACK_100}>
+              {moment(startTime).format(TIME_FORMAT_STRING)}
             </Text>
           </Text>
         )}
         <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
           {getString('cv.changeSource.changeSourceCard.finished')}:&nbsp;
-          <Text tag="span" font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
-            {moment(endTime).format(TIME_FORMAT)}
+          <Text tag="span" font={{ size: 'small' }} color={Color.BLACK_100}>
+            {moment(endTime).format(TIME_FORMAT_STRING)}
           </Text>
         </Text>
         <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
           {getString('common.durationPrefix')}:&nbsp;
-          <Text tag="span" font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
+          <Text tag="span" font={{ size: 'small' }} color={Color.BLACK_100}>
             {durationString}
           </Text>
         </Text>

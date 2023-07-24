@@ -15,7 +15,7 @@ export interface HealthScoreChartProps {
   timeFormat?: string
   endTime?: number
   startTime?: number
-  columChartProps?: Pick<ColumnChartProps, 'columnHeight' | 'columnWidth' | 'timestampMarker'>
+  columChartProps?: Pick<ColumnChartProps, 'columnHeight' | 'columnWidth' | 'timestampMarker' | 'multiTimeStampMarker'>
   hasTimelineIntegration?: boolean
   isChangeEventView?: boolean
 }

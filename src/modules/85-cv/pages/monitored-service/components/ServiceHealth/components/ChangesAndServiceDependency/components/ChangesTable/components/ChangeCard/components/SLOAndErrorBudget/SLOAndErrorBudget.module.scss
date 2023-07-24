@@ -53,3 +53,9 @@
 .timelineBar {
   margin-left: var(--spacing-xxxlarge);
 }
+
+.gridLayout {
+  display: grid;
+  grid-gap: var(--spacing-small);
+  grid-template-columns: auto auto auto auto;
+}

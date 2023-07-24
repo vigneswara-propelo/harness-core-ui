@@ -8,7 +8,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
-import { Card, Container, Layout, Text } from '@harness/uicore'
+import { Card, Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
@@ -18,18 +18,18 @@ import ChangeEventServiceHealth from '@cv/pages/monitored-service/components/Ser
 import SLOAndErrorBudget from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/SLOAndErrorBudget'
 import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
 import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
-import { UserLabel } from '@common/exports'
+import { TimeAgo, UserLabel } from '@common/exports'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { ChangeTitleData, ChangeDetailsDataInterface } from '../../../ChangeEventCard.types'
 import { createChangeTitleData, createChangeDetailsData } from '../../../ChangeEventCard.utils'
 import ChangeDetails from '../../ChangeDetails/ChangeDetails'
 import DeploymentTimeDuration from '../../DeploymentTimeDuration/DeploymentTimeDuration'
 import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
-import { durationAsString } from '../../DeploymentTimeDuration/DeploymentTimeDuration.utils'
 import ChangeTitleWithRedirectButton from '../../ChangeTitleWithRedirectButton/ChangeTitleWithRedirectButton'
-import { TIME_FORMAT } from '../../DeploymentTimeDuration/DeploymentTimeDuration.constant'
 import StatusChip from '../../ChangeDetails/components/StatusChip/StatusChip'
 import { statusToColorMapping } from '../../ChangeDetails/ChangeDetails.utils'
+import { calculateEndtime, convertToDays } from './SRMStepAnalysis.utils'
+import { TIME_FORMAT_STRING } from '../../DeploymentTimeDuration/DeploymentTimeDuration.constant'
 import css from '../../../ChangeEventCard.module.scss'
 
 export default function SRMStepAnalysis({ data }: { data: ChangeEventDTO }): JSX.Element {
@@ -60,26 +60,21 @@ export default function SRMStepAnalysis({ data }: { data: ChangeEventDTO }): JSX
     [pipelineExecutionSummary]
   )
 
-  const timePassed = useMemo(() => {
-    /* istanbul ignore else */ if (metadata.analysisStartTime && metadata.analysisEndTime) {
-      return durationAsString(metadata.analysisEndTime, moment().valueOf())
-    }
-    return ''
-  }, [metadata.analysisStartTime, metadata.analysisEndTime])
-
   const { triggeredBy, triggerType } = defaultTo(pipelineExecutionSummary?.executionTriggerInfo, {})
   const { identifier, extraInfo } = defaultTo(triggeredBy, {})
 
   const { color, backgroundColor } = statusToColorMapping(metadata.analysisStatus, data.type) || {}
 
+  const derivedEndTime = useMemo(
+    () => calculateEndtime(data.metadata.analysisEndTime, data.metadata.analysisDuration),
+    [data.metadata.analysisEndTime, data.metadata.analysisDuration]
+  )
+
   useEffect(() => {
     if (data.type === ChangeSourceTypes.SrmStepAnalysis) {
-      setTimestamps([
-        data.metadata.analysisStartTime - TWO_HOURS_IN_MILLISECONDS,
-        data.metadata.analysisEndTime + TWO_HOURS_IN_MILLISECONDS
-      ])
+      setTimestamps([data.metadata.analysisStartTime - TWO_HOURS_IN_MILLISECONDS, derivedEndTime])
     }
-  }, [data.type])
+  }, [data.type, derivedEndTime])
 
   return (
     <Card className={css.main}>
@@ -110,16 +105,14 @@ export default function SRMStepAnalysis({ data }: { data: ChangeEventDTO }): JSX
                     <Text font={{ size: 'small' }} margin={{ left: 'small', right: 'small' }} color={Color.BLACK_100}>
                       {triggerType}
                     </Text>
-
-                    <Text
-                      icon={'calendar'}
-                      iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                    <Icon name={'calendar'} size={12} color={Color.PRIMARY_7} />
+                    <TimeAgo
+                      inline
+                      icon={undefined}
+                      color={Color.GREY_800}
                       font={{ size: 'small' }}
-                      color={Color.BLACK_100}
-                    >
-                      {timePassed}
-                      {getString('cv.changeSource.changeSourceCard.ago')}
-                    </Text>
+                      time={data.metadata.analysisStartTime}
+                    />
                   </Layout.Horizontal>
                   <DeploymentTimeDuration
                     startTime={data.metadata.analysisStartTime}
@@ -135,13 +128,19 @@ export default function SRMStepAnalysis({ data }: { data: ChangeEventDTO }): JSX
             component: (
               <Layout.Vertical spacing="small">
                 <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="small">
-                  <Text font={{ size: 'small' }} margin={{ left: 'small', right: 'small' }} color={Color.BLACK_100}>
-                    Analysis Duration: 2 Days
+                  <Text font={{ size: 'small' }} margin={{ left: '0', right: 'medium' }} color={Color.BLACK_100}>
+                    {convertToDays(getString, metadata.analysisDuration as number)}
                   </Text>
-                  <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
-                    {`${moment(metadata.analysisStartTime).format(TIME_FORMAT)} to ${moment(
-                      metadata.analysisStartTime
-                    ).format(TIME_FORMAT)}`}
+                  <Text
+                    data-testid="analysisDuration"
+                    icon={'time'}
+                    iconProps={{ size: 12 }}
+                    font={{ size: 'small' }}
+                    color={Color.BLACK_100}
+                  >
+                    {`${moment(metadata.analysisStartTime).format(TIME_FORMAT_STRING)} to ${moment(
+                      metadata.analysisEndTime
+                    ).format(TIME_FORMAT_STRING)}`}
                   </Text>
                 </Layout.Horizontal>
                 {metadata.analysisStatus && (
@@ -159,20 +158,26 @@ export default function SRMStepAnalysis({ data }: { data: ChangeEventDTO }): JSX
           <ChangeEventServiceHealth
             monitoredServiceIdentifier={data.monitoredServiceIdentifier}
             startTime={data.metadata.analysisStartTime - TWO_HOURS_IN_MILLISECONDS}
-            endTime={data.metadata.analysisEndTime + TWO_HOURS_IN_MILLISECONDS}
+            endTime={derivedEndTime}
             eventType={data.type}
             timeStamps={timeStamps}
             setTimestamps={setTimestamps}
             title={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
             verifyStepSummaries={verifyStepSummaries}
+            eventStatus={data.metadata.analysisStatus}
+            eventEndTime={data.metadata.analysisEndTime}
           />
-          <SLOAndErrorBudget
-            monitoredServiceIdentifier={data.monitoredServiceIdentifier}
-            startTime={data.metadata.analysisStartTime - TWO_HOURS_IN_MILLISECONDS}
-            endTime={data.metadata.analysisEndTime + TWO_HOURS_IN_MILLISECONDS}
-            eventTime={data.metadata.analysisStartTime}
-            eventType={data.type}
-          />
+          {timeStamps[0] && timeStamps[1] && (
+            <SLOAndErrorBudget
+              monitoredServiceIdentifier={data.monitoredServiceIdentifier}
+              startTime={timeStamps[0]}
+              endTime={timeStamps[1]}
+              eventType={data.type}
+              eventTime={data.metadata.analysisStartTime}
+              eventStatus={data.metadata.analysisStatus}
+              eventEndTime={data.metadata.analysisEndTime}
+            />
+          )}
         </>
       )}
     </Card>

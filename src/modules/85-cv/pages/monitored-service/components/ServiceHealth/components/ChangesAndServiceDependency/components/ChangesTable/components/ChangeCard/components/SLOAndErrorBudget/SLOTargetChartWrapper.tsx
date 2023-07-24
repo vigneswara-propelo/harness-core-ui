@@ -22,9 +22,9 @@ import ColumnChartEventMarker from '@cv/components/ColumnChart/components/Columm
 import { getColorForChangeEventType } from '@cv/components/ChangeTimeline/ChangeTimeline.utils'
 import { calculatePositionForTimestamp } from '@cv/components/ColumnChart/ColumnChart.utils'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import { AnalysisStatus } from '@cv/components/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
 import { SLOCardToggleViews, SLOTargetChartWrapperProps } from './SLOAndErrorBudget.types'
 import ColumChartWithStartAndStopEventMarker from './ColumChartWithStartAndStopEventMarker/ColumChartWithStartAndStopEventMarker'
-import { TWO_HOURS_IN_MILLISECONDS } from '../ChangeEventServiceHealth/ChangeEventServiceHealth.constants'
 import cssCVSLOsListingPage from '@cv/pages/slos/CVSLOsListingPage.module.scss'
 import css from './SLOAndErrorBudget.module.scss'
 
@@ -34,7 +34,9 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   startTime,
   endTime,
   eventTime,
-  eventType
+  eventType,
+  eventStatus,
+  eventEndTime
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -59,7 +61,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   useLayoutEffect(() => {
     if (serviceLevelObjective && mainRef.current) {
       const containerWidth = defaultTo(mainRef.current.parentElement?.getBoundingClientRect().width, 0)
-      const ignoreMarginLength = 40
+      const ignoreMarginLength = 38
       if (eventTime && !isMultiMarkerStep) {
         setMarkerPosition(
           calculatePositionForTimestamp({
@@ -70,21 +72,34 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
           })
         )
       } else if (eventTime && isMultiMarkerStep) {
-        const startMarker =
-          calculatePositionForTimestamp({
-            containerWidth,
-            startTime: eventTime,
-            startOfTimestamps: startTime,
-            endOfTimestamps: endTime
-          }) + ignoreMarginLength
-        const stopMarker = calculatePositionForTimestamp({
+        const startMarker = calculatePositionForTimestamp({
           containerWidth,
-          startTime: endTime - TWO_HOURS_IN_MILLISECONDS,
+          startTime: eventTime,
           startOfTimestamps: startTime,
           endOfTimestamps: endTime
         })
+        const isEventEndTimeOutofScope = eventEndTime ? endTime < eventEndTime : true
+        const stopMarker = isEventEndTimeOutofScope
+          ? undefined
+          : calculatePositionForTimestamp({
+              containerWidth,
+              startTime: eventEndTime || 0,
+              startOfTimestamps: startTime,
+              endOfTimestamps: endTime
+            })
+        let startMarkerPosition = startMarker + ignoreMarginLength
+        let stopMarkerPosition = stopMarker
+        if (eventEndTime && stopMarker) {
+          const shouldRemoveOffset = stopMarker > startMarker && stopMarker - startMarker < ignoreMarginLength
+          if (shouldRemoveOffset) {
+            startMarkerPosition = startMarker + ignoreMarginLength
+            stopMarkerPosition = stopMarker + ignoreMarginLength
+          }
+        }
 
-        setMultipleMarkerPosition({ startMarker, stopMarker })
+        const markerPositions = { startMarker: startMarkerPosition, stopMarker: stopMarkerPosition }
+
+        setMultipleMarkerPosition(markerPositions)
       }
     }
   }, [endTime, eventTime, loading, serviceLevelObjective, startTime])
@@ -143,6 +158,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
               ? !selectedSLO.outOfRange &&
                 !!multiMarkerPosition?.startMarker && (
                   <ColumChartWithStartAndStopEventMarker
+                    isStopped={eventStatus === AnalysisStatus.ABORTED}
                     startMarkerPosition={multiMarkerPosition?.startMarker || 0}
                     deployedOrStopMarkerPosition={multiMarkerPosition?.stopMarker || 0}
                     containerWidth={defaultTo(mainRef?.current?.parentElement?.getBoundingClientRect().width, 0)}

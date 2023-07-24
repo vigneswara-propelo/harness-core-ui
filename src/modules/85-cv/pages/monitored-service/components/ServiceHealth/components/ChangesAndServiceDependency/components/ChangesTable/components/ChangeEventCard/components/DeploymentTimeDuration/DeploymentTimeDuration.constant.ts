@@ -6,3 +6,4 @@
  */
 
 export const TIME_FORMAT = 'MM/DD/YYYY hh:mm a'
+export const TIME_FORMAT_STRING = 'MMMM Do YYYY, h:mm a'

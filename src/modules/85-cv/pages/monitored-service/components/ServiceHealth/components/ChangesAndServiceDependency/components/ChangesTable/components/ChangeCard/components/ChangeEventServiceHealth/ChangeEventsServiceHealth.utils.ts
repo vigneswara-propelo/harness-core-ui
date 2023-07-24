@@ -9,11 +9,13 @@ import { getColorForChangeEventType } from '@cv/components/ChangeTimeline/Change
 import { ColumnChartProps } from '@cv/components/ColumnChart/ColumnChart.types'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { ChangeEventDTO } from 'services/cv'
+import { TWO_HOURS_IN_MILLISECONDS } from './ChangeEventServiceHealth.constants'
 
 export const getMarkerProps = (
   eventType: ChangeEventDTO['type'],
   propsStartTime: number,
-  propsEndTime?: number
+  eventEndTime?: number,
+  eventStatus?: string
 ): {
   multiTimeStampMarker?: ColumnChartProps['multiTimeStampMarker']
   timestampMarker?: ColumnChartProps['timestampMarker']
@@ -22,13 +24,15 @@ export const getMarkerProps = (
     ? {
         multiTimeStampMarker: {
           markerStartTime: {
-            timestamp: propsStartTime as number,
+            timestamp: (propsStartTime + TWO_HOURS_IN_MILLISECONDS) as number,
             color: getColorForChangeEventType(eventType)
           },
           markerEndTime: {
-            timestamp: propsEndTime as number,
+            timestamp: eventEndTime as number,
             color: getColorForChangeEventType(eventType)
-          }
+          },
+          eventEndTime,
+          eventStatus
         }
       }
     : {

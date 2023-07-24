@@ -34,7 +34,10 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
   startTime,
   endTime,
   eventTime,
-  eventType
+  eventType,
+  eventStatus,
+  eventEndTime,
+  eventStartTime
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -119,7 +122,7 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
           </Text>
         )}
         {!loading && !error && (
-          <Layout.Horizontal spacing="small">
+          <Container className={css.gridLayout}>
             {data?.resource?.map(item => (
               <Button
                 key={item.identifier}
@@ -130,7 +133,7 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
                 variation={find(selectedSLOs, item) ? ButtonVariation.SECONDARY : ButtonVariation.TERTIARY}
               />
             ))}
-          </Layout.Horizontal>
+          </Container>
         )}
       </Layout.Horizontal>
       <Text
@@ -152,6 +155,9 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
             selectedSLO={serviceLevelObjective}
             eventTime={eventTime}
             eventType={eventType}
+            eventStatus={eventStatus}
+            eventEndTime={eventEndTime}
+            eventStartTime={eventStartTime}
           />
         ))}
       </Layout.Vertical>

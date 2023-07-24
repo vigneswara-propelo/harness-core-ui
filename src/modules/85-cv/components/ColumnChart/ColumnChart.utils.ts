@@ -50,19 +50,24 @@ export const calculatePositionForStartAndEndTimestamp = ({
   startTime,
   endTime,
   startOfTimestamps,
-  containerWidth
+  containerWidth,
+  eventEndTime
 }: {
   endOfTimestamps: number
   startTime: number
   endTime: number
   startOfTimestamps: number
   containerWidth: number
+  eventEndTime?: number
 }): {
   startPosition: number
-  endPosition: number
+  endPosition?: number
 } => {
+  const isEventEndTimeOutofScope = eventEndTime ? endTime < eventEndTime : true
   return {
-    endPosition: (1 - (endOfTimestamps - endTime) / (endOfTimestamps - startOfTimestamps)) * containerWidth,
+    endPosition: isEventEndTimeOutofScope
+      ? undefined
+      : (1 - (endOfTimestamps - (eventEndTime || 0)) / (endOfTimestamps - startOfTimestamps)) * containerWidth,
     startPosition: (1 - (endOfTimestamps - startTime) / (endOfTimestamps - startOfTimestamps)) * containerWidth
   }
 }
