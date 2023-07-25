@@ -26,19 +26,23 @@ import {
   jiraTicketDetailsCall,
   jiraTicketGetResponse,
   logsListCall,
+  logsListCallForNoBaseline,
   logsListCallResponse,
   logsListCallResponseWithTicket,
   logsListCLusterFilterCall,
   logsListMinSliderFilterCall,
   logsListNodeFilterCall,
+  logsListResponseWithNoBaselineAnalysis,
   logsRadarChartDataCall,
   logsRadarChartDataCallResponse,
   logsRadarChartDataCLusterFilterCall,
   logsRadarChartDataNodeFilterCall,
+  logsRadarChartDataNoFiltersCall,
   nodeNamesFilterAPI,
   overviewCall,
   overviewCallResponse,
   overviewCallResponseWithBaseline,
+  overviewDataWithNoBaselineData,
   pipelinesFetchCall,
   pipelinesSummaryFetchCall,
   pipelinesYamlFetchCall,
@@ -554,5 +558,60 @@ describe('Verify step', () => {
     cy.findByTestId(/pinBaselineButton/)
       .should('exist')
       .should('contain.text', 'Unpin baseline')
+  })
+
+  describe('No baseline analysis', () => {
+    it('Should not render the radar chart and show correct legends for the first time baseline analysis', () => {
+      cy.intercept('GET', logsListCallForNoBaseline, logsListResponseWithNoBaselineAnalysis).as('logsListCall')
+      cy.intercept('GET', logsRadarChartDataNoFiltersCall, logsRadarChartDataCallResponse).as('logsRadarChartDataCall')
+      cy.intercept('GET', logsListNodeFilterCall, logsListCallResponse).as('logsListNodeFilterCall')
+
+      cy.intercept('GET', overviewCall, overviewDataWithNoBaselineData).as('overviewCallForBaseline')
+
+      cy.findByText('NG Docker Image').click()
+
+      cy.wait('@sourceCodeManagerCall')
+      cy.wait('@gitSyncCall')
+      cy.wait('@pipelinesYamlFetchCall')
+
+      cy.wait('@pipelineSummary')
+      cy.wait('@pipelineDetails')
+
+      cy.url().should('include', '/pipelines/NG_Docker_Image/pipeline-studio')
+
+      cy.findByRole('link', { name: /Execution History/i }).click()
+
+      cy.wait('@pipelineExecutionSumary')
+      cy.wait('@pipelineSummary')
+
+      cy.findByText(/(Execution Id: 5)/i)
+        .scrollIntoView()
+        .click()
+
+      cy.wait('@pipelineExecution')
+      cy.wait('@pipelineExecutionForNode')
+
+      cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
+
+      cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
+
+      cy.findByTestId(/Logs/i).click()
+
+      cy.wait('@overviewCallForBaseline')
+      cy.wait('@logsListCall')
+      cy.wait('@logsRadarChartDataCall')
+
+      cy.url().should(
+        'include',
+        '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?storeType=INLINE&view=log&type=Logs&filterAnomalous=true'
+      )
+
+      cy.findByTestId(/newBaselineEventMessage/).should('be.visible')
+
+      cy.findByTestId(/logs-data-row/).should('be.visible')
+      cy.findByTestId(/logs-data-row/).click()
+
+      cy.findByText(/New events/).should('be.visible')
+    })
   })
 })

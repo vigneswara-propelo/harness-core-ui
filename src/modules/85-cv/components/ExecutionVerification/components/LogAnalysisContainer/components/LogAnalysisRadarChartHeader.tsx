@@ -16,6 +16,7 @@ import {
   getRiskDisplayText,
   getRiskIcon
 } from './LogAnalysisRow/components/LogAnalysisDataRow/components/LogAnalysisRiskDisplayUtils'
+import { LogEvents } from '../LogAnalysis.types'
 import css from '../LogAnalysis.module.scss'
 
 const LogAnalysisRadarChartHeader: React.FC<LogAnalysisRadarChartHeaderProps> = ({
@@ -52,7 +53,16 @@ const LogAnalysisRadarChartHeader: React.FC<LogAnalysisRadarChartHeaderProps> = 
                     className={css.radarChartTypeIndicator}
                     style={{ background: getEventTypeChartColor(detail.clusterType) }}
                   ></span>
-                  <Text font={{ variation: FontVariation.SMALL }}>
+                  <Text
+                    font={{ variation: FontVariation.SMALL }}
+                    tooltipProps={{
+                      isDark: true,
+                      dataTooltipId:
+                        detail.clusterType === LogEvents.NO_BASELINE_AVAILABLE
+                          ? 'NoBaselineAvailableLegendTooltip'
+                          : undefined
+                    }}
+                  >
                     {detail.displayName} ({detail.count})
                   </Text>
                 </Layout.Horizontal>

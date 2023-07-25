@@ -1,5 +1,6 @@
 import type { Tooltip, TooltipPositionerPointObject } from 'highcharts'
 import type { LogAnalysisMessageFrequency } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { getChartsConfigForDrawer } from '../LogAnalysisDetailsDrawer.utils'
 import { drawerPropsMockData, thisValueForFormatter, thisValueForTooltip } from './LogAnalysisDetailsDrawer.mock'
 
@@ -7,7 +8,11 @@ describe('LogAnalysisDetailsDrawer utils test', () => {
   test('getChartsConfigForDrawer should return tooltip with baseline data for known event type', () => {
     const messageFrequency = drawerPropsMockData.rowData.messageFrequency[0]
 
-    const result = getChartsConfigForDrawer({ getString: a => a, chartDetails: messageFrequency, eventType: 'KNOWN' })
+    const result = getChartsConfigForDrawer({
+      getString: a => a,
+      chartDetails: messageFrequency,
+      eventType: LogEvents.KNOWN
+    })
 
     const tooltipFormatter = result.tooltip?.formatter?.bind(thisValueForFormatter)
 
@@ -22,7 +27,11 @@ describe('LogAnalysisDetailsDrawer utils test', () => {
   test('getChartsConfigForDrawer should return tooltip without baseline data for unknown event type', () => {
     const messageFrequency = drawerPropsMockData.rowData.messageFrequency[0]
 
-    const result = getChartsConfigForDrawer({ getString: a => a, chartDetails: messageFrequency, eventType: 'UNKNOWN' })
+    const result = getChartsConfigForDrawer({
+      getString: a => a,
+      chartDetails: messageFrequency,
+      eventType: LogEvents.UNKNOWN
+    })
 
     const tooltipFormatter = result.tooltip?.formatter?.bind(thisValueForFormatter)
 
@@ -39,7 +48,7 @@ describe('LogAnalysisDetailsDrawer utils test', () => {
     const result = getChartsConfigForDrawer({
       getString: a => a,
       chartDetails: messageFrequency as unknown as LogAnalysisMessageFrequency,
-      eventType: 'UNKNOWN'
+      eventType: LogEvents.UNKNOWN
     })
 
     const tooltipFormatter = result.tooltip?.formatter?.bind(thisValueForFormatter)
@@ -55,7 +64,7 @@ describe('LogAnalysisDetailsDrawer utils test', () => {
     const result = getChartsConfigForDrawer({
       getString: a => a,
       chartDetails: messageFrequency as unknown as LogAnalysisMessageFrequency,
-      eventType: 'UNKNOWN'
+      eventType: LogEvents.UNKNOWN
     })
 
     const tooltipPositioner = result.tooltip?.positioner?.bind(thisValueForTooltip)
@@ -71,7 +80,7 @@ describe('LogAnalysisDetailsDrawer utils test', () => {
     const result = getChartsConfigForDrawer({
       getString: a => a,
       chartDetails: messageFrequency as unknown as LogAnalysisMessageFrequency,
-      eventType: 'UNKNOWN'
+      eventType: LogEvents.UNKNOWN
     })
 
     const tooltipPositioner = result.tooltip?.positioner?.bind(thisValueForTooltip)

@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { ActivityHeadingContent } from '../ActivityHeadingContent'
 import type { ActivityHeadingContentProps } from '../../LogAnalysisDetailsDrawer.types'
 import { feedbackMock, messageFrequency } from './ActivityHeadingContent.mock'
@@ -11,7 +12,7 @@ interface FeatureFlagProp {
 
 const initialProps: ActivityHeadingContentProps = {
   count: 12,
-  activityType: 'KNOWN',
+  activityType: LogEvents.KNOWN,
   messageFrequency,
   feedback: feedbackMock
 }
@@ -42,7 +43,7 @@ describe('ActivityHeadingContent', () => {
   })
 
   test('should render full name if the activity type is unexpected', () => {
-    render(<WrapperComponent {...initialProps} activityType="UNEXPECTED" />)
+    render(<WrapperComponent {...initialProps} activityType={LogEvents.UNEXPECTED} />)
 
     expect(screen.getByTestId('ActivityHeadingContent_eventType')).toHaveTextContent('cv.unexpectedFrequency')
   })
@@ -52,7 +53,7 @@ describe('ActivityHeadingContent', () => {
       ...initialProps,
       messageFrequency: []
     }
-    render(<WrapperComponent {...updatedProps} activityType="KNOWN" />)
+    render(<WrapperComponent {...updatedProps} activityType={LogEvents.KNOWN} />)
 
     expect(screen.queryByTestId('activityHeadingContent-chart')).not.toBeInTheDocument()
     expect(screen.getByTestId('ActivityHeadingContent_eventType')).toHaveTextContent('Known')
@@ -64,7 +65,7 @@ describe('ActivityHeadingContent', () => {
       ...initialProps,
       messageFrequency: []
     }
-    render(<WrapperComponent {...updatedProps} activityType="KNOWN" />)
+    render(<WrapperComponent {...updatedProps} activityType={LogEvents.KNOWN} />)
 
     expect(screen.queryByTestId('updatedFeedbackDisplay')).not.toBeInTheDocument()
   })

@@ -37,6 +37,8 @@ knownEvents: Known events
 baselineEvents: Baseline events
 unknownEvents: Unknown events
 unexpectedEvents: Unexpected events
+noBaselineAvailableEvents: New events
+noBaselineAvailableEvent: New event
 knownEvent: Known event
 baselineEvent: Baseline event
 unknownEvent: Unknown event
@@ -1336,3 +1338,4 @@ analyzeDeploymentImpact:
   redirectLabel: View Monitored Service details
   stopAnalysis: Stop the analysis and send the report
   analysisStopped: Analysis stopped successfully
+logsNewBaselineEventMessage: A baseline for comparing the events from the first deployments has not yet been established. Once the deployment runs again, the analysis will be shown.

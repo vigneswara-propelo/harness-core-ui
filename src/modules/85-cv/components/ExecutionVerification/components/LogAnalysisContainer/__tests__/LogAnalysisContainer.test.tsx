@@ -11,11 +11,25 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
 import { useQueryParams } from '@common/hooks'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import { logsNodeNamesMock, mockedLogAnalysisData, mockedLogChartsData } from './LogAnalysisContainer.mocks'
+import {
+  defaultOverviewData,
+  logsNodeNamesMock,
+  mockLogAnalysisDataWithAllEvent,
+  mockLogAnalysisDataWithNewEvent,
+  mockedLogAnalysisData,
+  mockedLogChartsData,
+  overviewDataWithBaselineData,
+  overviewDataWithBaselineDataWithTimestamp
+} from './LogAnalysisContainer.mocks'
 import LogAnalysisContainer from '../LogAnalysisView.container'
 import type { LogAnalysisContainerProps } from '../LogAnalysis.types'
 
 const WrapperComponent = (props: LogAnalysisContainerProps): JSX.Element => {
+  const updatedProps = {
+    ...props,
+    overviewData: props.overviewData || (defaultOverviewData as cvService.VerificationOverview)
+  }
+
   return (
     <TestWrapper
       path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/pipeline/executions/:executionId/pipeline"
@@ -26,7 +40,7 @@ const WrapperComponent = (props: LogAnalysisContainerProps): JSX.Element => {
         executionId: 'Test_execution'
       }}
     >
-      <LogAnalysisContainer {...props} />
+      <LogAnalysisContainer {...updatedProps} />
     </TestWrapper>
   )
 }
@@ -86,6 +100,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     await waitFor(() => {
       expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        lazy: true,
         queryParams: {
           accountId: '1234_accountId',
           clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -99,6 +114,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
         verifyStepExecutionId: 'activityId-1'
       })
       expect(useGetVerifyStepDeploymentRadarChartLogAnalysisClustersSpy).toHaveBeenCalledWith({
+        lazy: true,
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
         queryParams: {
           accountId: '1234_accountId',
@@ -116,6 +132,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     await waitFor(() => {
       expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        lazy: true,
         queryParams: {
           accountId: '1234_accountId',
           clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -131,6 +148,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
 
       expect(useGetVerifyStepDeploymentRadarChartLogAnalysisClustersSpy).toHaveBeenCalledWith({
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        lazy: true,
         queryParams: {
           accountId: '1234_accountId',
           clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -155,6 +173,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     await waitFor(() => {
       expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        lazy: true,
         queryParams: {
           accountId: '1234_accountId',
           clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -170,6 +189,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
 
       expect(useGetVerifyStepDeploymentRadarChartLogAnalysisClustersSpy).toHaveBeenCalledWith({
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        lazy: true,
         queryParams: {
           accountId: '1234_accountId',
           clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -202,6 +222,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
 
     expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
       queryParamStringifyOptions: { arrayFormat: 'repeat' },
+      lazy: true,
       queryParams: {
         accountId: '1234_accountId',
         clusterTypes: ['UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -243,6 +264,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     await waitFor(() => {
       expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        lazy: true,
         queryParams: {
           accountId: '1234_accountId',
           clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -259,6 +281,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
 
     expect(useGetVerifyStepDeploymentRadarChartLogAnalysisClustersSpy).toHaveBeenCalledWith({
       queryParamStringifyOptions: { arrayFormat: 'repeat' },
+      lazy: true,
       queryParams: {
         accountId: '1234_accountId',
         clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -271,6 +294,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     rerender(<WrapperComponent {...initialProps} hostName="ABC" />)
 
     expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
+      lazy: true,
       queryParamStringifyOptions: { arrayFormat: 'repeat' },
       queryParams: {
         accountId: '1234_accountId',
@@ -287,6 +311,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
 
     expect(useGetVerifyStepDeploymentRadarChartLogAnalysisClustersSpy).toHaveBeenCalledWith({
       queryParamStringifyOptions: { arrayFormat: 'repeat' },
+      lazy: true,
       queryParams: {
         accountId: '1234_accountId',
         clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -308,6 +333,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
 
     await waitFor(() =>
       expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
+        lazy: true,
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
         queryParams: {
           accountId: '1234_accountId',
@@ -384,6 +410,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     await waitFor(() =>
       expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({
         queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        lazy: true,
         queryParams: {
           accountId: '1234_accountId',
           clusterTypes: ['UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
@@ -410,11 +437,63 @@ describe('Unit tests for LogAnalysisContainer', () => {
     jest.spyOn(cvService, 'useGetVerifyStepDeploymentRadarChartLogAnalysisClusters').mockReturnValue({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      data: { data: { resource: [] } }
+      data: { data: { resource: [] } },
+      refetch: fetchChartsAnalysisData
     })
     render(<WrapperComponent {...initialProps} />)
 
     expect(screen.getByTestId(/LogAnalysis_common_noData/)).toBeInTheDocument()
     expect(screen.getAllByText(/cv.monitoredServices.noMatchingData/)).toHaveLength(1)
+  })
+
+  describe('No baseline analysis event tests', () => {
+    test('Should not show radar chart if it is a first time baseline run', () => {
+      jest.spyOn(cvService, 'useGetVerifyStepDeploymentLogAnalysisRadarChartResult').mockReturnValue({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        data: mockLogAnalysisDataWithNewEvent,
+        refetch: fetchLogsAnalysisData
+      })
+
+      render(
+        <WrapperComponent
+          {...initialProps}
+          overviewData={overviewDataWithBaselineData as cvService.VerificationOverview}
+        />
+      )
+
+      expect(screen.getByTestId(/newBaselineEventMessage/)).toBeInTheDocument()
+
+      expect((screen.getByTestId('cv.known') as HTMLInputElement).checked).toBe(false)
+      expect((screen.getByTestId('cd.getStartedWithCD.healthStatus.unknown') as HTMLInputElement).checked).toBe(false)
+      expect((screen.getByTestId('cv.unexpectedFrequency') as HTMLInputElement).checked).toBe(false)
+
+      expect(screen.getAllByTestId(/logs-data-row/)).toHaveLength(1)
+      expect(screen.getByText(/some other log message with NEW Event/)).toBeInTheDocument()
+    })
+
+    test('Should show radar chart if it is not a first time baseline run', () => {
+      jest.spyOn(cvService, 'useGetVerifyStepDeploymentLogAnalysisRadarChartResult').mockReturnValue({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        data: mockLogAnalysisDataWithAllEvent,
+        refetch: fetchLogsAnalysisData
+      })
+
+      render(
+        <WrapperComponent
+          {...initialProps}
+          overviewData={overviewDataWithBaselineDataWithTimestamp as cvService.VerificationOverview}
+        />
+      )
+
+      expect(screen.queryByTestId(/newBaselineEventMessage/)).not.toBeInTheDocument()
+
+      expect((screen.getByTestId('cd.getStartedWithCD.healthStatus.unknown') as HTMLInputElement).checked).toBe(true)
+      expect((screen.getByTestId('cv.unexpectedFrequency') as HTMLInputElement).checked).toBe(true)
+
+      expect(screen.getAllByTestId(/logs-data-row/)).toHaveLength(1)
+      expect(screen.getByText(/some other log message with NEW Event/)).toBeInTheDocument()
+    })
   })
 })

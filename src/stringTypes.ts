@@ -9222,6 +9222,7 @@ export interface StringsMap {
   'cv.logs.updatedBy': string
   'cv.logs.viewEventDetails': string
   'cv.logsCluster': string
+  'cv.logsNewBaselineEventMessage': string
   'cv.maxValue': string
   'cv.messageFrequency': string
   'cv.methodLabel': string
@@ -9625,6 +9626,8 @@ export interface StringsMap {
   'cv.newMetric': string
   'cv.noAnalysis': string
   'cv.noAnomalies': string
+  'cv.noBaselineAvailableEvent': string
+  'cv.noBaselineAvailableEvents': string
   'cv.noDataAvailableForTheCurrentSLOCycle': string
   'cv.noPreviousErrorBudgetResetHistoryAvailable': string
   'cv.noSLOHasBeenCreated': string

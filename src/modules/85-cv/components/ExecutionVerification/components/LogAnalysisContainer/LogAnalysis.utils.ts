@@ -13,26 +13,29 @@ import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
+  EventCount,
   HostFrequencyData,
   LogAnalysisRadarChartListDTO,
-  LogData,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseLogAnalysisRadarChartListWithCountDTO,
   TimestampFrequencyCount
 } from 'services/cv'
 import type { LogAnalysisMessageFrequency, LogAnalysisRowData } from './LogAnalysis.types'
+import { LogEvents } from './LogAnalysis.types'
 import { EventTypeFullName } from './LogAnalysis.constants'
 
-export const mapClusterType = (type: string): LogData['tag'] => {
+export const mapClusterType = (type: string): LogEvents => {
   switch (type) {
     case EventTypeFullName.KNOWN_EVENT:
-      return 'KNOWN'
+      return LogEvents.KNOWN
     case EventTypeFullName.UNKNOWN_EVENT:
-      return 'UNKNOWN'
+      return LogEvents.UNKNOWN
     case EventTypeFullName.UNEXPECTED_FREQUENCY:
-      return 'UNEXPECTED'
+      return LogEvents.UNEXPECTED
+    case EventTypeFullName.NO_BASELINE_AVAILABLE:
+      return LogEvents.NO_BASELINE_AVAILABLE
     default:
-      return 'KNOWN'
+      return LogEvents.KNOWN
   }
 }
 
@@ -172,4 +175,24 @@ export function getInitialNodeName(selectedHostName?: string): MultiSelectOption
       value: selectedHostName
     }
   ]
+}
+
+const getIsEventCountHasOnlyNewEventData = (eventCounts: EventCount[]): boolean => {
+  if (!eventCounts.length) {
+    return false
+  }
+
+  const firstEventDetails = eventCounts.find(eventDetail => eventDetail.clusterType === LogEvents.NO_BASELINE_AVAILABLE)
+
+  return Boolean(firstEventDetails?.count)
+}
+
+export const getCanRenderLogsRadarChart = (logsData: RestResponseLogAnalysisRadarChartListWithCountDTO): boolean => {
+  const eventCounts = logsData?.resource?.eventCounts
+
+  if (!Array.isArray(eventCounts) || getIsEventCountHasOnlyNewEventData(eventCounts)) {
+    return false
+  }
+
+  return true
 }

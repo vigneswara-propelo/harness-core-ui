@@ -6,3 +6,5 @@ export enum RadarChartAngleLimits {
 }
 
 export const HealthRiskLegendOrder: LogData['riskStatus'][] = ['HEALTHY', 'OBSERVE', 'UNHEALTHY']
+
+export const BaselineTestNodeType = 'BASELINE_TEST'

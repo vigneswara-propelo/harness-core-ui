@@ -1,8 +1,9 @@
 import React from 'react'
 import { Container, Text, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { LogAnalysisRadarChartListDTO, LogData } from 'services/cv'
+import type { LogAnalysisRadarChartListDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
 import { getEventTypeFromClusterType } from '../../../LogAnalysisRow.utils'
 import LogAnalysisRiskDisplay from '../../LogAnalysisDataRow/components/LogAnalysisRiskDisplay'
@@ -10,7 +11,7 @@ import logRowStyle from '../../../LogAnalysisRow.module.scss'
 import css from '../LogAnalysisDetailsDrawer.module.scss'
 
 interface LogsMetaDataProps {
-  activityType?: LogData['tag']
+  activityType?: LogEvents
   risk?: LogAnalysisRadarChartListDTO['risk']
   count?: number
 }
@@ -35,7 +36,7 @@ export default function LogsMetaData({ activityType, count, risk }: LogsMetaData
             }}
             data-testid="ActivityHeadingContent_eventType"
           >
-            {getEventTypeFromClusterType(activityType, getString, true)}
+            {getEventTypeFromClusterType(activityType as LogEvents, getString, true)}
           </Text>
         </Container>
         <Container>

@@ -6,6 +6,7 @@
  */
 
 import { IDrawerProps, IPopoverProps, PopoverInteractionKind, PopoverPosition, Position } from '@blueprintjs/core'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { EVENT_TYPE } from '@cv/utils/CommonUtils'
 import type { StringKeys } from 'framework/strings'
 
@@ -30,12 +31,6 @@ export const DrawerProps: IDrawerProps = {
   isCloseButtonShown: true
 }
 
-export enum LogEvents {
-  KNOWN = 'KNOWN',
-  UNKNOWN = 'UNKNOWN',
-  UNEXPECTED = 'UNEXPECTED'
-}
-
 export const ShareContentPopoverProps: IPopoverProps = {
   canEscapeKeyClose: true,
   interactionKind: PopoverInteractionKind.CLICK,
@@ -47,11 +42,13 @@ export const ShareContentPopoverProps: IPopoverProps = {
 export const legendKeyMapping: Record<LogEvents, StringKeys> = {
   [EVENT_TYPE.UNKNOWN]: 'cv.unknownEvents',
   [EVENT_TYPE.KNOWN]: 'cv.knownEvents',
-  [EVENT_TYPE.UNEXPECTED]: 'cv.unexpectedEvents'
+  [EVENT_TYPE.UNEXPECTED]: 'cv.unexpectedEvents',
+  [EVENT_TYPE.NO_BASELINE_AVAILABLE]: 'cv.noBaselineAvailableEvents'
 }
 
 export const legendKeyMappingSingular: Record<LogEvents, StringKeys> = {
   [EVENT_TYPE.UNKNOWN]: 'cv.unknownEvent',
   [EVENT_TYPE.KNOWN]: 'cv.knownEvent',
-  [EVENT_TYPE.UNEXPECTED]: 'cv.unexpectedEvent'
+  [EVENT_TYPE.UNEXPECTED]: 'cv.unexpectedEvent',
+  [EVENT_TYPE.NO_BASELINE_AVAILABLE]: 'cv.noBaselineAvailableEvent'
 }

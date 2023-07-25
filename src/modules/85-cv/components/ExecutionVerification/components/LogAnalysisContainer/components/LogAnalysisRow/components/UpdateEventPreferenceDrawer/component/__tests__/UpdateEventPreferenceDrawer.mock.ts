@@ -1,7 +1,8 @@
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import type { UpdateEventPreferenceDrawerProps } from '../../UpdateEventPreferenceDrawer'
 
 export const updateEventRowData: UpdateEventPreferenceDrawerProps['rowData'] = {
-  clusterType: 'KNOWN',
+  clusterType: LogEvents.NO_BASELINE_AVAILABLE,
   count: 10,
   message: 'Some message',
   messageFrequency: [],

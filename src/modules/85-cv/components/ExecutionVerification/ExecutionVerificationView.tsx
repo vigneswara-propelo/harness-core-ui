@@ -98,7 +98,12 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
                 overviewError={error}
                 overviewData={data}
               />
-              <LogAnalysisContainer step={step} hostName={selectedNode?.nodeIdentifier} />
+              <LogAnalysisContainer
+                step={step}
+                hostName={selectedNode?.nodeIdentifier}
+                overviewLoading={loading}
+                overviewData={data}
+              />
             </Layout.Horizontal>
           }
           panelClassName={css.mainTabPanelLogs}

@@ -5,6 +5,7 @@ import type {
   AnalyzedRadarChartLogDataDTO,
   FrequencyDTO,
   LogAnalysisRadarChartListDTO,
+  LogData,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseLogAnalysisRadarChartListWithCountDTO
 } from 'services/cv'
@@ -23,7 +24,7 @@ export const getSingleLogData = (
   const { clusterType, count, message, frequencyData, clusterId, risk } =
     (logData as AnalyzedRadarChartLogDataDTO) || {}
   return {
-    clusterType: mapClusterType(clusterType as string),
+    clusterType: mapClusterType(clusterType as string) as LogData['tag'],
     count: count as number,
     message: message as string,
     messageFrequency: [

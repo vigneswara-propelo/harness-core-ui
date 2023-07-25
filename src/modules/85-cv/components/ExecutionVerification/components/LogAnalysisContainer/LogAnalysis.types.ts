@@ -10,10 +10,10 @@ import type { GetDataError } from 'restful-react'
 
 import type {
   LogAnalysisRadarChartListDTO,
-  LogData,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseListLogAnalysisRadarChartClusterDTO,
-  RestResponseLogAnalysisRadarChartListWithCountDTO
+  RestResponseLogAnalysisRadarChartListWithCountDTO,
+  VerificationOverview
 } from 'services/cv'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import type { MinMaxAngleState } from './LogAnalysisView.container.types'
@@ -23,8 +23,15 @@ export interface LogAnalysisMessageFrequency {
   data: SeriesColumnOptions[]
 }
 
+export enum LogEvents {
+  KNOWN = 'KNOWN',
+  UNKNOWN = 'UNKNOWN',
+  UNEXPECTED = 'UNEXPECTED',
+  NO_BASELINE_AVAILABLE = 'NO_BASELINE_AVAILABLE'
+}
+
 export type LogAnalysisRowData = {
-  clusterType: LogData['tag']
+  clusterType: LogEvents
   message: string
   count: number
   messageFrequency: LogAnalysisMessageFrequency[]
@@ -38,6 +45,8 @@ export interface LogAnalysisContainerProps {
   step: ExecutionNode
   hostName?: string
   isErrorTracking?: boolean
+  overviewData?: VerificationOverview | null
+  overviewLoading?: boolean
 }
 
 export interface LogAnalysisProps {

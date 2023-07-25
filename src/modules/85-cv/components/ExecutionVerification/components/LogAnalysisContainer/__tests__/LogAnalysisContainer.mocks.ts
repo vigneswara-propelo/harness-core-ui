@@ -286,3 +286,157 @@ export const mockedHealthSourcesData = {
 export const logsNodeNamesMock = {
   resource: ['V', 'W']
 }
+
+export const mockLogAnalysisDataWithNewEvent = {
+  metaData: {},
+  resource: {
+    totalClusters: 1,
+    eventCounts: [{ clusterType: 'NO_BASELINE_AVAILABLE', count: 1, displayName: 'No Baseline available' }],
+    logAnalysisRadarCharts: {
+      totalPages: 1,
+      totalItems: 1,
+      pageItemCount: 1,
+      pageSize: 10,
+      content: [
+        {
+          message: 'some other log message with NEW Event',
+          clusterId: '67b09b91-6dcc-3731-be99-622ccaad5bb0',
+          label: 0,
+          risk: 'HEALTHY',
+          previousRisk: 'HEALTHY',
+          clusterType: 'NO_BASELINE_AVAILABLE',
+          count: 6,
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                { timeStamp: 1689152160, count: 0.0 },
+                { timeStamp: 1689152220, count: 0.0 },
+                { timeStamp: 1689152280, count: 0.0 },
+                { timeStamp: 1689152340, count: 0.0 },
+                { timeStamp: 1689152400, count: 6.0 }
+              ],
+              host: 'dummy'
+            }
+          ],
+          totalTestFrequencyData: [
+            { timeStamp: 1689152160, count: 0.0 },
+            { timeStamp: 1689152220, count: 0.0 },
+            { timeStamp: 1689152280, count: 0.0 },
+            { timeStamp: 1689152340, count: 0.0 },
+            { timeStamp: 1689152400, count: 6.0 }
+          ],
+          averageControlFrequencyData: [],
+          hasControlData: false
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  },
+  responseMessages: []
+}
+
+export const mockLogAnalysisDataWithAllEvent = {
+  metaData: {},
+  resource: {
+    ...mockLogAnalysisDataWithNewEvent.resource,
+    totalClusters: 1,
+    eventCounts: [
+      { clusterType: 'KNOWN_EVENT', count: 1, displayName: 'Known' },
+      { clusterType: 'UNEXPECTED_FREQUENCY', count: 0, displayName: 'Unexpected Frequency' },
+      { clusterType: 'UNKNOWN_EVENT', count: 0, displayName: 'Unknown' },
+      { clusterType: 'NO_BASELINE_AVAILABLE', count: 0, displayName: 'No Baseline available' },
+      { clusterType: 'BASELINE', count: 0, displayName: 'Baseline' }
+    ]
+  },
+  responseMessages: []
+}
+
+export const defaultOverviewData = {
+  spec: {
+    analysedServiceIdentifier: 'svcqasignoffelasticsearch',
+    analysedEnvIdentifier: 'envqasignoffelasticsearch',
+    monitoredServiceType: 'DEFAULT',
+    monitoredServiceIdentifier: 'svcqasignoffelasticsearch_envqasignoffelasticsearch',
+    analysisType: 'AUTO',
+    sensitivity: 'HIGH',
+    durationInMinutes: 10,
+    isFailOnNoAnalysis: true,
+    baselineType: 'LAST'
+  },
+  appliedDeploymentAnalysisType: 'ROLLING',
+  verificationStatus: 'ERROR',
+  verificationProgressPercentage: 20,
+  verificationStartTimestamp: 1689796661875,
+  testNodes: {
+    nodeType: 'POST_DEPLOYMENT',
+    nodes: [
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'cvng-qa-sign-off-appd-deployment-canary-58f5b67845-nrqcb',
+        verificationResult: 'FAILED',
+        failedMetrics: 0,
+        failedLogClusters: 5
+      },
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'cvng-qa-sign-off-appd-deployment-canary-bccbf9dfb-t84mt',
+        verificationResult: 'FAILED',
+        failedMetrics: 0,
+        failedLogClusters: 14
+      },
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'cvng-qa-sign-off-appd-deployment-canary-fbf5d4b79-j8fqx',
+        verificationResult: 'FAILED',
+        failedMetrics: 0,
+        failedLogClusters: 4
+      }
+    ]
+  },
+  controlNodes: {
+    nodeType: 'PRE_DEPLOYMENT',
+    nodes: []
+  },
+  metricsAnalysis: {
+    healthy: 0,
+    warning: 0,
+    unhealthy: 0,
+    noAnalysis: 0
+  },
+  logClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 14,
+    unexpectedFrequencyClustersCount: 0
+  },
+  errorClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  },
+  controlDataStartTimestamp: 1689795960000,
+  testDataStartTimestamp: 1689796620000
+}
+
+export const overviewDataWithBaselineData = {
+  controlNodes: {
+    nodeType: 'BASELINE_TEST',
+    nodes: [
+      {
+        type: 'LOAD_TEST_NODE'
+      }
+    ]
+  }
+}
+
+export const overviewDataWithBaselineDataWithTimestamp = {
+  controlNodes: {
+    nodeType: 'BASELINE_TEST',
+    nodes: [
+      {
+        type: 'LOAD_TEST_NODE',
+        testStartTimestamp: 1672845480000
+      }
+    ]
+  }
+}

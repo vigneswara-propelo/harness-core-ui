@@ -37,7 +37,8 @@ export enum EVENT_TYPE {
   UNKNOWN = 'UNKNOWN',
   FREQUENCY = 'UNEXPECTED_FREQUENCY',
   UNEXPECTED = 'UNEXPECTED',
-  BASELINE = 'BASELINE'
+  BASELINE = 'BASELINE',
+  NO_BASELINE_AVAILABLE = 'NO_BASELINE_AVAILABLE'
 }
 
 export enum RiskValues {
@@ -276,6 +277,7 @@ export function getEventTypeColor(eventType?: string, realCSSColor = true): stri
     case 'UNEXPECTED':
       return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_800) : Color.YELLOW_800
     case EVENT_TYPE.BASELINE:
+    case EVENT_TYPE.NO_BASELINE_AVAILABLE:
     default:
       return realCSSColor ? Utils.getRealCSSColor(Color.GREY_700) : Color.GREY_700
   }
@@ -291,6 +293,7 @@ export function getEventTypeLightColor(eventType?: string, realCSSColor = true):
     case 'UNEXPECTED':
       return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_200) : Color.YELLOW_200
     case EVENT_TYPE.BASELINE:
+    case EVENT_TYPE.NO_BASELINE_AVAILABLE:
     default:
       return realCSSColor ? Utils.getRealCSSColor(Color.GREY_200) : Color.GREY_200
   }
@@ -309,6 +312,7 @@ export function getEventTypeChartColor(eventType?: string, realCSSColor = true):
     case 'UNEXPECTED':
       return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_700) : Color.YELLOW_700
     case EVENT_TYPE.BASELINE:
+    case EVENT_TYPE.NO_BASELINE_AVAILABLE:
     default:
       return realCSSColor ? Utils.getRealCSSColor(Color.GREY_300) : Color.GREY_300
   }

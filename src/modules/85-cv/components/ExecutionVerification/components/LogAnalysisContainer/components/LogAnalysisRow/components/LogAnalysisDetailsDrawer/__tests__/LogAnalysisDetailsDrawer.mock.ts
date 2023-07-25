@@ -1,9 +1,10 @@
 import type { Tooltip, TooltipFormatterContextObject } from 'highcharts'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import type { LogAnalysisDetailsDrawerProps } from '../LogAnalysisDetailsDrawer.types'
 
 export const drawerPropsMockData: Pick<LogAnalysisDetailsDrawerProps, 'isDataLoading' | 'rowData' | 'logsError'> = {
   rowData: {
-    clusterType: 'KNOWN',
+    clusterType: LogEvents.KNOWN,
     count: 8,
     message: 'test data - host1 - log1',
     clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1c',

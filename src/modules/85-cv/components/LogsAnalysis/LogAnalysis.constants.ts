@@ -6,3 +6,9 @@
  */
 
 export const PAGE_SIZE = 7
+
+export enum EventTypeFullName {
+  KNOWN_EVENT = 'KNOWN_EVENT',
+  UNKNOWN_EVENT = 'UNKNOWN_EVENT',
+  UNEXPECTED_FREQUENCY = 'UNEXPECTED_FREQUENCY'
+}

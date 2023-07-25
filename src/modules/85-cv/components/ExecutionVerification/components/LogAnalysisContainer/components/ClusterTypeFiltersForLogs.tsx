@@ -47,7 +47,7 @@ const ClusterTypeFiltersForLogs: React.FC<ClusterTypeFiltersForLogsProps> = ({
               label={item.label}
               value={item.value as string}
               data-testid={item.label}
-              defaultChecked={clusterTypeFilters?.includes(item.value as EventTypeFullName)}
+              checked={clusterTypeFilters?.includes(item.value as EventTypeFullName)}
               onChange={inputEl => {
                 onFilterChange((inputEl.target as HTMLInputElement).checked, item.value as EventTypeFullName)
               }}

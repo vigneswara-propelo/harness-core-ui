@@ -25,10 +25,11 @@ import { pageSize, initialPageNumber, POLLING_INTERVAL, StepStatus, EventTypeFul
 import type { ClusterTypes, LogAnalysisQueryParams, MinMaxAngleState } from './LogAnalysisView.container.types'
 import type { LogAnalysisContainerProps, LogAnalysisProps } from './LogAnalysis.types'
 import { getActivityId } from '../../ExecutionVerificationView.utils'
-import { getClusterTypes, getInitialNodeName } from './LogAnalysis.utils'
+import { getInitialNodeName } from './LogAnalysis.utils'
 import { getQueryParamForHostname, getQueryParamFromFilters } from '../DeploymentMetrics/DeploymentMetrics.utils'
 import { RadarChartAngleLimits } from './LogAnalysisView.container.constants'
 import ClusterTypeFiltersForLogs from './components/ClusterTypeFiltersForLogs'
+import { getInitialClustersFilterValue } from './LogAnalysisView.container.utils'
 import css from './LogAnalysisView.container.module.scss'
 import logAnalysisStyles from './LogAnalysis.module.scss'
 
@@ -36,20 +37,14 @@ import logAnalysisStyles from './LogAnalysis.module.scss'
 export default function LogAnalysisContainer({
   step,
   hostName,
-  isErrorTracking
+  isErrorTracking,
+  overviewData,
+  overviewLoading
 }: LogAnalysisContainerProps): React.ReactElement {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const pageParams = useQueryParams<LogAnalysisQueryParams>()
-  const [clusterTypeFilters, setClusterTypeFilters] = useState<ClusterTypes>(() => {
-    let filterValues = getClusterTypes(getString).map(i => i.value) as ClusterTypes
-
-    if (pageParams.filterAnomalous === 'true') {
-      filterValues = filterValues?.filter(clusterType => clusterType !== EventTypeFullName.KNOWN_EVENT)
-    }
-
-    return filterValues
-  })
+  const [clusterTypeFilters, setClusterTypeFilters] = useState<ClusterTypes>([])
 
   const isMounted = useRef(false)
   const isFirstFilterCall = useRef(true)
@@ -97,7 +92,8 @@ export default function LogAnalysisContainer({
     queryParams: logsDataQueryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
-    }
+    },
+    lazy: true
   })
 
   const {
@@ -110,7 +106,8 @@ export default function LogAnalysisContainer({
     queryParams: radarChartDataQueryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
-    }
+    },
+    lazy: true
   })
 
   const {
@@ -123,6 +120,31 @@ export default function LogAnalysisContainer({
       accountId
     }
   })
+
+  useEffect(() => {
+    if (!overviewLoading) {
+      setClusterTypeFilters(() =>
+        getInitialClustersFilterValue({
+          filterAnomalous: pageParams.filterAnomalous,
+          getString,
+          overviewData,
+          overviewLoading
+        })
+      )
+    }
+  }, [overviewData, overviewLoading, pageParams.filterAnomalous])
+
+  useEffect(() => {
+    if (!overviewLoading) {
+      fetchClusterAnalysis({ queryParams: radarChartDataQueryParams })
+    }
+  }, [overviewLoading, radarChartDataQueryParams])
+
+  useEffect(() => {
+    if (!overviewLoading) {
+      fetchLogAnalysis({ queryParams: logsDataQueryParams })
+    }
+  }, [overviewLoading, logsDataQueryParams])
 
   const handleNodeNameChange = useCallback(selectedNodeNameFitlers => {
     setSelectedNodeName(selectedNodeNameFitlers)

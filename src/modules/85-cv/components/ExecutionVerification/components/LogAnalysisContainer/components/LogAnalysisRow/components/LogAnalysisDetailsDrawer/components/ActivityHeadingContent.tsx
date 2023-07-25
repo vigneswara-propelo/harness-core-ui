@@ -6,6 +6,7 @@ import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { useStrings } from 'framework/strings'
 import type { ActivityHeadingContentProps } from '../LogAnalysisDetailsDrawer.types'
 import { getChartsConfigForDrawer } from '../LogAnalysisDetailsDrawer.utils'
@@ -26,7 +27,11 @@ export function ActivityHeadingContent(props: ActivityHeadingContentProps): JSX.
       messageFrequency?.map(chart => {
         return {
           hostName: chart.hostName,
-          chartConfig: getChartsConfigForDrawer({ getString, chartDetails: chart, eventType: activityType })
+          chartConfig: getChartsConfigForDrawer({
+            getString,
+            chartDetails: chart,
+            eventType: activityType as LogEvents
+          })
         }
       }),
     [messageFrequency]
@@ -42,7 +47,7 @@ export function ActivityHeadingContent(props: ActivityHeadingContentProps): JSX.
 
       {canShowCharts && (
         <Container margin={{ bottom: 'medium' }}>
-          <LogsDetailLegendForChart clusterType={activityType} />
+          <LogsDetailLegendForChart clusterType={activityType as LogEvents} />
         </Container>
       )}
       {canShowCharts &&

@@ -1,14 +1,14 @@
 import React from 'react'
 import { Container, Layout, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { useStrings } from 'framework/strings'
-import type { LogData } from 'services/cv'
 import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
-import { legendKeyMapping, LogEvents } from '../../../LogAnalysisDetailsDrawer.constants'
+import { legendKeyMapping } from '../../../LogAnalysisDetailsDrawer.constants'
 import css from './LogsDetailLegendForChart.module.scss'
 
 export interface LogsDetailLegendForChartPropsType {
-  clusterType: LogData['tag']
+  clusterType: LogEvents
 }
 
 export default function LogsDetailLegendForChart({
@@ -19,6 +19,7 @@ export default function LogsDetailLegendForChart({
   const clusterTypeColor = getEventTypeChartColor(clusterType)
 
   const isUnknownEvent = clusterType === LogEvents.UNKNOWN
+  const isNewEvent = clusterType === LogEvents.NO_BASELINE_AVAILABLE
 
   if (!clusterType) {
     return null
@@ -26,7 +27,7 @@ export default function LogsDetailLegendForChart({
 
   return (
     <Layout.Horizontal spacing="medium">
-      {!isUnknownEvent && (
+      {!isUnknownEvent && !isNewEvent && (
         <Layout.Horizontal className={css.legendHolder}>
           <Container
             className={css.legendTile}

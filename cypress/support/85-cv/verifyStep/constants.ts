@@ -54,7 +54,9 @@ export const sourceCodeManagerCall = `/ng/api/source-code-manager?routingId=${ac
 
 // logs initial call
 export const logsListCall = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10&minAngle=0&maxAngle=360&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+export const logsListCallForNoBaseline = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10&minAngle=0&maxAngle=360`
 export const logsRadarChartDataCall = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-clusters?routingId=${accountId}&accountId=${accountId}&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+export const logsRadarChartDataNoFiltersCall = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-clusters?routingId=${accountId}&accountId=${accountId}`
 
 // logs node filter call
 export const logsListNodeFilterCall = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10&hostNames=harness-deployment-canary-7445f86dbf-ml857&minAngle=0&maxAngle=360&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
@@ -2498,4 +2500,64 @@ export const jiraTicketGetResponse = {
   statusColor: '#42526E',
   title: 'A new ticket',
   url: 'https://example.atlassian.net/browse/ABCD-1234'
+}
+
+export const logsListResponseWithNoBaselineAnalysis = {
+  metaData: {},
+  resource: {
+    totalClusters: 1,
+    eventCounts: [{ clusterType: 'NO_BASELINE_AVAILABLE', count: 1, displayName: 'New' }],
+    logAnalysisRadarCharts: {
+      totalPages: 1,
+      totalItems: 1,
+      pageItemCount: 1,
+      pageSize: 10,
+      content: [
+        {
+          message: 'some other log message',
+          clusterId: '67b09b91-6dcc-3731-be99-622ccaad5bb0',
+          label: 0,
+          risk: 'HEALTHY',
+          previousRisk: 'HEALTHY',
+          clusterType: 'NO_BASELINE_AVAILABLE',
+          count: 6,
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                { timeStamp: 1689152160, count: 0.0 },
+                { timeStamp: 1689152220, count: 0.0 },
+                { timeStamp: 1689152280, count: 0.0 },
+                { timeStamp: 1689152340, count: 0.0 },
+                { timeStamp: 1689152400, count: 6.0 }
+              ],
+              host: 'dummy'
+            }
+          ],
+          totalTestFrequencyData: [
+            { timeStamp: 1689152160, count: 0.0 },
+            { timeStamp: 1689152220, count: 0.0 },
+            { timeStamp: 1689152280, count: 0.0 },
+            { timeStamp: 1689152340, count: 0.0 },
+            { timeStamp: 1689152400, count: 6.0 }
+          ],
+          averageControlFrequencyData: [],
+          hasControlData: false
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  },
+  responseMessages: []
+}
+
+export const overviewDataWithNoBaselineData = {
+  controlNodes: {
+    nodeType: 'BASELINE_TEST',
+    nodes: [
+      {
+        type: 'LOAD_TEST_NODE'
+      }
+    ]
+  }
 }

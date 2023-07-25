@@ -9,24 +9,26 @@ import type { GetDataError } from 'restful-react'
 import routes from '@common/RouteDefinitions'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
-  LogData,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseLogAnalysisRadarChartListWithCountDTO
 } from 'services/cv'
 import type { LogsRowData } from './LogAnalysisRow.types'
+import { LogEvents } from '../../LogAnalysis.types'
 
 export const getEventTypeFromClusterType = (
-  tag: LogData['tag'],
+  tag: LogEvents,
   getString: UseStringsReturn['getString'],
   fullName = false
 ): string => {
   switch (tag) {
-    case 'KNOWN':
+    case LogEvents.KNOWN:
       return 'Known'
-    case 'UNKNOWN':
+    case LogEvents.UNKNOWN:
       return 'Unknown'
-    case 'UNEXPECTED':
+    case LogEvents.UNEXPECTED:
       return fullName ? getString('cv.unexpectedFrequency') : 'Unexpected'
+    case LogEvents.NO_BASELINE_AVAILABLE:
+      return getString('newLabel')
     default:
       return ''
   }

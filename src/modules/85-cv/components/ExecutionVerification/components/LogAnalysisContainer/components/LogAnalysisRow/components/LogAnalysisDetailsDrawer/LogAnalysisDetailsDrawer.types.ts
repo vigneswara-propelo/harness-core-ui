@@ -6,10 +6,11 @@
  */
 
 import type { GetDataError } from 'restful-react'
-import type { LogAnalysisRadarChartListDTO, LogData, LogFeedback } from 'services/cv'
+import type { LogAnalysisRadarChartListDTO, LogFeedback } from 'services/cv'
 import type {
   LogAnalysisMessageFrequency,
-  LogAnalysisRowData
+  LogAnalysisRowData,
+  LogEvents
 } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import type { UpdateEventPreferenceOpenFn } from '../../LogAnalysisRow.types'
 
@@ -32,7 +33,7 @@ export interface RiskAndMessageFormProps {
 export interface ActivityHeadingContentProps {
   count: number
   messageFrequency?: LogAnalysisMessageFrequency[]
-  activityType?: LogData['tag']
+  activityType?: LogEvents
   riskStatus?: LogAnalysisRadarChartListDTO['risk']
   feedback?: LogFeedback
   feedbackApplied?: LogFeedback

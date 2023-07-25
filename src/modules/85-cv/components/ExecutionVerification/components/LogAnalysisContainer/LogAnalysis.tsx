@@ -6,15 +6,16 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { Container, Icon, NoDataCard, PageError } from '@harness/uicore'
+import { Container, Icon, NoDataCard, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { RestResponseLogAnalysisRadarChartListWithCountDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import noDataImage from '@cv/assets/noData.svg'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { LogAnalysisProps, LogAnalysisRowData } from './LogAnalysis.types'
 import LogAnalysisRadarChartHeader from './components/LogAnalysisRadarChartHeader'
 import LogAnalysisRadarChart from './components/LogAnalysisRadarChart'
-import { getLogAnalysisData } from './LogAnalysis.utils'
+import { getCanRenderLogsRadarChart, getLogAnalysisData } from './LogAnalysis.utils'
 import { LogAnalysisRow } from './components/LogAnalysisRow/LogAnalysisRow'
 import styles from './LogAnalysis.module.scss'
 
@@ -98,6 +99,39 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logsLoading, logAnalysisData.length, selectedLog])
 
+  const renderLogsRadarChart = (): JSX.Element => {
+    if (
+      !logsError &&
+      !logsLoading &&
+      !getCanRenderLogsRadarChart(data as RestResponseLogAnalysisRadarChartListWithCountDTO)
+    ) {
+      return (
+        <Container
+          data-testid="newBaselineEventMessage"
+          padding="medium"
+          margin={{ right: 'medium' }}
+          background={Color.PRIMARY_1}
+        >
+          <Text color={Color.BLACK}>{getString('cv.logsNewBaselineEventMessage')}</Text>
+        </Container>
+      )
+    }
+
+    return (
+      <LogAnalysisRadarChart
+        clusterChartLoading={clusterChartLoading}
+        clusterChartData={clusterChartData}
+        handleAngleChange={handleAngleChange}
+        filteredAngle={filteredAngle}
+        onRadarPointClick={handleLogSelection}
+        clusterChartError={clusterChartError}
+        refetchClusterAnalysis={refetchClusterAnalysis}
+        logsLoading={logsLoading}
+        showBaseline={!isServicePage}
+      />
+    )
+  }
+
   return (
     <Container className={styles.logsTab}>
       <Container className={styles.clusterChart}>
@@ -108,17 +142,8 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
             eventsCount={data?.resource?.eventCounts}
           />
         )}
-        <LogAnalysisRadarChart
-          clusterChartLoading={clusterChartLoading}
-          clusterChartData={clusterChartData}
-          handleAngleChange={handleAngleChange}
-          filteredAngle={filteredAngle}
-          onRadarPointClick={handleLogSelection}
-          clusterChartError={clusterChartError}
-          refetchClusterAnalysis={refetchClusterAnalysis}
-          logsLoading={logsLoading}
-          showBaseline={!isServicePage}
-        />
+
+        {renderLogsRadarChart()}
       </Container>
       <Container className={styles.tableContent}>{renderLogsData()}</Container>
     </Container>

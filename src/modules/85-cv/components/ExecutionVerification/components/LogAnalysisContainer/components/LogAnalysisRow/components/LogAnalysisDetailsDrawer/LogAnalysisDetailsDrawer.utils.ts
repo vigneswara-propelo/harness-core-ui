@@ -3,11 +3,11 @@ import type { SeriesColumnOptions } from 'highcharts'
 import moment from 'moment'
 import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { LogData } from 'services/cv'
 import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { LogAnalysisMessageFrequency } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import type { UseStringsReturn } from 'framework/strings'
-import { legendKeyMappingSingular, LogEvents } from './LogAnalysisDetailsDrawer.constants'
+import { legendKeyMappingSingular } from './LogAnalysisDetailsDrawer.constants'
 
 const getChartCategories = (data?: SeriesColumnOptions[]): string[] => {
   if (data && isEmpty(data?.[0]?.data)) {
@@ -28,7 +28,7 @@ const getTooltipHTML = ({
   chartDetails: LogAnalysisMessageFrequency
   hoveredBarIndex: number
   chartIndex: number
-  eventType: LogData['tag']
+  eventType: LogEvents
   isBaseline?: boolean
   getString: UseStringsReturn['getString']
 }): string => {
@@ -59,7 +59,7 @@ export function getChartsConfigForDrawer({
 }: {
   getString: UseStringsReturn['getString']
   chartDetails: LogAnalysisMessageFrequency
-  eventType: LogData['tag']
+  eventType: LogEvents
 }): Highcharts.Options {
   return {
     chart: {
@@ -106,9 +106,10 @@ export function getChartsConfigForDrawer({
         const hoveredBarIndex = this?.points?.[0]?.point.index
 
         const isUnknownEvent = eventType === LogEvents.UNKNOWN
+        const isNewEvent = eventType === LogEvents.NO_BASELINE_AVAILABLE
         const chartDataIndexForTestData = isUnknownEvent ? 0 : 1
 
-        const tooltipHeight = isUnknownEvent ? 44 : 80
+        const tooltipHeight = isUnknownEvent || isNewEvent ? 44 : 80
 
         const testTooltipData = getTooltipHTML({
           chartDetails,
@@ -120,7 +121,7 @@ export function getChartsConfigForDrawer({
 
         let baselineTooltipData = ''
 
-        if (!isUnknownEvent) {
+        if (!isUnknownEvent && !isNewEvent) {
           baselineTooltipData = getTooltipHTML({
             chartDetails,
             chartIndex: 0,

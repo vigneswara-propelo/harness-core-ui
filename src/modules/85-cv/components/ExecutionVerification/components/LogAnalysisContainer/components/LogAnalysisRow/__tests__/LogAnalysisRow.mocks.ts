@@ -7,6 +7,7 @@
 
 import { RiskValues } from '@cv/utils/CommonUtils'
 import type { LogAnalysisMessageFrequency, LogAnalysisRowData } from '../../../LogAnalysis.types'
+import { LogEvents } from '../../../LogAnalysis.types'
 
 const messageFrequency: LogAnalysisMessageFrequency[] = [
   {
@@ -440,7 +441,7 @@ export const jiraTicketDetailsMock = {
 }
 
 export const rowDataMockForJira: LogAnalysisRowData = {
-  clusterType: 'KNOWN',
+  clusterType: LogEvents.KNOWN,
   count: 10,
   message: 'Some message',
   messageFrequency: [],

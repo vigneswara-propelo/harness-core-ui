@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import { LogEvents } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.types'
 import { TestWrapper } from '@common/utils/testUtils'
 import LogsDetailLegendForChart, { LogsDetailLegendForChartPropsType } from '../LogsDetailLegendForChart'
 
@@ -12,13 +13,15 @@ describe('LogsDetailLegendForChart', () => {
     )
   }
   test('LogsDetailLegendForChart should return null if no clusterType is passed as prop', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const { container } = render(<WrapperComponent clusterType={undefined} />)
 
     expect(container).toBeEmptyDOMElement()
   })
 
   test('LogsDetailLegendForChart should return baseline legend if it is not an UNKNWON event', async () => {
-    render(<WrapperComponent clusterType={'KNOWN'} />)
+    render(<WrapperComponent clusterType={LogEvents.KNOWN} />)
 
     const baselineDOMElement = await screen.findByText(/cv.baselineEvents/)
     const knownDOMElement = await screen.findByText(/cv.knownEvents/)
@@ -28,7 +31,7 @@ describe('LogsDetailLegendForChart', () => {
   })
 
   test('LogsDetailLegendForChart should not return baseline legend if it is an UNKNWON event', async () => {
-    render(<WrapperComponent clusterType={'UNKNOWN'} />)
+    render(<WrapperComponent clusterType={LogEvents.UNKNOWN} />)
 
     const baselineDOMElement = await screen.queryByText(/cv.baselineEvents/)
     const unknownDOMElement = await screen.findByText(/cv.unknownEvents/)
