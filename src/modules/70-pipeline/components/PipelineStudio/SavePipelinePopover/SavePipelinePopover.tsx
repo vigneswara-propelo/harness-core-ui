@@ -36,7 +36,6 @@ import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialo
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { PipelineActions } from '@common/constants/TrackingConstants'
-import { validateCICodebaseConfiguration } from '@pipeline/components/PipelineStudio/StepUtil'
 import { useQueryParams } from '@common/hooks'
 import type {
   GitQueryParams,
@@ -64,6 +63,7 @@ import { hasChainedPipelineStage } from '@pipeline/utils/stageHelpers'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { AccessControlCheckError } from 'services/cd-ng'
+import { validateCICodebaseConfiguration } from '../StepUtil'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 import css from './SavePipelinePopover.module.scss'
 

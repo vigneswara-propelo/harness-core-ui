@@ -178,8 +178,8 @@ export const EditStageView: React.FC<EditStageView> = ({
         ...(!codebase &&
           isContextTypeNotStageTemplate(contextType) &&
           values.cloneCodebase && {
-            connectorRef: Yup.mixed().required(getString('fieldRequired', { field: getString('connector') })),
-            ...(connectionType === 'Account' && {
+            connectorRef: Yup.mixed().nullable(),
+            ...((connectionType === 'Account' || !values.connectorRef) && {
               repoName: Yup.string()
                 .required(getString('fieldRequired', { field: repositoryNameLabel }))
                 .matches(blankspacesRegex, getString('common.validation.blankRepositoryName'))
@@ -203,7 +203,7 @@ export const EditStageView: React.FC<EditStageView> = ({
     if (data?.stage) {
       // TODO: Add Codebase verification
       let pipelineData: PipelineInfoConfig | undefined = undefined
-      if (values.cloneCodebase && values.connectorRef) {
+      if (values.cloneCodebase) {
         pipelineData = produce<PipelineInfoConfig>(pipeline, draft => {
           set(draft, 'properties.ci.codebase', {
             connectorRef: typeof values.connectorRef === 'string' ? values.connectorRef : values.connectorRef?.value,

@@ -497,8 +497,8 @@ export function RightBar(): JSX.Element {
             enableReinitialize
             initialValues={codebaseInitialValues}
             validationSchema={Yup.object().shape({
-              connectorRef: Yup.mixed().required(getString('fieldRequired', { field: getString('connector') })),
-              ...(connectionType === ConnectionType.Account &&
+              connectorRef: Yup.mixed().nullable(),
+              ...((connectionType === ConnectionType.Account || !codebase?.connectorRef) &&
                 !codebaseRuntimeInputs.repoName && {
                   repoName: Yup.string()
                     .required(getString('common.validation.repositoryName'))

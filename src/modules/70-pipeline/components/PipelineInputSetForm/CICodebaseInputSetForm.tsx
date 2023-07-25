@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { debounce, get, isEmpty, isUndefined, set, omit } from 'lodash-es'
+import { debounce, get, isEmpty, set, omit } from 'lodash-es'
 import produce from 'immer'
 import {
   FormInput,
@@ -377,28 +377,21 @@ function CICodebaseInputSetFormInternal({
       viewType === StepViewType.DeploymentForm &&
       codeBaseType === CodebaseTypes.BRANCH &&
       !get(formik?.values, codeBaseInputFieldFormName.branch) &&
-      !isDefaultBranchSet &&
-      !isUndefined(codebaseConnector)
+      !isDefaultBranchSet
     )
-  }, [
-    viewType,
-    codeBaseType,
-    get(formik?.values, codeBaseInputFieldFormName.branch),
-    isDefaultBranchSet,
-    codebaseConnector
-  ])
+  }, [viewType, codeBaseType, get(formik?.values, codeBaseInputFieldFormName.branch), isDefaultBranchSet])
 
   const fetchBranchesForRepo = useCallback(
     (repoName: string) => {
       if (shouldAllowRepoFetch) {
         // Default branch needs to be set only if not specified by the user already for "branch" type build, only on Run Pipeline form
-        if (!get(codebaseConnector, 'spec.apiAccess')) {
+        if (codebaseConnector && !get(codebaseConnector, 'spec.apiAccess')) {
           return
         }
         const connectorReference =
           get(originalPipeline, 'properties.ci.codebase.connectorRef', '') === RUNTIME_INPUT_VALUE
             ? codebaseConnector && getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier)
-            : get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
+            : get(originalPipeline, 'properties.ci.codebase.connectorRef', '') ?? null
 
         if (repoName) {
           try {
@@ -432,7 +425,7 @@ function CICodebaseInputSetFormInternal({
         }
       }
     },
-    [shouldAllowRepoFetch, originalPipeline]
+    [shouldAllowRepoFetch, originalPipeline, codebaseConnector]
   )
 
   useEffect(() => {
@@ -446,8 +439,11 @@ function CICodebaseInputSetFormInternal({
       ) {
         fetchBranchesForRepo(get(originalPipeline, 'properties.ci.codebase.repoName', ''))
       }
+    } else if (codeBaseType === CodebaseTypes.BRANCH) {
+      // fetch branches without connector for gitness
+      fetchBranchesForRepo(get(originalPipeline, 'properties.ci.codebase.repoName', ''))
     }
-  }, [codebaseConnector, originalPipeline])
+  }, [codebaseConnector, originalPipeline, codeBaseType])
 
   const codeBaseInputDefaultValue = {
     depth: 50,
@@ -812,8 +808,7 @@ function CICodebaseInputSetFormInternal({
                           )}
                       </>
                     ))}
-                  {((!isConnectorRuntimeInput && buildIncludesRuntimeInput) ||
-                    (isConnectorRuntimeInput && get(formik?.values, codeBaseInputFieldFormName.connectorRef))) && (
+                  {buildIncludesRuntimeInput && (
                     <>
                       <Text
                         font={{ variation: FontVariation.FORM_LABEL }}

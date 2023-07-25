@@ -758,8 +758,6 @@ export const validateCICodebase = ({
   selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   const errors = {}
-  const requiresConnectorRuntimeInputValue =
-    template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
 
   let pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
   if (selectedStageData && !selectedStageData.allStagesSelected) {
@@ -772,33 +770,23 @@ export const validateCICodebase = ({
         stage?.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
     )
   }
-  const shouldValidateCICodebase =
-    pipelineHasCloneCodebase &&
-    (!requiresConnectorRuntimeInputValue ||
-      (requiresConnectorRuntimeInputValue && !isEmpty(pipeline?.properties?.ci?.codebase?.connectorRef))) // ci codebase field is hidden until connector is selected
   const shouldValidate = !Object.keys(viewTypeMetadata || {}).includes('isTemplateBuilder')
   const isInputSetForm = viewTypeMetadata?.isInputSet // should not require any values
   const isCodebaseBuildEmpty =
     has(originalPipeline, 'properties') &&
     has(originalPipeline?.properties, 'ci') &&
     isEmpty(get(originalPipeline, 'properties.ci.codebase.build') || get(pipeline, 'properties.ci.codebase.build'))
-  if (shouldValidate && shouldValidateCICodebase && !isInputSetForm && isCodebaseBuildEmpty && getString) {
+  if (shouldValidate && pipelineHasCloneCodebase && !isInputSetForm && isCodebaseBuildEmpty && getString) {
     set(errors, 'properties.ci.codebase', getString('fieldRequired', { field: getString('ciCodebase') }))
   }
 
   if (
-    shouldValidateCICodebase &&
+    pipelineHasCloneCodebase &&
     getMultiTypeFromValue((template as PipelineInfoConfig)?.properties?.ci?.codebase?.build as unknown as string) ===
       MultiTypeInputType.RUNTIME
   ) {
     // connectorRef required to display build type
-    if (
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.type) &&
-      !isInputSetForm &&
-      (!requiresConnectorRuntimeInputValue ||
-        (requiresConnectorRuntimeInputValue && pipeline?.properties?.ci?.codebase?.connectorRef)) &&
-      pipelineHasCloneCodebase
-    ) {
+    if (isEmpty(pipeline?.properties?.ci?.codebase?.build?.type) && !isInputSetForm && pipelineHasCloneCodebase) {
       set(
         errors,
         'properties.ci.codebase.build.type',
@@ -851,14 +839,6 @@ export const validateCICodebase = ({
   }
 
   if (shouldValidate) {
-    if (requiresConnectorRuntimeInputValue && pipelineHasCloneCodebase && !isInputSetForm) {
-      set(
-        errors,
-        'properties.ci.codebase.connectorRef',
-        getString?.('fieldRequired', { field: getString?.('connector') })
-      )
-    }
-
     if (
       template?.properties?.ci?.codebase?.repoName &&
       pipeline?.properties?.ci?.codebase?.repoName?.trim() === '' &&
@@ -1168,9 +1148,9 @@ export const validatePipeline = ({
 }
 
 export const validateCICodebaseConfiguration = ({ pipeline, getString }: Partial<ValidatePipelineProps>): string => {
-  const shouldValidateCICodebase = isCloneCodebaseEnabledAtLeastOneStage(pipeline)
+  const pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(pipeline)
   if (
-    shouldValidateCICodebase &&
+    pipelineHasCloneCodebase &&
     !has(pipeline, 'properties') &&
     !has(pipeline?.properties, 'ci') &&
     isEmpty(get(pipeline, 'properties.ci.codebase.build')) &&
