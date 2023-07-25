@@ -271,7 +271,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       ],
       logsTable: {
         enabled: true,
-        showExactJsonPath: true
+        selectOnlyValue: true
       },
       assign: {
         enabled: false,
