@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, map, get, defaultTo } from 'lodash-es'
+import { isEmpty, map, get, defaultTo, isArray } from 'lodash-es'
 import cx from 'classnames'
 import {
   FormikForm,
@@ -59,8 +59,28 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
   const [awsStatuses, setAwsStates] = useState<MultiSelectOption[]>([])
   const [capabilities, setCapabilities] = useState<MultiSelectOption[]>([])
-  const [selectedCapabilities, setSelectedCapabilities] = useState<MultiSelectOption[]>([])
-  const [selectedStackStatus, setSelectedStackStatus] = useState<MultiSelectOption[]>([])
+
+  let capabilityMap = defaultTo(
+    get(initialValues, 'spec.configuration.capabilities'),
+    get(allValues, 'spec.configuration.capabilities')
+  )
+  capabilityMap = Array.isArray(capabilityMap)
+    ? capabilityMap.map((item: any) => ({ label: item, value: item }))
+    : !isEmpty(capabilityMap) && getMultiTypeFromValue(capabilityMap) !== MultiTypeInputType.FIXED
+    ? capabilityMap
+    : []
+  let selectedStackStatusMap = defaultTo(
+    get(initialValues, 'spec.configuration.skipOnStackStatuses'),
+    get(allValues, 'spec.configuration.skipOnStackStatuses')
+  )
+  selectedStackStatusMap = Array.isArray(selectedStackStatusMap)
+    ? selectedStackStatusMap.map((item: any) => ({ label: item, value: item }))
+    : !isEmpty(selectedStackStatusMap) && getMultiTypeFromValue(selectedStackStatusMap) !== MultiTypeInputType.FIXED
+    ? selectedStackStatusMap
+    : []
+
+  const [selectedCapabilities, setSelectedCapabilities] = useState<MultiSelectOption[]>(capabilityMap)
+  const [selectedStackStatus, setSelectedStackStatus] = useState<MultiSelectOption[]>(selectedStackStatusMap)
   const [awsRef, setAwsRef] = useState(
     defaultTo(get(initialValues, 'spec.configuration.connectorRef'), get(allValues, 'spec.configuration.connectorRef'))
   )
@@ -70,27 +90,40 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
 
   useEffect(() => {
     /* istanbul ignore next */
-    if (selectedCapabilities.length > 0) {
+    if (isArray(selectedCapabilities) && selectedCapabilities.length > 0) {
       formik?.setFieldValue(
         `${path}.spec.configuration.capabilities`,
         map(selectedCapabilities, cap => cap.value)
       )
+    } else if (
+      !isEmpty(selectedCapabilities) &&
+      getMultiTypeFromValue(selectedCapabilities) !== MultiTypeInputType.FIXED
+    ) {
+      formik?.setFieldValue(`${path}.spec.configuration.capabilities`, selectedCapabilities)
+    } else {
+      formik?.setFieldValue(`${path}.spec.configuration.capabilities`, [])
     }
   }, [selectedCapabilities])
 
   useEffect(() => {
     /* istanbul ignore next */
-    if (selectedStackStatus.length > 0) {
+    if (isArray(selectedStackStatus) && selectedStackStatus.length > 0) {
       formik?.setFieldValue(
         `${path}.spec.configuration.skipOnStackStatuses`,
         map(selectedStackStatus, status => status.value)
       )
+    } else if (
+      !isEmpty(selectedStackStatus) &&
+      getMultiTypeFromValue(selectedStackStatus) !== MultiTypeInputType.FIXED
+    ) {
+      formik?.setFieldValue(`${path}.spec.configuration.skipOnStackStatuses`, selectedStackStatus)
+    } else {
+      formik?.setFieldValue(`${path}.spec.configuration.skipOnStackStatuses`, [])
     }
   }, [selectedStackStatus])
 
   const capabilitiesRequired = isRuntime(inputSetData?.template?.spec?.configuration?.capabilities as string)
   const { data: capabilitiesData, refetch: getAwsCapabilities } = useCFCapabilitiesForAws({ lazy: true })
-
   useEffect(() => {
     if (capabilitiesData) {
       const capabilitiesValues = map(capabilitiesData?.data, cap => ({ label: cap, value: cap }))
@@ -358,9 +391,12 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               disabled={readonly}
               multiSelectProps={{
                 items: capabilities,
-                allowCreatingNewItems: false
+                allowCreatingNewItems: false,
+                usePortal: true
               }}
               width={500}
+              allowableTypes={allowableTypes}
+              expressions={expressions}
               value={selectedCapabilities}
               onChange={values => {
                 /* istanbul ignore next */
@@ -415,9 +451,12 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               disabled={readonly}
               multiSelectProps={{
                 items: awsStatuses,
-                allowCreatingNewItems: false
+                allowCreatingNewItems: false,
+                usePortal: true
               }}
               width={500}
+              allowableTypes={allowableTypes}
+              expressions={expressions}
               value={selectedStackStatus}
               onChange={values => {
                 /* istanbul ignore next */

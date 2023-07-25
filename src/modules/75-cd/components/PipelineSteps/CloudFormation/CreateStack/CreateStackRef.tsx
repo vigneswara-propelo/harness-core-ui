@@ -27,7 +27,8 @@ import {
   AllowedTypes
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { map, get, isEmpty, defaultTo, set } from 'lodash-es'
+import { map, get, isEmpty, defaultTo, set, isArray } from 'lodash-es'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -102,6 +103,39 @@ export const CreateStack = (
   })
   const query = useQueryParams()
   const sectionId = (query as any).sectionId || ''
+  const [newInit, setNewInit] = useState<any>(initialValues)
+
+  useEffect(() => {
+    const initValues = produce(initialValues, (draft: any) => {
+      const capabilitiesVal = get(initialValues, 'spec.configuration.capabilities')
+      const skipOnStackStatuses = get(initialValues, 'spec.configuration.skipOnStackStatuses')
+
+      if (
+        !isEmpty(capabilitiesVal) &&
+        getMultiTypeFromValue(capabilitiesVal) === MultiTypeInputType.FIXED &&
+        isArray(capabilitiesVal)
+      ) {
+        set(
+          draft,
+          'spec.configuration.capabilities',
+          capabilitiesVal?.map(i => ({ label: i, value: i }))
+        )
+      }
+
+      if (
+        !isEmpty(skipOnStackStatuses) &&
+        getMultiTypeFromValue(skipOnStackStatuses) === MultiTypeInputType.FIXED &&
+        isArray(skipOnStackStatuses)
+      ) {
+        set(
+          draft,
+          'spec.configuration.skipOnStackStatuses',
+          skipOnStackStatuses?.map(i => ({ label: i, value: i }))
+        )
+      }
+    })
+    setNewInit(initValues)
+  }, [initialValues])
 
   useEffect(() => {
     if (regionData && !regions.length) {
@@ -227,7 +261,7 @@ export const CreateStack = (
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={initialValues}
+      initialValues={newInit}
       formName={`cloudFormationCreateStack-${sectionId}`}
       validate={values => {
         const payload = {

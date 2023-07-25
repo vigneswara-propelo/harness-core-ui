@@ -7,7 +7,7 @@
 
 import React, { forwardRef } from 'react'
 import * as Yup from 'yup'
-import { isEmpty, map, set, unset, isNull, forOwn, get } from 'lodash-es'
+import { isEmpty, map, set, unset, isNull, forOwn, get, isArray } from 'lodash-es'
 import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { yupToFormErrors, FormikErrors } from 'formik'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -187,20 +187,24 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
       )
     }
 
-    if (!isEmpty(data?.spec?.configuration?.skipOnStackStatuses)) {
-      let statuses = data?.spec?.configuration?.skipOnStackStatuses
-      if (getMultiTypeFromValue(statuses) === MultiTypeInputType.FIXED) {
-        statuses = map(statuses, status => status?.value || status)
-      }
-      set(data, 'spec.configuration.skipOnStackStatuses', statuses)
+    const capabilities = get(data, 'spec.configuration.capabilities')
+    let capbilitiesMap = capabilities
+    if (
+      !isEmpty(capabilities) &&
+      getMultiTypeFromValue(capabilities) === MultiTypeInputType.FIXED &&
+      isArray(capabilities)
+    ) {
+      capbilitiesMap = capabilities?.map(i => i?.value)
     }
 
-    if (!isEmpty(data?.spec?.configuration?.capabilities)) {
-      let capabilities = data.spec.configuration.capabilities
-      if (getMultiTypeFromValue(capabilities) === MultiTypeInputType.FIXED) {
-        capabilities = map(capabilities, cap => cap?.value || cap)
-      }
-      set(data, 'spec.configuration.capabilities', capabilities)
+    const skipOnStackStatuses = get(data, 'spec.configuration.skipOnStackStatuses')
+    let statusMap = skipOnStackStatuses
+    if (
+      !isEmpty(skipOnStackStatuses) &&
+      getMultiTypeFromValue(skipOnStackStatuses) === MultiTypeInputType.FIXED &&
+      isArray(skipOnStackStatuses)
+    ) {
+      statusMap = skipOnStackStatuses?.map(i => i?.value)
     }
 
     if (!isEmpty(data.spec.configuration?.parameterOverrides)) {
@@ -233,6 +237,8 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
         ...data.spec,
         configuration: {
           ...data.spec.configuration,
+          capabilities: !isEmpty(capbilitiesMap) ? capbilitiesMap : undefined,
+          skipOnStackStatuses: !isEmpty(statusMap) ? statusMap : undefined,
           connectorRef: awsConnRef,
           templateFile
         }
@@ -243,18 +249,7 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
   /* istanbul ignore next */
   private getInitialValues(data: CreateStackStepInfo): CreateStackData {
     const config = data?.spec?.configuration
-    let capabilities, skipOnStackStatuses, parameters
-    capabilities = config?.capabilities
-    if (!isEmpty(capabilities) && getMultiTypeFromValue(capabilities) === MultiTypeInputType.FIXED) {
-      capabilities = map(data?.spec?.configuration?.capabilities, item => ({ label: item, value: item }))
-      set(data, 'spec.configuration.capabilities', capabilities)
-    }
-
-    skipOnStackStatuses = config?.skipOnStackStatuses
-    if (!isEmpty(skipOnStackStatuses) && getMultiTypeFromValue(skipOnStackStatuses) === MultiTypeInputType.FIXED) {
-      skipOnStackStatuses = map(config?.skipOnStackStatuses, item => ({ label: item, value: item }))
-      set(data, 'spec.configuration.skipOnStackStatuses', skipOnStackStatuses)
-    }
+    let parameters
 
     parameters = config?.parameters
     if (!isEmpty(parameters)) {
