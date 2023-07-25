@@ -566,7 +566,6 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const history = useHistory()
 
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
@@ -645,7 +644,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
 
   const goToServiceDetails = useCallback(
     ({ identifier: serviceId }: ServiceListItem): void => {
-      history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
+      window.open(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }), '_blank')
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [accountId, orgIdentifier, projectIdentifier, module]
