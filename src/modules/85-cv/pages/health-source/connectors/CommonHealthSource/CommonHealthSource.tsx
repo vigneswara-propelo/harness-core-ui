@@ -129,7 +129,8 @@ export default function CommonHealthSource({
                     handleValidateCustomMetricForm({
                       getString,
                       formData: values,
-                      customMetricsConfig: healthSourceConfig.customMetrics
+                      customMetricsConfig: healthSourceConfig.customMetrics,
+                      name: healthSourceConfig?.name
                     })
                   }
                   innerRef={customMetricFormRef as Ref<FormikProps<CommonCustomMetricFormikInterface>>}

@@ -29,6 +29,7 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
     case HealthSourceTypes.AwsPrometheus:
     case HealthSourceTypes.SignalFX:
     case HealthSourceTypes.SplunkSignalFXMetrics:
+    case HealthSourceTypes.AzureMetrics:
       return getString('pipeline.verification.analysisTab.metrics')
     case HealthSourceTypes.StackdriverLog:
     case HealthSourceTypes.DatadogLog:
@@ -36,6 +37,7 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
     case HealthSourceTypes.Elk:
     case HealthSourceTypes.SumologicLogs:
     case HealthSourceTypes.GrafanaLokiLogs:
+    case HealthSourceTypes.AzureLogs:
       return getString('pipeline.verification.analysisTab.logs')
     default:
       return getString('common.repo_provider.customLabel')
@@ -114,6 +116,11 @@ export const getIconBySourceType = (type: string): IconName => {
     case HealthSourceTypes.GrafanaLokiLogs:
     case 'GRAFANA_LOKI_LOGS': {
       return 'service-grafana-loki'
+    }
+    case HealthSourceTypes.Azure:
+    case HealthSourceTypes.AzureLogs:
+    case HealthSourceTypes.AzureMetrics: {
+      return 'microsoft-azure'
     }
     default:
       return 'placeholder'

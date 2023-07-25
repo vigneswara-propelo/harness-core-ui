@@ -140,6 +140,10 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
     case HealthSourceTypes.GrafanaLokiLogs:
       connectorTypeName = HealthSourceTypes.GrafanaLoki
       break
+    case HealthSourceTypes.AzureLogs:
+    case HealthSourceTypes.AzureMetrics:
+      connectorTypeName = Connectors.AZURE
+      break
     default:
       connectorTypeName = name
   }
@@ -305,6 +309,18 @@ export const getFeatureOption = (
       ]
     }
 
+    case Connectors.AZURE:
+      return [
+        {
+          value: HealthSourceProducts[HealthSourceTypes.AzureMetrics].value,
+          label: HealthSourceProducts[HealthSourceTypes.AzureMetrics].label
+        },
+        {
+          value: HealthSourceProducts[HealthSourceTypes.AzureLogs].value,
+          label: HealthSourceProducts[HealthSourceTypes.AzureLogs].label
+        }
+      ]
+
     default:
       return []
   }
@@ -333,6 +349,10 @@ export function getProductBasedOnType(
       return getFeatureOption(Connectors.SignalFX, getString)[0]
     case HealthSourceTypes.GrafanaLokiLogs:
       return getFeatureOption(HealthSourceTypes.GrafanaLoki, getString)[0]
+    case HealthSourceTypes.AzureMetrics:
+      return getFeatureOption(Connectors.AZURE, getString)[0]
+    case HealthSourceTypes.AzureLogs:
+      return getFeatureOption(Connectors.AZURE, getString)[1]
     default:
       return { ...currProduct } as SelectOption
   }
@@ -464,4 +484,30 @@ export function shouldShowProductChangeConfirmation(
     currentProduct?.value !== updatedProduct?.value &&
     isHealthSourceConfigured
   )
+}
+
+export function getDisabledConnectorsList({
+  isSignalFXEnabled,
+  isLokiEnabled,
+  isAzureLogsEnabled
+}: {
+  isSignalFXEnabled: boolean
+  isLokiEnabled: boolean
+  isAzureLogsEnabled: boolean
+}): HealthSourceTypes[] {
+  const disabledConnectorsList = []
+
+  if (!isSignalFXEnabled) {
+    disabledConnectorsList.push(HealthSourceTypes.SignalFX)
+  }
+
+  if (!isLokiEnabled) {
+    disabledConnectorsList.push(HealthSourceTypes.GrafanaLoki)
+  }
+
+  if (!isAzureLogsEnabled) {
+    disabledConnectorsList.push(HealthSourceTypes.Azure)
+  }
+
+  return disabledConnectorsList
 }

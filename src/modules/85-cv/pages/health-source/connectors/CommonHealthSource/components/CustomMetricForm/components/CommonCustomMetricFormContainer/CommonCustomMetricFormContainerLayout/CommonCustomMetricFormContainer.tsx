@@ -180,6 +180,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
           selectOnlyLastKey={healthSourceConfig?.customMetrics?.logsTable?.selectOnlyLastKey}
           showExactJsonPath={healthSourceConfig?.customMetrics?.logsTable?.showExactJsonPath}
+          selectOnlyValue={healthSourceConfig?.customMetrics?.logsTable?.selectOnlyValue}
           healthSourceType={healthSourceType as QueryRecordsRequest['healthSourceType']}
           connectorIdentifier={connectorIdentifier}
           sampleRecords={records}

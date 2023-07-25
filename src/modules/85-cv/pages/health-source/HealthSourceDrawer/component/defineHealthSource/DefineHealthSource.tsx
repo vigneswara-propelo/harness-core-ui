@@ -58,7 +58,8 @@ import {
   canShowDataInfoSelector,
   formValidation,
   getIsConnectorDisabled,
-  shouldShowProductChangeConfirmation
+  shouldShowProductChangeConfirmation,
+  getDisabledConnectorsList
 } from './DefineHealthSource.utils'
 import PrometheusDataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
 import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
@@ -82,10 +83,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   >()
   const { isEdit } = sourceData
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-
   const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
-
   const isLokiEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_GRAFANA_LOKI_LOGS)
+  const isAzureLogsEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_AZURE_LOGS)
 
   const [productInfo, setProductInfo] = useState<{
     updatedProduct: SelectOption | null
@@ -94,18 +94,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const defineHealthSourceFormRef = useRef<FormikProps<any>>()
 
   const disabledByFF: string[] = useMemo(() => {
-    const disabledConnectorsList = []
-
-    if (!isSignalFXEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.SignalFX)
-    }
-
-    if (!isLokiEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.GrafanaLoki)
-    }
-
-    return disabledConnectorsList
-  }, [isSignalFXEnabled, isLokiEnabled])
+    return getDisabledConnectorsList({ isSignalFXEnabled, isLokiEnabled, isAzureLogsEnabled })
+  }, [isSignalFXEnabled, isLokiEnabled, isAzureLogsEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)

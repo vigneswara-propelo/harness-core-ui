@@ -27,11 +27,14 @@ export const getMultiTypeRecordInitialValue = ({
 export function getSelectedPath(
   selectOnlyLastKey: boolean | undefined,
   pathSelected: JsonRawSelectedPathType,
-  showExactJsonPath: boolean | undefined
+  showExactJsonPath: boolean | undefined,
+  selectOnlyValue?: boolean
 ): string {
   let path = ''
   if (selectOnlyLastKey) {
     path = pathSelected.key
+  } else if (selectOnlyValue) {
+    path = pathSelected.value
   } else {
     const pathArray = [...pathSelected.path, pathSelected.key]
     path = showExactJsonPath ? formatJSONPath(pathArray) : wrapJsonKeysWithBrackets(pathArray)

@@ -22,6 +22,14 @@ export const HealthSourceProducts: HealthSourceProductsType = {
     label: 'SumoLogic Cloud Logs',
     value: HealthSourceTypes.SumologicLogs
   },
+  [HealthSourceTypes.AzureMetrics]: {
+    label: 'Azure Cloud Metrics',
+    value: HealthSourceTypes.AzureMetrics
+  },
+  [HealthSourceTypes.AzureLogs]: {
+    label: 'Azure Cloud Logs',
+    value: HealthSourceTypes.AzureLogs
+  },
   [HealthSourceTypes.Elk]: {
     value: ElkProduct.ELK_LOGS,
     label: ElkProduct.ELK_LOGS

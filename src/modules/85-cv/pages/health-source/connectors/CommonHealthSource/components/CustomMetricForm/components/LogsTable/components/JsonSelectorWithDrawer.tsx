@@ -39,6 +39,7 @@ interface JsonSelectorWithDrawerProps {
   setMultiTypeRecord: React.Dispatch<React.SetStateAction<LogFieldsMultiTypeState | null>>
   selectOnlyLastKey?: boolean
   showExactJsonPath?: boolean
+  selectOnlyValue?: boolean
 }
 
 export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProps): JSX.Element | null {
@@ -53,7 +54,8 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
     multiTypeRecord,
     setMultiTypeRecord,
     selectOnlyLastKey,
-    showExactJsonPath
+    showExactJsonPath,
+    selectOnlyValue
   } = props
   const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
   const isDisabled = disableFields
@@ -93,7 +95,7 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
               json={jsonData || {}}
               showSelectButton
               onPathSelect={(pathSelected: JsonRawSelectedPathType) => {
-                const path = getSelectedPath(selectOnlyLastKey, pathSelected, showExactJsonPath)
+                const path = getSelectedPath(selectOnlyLastKey, pathSelected, showExactJsonPath, selectOnlyValue)
                 drawerProps?.formikFieldUpdateFn(path)
                 hideHealthSourceDrawer()
               }}

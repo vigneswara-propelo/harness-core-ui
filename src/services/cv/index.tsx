@@ -270,16 +270,6 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
   usernameRef?: string
 }
 
-export interface AssociatedSLOsDetails {
-  currentSLOPerformance?: number
-  errorBudgetBurnRate?: number
-  identifier?: string
-  name?: string
-  pastSLOPerformance?: number
-  scopedMonitoredServiceIdentifier?: string
-  sloTarget?: number
-}
-
 export interface AwsCodeCommitAuthenticationDTO {
   spec: AwsCodeCommitCredentialsDTO
   type: 'HTTPS'
@@ -918,13 +908,13 @@ export interface ClusterHostFrequencyData {
 }
 
 export interface ClusterSummary {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  clusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   feedback?: LogFeedback
   feedbackApplied?: LogFeedback
   frequencyData?: HostFrequencyData[]
   label?: number
-  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  previousClusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   previousRisk?: number
   previousRiskLevel?:
     | 'NO_DATA'
@@ -1054,7 +1044,6 @@ export interface CustomChangeEvent {
   channelUrl?: string
   description?: string
   externalLinkToEntity?: string
-  msHealthReport?: MSHealthReport
   webhookUrl?: string
 }
 
@@ -1238,6 +1227,9 @@ export interface DataCollectionRequest {
     | 'SUMOLOGIC_LOG_SAMPLE_DATA'
     | 'SIGNALFX_METRIC_SAMPLE_DATA'
     | 'GRAFANA_LOKI_LOG_SAMPLE_DATA'
+    | 'AZURE_LOGS_SAMPLE_DATA'
+    | 'AZURE_METRICS_SAMPLE_DATA'
+    | 'AZURE_SERVICE_INSTANCE_FIELD_DATA'
 }
 
 export interface DataCollectionTaskDTO {
@@ -2027,7 +2019,9 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2074,7 +2068,7 @@ export type ErrorTrackingHealthSourceSpec = HealthSourceSpec & {
 }
 
 export interface EventCount {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  clusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   displayName?: string
 }
@@ -2473,7 +2467,9 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2856,6 +2852,8 @@ export interface HealthSource {
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
     | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
   version?: 'v2'
 }
 
@@ -2884,6 +2882,8 @@ export interface HealthSourceDTO {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2918,6 +2918,8 @@ export interface HealthSourceParamValuesRequest {
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
     | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
 }
 
 export interface HealthSourceParamValuesResponse {
@@ -2955,6 +2957,8 @@ export interface HealthSourceRecordsRequest {
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
     | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -2977,6 +2981,8 @@ export interface HealthSourceRecordsRequest {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   query: string
   startTime: number
 }
@@ -3004,6 +3010,8 @@ export interface HealthSourceRecordsResponse {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   rawRecords?: { [key: string]: any }[]
 }
 
@@ -3044,6 +3052,8 @@ export interface HealthSourceV2 {
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
     | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
 }
 
 export interface HistoricalTrend {
@@ -3420,7 +3430,7 @@ export interface LogAnalysisCluster {
 }
 
 export interface LogAnalysisClusterChartDTO {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  clusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   hostName?: string
   label?: number
   risk?:
@@ -3437,7 +3447,7 @@ export interface LogAnalysisClusterChartDTO {
 }
 
 export interface LogAnalysisClusterDTO {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  clusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   controlFrequencyData?: number[]
   count?: number
   label?: number
@@ -3476,7 +3486,7 @@ export interface LogAnalysisRadarChartClusterDTO {
   angle?: number
   baseline?: LogAnalysisRadarChartClusterDTO
   clusterId?: string
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  clusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   hasControlData?: boolean
   label?: number
   message?: string
@@ -3495,14 +3505,14 @@ export interface LogAnalysisRadarChartListDTO {
   averageControlFrequencyData?: TimestampFrequencyCount[]
   baseline?: LogAnalysisRadarChartListDTO
   clusterId?: string
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  clusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   feedback?: LogFeedback
   feedbackApplied?: LogFeedback
   hasControlData?: boolean
   label?: number
   message?: string
-  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE'
+  previousClusterType?: 'NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   previousRisk?:
     | 'NO_DATA'
     | 'NO_ANALYSIS'
@@ -3642,13 +3652,6 @@ export interface MSDropdownResponse {
   serviceRef?: string
 }
 
-export interface MSHealthReport {
-  associatedSLOsDetails?: AssociatedSLOsDetails[]
-  changeSummary?: ChangeSummaryDTO
-  currentHealthScore?: number
-  internalLinkToEntity?: string
-}
-
 export interface MessageFrequency {
   count?: number
   host?: string
@@ -3743,6 +3746,8 @@ export interface MetricPack {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -3776,6 +3781,8 @@ export interface MetricPackDTO {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -4650,6 +4657,9 @@ export interface QueryDefinition {
 }
 
 export interface QueryParamsDTO {
+  aggregationType?: 'average' | 'maximum' | 'minimum' | 'total' | 'count'
+  healthSourceMetricName?: string
+  healthSourceMetricNamespace?: string
   index?: string
   messageIdentifier?: string
   serviceInstanceField?: string
@@ -4683,6 +4693,8 @@ export interface QueryRecordsRequest {
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
     | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -4705,6 +4717,8 @@ export interface QueryRecordsRequest {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   query: string
   startTime: number
 }
@@ -5329,7 +5343,9 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -7015,6 +7031,8 @@ export interface TimeSeriesMetricDataDTO {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   deeplinkURL?: string
   environmentIdentifier?: string
   groupName?: string
@@ -7042,6 +7060,8 @@ export interface TimeSeriesMetricDataDTO {
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
     | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
   monitoredServiceIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -7149,6 +7169,8 @@ export interface TimeSeriesThreshold {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -7196,6 +7218,8 @@ export interface TimeSeriesThresholdDTO {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -7275,6 +7299,8 @@ export interface TransactionMetricInfo {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -13096,6 +13122,8 @@ export interface GetMetricPacksQueryParams {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -13168,6 +13196,8 @@ export interface SaveMetricPacksQueryParams {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -15859,6 +15889,8 @@ export interface GetLabelNamesQueryParams {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
 }
 
 export type GetLabelNamesProps = Omit<
@@ -15936,6 +15968,8 @@ export interface GetLabeValuesQueryParams {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
 }
 
 export type GetLabeValuesProps = Omit<
@@ -16013,6 +16047,8 @@ export interface GetMetricNamesQueryParams {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
 }
 
 export type GetMetricNamesProps = Omit<
@@ -16090,6 +16126,8 @@ export interface GetSampleDataQueryParams {
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
     | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
 }
 
 export type GetSampleDataProps = Omit<
@@ -18838,7 +18876,7 @@ export interface GetVerifyStepDeploymentLogAnalysisResultV2QueryParams {
   label?: number
   filter?: string
   healthSources?: string[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE')[]
+  clusterTypes?: ('NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
   hostName?: string
   minAngle?: number
   maxAngle?: number
@@ -18937,7 +18975,7 @@ export interface GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams
   accountId: string
   filter?: string
   healthSources?: string[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE')[]
+  clusterTypes?: ('NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
   hostName?: string
   minAngle?: number
   maxAngle?: number
@@ -19039,7 +19077,7 @@ export interface GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams {
   accountId: string
   filter?: string
   healthSources?: string[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT' | 'NO_BASELINE_AVAILABLE')[]
+  clusterTypes?: ('NO_BASELINE_AVAILABLE' | 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
   hostName?: string
   minAngle?: number
   maxAngle?: number

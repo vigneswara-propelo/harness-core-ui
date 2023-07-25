@@ -61,6 +61,10 @@ export const HEALTHSOURCE_LIST = [
   {
     name: HealthSourceTypes.GrafanaLoki,
     icon: getConnectorIconByType(HealthSourceTypes.GrafanaLoki)
+  },
+  {
+    name: HealthSourceTypes.Azure,
+    icon: getConnectorIconByType(Connectors.AZURE)
   }
 ]
 

@@ -36,6 +36,7 @@ interface CommonHealthSourceLogsTable {
   sampleRecords: Record<string, any>[]
   selectOnlyLastKey?: boolean
   showExactJsonPath?: boolean
+  selectOnlyValue?: boolean
 }
 
 export default function LogsTableContainer(props: CommonHealthSourceLogsTable): JSX.Element {
@@ -48,7 +49,8 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
     disableLogFields,
     isRecordsLoading,
     selectOnlyLastKey,
-    showExactJsonPath
+    showExactJsonPath,
+    selectOnlyValue
   } = props
   const { values, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { query } = values
@@ -131,6 +133,7 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
           multiTypeRecord={multiTypeRecord}
           setMultiTypeRecord={setMultiTypeRecord}
           selectOnlyLastKey={selectOnlyLastKey}
+          selectOnlyValue={selectOnlyValue}
           showExactJsonPath={showExactJsonPath}
         />
       </Container>

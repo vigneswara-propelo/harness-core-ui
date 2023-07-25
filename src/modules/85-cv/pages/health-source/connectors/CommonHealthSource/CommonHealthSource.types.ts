@@ -46,6 +46,7 @@ export interface AssignSectionType {
 }
 
 export interface HealthSourceConfig {
+  name?: string
   addQuery: {
     enableDefaultGroupName?: boolean
     label: string
@@ -66,6 +67,7 @@ export interface HealthSourceConfig {
       enabled: boolean
       showExactJsonPath?: boolean
       selectOnlyLastKey?: boolean
+      selectOnlyValue?: boolean
     }
     assign?: AssignSectionType
   }

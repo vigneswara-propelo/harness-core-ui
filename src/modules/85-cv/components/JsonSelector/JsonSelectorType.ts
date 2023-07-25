@@ -1,1 +1,1 @@
-export type JsonRawSelectedPathType = { key: string; path: Array<string> }
+export type JsonRawSelectedPathType = { key: string; value: string; path: Array<string> }

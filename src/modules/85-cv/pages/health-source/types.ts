@@ -49,7 +49,10 @@ export enum HealthSourceTypes {
   SignalFX = 'Splunk Observability [SignalFX]',
   SplunkSignalFXMetrics = 'SplunkSignalFXMetrics',
   GrafanaLoki = 'GrafanaLoki',
-  GrafanaLokiLogs = 'GrafanaLokiLogs'
+  GrafanaLokiLogs = 'GrafanaLokiLogs',
+  Azure = 'Azure',
+  AzureLogs = 'AzureLogs',
+  AzureMetrics = 'AzureMetrics'
 }
 
 export type CommonNonCustomMetricFieldsType = {

@@ -228,5 +228,64 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     metricThresholds: {
       enabled: true
     }
+  },
+  [HealthSourceTypes.AzureLogs]: {
+    name: HealthSourceTypes.AzureLogs,
+    addQuery: {
+      label: 'Query',
+      enableDefaultGroupName: true
+    },
+    customMetrics: {
+      enabled: true,
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics',
+        queryField: {
+          type: FIELD_ENUM.TEXT_INPUT,
+          label: 'Resource ID / Workspace Id',
+          identifier: CustomMetricFormFieldNames.INDEX,
+          placeholder: 'Please provide Resource ID/Workspace Id ',
+          isTemplateSupportEnabled: true,
+          allowCreatingNewItems: true
+        }
+      },
+      fieldMappings: [
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Timestamp Identifier',
+          identifier: CustomMetricFormFieldNames.TIMESTAMP_IDENTIFIER,
+          isTemplateSupportEnabled: true
+        },
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Service Instance Identifier',
+          identifier: CustomMetricFormFieldNames.SERVICE_INSTANCE,
+          isTemplateSupportEnabled: true
+        },
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Message Identifier',
+          identifier: CustomMetricFormFieldNames.MESSAGE_IDENTIFIER,
+          isTemplateSupportEnabled: true
+        }
+      ],
+      logsTable: {
+        enabled: true,
+        selectOnlyValue: true
+      },
+      assign: {
+        enabled: false,
+        defaultServiceInstance: ''
+      }
+    },
+    sideNav: {
+      shouldBeAbleToDeleteLastMetric: false
+    },
+    metricPacks: {
+      enabled: false
+    },
+    metricThresholds: {
+      enabled: false
+    }
   }
 }

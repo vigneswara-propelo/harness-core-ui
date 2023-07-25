@@ -247,15 +247,18 @@ const validateLogFields = ({
 export const handleValidateCustomMetricForm = ({
   formData,
   getString,
-  customMetricsConfig
+  customMetricsConfig,
+  name
 }: {
   formData: CommonCustomMetricFormikInterface
   getString: UseStringsReturn['getString']
   customMetricsConfig: HealthSourceConfig['customMetrics']
+  name?: string
 }): FormikErrors<CommonCustomMetricFormikInterface> => {
   const isAssignComponentEnabled = customMetricsConfig?.assign?.enabled
   const isLogsTableEnabled = customMetricsConfig?.logsTable?.enabled
   const queryFieldIdentifier = customMetricsConfig?.queryAndRecords?.queryField?.identifier
+
   let errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
   const { query = '', recordCount } = formData
 
@@ -273,7 +276,7 @@ export const handleValidateCustomMetricForm = ({
     set(
       errors,
       queryFieldIdentifier,
-      getString('fieldRequired', { field: getFieldName(queryFieldIdentifier, getString) })
+      getString('fieldRequired', { field: getFieldName(queryFieldIdentifier, getString, name) })
     )
   }
 
@@ -613,8 +616,12 @@ export function getCurrentQueryData(
 
 export function getFieldName(
   fieldIdentifier: keyof CommonCustomMetricFormikInterface,
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  name?: string
 ): string {
+  if (name === HealthSourceTypes.AzureLogs && fieldIdentifier === CustomMetricFormFieldNames.INDEX) {
+    return getString('connectors.serviceNow.resourceID')
+  }
   switch (fieldIdentifier) {
     case CustomMetricFormFieldNames.QUERY:
       return getString('cv.query')

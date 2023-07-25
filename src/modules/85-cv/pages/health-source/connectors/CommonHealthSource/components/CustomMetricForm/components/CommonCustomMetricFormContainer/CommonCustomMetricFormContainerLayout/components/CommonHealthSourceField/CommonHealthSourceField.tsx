@@ -117,6 +117,32 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
             )}
           </>
         )
+      case FIELD_ENUM.TEXT_INPUT:
+        return (
+          <>
+            {shouldShowTemplatisedComponent ? (
+              <FormInput.MultiTextInput
+                label={label}
+                name={identifier}
+                data-testid={identifier}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes: isConnectorRuntimeOrExpression
+                    ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                    : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                }}
+              />
+            ) : (
+              <FormInput.Text
+                label={label}
+                name={identifier}
+                disabled={loading}
+                placeholder={loading ? getString('loading') : placeholder}
+                data-testid={identifier}
+              />
+            )}
+          </>
+        )
       default:
         return <></>
     }
