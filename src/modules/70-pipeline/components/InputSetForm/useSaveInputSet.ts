@@ -29,7 +29,6 @@ import { useQueryParams } from '@common/hooks'
 import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { clearNullUndefined } from '@pipeline/utils/inputSetUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 interface GetUpdatedGitDetailsReturnType extends EntityGitDetails {
@@ -131,7 +130,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         )
         if (isEdit) {
           if (inputSetObj.identifier) {
-            response = await updateInputSet(yamlStringify({ inputSet: clearNullUndefined(inputSetObj) }), {
+            response = await updateInputSet(yamlStringify({ inputSet: inputSetObj }), {
               pathParams: {
                 inputSetIdentifier: defaultTo(inputSetObj.identifier, '')
               },
@@ -154,7 +153,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
             throw new Error(getString('common.validation.identifierIsRequired'))
           }
         } else {
-          response = await createInputSet(yamlStringify({ inputSet: clearNullUndefined(inputSetObj) }), {
+          response = await createInputSet(yamlStringify({ inputSet: inputSetObj }), {
             queryParams: {
               accountIdentifier: accountId,
               orgIdentifier,

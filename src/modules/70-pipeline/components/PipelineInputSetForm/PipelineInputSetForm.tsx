@@ -584,17 +584,21 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
     }
   }, [props?.template])
 
+  function getAllowableTypes(): AllowedTypes {
+    if (isRunPipelineForm) {
+      if (NG_EXECUTION_INPUT) {
+        return [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
+      } else {
+        return [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+      }
+    } else {
+      return [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+    }
+  }
+
   return (
     <ConfigureOptionsContextProvider disableConfigureOptions={!!disableConfigureOptions}>
-      <PipelineInputSetFormInternal
-        {...props}
-        template={template}
-        allowableTypes={
-          NG_EXECUTION_INPUT
-            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
-            : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-        }
-      />
+      <PipelineInputSetFormInternal {...props} template={template} allowableTypes={getAllowableTypes()} />
     </ConfigureOptionsContextProvider>
   )
 }
