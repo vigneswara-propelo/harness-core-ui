@@ -17,6 +17,7 @@ import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestW
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import {
   getBuildPayload,
+  isECSTypeManifest,
   isGitTypeManifestStore,
   ManifestStoreMap,
   ManifestToConnectorMap
@@ -40,7 +41,8 @@ import type {
   TASManifestLastStepPrevStepData,
   TASWithHarnessStoreManifestLastStepPrevStepData,
   HelmRepoOverrideManifestLastStepPrevStepData,
-  ManifestStores
+  ManifestStores,
+  ECSWithS3ManifestLastStepPrevStepData
 } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import {
   getConnectorPath,
@@ -71,6 +73,8 @@ import type { EnvironmentPathProps, GitQueryParams, ProjectPathProps } from '@co
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
+import { ECSWithS3 } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/ECSWithS3'
+
 import {
   OverrideManifestTypes,
   OverrideManifestStores,
@@ -266,7 +270,6 @@ export default function useManifestOverride({
     const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
     let manifestDetailStep = null
     const isGitTypeStores = isGitTypeManifestStore(manifestStore as OverrideManifestStoresTypes)
-
     if (isManifestEditMode && fetchingConnector) {
       manifestDetailStep = <PageSpinner />
     } else {
@@ -302,7 +305,11 @@ export default function useManifestOverride({
           OverrideManifests.OpenshiftParam,
           OverrideManifests.KustomizePatches,
           OverrideManifests.TasVars,
-          OverrideManifests.TasAutoScaler
+          OverrideManifests.TasAutoScaler,
+          OverrideManifests.EcsScalableTargetDefinition,
+          OverrideManifests.EcsTaskDefinition,
+          OverrideManifests.EcsServiceDefinition,
+          OverrideManifests.EcsScalingPolicyDefinition
         ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.Harness:
           manifestDetailStep = (
             <HarnessFileStore
@@ -316,7 +323,11 @@ export default function useManifestOverride({
           OverrideManifests.OpenshiftParam,
           OverrideManifests.TasManifest,
           OverrideManifests.TasVars,
-          OverrideManifests.TasAutoScaler
+          OverrideManifests.TasAutoScaler,
+          OverrideManifests.EcsScalableTargetDefinition,
+          OverrideManifests.EcsTaskDefinition,
+          OverrideManifests.EcsServiceDefinition,
+          OverrideManifests.EcsScalingPolicyDefinition
         ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.CustomRemote:
           manifestDetailStep = (
             <CustomRemoteManifest
@@ -358,6 +369,14 @@ export default function useManifestOverride({
             <HelmRepoOverrideManifest
               {...lastStepProps()}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HelmRepoOverrideManifestLastStepPrevStepData)}
+            />
+          )
+          break
+        case isECSTypeManifest(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.S3:
+          manifestDetailStep = (
+            <ECSWithS3
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as ECSWithS3ManifestLastStepPrevStepData)}
             />
           )
           break
