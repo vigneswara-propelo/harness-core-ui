@@ -97,21 +97,11 @@ const RancherInfrastructureSpecEditable: React.FC<RancherInfrastructureSpecEdita
   }>()
   const [clusterOptions, setClusterOptions] = useState<SelectOption[]>([])
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
+  const [loadingClusterNames, setLoadingClusterNames] = useState<boolean>(false)
+  const [clusterError, setClusterError] = useState({})
   const { getString } = useStrings()
   /* istanbul ignore next */
   const connectorRef = defaultTo(initialValues?.connectorRef, '')
-  const {
-    isLoading: loadingClusterNames,
-    error: clusterError,
-    refetch: clusterNamesRefetch
-  } = useListAccountScopedRancherClustersUsingConnectorRefQuery({
-    pathParams: {
-      project: projectIdentifier,
-      org: orgIdentifier,
-      connector: connectorRef,
-      queryParams: {}
-    }
-  })
 
   useEffect(() => {
     if (
@@ -189,16 +179,29 @@ const RancherInfrastructureSpecEditable: React.FC<RancherInfrastructureSpecEdita
                 clusterOptions={clusterOptions}
                 setClusterOptions={setClusterOptions}
                 fetchClusters={() => {
-                  clusterNamesRefetch().then(res => {
-                    /* istanbul ignore next */
-                    if (res?.data?.content) {
-                      const options = (res.data.content as RancherListResponse)?.clusters?.map((name: string) => ({
+                  setLoadingClusterNames(true)
+                  listAccountScopedRancherClustersUsingConnectorRef({
+                    pathParams: {
+                      org: orgIdentifier,
+                      project: projectIdentifier,
+                      connector: connectorRef
+                    }
+                  })
+                    .then(res => {
+                      /* istanbul ignore next */
+                      const options = (res?.content as RancherListResponse)?.clusters?.map((name: string) => ({
                         label: name,
                         value: name
                       }))
                       setClusterOptions(defaultTo(options, []))
-                    }
-                  })
+                    })
+                    .catch(e => {
+                      setClusterOptions([])
+                      setClusterError(e)
+                    })
+                    .finally(() => {
+                      setLoadingClusterNames(false)
+                    })
                 }}
               />
             </FormikForm>
