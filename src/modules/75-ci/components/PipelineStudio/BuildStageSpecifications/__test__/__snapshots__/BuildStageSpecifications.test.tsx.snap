@@ -320,25 +320,29 @@ exports[`BuildStageSpecifications tests renders correctly 1`] = `
           >
             <div>
               <div
-                style="display: flex; align-items: center;"
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
               >
-                <label
-                  class="bp3-control bp3-switch bp3-disabled StyledProps--font Switch--switch StyledProps--main"
+                <div
+                  style="display: flex; align-items: center;"
                 >
-                  <input
-                    disabled=""
-                    type="checkbox"
-                  />
-                  <span
-                    class="bp3-control-indicator"
-                  />
-                  <span
-                    class="Tooltip--acenter Switch--inlineTooltip"
-                    data-tooltip-id="enableCacheIntelligence"
+                  <label
+                    class="bp3-control bp3-switch bp3-disabled StyledProps--font Switch--switch StyledProps--main"
                   >
-                    ci.cacheIntelligence.enable
-                  </span>
-                </label>
+                    <input
+                      disabled=""
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <span
+                      class="Tooltip--acenter Switch--inlineTooltip"
+                      data-tooltip-id="enableCacheIntelligence"
+                    >
+                      ci.cacheIntelligence.enable
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
           </form>

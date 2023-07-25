@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent } from '@testing-library/react'
+import { render, act, fireEvent, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import BuildStageSpecifications from '../BuildStageSpecifications'
@@ -100,11 +100,19 @@ describe('BuildStageSpecifications tests', () => {
     const enableCacheIntelSwitch = switches[1]
     expect(enableCacheIntelSwitch).not.toHaveClass('bp3-disabled')
 
+    /* Paths and key are visible only when Caching is enabled */
+
+    expect(screen.queryByText('pipelineSteps.paths')).not.toBeInTheDocument()
+    expect(screen.queryByText('keyLabel')).not.toBeInTheDocument()
+
     await act(async () => {
       fireEvent.click(enableCacheIntelSwitch)
     })
 
     expect(enableCacheIntelSwitch).not.toHaveAttribute('checked')
+
+    expect(getByText('pipelineSteps.paths')).toBeInTheDocument()
+    expect(getByText('keyLabel')).toBeInTheDocument()
   })
 
   test('Switch infrastructure to verify Cache intelligence section behaviour', async () => {

@@ -7,7 +7,8 @@
 
 import React, { useEffect } from 'react'
 import * as yup from 'yup'
-import { Accordion, Card, Formik, FormikForm, Switch, Text, MultiTypeInputType } from '@harness/uicore'
+import { Accordion, Card, Formik, FormikForm, Switch, Text, MultiTypeInputType, Layout } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { cloneDeep, debounce, defaultTo, isEqual, set, uniqBy } from 'lodash-es'
 import cx from 'classnames'
@@ -31,6 +32,7 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { NameSchema } from '@common/utils/Validation'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
+import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -97,6 +99,8 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
     cloneCodebase: boolean
     sharedPaths: string[]
     cacheIntelligenceEnabled?: boolean
+    cacheIntelligencePaths?: string[]
+    cacheIntelligenceKey?: string
     variables: NGVariable[]
   } => {
     const pipelineData = stage?.stage || null
@@ -117,6 +121,16 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
               id: uuid('', nameSpace()),
               value: _value
             })) || []
+    const cacheIntelligencePaths =
+      typeof spec?.caching?.paths === 'string'
+        ? spec?.caching?.paths
+        : (spec?.caching?.paths as any)
+            ?.filter((path: string) => !!path)
+            ?.map((_value: string) => ({
+              id: uuid('', nameSpace()),
+              value: _value
+            })) || []
+    const cacheIntelligenceKey = spec?.caching?.key
     const variables = pipelineData?.variables || []
 
     return {
@@ -127,6 +141,8 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
       cloneCodebase,
       sharedPaths: sharedPaths as any,
       cacheIntelligenceEnabled: cacheIntelligenceEnabled,
+      cacheIntelligencePaths,
+      cacheIntelligenceKey,
       variables
     }
   }
@@ -140,19 +156,21 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
     return () => unSubscribeForm({ tab: BuildTabs.OVERVIEW, form: formikRef })
   }, [])
 
+  const commonValidationSchema = yup.lazy(value => {
+    if (Array.isArray(value)) {
+      return yup.array().test('valuesShouldBeUnique', getString('validation.uniqueValues'), list => {
+        if (!list) return true
+        return uniqBy(list, 'value').length === list.length
+      })
+    } else {
+      return yup.string()
+    }
+  })
+
   const validationSchema = yup.object().shape({
     ...(isContextTypeNotStageTemplate(contextType) && { name: NameSchema(getString) }),
-    sharedPaths: yup.lazy(value => {
-      if (Array.isArray(value)) {
-        return yup.array().test('valuesShouldBeUnique', getString('validation.uniqueValues'), list => {
-          if (!list) return true
-
-          return uniqBy(list, 'value').length === list.length
-        })
-      } else {
-        return yup.string()
-      }
-    })
+    sharedPaths: commonValidationSchema,
+    cacheIntelligencePaths: commonValidationSchema
   })
 
   const handleValidate = (values: any): void => {
@@ -187,7 +205,21 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
           delete spec.sharedPaths
         }
 
-        spec = set(spec, 'caching.enabled', values.cacheIntelligenceEnabled)
+        set(spec, 'caching.enabled', values.cacheIntelligenceEnabled)
+
+        if (values.cacheIntelligencePaths && values.cacheIntelligencePaths.length > 0) {
+          set(
+            spec,
+            'caching.paths',
+            typeof values.cacheIntelligencePaths === 'string'
+              ? values.cacheIntelligencePaths
+              : values.cacheIntelligencePaths.map((listValue: { id: string; value: string }) => listValue.value)
+          )
+        } else {
+          set(spec, 'caching.paths', [])
+        }
+
+        spec = set(spec, 'caching.key', values.cacheIntelligenceKey)
 
         if (values.variables && values.variables.length > 0) {
           stageData.variables = values.variables
@@ -307,15 +339,77 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                   </div>
                   <Card disabled={isReadonly} className={cx(css.sectionCard)}>
                     <FormikForm className={cx(css.fields, css.contentCard)}>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Switch
-                          checked={formValues.cacheIntelligenceEnabled}
-                          label={getString('ci.cacheIntelligence.enable')}
-                          onChange={e => setFieldValue('cacheIntelligenceEnabled', e.currentTarget.checked)}
-                          disabled={isReadonly || buildInfraType !== CIBuildInfrastructureType.Cloud}
-                          tooltipProps={{ tooltipId: 'enableCacheIntelligence' }}
-                        />
-                      </div>
+                      <Layout.Vertical spacing="medium">
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <Switch
+                            checked={formValues.cacheIntelligenceEnabled}
+                            label={getString('ci.cacheIntelligence.enable')}
+                            onChange={e => setFieldValue('cacheIntelligenceEnabled', e.currentTarget.checked)}
+                            disabled={isReadonly || buildInfraType !== CIBuildInfrastructureType.Cloud}
+                            tooltipProps={{ tooltipId: 'enableCacheIntelligence' }}
+                          />
+                        </div>
+                        {formValues.cacheIntelligenceEnabled ? (
+                          <>
+                            <MultiTypeList
+                              name="cacheIntelligencePaths"
+                              multiTextInputProps={{
+                                expressions,
+                                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                              }}
+                              multiTypeFieldSelectorProps={{
+                                label: (
+                                  <Text
+                                    font={{ variation: FontVariation.FORM_LABEL }}
+                                    tooltipProps={{ dataTooltipId: 'cacheIntelligencePaths' }}
+                                  >
+                                    {getString('pipelineSteps.paths')}
+                                  </Text>
+                                ),
+                                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                              }}
+                              disabled={isReadonly}
+                              configureOptionsProps={{ hideExecutionTimeField: true }}
+                            />
+                            <MultiTypeTextField
+                              name={'cacheIntelligenceKey'}
+                              label={
+                                <Layout.Horizontal
+                                  flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}
+                                  spacing="xsmall"
+                                  padding={{ bottom: 'small' }}
+                                >
+                                  <Text
+                                    font={{ size: 'small', weight: 'semi-bold' }}
+                                    tooltipProps={{ dataTooltipId: 'cacheIntelligenceKey' }}
+                                  >
+                                    {getString('keyLabel')}
+                                  </Text>
+                                  <Text
+                                    color={Color.GREY_400}
+                                    font={{ size: 'small', weight: 'semi-bold' }}
+                                    style={{ textTransform: 'capitalize' }}
+                                  >
+                                    {getString('common.optionalLabel')}
+                                  </Text>
+                                </Layout.Horizontal>
+                              }
+                              multiTextInputProps={{
+                                disabled: isReadonly,
+                                multiTextInputProps: {
+                                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                                },
+                                placeholder: getString('ci.cacheIntelligence.keyNamePlaceholder')
+                              }}
+                              configureOptionsProps={{
+                                hideExecutionTimeField: true
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </Layout.Vertical>
                     </FormikForm>
                   </Card>
                 </>
