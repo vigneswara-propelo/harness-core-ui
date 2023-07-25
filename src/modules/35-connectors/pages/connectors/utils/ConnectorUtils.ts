@@ -2227,7 +2227,7 @@ export const buildPrometheusPayload = (formData: FormData) => {
         url: formData.url,
         accountId: formData.accountId,
         username: formData.username,
-        passwordRef: formData?.passwordRef?.identifier
+        passwordRef: formData?.passwordRef?.referenceString
       }
     }
   }

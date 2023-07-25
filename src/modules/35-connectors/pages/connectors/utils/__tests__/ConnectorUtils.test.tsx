@@ -26,8 +26,10 @@ import {
   getIconByType,
   isSMConnector,
   getCompleteConnectorUrl,
-  GitAuthenticationProtocol
+  GitAuthenticationProtocol,
+  buildPrometheusPayload
 } from '../ConnectorUtils'
+import { expectedPrometheusConnector, prometheusConectorFormData } from './mocks/ConnectorUtils.mock'
 
 jest.mock('services/cd-ng', () => ({
   getSecretV2Promise: jest.fn().mockImplementation(() =>
@@ -1256,5 +1258,11 @@ describe('Connector Utils', () => {
         gitAuthProtocol: GitAuthenticationProtocol.SSH
       })
     ).toBe('ssh://dev.azure.com/harness/test-repo')
+  })
+
+  test('buildPrometheusPayload should return correct payload', () => {
+    const result = buildPrometheusPayload(prometheusConectorFormData)
+
+    expect(result).toEqual(expectedPrometheusConnector)
   })
 })
