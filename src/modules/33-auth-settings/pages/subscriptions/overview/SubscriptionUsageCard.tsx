@@ -25,6 +25,7 @@ interface SubscriptionUsageProps {
   module: ModuleName
   licenseData: ModuleLicenseDTO
   creditsData?: CreditDTO[]
+  creditsUsed: number | undefined
 }
 
 const getModuleUsages = (props: SubscriptionUsageProps): React.ReactElement | undefined => {

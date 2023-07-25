@@ -17,6 +17,9 @@
       "name": "execution-config"
     },
     {
+      "name": "license-usage"
+    },
+    {
       "name": "execution-limit"
     },
     {
@@ -31,6 +34,42 @@
   ],
   "schemes": ["https", "http"],
   "paths": {
+    "/cache/info": {
+      "get": {
+        "tags": ["cache"],
+        "summary": "Get Cache Metadata Information",
+        "description": "",
+        "operationId": "getCacheInfo",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCacheMetadataInfo"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/cache": {
       "delete": {
         "tags": ["cache"],
@@ -73,25 +112,39 @@
         }
       }
     },
-    "/cache/info": {
+    "/ci/credits": {
       "get": {
-        "tags": ["cache"],
-        "summary": "Get Cache Metadata Information",
+        "tags": ["ci"],
+        "summary": "Get build credits",
         "description": "",
-        "operationId": "getCacheInfo",
+        "operationId": "getCredits",
         "parameters": [
           {
             "name": "accountIdentifier",
             "in": "query",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseCacheMetadataInfo"
+              "$ref": "#/definitions/ResponseCICreditsResult"
             }
           },
           "400": {
@@ -187,14 +240,21 @@
           {
             "name": "orgIdentifier",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "projectIdentifier",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["DAY", "WEEK", "MONTH"]
           },
           {
             "name": "startTime",
@@ -394,19 +454,88 @@
         }
       }
     },
-    "/execution-config/get-default-config": {
+    "/execution-config": {
       "get": {
         "tags": ["execution-config"],
-        "summary": "Get default execution config",
+        "summary": "Get execution config",
         "description": "",
-        "operationId": "getDefaultConfig",
+        "operationId": "getExecutionConfig",
         "parameters": [
           {
-            "name": "infra",
+            "name": "accountIdentifier",
             "in": "query",
             "required": true,
-            "type": "string",
-            "enum": ["K8", "VM", "DLITE_VM"]
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListDeprecatedImageInfo"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["execution-config"],
+        "summary": "Delete execution config",
+        "description": "",
+        "operationId": "deleteExecutionConfig",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/execution-config/get-deprecated-config": {
+      "get": {
+        "tags": ["execution-config"],
+        "summary": "Get deprecated config",
+        "description": "",
+        "operationId": "getDeprecatedConfig",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -481,59 +610,26 @@
         }
       }
     },
-    "/execution-config": {
+    "/execution-config/get-default-config": {
       "get": {
         "tags": ["execution-config"],
-        "summary": "Get execution config",
+        "summary": "Get default execution config",
         "description": "",
-        "operationId": "getExecutionConfig",
+        "operationId": "getDefaultConfig",
         "parameters": [
           {
-            "name": "accountIdentifier",
+            "name": "infra",
             "in": "query",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "enum": ["K8", "VM", "DLITE_VM"]
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseListDeprecatedImageInfo"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": ["execution-config"],
-        "summary": "Delete execution config",
-        "description": "",
-        "operationId": "deleteExecutionConfig",
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseBoolean"
+              "$ref": "#/definitions/ResponseCIExecutionImages"
             }
           },
           "400": {
@@ -605,42 +701,6 @@
         }
       }
     },
-    "/execution-config/get-deprecated-config": {
-      "get": {
-        "tags": ["execution-config"],
-        "summary": "Get deprecated config",
-        "description": "",
-        "operationId": "getDeprecatedConfig",
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseCIExecutionImages"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/execution-config/reset-config": {
       "post": {
         "tags": ["execution-config"],
@@ -678,6 +738,218 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/license-usage/csv/download": {
+      "get": {
+        "tags": ["license-usage"],
+        "summary": "Download CSV Active Developers report",
+        "description": "",
+        "operationId": "downloadActiveDevelopersCSVReport",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/license-usage/developers": {
+      "get": {
+        "tags": ["license-usage"],
+        "summary": "List Active Developers",
+        "description": "",
+        "operationId": "listActiveDevelopers",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseSetString"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/license-usage/history": {
+      "post": {
+        "tags": ["license-usage"],
+        "summary": "Get license date usage in CI Module",
+        "description": "",
+        "operationId": "getLicenseHistoryUsage",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "licenseType",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["DEVELOPERS"]
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CIDevelopersFilterParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCILicenseHistoryDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/license-usage": {
+      "post": {
+        "tags": ["license-usage"],
+        "summary": "Get CI Licence Usage",
+        "description": "",
+        "operationId": "ciLicenseUsage",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 30,
+            "maximum": 50,
+            "format": "int32"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CIDevelopersFilterParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePageActiveDevelopersDTO"
             }
           },
           "400": {
@@ -801,6 +1073,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -808,99 +1086,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponsePagePluginMetadataResponse"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck": {
-      "get": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "dummy api for checking CIPipelineModuleInfo",
-        "description": "",
-        "operationId": "dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseCIPipelineModuleInfo"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/dummyApiForSwaggerStageSchemaCheck": {
-      "get": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "dummy api for checking integration stage",
-        "description": "",
-        "operationId": "dummyApiForSwaggerStageSchemaCheck",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseStageElementConfig"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/partial-yaml-schema/dummyApiForSwaggerStepSchemaCheck": {
-      "get": {
-        "tags": ["partial-yaml-schema"],
-        "summary": "dummy api for checking integration stage",
-        "description": "",
-        "operationId": "dummyApiForSwaggerStepSchemaCheck",
-        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseStepElementConfig"
             }
           },
           "400": {
@@ -1210,7 +1395,29 @@
               "AwsSamRollback",
               "SscaOrchestration",
               "AwsLambdaRollback",
-              "GITOPS_SYNC"
+              "GITOPS_SYNC",
+              "BambooBuild",
+              "CdSscaOrchestration",
+              "RouteMapping",
+              "AWSSecurityHub",
+              "CustomIngest",
+              "BackstageEnvironmentVariable",
+              "Fossa",
+              "CodeQL",
+              "Gitleaks",
+              "DeployCloudFunctionGenOne",
+              "RollbackCloudFunctionGenOne",
+              "K8sBlueGreenStageScaleDown",
+              "AwsSamBuild",
+              "Semgrep",
+              "SscaEnforcement",
+              "IdpConnector",
+              "CdSscaEnforcement",
+              "DownloadManifests",
+              "ServerlessAwsLambdaPrepareRollbackV2",
+              "ServerlessAwsLambdaRollbackV2",
+              "Coverity",
+              "ServerlessAwsLambdaDeployV2"
             ]
           },
           {
@@ -1233,6 +1440,99 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseJsonNode"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/partial-yaml-schema/dummyApiForSwaggerStageSchemaCheck": {
+      "get": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "dummy api for checking integration stage",
+        "description": "",
+        "operationId": "dummyApiForSwaggerStageSchemaCheck",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseStageElementConfig"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/partial-yaml-schema/dummyApiForSwaggerStepSchemaCheck": {
+      "get": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "dummy api for checking integration stage",
+        "description": "",
+        "operationId": "dummyApiForSwaggerStepSchemaCheck",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseStepElementConfig"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/partial-yaml-schema/dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck": {
+      "get": {
+        "tags": ["partial-yaml-schema"],
+        "summary": "dummy api for checking CIPipelineModuleInfo",
+        "description": "",
+        "operationId": "dummyApiForSwaggerCIPipelineModuleInfoSchemaCheck",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCIPipelineModuleInfo"
             }
           },
           "400": {
@@ -1386,10 +1686,25 @@
         }
       }
     },
-    "DeleteCacheResponse": {
+    "CacheMetadataInfo": {
       "type": "object",
       "properties": {
-        "deleted": {
+        "used": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "available": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "details": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/CacheMetadataDetail"
@@ -1415,7 +1730,7 @@
         }
       }
     },
-    "ResponseDeleteCacheResponse": {
+    "ResponseCacheMetadataInfo": {
       "type": "object",
       "properties": {
         "status": {
@@ -1423,7 +1738,7 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/DeleteCacheResponse"
+          "$ref": "#/definitions/CacheMetadataInfo"
         },
         "metaData": {
           "type": "object"
@@ -1720,6 +2035,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -1747,6 +2063,7 @@
             "BUCKET_SERVER_ERROR",
             "GIT_SYNC_ERROR",
             "TEMPLATE_EXCEPTION",
+            "TEMPLATE_ALREADY_EXISTS_EXCEPTION",
             "ENTITY_REFERENCE_EXCEPTION",
             "ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION",
             "INVALID_INPUT_SET",
@@ -1797,7 +2114,20 @@
             "ADFS_ERROR",
             "TERRAFORM_CLOUD_ERROR",
             "CLUSTER_CREDENTIALS_NOT_FOUND",
-            "SCM_API_ERROR"
+            "SCM_API_ERROR",
+            "INTERNAL_SERVER_ERROR",
+            "SCM_FORBIDDEN",
+            "AWS_EKS_ERROR",
+            "OPA_POLICY_EVALUATION_ERROR",
+            "USER_MARKED_FAILURE",
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE",
+            "SERVICENOW_REFRESH_TOKEN_ERROR"
           ]
         },
         "message": {
@@ -2179,6 +2509,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -2206,6 +2537,7 @@
             "BUCKET_SERVER_ERROR",
             "GIT_SYNC_ERROR",
             "TEMPLATE_EXCEPTION",
+            "TEMPLATE_ALREADY_EXISTS_EXCEPTION",
             "ENTITY_REFERENCE_EXCEPTION",
             "ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION",
             "INVALID_INPUT_SET",
@@ -2256,7 +2588,20 @@
             "ADFS_ERROR",
             "TERRAFORM_CLOUD_ERROR",
             "CLUSTER_CREDENTIALS_NOT_FOUND",
-            "SCM_API_ERROR"
+            "SCM_API_ERROR",
+            "INTERNAL_SERVER_ERROR",
+            "SCM_FORBIDDEN",
+            "AWS_EKS_ERROR",
+            "OPA_POLICY_EVALUATION_ERROR",
+            "USER_MARKED_FAILURE",
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE",
+            "SERVICENOW_REFRESH_TOKEN_ERROR"
           ]
         },
         "message": {
@@ -2562,6 +2907,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -2589,6 +2935,7 @@
             "BUCKET_SERVER_ERROR",
             "GIT_SYNC_ERROR",
             "TEMPLATE_EXCEPTION",
+            "TEMPLATE_ALREADY_EXISTS_EXCEPTION",
             "ENTITY_REFERENCE_EXCEPTION",
             "ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION",
             "INVALID_INPUT_SET",
@@ -2639,7 +2986,20 @@
             "ADFS_ERROR",
             "TERRAFORM_CLOUD_ERROR",
             "CLUSTER_CREDENTIALS_NOT_FOUND",
-            "SCM_API_ERROR"
+            "SCM_API_ERROR",
+            "INTERNAL_SERVER_ERROR",
+            "SCM_FORBIDDEN",
+            "AWS_EKS_ERROR",
+            "OPA_POLICY_EVALUATION_ERROR",
+            "USER_MARKED_FAILURE",
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE",
+            "SERVICENOW_REFRESH_TOKEN_ERROR"
           ]
         },
         "errorMessage": {
@@ -2703,6 +3063,9 @@
           "type": "object",
           "properties": {
             "branch": {
+              "type": "string"
+            },
+            "repo": {
               "type": "string"
             }
           }
@@ -3104,6 +3467,7 @@
             "UNRESOLVED_EXPRESSIONS_ERROR",
             "KRYO_HANDLER_NOT_FOUND_ERROR",
             "DELEGATE_ERROR_HANDLER_EXCEPTION",
+            "DELEGATE_SERVICE_DRIVER_EXCEPTION",
             "DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION",
             "UNEXPECTED_TYPE_ERROR",
             "EXCEPTION_HANDLER_NOT_FOUND",
@@ -3131,6 +3495,7 @@
             "BUCKET_SERVER_ERROR",
             "GIT_SYNC_ERROR",
             "TEMPLATE_EXCEPTION",
+            "TEMPLATE_ALREADY_EXISTS_EXCEPTION",
             "ENTITY_REFERENCE_EXCEPTION",
             "ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION",
             "INVALID_INPUT_SET",
@@ -3181,7 +3546,20 @@
             "ADFS_ERROR",
             "TERRAFORM_CLOUD_ERROR",
             "CLUSTER_CREDENTIALS_NOT_FOUND",
-            "SCM_API_ERROR"
+            "SCM_API_ERROR",
+            "INTERNAL_SERVER_ERROR",
+            "SCM_FORBIDDEN",
+            "AWS_EKS_ERROR",
+            "OPA_POLICY_EVALUATION_ERROR",
+            "USER_MARKED_FAILURE",
+            "SSH_RETRY",
+            "HTTP_CLIENT_ERROR_RESPONSE",
+            "HTTP_INTERNAL_SERVER_ERROR",
+            "HTTP_BAD_GATEWAY",
+            "HTTP_SERVICE_UNAVAILABLE",
+            "HTTP_GATEWAY_TIMEOUT",
+            "HTTP_SERVER_ERROR_RESPONSE",
+            "SERVICENOW_REFRESH_TOKEN_ERROR"
           ]
         },
         "level": {
@@ -3210,7 +3588,8 @@
               "POLICY_EVALUATION_FAILURE",
               "INPUT_TIMEOUT_FAILURE",
               "APPROVAL_REJECTION",
-              "DELEGATE_RESTART"
+              "DELEGATE_RESTART",
+              "USER_MARKED_FAILURE"
             ]
           }
         }
@@ -3511,25 +3890,10 @@
         }
       ]
     },
-    "CacheMetadataInfo": {
+    "DeleteCacheResponse": {
       "type": "object",
       "properties": {
-        "used": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "available": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "total": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "unit": {
-          "type": "string"
-        },
-        "details": {
+        "deleted": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/CacheMetadataDetail"
@@ -3537,7 +3901,7 @@
         }
       }
     },
-    "ResponseCacheMetadataInfo": {
+    "ResponseDeleteCacheResponse": {
       "type": "object",
       "properties": {
         "status": {
@@ -3545,7 +3909,34 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/CacheMetadataInfo"
+          "$ref": "#/definitions/DeleteCacheResponse"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CICreditsResult": {
+      "type": "object",
+      "properties": {
+        "credits": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ResponseCICreditsResult": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CICreditsResult"
         },
         "metaData": {
           "type": "object"
@@ -3648,6 +4039,14 @@
     "DashboardBuildExecutionInfo": {
       "type": "object",
       "properties": {
+        "buildRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "buildRateChangeRate": {
+          "type": "number",
+          "format": "double"
+        },
         "buildExecutionInfoList": {
           "type": "array",
           "items": {
@@ -3717,11 +4116,11 @@
         "commit": {
           "type": "string"
         },
-        "endTime": {
+        "startTime": {
           "type": "integer",
           "format": "int64"
         },
-        "startTime": {
+        "endTime": {
           "type": "integer",
           "format": "int64"
         }
@@ -4037,6 +4436,56 @@
         }
       }
     },
+    "ResponseBoolean": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "boolean"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "DeprecatedImageInfo": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseListDeprecatedImageInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeprecatedImageInfo"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
     "CIExecutionImages": {
       "type": "object",
       "properties": {
@@ -4081,6 +4530,9 @@
         },
         "sscaOrchestrationTag": {
           "type": "string"
+        },
+        "sscaEnforcementTag": {
+          "type": "string"
         }
       }
     },
@@ -4102,24 +4554,6 @@
         }
       }
     },
-    "ResponseBoolean": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "boolean"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
     "Operation": {
       "type": "object",
       "required": ["field"],
@@ -4132,18 +4566,7 @@
         }
       }
     },
-    "DeprecatedImageInfo": {
-      "type": "object",
-      "properties": {
-        "tag": {
-          "type": "string"
-        },
-        "version": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseListDeprecatedImageInfo": {
+    "ResponseSetString": {
       "type": "object",
       "properties": {
         "status": {
@@ -4152,8 +4575,9 @@
         },
         "data": {
           "type": "array",
+          "uniqueItems": true,
           "items": {
-            "$ref": "#/definitions/DeprecatedImageInfo"
+            "type": "string"
           }
         },
         "metaData": {
@@ -4161,6 +4585,224 @@
         },
         "correlationId": {
           "type": "string"
+        }
+      }
+    },
+    "CILicenseHistoryDTO": {
+      "type": "object",
+      "properties": {
+        "licenseUsage": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "licenseType": {
+          "type": "string",
+          "enum": ["DEVELOPERS"]
+        }
+      }
+    },
+    "ResponseCILicenseHistoryDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CILicenseHistoryDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CIDevelopersFilterParams": {
+      "type": "object",
+      "properties": {
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "developer": {
+          "type": "string"
+        }
+      }
+    },
+    "ActiveDevelopersDTO": {
+      "type": "object",
+      "required": ["identifier"],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "lastBuild": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "accountIdentifier": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Page": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "pageToken": {
+          "type": "string"
+        }
+      }
+    },
+    "PageActiveDevelopersDTO": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalElements": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "first": {
+          "type": "boolean"
+        },
+        "numberOfElements": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "pageable": {
+          "$ref": "#/definitions/Pageable"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActiveDevelopersDTO"
+          }
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Pageable": {
+      "type": "object",
+      "properties": {
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "paged": {
+          "type": "boolean"
+        },
+        "unpaged": {
+          "type": "boolean"
+        },
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ResponsePageActiveDevelopersDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageActiveDevelopersDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "Sort": {
+      "type": "object",
+      "properties": {
+        "sorted": {
+          "type": "boolean"
+        },
+        "unsorted": {
+          "type": "boolean"
+        },
+        "empty": {
+          "type": "boolean"
         }
       }
     },
@@ -4202,6 +4844,9 @@
         "description": {
           "type": "string"
         },
+        "type": {
+          "type": "string"
+        },
         "required": {
           "type": "boolean"
         },
@@ -4221,39 +4866,13 @@
         }
       }
     },
-    "Page": {
+    "Output": {
       "type": "object",
       "properties": {
-        "totalPages": {
-          "type": "integer",
-          "format": "int64"
+        "name": {
+          "type": "string"
         },
-        "totalItems": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageItemCount": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "content": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "pageIndex": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "empty": {
-          "type": "boolean"
-        },
-        "pageToken": {
+        "description": {
           "type": "string"
         }
       }
@@ -4324,6 +4943,12 @@
           "items": {
             "$ref": "#/definitions/Input"
           }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Output"
+          }
         }
       }
     },
@@ -4345,282 +4970,51 @@
         }
       }
     },
-    "CIBuildAuthor": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "avatar": {
-          "type": "string"
-        }
-      }
+    "JsonNode": {
+      "type": "object"
     },
-    "CIBuildBranchHook": {
+    "PartialSchemaDTO": {
       "type": "object",
       "properties": {
-        "name": {
+        "schema": {
+          "$ref": "#/definitions/JsonNode"
+        },
+        "nodeType": {
           "type": "string"
         },
-        "link": {
+        "nodeName": {
           "type": "string"
         },
-        "state": {
+        "namespace": {
           "type": "string"
         },
-        "commits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        },
-        "triggerCommits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        }
-      }
-    },
-    "CIBuildCommit": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "link": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "ownerName": {
-          "type": "string"
-        },
-        "ownerId": {
-          "type": "string"
-        },
-        "ownerEmail": {
-          "type": "string"
-        },
-        "timeStamp": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "CIBuildPRHook": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "link": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "sourceRepo": {
-          "type": "string"
-        },
-        "sourceBranch": {
-          "type": "string"
-        },
-        "targetBranch": {
-          "type": "string"
-        },
-        "state": {
-          "type": "string"
-        },
-        "commits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        },
-        "triggerCommits": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIBuildCommit"
-          }
-        }
-      }
-    },
-    "CIImageDetails": {
-      "type": "object",
-      "properties": {
-        "imageName": {
-          "type": "string"
-        },
-        "imageTag": {
-          "type": "string"
-        }
-      }
-    },
-    "CIInfraDetails": {
-      "type": "object",
-      "properties": {
-        "infraType": {
-          "type": "string"
-        },
-        "infraOSType": {
-          "type": "string"
-        },
-        "infraHostType": {
-          "type": "string"
-        },
-        "infraArchType": {
-          "type": "string"
-        }
-      }
-    },
-    "CIPipelineModuleInfo": {
-      "type": "object",
-      "properties": {
-        "ciExecutionInfoDTO": {
-          "$ref": "#/definitions/CIWebhookInfoDTO"
-        },
-        "branch": {
-          "type": "string"
-        },
-        "repoName": {
-          "type": "string"
-        },
-        "triggerRepoName": {
-          "type": "string"
-        },
-        "tag": {
-          "type": "string"
-        },
-        "prNumber": {
-          "type": "string"
-        },
-        "buildType": {
-          "type": "string"
-        },
-        "isPrivateRepo": {
+        "skipStageSchema": {
           "type": "boolean"
         },
-        "scmDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIScmDetails"
-          }
-        },
-        "infraDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIInfraDetails"
-          }
-        },
-        "imageDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CIImageDetails"
-          }
-        },
-        "tiBuildDetailsList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TIBuildDetails"
-          }
-        },
-        "ciPipelineStageModuleInfo": {
-          "$ref": "#/definitions/CIPipelineStageModuleInfo"
-        },
-        "ciLicenseType": {
-          "type": "string"
-        },
-        "ciEditionType": {
-          "type": "string"
+        "moduleType": {
+          "type": "string",
+          "enum": [
+            "CD",
+            "CI",
+            "CV",
+            "CF",
+            "CE",
+            "STO",
+            "CHAOS",
+            "SRM",
+            "IACM",
+            "CET",
+            "CODE",
+            "CORE",
+            "PMS",
+            "TEMPLATESERVICE",
+            "GOVERNANCE",
+            "IDP"
+          ]
         }
       }
     },
-    "CIPipelineStageModuleInfo": {
-      "type": "object",
-      "properties": {
-        "stageExecutionId": {
-          "type": "string"
-        },
-        "stageId": {
-          "type": "string"
-        },
-        "stageName": {
-          "type": "string"
-        },
-        "cpuTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "stageBuildTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "infraType": {
-          "type": "string"
-        },
-        "osType": {
-          "type": "string"
-        },
-        "osArch": {
-          "type": "string"
-        },
-        "startTs": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "buildMultiplier": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "CIScmDetails": {
-      "type": "object",
-      "properties": {
-        "scmUrl": {
-          "type": "string"
-        },
-        "scmProvider": {
-          "type": "string"
-        },
-        "scmAuthType": {
-          "type": "string"
-        },
-        "scmHostType": {
-          "type": "string"
-        }
-      }
-    },
-    "CIWebhookInfoDTO": {
-      "type": "object",
-      "properties": {
-        "event": {
-          "type": "string"
-        },
-        "author": {
-          "$ref": "#/definitions/CIBuildAuthor"
-        },
-        "branch": {
-          "$ref": "#/definitions/CIBuildBranchHook"
-        },
-        "pullRequest": {
-          "$ref": "#/definitions/CIBuildPRHook"
-        }
-      }
-    },
-    "ResponseCIPipelineModuleInfo": {
+    "ResponseListPartialSchemaDTO": {
       "type": "object",
       "properties": {
         "status": {
@@ -4628,23 +5022,15 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/CIPipelineModuleInfo"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartialSchemaDTO"
+          }
         },
         "metaData": {
           "type": "object"
         },
         "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "TIBuildDetails": {
-      "type": "object",
-      "properties": {
-        "buildTool": {
-          "type": "string"
-        },
-        "language": {
           "type": "string"
         }
       }
@@ -4849,10 +5235,17 @@
     "Attestation": {
       "type": "object",
       "properties": {
-        "privateKey": {
-          "type": "string"
+        "type": {
+          "type": "string",
+          "enum": ["cosign"]
+        },
+        "spec": {
+          "$ref": "#/definitions/AttestationSpec"
         }
       }
+    },
+    "AttestationSpec": {
+      "type": "object"
     },
     "AwsEcrStepInfo": {
       "allOf": [
@@ -4898,6 +5291,71 @@
             },
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
+            },
+            "image": {
+              "$ref": "#/definitions/STOYamlImage"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default"]
+            },
+            "baseImageConnectorRefs": {
+              "$ref": "#/definitions/ParameterFieldListString"
+            }
+          }
+        }
+      ]
+    },
+    "AwsSecurityHubStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["config", "mode", "target"],
+          "properties": {
+            "settings": {
+              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
+            },
+            "resources": {
+              "$ref": "#/definitions/ContainerResource"
+            },
+            "outputVariables": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputNGVariable"
+              }
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["ingestion", "orchestration", "extraction"]
+            },
+            "target": {
+              "$ref": "#/definitions/STOYamlTarget"
+            },
+            "ingestion": {
+              "$ref": "#/definitions/STOYamlIngestion"
+            },
+            "advanced": {
+              "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
             },
             "config": {
               "type": "string",
@@ -5386,10 +5844,41 @@
             },
             "config": {
               "type": "string",
-              "enum": ["default"]
+              "enum": [
+                "default",
+                "never-stop-crawl-due-to-application-errors",
+                "never-stop-audit-due-to-application-errors",
+                "minimize-false-positives",
+                "minimize-false-negatives",
+                "crawl-strategy-most-complete",
+                "crawl-strategy-more-complete",
+                "crawl-strategy-fastest",
+                "crawl-strategy-faster",
+                "crawl-limit-60-minutes",
+                "crawl-limit-30-minutes",
+                "crawl-limit-10-minutes",
+                "crawl-and-audit-lightweight",
+                "crawl-and-audit-fast",
+                "crawl-and-audit-deep",
+                "crawl-and-audit-balanced",
+                "audit-coverage-thorough",
+                "audit-coverage-maximum",
+                "audit-checks-passive",
+                "audit-checks-medium-active",
+                "audit-checks-light-active",
+                "audit-checks-critical-issues-only",
+                "audit-checks-all-except-time-based-detection-methods",
+                "audit-checks-all-except-java-script-analysis"
+              ]
+            },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
             },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
+            },
+            "tool": {
+              "$ref": "#/definitions/STOYamlBurpToolData"
             }
           }
         }
@@ -5652,6 +6141,26 @@
       "properties": {
         "disabled": {
           "type": "boolean"
+        },
+        "insecure": {
+          "type": "boolean"
+        },
+        "depth": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "trace": {
+          "type": "boolean"
+        },
+        "strategy": {
+          "type": "string",
+          "enum": ["merge", "source-branch"]
+        },
+        "ref": {
+          "$ref": "#/definitions/ParameterFieldRef"
+        },
+        "resources": {
+          "$ref": "#/definitions/ContainerResource"
         }
       }
     },
@@ -5705,7 +6214,7 @@
     },
     "CodeBase": {
       "type": "object",
-      "required": ["build", "connectorRef"],
+      "required": ["build"],
       "properties": {
         "connectorRef": {
           "type": "string"
@@ -5731,6 +6240,62 @@
           "$ref": "#/definitions/ContainerResource"
         }
       }
+    },
+    "CodeqlStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["config", "mode", "target"],
+          "properties": {
+            "settings": {
+              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
+            },
+            "resources": {
+              "$ref": "#/definitions/ContainerResource"
+            },
+            "outputVariables": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputNGVariable"
+              }
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["ingestion", "orchestration", "extraction"]
+            },
+            "target": {
+              "$ref": "#/definitions/STOYamlTarget"
+            },
+            "ingestion": {
+              "$ref": "#/definitions/STOYamlIngestion"
+            },
+            "advanced": {
+              "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default"]
+            },
+            "baseImageConnectorRefs": {
+              "$ref": "#/definitions/ParameterFieldListString"
+            }
+          }
+        }
+      ]
     },
     "CommitDetails": {
       "type": "object",
@@ -5851,10 +6416,10 @@
         "imagePullPolicy": {
           "type": "string"
         },
-        "mainLiteEngine": {
+        "harnessManagedImage": {
           "type": "boolean"
         },
-        "harnessManagedImage": {
+        "mainLiteEngine": {
           "type": "boolean"
         }
       }
@@ -5866,6 +6431,85 @@
           "$ref": "#/definitions/ImageDetails"
         },
         "connectorIdentifier": {
+          "type": "string"
+        }
+      }
+    },
+    "ContainerInfraYamlSpec": {
+      "type": "object",
+      "required": ["connectorRef", "namespace"],
+      "properties": {
+        "resources": {
+          "$ref": "#/definitions/ContainerResource"
+        },
+        "connectorRef": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2147483647
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "runAsUser": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "serviceAccountName": {
+          "type": "string"
+        },
+        "initTimeout": {
+          "type": "string"
+        },
+        "nodeSelector": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "hostNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tolerations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Toleration"
+          }
+        },
+        "volumes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIVolume"
+          }
+        },
+        "automountServiceAccountToken": {
+          "type": "boolean"
+        },
+        "containerSecurityContext": {
+          "$ref": "#/definitions/SecurityContext"
+        },
+        "priorityClassName": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string",
+          "enum": ["Linux", "MacOS", "Windows"]
+        },
+        "harnessImageConnectorRef": {
           "type": "string"
         }
       }
@@ -5900,6 +6544,95 @@
         }
       }
     },
+    "CosignAttestation": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AttestationSpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "privateKey": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "CosignVerifyAttestation": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/VerifyAttestationSpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "publicKey": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "CoverityStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["config", "mode", "target"],
+          "properties": {
+            "settings": {
+              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
+            },
+            "resources": {
+              "$ref": "#/definitions/ContainerResource"
+            },
+            "outputVariables": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputNGVariable"
+              }
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["ingestion", "orchestration", "extraction"]
+            },
+            "target": {
+              "$ref": "#/definitions/STOYamlTarget"
+            },
+            "ingestion": {
+              "$ref": "#/definitions/STOYamlIngestion"
+            },
+            "advanced": {
+              "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default"]
+            },
+            "baseImageConnectorRefs": {
+              "$ref": "#/definitions/ParameterFieldListString"
+            }
+          }
+        }
+      ]
+    },
     "CustomExecutionSource": {
       "allOf": [
         {
@@ -5913,6 +6646,62 @@
             },
             "tag": {
               "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "CustomIngestStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["config", "mode", "target"],
+          "properties": {
+            "settings": {
+              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
+            },
+            "resources": {
+              "$ref": "#/definitions/ContainerResource"
+            },
+            "outputVariables": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputNGVariable"
+              }
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["ingestion", "orchestration", "extraction"]
+            },
+            "target": {
+              "$ref": "#/definitions/STOYamlTarget"
+            },
+            "ingestion": {
+              "$ref": "#/definitions/STOYamlIngestion"
+            },
+            "advanced": {
+              "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default", "sarif"]
+            },
+            "baseImageConnectorRefs": {
+              "$ref": "#/definitions/ParameterFieldListString"
             }
           }
         }
@@ -6045,6 +6834,9 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "image": {
+              "$ref": "#/definitions/STOYamlImage"
+            },
             "config": {
               "type": "string",
               "enum": ["default"]
@@ -6160,6 +6952,18 @@
             "optimize": {
               "type": "boolean"
             },
+            "cacheFrom": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "cacheTo": {
+              "type": "string"
+            },
+            "caching": {
+              "type": "boolean"
+            },
             "remoteCacheRepo": {
               "type": "string"
             },
@@ -6236,6 +7040,18 @@
               "items": {
                 "type": "string"
               }
+            },
+            "cacheFrom": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "cacheTo": {
+              "type": "string"
+            },
+            "caching": {
+              "type": "boolean"
             }
           }
         }
@@ -6302,6 +7118,14 @@
         }
       }
     },
+    "EnforcementPolicy": {
+      "type": "object",
+      "properties": {
+        "store": {
+          "$ref": "#/definitions/PolicyStore"
+        }
+      }
+    },
     "ExecutionElementConfig": {
       "type": "object",
       "required": ["steps"],
@@ -6346,62 +7170,6 @@
         }
       }
     },
-    "ExternalStepInfo": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/StepSpecType"
-        },
-        {
-          "type": "object",
-          "required": ["config", "mode", "target"],
-          "properties": {
-            "settings": {
-              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
-            },
-            "resources": {
-              "$ref": "#/definitions/ContainerResource"
-            },
-            "outputVariables": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OutputNGVariable"
-              }
-            },
-            "privileged": {
-              "type": "boolean"
-            },
-            "runAsUser": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "imagePullPolicy": {
-              "type": "string",
-              "enum": ["Always", "Never", "IfNotPresent"]
-            },
-            "mode": {
-              "type": "string",
-              "enum": ["ingestion", "orchestration", "extraction"]
-            },
-            "target": {
-              "$ref": "#/definitions/STOYamlTarget"
-            },
-            "ingestion": {
-              "$ref": "#/definitions/STOYamlIngestion"
-            },
-            "advanced": {
-              "$ref": "#/definitions/STOYamlAdvancedSettings"
-            },
-            "config": {
-              "type": "string",
-              "enum": ["default"]
-            },
-            "baseImageConnectorRefs": {
-              "$ref": "#/definitions/ParameterFieldListString"
-            }
-          }
-        }
-      ]
-    },
     "FailureStrategyActionConfig": {
       "type": "object",
       "required": ["type"],
@@ -6419,7 +7187,8 @@
             "PipelineRollback",
             "ManualIntervention",
             "ProceedWithDefaultValues",
-            "MarkAsFailure"
+            "MarkAsFailure",
+            "RetryStepGroup"
           ]
         }
       }
@@ -6498,6 +7267,68 @@
         }
       ]
     },
+    "FossaStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["config", "mode", "target"],
+          "properties": {
+            "settings": {
+              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
+            },
+            "resources": {
+              "$ref": "#/definitions/ContainerResource"
+            },
+            "outputVariables": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputNGVariable"
+              }
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["ingestion", "orchestration", "extraction"]
+            },
+            "target": {
+              "$ref": "#/definitions/STOYamlTarget"
+            },
+            "ingestion": {
+              "$ref": "#/definitions/STOYamlIngestion"
+            },
+            "advanced": {
+              "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default"]
+            },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
+            },
+            "tool": {
+              "$ref": "#/definitions/STOYamlFossaToolData"
+            },
+            "baseImageConnectorRefs": {
+              "$ref": "#/definitions/ParameterFieldListString"
+            }
+          }
+        }
+      ]
+    },
     "GCRStepInfo": {
       "allOf": [
         {
@@ -6559,6 +7390,18 @@
             "remoteCacheImage": {
               "type": "string"
             },
+            "cacheFrom": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "cacheTo": {
+              "type": "string"
+            },
+            "caching": {
+              "type": "boolean"
+            },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
             }
@@ -6603,6 +7446,68 @@
             },
             "cloneDirectory": {
               "type": "string"
+            },
+            "outputFilePathsContent": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "baseImageConnectorRefs": {
+              "$ref": "#/definitions/ParameterFieldListString"
+            }
+          }
+        }
+      ]
+    },
+    "GitleaksStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["config", "mode", "target"],
+          "properties": {
+            "settings": {
+              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
+            },
+            "resources": {
+              "$ref": "#/definitions/ContainerResource"
+            },
+            "outputVariables": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputNGVariable"
+              }
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["ingestion", "orchestration", "extraction"]
+            },
+            "target": {
+              "$ref": "#/definitions/STOYamlTarget"
+            },
+            "ingestion": {
+              "$ref": "#/definitions/STOYamlIngestion"
+            },
+            "advanced": {
+              "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default"]
             },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
@@ -6710,6 +7615,21 @@
         }
       }
     },
+    "HarnessStore": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StoreSpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "HostPathVolume": {
       "allOf": [
         {
@@ -6799,6 +7719,24 @@
         }
       ]
     },
+    "IACMApprovalInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "env": {
+              "$ref": "#/definitions/ParameterFieldMapStringString"
+            },
+            "image": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "IACMStageConfigImpl": {
       "allOf": [
         {
@@ -6806,7 +7744,7 @@
         },
         {
           "type": "object",
-          "required": ["stackID"],
+          "required": ["workspace"],
           "properties": {
             "sharedPaths": {
               "type": "array",
@@ -6814,7 +7752,7 @@
                 "type": "string"
               }
             },
-            "stackID": {
+            "workspace": {
               "type": "string"
             },
             "infrastructure": {
@@ -6839,6 +7777,36 @@
         }
       ]
     },
+    "IACMStageConfigImplV1": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StageInfoConfig"
+        },
+        {
+          "type": "object",
+          "required": ["steps"],
+          "properties": {
+            "steps": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/JsonNode"
+              },
+              "maxItems": 2147483647,
+              "minItems": 1
+            },
+            "clone": {
+              "$ref": "#/definitions/Clone"
+            },
+            "runtime": {
+              "$ref": "#/definitions/RuntimeV1"
+            },
+            "platform": {
+              "$ref": "#/definitions/PlatformV1"
+            }
+          }
+        }
+      ]
+    },
     "IACMStepInfo": {
       "allOf": [
         {
@@ -6849,29 +7817,23 @@
         }
       ]
     },
-    "IACMTemplateInfo": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/StepSpecType"
-        },
-        {
-          "type": "object"
-        }
-      ]
-    },
-    "IACMTerraformPlanInfo": {
+    "IACMTerraformPluginInfo": {
       "allOf": [
         {
           "$ref": "#/definitions/StepSpecType"
         },
         {
           "type": "object",
+          "required": ["command"],
           "properties": {
             "env": {
               "$ref": "#/definitions/ParameterFieldMapStringString"
             },
-            "tfVars": {
-              "$ref": "#/definitions/ParameterFieldMapStringString"
+            "command": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string"
             }
           }
         }
@@ -7004,6 +7966,9 @@
               "items": {
                 "$ref": "#/definitions/NGVariable"
               }
+            },
+            "delegateSelectors": {
+              "$ref": "#/definitions/ParameterFieldListTaskSelectorYaml"
             }
           }
         }
@@ -7024,26 +7989,26 @@
     "IntegrationStageConfig": {
       "type": "object",
       "properties": {
-        "caching": {
-          "$ref": "#/definitions/Caching"
-        },
-        "execution": {
-          "$ref": "#/definitions/ExecutionElementConfig"
+        "infrastructure": {
+          "$ref": "#/definitions/Infrastructure"
         },
         "platform": {
           "$ref": "#/definitions/ParameterFieldPlatform"
         },
-        "infrastructure": {
-          "$ref": "#/definitions/Infrastructure"
+        "execution": {
+          "$ref": "#/definitions/ExecutionElementConfig"
         },
-        "cloneCodebase": {
-          "$ref": "#/definitions/ParameterFieldBoolean"
+        "caching": {
+          "$ref": "#/definitions/Caching"
+        },
+        "sharedPaths": {
+          "$ref": "#/definitions/ParameterFieldListString"
         },
         "serviceDependencies": {
           "$ref": "#/definitions/ParameterFieldListDependencyElement"
         },
-        "sharedPaths": {
-          "$ref": "#/definitions/ParameterFieldListString"
+        "cloneCodebase": {
+          "$ref": "#/definitions/ParameterFieldBoolean"
         },
         "runtime": {
           "$ref": "#/definitions/Runtime"
@@ -7193,9 +8158,6 @@
         }
       ]
     },
-    "JsonNode": {
-      "type": "object"
-    },
     "K8BuildJobEnvInfo": {
       "allOf": [
         {
@@ -7218,6 +8180,26 @@
                   "$ref": "#/definitions/ConnectorConversionInfo"
                 }
               }
+            }
+          }
+        }
+      ]
+    },
+    "K8sDirectInfra": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepGroupInfra"
+        },
+        {
+          "type": "object",
+          "required": ["spec", "type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["KubernetesDirect", "Delegate", "Noop"]
+            },
+            "spec": {
+              "$ref": "#/definitions/ContainerInfraYamlSpec"
             }
           }
         }
@@ -7586,9 +8568,12 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "instance": {
+              "$ref": "#/definitions/STOYamlInstance"
+            },
             "config": {
               "type": "string",
-              "enum": ["default"]
+              "enum": ["default", "metasploit-weak-ssh", "metasploit-openssl-heartbleed"]
             },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
@@ -7601,11 +8586,11 @@
       "type": "object",
       "discriminator": "type",
       "properties": {
-        "required": {
-          "type": "boolean"
-        },
         "description": {
           "type": "string"
+        },
+        "required": {
+          "type": "boolean"
         },
         "name": {
           "type": "string"
@@ -7663,6 +8648,9 @@
             },
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "instance": {
+              "$ref": "#/definitions/STOYamlInstance"
             },
             "config": {
               "type": "string",
@@ -7776,6 +8764,9 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "instance": {
+              "$ref": "#/definitions/STOYamlInstance"
+            },
             "config": {
               "type": "string",
               "enum": ["default"]
@@ -7832,9 +8823,19 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "instance": {
+              "$ref": "#/definitions/STOYamlInstance"
+            },
             "config": {
               "type": "string",
-              "enum": ["default"]
+              "enum": [
+                "default",
+                "firewall-bypass",
+                "unusual-port",
+                "smb-security-mode",
+                "exploit",
+                "no-default-cli-flags"
+              ]
             },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
@@ -7892,7 +8893,8 @@
               "PolicyEvaluationFailure",
               "InputTimeoutError",
               "ApprovalRejection",
-              "DelegateRestart"
+              "DelegateRestart",
+              "UserMarkedFailure"
             ]
           }
         },
@@ -7961,6 +8963,12 @@
             },
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "instance": {
+              "$ref": "#/definitions/STOYamlInstance"
+            },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
             },
             "config": {
               "type": "string",
@@ -8304,6 +9312,44 @@
         }
       }
     },
+    "ParameterFieldListTaskSelectorYaml": {
+      "type": "object",
+      "properties": {
+        "expressionValue": {
+          "type": "string"
+        },
+        "expression": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskSelectorYaml"
+          }
+        },
+        "defaultValue": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskSelectorYaml"
+          }
+        },
+        "typeString": {
+          "type": "boolean"
+        },
+        "inputSetValidator": {
+          "$ref": "#/definitions/InputSetValidator"
+        },
+        "jsonResponseField": {
+          "type": "boolean"
+        },
+        "responseField": {
+          "type": "string"
+        },
+        "executionInput": {
+          "type": "boolean"
+        }
+      }
+    },
     "ParameterFieldMapStringJsonNode": {
       "type": "object",
       "properties": {
@@ -8444,6 +9490,38 @@
         }
       }
     },
+    "ParameterFieldRef": {
+      "type": "object",
+      "properties": {
+        "expressionValue": {
+          "type": "string"
+        },
+        "expression": {
+          "type": "boolean"
+        },
+        "value": {
+          "$ref": "#/definitions/Ref"
+        },
+        "defaultValue": {
+          "$ref": "#/definitions/Ref"
+        },
+        "typeString": {
+          "type": "boolean"
+        },
+        "inputSetValidator": {
+          "$ref": "#/definitions/InputSetValidator"
+        },
+        "jsonResponseField": {
+          "type": "boolean"
+        },
+        "responseField": {
+          "type": "string"
+        },
+        "executionInput": {
+          "type": "boolean"
+        }
+      }
+    },
     "ParameterFieldString": {
       "type": "object",
       "properties": {
@@ -8487,11 +9565,11 @@
         },
         "value": {
           "type": "string",
-          "enum": ["Java", "Kotlin", "Scala", "Csharp"]
+          "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python"]
         },
         "defaultValue": {
           "type": "string",
-          "enum": ["Java", "Kotlin", "Scala", "Csharp"]
+          "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python"]
         },
         "typeString": {
           "type": "boolean"
@@ -8774,6 +9852,19 @@
         }
       }
     },
+    "PolicyStore": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["Harness"]
+        },
+        "spec": {
+          "$ref": "#/definitions/StoreSpec"
+        }
+      }
+    },
     "PrismaCloudStepInfo": {
       "allOf": [
         {
@@ -8898,9 +9989,12 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
+            },
             "config": {
               "type": "string",
-              "enum": ["default"]
+              "enum": ["default", "hipaa", "gdpr", "exclude_extras"]
             },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
@@ -9016,6 +10110,61 @@
             },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
+            }
+          }
+        }
+      ]
+    },
+    "Ref": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "readOnly": true
+        },
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "enum": ["branch", "tag", "pr"]
+        },
+        "sha": {
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "ReleaseWebhookEvent": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WebhookEvent"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "releaseTag": {
+              "type": "string"
+            },
+            "releaseLink": {
+              "type": "string"
+            },
+            "releaseBody": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "draft": {
+              "type": "boolean"
+            },
+            "prerelease": {
+              "type": "boolean"
+            },
+            "repository": {
+              "$ref": "#/definitions/Repository"
+            },
+            "baseAttributes": {
+              "$ref": "#/definitions/WebhookBaseAttributes"
             }
           }
         }
@@ -9197,6 +10346,27 @@
         }
       }
     },
+    "RetrySGFailureActionConfig": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FailureStrategyActionConfig"
+        },
+        {
+          "type": "object",
+          "required": ["spec", "type"],
+          "properties": {
+            "spec": {
+              "readOnly": true,
+              "$ref": "#/definitions/RetryFailureSpecConfig"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["RetryStepGroup"]
+            }
+          }
+        }
+      ]
+    },
     "RunStepInfo": {
       "allOf": [
         {
@@ -9266,11 +10436,11 @@
             },
             "language": {
               "type": "string",
-              "enum": ["Java", "Kotlin", "Scala", "Csharp"]
+              "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python"]
             },
             "buildTool": {
               "type": "string",
-              "enum": ["Maven", "Bazel", "Gradle", "Dotnet", "Nunitconsole", "SBT"]
+              "enum": ["Maven", "Bazel", "Gradle", "Dotnet", "Nunitconsole", "SBT", "Pytest", "Unittest"]
             },
             "image": {
               "type": "string"
@@ -9285,6 +10455,9 @@
               "$ref": "#/definitions/UnitTestReport"
             },
             "testAnnotations": {
+              "type": "string"
+            },
+            "testRoot": {
               "type": "string"
             },
             "packages": {
@@ -9321,6 +10494,10 @@
             "frameworkVersion": {
               "type": "string",
               "enum": ["5.0", "6.0"]
+            },
+            "pythonVersion": {
+              "type": "string",
+              "enum": ["3", "2"]
             },
             "privileged": {
               "type": "boolean"
@@ -9410,6 +10587,9 @@
         "access_token": {
           "type": "string"
         },
+        "region": {
+          "type": "string"
+        },
         "version": {
           "type": "string"
         },
@@ -9418,7 +10598,7 @@
         },
         "type": {
           "type": "string",
-          "enum": ["apiKey", "usernamePassword"]
+          "enum": ["apiKey", "usernamePassword", "aws", "azure", "gcp"]
         },
         "ssl": {
           "type": "boolean"
@@ -9432,6 +10612,17 @@
           "type": "string"
         },
         "project_version": {
+          "type": "string"
+        }
+      }
+    },
+    "STOYamlBurpToolData": {
+      "type": "object",
+      "properties": {
+        "site_id": {
+          "type": "string"
+        },
+        "scan_id": {
           "type": "string"
         }
       }
@@ -9485,6 +10676,20 @@
         }
       }
     },
+    "STOYamlFossaToolData": {
+      "type": "object",
+      "properties": {
+        "team_name": {
+          "type": "string"
+        },
+        "project_name": {
+          "type": "string"
+        },
+        "policy_name": {
+          "type": "string"
+        }
+      }
+    },
     "STOYamlImage": {
       "type": "object",
       "required": ["type"],
@@ -9524,10 +10729,10 @@
     "STOYamlInstance": {
       "type": "object",
       "properties": {
-        "access_id": {
+        "username": {
           "type": "string"
         },
-        "access_token": {
+        "password": {
           "type": "string"
         },
         "domain": {
@@ -9599,6 +10804,9 @@
           "type": "string"
         },
         "exclude": {
+          "type": "string"
+        },
+        "project_key": {
           "type": "string"
         },
         "java": {
@@ -9960,6 +11168,65 @@
         }
       ]
     },
+    "SemgrepStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["config", "mode", "target"],
+          "properties": {
+            "settings": {
+              "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
+            },
+            "resources": {
+              "$ref": "#/definitions/ContainerResource"
+            },
+            "outputVariables": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputNGVariable"
+              }
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["ingestion", "orchestration", "extraction"]
+            },
+            "target": {
+              "$ref": "#/definitions/STOYamlTarget"
+            },
+            "ingestion": {
+              "$ref": "#/definitions/STOYamlIngestion"
+            },
+            "advanced": {
+              "$ref": "#/definitions/STOYamlAdvancedSettings"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default"]
+            },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
+            },
+            "baseImageConnectorRefs": {
+              "$ref": "#/definitions/ParameterFieldListString"
+            }
+          }
+        }
+      ]
+    },
     "ShiftLeftStepInfo": {
       "allOf": [
         {
@@ -10213,6 +11480,28 @@
         }
       }
     },
+    "SscaEnforcementStepInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/StepSpecType"
+        },
+        {
+          "type": "object",
+          "required": ["policy", "source", "verifyAttestation"],
+          "properties": {
+            "source": {
+              "$ref": "#/definitions/SbomSource"
+            },
+            "verifyAttestation": {
+              "$ref": "#/definitions/VerifyAttestation"
+            },
+            "policy": {
+              "$ref": "#/definitions/EnforcementPolicy"
+            }
+          }
+        }
+      ]
+    },
     "SscaOrchestrationStepInfo": {
       "allOf": [
         {
@@ -10220,7 +11509,7 @@
         },
         {
           "type": "object",
-          "required": ["source", "tool"],
+          "required": ["attestation", "source", "tool"],
           "properties": {
             "tool": {
               "$ref": "#/definitions/SbomOrchestrationTool"
@@ -10380,6 +11669,15 @@
       "type": "object",
       "required": ["identifier", "name"],
       "properties": {
+        "stepGroupInfra": {
+          "$ref": "#/definitions/StepGroupInfra"
+        },
+        "sharedPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "identifier": {
           "type": "string",
           "pattern": "^[a-zA-Z_][0-9a-zA-Z_]{0,127}$"
@@ -10390,6 +11688,12 @@
         },
         "when": {
           "$ref": "#/definitions/StepWhenCondition"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NGVariable"
+          }
         },
         "template": {
           "$ref": "#/definitions/TemplateLinkConfig"
@@ -10436,6 +11740,16 @@
         }
       ]
     },
+    "StepGroupInfra": {
+      "type": "object",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["KubernetesDirect", "Delegate", "Noop"]
+        }
+      }
+    },
     "StepSpecType": {
       "type": "object",
       "discriminator": "type"
@@ -10453,6 +11767,9 @@
           "pattern": "^(?!<\\+input>.*\\.executionInput\\(\\)(.*)$)"
         }
       }
+    },
+    "StoreSpec": {
+      "type": "object"
     },
     "StrategyConfig": {
       "type": "object",
@@ -10516,7 +11833,7 @@
           "properties": {
             "format": {
               "type": "string",
-              "enum": ["spdx-json"]
+              "enum": ["spdx-json", "cyclonedx-json"]
             }
           }
         }
@@ -10567,6 +11884,12 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "image": {
+              "$ref": "#/definitions/STOYamlImage"
+            },
+            "auth": {
+              "$ref": "#/definitions/STOYamlAuth"
+            },
             "config": {
               "type": "string",
               "enum": ["default"]
@@ -10594,6 +11917,17 @@
         }
       ]
     },
+    "TaskSelectorYaml": {
+      "type": "object",
+      "properties": {
+        "delegateSelectors": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        }
+      }
+    },
     "TemplateLinkConfig": {
       "type": "object",
       "required": ["templateRef"],
@@ -10610,6 +11944,9 @@
         },
         "templateVariables": {
           "$ref": "#/definitions/JsonNode"
+        },
+        "gitBranch": {
+          "type": "string"
         }
       }
     },
@@ -10658,6 +11995,9 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "instance": {
+              "$ref": "#/definitions/STOYamlInstance"
+            },
             "config": {
               "type": "string",
               "enum": ["default"]
@@ -10682,7 +12022,7 @@
             },
             "uses": {
               "type": "string",
-              "enum": ["maven", "bazel", "gradle", "dotnet", "nunit_console", "sbt"]
+              "enum": ["maven", "bazel", "gradle", "dotnet", "nunit_console", "sbt", "pytest", "unittest"]
             },
             "with": {
               "type": "object",
@@ -10984,6 +12324,21 @@
         }
       ]
     },
+    "VerifyAttestation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["cosign"]
+        },
+        "spec": {
+          "$ref": "#/definitions/VerifyAttestationSpec"
+        }
+      }
+    },
+    "VerifyAttestationSpec": {
+      "type": "object"
+    },
     "VmBuildJobInfo": {
       "allOf": [
         {
@@ -11150,7 +12505,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["PR", "BRANCH"]
+          "enum": ["PR", "BRANCH", "RELEASE"]
         }
       }
     },
@@ -11201,16 +12556,6 @@
           "type": "object",
           "required": ["config", "mode", "target"],
           "properties": {
-            "instance": {
-              "$ref": "#/definitions/STOYamlInstance"
-            },
-            "config": {
-              "type": "string",
-              "enum": ["default", "quick", "attack", "standard"]
-            },
-            "tool": {
-              "$ref": "#/definitions/STOYamlZapToolData"
-            },
             "settings": {
               "$ref": "#/definitions/ParameterFieldMapStringJsonNode"
             },
@@ -11247,6 +12592,16 @@
             "advanced": {
               "$ref": "#/definitions/STOYamlAdvancedSettings"
             },
+            "instance": {
+              "$ref": "#/definitions/STOYamlInstance"
+            },
+            "config": {
+              "type": "string",
+              "enum": ["default", "quick", "attack", "standard"]
+            },
+            "tool": {
+              "$ref": "#/definitions/STOYamlZapToolData"
+            },
             "baseImageConnectorRefs": {
               "$ref": "#/definitions/ParameterFieldListString"
             }
@@ -11272,46 +12627,305 @@
         }
       }
     },
-    "PartialSchemaDTO": {
+    "CIBuildAuthor": {
       "type": "object",
       "properties": {
-        "schema": {
-          "$ref": "#/definitions/JsonNode"
-        },
-        "nodeType": {
+        "id": {
           "type": "string"
         },
-        "nodeName": {
+        "name": {
           "type": "string"
         },
-        "namespace": {
+        "email": {
           "type": "string"
         },
-        "skipStageSchema": {
-          "type": "boolean"
-        },
-        "moduleType": {
-          "type": "string",
-          "enum": [
-            "CD",
-            "CI",
-            "CV",
-            "CF",
-            "CE",
-            "STO",
-            "CHAOS",
-            "SRM",
-            "CODE",
-            "CORE",
-            "PMS",
-            "TEMPLATESERVICE",
-            "GOVERNANCE",
-            "IACM"
-          ]
+        "avatar": {
+          "type": "string"
         }
       }
     },
-    "ResponseListPartialSchemaDTO": {
+    "CIBuildBranchHook": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "commits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        },
+        "triggerCommits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        }
+      }
+    },
+    "CIBuildCommit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "ownerId": {
+          "type": "string"
+        },
+        "ownerEmail": {
+          "type": "string"
+        },
+        "timeStamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CIBuildPRHook": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "link": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "sourceRepo": {
+          "type": "string"
+        },
+        "sourceBranch": {
+          "type": "string"
+        },
+        "targetBranch": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "commits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        },
+        "triggerCommits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIBuildCommit"
+          }
+        }
+      }
+    },
+    "CIBuildReleaseHook": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "CIImageDetails": {
+      "type": "object",
+      "properties": {
+        "imageName": {
+          "type": "string"
+        },
+        "imageTag": {
+          "type": "string"
+        }
+      }
+    },
+    "CIInfraDetails": {
+      "type": "object",
+      "properties": {
+        "infraType": {
+          "type": "string"
+        },
+        "infraOSType": {
+          "type": "string"
+        },
+        "infraHostType": {
+          "type": "string"
+        },
+        "infraArchType": {
+          "type": "string"
+        }
+      }
+    },
+    "CIPipelineModuleInfo": {
+      "type": "object",
+      "properties": {
+        "ciExecutionInfoDTO": {
+          "$ref": "#/definitions/CIWebhookInfoDTO"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "repoName": {
+          "type": "string"
+        },
+        "triggerRepoName": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "prNumber": {
+          "type": "string"
+        },
+        "buildType": {
+          "type": "string"
+        },
+        "isPrivateRepo": {
+          "type": "boolean"
+        },
+        "scmDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIScmDetails"
+          }
+        },
+        "infraDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIInfraDetails"
+          }
+        },
+        "imageDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CIImageDetails"
+          }
+        },
+        "tiBuildDetailsList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TIBuildDetails"
+          }
+        },
+        "ciPipelineStageModuleInfo": {
+          "$ref": "#/definitions/CIPipelineStageModuleInfo"
+        },
+        "ciLicenseType": {
+          "type": "string"
+        },
+        "ciEditionType": {
+          "type": "string"
+        }
+      }
+    },
+    "CIPipelineStageModuleInfo": {
+      "type": "object",
+      "properties": {
+        "stageExecutionId": {
+          "type": "string"
+        },
+        "stageId": {
+          "type": "string"
+        },
+        "stageName": {
+          "type": "string"
+        },
+        "cpuTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "stageBuildTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "infraType": {
+          "type": "string"
+        },
+        "osType": {
+          "type": "string"
+        },
+        "osArch": {
+          "type": "string"
+        },
+        "startTs": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "buildMultiplier": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "CIScmDetails": {
+      "type": "object",
+      "properties": {
+        "scmUrl": {
+          "type": "string"
+        },
+        "scmProvider": {
+          "type": "string"
+        },
+        "scmAuthType": {
+          "type": "string"
+        },
+        "scmHostType": {
+          "type": "string"
+        }
+      }
+    },
+    "CIWebhookInfoDTO": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "type": "string"
+        },
+        "author": {
+          "$ref": "#/definitions/CIBuildAuthor"
+        },
+        "branch": {
+          "$ref": "#/definitions/CIBuildBranchHook"
+        },
+        "pullRequest": {
+          "$ref": "#/definitions/CIBuildPRHook"
+        },
+        "userSource": {
+          "type": "string"
+        },
+        "release": {
+          "$ref": "#/definitions/CIBuildReleaseHook"
+        }
+      }
+    },
+    "ResponseCIPipelineModuleInfo": {
       "type": "object",
       "properties": {
         "status": {
@@ -11319,15 +12933,23 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PartialSchemaDTO"
-          }
+          "$ref": "#/definitions/CIPipelineModuleInfo"
         },
         "metaData": {
           "type": "object"
         },
         "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "TIBuildDetails": {
+      "type": "object",
+      "properties": {
+        "buildTool": {
+          "type": "string"
+        },
+        "language": {
           "type": "string"
         }
       }
@@ -11389,12 +13011,14 @@
               "STO",
               "CHAOS",
               "SRM",
+              "IACM",
+              "CET",
               "CODE",
               "CORE",
               "PMS",
               "TEMPLATESERVICE",
               "GOVERNANCE",
-              "IACM"
+              "IDP"
             ]
           }
         },
@@ -11435,12 +13059,14 @@
             "STO",
             "CHAOS",
             "SRM",
+            "IACM",
+            "CET",
             "CODE",
             "CORE",
             "PMS",
             "TEMPLATESERVICE",
             "GOVERNANCE",
-            "IACM"
+            "IDP"
           ]
         },
         "yamlSchemaMetadata": {

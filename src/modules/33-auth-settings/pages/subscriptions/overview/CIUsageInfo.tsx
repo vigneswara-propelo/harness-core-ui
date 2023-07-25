@@ -8,6 +8,7 @@
 import React from 'react'
 import { Layout, PageError } from '@harness/uicore'
 import moment from 'moment'
+
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -24,12 +25,14 @@ interface ActiveDevelopersProps {
 interface CreditInfoProps {
   totalCredits: number
   expiryDate: string
+  creditsUsed: number
 }
 
 interface CIUsageInfoProps {
   module: ModuleName
   licenseData: ModuleLicenseDTO
   creditsData?: CreditDTO[]
+  creditsUsed?: number
 }
 const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, activeUsers, rightHeader }) => {
   const { getString } = useStrings()
@@ -51,20 +54,26 @@ const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, ac
   }
   return <UsageInfoCard {...props} />
 }
-const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate }) => {
+const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate, creditsUsed }) => {
   const { getString } = useStrings()
-  const leftHeader = getString('common.subscriptions.usage.allCredits')
+  const leftHeader = getString('common.subscriptions.usage.availableCredits')
+  const hasBar = true
+  const leftFooter = getString('common.subscriptions.usage.available')
   const tooltip = getString('common.subscriptions.usage.creditTooltip')
   const tooltipExpiry = getString('common.subscriptions.usage.creditTooltipExpiry', { date: expiryDate })
   const defaultRightHeader = getString('common.subscriptions.usage.creditsRightHeader', {
     date: expiryDate
   })
   const props = {
+    creditsUsed,
     credits: totalCredits,
     leftHeader,
     tooltip,
     tooltipExpiry,
-    rightHeader: defaultRightHeader
+    hasBar,
+    leftFooter,
+    rightHeader: '',
+    rightFooter: defaultRightHeader || ''
   }
   return <UsageInfoCard {...props} />
 }
@@ -81,9 +90,10 @@ export const creditSum = (creditsData: CreditDTO[]): number => {
   return totalCredits
 }
 const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
-  const { creditsData } = props
+  const { creditsData, creditsUsed } = props
   const { BUILD_CREDITS_VIEW } = useFeatureFlags()
   let totalCredits = 0
+
   let expiryDate = ''
   if (creditsData && creditsData.length > 0) {
     totalCredits = creditSum(creditsData)
@@ -124,7 +134,9 @@ const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
         subscribedUsers={limit?.ci?.totalDevelopers || 0}
         activeUsers={usage?.ci?.activeCommitters?.count || 0}
       />
-      {BUILD_CREDITS_VIEW === true ? <CreditInfo totalCredits={totalCredits} expiryDate={expiryDate} /> : null}
+      {BUILD_CREDITS_VIEW === true ? (
+        <CreditInfo creditsUsed={creditsUsed || 0} totalCredits={totalCredits} expiryDate={expiryDate} />
+      ) : null}
     </Layout.Horizontal>
   )
 }

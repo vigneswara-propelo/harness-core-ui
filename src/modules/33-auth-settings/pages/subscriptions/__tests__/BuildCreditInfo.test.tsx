@@ -24,6 +24,8 @@ enum Status {
 }
 
 describe('Build Credit Info test ', () => {
+  jest.useFakeTimers({ advanceTimers: true })
+  jest.setSystemTime(new Date('2020-01-19'))
   test('Build Credit Info', () => {
     const data = {
       id: '622596d705bb66724f02cf12',
@@ -44,6 +46,7 @@ describe('Build Credit Info test ', () => {
     const { container } = render(
       <TestWrapper>
         <BuildCreditInfoTable
+          creditsUsed={0}
           licenseData={data}
           data={[
             { quantity: 1000, expiryTime: 1234567789, purchaseTime: 12345675678 },
@@ -74,7 +77,7 @@ describe('Build Credit Info test ', () => {
     }
     const { container } = render(
       <TestWrapper>
-        <BuildCreditInfoTable licenseData={data} data={[]} />
+        <BuildCreditInfoTable creditsUsed={0} licenseData={data} data={[]} />
       </TestWrapper>
     )
 

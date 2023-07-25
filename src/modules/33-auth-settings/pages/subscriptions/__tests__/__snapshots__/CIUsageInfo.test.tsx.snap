@@ -104,7 +104,7 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
             >
-              common.subscriptions.usage.allCredits
+              common.subscriptions.usage.availableCredits
             </p>
             <span
               class="bp3-popover-wrapper"
@@ -136,12 +136,21 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
           >
-            common.subscriptions.usage.creditsRightHeader
+            
           </p>
         </div>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-size-large StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
         />
+        <div
+          class="StyledProps--font StyledProps--main bar StyledProps--background-grey100 StyledProps--border StyledProps--margin-bottom-small"
+          style="width: 100%; height: 10px;"
+        >
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--background-primary6 StyledProps--border"
+            style="width: 0%; height: 100%;"
+          />
+        </div>
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
@@ -149,6 +158,14 @@ exports[`CIUsageInfo CIUsageInfo 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
           >
              
+            common.subscriptions.usage.available
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color"
+          >
+            0
+            % 
+            common.subscriptions.usage.creditsRightHeader
           </p>
         </div>
       </div>

@@ -1190,6 +1190,8 @@ export interface StringsMap {
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
   'common.subscriptions.usage.allCredits': string
+  'common.subscriptions.usage.available': string
+  'common.subscriptions.usage.availableCredits': string
   'common.subscriptions.usage.buildCredits': string
   'common.subscriptions.usage.ccmTooltip': string
   'common.subscriptions.usage.ccmUsers': string
@@ -1224,6 +1226,7 @@ export interface StringsMap {
   'common.subscriptions.usage.stoDevelopersTooltip': string
   'common.subscriptions.usage.stoScans': string
   'common.subscriptions.usage.stoScansTooltip': string
+  'common.subscriptions.usage.usedCredits': string
   'common.subtotal': string
   'common.successCount': string
   'common.successfullCreate': string

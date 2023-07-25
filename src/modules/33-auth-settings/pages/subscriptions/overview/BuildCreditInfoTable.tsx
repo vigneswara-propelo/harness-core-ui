@@ -21,6 +21,7 @@ import pageCss from '../SubscriptionsPage.module.scss'
 interface SummaryCardData {
   title: string
   count: number | string
+  fromDate?: string
   className: string
 }
 
@@ -38,9 +39,10 @@ type CellType = Renderer<CellTypeWithActions<CreditDTO>>
 export interface BuildCreditInfoTableProps {
   data: CreditDTO[]
   licenseData: CIModuleLicenseDTO | undefined
+  creditsUsed: number
 }
 
-export function BuildCreditInfoTable({ data }: BuildCreditInfoTableProps): React.ReactElement {
+export function BuildCreditInfoTable({ data, creditsUsed }: BuildCreditInfoTableProps): React.ReactElement {
   const { getString } = useStrings()
   let totalCredits = 0
   if (data && data.length > 0) {
@@ -123,16 +125,29 @@ export function BuildCreditInfoTable({ data }: BuildCreditInfoTableProps): React
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [])
 
+  const creditsAvailable =
+    totalCredits !== undefined && creditsUsed !== undefined && creditsUsed >= 0 ? totalCredits - creditsUsed : 0
+
+  const fetchStartDate = () => {
+    if (data && data.length > 0) {
+      const filteredSmallestTimeObject = data?.reduce((prev, curr) =>
+        (prev?.purchaseTime || 0) < (curr?.purchaseTime || 0) ? prev : curr
+      )
+      return filteredSmallestTimeObject.purchaseTime
+    }
+  }
   const summaryCardsData: SummaryCardData[] = useMemo(() => {
+    const startDate = fetchStartDate()
     return [
       {
-        title: getString('common.subscriptions.usage.allCredits'),
-        count: totalCredits || 0,
+        title: getString('common.subscriptions.usage.availableCredits'),
+        count: creditsAvailable || 0,
         className: pageCss.peakClass
       },
       {
-        title: getString('common.plans.subscription'),
-        count: data.length > 0 ? data.length : 0,
+        title: getString('common.subscriptions.usage.usedCredits'),
+        count: creditsUsed && creditsUsed > 0 ? creditsUsed : 0,
+        fromDate: moment(startDate).format('MMM DD YYYY'),
         className: pageCss.subClass
       },
       {
@@ -142,7 +157,7 @@ export function BuildCreditInfoTable({ data }: BuildCreditInfoTableProps): React
         className: pageCss.overUseClass
       }
     ]
-  }, [totalCredits])
+  }, [totalCredits, creditsUsed])
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>

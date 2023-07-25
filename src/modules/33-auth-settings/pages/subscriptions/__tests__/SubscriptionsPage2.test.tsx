@@ -20,8 +20,8 @@ import {
   useDownloadActiveServiceCSVReport,
   useGetCreditsByAccount
 } from 'services/cd-ng'
+import { listActiveDevelopersPromise, useGetCredits } from 'services/ci'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
-import { listActiveDevelopersPromise } from 'services/ci'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
@@ -37,6 +37,7 @@ const getListActiveDevelopersPromiseMock = listActiveDevelopersPromise as jest.M
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
+const useGetCreditsMock = useGetCredits as jest.MockedFunction<any>
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
@@ -56,6 +57,17 @@ const devListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     data: ['abc', 'def']
   })
+})
+useGetCreditsMock.mockImplementation(() => {
+  return {
+    data: {
+      data: {
+        credits: '123'
+      },
+      status: 'SUCCESS'
+    },
+    refetch: jest.fn()
+  }
 })
 const serviceListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({

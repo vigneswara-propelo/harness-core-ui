@@ -2215,6 +2215,7 @@ export type GitCloneStepInfo = StepSpecType & {
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
   branch?: string
+  repo?: string
 }
 
 export interface GitInfo {
@@ -6149,6 +6150,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaPrepareRollbackV2'
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
   yamlGroup?: string
 }
 

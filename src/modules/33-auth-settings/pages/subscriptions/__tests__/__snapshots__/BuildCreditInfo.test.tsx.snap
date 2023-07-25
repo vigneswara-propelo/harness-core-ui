@@ -35,7 +35,7 @@ exports[`Build Credit Info test  Build Credit Info with emmpty credit data: buil
               <p
                 class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
               >
-                common.subscriptions.usage.allCredits
+                common.subscriptions.usage.availableCredits
               </p>
               <div
                 class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -53,7 +53,7 @@ exports[`Build Credit Info test  Build Credit Info with emmpty credit data: buil
               <p
                 class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
               >
-                common.plans.subscription
+                common.subscriptions.usage.usedCredits (from Jan 19 2020)
               </p>
               <div
                 class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -143,7 +143,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <p
                 class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
               >
-                common.subscriptions.usage.allCredits
+                common.subscriptions.usage.availableCredits
               </p>
               <div
                 class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -161,7 +161,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <p
                 class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
               >
-                common.plans.subscription
+                common.subscriptions.usage.usedCredits (from May 23 1970)
               </p>
               <div
                 class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -169,7 +169,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
                 >
-                  2
+                  0
                 </p>
               </div>
             </div>

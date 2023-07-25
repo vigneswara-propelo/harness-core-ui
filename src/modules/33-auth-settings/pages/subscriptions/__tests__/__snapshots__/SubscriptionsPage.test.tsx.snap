@@ -1253,7 +1253,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                   <p
                     class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                   >
-                    common.subscriptions.usage.allCredits
+                    common.subscriptions.usage.availableCredits
                   </p>
                   <div
                     class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -1261,7 +1261,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                     <p
                       class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
                     >
-                      0
+                      -123
                     </p>
                   </div>
                 </div>
@@ -1271,7 +1271,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                   <p
                     class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
                   >
-                    common.plans.subscription
+                    common.subscriptions.usage.usedCredits (from Dec 21 2016)
                   </p>
                   <div
                     class="Layout--horizontal StyledProps--main frequencyContainer"
@@ -1279,7 +1279,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                     <p
                       class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
                     >
-                      0
+                      123
                     </p>
                   </div>
                 </div>

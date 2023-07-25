@@ -582,7 +582,10 @@ subscriptions:
     monthlyUsers: Monthly Active Users
     activeDevelopers: Active Developers
     creditsRightHeader: Expires on {{date}}
-    allCredits: Credits
+    availableCredits: Available Credits
+    usedCredits: Used Credits
+    allCredits: All Credits
+    available: Available
     freeCredits: free credits
     developers: Developers
     developer: Developer
