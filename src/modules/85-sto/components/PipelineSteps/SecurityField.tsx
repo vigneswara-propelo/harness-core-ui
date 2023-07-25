@@ -18,6 +18,7 @@ import type { StringsMap } from 'stringTypes'
 import { renderOptionalWrapper } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import SectionHeader from './SectionHeader'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -92,6 +93,7 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
   const fields = Object.entries(enableFields)
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   if (!enableFields) return null
   return (
@@ -131,11 +133,11 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
                   multiTypeInputProps: {
                     expressions,
                     allowableTypes,
-                    selectProps: { items: selectItems }
+                    selectProps: { items: selectItems },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                    ...multiTypeInputProps
                   },
-                  width: 384,
-                  disabled: readonly || selectItems?.length === 1,
-                  ...multiTypeInputProps
+                  disabled: readonly || selectItems?.length === 1
                 }}
               />
             </Container>
@@ -153,6 +155,7 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
                 label={getString(label)}
                 setToFalseWhenEmpty={true}
                 multiTypeTextbox={{
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   expressions,
                   allowableTypes
                 }}
@@ -171,7 +174,9 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
                 ...inputProps,
                 multiTextInputProps: {
                   allowableTypes,
-                  expressions
+                  expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  ...multiTypeInputProps
                 }
               }}
             />
