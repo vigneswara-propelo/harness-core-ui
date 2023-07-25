@@ -38,7 +38,7 @@ const drawerStates: IDrawerProps = {
   hasBackdrop: true,
   usePortal: true,
   isOpen: true,
-  size: 790,
+  size: 1000,
   backdropClassName: css.backdrop,
   className: css.container
 }
@@ -48,7 +48,7 @@ const DIFF_VIEWER_OPTIONS = {
   minimap: { enabled: false },
   codeLens: false,
   readOnly: true,
-  renderSideBySide: false,
+  renderSideBySide: true,
   lineNumbers: 'off' as const,
   inDiffEditor: true,
   scrollBeyondLastLine: false,
@@ -171,9 +171,9 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
               <Container margin={{ top: 'xsmall', left: 'small', right: 'small' }} height={editorHeight}>
                 {!!diffData && (
                   <MonacoDiffEditor
-                    width="670"
+                    width="100%"
                     height={editorHeight}
-                    language="javascript"
+                    language="yaml"
                     original={valueBefore}
                     value={valueAfter}
                     options={DIFF_VIEWER_OPTIONS}
@@ -207,20 +207,7 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
                   />
                 )}
 
-                {loading && (
-                  <Container
-                    style={{
-                      position: 'fixed',
-                      top: `${buttonClientY + 16}px`,
-                      right: '40px',
-                      width: '715px',
-                      bottom: '20px',
-                      zIndex: 9
-                    }}
-                  >
-                    <ContainerSpinner />
-                  </Container>
-                )}
+                {loading && <ContainerSpinner />}
               </Container>
             )}
           </Container>

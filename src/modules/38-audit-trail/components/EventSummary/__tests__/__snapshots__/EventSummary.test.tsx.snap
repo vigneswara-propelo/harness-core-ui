@@ -3,7 +3,7 @@
 exports[`Event summary test render 1`] = `
 <div
   class="bp3-drawer drawer bp3-overlay-content bp3-overlay-appear bp3-overlay-appear-active"
-  style="width: 790px;"
+  style="width: 1000px;"
   tabindex="0"
 >
   <div

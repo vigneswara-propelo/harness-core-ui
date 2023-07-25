@@ -26,7 +26,7 @@ const drawerStates: IDrawerProps = {
   hasBackdrop: true,
   usePortal: true,
   isOpen: true,
-  size: 790
+  size: 1000
 }
 
 interface EventSummaryProps {

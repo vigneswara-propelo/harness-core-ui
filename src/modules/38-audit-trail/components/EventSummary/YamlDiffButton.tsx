@@ -25,7 +25,7 @@ const DIFF_VIEWER_OPTIONS = {
   minimap: { enabled: false },
   codeLens: false,
   readOnly: true,
-  renderSideBySide: false,
+  renderSideBySide: true,
   lineNumbers: 'off' as const,
   inDiffEditor: true,
   scrollBeyondLastLine: false,
