@@ -209,7 +209,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       refetchSubscriptions({
         body: pipelineRuntimeYaml,
         queryParams: {
-          connectorRef: connectorRefValue,
+          connectorRef: getFinalQueryParamValue(connectorRefValue),
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
