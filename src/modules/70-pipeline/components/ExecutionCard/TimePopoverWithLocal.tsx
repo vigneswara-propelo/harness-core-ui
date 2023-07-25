@@ -20,37 +20,44 @@ export interface TimePopoverProps extends TextProps, React.ComponentProps<typeof
   icon?: IconName
   className?: string
 }
+export const DATE_PARSE_FORMAT = 'MMM DD, YYYY hh:mm:ss A'
 
 enum TimeZone {
   UTC = 'UTC',
   LOCAL = 'LOCAL'
 }
 
-function TimeDate(timeZone: string, time: number): JSX.Element {
+export function DateTimeWithLocalContent({ time }: { time: number }): JSX.Element {
   return (
-    <>
-      <Layout.Horizontal className={css.popoverClass} spacing={'medium'}>
-        <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_200}>
-          {timeZone}
+    <Layout.Vertical>
+      <Layout.Horizontal spacing={'small'} className={css.timeWrapper}>
+        <Text
+          color={Color.PRIMARY_1}
+          font={{ variation: FontVariation.SMALL_BOLD }}
+          margin={0}
+          className={css.timezone}
+        >
+          {TimeZone.UTC}
+        </Text>
+        <Text color={Color.PRIMARY_1} className={css.time} font={{ variation: FontVariation.SMALL_BOLD }}>
+          {moment(time).utc().format(DATE_PARSE_FORMAT)}
         </Text>
       </Layout.Horizontal>
-      <Layout.Horizontal className={css.dateTimeStyle} spacing={'small'}>
-        <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_200}>
-          DATE
+
+      <Layout.Horizontal spacing={'small'} className={css.timeWrapper}>
+        <Text
+          color={Color.PRIMARY_1}
+          font={{ variation: FontVariation.SMALL_BOLD }}
+          margin={0}
+          className={css.timezone}
+        >
+          {TimeZone.LOCAL}
         </Text>
-        <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.WHITE}>
-          {timeZone === TimeZone.UTC ? moment(time).utc().format('DD/MM/YYYY') : new Date(time).toLocaleDateString()}
-        </Text>
-      </Layout.Horizontal>
-      <Layout.Horizontal className={css.dateTimeStyle} spacing={'small'}>
-        <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_200}>
-          TIME
-        </Text>
-        <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.WHITE}>
-          {timeZone === TimeZone.UTC ? `${moment(time).utc().format('HH:mm:ss')}` : new Date(time).toLocaleTimeString()}
+        <Text color={Color.PRIMARY_1} className={css.time} font={{ variation: FontVariation.SMALL_BOLD }}>
+          {moment(time).format(DATE_PARSE_FORMAT)}
         </Text>
       </Layout.Horizontal>
-    </>
+    </Layout.Vertical>
   )
 }
 
@@ -67,8 +74,7 @@ export function TimePopoverWithLocal(props: TimePopoverProps): ReactElement {
         <ReactTimeago date={time} live title={''} />
       </Text>
       <Layout.Vertical padding="medium">
-        {TimeDate(TimeZone.UTC, time)}
-        {TimeDate(TimeZone.LOCAL, time)}
+        <DateTimeWithLocalContent time={time} />
       </Layout.Vertical>
     </Popover>
   )

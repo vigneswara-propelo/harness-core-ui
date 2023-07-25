@@ -1936,3 +1936,4 @@ templateStageUpdatedWarning: Template has been changed. Update stage to enable e
 templatePipelineUpdatedWarning: Template has been changed. Update pipeline to enable editing.
 updateStage: Update stage
 updatePipeline: Update pipeline
+abortedDetails: Aborted Details

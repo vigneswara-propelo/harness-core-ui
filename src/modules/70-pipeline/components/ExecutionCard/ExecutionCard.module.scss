@@ -246,3 +246,17 @@ $actions-translate: 10px;
   display: flex !important;
   align-items: center !important;
 }
+
+.timeWrapper {
+  display: flex;
+  gap: var(--spacing-1);
+
+  .timezone {
+    width: 15%;
+    margin-right: var(--spacing-small);
+  }
+  .time {
+    padding-left: var(--spacing-small);
+    border-left: 1px solid var(--grey-300);
+  }
+}

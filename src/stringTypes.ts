@@ -3754,6 +3754,7 @@ export interface StringsMap {
   'pipeline.OverviewEmptyStates.runPipelineHeaderMsg': string
   'pipeline.OverviewEmptyStates.runPipelineInfo': string
   'pipeline.ServiceDetail.envCardEmptyStateMsg': string
+  'pipeline.abortedDetails': string
   'pipeline.aboutYourStage.stageNamePlaceholder': string
   'pipeline.addDeploymenteRepo': string
   'pipeline.addReleaseRepo': string

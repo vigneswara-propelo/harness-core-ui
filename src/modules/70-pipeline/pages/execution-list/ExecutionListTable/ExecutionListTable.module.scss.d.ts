@@ -13,6 +13,7 @@ declare const styles: {
   readonly checkbox: string
   readonly childPipelineExecutionInfo: string
   readonly divider: string
+  readonly division: string
   readonly environment: string
   readonly environmentsText: string
   readonly execution: string

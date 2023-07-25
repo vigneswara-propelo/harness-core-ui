@@ -271,3 +271,9 @@
   align-items: end !important;
   cursor: pointer;
 }
+
+.division {
+  border-color: var(--grey-100);
+  margin: var(--spacing-medium) 0;
+  opacity: 0.2;
+}

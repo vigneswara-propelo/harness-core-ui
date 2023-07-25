@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes, Popover, Position } from '@blueprintjs/core'
+import { Classes, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
@@ -37,7 +37,7 @@ import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
-import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
+import { DateTimeWithLocalContent, TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
@@ -54,6 +54,7 @@ import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary, PipelineStageInfo, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
+import { DateTimeContent } from '@common/components/TimeAgoPopover/TimeAgoPopover'
 import FrozenExecutionDrawer from './FrozenExecutionDrawer/FrozenExecutionDrawer'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
@@ -224,6 +225,7 @@ export const StatusCell: CellType = ({ row }) => {
   const isAbortedByFreeze = ExecutionStatusEnum.AbortedByFreeze === (row.original.status as ExecutionStatus)
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false)
   const { getString } = useStrings()
+  const { module } = useModuleInfo()
 
   const AbortedByFreezePopover = (): JSX.Element => {
     return (
@@ -249,17 +251,52 @@ export const StatusCell: CellType = ({ row }) => {
     )
   }
 
+  const AbortedByUserPopover = (): JSX.Element => {
+    const { userName, email = '', createdAt = 0 } = row.original.abortedBy || {}
+    const DateTimeComponent = module === 'cd' ? DateTimeWithLocalContent : DateTimeContent
+
+    return (
+      <Popover interactionKind={PopoverInteractionKind.HOVER} position={Position.TOP} className={Classes.DARK}>
+        <Icon name="info" size={10} color={Color.PRIMARY_7} padding={{ left: 'small' }} flex />
+        <Layout.Vertical padding="medium">
+          <Text color={Color.PRIMARY_1} font={{ variation: FontVariation.SMALL_BOLD }} padding={{ bottom: 'small' }}>
+            {getString('pipeline.abortedDetails')}
+          </Text>
+          <hr className={css.division} />
+          <Layout.Horizontal padding={{ bottom: 'medium' }}>
+            <Icon name="avatar" size={15} color={Color.GREY_100} padding={{ right: 'small', top: 'small' }} />
+            <Layout.Vertical>
+              <Text color={Color.PRIMARY_1} font={{ variation: FontVariation.SMALL_BOLD }}>
+                {userName}
+              </Text>
+              <Text color={Color.PRIMARY_1} font={{ variation: FontVariation.SMALL_BOLD }}>
+                {email}
+              </Text>
+            </Layout.Vertical>
+          </Layout.Horizontal>
+          <Layout.Horizontal>
+            <Icon name="timer" size={15} color={Color.GREY_100} padding={{ right: 'small', top: 'small' }} />
+            <DateTimeComponent time={createdAt} />
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      </Popover>
+    )
+  }
+
   return (
     <div onClick={e => e.stopPropagation()}>
-      <Popover
-        interactionKind="hover"
-        popoverClassName={css.popoverStyle}
-        content={<AbortedByFreezePopover />}
-        disabled={!isAbortedByFreeze || drawerOpen}
-        position={Position.TOP}
-      >
-        <ExecutionStatusLabel status={row.original.status as ExecutionStatus} disableTooltip={isAbortedByFreeze} />
-      </Popover>
+      <Layout.Horizontal>
+        <Popover
+          interactionKind={PopoverInteractionKind.HOVER}
+          popoverClassName={css.popoverStyle}
+          content={<AbortedByFreezePopover />}
+          disabled={!isAbortedByFreeze || drawerOpen}
+          position={Position.TOP}
+        >
+          <ExecutionStatusLabel status={row.original.status as ExecutionStatus} disableTooltip={isAbortedByFreeze} />
+        </Popover>
+        {!isEmpty(row.original?.abortedBy) && <AbortedByUserPopover />}
+      </Layout.Horizontal>
       {drawerOpen && (
         <FrozenExecutionDrawer
           drawerOpen={drawerOpen}

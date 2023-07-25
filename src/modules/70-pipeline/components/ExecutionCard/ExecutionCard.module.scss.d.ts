@@ -33,8 +33,11 @@ declare const styles: {
   readonly singleExecutionTag: string
   readonly statusContainer: string
   readonly tags: string
+  readonly time: string
   readonly timeAgo: string
+  readonly timeWrapper: string
   readonly timers: string
+  readonly timezone: string
   readonly triggerInfo: string
   readonly triggerType: string
   readonly user: string
