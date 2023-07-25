@@ -39,7 +39,6 @@ import {
   ServiceNowTicketTypeDTO,
   useGetServiceNowIssueMetadata,
   useGetServiceNowTemplateMetadata,
-  useGetServiceNowTicketTypes,
   useGetServiceNowTicketTypesV2
 } from 'services/cd-ng'
 import type {
@@ -72,7 +71,6 @@ import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineS
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowUpdateStepModeProps, ServiceNowUpdateData, ServiceNowUpdateFormContentInterface } from './types'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
@@ -97,7 +95,6 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
 
   const [ticketFieldList, setTicketFieldList] = useState<ServiceNowFieldNG[]>([])
   const [count, setCount] = React.useState(0)
@@ -418,7 +415,7 @@ function FormContent({
             multiTypeInputProps={{
               selectProps: {
                 addClearBtn: true,
-                allowCreatingNewItems: !!CDS_SERVICENOW_TICKET_TYPE_V2,
+                allowCreatingNewItems: true,
                 items: ticketTypesLoading
                   ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                   : serviceNowTicketTypesOptions
@@ -673,15 +670,6 @@ function ServiceNowUpdateStepMode(
     repoIdentifier,
     branch
   }
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
-
-  const serviceNowTicketTypesQuery = useGetServiceNowTicketTypes({
-    lazy: true,
-    queryParams: {
-      ...commonParams,
-      connectorRef: ''
-    }
-  })
 
   const serviceNowTicketTypesV2Query = useGetServiceNowTicketTypesV2({
     lazy: true,
@@ -763,9 +751,7 @@ function ServiceNowUpdateStepMode(
               stepViewType={stepViewType}
               readonly={readonly}
               isNewStep={isNewStep}
-              serviceNowTicketTypesQuery={
-                CDS_SERVICENOW_TICKET_TYPE_V2 ? serviceNowTicketTypesV2Query : serviceNowTicketTypesQuery
-              }
+              serviceNowTicketTypesQuery={serviceNowTicketTypesV2Query}
               serviceNowIssueCreateMetadataQuery={serviceNowIssueCreateMetadataQuery}
               serviceNowTemplateMetaDataQuery={serviceNowTemplateMetaDataQuery}
             />

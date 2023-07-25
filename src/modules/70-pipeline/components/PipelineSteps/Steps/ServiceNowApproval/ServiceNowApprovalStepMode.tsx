@@ -60,7 +60,6 @@ import { StringKeys, useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'
@@ -93,7 +92,6 @@ function FormContent({
     repoIdentifier,
     branch
   }
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
 
   const ticketTypeKeyFixedValue =
@@ -142,21 +140,12 @@ function FormContent({
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
-      if (CDS_SERVICENOW_TICKET_TYPE_V2) {
-        getServiceNowTicketTypesV2Query.refetch({
-          queryParams: {
-            ...commonParams,
-            connectorRef: connectorRefFixedValue.toString()
-          }
-        })
-      } else {
-        getServiceNowTicketTypesQuery.refetch({
-          queryParams: {
-            ...commonParams,
-            connectorRef: connectorRefFixedValue.toString()
-          }
-        })
-      }
+      getServiceNowTicketTypesV2Query.refetch({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue.toString()
+        }
+      })
     }
   }, [connectorRefFixedValue])
 
@@ -265,7 +254,7 @@ function FormContent({
             multiTypeInputProps={{
               selectProps: {
                 addClearBtn: true,
-                allowCreatingNewItems: !!CDS_SERVICENOW_TICKET_TYPE_V2,
+                allowCreatingNewItems: true,
                 items: ticketTypesLoading
                   ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                   : serviceNowTicketTypesOptions

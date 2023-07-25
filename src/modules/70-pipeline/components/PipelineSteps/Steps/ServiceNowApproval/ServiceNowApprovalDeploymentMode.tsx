@@ -28,11 +28,10 @@ import {
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowTicketTypeSelectOption, SnowApprovalDeploymentModeProps } from './types'
 import { getDateTimeOptions } from './ServiceNowApprovalChangeWindow'
 import { getGenuineValue } from './helper'
+import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import css from './ServiceNowApproval.module.scss'
 
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
@@ -57,7 +56,6 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
     branch
   }
   const { expressions } = useVariablesExpression()
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
   const connectorRefFixedValue =
     template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
       ? get(formik?.values, `${prefix}spec.connectorRef`)
@@ -99,21 +97,12 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
       !isEmpty(connectorRefFixedValue) &&
       getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
     ) {
-      if (CDS_SERVICENOW_TICKET_TYPE_V2) {
-        getServiceNowTicketTypesV2Query.refetch({
-          queryParams: {
-            ...commonParams,
-            connectorRef: connectorRefFixedValue?.toString()
-          }
-        })
-      } else {
-        getServiceNowTicketTypesQuery.refetch({
-          queryParams: {
-            ...commonParams,
-            connectorRef: connectorRefFixedValue?.toString()
-          }
-        })
-      }
+      getServiceNowTicketTypesV2Query.refetch({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue?.toString()
+        }
+      })
     }
   }, [connectorRefFixedValue])
 
@@ -224,7 +213,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           multiTypeInputProps={{
             selectProps: {
               addClearBtn: true,
-              allowCreatingNewItems: !!CDS_SERVICENOW_TICKET_TYPE_V2,
+              allowCreatingNewItems: true,
               items: ticketTypesLoading
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions

@@ -36,12 +36,7 @@ import type {
   ServiceNowCreateDeploymentModeProps
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
-import {
-  ServiceNowTicketTypeDTO,
-  useGetServiceNowIssueMetadata,
-  useGetServiceNowTicketTypes,
-  useGetServiceNowTicketTypesV2
-} from 'services/cd-ng'
+import { ServiceNowTicketTypeDTO, useGetServiceNowIssueMetadata, useGetServiceNowTicketTypesV2 } from 'services/cd-ng'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import {
   ServiceNowCreateFieldType,
@@ -55,7 +50,6 @@ import {
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 
@@ -111,8 +105,6 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   )
   // If index is zero/ or greater than return true, if null (no field available) then return false
   const fetchMetadataRequired = areFieldsRuntime === 0 ? true : areFieldsRuntime ? areFieldsRuntime > 0 : false
-
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
 
   useEffect(() => {
     if (connectorRefFixedValue) {
@@ -257,7 +249,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           multiTypeInputProps={{
             selectProps: {
               addClearBtn: true,
-              allowCreatingNewItems: !!CDS_SERVICENOW_TICKET_TYPE_V2,
+              allowCreatingNewItems: true,
               items: ticketTypesLoading
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions
@@ -410,7 +402,6 @@ export default function ServiceNowCreateDeploymentMode(props: ServiceNowCreateDe
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
 
   const commonParams = {
     accountIdentifier: accountId,
@@ -419,14 +410,6 @@ export default function ServiceNowCreateDeploymentMode(props: ServiceNowCreateDe
     repoIdentifier,
     branch
   }
-
-  const serviceNowTicketTypesQuery = useGetServiceNowTicketTypes({
-    lazy: true,
-    queryParams: {
-      ...commonParams,
-      connectorRef: ''
-    }
-  })
 
   const serviceNowTicketTypesV2Query = useGetServiceNowTicketTypesV2({
     lazy: true,
@@ -447,9 +430,7 @@ export default function ServiceNowCreateDeploymentMode(props: ServiceNowCreateDe
     <FormContent
       {...props}
       serviceNowIssueCreateMetadataQuery={serviceNowIssueCreateMetadataQuery}
-      serviceNowTicketTypesQuery={
-        CDS_SERVICENOW_TICKET_TYPE_V2 ? serviceNowTicketTypesV2Query : serviceNowTicketTypesQuery
-      }
+      serviceNowTicketTypesQuery={serviceNowTicketTypesV2Query}
     />
   )
 }

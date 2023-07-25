@@ -1527,21 +1527,16 @@ export const mockTicketTypesResponseV2: UseGetMockData<ResponseListServiceNowTic
     metaData: null as unknown as undefined,
     data: [
       {
-        key: 'change_request',
-        name: 'Change Request'
+        key: 'INCIDENT',
+        name: 'INCIDENT'
       },
       {
-        key: 'change_task',
-        name: 'Change Task'
-      },
-
-      {
-        key: 'release_task',
-        name: 'Feature Task'
+        key: 'CHANGE',
+        name: 'CHANGE'
       },
       {
-        key: 'incident_task',
-        name: 'Incident Task'
+        key: 'CHANGE_TASK',
+        name: 'CHANGE_TASK'
       }
     ]
   }

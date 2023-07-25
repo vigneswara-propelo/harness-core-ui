@@ -15,7 +15,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     '/pipeline/api/approvals/stage-yaml-snippet?routingId=accountId&approvalType=SERVICENOW_APPROVAL'
 
   const serviceNowTicketTypesCall =
-    'ng/api/servicenow/ticketTypes?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector'
+    'ng/api/servicenow/ticketTypesV2?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector'
 
   const serviceNowMetadataCall =
     'ng/api/servicenow/metadata?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector&ticketType=INCIDENT'

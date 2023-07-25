@@ -38,7 +38,6 @@ import {
   ServiceNowTicketTypeDTO,
   useGetServiceNowIssueMetadata,
   useGetServiceNowTemplateMetadata,
-  useGetServiceNowTicketTypes,
   useGetServiceNowTicketTypesV2
 } from 'services/cd-ng'
 import type {
@@ -57,7 +56,6 @@ import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineS
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -107,7 +105,6 @@ function FormContent({
   )
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [ticketValueType, setTicketValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -426,7 +423,7 @@ function FormContent({
             multiTypeInputProps={{
               selectProps: {
                 addClearBtn: true,
-                allowCreatingNewItems: !!CDS_SERVICENOW_TICKET_TYPE_V2,
+                allowCreatingNewItems: true,
                 items: ticketTypesLoading
                   ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                   : serviceNowTicketTypesOptions
@@ -654,15 +651,6 @@ function ServiceNowCreateStepMode(
     repoIdentifier,
     branch
   }
-  const { CDS_SERVICENOW_TICKET_TYPE_V2 } = useFeatureFlags()
-
-  const serviceNowTicketTypesQuery = useGetServiceNowTicketTypes({
-    lazy: true,
-    queryParams: {
-      ...commonParams,
-      connectorRef: ''
-    }
-  })
 
   const serviceNowTicketTypesV2Query = useGetServiceNowTicketTypesV2({
     lazy: true,
@@ -743,9 +731,7 @@ function ServiceNowCreateStepMode(
               readonly={readonly}
               isNewStep={isNewStep}
               serviceNowTemplateMetaDataQuery={serviceNowTemplateMetaDataQuery}
-              serviceNowTicketTypesQuery={
-                CDS_SERVICENOW_TICKET_TYPE_V2 ? serviceNowTicketTypesV2Query : serviceNowTicketTypesQuery
-              }
+              serviceNowTicketTypesQuery={serviceNowTicketTypesV2Query}
               serviceNowIssueCreateMetadataQuery={serviceNowIssueCreateMetadataQuery}
             />
           </FormikForm>
