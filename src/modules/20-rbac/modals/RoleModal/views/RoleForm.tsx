@@ -6,24 +6,16 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Button,
-  Container,
-  Formik,
-  FormikForm as Form,
-  Layout,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  ButtonVariation
-} from '@harness/uicore'
+import { Button, Container, Formik, FormikForm as Form, Layout, ButtonVariation } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { NameIdDescriptionTags, useToaster } from '@common/components'
 import { Role, usePostRole, usePutRole } from 'services/rbac'
 import { useStrings } from 'framework/strings'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import { Error } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import css from '@rbac/modals/RoleModal/useRoleModal.module.scss'
 
 interface RoleModalData {
@@ -36,10 +28,9 @@ interface RoleModalData {
 const RoleForm: React.FC<RoleModalData> = props => {
   const { data: roleData, onSubmit, isEdit, onCancel } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
-  const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
+  const [error, setError] = useState<Error>()
   const { mutate: createRole, loading: saving } = usePostRole({
     queryParams: {
       accountIdentifier: accountId,
@@ -74,7 +65,7 @@ const RoleForm: React.FC<RoleModalData> = props => {
       }
     } catch (e) {
       /* istanbul ignore next */
-      modalErrorHandler?.showDanger(getRBACErrorMessage(e))
+      setError(e?.data)
     }
   }
   return (
@@ -92,15 +83,17 @@ const RoleForm: React.FC<RoleModalData> = props => {
         identifier: IdentifierSchema(getString)
       })}
       onSubmit={values => {
-        modalErrorHandler?.hide()
         handleSubmit(values)
+        setError(undefined)
       }}
     >
       {formikProps => {
         return (
           <Form>
             <Container className={css.roleForm}>
-              <ModalErrorHandler bind={setModalErrorHandler} />
+              {error?.responseMessages?.length ? (
+                <ErrorHandler responseMessages={error?.responseMessages} className={css.errorContainer} />
+              ) : undefined}
               <NameIdDescriptionTags formikProps={formikProps} identifierProps={{ isIdentifierEditable: !isEdit }} />
             </Container>
             <Layout.Horizontal spacing="small">
