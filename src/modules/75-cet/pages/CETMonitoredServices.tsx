@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
+import { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 export const CETMonitoredServices = (): JSX.Element => {
   const { getString } = useStrings()
@@ -33,7 +34,8 @@ export const CETMonitoredServices = (): JSX.Element => {
         componentLocation={componentLocation}
         customComponents={{
           NotificationWizardOverviewStep: Overview,
-          NotificationWizardMethodStep: NotificationMethods
+          NotificationWizardMethodStep: NotificationMethods,
+          MultiTypeConnectorField: MultiTypeConnectorField
         }}
       />
     )

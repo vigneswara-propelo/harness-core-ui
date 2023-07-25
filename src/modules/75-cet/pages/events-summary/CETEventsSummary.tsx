@@ -11,6 +11,7 @@ import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
+import { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 export const CETEventsSummary = (): JSX.Element => {
   const componentLocation = {
@@ -21,7 +22,11 @@ export const CETEventsSummary = (): JSX.Element => {
     <ChildAppMounter<ETCustomMicroFrontendProps>
       ChildApp={ErrorTracking}
       componentLocation={componentLocation}
-      customComponents={{ NotificationWizardOverviewStep: Overview, NotificationWizardMethodStep: NotificationMethods }}
+      customComponents={{
+        NotificationWizardOverviewStep: Overview,
+        NotificationWizardMethodStep: NotificationMethods,
+        MultiTypeConnectorField: MultiTypeConnectorField
+      }}
     />
   )
 }

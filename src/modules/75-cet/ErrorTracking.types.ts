@@ -9,12 +9,14 @@ import type React from 'react'
 import type { NotificationMethodsProps } from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import type { OverviewProps } from '@pipeline/components/Notifications/Steps/Overview'
 import { MonitoredServiceActiveAgentsDTO } from 'services/cet/cetSchemas'
+import { MultiTypeConnectorFieldProps } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ChildAppProps } from './ErrorTrackingApp'
 
 export interface ETCustomMicroFrontendProps extends ChildAppProps {
   customComponents: {
     NotificationWizardOverviewStep: React.ComponentType<OverviewProps>
     NotificationWizardMethodStep: React.ComponentType<NotificationMethodsProps>
+    MultiTypeConnectorField: React.ComponentType<MultiTypeConnectorFieldProps>
   }
 }
 

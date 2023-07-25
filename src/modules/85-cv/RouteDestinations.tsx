@@ -61,6 +61,7 @@ import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/Harn
 import { Ticker } from '@common/components/Ticker/Ticker'
 import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
 import { RedirectToCETEventSummaryDetail, etModuleParams } from '@cet/RouteDestinations'
+import { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -540,7 +541,8 @@ export const SRMRoutes = (
         ChildApp={ErrorTracking}
         customComponents={{
           NotificationWizardOverviewStep: Overview,
-          NotificationWizardMethodStep: NotificationMethods
+          NotificationWizardMethodStep: NotificationMethods,
+          MultiTypeConnectorField: MultiTypeConnectorField
         }}
       />
     </RouteWithLayout>
