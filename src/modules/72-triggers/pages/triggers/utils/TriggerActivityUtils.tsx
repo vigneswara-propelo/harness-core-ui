@@ -7,16 +7,14 @@
 
 import React from 'react'
 import { Icon, Layout, Text } from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
-import { capitalize, defaultTo, get } from 'lodash-es'
+import { FontVariation } from '@harness/design-system'
+import { get } from 'lodash-es'
 import { CellProps, Renderer } from 'react-table'
 import { Drawer } from '@blueprintjs/core'
 import { MonacoEditorProps } from 'react-monaco-editor'
 import { NGTriggerEventHistoryResponse } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import css from '../TriggerLandingPage/TriggerActivityHistoryPage/TriggerActivityHistoryPage.module.scss'
 
 interface PayloadDrawerInterface {
@@ -32,21 +30,6 @@ export const RenderColumnEventId: CellType = ({ row }) => {
     <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }} spacing="xsmall">
       <Text>{data.eventCorrelationId}</Text>
     </Layout.Horizontal>
-  )
-}
-
-export const RenderColumnStatus: CellType = ({ row }) => {
-  const data = row.original.triggerEventStatus
-  const { status, message } = defaultTo(data, {})
-  return (
-    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
-      <ExecutionStatusLabel status={capitalize(status) as ExecutionStatus} />
-      <div className={css.statusMessage}>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
-          {message}
-        </Text>
-      </div>
-    </Layout.Vertical>
   )
 }
 

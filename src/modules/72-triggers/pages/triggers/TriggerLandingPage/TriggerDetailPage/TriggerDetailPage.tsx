@@ -204,11 +204,11 @@ export default function TriggerDetailPage(): JSX.Element {
         triggerIdentifier,
         triggerType: getTriggerBaseType(type),
         module,
-        repoIdentifier,
         branch,
-        connectorRef,
-        repoName,
-        storeType
+        repoIdentifier: defaultTo(repoIdentifier, pipeline?.data?.gitDetails?.repoIdentifier),
+        connectorRef: defaultTo(connectorRef, pipeline?.data?.connectorRef),
+        repoName: defaultTo(repoName, pipeline?.data?.gitDetails?.repoName),
+        storeType: defaultTo(storeType, pipeline?.data?.storeType)
       })
     )
   }
@@ -264,7 +264,8 @@ export default function TriggerDetailPage(): JSX.Element {
       orgIdentifier,
       projectIdentifier,
       repoIdentifier,
-      branch
+      branch,
+      getMetadataOnly: true
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })

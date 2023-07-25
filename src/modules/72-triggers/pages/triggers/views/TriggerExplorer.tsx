@@ -8,31 +8,72 @@
 import React, { useMemo } from 'react'
 import { ExpandingSearchInput, Layout, Text, Button, ButtonVariation, TableV2, Page } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { Link, useParams } from 'react-router-dom'
+import { capitalize, defaultTo, get, isEmpty } from 'lodash-es'
 import { Column } from 'react-table'
 import { Divider } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { NGTriggerEventHistoryResponse, useTriggerHistoryEventCorrelation } from 'services/pipeline-ng'
+import { NGTriggerEventHistoryResponse, useTriggerHistoryEventCorrelationV2 } from 'services/pipeline-ng'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
 import { usePrevious } from '@common/hooks/usePrevious'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import {
-  PayloadDrawer,
-  RenderColumnEventId,
-  RenderColumnPayload,
-  RenderColumnStatus
-} from '../utils/TriggerActivityUtils'
+import { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import routes from '@common/RouteDefinitions'
+import { CellType, PayloadDrawer, RenderColumnEventId, RenderColumnPayload } from '../utils/TriggerActivityUtils'
 import TriggerExplorerEmptyState from '../TriggerLandingPage/images/trigger_explorer_empty_state.svg'
 import css from './TriggerExplorer.module.scss'
 
-const RenderColumn: React.FC<{ text?: string }> = ({ text }) => {
+const RenderColumnMessage: CellType = ({ row }) => {
   return (
-    <Text color={Color.BLACK} lineClamp={1} width="90%">
-      {text}
+    <Text color={Color.BLACK} lineClamp={1} width="90%" tooltipProps={{ isDark: true }}>
+      {row.original.message}
     </Text>
+  )
+}
+
+const RenderColumnStatus: CellType = ({ row }) => {
+  const data = row.original.triggerEventStatus
+  const { status, message } = defaultTo(data, {})
+  return (
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+      <ExecutionStatusLabel status={capitalize(status) as ExecutionStatus} />
+      <div className={css.statusMessage}>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
+          {message}
+        </Text>
+      </div>
+    </Layout.Vertical>
+  )
+}
+
+const RenderTriggerName: CellType = ({ row }) => {
+  const { accountId } = useParams<AccountPathProps>()
+  const { orgIdentifier = '', projectIdentifier = '', targetIdentifier = '', triggerIdentifier = '' } = row.original
+  return (
+    <Layout.Horizontal>
+      <Link
+        to={routes.toTriggersActivityHistoryPage({
+          accountId,
+          orgIdentifier: orgIdentifier,
+          projectIdentifier: projectIdentifier,
+          pipelineIdentifier: targetIdentifier,
+          triggerIdentifier: triggerIdentifier
+        })}
+        target="_blank"
+      >
+        <Text
+          font={{ variation: FontVariation.LEAD }}
+          color={Color.PRIMARY_7}
+          tooltipProps={{ isDark: true }}
+          lineClamp={1}
+        >
+          {triggerIdentifier}
+        </Text>
+      </Link>
+    </Layout.Horizontal>
   )
 }
 
@@ -47,7 +88,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
     loading,
     refetch,
     error
-  } = useTriggerHistoryEventCorrelation({
+  } = useTriggerHistoryEventCorrelationV2({
     eventCorrelationId: searchId,
     queryParams: {
       accountIdentifier: accountId
@@ -71,14 +112,14 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
       {
         Header: getString('triggers.activityHistory.eventCorrelationId'),
         id: 'eventCorrelationId',
-        width: '25%',
+        width: '20%',
         Cell: RenderColumnEventId
       },
       {
         Header: getString('common.triggerName'),
         id: 'name',
-        width: '15%',
-        Cell: ({ row }) => <RenderColumn text={row.original.triggerIdentifier} />
+        width: '20%',
+        Cell: RenderTriggerName
       },
       {
         Header: getString('triggers.activityHistory.triggerStatus'),
@@ -90,7 +131,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
         Header: getString('message'),
         id: 'message',
         width: '35%',
-        Cell: ({ row }) => <RenderColumn text={row.original.message} />
+        Cell: RenderColumnMessage
       },
       {
         Header: getString('common.payload'),

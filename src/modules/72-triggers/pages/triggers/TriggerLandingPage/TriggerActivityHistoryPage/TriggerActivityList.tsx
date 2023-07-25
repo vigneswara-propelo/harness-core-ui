@@ -9,22 +9,19 @@ import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import type { Column } from 'react-table'
-import { Text, Layout, TableV2 } from '@harness/uicore'
+import { Text, Layout, TableV2, Popover } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get } from 'lodash-es'
+import { capitalize, defaultTo, get } from 'lodash-es'
+import { Classes, Intent, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import type { NGTriggerEventHistoryResponse, PageNGTriggerEventHistoryResponse } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import {
-  CellType,
-  PayloadDrawer,
-  RenderColumnEventId,
-  RenderColumnPayload,
-  RenderColumnStatus
-} from '../../utils/TriggerActivityUtils'
+import { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import { CellType, PayloadDrawer, RenderColumnEventId, RenderColumnPayload } from '../../utils/TriggerActivityUtils'
 import css from './TriggerActivityHistoryPage.module.scss'
 
 interface TriggerActivityListProps {
@@ -32,15 +29,46 @@ interface TriggerActivityListProps {
 }
 
 const RenderColumnTime: CellType = ({ row }) => {
-  const data = get(row.original, 'targetExecutionSummary')
+  const data = row.original
 
   return (
     <Layout.Vertical>
       <Layout.Horizontal spacing="small" width={230}>
         <Text color={Color.BLACK} lineClamp={1} font={{ variation: FontVariation.BODY2 }}>
-          <ReactTimeago date={get(data, 'startTs') as number} />
+          <ReactTimeago date={get(data, 'eventCreatedAt') as number} />
         </Text>
       </Layout.Horizontal>
+    </Layout.Vertical>
+  )
+}
+
+const RenderColumnStatus: CellType = ({ row }) => {
+  const data = row.original.triggerEventStatus
+  const { status, message } = defaultTo(data, {})
+  return (
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+      <Popover
+        position={Position.TOP}
+        interactionKind={PopoverInteractionKind.HOVER}
+        className={Classes.DARK}
+        popoverClassName={css.statusPopover}
+        content={
+          <Text
+            intent={status === 'SUCCESS' ? Intent.SUCCESS : Intent.DANGER}
+            padding={'medium'}
+            font={{ weight: 'bold' }}
+          >
+            {row.original.message}
+          </Text>
+        }
+      >
+        <ExecutionStatusLabel status={capitalize(status) as ExecutionStatus} />
+      </Popover>
+      <div className={css.statusMessage}>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
+          {message}
+        </Text>
+      </div>
     </Layout.Vertical>
   )
 }
@@ -66,6 +94,7 @@ const RenderColumnExecutionId: CellType = ({ row }) => {
             module,
             source: 'executions'
           })}
+          target="_blank"
         >
           <Text
             font={{ variation: FontVariation.LEAD }}
@@ -114,12 +143,12 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
       {
         Header: getString('triggers.activityHistory.executionDetails'),
         accessor: row => row?.targetExecutionSummary?.planExecutionId,
-        width: '25%',
+        width: '30%',
         Cell: RenderColumnExecutionId
       },
       {
         Header: getString('common.payload'),
-        width: '10%',
+        width: '5%',
         Cell: RenderColumnPayload,
         setShowPayload,
         setSelectedPayloadRow

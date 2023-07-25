@@ -11,6 +11,7 @@ declare const styles: {
   readonly drawer: string
   readonly notesIcon: string
   readonly statusMessage: string
+  readonly statusPopover: string
   readonly table: string
 }
 export default styles

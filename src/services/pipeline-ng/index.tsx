@@ -978,11 +978,11 @@ export type CdSscaEnforcementStepInfo = StepSpecType & {
   infrastructure: ContainerStepInfra
   policy: EnforcementPolicy
   source: SbomSource
-  verifyAttestation: VerifyAttestation
+  verifyAttestation?: VerifyAttestation
 }
 
 export type CdSscaOrchestrationStepInfo = StepSpecType & {
-  attestation: Attestation
+  attestation?: Attestation
   infrastructure: ContainerStepInfra
   source: SbomSource
   tool: SbomOrchestrationTool
@@ -14254,54 +14254,6 @@ export const getExpandedPipelineJSONPromise = (
     GetExpandedPipelineJSONPathParams
   >(getConfig('pipeline/api'), `/pipelines/expandedJSON/${pipelineIdentifier}`, props, signal)
 
-export interface RefreshFFCacheQueryParams {
-  accountIdentifier: string
-}
-
-export type RefreshFFCacheProps = Omit<
-  GetProps<ResponseBoolean, Failure | Error, RefreshFFCacheQueryParams, void>,
-  'path'
->
-
-/**
- * Refresh the feature flag cache
- */
-export const RefreshFFCache = (props: RefreshFFCacheProps) => (
-  <Get<ResponseBoolean, Failure | Error, RefreshFFCacheQueryParams, void>
-    path={`/pipelines/ffCache/refresh`}
-    base={getConfig('pipeline/api')}
-    {...props}
-  />
-)
-
-export type UseRefreshFFCacheProps = Omit<
-  UseGetProps<ResponseBoolean, Failure | Error, RefreshFFCacheQueryParams, void>,
-  'path'
->
-
-/**
- * Refresh the feature flag cache
- */
-export const useRefreshFFCache = (props: UseRefreshFFCacheProps) =>
-  useGet<ResponseBoolean, Failure | Error, RefreshFFCacheQueryParams, void>(`/pipelines/ffCache/refresh`, {
-    base: getConfig('pipeline/api'),
-    ...props
-  })
-
-/**
- * Refresh the feature flag cache
- */
-export const refreshFFCachePromise = (
-  props: GetUsingFetchProps<ResponseBoolean, Failure | Error, RefreshFFCacheQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseBoolean, Failure | Error, RefreshFFCacheQueryParams, void>(
-    getConfig('pipeline/api'),
-    `/pipelines/ffCache/refresh`,
-    props,
-    signal
-  )
-
 export interface GetExecutionNodeQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -16760,6 +16712,98 @@ export const polledResponseTriggerIdentifierPromise = (
     PolledResponseTriggerIdentifierQueryParams,
     PolledResponseTriggerIdentifierPathParams
   >(getConfig('pipeline/api'), `/triggers/eventHistory/polledResponse/${triggerIdentifier}`, props, signal)
+
+export interface TriggerHistoryEventCorrelationV2QueryParams {
+  accountIdentifier: string
+  page?: number
+  size?: number
+  sort?: string[]
+}
+
+export interface TriggerHistoryEventCorrelationV2PathParams {
+  eventCorrelationId: string
+}
+
+export type TriggerHistoryEventCorrelationV2Props = Omit<
+  GetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationV2QueryParams,
+    TriggerHistoryEventCorrelationV2PathParams
+  >,
+  'path'
+> &
+  TriggerHistoryEventCorrelationV2PathParams
+
+/**
+ * Get Trigger history event correlation V2
+ */
+export const TriggerHistoryEventCorrelationV2 = ({
+  eventCorrelationId,
+  ...props
+}: TriggerHistoryEventCorrelationV2Props) => (
+  <Get<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationV2QueryParams,
+    TriggerHistoryEventCorrelationV2PathParams
+  >
+    path={`/triggers/eventHistory/v2/eventCorrelation/${eventCorrelationId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseTriggerHistoryEventCorrelationV2Props = Omit<
+  UseGetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationV2QueryParams,
+    TriggerHistoryEventCorrelationV2PathParams
+  >,
+  'path'
+> &
+  TriggerHistoryEventCorrelationV2PathParams
+
+/**
+ * Get Trigger history event correlation V2
+ */
+export const useTriggerHistoryEventCorrelationV2 = ({
+  eventCorrelationId,
+  ...props
+}: UseTriggerHistoryEventCorrelationV2Props) =>
+  useGet<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationV2QueryParams,
+    TriggerHistoryEventCorrelationV2PathParams
+  >(
+    (paramsInPath: TriggerHistoryEventCorrelationV2PathParams) =>
+      `/triggers/eventHistory/v2/eventCorrelation/${paramsInPath.eventCorrelationId}`,
+    { base: getConfig('pipeline/api'), pathParams: { eventCorrelationId }, ...props }
+  )
+
+/**
+ * Get Trigger history event correlation V2
+ */
+export const triggerHistoryEventCorrelationV2Promise = (
+  {
+    eventCorrelationId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationV2QueryParams,
+    TriggerHistoryEventCorrelationV2PathParams
+  > & { eventCorrelationId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerHistoryEventCorrelationV2QueryParams,
+    TriggerHistoryEventCorrelationV2PathParams
+  >(getConfig('pipeline/api'), `/triggers/eventHistory/v2/eventCorrelation/${eventCorrelationId}`, props, signal)
 
 export interface TriggerEventHistoryNewQueryParams {
   accountIdentifier: string
