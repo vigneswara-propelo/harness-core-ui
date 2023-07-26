@@ -20,6 +20,7 @@ import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -284,6 +285,22 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
             isReadonly={readonly}
           />
         )}
+      </Container>
+
+      <Container className={stepCss.formGroup}>
+        <MultiTypeMap
+          appearance={'minimal'}
+          name={'spec.envVariables'}
+          valueMultiTextInputProps={{ expressions, allowableTypes }}
+          multiTypeFieldSelectorProps={{
+            label: getString('environmentVariables'),
+            disableTypeSelection: true
+          }}
+          configureOptionsProps={{
+            hideExecutionTimeField: true
+          }}
+          disabled={readonly}
+        />
       </Container>
     </>
   )

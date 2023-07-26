@@ -30,6 +30,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { MultiTypeListType } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import type { MapValue } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -58,6 +59,7 @@ export interface ServerlessAwsLambdaPackageV2StepFormikValues extends StepElemen
         cpu?: string
       }
     }
+    envVariables?: MapValue
   }
 }
 export interface ServerlessAwsLambdaPackageV2StepProps {
@@ -101,7 +103,15 @@ const ServerlessAwsLambdaPackageV2StepEdit = (
             : initialValues.spec.packageCommandOptions?.map(packageCommandOption => ({
                 id: uuid('', nameSpace()),
                 value: packageCommandOption
-              }))
+              })),
+        envVariables: Object.keys(defaultTo(initialValues.spec.envVariables, {})).map(envKey => {
+          const envValue = initialValues.spec.envVariables?.[envKey]
+          return {
+            id: uuid('', nameSpace()),
+            key: envKey,
+            value: defaultTo(envValue, '')
+          }
+        })
       }
     }
   }

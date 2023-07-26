@@ -8,8 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import produce from 'immer'
-import { defaultTo, get, set } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { FormikProps } from 'formik'
 import {
@@ -31,6 +30,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { MultiTypeListType } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import type { MapValue } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -59,6 +59,7 @@ export interface ServerlessAwsLambdaDeployV2StepFormikValues extends StepElement
         cpu?: string
       }
     }
+    envVariables?: MapValue
   }
 }
 export interface ServerlessAwsLambdaDeployV2StepProps {
@@ -91,20 +92,29 @@ const ServerlessAwsLambdaDeployV2StepEdit = (
     })
   })
 
-  const modifiedInitialValues = React.useMemo((): ServerlessAwsLambdaDeployV2StepFormikValues => {
-    return produce(initialValues, draft => {
-      set(
-        draft,
-        'spec.deployCommandOptions',
-        typeof initialValues.spec.deployCommandOptions === 'string'
-          ? initialValues.spec.deployCommandOptions
-          : initialValues.spec.deployCommandOptions?.map(deployCommandOption => ({
-              id: uuid('', nameSpace()),
-              value: deployCommandOption
-            }))
-      )
-    })
-  }, [initialValues])
+  const getInitialValues = (): ServerlessAwsLambdaDeployV2StepFormikValues => {
+    return {
+      ...initialValues,
+      spec: {
+        ...initialValues.spec,
+        deployCommandOptions:
+          typeof initialValues.spec.deployCommandOptions === 'string'
+            ? initialValues.spec.deployCommandOptions
+            : initialValues.spec.deployCommandOptions?.map(deployCommandOption => ({
+                id: uuid('', nameSpace()),
+                value: deployCommandOption
+              })),
+        envVariables: Object.keys(defaultTo(initialValues.spec.envVariables, {})).map(envKey => {
+          const envValue = initialValues.spec.envVariables?.[envKey]
+          return {
+            id: uuid('', nameSpace()),
+            key: envKey,
+            value: defaultTo(envValue, '')
+          }
+        })
+      }
+    }
+  }
 
   const renderConnectorField = (
     formik: FormikProps<ServerlessAwsLambdaDeployV2StepFormikValues>,
@@ -164,7 +174,7 @@ const ServerlessAwsLambdaDeployV2StepEdit = (
           onChange?.(values)
         }}
         formName="ServerlessAwsLambdaDeployV2StepEdit"
-        initialValues={modifiedInitialValues}
+        initialValues={getInitialValues()}
         validationSchema={validationSchema}
       >
         {(formik: FormikProps<ServerlessAwsLambdaDeployV2StepFormikValues>) => {

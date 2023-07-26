@@ -266,6 +266,20 @@ describe('AwsSamServerlessStepCommonOptionalFieldsEdit tests', () => {
     fireEvent.change(cpuInput, { target: { value: '2000' } })
     expect(cpuInput.value).toBe('2000')
 
+    const addEnvVariableButton = screen.getByTestId('add-spec.envVariables')
+    expect(addEnvVariableButton).toBeInTheDocument()
+    const envVariableKeyInput = queryByNameAttribute('spec.envVariables[0].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput).toBeInTheDocument())
+    expect(envVariableKeyInput.value).toBe('')
+    fireEvent.change(envVariableKeyInput, { target: { value: 'key1' } })
+    expect(envVariableKeyInput.value).toBe('key1')
+    let envVariableValueInput = queryByNameAttribute('spec.envVariables[0].value', container) as HTMLInputElement
+    expect(envVariableValueInput).toBeInTheDocument()
+    expect(envVariableValueInput.value).toBe('')
+    fireEvent.change(envVariableValueInput, { target: { value: 'value1' } })
+    envVariableValueInput = queryByNameAttribute('spec.envVariables[0].value', container) as HTMLInputElement
+    expect(envVariableValueInput.value).toBe('value1')
+
     // submit form and verify
     act(() => {
       ref.current?.submitForm()
@@ -350,6 +364,19 @@ describe('AwsSamServerlessStepCommonOptionalFieldsEdit tests', () => {
     fireEvent.change(cpuInput, { target: { value: '5000' } })
     expect(cpuInput.value).toBe('5000')
 
+    const addEnvVariableButton = screen.getByTestId('add-spec.envVariables')
+    expect(addEnvVariableButton).toBeInTheDocument()
+    const envVariableKeyInput = queryByNameAttribute('spec.envVariables[0].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput).toBeInTheDocument())
+    expect(envVariableKeyInput.value).toBe('k1')
+    fireEvent.change(envVariableKeyInput, { target: { value: 'keyUpdated' } })
+    expect(envVariableKeyInput.value).toBe('keyUpdated')
+    const envVariableValueInput = queryByNameAttribute('spec.envVariables[0].value', container) as HTMLInputElement
+    expect(envVariableValueInput).toBeInTheDocument()
+    expect(envVariableValueInput.value).toBe('v1')
+    fireEvent.change(envVariableValueInput, { target: { value: 'valueUpdated' } })
+    expect(envVariableValueInput.value).toBe('valueUpdated')
+
     // submit form and verify
     act(() => {
       ref.current?.submitForm()
@@ -414,6 +441,18 @@ describe('AwsSamServerlessStepCommonOptionalFieldsEdit tests', () => {
     expect(cpuInput).toBeInTheDocument()
     expect(cpuInput.value).toBe('4000')
     expect(cpuInput).toBeDisabled()
+
+    const addEnvVariableButton = screen.getByTestId('add-spec.envVariables')
+    expect(addEnvVariableButton).toBeInTheDocument()
+    expect(addEnvVariableButton).toBeDisabled()
+    const envVariableKeyInput = queryByNameAttribute('spec.envVariables[0].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput).toBeInTheDocument())
+    expect(envVariableKeyInput.value).toBe('k1')
+    expect(envVariableKeyInput).toBeDisabled()
+    const envVariableValueInput = queryByNameAttribute('spec.envVariables[0].value', container) as HTMLInputElement
+    expect(envVariableValueInput).toBeInTheDocument()
+    expect(envVariableValueInput.value).toBe('v1')
+    expect(envVariableValueInput).toBeDisabled()
 
     // submit form and verify
     act(() => {

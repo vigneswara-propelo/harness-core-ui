@@ -171,7 +171,11 @@ function ServerlessAwsLambdaDeployV2StepInputSet(props: ServerlessPackageStepInp
           fieldLabel: 'cd.steps.serverlessPackageStep.packageCommandOptions'
         })}
 
-      <AwsSamServerlessStepCommonOptionalFieldsInputSet allowableTypes={allowableTypes} inputSetData={inputSetData} />
+      <AwsSamServerlessStepCommonOptionalFieldsInputSet
+        allowableTypes={allowableTypes}
+        inputSetData={inputSetData}
+        formik={formik}
+      />
     </>
   )
 }

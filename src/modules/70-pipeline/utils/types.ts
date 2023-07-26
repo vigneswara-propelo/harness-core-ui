@@ -161,6 +161,7 @@ export interface ServerlessAwsLambdaPrepareRollbackV2StepInitialValues extends S
         cpu?: string
       }
     }
+    envVariables?: { [key: string]: string }
   }
 }
 
@@ -179,6 +180,7 @@ export interface ServerlessAwsLambdaPackageV2StepInitialValues extends StepEleme
     packageCommandOptions?: string | string[]
     serverlessVersion?: string
     runAsUser?: string
+    envVariables?: { [key: string]: string }
   }
 }
 
@@ -197,5 +199,6 @@ export interface ServerlessAwsLambdaDeployV2StepInitialValues extends StepElemen
     deployCommandOptions?: string | string[]
     serverlessVersion?: string
     runAsUser?: string
+    envVariables?: { [key: string]: string }
   }
 }

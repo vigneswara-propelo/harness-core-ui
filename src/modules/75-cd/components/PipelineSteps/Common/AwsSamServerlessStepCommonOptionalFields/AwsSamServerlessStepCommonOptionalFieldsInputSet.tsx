@@ -6,14 +6,19 @@
  */
 
 import React from 'react'
+import { FormikProps } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import type { AllowedTypes } from '@harness/uicore'
+import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
 
+import { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'
+import { PipelineInfoConfig } from 'services/pipeline-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
+import MultiTypeMapInputSet from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
+import { getHasValuesAsRuntimeInputFromTemplate } from '@pipeline/utils/CIUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
@@ -37,18 +42,62 @@ interface AwsSamServerlessStepCommonOptionalFieldsInputSetProps {
     path?: string
     readonly?: boolean
   }
+  formik?: FormikProps<PipelineInfoConfig>
 }
 
 export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
   props: AwsSamServerlessStepCommonOptionalFieldsInputSetProps
 ): React.ReactElement {
-  const { inputSetData, allowableTypes } = props
+  const { inputSetData, allowableTypes, formik } = props
   const { template, path, readonly } = inputSetData
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
+
+  const renderMultiTypeMapInputSet = ({
+    fieldName,
+    fieldLabel,
+    keyLabel,
+    valueLabel,
+    restrictToSingleEntry,
+    appliedInputSetValue,
+    templateFieldName,
+    keyValuePlaceholders
+  }: {
+    fieldName: string
+    fieldLabel: keyof StringsMap
+    keyLabel?: keyof StringsMap
+    valueLabel?: keyof StringsMap
+    restrictToSingleEntry?: boolean
+    appliedInputSetValue?: { [key: string]: string }
+    templateFieldName?: string
+    keyValuePlaceholders?: Array<string>
+  }): React.ReactElement => (
+    <div className={cx(stepCss.formGroup, stepCss.md)}>
+      <MultiTypeMapInputSet
+        name={fieldName}
+        valueMultiTextInputProps={{
+          allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+          expressions
+        }}
+        multiTypeFieldSelectorProps={{
+          label: getString('optionalField', { name: getString(fieldLabel) }),
+          allowedTypes: [MultiTypeInputType.FIXED]
+        }}
+        disabled={readonly}
+        formik={formik}
+        keyLabel={keyLabel ? getString(keyLabel) : ''}
+        valueLabel={valueLabel ? getString(valueLabel) : ''}
+        restrictToSingleEntry={restrictToSingleEntry}
+        appliedInputSetValue={appliedInputSetValue}
+        hasValuesAsRuntimeInput={getHasValuesAsRuntimeInputFromTemplate({ template, templateFieldName })}
+        keyValuePlaceholders={keyValuePlaceholders}
+        configureOptionsProps={{ hideExecutionTimeField: true }}
+      />
+    </div>
+  )
 
   return (
     <>
@@ -139,6 +188,14 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
           />
         </div>
       )}
+
+      {!isEmpty(get(template, `spec.envVariables`)) &&
+        renderMultiTypeMapInputSet({
+          fieldName: `${prefix}spec.envVariables`,
+          fieldLabel: 'environmentVariables',
+          templateFieldName: 'spec.envVariables',
+          appliedInputSetValue: get(formik?.values, `${prefix}spec.envVariables`)
+        })}
     </>
   )
 }

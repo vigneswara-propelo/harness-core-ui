@@ -14,7 +14,8 @@ import {
   waitFor,
   findByText as findElementByText,
   getByText as getElementByText,
-  RenderResult
+  RenderResult,
+  screen
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Button, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
@@ -79,13 +80,7 @@ const existingInitialValues: AwsSamServerlessCommonStepFormikVaues = {
         cpu: '4000'
       }
     },
-    envVariables: [
-      {
-        id: 'env1',
-        key: 'k1',
-        value: 'v1'
-      }
-    ]
+    envVariables: { k1: 'v1' } as unknown as any
   },
   timeout: '20m',
   type: StepType.AwsSamBuild
@@ -108,6 +103,9 @@ const awsSamBuildRuntimeTemplate: AwsSamServerlessStepInitialValues = {
         memory: RUNTIME_INPUT_VALUE,
         cpu: RUNTIME_INPUT_VALUE
       }
+    },
+    envVariables: {
+      k1: RUNTIME_INPUT_VALUE
     }
   },
   timeout: RUNTIME_INPUT_VALUE,
@@ -222,6 +220,11 @@ describe('AwsSamServerlessStepCommonOptionalFieldsInputSet tests', () => {
     fireEvent.change(cpuInput, { target: { value: '2000' } })
     expect(cpuInput.value).toBe('2000')
 
+    const addEnvVariableButton = screen.queryByTestId('add-spec.envVariables')
+    expect(addEnvVariableButton).not.toBeInTheDocument()
+    const envVariableKeyInput = queryByNameAttribute('spec.envVariables[0].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput).not.toBeInTheDocument())
+
     // submit form and verify
     act(() => {
       ref.current?.submitForm()
@@ -277,6 +280,19 @@ describe('AwsSamServerlessStepCommonOptionalFieldsInputSet tests', () => {
     fireEvent.change(cpuInput, { target: { value: '5000' } })
     expect(cpuInput.value).toBe('5000')
 
+    const addEnvVariableButton = screen.queryByTestId('add-spec.envVariables')
+    expect(addEnvVariableButton).not.toBeInTheDocument()
+    const envVariableKeyInput = queryByNameAttribute('spec.envVariables[0].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput).toBeInTheDocument())
+    expect(envVariableKeyInput.value).toBe('k1')
+    fireEvent.change(envVariableKeyInput, { target: { value: 'keyUpdated' } })
+    expect(envVariableKeyInput.value).toBe('keyUpdated')
+    const envVariableValueInput = queryByNameAttribute('spec.envVariables[0].value', container) as HTMLInputElement
+    expect(envVariableValueInput).toBeInTheDocument()
+    expect(envVariableValueInput.value).toBe('v1')
+    fireEvent.change(envVariableValueInput, { target: { value: 'valueUpdated' } })
+    expect(envVariableValueInput.value).toBe('valueUpdated')
+
     // submit form and verify
     act(() => {
       ref.current?.submitForm()
@@ -322,6 +338,17 @@ describe('AwsSamServerlessStepCommonOptionalFieldsInputSet tests', () => {
     expect(cpuInput.value).toBe('4000')
     expect(cpuInput).toBeDisabled()
 
+    const addEnvVariableButton = screen.queryByTestId('add-spec.envVariables')
+    expect(addEnvVariableButton).not.toBeInTheDocument()
+    const envVariableKeyInput = queryByNameAttribute('spec.envVariables[0].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput).toBeInTheDocument())
+    expect(envVariableKeyInput.value).toBe('k1')
+    expect(envVariableKeyInput).toBeDisabled()
+    const envVariableValueInput = queryByNameAttribute('spec.envVariables[0].value', container) as HTMLInputElement
+    expect(envVariableValueInput).toBeInTheDocument()
+    expect(envVariableValueInput.value).toBe('v1')
+    expect(envVariableValueInput).toBeDisabled()
+
     // submit form and verify
     act(() => {
       ref.current?.submitForm()
@@ -334,7 +361,7 @@ describe('AwsSamServerlessStepCommonOptionalFieldsInputSet tests', () => {
     const ref = React.createRef<StepFormikRef<AwsSamServerlessCommonStepFormikVaues>>()
 
     const { container } = renderComponent({
-      initialValues: awsSamBuildRuntimeTemplate,
+      initialValues: awsSamBuildRuntimeTemplate as AwsSamServerlessCommonStepFormikVaues,
       readonly: false,
       formikRef: ref,
       onUpdateMocked: onUpdate
@@ -387,6 +414,9 @@ describe('AwsSamServerlessStepCommonOptionalFieldsInputSet tests', () => {
               memory: RUNTIME_INPUT_VALUE,
               cpu: RUNTIME_INPUT_VALUE
             }
+          },
+          envVariables: {
+            k1: RUNTIME_INPUT_VALUE
           }
         },
         timeout: RUNTIME_INPUT_VALUE,

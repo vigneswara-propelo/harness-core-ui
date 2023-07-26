@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { isEmpty, set } from 'lodash-es'
-import produce from 'immer'
 import type { FormikErrors } from 'formik'
 import { IconName, AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
@@ -157,18 +156,31 @@ export class ServerlessAwsLambdaDeployV2Step extends PipelineStep<ServerlessAwsL
     return errors
   }
 
-  processFormData(formData: ServerlessAwsLambdaDeployV2StepFormikValues): ServerlessAwsLambdaDeployV2StepInitialValues {
-    return produce(formData, draft => {
-      set(
-        draft,
-        'spec.deployCommandOptions',
-        typeof formData.spec.deployCommandOptions === 'string'
-          ? formData.spec.deployCommandOptions
-          : (formData.spec.deployCommandOptions as ListValue)?.map(
-              (deployCommandOption: { id: string; value: string }) => deployCommandOption.value
-            )
+  processFormData(formData: any): ServerlessAwsLambdaDeployV2StepInitialValues {
+    let envVariables
+    if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = formData.spec?.envVariables.reduce(
+        (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
+          ...agg,
+          [envVar.key]: envVar.value
+        }),
+        {}
       )
-      set(draft, 'spec.connectorRef', getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType))
-    }) as ServerlessAwsLambdaDeployV2StepInitialValues
+    }
+
+    return {
+      ...formData,
+      spec: {
+        ...formData.spec,
+        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
+        deployCommandOptions:
+          typeof formData.spec.deployCommandOptions === 'string'
+            ? formData.spec.deployCommandOptions
+            : (formData.spec.deployCommandOptions as ListValue)?.map(
+                (deployCommandOption: { id: string; value: string }) => deployCommandOption.value
+              ),
+        envVariables: envVariables
+      }
+    }
   }
 }

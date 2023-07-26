@@ -16,10 +16,8 @@ import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
-import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamBuildStepInitialValues, AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
-import { getHasValuesAsRuntimeInputFromTemplate } from '@pipeline/utils/CIUtils'
 import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -73,49 +71,6 @@ export function AwsSamBuildDeployStepOptionalFieldsInputSet(
     </div>
   )
 
-  const renderMultiTypeMapInputSet = ({
-    fieldName,
-    fieldLabel,
-    keyLabel,
-    valueLabel,
-    restrictToSingleEntry,
-    appliedInputSetValue,
-    templateFieldName,
-    keyValuePlaceholders
-  }: {
-    fieldName: string
-    fieldLabel: keyof StringsMap
-    keyLabel?: keyof StringsMap
-    valueLabel?: keyof StringsMap
-    restrictToSingleEntry?: boolean
-    appliedInputSetValue?: { [key: string]: string }
-    templateFieldName?: string
-    keyValuePlaceholders?: Array<string>
-  }): React.ReactElement => (
-    <div className={cx(stepCss.formGroup, stepCss.md)}>
-      <MultiTypeMapInputSet
-        name={fieldName}
-        valueMultiTextInputProps={{
-          allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
-          expressions
-        }}
-        multiTypeFieldSelectorProps={{
-          label: getString('optionalField', { name: getString(fieldLabel) }),
-          allowedTypes: [MultiTypeInputType.FIXED]
-        }}
-        disabled={readonly}
-        formik={formik}
-        keyLabel={keyLabel ? getString(keyLabel) : ''}
-        valueLabel={valueLabel ? getString(valueLabel) : ''}
-        restrictToSingleEntry={restrictToSingleEntry}
-        appliedInputSetValue={appliedInputSetValue}
-        hasValuesAsRuntimeInput={getHasValuesAsRuntimeInputFromTemplate({ template, templateFieldName })}
-        keyValuePlaceholders={keyValuePlaceholders}
-        configureOptionsProps={{ hideExecutionTimeField: true }}
-      />
-    </div>
-  )
-
   return (
     <>
       {isValueRuntimeInput(
@@ -128,15 +83,11 @@ export function AwsSamBuildDeployStepOptionalFieldsInputSet(
             : 'cd.steps.awsSamDeployStep.awsSamDeployCommandOptions'
         })}
 
-      <AwsSamServerlessStepCommonOptionalFieldsInputSet inputSetData={inputSetData} allowableTypes={allowableTypes} />
-
-      {!isEmpty(get(template, `spec.envVariables`)) &&
-        renderMultiTypeMapInputSet({
-          fieldName: `${prefix}spec.envVariables`,
-          fieldLabel: 'environmentVariables',
-          templateFieldName: 'spec.envVariables',
-          appliedInputSetValue: get(formik?.values, `${prefix}spec.envVariables`)
-        })}
+      <AwsSamServerlessStepCommonOptionalFieldsInputSet
+        inputSetData={inputSetData}
+        allowableTypes={allowableTypes}
+        formik={formik}
+      />
     </>
   )
 }

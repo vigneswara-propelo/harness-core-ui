@@ -159,14 +159,24 @@ export class ServerlessAwsLambdaPrepareRollbackV2Step extends PipelineStep<Serve
     return errors
   }
 
-  processFormData(
-    formData: ServerlessAwsLambdaPrepareRollbackV2StepFormikValues
-  ): ServerlessAwsLambdaPrepareRollbackV2StepInitialValues {
+  processFormData(formData: any): ServerlessAwsLambdaPrepareRollbackV2StepInitialValues {
+    let envVariables
+    if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = formData.spec?.envVariables.reduce(
+        (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
+          ...agg,
+          [envVar.key]: envVar.value
+        }),
+        {}
+      )
+    }
+
     return {
       ...formData,
       spec: {
         ...formData.spec,
-        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType)
+        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
+        envVariables
       }
     }
   }

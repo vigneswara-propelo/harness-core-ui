@@ -111,7 +111,7 @@ export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues
       <AwsSamDeployStepEditRef
         initialValues={initialValues}
         onUpdate={(formData: AwsSamDeployStepFormikValues) => onUpdate?.(this.processFormData(formData))}
-        onChange={(formData: AwsSamDeployStepInitialValues) => onChange?.(this.processFormData(formData))}
+        onChange={(formData: AwsSamDeployStepFormikValues) => onChange?.(this.processFormData(formData))}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}

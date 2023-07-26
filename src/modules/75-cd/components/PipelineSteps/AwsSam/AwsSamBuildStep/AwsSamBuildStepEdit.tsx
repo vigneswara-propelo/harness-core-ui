@@ -40,10 +40,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
-import {
-  AwsSamBuildDeployStepOptionalFields,
-  AwsSamBuildDeployStepFormikVaues
-} from '../AwsSamBuildDeployStepOptionalFields'
+import { AwsSamServerlessStepCommonOptionalFieldsEdit } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../AwsSamBuildDeployStep.module.scss'
 
@@ -234,11 +231,14 @@ const AwsSamBuildStepEdit = (
                   summary={getString('common.optionalConfig')}
                   details={
                     <Container margin={{ top: 'medium' }}>
-                      <AwsSamBuildDeployStepOptionalFields
-                        readonly={readonly}
-                        stepViewType={stepViewType}
+                      <AwsSamServerlessStepCommonOptionalFieldsEdit
                         allowableTypes={allowableTypes}
-                        formik={formik as FormikProps<AwsSamBuildDeployStepFormikVaues>}
+                        readonly={readonly}
+                        formik={formik}
+                        versionFieldName={'spec.samVersion'}
+                        versionFieldLabel={getString('cd.samVersionLabel')}
+                        commandOptionsFieldName={'spec.buildCommandOptions'}
+                        commandOptionsFieldLabel={getString('cd.steps.awsSamBuildStep.awsSamBuildCommandOptions')}
                         isAwsSamBuildStep={true}
                       />
                     </Container>

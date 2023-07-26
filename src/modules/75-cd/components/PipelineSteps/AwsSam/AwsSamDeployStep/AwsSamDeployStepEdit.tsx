@@ -30,7 +30,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { MultiTypeListType } from '@common/components/MultiTypeList/MultiTypeList'
-import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
+import type { MapValue } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -40,10 +40,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
-import {
-  AwsSamBuildDeployStepFormikVaues,
-  AwsSamBuildDeployStepOptionalFields
-} from '../AwsSamBuildDeployStepOptionalFields'
+import { AwsSamServerlessStepCommonOptionalFieldsEdit } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../AwsSamBuildDeployStep.module.scss'
 
@@ -70,7 +67,7 @@ export interface AwsSamDeployStepProps {
   initialValues: AwsSamDeployStepInitialValues
   onUpdate?: (data: AwsSamDeployStepFormikValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsSamDeployStepInitialValues) => void
+  onChange?: (data: AwsSamDeployStepFormikValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
@@ -132,11 +129,11 @@ const AwsSamDeployStepEdit = (
         formName="AwsSamDeployStepEdit"
         initialValues={getInitialValues()}
         validate={formValues => {
-          onChange?.(formValues as AwsSamDeployStepInitialValues)
+          onChange?.(formValues)
         }}
         validationSchema={validationSchema}
       >
-        {(formik: FormikProps<AwsSamDeployStepInitialValues>) => {
+        {(formik: FormikProps<AwsSamDeployStepFormikValues>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -172,7 +169,7 @@ const AwsSamDeployStepEdit = (
                 {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
                   <ConnectorConfigureOptions
                     style={{ marginTop: 6 }}
-                    value={formik.values.spec.connectorRef}
+                    value={formik.values.spec.connectorRef as string}
                     type="String"
                     variableName="spec.connectorRef"
                     showRequiredField={false}
@@ -256,11 +253,14 @@ const AwsSamDeployStepEdit = (
                   summary={getString('common.optionalConfig')}
                   details={
                     <Container margin={{ top: 'medium' }}>
-                      <AwsSamBuildDeployStepOptionalFields
-                        readonly={readonly}
-                        stepViewType={stepViewType}
+                      <AwsSamServerlessStepCommonOptionalFieldsEdit
                         allowableTypes={allowableTypes}
-                        formik={formik as FormikProps<AwsSamBuildDeployStepFormikVaues>}
+                        readonly={readonly}
+                        formik={formik}
+                        versionFieldName={'spec.samVersion'}
+                        versionFieldLabel={getString('cd.samVersionLabel')}
+                        commandOptionsFieldName={'spec.deployCommandOptions'}
+                        commandOptionsFieldLabel={getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions')}
                       />
                     </Container>
                   }

@@ -160,20 +160,30 @@ export class ServerlessAwsLambdaPackageV2Step extends PipelineStep<ServerlessAws
     return errors
   }
 
-  processFormData(
-    formData: ServerlessAwsLambdaPackageV2StepFormikValues
-  ): ServerlessAwsLambdaPackageV2StepInitialValues {
+  processFormData(formData: any): ServerlessAwsLambdaPackageV2StepInitialValues {
+    let envVariables
+    if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = formData.spec?.envVariables.reduce(
+        (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
+          ...agg,
+          [envVar.key]: envVar.value
+        }),
+        {}
+      )
+    }
+
     return {
       ...formData,
       spec: {
         ...formData.spec,
+        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
         packageCommandOptions:
           typeof formData.spec.packageCommandOptions === 'string'
             ? formData.spec.packageCommandOptions
             : (formData.spec.packageCommandOptions as ListValue)?.map(
                 (packageCommandOption: { id: string; value: string }) => packageCommandOption.value
               ),
-        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType)
+        envVariables: envVariables
       }
     }
   }

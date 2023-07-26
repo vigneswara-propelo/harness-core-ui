@@ -9,6 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { defaultTo, get } from 'lodash-es'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { FormikProps } from 'formik'
 import {
   Accordion,
@@ -28,6 +29,7 @@ import { useQueryParams } from '@common/hooks'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { MapValue } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -55,6 +57,7 @@ export interface ServerlessAwsLambdaPrepareRollbackV2StepFormikValues extends St
         cpu?: string
       }
     }
+    envVariables?: MapValue
   }
 }
 export interface ServerlessAwsLambdaPrepareRollbackV2StepProps {
@@ -86,6 +89,23 @@ const ServerlessAwsLambdaPrepareRollbackV2StepEdit = (
       )
     })
   })
+
+  const getInitialValues = (): ServerlessAwsLambdaPrepareRollbackV2StepFormikValues => {
+    return {
+      ...initialValues,
+      spec: {
+        ...initialValues.spec,
+        envVariables: Object.keys(defaultTo(initialValues.spec.envVariables, {})).map(envKey => {
+          const envValue = initialValues.spec.envVariables?.[envKey]
+          return {
+            id: uuid('', nameSpace()),
+            key: envKey,
+            value: defaultTo(envValue, '')
+          }
+        })
+      }
+    }
+  }
 
   const renderConnectorField = (
     formik: FormikProps<ServerlessAwsLambdaPrepareRollbackV2StepFormikValues>,
@@ -145,7 +165,7 @@ const ServerlessAwsLambdaPrepareRollbackV2StepEdit = (
           onChange?.(values)
         }}
         formName="ServerlessAwsLambdaPrepareRollbackV2StepEdit"
-        initialValues={initialValues}
+        initialValues={getInitialValues()}
         validationSchema={validationSchema}
       >
         {(formik: FormikProps<ServerlessAwsLambdaPrepareRollbackV2StepFormikValues>) => {

@@ -41,7 +41,7 @@ interface ServerlessPrepareRollbackStepInputSetProps {
 function ServerlessAwsLambdaPrepareRollbackV2StepInputSet(
   props: ServerlessPrepareRollbackStepInputSetProps
 ): React.ReactElement {
-  const { initialValues, inputSetData, allowableTypes } = props
+  const { initialValues, inputSetData, allowableTypes, formik } = props
   const { template, path, readonly } = inputSetData
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -141,7 +141,11 @@ function ServerlessAwsLambdaPrepareRollbackV2StepInputSet(
         </div>
       )}
 
-      <AwsSamServerlessStepCommonOptionalFieldsInputSet allowableTypes={allowableTypes} inputSetData={inputSetData} />
+      <AwsSamServerlessStepCommonOptionalFieldsInputSet
+        allowableTypes={allowableTypes}
+        inputSetData={inputSetData}
+        formik={formik}
+      />
     </>
   )
 }
