@@ -51,6 +51,7 @@ import {
   shouldDisableGitDetailsFields
 } from '@pipeline/utils/inputSetUtils'
 import { SettingType } from '@common/constants/Utils'
+import { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -351,7 +352,7 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
                 repoName: values.repo
               },
               {
-                connectorRef: values.connectorRef,
+                connectorRef: (values.connectorRef as unknown as ConnectorSelectedValue)?.value || values.connectorRef,
                 repoName: values.repo,
                 branch: values.branch,
                 filePath: values.filePath,
