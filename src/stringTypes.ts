@@ -8925,9 +8925,12 @@ export interface StringsMap {
   'cv.analysisScreens.totalClusters': string
   'cv.analyzeDeploymentImpact.analysisStopped': string
   'cv.analyzeDeploymentImpact.duration': string
+  'cv.analyzeDeploymentImpact.msDisabledWarning': string
   'cv.analyzeDeploymentImpact.redirectLabel': string
   'cv.analyzeDeploymentImpact.remaining': string
   'cv.analyzeDeploymentImpact.stopAnalysis': string
+  'cv.analyzeDeploymentImpact.stopAnalysisTitle': string
+  'cv.analyzeDeploymentImpact.stopAnalysisWarning': string
   'cv.analyzeStep.healthSources.healthSourceNotPresent': string
   'cv.analyzeStep.monitoredService.createMonitoredService': string
   'cv.analyzeStep.monitoredService.fetchingMonitoredService': string

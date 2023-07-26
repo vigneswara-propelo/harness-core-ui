@@ -1338,4 +1338,7 @@ analyzeDeploymentImpact:
   redirectLabel: View Monitored Service details
   stopAnalysis: Stop the analysis and send the report
   analysisStopped: Analysis stopped successfully
+  stopAnalysisTitle: Stop Analysis
+  stopAnalysisWarning: Are you sure you want to stop analysis ?
+  msDisabledWarning: 'Important: Prior to creating this step, ensure you enable the monitored service otherwise, this step will be skipped during execution.'
 logsNewBaselineEventMessage: A baseline for comparing the events from the first deployments has not yet been established. Once the deployment runs again, the analysis will be shown.

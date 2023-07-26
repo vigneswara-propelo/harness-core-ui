@@ -6,7 +6,7 @@
  */
 
 import { Container, FormInput, AllowedTypes, useToaster, Text, Layout } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, Intent } from '@harness/design-system'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
@@ -36,6 +36,7 @@ import ConfigureMonitoredServiceDetails from './components/ConfigureMonitoredSer
 import AnalyseStepNotifications from './components/AnalyseStepNotifications/AnalyseStepNotifications'
 import DetailNotPresent from './components/DetailNotPresent/DetailNotPresent'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './ConfiguredMonitoredService.module.scss'
 
 interface ConfiguredMonitoredServiceProps {
   allowableTypes: AllowedTypes
@@ -219,19 +220,27 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
             {getString('connectors.cdng.monitoredService.monitoredServiceDef')}
           </Text>
           <Container className={stepCss.formGroup}>
-            <FormInput.MultiTypeInput
-              name="spec.monitoredService.spec.monitoredServiceRef"
-              label={getString('cv.monitoredServices.heading')}
-              useValue
-              placeholder={
-                monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
-              }
-              selectItems={monitoredServicesOptions}
-              multiTypeInputProps={{
-                ...getMultiTypeInputProps(expressions, allowableTypes)
-              }}
-            />
+            <Layout.Vertical>
+              <FormInput.MultiTypeInput
+                name="spec.monitoredService.spec.monitoredServiceRef"
+                label={getString('cv.monitoredServices.heading')}
+                useValue
+                placeholder={
+                  monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
+                }
+                selectItems={monitoredServicesOptions}
+                multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+              />
+              {!monitoredService?.enabled && (
+                <Container className={css.msDisabledWarning}>
+                  <Text font={{ size: 'small' }} intent={Intent.WARNING}>
+                    {getString('cv.analyzeDeploymentImpact.msDisabledWarning')}
+                  </Text>
+                </Container>
+              )}
+            </Layout.Vertical>
           </Container>
+
           {renderConfiguredMonitoredService()}
         </>
       </Card>

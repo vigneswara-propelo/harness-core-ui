@@ -7,8 +7,8 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { PopoverInteractionKind, Classes } from '@blueprintjs/core'
-import { Icon, Popover, useToaster, Text, Layout } from '@harness/uicore'
+import { PopoverInteractionKind, Classes, Intent } from '@blueprintjs/core'
+import { Icon, Popover, useToaster, Text, Layout, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStopSRMAnalysisStep } from 'services/cv'
@@ -44,6 +44,19 @@ export const StopAnalysisButton = ({ eventId, refetch }: StopAnalysisButtonInter
     setLoading(false)
   }
 
+  const { openDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('cv.analyzeDeploymentImpact.stopAnalysisWarning'),
+    titleText: getString('cv.analyzeDeploymentImpact.stopAnalysisTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        stopExecution()
+      }
+    }
+  })
+
   return (
     <Popover
       interactionKind={PopoverInteractionKind.HOVER}
@@ -56,7 +69,7 @@ export const StopAnalysisButton = ({ eventId, refetch }: StopAnalysisButtonInter
       }
     >
       <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Icon data-testid="stopBtn" className={css.stopButton} name={iconName} onClick={() => stopExecution()} />
+        <Icon data-testid="stopBtn" className={css.stopButton} name={iconName} onClick={openDialog} />
       </Layout.Horizontal>
     </Popover>
   )

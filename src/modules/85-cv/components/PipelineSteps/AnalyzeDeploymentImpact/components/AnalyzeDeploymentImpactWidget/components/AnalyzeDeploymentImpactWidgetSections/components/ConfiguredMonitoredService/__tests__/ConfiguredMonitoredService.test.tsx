@@ -292,7 +292,9 @@ describe('ConfiguredMonitoredService', () => {
     )
 
     const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    const monitoredServiceDisabledWarning = screen.getByText('cv.analyzeDeploymentImpact.msDisabledWarning')
     expect(monitoredServiceDisplay).toBeInTheDocument()
+    expect(monitoredServiceDisabledWarning).toBeInTheDocument()
   })
 
   test('renders correct ux for default when we have multi services and environment', () => {

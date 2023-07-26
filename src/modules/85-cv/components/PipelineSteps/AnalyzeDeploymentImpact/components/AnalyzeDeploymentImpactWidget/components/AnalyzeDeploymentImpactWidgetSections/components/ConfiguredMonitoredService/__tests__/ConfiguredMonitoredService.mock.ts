@@ -18,7 +18,8 @@ export const mockedMonitoredService = {
       environmentRef: 'test',
       sources: {
         healthSources: []
-      }
+      },
+      enabled: false
     }
   }
 }
