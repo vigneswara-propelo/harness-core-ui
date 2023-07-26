@@ -8822,6 +8822,9 @@ export interface StringsMap {
   'ci.usesLabel': string
   'ci.welcome': string
   'idp.adminHome': string
+  'idp.chooseProject': string
+  'idp.createChooseProject': string
+  'idp.createProject': string
   'idp.layout': string
   'idp.oAuthConfig': string
   'idp.urlAllowList': string

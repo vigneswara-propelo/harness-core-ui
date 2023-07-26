@@ -2269,7 +2269,15 @@ const routes = {
   toConnectorsPage: withAccountId(() => '/idp-admin/connectors'),
   toIDPOAuthConfig: withAccountId(() => '/idp-admin/oauth'),
   toIDPAllowListURL: withAccountId(() => '/idp-admin/allowlist-url'),
-
+  toIDPPipelines: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/idp-admin/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
+  ),
+  toIDPDeployments: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/idp-admin/orgs/${orgIdentifier}/projects/${projectIdentifier}/deployments`
+  ),
+  toIDPProjectSetup: withAccountId(() => `/idp-admin/project-setup`),
   // Error Tracking
   toCET: withAccountId(() => '/cet'),
   toCETHome: withAccountId(() => '/cet/home'),

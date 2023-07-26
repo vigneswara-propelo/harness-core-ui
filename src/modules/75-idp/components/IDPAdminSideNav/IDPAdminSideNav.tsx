@@ -13,13 +13,16 @@ import { isEmpty } from 'lodash-es'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './IDPAdminSideNav.module.scss'
 
 export default function IDPAdminSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const params = useParams<AccountPathProps>()
+  const params = useParams<ProjectPathProps>()
+  const { selectedProject } = useAppStore()
+  const isProjectSelected = !isEmpty(selectedProject?.identifier)
 
   const { data } = useGetStatusInfoByTypeQuery(
     { type: 'onboarding' },
@@ -57,6 +60,26 @@ export default function IDPAdminSideNav(): React.ReactElement {
           <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectorsPage(params)} />
           <SidebarLink label={getString('idp.oAuthConfig')} to={routes.toIDPOAuthConfig(params)} />
           <SidebarLink label={getString('idp.urlAllowList')} to={routes.toIDPAllowListURL(params)} />
+          <SidebarLink
+            label={getString('common.pipelineExecution')}
+            to={routes.toIDPDeployments({
+              ...params,
+              projectIdentifier: selectedProject?.identifier,
+              orgIdentifier: selectedProject?.orgIdentifier
+            })}
+          />
+          <SidebarLink
+            label={getString('pipelines')}
+            to={
+              isProjectSelected
+                ? routes.toIDPPipelines({
+                    ...params,
+                    projectIdentifier: selectedProject?.identifier,
+                    orgIdentifier: selectedProject?.orgIdentifier
+                  })
+                : routes.toIDPProjectSetup(params)
+            }
+          />
         </>
       )}
     </Layout.Vertical>

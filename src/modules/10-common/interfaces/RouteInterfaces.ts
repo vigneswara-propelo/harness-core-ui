@@ -227,6 +227,7 @@ export type ModuleNameMatch =
   | ':module(iacm)'
   | ':module(ssca)'
   | ':module(idp)'
+  | ':module(idp-admin)'
   | ':module(dashboards)'
   | ':module(cet)'
 

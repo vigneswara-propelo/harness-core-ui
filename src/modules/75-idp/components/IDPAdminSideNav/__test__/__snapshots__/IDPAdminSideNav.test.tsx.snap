@@ -102,6 +102,26 @@ exports[`IDP Sidenav render 1`] = `
         idp.urlAllowList
       </p>
     </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/orgs/undefined/projects/undefined/deployments"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        common.pipelineExecution
+      </p>
+    </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/project-setup"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        pipelines
+      </p>
+    </a>
   </div>
 </div>
 `;

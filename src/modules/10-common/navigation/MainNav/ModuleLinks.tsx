@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams, NavLink as Link, NavLinkProps, useLocation } from 'react-router-dom'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { String } from 'framework/strings'
 
@@ -242,14 +242,21 @@ export const SSCANavItem = (): JSX.Element => {
 }
 
 export const IDPNavItem = (): JSX.Element => {
-  const params = useParams<ProjectPathProps>()
+  const params = useParams<ProjectPathProps & ModulePathParams>()
   const location = useLocation()
 
   const validPath = location.pathname.match(/idp-admin|idp/g)
 
+  function isIDPActive(): boolean {
+    if (params?.module === 'idp-admin') {
+      return true
+    }
+    return validPath?.length === 1
+  }
+
   return (
     <li className={css.navItem}>
-      <Link {...commonLinkProps} to={routes.toIDPDefaultPath(params)} isActive={() => validPath?.length === 1}>
+      <Link {...commonLinkProps} to={routes.toIDPDefaultPath(params)} isActive={() => isIDPActive()}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
           <Icon name="idp" size={30} />
           <Text
