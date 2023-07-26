@@ -104,8 +104,16 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
               /^[a-zA-Z_][0-9a-zA-Z_$.]*$/,
               getString('common.validation.fieldMustBeAlphanumeric', { name: getString('name') })
             )
-            .notOneOf(existingNames, getString('common.validation.variableAlreadyExists'))
-            .notOneOf(illegalIdentifiers, getString('common.invalidNames', { names: illegalIdentifiers.join(', ') }))
+            .test(
+              'variableAlreadyExists',
+              getString('common.validation.variableAlreadyExists'),
+              value => !existingNames.includes(value)
+            )
+            .test(
+              'invalidNames',
+              getString('common.invalidNames', { names: illegalIdentifiers.join(', ') }),
+              value => !illegalIdentifiers.includes(value)
+            )
         })}
         onSubmit={data => {
           if (data && selectedVariable) {

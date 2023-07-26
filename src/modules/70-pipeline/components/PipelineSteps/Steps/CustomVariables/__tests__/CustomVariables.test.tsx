@@ -23,6 +23,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { listSecretsV2Promise } from 'services/cd-ng'
+import { queryByNameAttribute } from '@common/utils/testUtils'
 import { CustomVariables } from '../CustomVariables'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -112,6 +113,33 @@ describe('Custom Variables', () => {
     await userEvent.clear(variableNameTextBox)
     await userEvent.type(variableNameTextBox, mockName_78)
     await waitFor(() => expect(within(view).queryByText('common.validation.fieldCannotbeLongerThanN')).toBeFalsy())
+  })
+
+  test('validation error for duplicate variables and restricted variables', async () => {
+    render(
+      <TestStepWidget
+        initialValues={{
+          variables: [{ name: 'variable1', type: 'String', value: 'variable1Value' }],
+          canAddVariable: true
+        }}
+        type={StepType.CustomVariable}
+        stepViewType={StepViewType.Edit}
+      />
+    )
+    const addBtn = await screen.findByText('common.addVariable')
+    await userEvent.click(addBtn)
+    await screen.findByRole('heading', { name: 'variables.newVariable' })
+    const view = screen.getByTestId('add-edit-variable')
+    const saveVariableBtn = within(view).getByText('save')
+    const variableNameTextBox = queryByNameAttribute('name', view)!
+
+    await userEvent.type(variableNameTextBox, 'variable1')
+    await userEvent.click(saveVariableBtn)
+    expect(await within(view).findByText('common.validation.variableAlreadyExists')).toBeInTheDocument()
+
+    await userEvent.clear(variableNameTextBox)
+    await userEvent.type(variableNameTextBox, 'account')
+    expect(await within(view).findByText('common.invalidNames')).toBeInTheDocument()
   })
 
   test('should render variables', () => {
