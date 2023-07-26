@@ -107,7 +107,7 @@ declare global {
       isChildVisible(): void
       fillField(fieldName: string, value: string): void
       addNewMonitoredServiceWithServiceAndEnv(): void
-      mapMetricToServices(hasServiceIndentifier?: boolean): void
+      mapMetricToServices(hasServiceIndentifier?: boolean, canSubmit?: boolean): void
       addingGroupName(name: string): void
       populateDefineHealthSource(
         connectorType: string,
@@ -352,7 +352,7 @@ Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   cy.get('button').contains('span', 'Discard').parent().should('be.enabled')
 })
 
-Cypress.Commands.add('mapMetricToServices', (hasServiceIndentifier = false) => {
+Cypress.Commands.add('mapMetricToServices', (hasServiceIndentifier = false, canSubmit = true) => {
   // Triggering validations again
   cy.findByRole('button', { name: /Submit/i }).click()
 
@@ -377,7 +377,9 @@ Cypress.Commands.add('mapMetricToServices', (hasServiceIndentifier = false) => {
     cy.get('.Select--menuItem').first().click()
   }
 
-  cy.findByRole('button', { name: /Submit/i }).click()
+  if (canSubmit) {
+    cy.findByRole('button', { name: /Submit/i }).click()
+  }
 })
 
 Cypress.Commands.add('addingGroupName', name => {

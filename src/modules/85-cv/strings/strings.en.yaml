@@ -749,6 +749,7 @@ healthSource:
   defineHealthSource: Define Health Source
   deleteHealthSourceWarning: Are you sure you want to delete Health Source
   deleteHealthSource: Delete Health Source
+  invalidMetric: '{{ metricName }} metric is invalid'
   selectConnectionTypeInfo: Select the connection type to see your hosted entities directly in Harness
   awsRegionLabel: Select AWS Region
   awsWorkspaceLabel: Select Workspace Id

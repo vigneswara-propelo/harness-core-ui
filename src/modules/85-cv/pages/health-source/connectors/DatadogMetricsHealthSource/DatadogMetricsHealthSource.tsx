@@ -278,11 +278,25 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
       metricHealthDetailsData.set(selectedMetricId, { ...selectedMetricData, ...formikProps.values })
     }
     const filteredData = new Map()
+
+    let invalidMetric: string | null = null
+
     for (const metric of metricHealthDetailsData) {
       const [metricName, metricInfo] = metric
       if (isEmpty(validateFormMappings(metricInfo, metricHealthDetailsData, getString))) {
         filteredData.set(metricName, metricInfo)
+      } else {
+        invalidMetric = metricName
       }
+    }
+
+    if (invalidMetric) {
+      showError(
+        getString('cv.healthSource.invalidMetric', {
+          metricName: invalidMetric
+        })
+      )
+      return void 0
     }
 
     const filteredCVDisabledMetricThresholds = getFilteredCVDisabledMetricThresholds(

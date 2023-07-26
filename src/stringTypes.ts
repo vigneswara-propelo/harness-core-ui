@@ -9167,6 +9167,7 @@ export interface StringsMap {
   'cv.healthSource.environmentLabel': string
   'cv.healthSource.featureLabel': string
   'cv.healthSource.featurePlaceholder': string
+  'cv.healthSource.invalidMetric': string
   'cv.healthSource.nameLabel': string
   'cv.healthSource.namePlaceholder': string
   'cv.healthSource.newHealthSource': string
