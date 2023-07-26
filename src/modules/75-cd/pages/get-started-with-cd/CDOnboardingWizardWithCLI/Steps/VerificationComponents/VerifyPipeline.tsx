@@ -106,7 +106,7 @@ function TroubleShootPipeline({ refetchPipeline }: { refetchPipeline: () => Prom
         )}`}</Button>
         {/* to be enabled later */}
         {/* <Button variation={ButtonVariation.LINK}>{`${getString('retry')} ${getString(
-          'delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot'
+          'platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot'
         )}`}</Button> */}
       </Layout.Horizontal>
     </Layout.Vertical>

@@ -382,7 +382,7 @@ describe('WinRmServiceSpec tests', () => {
       </TestWrapper>
     )
 
-    const registryHostName = await findByText(container, 'connectors.GCR.registryHostname')
+    const registryHostName = await findByText(container, 'platform.connectors.GCR.registryHostname')
     expect(registryHostName).toBeDefined()
   })
 })

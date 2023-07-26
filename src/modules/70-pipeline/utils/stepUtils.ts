@@ -23,7 +23,7 @@ import type {
 import { sanitize } from '@common/utils/JSONUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { ConnectorReferenceDTO } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfigWrapper } from './pipelineTypes'
 

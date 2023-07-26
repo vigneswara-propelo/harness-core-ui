@@ -18,7 +18,7 @@ import List from '@common/components/List/List'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
@@ -91,7 +91,7 @@ export default function TfPlanInputStep(
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.secretManagerRef) ===
         MultiTypeInputType.RUNTIME && (
         <FormMultiTypeConnectorField
-          label={getString('connectors.title.secretManager')}
+          label={getString('platform.connectors.title.secretManager')}
           accountIdentifier={accountId}
           selected={get(initialValues, 'spec.configuration.secretManagerRef', '')}
           projectIdentifier={projectIdentifier}

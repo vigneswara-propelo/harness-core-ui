@@ -41,9 +41,9 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@platform/connectors/constants'
 import { BambooPlanNames, useGetPlansKey } from 'services/cd-ng'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -157,7 +157,7 @@ function FormContent({
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormMultiTypeConnectorField
           name="spec.connectorRef"
-          label={getString('connectors.bamboo.bambooConnectorLabel')}
+          label={getString('platform.connectors.bamboo.bambooConnectorLabel')}
           width={390}
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
@@ -187,7 +187,7 @@ function FormContent({
               projectIdentifier,
               orgIdentifier,
               type: Connectors.Bamboo,
-              label: getString('connectors.bamboo.bamboo'),
+              label: getString('platform.connectors.bamboo.bamboo'),
               disabled: readonly,
               gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
             }}

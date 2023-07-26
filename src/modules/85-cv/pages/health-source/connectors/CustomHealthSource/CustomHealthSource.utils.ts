@@ -148,7 +148,7 @@ export function validateMappingInfo(
   }
 
   if (!formValues.requestMethod) {
-    completErrors['requestMethod'] = getString('connectors.customHealth.requestMethod')
+    completErrors['requestMethod'] = getString('platform.connectors.customHealth.requestMethod')
   }
 
   if (!formValues.startTime?.placeholder) {

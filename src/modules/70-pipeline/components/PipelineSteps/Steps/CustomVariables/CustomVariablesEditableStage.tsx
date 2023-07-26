@@ -36,7 +36,7 @@ import type { CustomDeploymentNGVariable, NGVariable } from 'services/cd-ng'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { getVariablesValidationField } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SecretConfigureOptions } from '@secrets/components/SecretConfigureOptions/SecretConfigureOptions'
@@ -322,7 +322,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={getString(defaultTo(addVariableLabel, 'variables.newVariable'))}
+                      text={getString(defaultTo(addVariableLabel, 'platform.variables.newVariable'))}
                     />
                   )}
                 </div>

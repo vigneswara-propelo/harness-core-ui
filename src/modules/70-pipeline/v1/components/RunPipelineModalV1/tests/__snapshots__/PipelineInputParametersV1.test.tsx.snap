@@ -19,7 +19,7 @@ exports[`PipelineInputParametersV1 tests Initial Render 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="runmodal-params-title"
           >
-            connectors.parameters
+            platform.connectors.parameters
           </p>
         </div>
       </div>
@@ -62,7 +62,7 @@ exports[`PipelineInputParametersV1 tests should not render if no inputs present 
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="runmodal-params-title"
           >
-            connectors.parameters
+            platform.connectors.parameters
           </p>
         </div>
       </div>

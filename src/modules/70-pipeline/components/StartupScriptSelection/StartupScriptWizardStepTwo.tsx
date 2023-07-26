@@ -24,7 +24,7 @@ import * as Yup from 'yup'
 
 import { get, isEmpty, isUndefined, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'

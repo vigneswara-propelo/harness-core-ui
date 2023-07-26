@@ -12,7 +12,7 @@ import type { ArtifactTriggerValues } from '../utils'
 
 export class AzureArtifacts extends ArtifactTrigger<ArtifactTriggerValues> {
   protected type: TriggerArtifactType = 'AzureArtifacts'
-  protected triggerDescription: keyof StringsMap = 'connectors.title.azureArtifacts'
+  protected triggerDescription: keyof StringsMap = 'platform.connectors.title.azureArtifacts'
 
   protected defaultValues = {
     triggerType: this.baseType,

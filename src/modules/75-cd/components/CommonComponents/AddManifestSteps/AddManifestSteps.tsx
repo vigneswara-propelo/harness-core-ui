@@ -88,7 +88,7 @@ export const AddManifestSteps: React.FC<AddManifestStepsProps> = (props: AddMani
                     onClick={onDownload}
                     className={css.icon}
                     color={Color.PRIMARY_7}
-                    title={getString('delegates.downloadYAMLFile')}
+                    title={getString('platform.delegates.downloadYAMLFile')}
                   ></Icon>
                 </Container>
               </div>

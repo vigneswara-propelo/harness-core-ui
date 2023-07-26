@@ -52,7 +52,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
     }),
     connectorRef: Yup.mixed().when('storeType', {
       is: StoreType.REMOTE,
-      then: Yup.string().trim().required(getString('connectors.validation.connectorIsRequired'))
+      then: Yup.string().trim().required(getString('platform.connectors.validation.connectorIsRequired'))
     }),
     branch: Yup.mixed().when('storeType', {
       is: StoreType.REMOTE,

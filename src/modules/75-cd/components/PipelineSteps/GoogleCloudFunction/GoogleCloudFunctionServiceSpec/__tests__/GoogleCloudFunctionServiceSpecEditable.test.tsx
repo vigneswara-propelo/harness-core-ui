@@ -27,7 +27,7 @@ import routes from '@common/RouteDefinitions'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'

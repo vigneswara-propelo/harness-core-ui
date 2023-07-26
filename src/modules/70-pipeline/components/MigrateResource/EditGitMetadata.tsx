@@ -23,7 +23,7 @@ import { GitSyncForm, GitSyncFormFields } from '@gitsync/components/GitSyncForm/
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
-import { getConnectorValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { getConnectorValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import {
   ResponseTemplateUpdateGitDetailsResponse,
   TemplateUpdateGitDetailsRequest,

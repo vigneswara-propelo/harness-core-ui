@@ -77,7 +77,7 @@ const getAdditionalTextFields = (
   if (type === VolumesTypes.EmptyDir) {
     return [
       {
-        label: getString('connectors.cdng.verificationSensitivityLabel.medium'),
+        label: getString('platform.connectors.cdng.verificationSensitivityLabel.medium'),
         name: 'spec.medium',
         fieldType: FieldType.TextInput,
         tooltipId: 'medium',

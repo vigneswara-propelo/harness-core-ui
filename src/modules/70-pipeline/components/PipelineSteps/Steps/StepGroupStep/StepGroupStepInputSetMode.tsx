@@ -21,8 +21,8 @@ import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiT
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
-import { Connectors } from '@connectors/constants'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { InputSetDTO } from '@pipeline/utils/types'
@@ -127,7 +127,7 @@ function StepGroupStepInputSet(props: StepGroupStepInputSetProps): React.ReactEl
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             name={`${prefix}stepGroupInfra.spec.connectorRef`}
-            label={getString('connectors.title.k8sCluster')}
+            label={getString('platform.connectors.title.k8sCluster')}
             enableConfigureOptions={false}
             placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
@@ -433,8 +433,10 @@ function StepGroupStepInputSet(props: StepGroupStepInputSetProps): React.ReactEl
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
             name={`${prefix}stepGroupInfra.spec.harnessImageConnectorRef`}
-            label={`${getString('connectors.title.harnessImageConnectorRef')} ${getString('common.optionalLabel')}`}
-            placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+            label={`${getString('platform.connectors.title.harnessImageConnectorRef')} ${getString(
+              'common.optionalLabel'
+            )}`}
+            placeholder={getString('platform.connectors.placeholder.harnessImageConnectorRef')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}

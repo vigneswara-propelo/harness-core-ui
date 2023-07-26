@@ -23,8 +23,8 @@ import {
   useSettingsGetSetting,
   useSettingsSaveSetting
 } from 'services/ticket-service/ticketServiceComponents'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import IssueTypesDropDown from '@sto/components/ExternalTickets/Settings/IssueTypesDropDown'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ExternalTicketSettings.module.scss'

@@ -124,7 +124,7 @@ export function getValidationSchemaNoPreconfiguredHosts(getString: UseStringsRet
   return Yup.object().shape({
     credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('credentials') })),
     hosts: Yup.string().required(
-      getString('common.validation.fieldIsRequired', { name: getString('connectors.pdc.hosts') })
+      getString('common.validation.fieldIsRequired', { name: getString('platform.connectors.pdc.hosts') })
     )
   })
 }

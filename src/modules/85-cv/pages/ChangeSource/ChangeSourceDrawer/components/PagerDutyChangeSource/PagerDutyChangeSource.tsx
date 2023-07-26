@@ -16,7 +16,7 @@ import { useGetServicesFromPagerDuty } from 'services/cv'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import {
   renderSearchLoading,
   setSearchPredicate
@@ -123,7 +123,7 @@ export default function PageDutyChangeSource({
             placeholder={getString('cv.healthSource.connectors.selectConnector', {
               sourceType: formik?.values?.type
             })}
-            label={getString('connectors.selectConnector')}
+            label={getString('platform.connectors.selectConnector')}
             tooltipProps={{ dataTooltipId: 'selectPageDutyConnector' }}
           />
         </div>

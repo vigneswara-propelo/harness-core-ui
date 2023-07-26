@@ -22,7 +22,7 @@ import { FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/ui
 import * as ngServices from 'services/cd-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { TestWrapper } from '@common/utils/testUtils'
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import { awsRegionsData } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/__tests__/mocks'
 import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

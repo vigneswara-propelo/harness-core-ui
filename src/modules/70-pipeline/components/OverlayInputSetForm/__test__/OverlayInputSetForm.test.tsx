@@ -17,7 +17,7 @@ import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@comm
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import { branchStatusMock } from '@connectors/mocks/mock'
+import { branchStatusMock } from '@platform/connectors/mocks/mock'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import {
   GetInputSetYamlDiffInline,

@@ -8,7 +8,7 @@
 import { cloneDeep, defaultTo, get, set, isEmpty } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { AWSDataSourceType } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { CustomHealthMetric } from '@cv/pages/health-source/HealthSourceDrawer/component/customiseHealthSource/CustomiseHealthSource.constant'

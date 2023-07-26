@@ -291,9 +291,12 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                                   <Container padding={{ top: 'xsmall' }}>
                                     <FormError
                                       name={'yamlPath'}
-                                      errorMessage={getString('connectors.cdng.runTimeMonitoredService.pleaseSpecify', {
-                                        field: `a ${getString('gitsync.gitSyncForm.yamlPathLabel').toLowerCase()}`
-                                      })}
+                                      errorMessage={getString(
+                                        'platform.connectors.cdng.runTimeMonitoredService.pleaseSpecify',
+                                        {
+                                          field: `a ${getString('gitsync.gitSyncForm.yamlPathLabel').toLowerCase()}`
+                                        }
+                                      )}
                                     />
                                   </Container>
                                 ) : null}

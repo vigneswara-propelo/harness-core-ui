@@ -25,7 +25,7 @@ import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/Artif
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   BuildDetails,
   JobDetails,
@@ -522,7 +522,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.jobName`, template) && (
             <>
               <FormInput.MultiTypeBiLevelInput
-                label={getString('connectors.jenkins.jobNameLabel')}
+                label={getString('platform.connectors.jenkins.jobNameLabel')}
                 name={`${path}.artifacts.${artifactPath}.spec.jobName`}
                 value={getJobnameValue()}
                 placeholder={
@@ -575,8 +575,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               />
               {showChildJobField && (
                 <FormInput.MultiTypeBiLevelInput
-                  label={`${recentParentJob?.current || getString('connectors.jenkins.child')} ${getString(
-                    'connectors.jenkins.jobs'
+                  label={`${recentParentJob?.current || getString('platform.connectors.jenkins.child')} ${getString(
+                    'platform.connectors.jenkins.jobs'
                   )}`}
                   name={`${path}.artifacts.${artifactPath}.spec.jobName`}
                   value={childJob}

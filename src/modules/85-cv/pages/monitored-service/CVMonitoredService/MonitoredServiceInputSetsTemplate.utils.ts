@@ -70,7 +70,7 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
     case 'serviceInstanceFieldName':
       return getString('cv.monitoringSources.serviceInstanceIdentifier')
     case 'connectorRef':
-      return getString('connectors.selectConnector')
+      return getString('platform.connectors.selectConnector')
     case 'query':
       return getString('cv.query')
     case 'category':
@@ -88,22 +88,22 @@ export const getValidationLabelByNameForTemplateInputs = (
 ): string => {
   switch (name) {
     case 'applicationName':
-      return getString('connectors.cdng.validations.applicationNameValidation')
+      return getString('platform.connectors.cdng.validations.applicationNameValidation')
     case 'serviceRef':
       return getString('cv.monitoringSources.serviceValidation')
     case 'environmentRef':
       return getString('cv.monitoringSources.envValidation')
     case 'tierName':
-      return getString('connectors.cdng.validations.tierNameValidation')
+      return getString('platform.connectors.cdng.validations.tierNameValidation')
     case 'completeMetricPath':
-      return getString('connectors.cdng.validations.completeMetricPathValidation')
+      return getString('platform.connectors.cdng.validations.completeMetricPathValidation')
     case 'serviceInstanceMetricPath':
-      return getString('connectors.cdng.validations.serviceInstanceMetricPathValidation')
+      return getString('platform.connectors.cdng.validations.serviceInstanceMetricPathValidation')
     case 'serviceInstanceFieldName':
     case 'serviceInstanceField':
-      return getString('connectors.cdng.validations.serviceInstanceFieldNameValidation')
+      return getString('platform.connectors.cdng.validations.serviceInstanceFieldNameValidation')
     case 'connectorRef':
-      return getString('connectors.validation.connectorIsRequired')
+      return getString('platform.connectors.validation.connectorIsRequired')
     case 'query':
       return getString('cv.monitoringSources.gco.manualInputQueryModal.validation.query')
     case 'category':

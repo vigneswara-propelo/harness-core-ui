@@ -617,7 +617,7 @@ export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['
     }),
     [SLOV2FormFields.USER_JOURNEY_REF]: Yup.string().required(getString('cv.slos.validations.userJourneyRequired')),
     [SLOV2FormFields.MONITORED_SERVICE_REF]: Yup.string().required(
-      getString('connectors.cdng.validations.monitoringServiceRequired')
+      getString('platform.connectors.cdng.validations.monitoringServiceRequired')
     ),
     [SLOV2FormFields.HEALTH_SOURCE_REF]: Yup.string().required(getString('cv.slos.validations.healthSourceRequired')),
 

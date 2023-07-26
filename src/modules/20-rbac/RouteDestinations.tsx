@@ -119,7 +119,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ROLE, {
 
 RbacFactory.registerResourceTypeHandler(ResourceType.AUTHSETTING, {
   icon: 'nav-settings',
-  label: 'authSettings.authenticationSettings',
+  label: 'platform.authSettings.authenticationSettings',
   labelSingular: 'common.singularLabels.authenticationSetting',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {

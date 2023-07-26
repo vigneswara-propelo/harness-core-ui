@@ -327,7 +327,7 @@ export const getHelpeTextForTags = (
     registryHostname !== undefined &&
     (!registryHostname || getMultiTypeFromValue(registryHostname) === MultiTypeInputType.RUNTIME)
   ) {
-    invalidFields.push(getString('connectors.GCR.registryHostname'))
+    invalidFields.push(getString('platform.connectors.GCR.registryHostname'))
   }
   if (
     !isServerlessDeploymentTypeSelected &&
@@ -490,7 +490,7 @@ export const getHelperTextForDigest = (
     registryHostname !== undefined &&
     (!registryHostname || getMultiTypeFromValue(registryHostname) === MultiTypeInputType.RUNTIME)
   ) {
-    invalidFields.push(getString('connectors.GCR.registryHostname'))
+    invalidFields.push(getString('platform.connectors.GCR.registryHostname'))
   }
   if (
     !isServerlessDeploymentTypeSelected &&

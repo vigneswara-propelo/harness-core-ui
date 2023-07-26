@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useCallback, useEffect, useState } from 'react'
 import { get, isEmpty, noop, isArray } from 'lodash-es'
 import { Dialog, Classes } from '@blueprintjs/core'
@@ -533,7 +540,7 @@ function ManifestListViewMultiple({
     connectorInfo: undefined
   }
   const ConnectorTestConnectionProps = {
-    name: getString('connectors.stepThreeName'),
+    name: getString('platform.connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false,
@@ -560,7 +567,7 @@ function ManifestListViewMultiple({
       case ManifestStoreMap.Http:
       case ManifestStoreMap.OciHelmChart:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepHelmAuth {...authenticationStepProps} isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart} />
             <DelegateSelectorStep
@@ -572,7 +579,7 @@ function ManifestListViewMultiple({
         )
       case ManifestStoreMap.S3:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepAWSAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
@@ -581,7 +588,7 @@ function ManifestListViewMultiple({
         )
       case ManifestStoreMap.Gcs:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GcpAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildGcpPayload} />
@@ -590,7 +597,7 @@ function ManifestListViewMultiple({
         )
       default:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GitDetailsStep
               type={ManifestToConnectorMap[manifestStore]}

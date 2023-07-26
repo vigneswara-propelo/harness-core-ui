@@ -48,7 +48,7 @@ export function healthSourcesValidation(
   ) {
     spec = {
       ...spec,
-      healthSources: getString('connectors.cdng.validations.healthSourceRequired')
+      healthSources: getString('platform.connectors.cdng.validations.healthSourceRequired')
     }
     errors['spec'] = spec
   }

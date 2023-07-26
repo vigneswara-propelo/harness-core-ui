@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getNestedRuntimeInputs } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {

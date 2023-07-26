@@ -9,7 +9,7 @@ import { defaultTo, set } from 'lodash-es'
 import { customAlphabet } from 'nanoid'
 import type { IconName } from '@harness/icons'
 import { AllowedTypesWithRunTime, MultiTypeInputType, SelectOption } from '@harness/uicore'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { gitStoreTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type {

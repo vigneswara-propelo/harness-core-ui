@@ -34,7 +34,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
@@ -445,8 +445,8 @@ export default function ArtifactsSelection({
       GoogleCloudSourceRepositoriesInitialValuesType
   > => {
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      key: getString('platform.connectors.stepFourName'),
+      name: getString('platform.connectors.stepFourName'),
       context,
       expressions,
       allowableTypes,
@@ -493,7 +493,7 @@ export default function ArtifactsSelection({
 
   const getLabels = useCallback((): ConnectorRefLabelType => {
     return {
-      firstStepName: getString('connectors.specifyArtifactRepoType'),
+      firstStepName: getString('platform.connectors.specifyArtifactRepoType'),
       secondStepName: `${selectedArtifact && getString(ArtifactTitleIdByType[selectedArtifact])} ${getString(
         'repository'
       )}`
@@ -527,7 +527,7 @@ export default function ArtifactsSelection({
     connectorInfo: undefined
   }
   const ConnectorTestConnectionProps = {
-    name: getString('connectors.stepThreeName'),
+    name: getString('platform.connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false

@@ -358,7 +358,7 @@ function FormComponent({
     connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
       ? fetchingChildJobs
         ? getString('common.loadingFieldOptions', {
-            fieldName: `${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
+            fieldName: `${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
               'pipeline.jenkinsStep.job'
             )}`
           })
@@ -374,7 +374,7 @@ function FormComponent({
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeBiLevelInput
-            label={getString('connectors.jenkins.jobNameLabel')}
+            label={getString('platform.connectors.jenkins.jobNameLabel')}
             name={'spec.jobName'}
             value={getJobNameValue()}
             placeholder={jobNamePlaceholder}
@@ -444,8 +444,8 @@ function FormComponent({
         {showChildJobField && (
           <div className={css.imagePathContainer}>
             <FormInput.MultiTypeBiLevelInput
-              label={`${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
-                'connectors.jenkins.jobs'
+              label={`${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
+                'platform.connectors.jenkins.jobs'
               )}`}
               name={'spec.childJobName'}
               value={childJob}
@@ -695,8 +695,8 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
           .trim()
           .required(
             getString('common.validation.fieldIsRequired', {
-              name: `${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
-                'connectors.jenkins.jobs'
+              name: `${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
+                'platform.connectors.jenkins.jobs'
               )}`
             })
           )

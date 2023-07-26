@@ -50,7 +50,7 @@ import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/
 import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import { SaveTemplateAsType, StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
 import type { ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { toBase64 } from '@common/utils/utils'

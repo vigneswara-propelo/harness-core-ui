@@ -23,14 +23,14 @@ import { SshWinRmAwsInfrastructure, useRegionsForAws, useTagsV2 } from 'services
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { useStrings } from 'framework/strings'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { SshWinRmAwsInfrastructureTemplate } from './SshWinRmAwsInfrastructureSpec'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

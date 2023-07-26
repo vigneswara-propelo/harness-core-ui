@@ -17,7 +17,7 @@ import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
@@ -65,7 +65,7 @@ const AwsSamInfraSpecInputForm = ({
           <FormMultiTypeConnectorField
             name={connectorFieldName}
             label={getString('optionalField', { name: getString('connector') })}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('platform.connectors.selectConnector')}
             enableConfigureOptions={false}
             disabled={readonly}
             accountIdentifier={accountId}

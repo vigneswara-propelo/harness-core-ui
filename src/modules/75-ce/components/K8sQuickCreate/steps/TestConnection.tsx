@@ -25,10 +25,13 @@ import {
   Error
 } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import { CCM_CONNECTOR_SAVE_SUCCESS, CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
-import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import {
+  CCM_CONNECTOR_SAVE_SUCCESS,
+  CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS
+} from '@platform/connectors/trackingConstants'
+import { useStepLoadTelemetry } from '@platform/connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { DelegateErrorHandler } from './DelegateErrorHandler'
 
 import css from '../K8sQuickCreateModal.module.scss'

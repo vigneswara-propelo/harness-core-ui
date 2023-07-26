@@ -13,7 +13,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import { TestWrapper } from '@common/utils/testUtils'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { ConnectorResponse } from '@pipeline/components/InputSetForm/__tests__/InputSetMocks'
 
 import { PipelineStudioInternal } from '../PipelineStudioInternal/PipelineStudioInternal'

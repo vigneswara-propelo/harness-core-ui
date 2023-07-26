@@ -17,7 +17,7 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
   ConnectorReferenceField,
   ConnectorSelectedValue
-} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+} from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -26,8 +26,8 @@ import RepositorySelect from '@common/components/RepositorySelect/RepositorySele
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
-import { Connectors } from '@connectors/constants'
-import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
+import { Connectors } from '@platform/connectors/constants'
+import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/utils'
 import { yamlPathRegex } from '@common/utils/StringUtils'
 import { ConnectorInfoDTO, GetConnectorQueryParams, useGetConnector, useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
@@ -329,9 +329,11 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             type={getSupportedProviders()}
             selected={defaultTo(formikProps.values.connectorRef, connectorRef)}
             error={formikProps.submitCount > 0 ? (formikProps?.errors?.connectorRef as string) : undefined}
-            label={getString('connectors.title.gitConnector')}
+            label={getString('platform.connectors.title.gitConnector')}
             placeholder={
-              loadingSetting ? getString('defaultSettings.fetchingDefaultConnector') : `- ${getString('select')} -`
+              loadingSetting
+                ? getString('platform.defaultSettings.fetchingDefaultConnector')
+                : `- ${getString('select')} -`
             }
             accountIdentifier={accountId}
             {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}

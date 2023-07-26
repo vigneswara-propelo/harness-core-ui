@@ -42,9 +42,9 @@ export function getDefaultBaselineOptions(
 
 export function getVerificationSensitivityOptions(getString: UseStringsReturn['getString']): SelectOption[] {
   return [
-    { label: getString('connectors.cdng.verificationSensitivityLabel.high'), value: 'HIGH' },
-    { label: getString('connectors.cdng.verificationSensitivityLabel.medium'), value: 'MEDIUM' },
-    { label: getString('connectors.cdng.verificationSensitivityLabel.low'), value: 'LOW' }
+    { label: getString('platform.connectors.cdng.verificationSensitivityLabel.high'), value: 'HIGH' },
+    { label: getString('platform.connectors.cdng.verificationSensitivityLabel.medium'), value: 'MEDIUM' },
+    { label: getString('platform.connectors.cdng.verificationSensitivityLabel.low'), value: 'LOW' }
   ]
 }
 
@@ -168,7 +168,7 @@ export function Baseline(props: BaseFieldProps): JSX.Element {
     <FormInput.MultiTypeInput
       name="baseline"
       style={style}
-      label={getString('connectors.cdng.baseline')}
+      label={getString('platform.connectors.cdng.baseline')}
       selectItems={selectProps.items}
       multiTypeInputProps={{
         allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
@@ -190,7 +190,7 @@ export function BaselineSelect(props: BaseFieldProps): JSX.Element {
         <FormInput.MultiTypeInput
           name={name ?? 'baseline'}
           style={style}
-          label={label ?? getString('connectors.cdng.baseline')}
+          label={label ?? getString('platform.connectors.cdng.baseline')}
           selectItems={getDefaultBaselineOptions(getString, SRM_ENABLE_BASELINE_BASED_VERIFICATION)}
           multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
         />
@@ -205,7 +205,7 @@ export function BaselineSelect(props: BaseFieldProps): JSX.Element {
         <FormInput.Select
           name={name ?? 'baseline'}
           style={style}
-          label={label ?? getString('connectors.cdng.baseline')}
+          label={label ?? getString('platform.connectors.cdng.baseline')}
           items={getDefaultBaselineOptions(getString, SRM_ENABLE_BASELINE_BASED_VERIFICATION)}
           value={(formik?.values as ContinousVerificationData).spec?.spec?.baseline as SelectOption}
           disabled={true}

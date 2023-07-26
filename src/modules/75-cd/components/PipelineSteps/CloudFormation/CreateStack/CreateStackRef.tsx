@@ -39,12 +39,12 @@ import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/V
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -746,7 +746,9 @@ export const CreateStack = (
                     </Layout.Vertical>
                     <Layout.Horizontal className={stepCss.formGroup}>
                       <FormInput.MultiTypeInput
-                        label={getString('optionalField', { name: getString('connectors.awsKms.roleArnLabel') })}
+                        label={getString('optionalField', {
+                          name: getString('platform.connectors.awsKms.roleArnLabel')
+                        })}
                         name="spec.configuration.roleArn"
                         placeholder={getString(rolesLoading ? 'common.loading' : 'select')}
                         disabled={readonly || rolesLoading}

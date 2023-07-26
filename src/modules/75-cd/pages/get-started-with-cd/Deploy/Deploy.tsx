@@ -227,7 +227,7 @@ export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps
                       padding={{ right: 'medium' }}
                       margin={{ bottom: 'large' }}
                     >
-                      {getString('connectors.ceAws.curExtention.stepB.step1.p1')}
+                      {getString('platform.connectors.ceAws.curExtention.stepB.step1.p1')}
                     </Text>
                     <Icon
                       name="Edit"

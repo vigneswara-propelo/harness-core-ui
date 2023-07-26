@@ -21,19 +21,19 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 
-import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
-import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
+import { useStepLoadTelemetry } from '@platform/connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@platform/connectors/trackingConstants'
 import { downloadYamlAsFile } from '@common/utils/downloadYamlUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
+import { DialogExtensionContext } from '@platform/connectors/common/ConnectorExtention/DialogExtention'
 import EnableAutoStoppingHeader from '@ce/components/CloudVisibilityModal/steps/EnableAutoStoppingStep'
 
 import { ConnectorInfoDTO, useUpdateConnector } from 'services/cd-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { useCloudCostK8sClusterSetup } from 'services/ce'
-import PermissionYAMLPreview from '@connectors/components/CreateConnector/CEK8sConnector/PermissionYAMLPreview'
-import CopyCodeSection from '@connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
+import PermissionYAMLPreview from '@platform/connectors/components/CreateConnector/CEK8sConnector/PermissionYAMLPreview'
+import CopyCodeSection from '@platform/connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
 
 import css from '../AutoStoppingModal.module.scss'
 
@@ -129,10 +129,10 @@ const InstallComponents: React.FC<StepProps<ConnectorInfoDTO> & InstallComponent
 
   const infoSteps = useMemo(
     () => [
-      getString('connectors.ceK8.providePermissionsStep.fileDescription.info1'),
-      getString('connectors.ceK8.providePermissionsStep.fileDescription.info2'),
-      getString('connectors.ceK8.providePermissionsStep.fileDescription.info3'),
-      getString('connectors.ceK8.providePermissionsStep.fileDescription.info4')
+      getString('platform.connectors.ceK8.providePermissionsStep.fileDescription.info1'),
+      getString('platform.connectors.ceK8.providePermissionsStep.fileDescription.info2'),
+      getString('platform.connectors.ceK8.providePermissionsStep.fileDescription.info3'),
+      getString('platform.connectors.ceK8.providePermissionsStep.fileDescription.info4')
     ],
     []
   )
@@ -164,7 +164,7 @@ const InstallComponents: React.FC<StepProps<ConnectorInfoDTO> & InstallComponent
               rightIcon="launch"
               variation={ButtonVariation.SECONDARY}
               margin={{ right: 'medium' }}
-              text={getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
+              text={getString('platform.connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
               onClick={handleDownload}
             />
             <Button

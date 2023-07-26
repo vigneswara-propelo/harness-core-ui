@@ -26,7 +26,7 @@ import { isEmpty } from 'lodash-es'
 import NetworkMap from '@discovery/images/NetworkMap.svg'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import List from '@discovery/components/List/List'
 import { useCreateAgent } from 'services/servicediscovery'
 import NumberedList from '@discovery/components/NumberedList/NumberedList'
@@ -214,13 +214,13 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
                               name={'connectorRef'}
                               label={
                                 <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-                                  {getString('connectors.selectConnector')}
+                                  {getString('platform.connectors.selectConnector')}
                                 </Text>
                               }
                               accountIdentifier={accountId}
                               projectIdentifier={projectIdentifier}
                               orgIdentifier={orgIdentifier}
-                              placeholder={getString('connectors.selectConnector')}
+                              placeholder={getString('platform.connectors.selectConnector')}
                               tooltipProps={{ dataTooltipId: 'selectNetworkMapConnector' }}
                             />
 

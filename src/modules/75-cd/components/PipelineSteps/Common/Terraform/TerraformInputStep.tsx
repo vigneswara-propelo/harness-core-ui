@@ -38,7 +38,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 

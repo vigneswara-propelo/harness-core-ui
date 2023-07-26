@@ -113,22 +113,22 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   DockerRegistry: 'dockerRegistry',
-  Gcr: 'connectors.GCR.name',
-  Ecr: 'connectors.ECR.name',
-  Nexus3Registry: 'connectors.nexus.nexusLabel',
-  Nexus2Registry: 'connectors.nexus.nexus2Label',
-  ArtifactoryRegistry: 'connectors.artifactory.artifactoryLabel',
+  Gcr: 'platform.connectors.GCR.name',
+  Ecr: 'platform.connectors.ECR.name',
+  Nexus3Registry: 'platform.connectors.nexus.nexusLabel',
+  Nexus2Registry: 'platform.connectors.nexus.nexus2Label',
+  ArtifactoryRegistry: 'platform.connectors.artifactory.artifactoryLabel',
   CustomArtifact: 'common.repo_provider.customLabel',
   Acr: 'pipeline.ACR.name',
-  Jenkins: 'connectors.jenkins.jenkins',
+  Jenkins: 'platform.connectors.jenkins.jenkins',
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
-  AzureArtifacts: 'connectors.title.azureArtifacts',
+  AzureArtifacts: 'platform.connectors.title.azureArtifacts',
   AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle',
   GoogleCloudStorage: 'pipeline.artifacts.googleCloudStorage.title',
   GoogleCloudSource: 'pipeline.artifacts.googleCloudSourceRepositories.title',
-  Bamboo: 'connectors.bamboo.bamboo'
+  Bamboo: 'platform.connectors.bamboo.bamboo'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {

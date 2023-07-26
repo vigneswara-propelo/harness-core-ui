@@ -14,7 +14,7 @@ import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMo
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@common/utils/routeUtils'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { queryByNameAttribute } from '@common/utils/testUtils'
 
 import { EnhancedInputSetForm } from '../InputSetForm'

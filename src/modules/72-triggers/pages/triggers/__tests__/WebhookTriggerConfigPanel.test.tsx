@@ -81,7 +81,9 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
         queryByText(container, result.current.getString('triggers.triggerConfigurationPanel.listenOnNewWebhook'))
       )
 
-      expect(queryByText(container, result.current.getString('secrets.secret.configureSecret'))).toBeInTheDocument()
+      expect(
+        queryByText(container, result.current.getString('platform.secrets.secret.configureSecret'))
+      ).toBeInTheDocument()
       expect(container).toMatchSnapshot()
     })
     test('Initial Render - Github Trigger Configuration Panel with Github Webhook Authentication disabled', async () => {
@@ -102,7 +104,7 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
         queryByText(container, result.current.getString('triggers.triggerConfigurationPanel.listenOnNewWebhook'))
       )
       const secretInputLabel = `${result.current.getString(
-        'secrets.secret.configureSecret'
+        'platform.secrets.secret.configureSecret'
       )} (${result.current.getString('projectsOrgs.optional')})`
 
       expect(queryByText(container, secretInputLabel)).toBeInTheDocument()

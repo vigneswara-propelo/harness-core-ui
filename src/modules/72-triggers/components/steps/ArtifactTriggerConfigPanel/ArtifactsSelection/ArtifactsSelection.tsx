@@ -15,7 +15,7 @@ import { useParams } from 'react-router-dom'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
 import { noop } from 'lodash-es'
-import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import type { GitQueryParams, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 
@@ -214,8 +214,8 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
       : artifactSpecSources[currentEditArtifactIndex].spec
 
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      key: getString('platform.connectors.stepFourName'),
+      name: getString('platform.connectors.stepFourName'),
       initialValues,
       handleSubmit: (data: ArtifactTriggerSpec) => {
         addArtifact(data)
@@ -226,7 +226,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
 
   const getLabels = useCallback((): ConnectorRefLabelType => {
     return {
-      firstStepName: getString('connectors.specifyArtifactRepoType'),
+      firstStepName: getString('platform.connectors.specifyArtifactRepoType'),
       secondStepName: `${selectedArtifactType && getString(ArtifactTitleIdByType[selectedArtifactType])} ${getString(
         'repository'
       )}`
@@ -261,7 +261,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     connectorInfo: undefined
   }
   const ConnectorTestConnectionProps = {
-    name: getString('connectors.stepThreeName'),
+    name: getString('platform.connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false

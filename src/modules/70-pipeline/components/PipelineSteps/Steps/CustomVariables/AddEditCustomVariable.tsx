@@ -16,7 +16,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
@@ -85,7 +85,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
       isOpen={!!selectedVariable}
       enforceFocus={false}
       style={{ width: 600 }}
-      title={isEdit ? getString('common.editVariable') : getString('variables.newVariable')}
+      title={isEdit ? getString('common.editVariable') : getString('platform.variables.newVariable')}
       onClose={closeModal}
     >
       <Formik

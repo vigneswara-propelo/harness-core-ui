@@ -86,7 +86,7 @@ describe('container test', () => {
     await userEvent.click(getByText('common.optionalConfig'))
 
     await waitFor(() => {
-      expect(screen.getByText('connectors.title.harnessImageConnectorRef')).toBeInTheDocument()
+      expect(screen.getByText('platform.connectors.title.harnessImageConnectorRef')).toBeInTheDocument()
     })
   })
 })

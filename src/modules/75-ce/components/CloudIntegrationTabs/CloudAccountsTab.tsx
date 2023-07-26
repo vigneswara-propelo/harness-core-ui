@@ -26,12 +26,12 @@ import { defaultTo, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConnectorResponse, PageConnectorResponse, useDeleteConnector, useGetConnectorListV2 } from 'services/cd-ng'
 import type { CcmMetaData } from 'services/ce/services'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import { Connectors } from '@connectors/constants'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import { Connectors } from '@platform/connectors/constants'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import useTestConnectionModal from '@platform/connectors/common/useTestConnectionModal/useTestConnectionModal'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ConnectorStatus } from '@ce/constants'
 import {
@@ -40,7 +40,7 @@ import {
   getCloudViewCostsLink,
   getConnectorStatusIcon
 } from '@ce/utils/cloudIntegrationUtils'
-import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import useCreateConnectorModal from '@platform/connectors/modals/ConnectorModal/useCreateConnectorModal'
 
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { EmptySearchState } from './NoConnectors'
@@ -183,8 +183,8 @@ const MenuCell: CustomCloudCell = ({ row, column }) => {
   })
 
   const { openDialog } = useConfirmationDialog({
-    titleText: getString('connectors.confirmDeleteTitle'),
-    contentText: `${getString('connectors.confirmDelete')} ${connector?.name}?`,
+    titleText: getString('platform.connectors.confirmDeleteTitle'),
+    contentText: `${getString('platform.connectors.confirmDelete')} ${connector?.name}?`,
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
     onCloseDialog: async isConfirmed => {
@@ -193,7 +193,7 @@ const MenuCell: CustomCloudCell = ({ row, column }) => {
           const isDeleted = await deleteConnector(connector?.identifier || '')
 
           if (isDeleted) {
-            showSuccess(getString('connectors.deletedSuccssMessage', { name: connector?.name }))
+            showSuccess(getString('platform.connectors.deletedSuccssMessage', { name: connector?.name }))
           }
         } catch (error) {
           showError(getErrorInfoFromErrorObject(error))
@@ -292,7 +292,7 @@ const CloudAccountsTab: React.FC<CloudAccountsTabProps> = ({ ccmMetaData, search
     () => [
       {
         accessor: 'name',
-        Header: getString('connectors.name'),
+        Header: getString('platform.connectors.name'),
         Cell: ConnectorNameCell,
         width: '25%',
         openConnectorModal
@@ -306,7 +306,7 @@ const CloudAccountsTab: React.FC<CloudAccountsTabProps> = ({ ccmMetaData, search
       },
       {
         accessor: 'lastUpdated',
-        Header: getString('delegates.lastUpdated'),
+        Header: getString('platform.delegates.lastUpdated'),
         Cell: LastUpdatedCell,
         width: '25%'
       },

@@ -35,7 +35,7 @@ import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationSt
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import MetricPackCustom from '@cv/pages/health-source/connectors/MetricPackCustom'
 import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/MetricsVerificationModal'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import {
   MetricPackDTO,
   MetricPackValidationResponse,

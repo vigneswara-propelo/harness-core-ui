@@ -178,12 +178,12 @@ describe('Test MergePrStep', () => {
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await userEvent.click(getByText('common.optionalConfig'))
-    await userEvent.click(getByText('connectors.addParameter'))
+    await userEvent.click(getByText('platform.connectors.addParameter'))
     await userEvent.type(queryByNameAttribute('spec.variables[0].name')!, 'bypassPolicy')
     await userEvent.type(queryByNameAttribute('spec.variables[0].value')!, 'true')
     expect(container).toMatchSnapshot('Merge Params section')
 
-    await userEvent.click(getByText('connectors.addParameter'))
+    await userEvent.click(getByText('platform.connectors.addParameter'))
     await userEvent.type(queryByNameAttribute('spec.variables[1].name')!, 'bypassReason')
     await userEvent.type(queryByNameAttribute('spec.variables[1].value')!, 'test bypass reason')
   })

@@ -100,7 +100,7 @@ co:
           resourceList:
             vms: 'VM(s)'
             asg: 'Auto scaling groups'
-            kubernetes: '{{$.connectors.title.k8sCluster}}'
+            kubernetes: '{{$.platform.connectors.title.k8sCluster}}'
             gcpVms: 'GCE VM(s)'
             ec2Vms: 'EC2 VM(s)'
             azureVms: 'Azure VM(s)'
@@ -216,7 +216,7 @@ co:
         title: 'Select instance group'
         gcpFiltersNotSelectedDescription: 'Select a region to see all the instance groups.'
       kubernetesModal:
-        title: '{{$.connectors.selectConnector}}'
+        title: '{{$.platform.connectors.selectConnector}}'
         infoText1: 'The connectors shown below are the clusters who are connected to a Harness Delegate'
         infoText2: 'A Harness Delegate is a service that can run in local network or VPC to connect artifact servers, infrastructure and verification providers to install projects and pipelines. If the cluster you would like to monitor does not have a Harness delegate connected to it, you will have to create a connector'
         createNewConnectorBtn: '+ Create a new connector'
@@ -575,7 +575,7 @@ dashboardPage:
   description: placeholder for description
 connector:
   AWS:
-    title: '{{$.connectors.title.aws}}'
+    title: '{{$.platform.connectors.title.aws}}'
     overview:
       title: AWS Cloud Provider Overview
       reqirementLabel: Adding an AWS account for
@@ -610,9 +610,9 @@ connector:
         modify any of your workloads. Cross-Account IAM ARN is the Output of CloudFormation
         Stack
       arn: Cross-Account Role ARN
-      externalID: '{{$.connectors.aws.externalId}}'
+      externalID: '{{$.platform.connectors.aws.externalId}}'
       validation:
-        arnRequired: '{{$.connectors.aws.validation.crossAccountRoleArn}}'
+        arnRequired: '{{$.platform.connectors.aws.validation.crossAccountRoleArn}}'
         extIDRequired: External Id is required
       submitText: Save & Continue
       templateLaunchText: Launch Template in AWS Console
@@ -753,7 +753,7 @@ perspectives:
   enterAmount: Enter amount
   exportRowsUpto: Export rows upto
   largeNoOfRowsWarning: Note that rows >500 may take longer to download.
-  cost: '{{ $.connectors.ceAws.crossAccountRoleStep1.cost }}'
+  cost: '{{ $.platform.connectors.ceAws.crossAccountRoleStep1.cost }}'
   costTrend: Cost Trend
   noOfRowsLessThan: 'Number of rows should be less than {{ number }}'
   noOfRowsGreaterThan: 'Number of rows should be greater than or equal to 1'
@@ -1269,7 +1269,7 @@ cloudIntegration:
   disableReporting: Disable Cost Reporting
   disableAutoStopping: Disable AutoStopping
   editConnector: Edit Connector
-  deleteConnector: '{{ $.connectors.confirmDeleteTitle }}'
+  deleteConnector: '{{ $.platform.connectors.confirmDeleteTitle }}'
   deleteConnectorDialog:
     header: 'Delete connector?'
     desc: Deleting the Connector would delete the Connector from the Account.This will impact any other modules that use this connector.<br><br>Are you sure you want to Delete the connector from the Account?
@@ -1291,14 +1291,14 @@ cloudIntegration:
       permissions: 'This is done by collecting Cost data on your existing Connector with <a target="_blank" href="https://ngdocs.harness.io/article/ltt65r6k39-set-up-cost-visibility-for-kubernetes#prerequisites">these permissions<a/>.'
       feat1: Costs by pods, nodes, namespaces, workloads
       feat2: Idle and unallocated cluster costs
-      feat3: '{{ $.connectors.ceAzure.chooseRequirements.billing.feat3 }}'
+      feat3: '{{ $.platform.connectors.ceAzure.chooseRequirements.billing.feat3 }}'
       feat4: Workload recommendations
       feat5: Node recommendations
       feat6: Budgets and alerts
   viewCosts: View costs
   autoStoppingModal:
     createSecret:
-      title: '{{ $.secrets.createSecret }}'
+      title: '{{ $.platform.secrets.createSecret }}'
       desc: Follow these steps to create a secret
       step1: Create a api key
       createKey: Create api key
@@ -1315,8 +1315,8 @@ cloudIntegration:
       feat1: Works for custom clusters and EKS, AKS, GKE, etc
       feat2: Orchestrate pods based on idleness
       feat3: Set dependencies between workloads like pods, VMs, etc.
-      feat4: '{{ $.connectors.ceAzure.chooseRequirements.billing.feat3 }}'
-      feat5: '{{ $.connectors.ceAzure.chooseRequirements.billing.feat4 }}'
+      feat4: '{{ $.platform.connectors.ceAzure.chooseRequirements.billing.feat3 }}'
+      feat5: '{{ $.platform.connectors.ceAzure.chooseRequirements.billing.feat4 }}'
 serviceDetails:
   title: '{{ $.common.serviceDetails }}'
   launchType: Launch Type

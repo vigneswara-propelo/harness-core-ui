@@ -42,14 +42,14 @@ import {
   FILE_TYPE_VALUES,
   ConfigFilesToConnectorMap
 } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks'
@@ -61,7 +61,7 @@ import type {
 } from '@pipeline/components/ConfigFilesSelection/ConfigFilesInterface'
 
 import { GitConfigStep } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/GitConfigStep'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import { getBuildPayload } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import ServiceConfigFileOverridesList from './ServiceConfigFileOverridesList'
@@ -288,7 +288,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
       case ConfigFilesToConnectorMap.Bitbucket:
       case ConfigFilesToConnectorMap.Github:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep
               type={ConfigFilesToConnectorMap[configStore]}
               name={getString('overview')}
@@ -321,7 +321,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
               connectorInfo={undefined}
             />
             <ConnectorTestConnection
-              name={getString('connectors.stepThreeName')}
+              name={getString('platform.connectors.stepThreeName')}
               connectorInfo={undefined}
               isStep={true}
               isLastStep={false}

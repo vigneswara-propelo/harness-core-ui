@@ -14,13 +14,13 @@ import * as pipelineNg from 'services/pipeline-ng'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import * as cdng from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 // eslint-disable-next-line no-restricted-imports
 import { KubernetesArtifacts } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 // eslint-disable-next-line no-restricted-imports
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import TriggerFactory from '@pipeline/factories/ArtifactTriggerInputFactory/index'
 import { TriggerFormType } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import {

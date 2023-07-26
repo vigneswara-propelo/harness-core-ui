@@ -223,15 +223,15 @@ export const severityOptions = (getString: getStringProp) => [
     value: 'critical'
   },
   {
-    label: getString('connectors.cdng.verificationSensitivityLabel.high'),
+    label: getString('platform.connectors.cdng.verificationSensitivityLabel.high'),
     value: 'high'
   },
   {
-    label: getString('connectors.cdng.verificationSensitivityLabel.medium'),
+    label: getString('platform.connectors.cdng.verificationSensitivityLabel.medium'),
     value: 'medium'
   },
   {
-    label: getString('connectors.cdng.verificationSensitivityLabel.low'),
+    label: getString('platform.connectors.cdng.verificationSensitivityLabel.low'),
     value: 'low'
   },
   {
@@ -404,7 +404,7 @@ export const instanceFieldsTransformConfig = (data: SecurityStepData<SecuritySte
         {
           name: 'spec.instance.domain',
           type: TransformValuesTypes.Text,
-          label: 'secrets.winRmAuthFormFields.domain'
+          label: 'platform.secrets.winRmAuthFormFields.domain'
         },
         {
           name: 'spec.instance.protocol',
@@ -471,7 +471,7 @@ export const imageFieldsValidationConfig = (
   {
     name: 'spec.image.domain',
     type: ValidationFieldTypes.Text,
-    label: 'secrets.winRmAuthFormFields.domain'
+    label: 'platform.secrets.winRmAuthFormFields.domain'
   },
   {
     name: 'spec.image.access_token',
@@ -505,7 +505,7 @@ export const instanceFieldsValidationConfig = (data: SecurityStepData<SecuritySt
         {
           name: 'spec.instance.domain',
           type: ValidationFieldTypes.Text,
-          label: 'secrets.winRmAuthFormFields.domain',
+          label: 'platform.secrets.winRmAuthFormFields.domain',
           isRequired: true
         },
         {
@@ -739,7 +739,7 @@ export const inputSetImageFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.domain) && {
           [getInputSetFieldName(prefix, 'spec.image.domain')]: {
-            label: 'secrets.winRmAuthFormFields.domain',
+            label: 'platform.secrets.winRmAuthFormFields.domain',
             tooltipId: tooltipIds.imageDomain,
             optional: true
           }
@@ -786,7 +786,7 @@ export const inputSetInstanceFields = (
         // Instance fields
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.domain) && {
           [getInputSetFieldName(prefix, 'spec.instance.domain')]: {
-            label: 'secrets.winRmAuthFormFields.domain',
+            label: 'platform.secrets.winRmAuthFormFields.domain',
             tooltipId: tooltipIds.instanceDomain
           }
         }),
@@ -945,7 +945,7 @@ export const inputSetAuthFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.domain) && {
           [getInputSetFieldName(prefix, 'spec.auth.domain')]: {
-            label: 'secrets.winRmAuthFormFields.domain',
+            label: 'platform.secrets.winRmAuthFormFields.domain',
             tooltipId: tooltipIds.authDomain
           }
         }),

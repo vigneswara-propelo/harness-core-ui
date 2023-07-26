@@ -15,7 +15,7 @@ exports[`Validate should close drawer 1`] = `
         <p
           class="StyledProps--font StyledProps--main tableTitle"
         >
-          connectors.cdng.healthSources.label
+          platform.connectors.cdng.healthSources.label
         </p>
       </div>
       <div
@@ -257,7 +257,7 @@ exports[`Validate should render HealthSourceTableContainer with data 1`] = `
         <p
           class="StyledProps--font StyledProps--main tableTitle"
         >
-          connectors.cdng.healthSources.label
+          platform.connectors.cdng.healthSources.label
         </p>
       </div>
       <div
@@ -499,7 +499,7 @@ exports[`Validate should render HealthSourceTableContainer with no data 1`] = `
         <p
           class="StyledProps--font StyledProps--main tableTitle"
         >
-          connectors.cdng.healthSources.label
+          platform.connectors.cdng.healthSources.label
         </p>
       </div>
       <div

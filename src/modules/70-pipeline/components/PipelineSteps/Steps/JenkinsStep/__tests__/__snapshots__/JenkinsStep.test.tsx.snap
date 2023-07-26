@@ -923,7 +923,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
                 class="Tooltip--acenter bp3-label"
                 data-tooltip-id="JenkinsStep_spec.connectorRef"
               >
-                connectors.jenkins.jenkinsConnectorLabel
+                platform.connectors.jenkins.jenkinsConnectorLabel
               </span>
             </div>
             <div
@@ -1017,7 +1017,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
                 class="Tooltip--acenter"
                 data-tooltip-id="JenkinsStep_spec.jobName"
               >
-                connectors.jenkins.jobNameLabel
+                platform.connectors.jenkins.jobNameLabel
               </span>
                
               <span
@@ -1734,7 +1734,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                 class="Tooltip--acenter bp3-label"
                 data-tooltip-id="JenkinsStep_spec.connectorRef"
               >
-                connectors.jenkins.jenkinsConnectorLabel
+                platform.connectors.jenkins.jenkinsConnectorLabel
               </span>
             </div>
             <div
@@ -1884,7 +1884,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                 class="Tooltip--acenter"
                 data-tooltip-id="JenkinsStep_spec.jobName"
               >
-                connectors.jenkins.jobNameLabel
+                platform.connectors.jenkins.jobNameLabel
               </span>
                
               <span

@@ -10,7 +10,7 @@ import { defaultTo, get, memoize } from 'lodash-es'
 import { FormInput, Layout, SelectOption, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   AzureArtifactsFeed,
   AzureArtifactsPackage,

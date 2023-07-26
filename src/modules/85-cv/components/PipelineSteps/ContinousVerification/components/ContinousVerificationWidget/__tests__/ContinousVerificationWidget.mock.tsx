@@ -88,19 +88,20 @@ export const expectedErrorsForEmptyTemplateInputs = {
             healthSources: [
               {
                 spec: {
-                  applicationName: 'connectors.cdng.validations.applicationNameValidation',
-                  connectorRef: 'connectors.validation.connectorIsRequired',
+                  applicationName: 'platform.connectors.cdng.validations.applicationNameValidation',
+                  connectorRef: 'platform.connectors.validation.connectorIsRequired',
                   metricDefinitions: [
                     {
                       analysis: {
                         deploymentVerification: {
-                          serviceInstanceMetricPath: 'connectors.cdng.validations.serviceInstanceMetricPathValidation'
+                          serviceInstanceMetricPath:
+                            'platform.connectors.cdng.validations.serviceInstanceMetricPathValidation'
                         }
                       },
-                      completeMetricPath: 'connectors.cdng.validations.completeMetricPathValidation'
+                      completeMetricPath: 'platform.connectors.cdng.validations.completeMetricPathValidation'
                     }
                   ],
-                  tierName: 'connectors.cdng.validations.tierNameValidation'
+                  tierName: 'platform.connectors.cdng.validations.tierNameValidation'
                 }
               }
             ]

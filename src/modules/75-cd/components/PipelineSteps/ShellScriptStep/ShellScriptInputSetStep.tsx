@@ -376,7 +376,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
             }}
             name={`${prefix}spec.executionTarget.connectorRef`}
-            label={connectorType === 'SSHKey' ? getString('sshConnector') : getString('secrets.typeWinRM')}
+            label={connectorType === 'SSHKey' ? getString('sshConnector') : getString('platform.secrets.typeWinRM')}
             disabled={readonly}
           />
         </div>

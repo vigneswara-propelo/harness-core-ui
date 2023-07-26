@@ -18,14 +18,14 @@ import {
   useGetAzureResourceGroupsV2
 } from 'services/cd-ng'
 
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'

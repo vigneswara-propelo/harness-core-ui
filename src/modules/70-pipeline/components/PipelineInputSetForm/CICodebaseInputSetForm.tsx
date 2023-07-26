@@ -33,8 +33,11 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getReference, isMultiTypeRuntime } from '@common/utils/utils'
-import { Connectors } from '@connectors/constants'
-import { getCompleteConnectorUrl, GitAuthenticationProtocol } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { Connectors } from '@platform/connectors/constants'
+import {
+  getCompleteConnectorUrl,
+  GitAuthenticationProtocol
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   ConnectorInfoDTO,
@@ -44,7 +47,7 @@ import {
 } from 'services/cd-ng'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ConnectorRefWidthKeys, getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'

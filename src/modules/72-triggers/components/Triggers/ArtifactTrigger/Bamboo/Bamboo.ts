@@ -12,7 +12,7 @@ import type { ArtifactTriggerValues } from '../utils'
 
 export class Bamboo extends ArtifactTrigger<ArtifactTriggerValues> {
   protected type: TriggerArtifactType = 'Bamboo'
-  protected triggerDescription: keyof StringsMap = 'connectors.bamboo.bamboo'
+  protected triggerDescription: keyof StringsMap = 'platform.connectors.bamboo.bamboo'
 
   protected defaultValues = {
     triggerType: this.baseType,

@@ -13,8 +13,8 @@ import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
-import { CONNECTOR_MODAL_MIN_WIDTH } from '@connectors/constants'
+import DialogExtention from '@platform/connectors/common/ConnectorExtention/DialogExtention'
+import { CONNECTOR_MODAL_MIN_WIDTH } from '@platform/connectors/constants'
 
 import CreateSecret from '@ce/components/AutoStoppingModal/steps/CreateSecret'
 import InstallComponents from '@ce/components/AutoStoppingModal/steps/InstallComponents'

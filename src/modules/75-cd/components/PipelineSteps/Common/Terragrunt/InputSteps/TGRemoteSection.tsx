@@ -20,7 +20,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

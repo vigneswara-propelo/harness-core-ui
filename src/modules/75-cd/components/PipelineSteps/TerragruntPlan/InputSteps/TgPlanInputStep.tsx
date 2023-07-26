@@ -25,7 +25,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TgPlanConfigSection from './TgPlanConfigSection'
 import TgPlanVarFiles from './TgPlanVarFiles'
@@ -87,7 +87,7 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
       {isValueRuntimeInput(inputSet?.secretManagerRef) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
-            label={getString('connectors.title.secretManager')}
+            label={getString('platform.connectors.title.secretManager')}
             accountIdentifier={accountId}
             selected={get(initialValues, 'spec.configuration.secretManagerRef', '')}
             projectIdentifier={projectIdentifier}

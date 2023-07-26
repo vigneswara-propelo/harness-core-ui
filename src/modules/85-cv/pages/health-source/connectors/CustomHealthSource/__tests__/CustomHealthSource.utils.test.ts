@@ -63,7 +63,7 @@ describe('Validate utils', () => {
     ).toEqual({
       pathURL: 'cv.customHealthSource.Querymapping.validation.pathWithoutPlaceholder',
       queryType: 'cv.customHealthSource.Querymapping.validation.queryType',
-      requestMethod: 'connectors.customHealth.requestMethod'
+      requestMethod: 'platform.connectors.customHealth.requestMethod'
     })
   })
 

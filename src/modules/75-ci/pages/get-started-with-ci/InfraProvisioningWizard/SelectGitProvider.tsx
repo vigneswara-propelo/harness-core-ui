@@ -49,7 +49,7 @@ import { Status } from '@common/utils/Constants'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import {
   getBackendServerUrl,
   isEnvironmentAllowedForOAuth,

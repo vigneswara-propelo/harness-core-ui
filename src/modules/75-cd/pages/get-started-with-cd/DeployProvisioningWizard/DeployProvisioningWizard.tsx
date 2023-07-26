@@ -289,7 +289,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         showFooter: false,
         onClickBack: noop,
         onClickNext: noop,
-        stepFooterLabel: 'connectors.ceAws.curExtention.stepB.step1.p1'
+        stepFooterLabel: 'platform.connectors.ceAws.curExtention.stepB.step1.p1'
       }
     ],
     [
@@ -506,7 +506,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       }
       const configureStepTitle = {
         StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Configure), StepStatus.ToDo),
-        StepName: getString('connectors.ceAws.curExtention.stepB.step1.p1'),
+        StepName: getString('platform.connectors.ceAws.curExtention.stepB.step1.p1'),
         onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Configure)
       }
       return new Map([

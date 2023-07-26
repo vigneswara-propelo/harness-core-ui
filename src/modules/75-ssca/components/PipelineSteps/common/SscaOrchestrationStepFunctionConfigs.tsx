@@ -117,12 +117,12 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
   {
     name: 'spec.attestation.type',
     type: ValidationFieldTypes.Text,
-    label: 'connectors.serviceNow.privateKey'
+    label: 'platform.connectors.serviceNow.privateKey'
   },
   {
     name: 'spec.attestation.spec.privateKey',
     type: ValidationFieldTypes.Text,
-    label: 'connectors.serviceNow.privateKey'
+    label: 'platform.connectors.serviceNow.privateKey'
   },
   {
     name: 'spec.attestation.spec.password',
@@ -216,7 +216,7 @@ export const getInputSetViewValidateFieldsConfig =
       {
         name: 'spec.attestation.spec.privateKey',
         type: ValidationFieldTypes.Text,
-        label: 'connectors.serviceNow.privateKey'
+        label: 'platform.connectors.serviceNow.privateKey'
       },
       {
         name: 'spec.attestation.spec.password',

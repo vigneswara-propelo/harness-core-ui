@@ -30,7 +30,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
                     class="Tooltip--acenter"
                     data-tooltip-id="GitSyncForm_connectorRef"
                   >
-                    connectors.title.gitConnector
+                    platform.connectors.title.gitConnector
                   </span>
                    
                   <span
@@ -347,7 +347,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
                     class="Tooltip--acenter"
                     data-tooltip-id="GitSyncForm_connectorRef"
                   >
-                    connectors.title.gitConnector
+                    platform.connectors.title.gitConnector
                   </span>
                    
                   <span

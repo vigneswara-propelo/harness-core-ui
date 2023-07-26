@@ -10,7 +10,7 @@ import { defaultTo, get } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   ArtifactSource,
   SidecarArtifact,
@@ -298,7 +298,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.registryHostname`, template) && (
             <SelectInputSetView
-              label={getString('connectors.GCR.registryHostname')}
+              label={getString('platform.connectors.GCR.registryHostname')}
               name={`${path}.artifacts.${artifactPath}.spec.registryHostname`}
               useValue
               fieldPath={`artifacts.${artifactPath}.spec.registryHostname`}

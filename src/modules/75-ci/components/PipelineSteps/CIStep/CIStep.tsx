@@ -24,7 +24,7 @@ import {
 } from '@pipeline/utils/CIUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import {
@@ -433,7 +433,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           {renderMultiTypeTextField({
             name: `${prefix}spec.repo`,
             tooltipId: 'dockerHubRepository',
-            labelKey: 'connectors.docker.dockerRepository',
+            labelKey: 'platform.connectors.docker.dockerRepository',
             inputProps: {
               multiTextInputProps: {
                 expressions,

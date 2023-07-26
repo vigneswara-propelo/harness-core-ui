@@ -23,7 +23,7 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@common/utils/routeUtils'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
 import { EnhancedInputSetForm } from '../InputSetForm'
 import {

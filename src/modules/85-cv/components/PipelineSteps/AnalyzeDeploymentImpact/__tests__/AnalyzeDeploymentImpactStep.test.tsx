@@ -97,7 +97,9 @@ describe('Test AnalyzeDeploymentImpact Step', () => {
         onUpdate={jest.fn()}
       />
     )
-    await waitFor(() => expect(getByText('connectors.cdng.monitoredService.monitoredServiceDef')).toBeInTheDocument())
+    await waitFor(() =>
+      expect(getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')).toBeInTheDocument()
+    )
   })
 
   test('should render InputSet view when current step is rendered in InputSet mode', () => {

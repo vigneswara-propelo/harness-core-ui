@@ -46,7 +46,7 @@ import { joinAsASentence } from '@common/utils/StringUtils'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import { Status } from '@common/utils/Constants'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import {
   getBackendServerUrl,
   isEnvironmentAllowedForOAuth,

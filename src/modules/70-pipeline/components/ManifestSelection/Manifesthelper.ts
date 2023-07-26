@@ -8,7 +8,7 @@
 import type { Schema } from 'yup'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { isBoolean } from 'lodash-es'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
@@ -21,7 +21,7 @@ import {
   buildGithubPayload,
   buildGitlabPayload,
   buildGitPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import type {
   CLIVersionOptions,
   HelmVersionOptions,
@@ -329,7 +329,7 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   Bitbucket: 'common.repo_provider.bitbucketLabel',
   Http: 'pipeline.manifestType.httpHelmRepoConnectorLabel',
   OciHelmChart: 'pipeline.manifestType.ociHelmConnectorLabel',
-  S3: 'connectors.S3',
+  S3: 'platform.connectors.S3',
   Gcs: 'pipeline.artifacts.googleCloudStorage.title',
   InheritFromManifest: 'pipeline.manifestType.InheritFromManifest',
   Inline: 'inline',
@@ -355,8 +355,8 @@ export const ManifestToConnectorLabelMap: Record<ManifestStoreWithoutConnector, 
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'common.repo_provider.bitbucketLabel',
-  Http: 'connectors.title.helmConnector',
-  OciHelmChart: 'connectors.title.ociHelmConnector',
+  Http: 'platform.connectors.title.helmConnector',
+  OciHelmChart: 'platform.connectors.title.ociHelmConnector',
   S3: 'pipeline.manifestToConnectorLabelMap.AWSLabel',
   Gcs: 'common.gcp',
   AzureRepo: 'pipeline.manifestType.azureRepoConnectorLabel'

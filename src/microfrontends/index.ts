@@ -24,7 +24,7 @@ import type { useTelemetry } from '@common/hooks/useTelemetry'
 import type { useLogout } from 'framework/utils/SessionUtils'
 import type useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { usePermission } from '@rbac/hooks/usePermission'
-import type useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import type useCreateConnectorModal from '@platform/connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { useFeature } from '@common/hooks/useFeatures'
 import type { useEventSourceListener } from '@common/hooks/useEventSourceListener'
 

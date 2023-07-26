@@ -354,7 +354,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for exis
                           class="StyledProps--font StyledProps--main containerLinkText StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-small"
                         >
                           <div>
-                            secrets.secret.configureSecret
+                            platform.secrets.secret.configureSecret
                           </div>
                           <div>
                             &lt;dummySecret&gt;
@@ -814,7 +814,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for new 
                           class="StyledProps--font StyledProps--main containerLinkText StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-small"
                         >
                           <div>
-                            secrets.createSecret
+                            platform.secrets.createSecret
                           </div>
                         </p>
                       </a>

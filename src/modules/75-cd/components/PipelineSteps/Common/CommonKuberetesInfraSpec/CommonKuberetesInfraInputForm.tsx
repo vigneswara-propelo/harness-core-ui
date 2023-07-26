@@ -25,7 +25,7 @@ import type {
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 import { Scope } from '@common/interfaces/SecretsInterface'

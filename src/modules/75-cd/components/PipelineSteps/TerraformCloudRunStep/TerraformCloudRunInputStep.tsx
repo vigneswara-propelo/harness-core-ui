@@ -22,9 +22,9 @@ import List from '@common/components/List/List'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { getSelectedConnectorValue, SelectedConnectorType } from '@cd/utils/connectorUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -176,7 +176,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
             label={getString('connector')}
             width={388}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('platform.connectors.selectConnector')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={Connectors.TERRAFORM_CLOUD}

@@ -9,7 +9,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type {
   ConnectorReferenceDTO,
   ConnectorSelectedValue
-} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+} from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
 export type ConnectorRefFormValueType = ConnectorSelectedValue & string
 export const getConnectorRefValue = (connectorRef?: ConnectorRefFormValueType) => {

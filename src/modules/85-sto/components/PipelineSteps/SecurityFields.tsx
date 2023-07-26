@@ -237,7 +237,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
             label: 'authentication'
           },
           'spec.auth.domain': {
-            label: 'secrets.winRmAuthFormFields.domain',
+            label: 'platform.secrets.winRmAuthFormFields.domain',
             hide: !showFields?.domain,
             inputProps: { placeholder: authDomainPlaceHolder },
             tooltipId: tooltipIds.authDomain
@@ -319,7 +319,7 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
             tooltipId: tooltipIds.imageType
           },
           'spec.image.domain': {
-            label: 'secrets.winRmAuthFormFields.domain',
+            label: 'platform.secrets.winRmAuthFormFields.domain',
             optional: true,
             inputProps: { placeholder: 'docker.io' },
             tooltipId: tooltipIds.imageDomain
@@ -451,7 +451,7 @@ export function SecurityInstanceFields(props: SecurityInstanceFieldsProps) {
             label: 'ce.co.gatewayReview.instance'
           },
           'spec.instance.domain': {
-            label: 'secrets.winRmAuthFormFields.domain',
+            label: 'platform.secrets.winRmAuthFormFields.domain',
             inputProps: { placeholder: 'app.harness.io' },
             tooltipId: tooltipIds.instanceDomain,
             hide: !showFields?.domain

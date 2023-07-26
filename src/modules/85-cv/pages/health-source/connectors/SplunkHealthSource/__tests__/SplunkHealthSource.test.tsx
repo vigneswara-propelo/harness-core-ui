@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import SplunkHealthSource from '../SplunkHealthSource'
 import { data, mockedSplunkSampleData } from './SplunkHealthSource.mock'

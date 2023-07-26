@@ -25,7 +25,7 @@ import * as Yup from 'yup'
 
 import { get, isEmpty, set } from 'lodash-es'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'

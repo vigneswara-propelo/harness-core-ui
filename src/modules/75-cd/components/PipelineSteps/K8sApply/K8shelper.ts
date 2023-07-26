@@ -6,7 +6,7 @@
  */
 
 import type { IconName } from '@harness/uicore'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { StringKeys } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { K8sManifestStores, K8sManifestTypes } from './K8sInterface'

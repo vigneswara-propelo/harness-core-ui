@@ -32,24 +32,24 @@ import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
-import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepHelmAuth from '@platform/connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
+import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import {
   buildAWSPayload,
   buildGcpPayload,
   buildHelmPayload,
   buildOCIHelmPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import GcpAuthentication from '@platform/connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
@@ -557,7 +557,7 @@ function ManifestListView({
     connectorInfo: undefined
   }
   const ConnectorTestConnectionProps = {
-    name: getString('connectors.stepThreeName'),
+    name: getString('platform.connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false,
@@ -583,7 +583,7 @@ function ManifestListView({
       case ManifestStoreMap.Http:
       case ManifestStoreMap.OciHelmChart:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepHelmAuth {...authenticationStepProps} isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart} />
             <DelegateSelectorStep
@@ -595,7 +595,7 @@ function ManifestListView({
         )
       case ManifestStoreMap.S3:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepAWSAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
@@ -604,7 +604,7 @@ function ManifestListView({
         )
       case ManifestStoreMap.Gcs:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GcpAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildGcpPayload} />
@@ -613,7 +613,7 @@ function ManifestListView({
         )
       default:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GitDetailsStep
               type={ManifestToConnectorMap[manifestStore]}

@@ -322,7 +322,7 @@ describe.skip('Render and test DeployProvisioningWizard', () => {
 
     //choose delegate type to be specific
     await act(async () => {
-      fireEvent.click(getByText('connectors.k8.delegateOutClusterInfo'))
+      fireEvent.click(getByText('platform.connectors.k8.delegateOutClusterInfo'))
     })
 
     //fill authentication details
@@ -372,7 +372,7 @@ describe.skip('Render and test DeployProvisioningWizard', () => {
 
     //creation of connector message
     await waitFor(() => {
-      expect(getByText('connectors.createdSuccessfully')).toBeDefined()
+      expect(getByText('platform.connectors.createdSuccessfully')).toBeDefined()
       findByText(container, 'common.test.connectionSuccessful')
     })
 

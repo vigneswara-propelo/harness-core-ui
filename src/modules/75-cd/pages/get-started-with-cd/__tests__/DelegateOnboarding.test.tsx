@@ -78,7 +78,7 @@ describe.skip('Test the initial flow for kubernetes delegate Creation', () => {
     await waitFor(() => expect(getByText('cd.instructionsDelegate')).toBeInTheDocument())
     const previewYAMLBtn = getByText('cd.previewYAML') as HTMLElement
     previewYAMLBtn.click()
-    const downloadYAMLBtn = getByText('delegates.downloadYAMLFile') as HTMLElement
+    const downloadYAMLBtn = getByText('platform.delegates.downloadYAMLFile') as HTMLElement
     downloadYAMLBtn.click()
     expect(global.URL.createObjectURL).toBeCalled()
     const helpBtn = getByText('cd.checkCluster') as HTMLElement
@@ -120,7 +120,7 @@ describe.skip('Test the initial flow for kubernetes delegate Creation', () => {
     await waitFor(() => expect(getByText('cd.instructionsDelegate')).toBeInTheDocument())
     const previewYAMLBtn = getByText('cd.previewYAML') as HTMLElement
     previewYAMLBtn.click()
-    const downloadYAMLBtn = getByText('delegates.downloadYAMLFile') as HTMLElement
+    const downloadYAMLBtn = getByText('platform.delegates.downloadYAMLFile') as HTMLElement
     downloadYAMLBtn.click()
     expect(global.URL.createObjectURL).toBeCalled()
     const createPipeline = getByText('ci.getStartedWithCI.createPipeline') as HTMLElement
@@ -175,15 +175,17 @@ describe.skip('Test the initial flow for docker delegate Creation', () => {
     await waitFor(() => expect(getByText('cd.instructionsDelegate')).toBeInTheDocument())
     const previewYAMLBtn = getByText('cd.previewYAML') as HTMLElement
     previewYAMLBtn.click()
-    const downloadYAMLBtn = getByText('delegates.downloadYAMLFile') as HTMLElement
+    const downloadYAMLBtn = getByText('platform.delegates.downloadYAMLFile') as HTMLElement
     downloadYAMLBtn.click()
     expect(global.URL.createObjectURL).toBeCalled()
     jest.runAllTimers()
     await waitFor(() => expect(getByText('common.delegateFailText1')).toBeInTheDocument())
-    const troubleShootBtn = getByText('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot') as HTMLElement
+    const troubleShootBtn = getByText(
+      'platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot'
+    ) as HTMLElement
     troubleShootBtn.click()
     await waitFor(() =>
-      expect(getByText('delegates.delegateNotInstalled.tabs.commonProblems.title')).toBeInTheDocument()
+      expect(getByText('platform.delegates.delegateNotInstalled.tabs.commonProblems.title')).toBeInTheDocument()
     )
   })
   test('failure response for unique name delegate call ', async () => {

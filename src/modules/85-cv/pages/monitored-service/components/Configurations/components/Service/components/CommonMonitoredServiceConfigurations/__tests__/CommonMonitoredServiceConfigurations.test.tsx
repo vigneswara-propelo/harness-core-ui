@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Button, Container, Formik, FormikForm } from '@harness/uicore'
@@ -115,7 +122,7 @@ describe('CommonMonitoredServiceConfigurations', () => {
   test('renders tabs correctly', () => {
     render(<WrapperComponent {...props} />)
     const overViewTab = screen.getByRole('tab', { name: 'overview' })
-    const healthSourceTab = screen.getByRole('tab', { name: 'connectors.cdng.healthSources.label' })
+    const healthSourceTab = screen.getByRole('tab', { name: 'platform.connectors.cdng.healthSources.label' })
     const changeSourceTab = screen.getByRole('tab', { name: 'cv.navLinks.adminSideNavLinks.activitySources' })
 
     expect(overViewTab).toBeInTheDocument()
@@ -126,7 +133,7 @@ describe('CommonMonitoredServiceConfigurations', () => {
   test('should not show the tabs if the component is rendered in create scenario', () => {
     const updatedProps = { ...props, identifier: '' }
     const { queryByText } = render(<WrapperComponent {...updatedProps} />)
-    const healthSourceTab = queryByText('connectors.cdng.healthSources.label')
+    const healthSourceTab = queryByText('platform.connectors.cdng.healthSources.label')
     const changeSourceTab = queryByText('cv.navLinks.adminSideNavLinks.activitySources')
 
     expect(healthSourceTab).not.toBeInTheDocument()

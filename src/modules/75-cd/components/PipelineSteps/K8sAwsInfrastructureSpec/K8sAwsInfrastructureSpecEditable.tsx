@@ -17,7 +17,7 @@ import { useStrings } from 'framework/strings'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import {
   CommonKuberetesInfraSpecEditable,
   getValidationSchema,

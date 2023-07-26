@@ -10,7 +10,7 @@ import { Container, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import CopyCodeSection from '@connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
+import CopyCodeSection from '@platform/connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
 
 import css from '../K8sQuickCreateModal.module.scss'
 

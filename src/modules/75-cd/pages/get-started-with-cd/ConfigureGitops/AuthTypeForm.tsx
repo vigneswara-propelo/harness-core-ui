@@ -46,7 +46,7 @@ export const AuthTypeForm = ({ authType }: { authType: any }) => {
       <FormInput.TextArea
         tooltipProps={{ dataTooltipId: 'clusterBearerToken' }}
         maxLength={16000}
-        label={getString('connectors.k8.serviceAccountToken')}
+        label={getString('platform.connectors.k8.serviceAccountToken')}
         className={classnames(css.keyTextArea, css.width50)}
         name="bearerToken"
       />
@@ -58,14 +58,14 @@ export const AuthTypeForm = ({ authType }: { authType: any }) => {
       <>
         <FormInput.Text
           tooltipProps={{ dataTooltipId: 'clusterClientKey' }}
-          label={getString('connectors.k8.clientKey')}
+          label={getString('platform.connectors.k8.clientKey')}
           className={css.width50}
           name="keyData"
         />
         <FormInput.TextArea
           tooltipProps={{ dataTooltipId: 'clusterClientKeyCertificate' }}
           maxLength={2048}
-          label={getString('connectors.k8.authLabels.clientKeyCertificate')}
+          label={getString('platform.connectors.k8.authLabels.clientKeyCertificate')}
           className={classnames(css.width50, css.keyTextArea)}
           name="certData"
         />

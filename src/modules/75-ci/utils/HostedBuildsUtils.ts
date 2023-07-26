@@ -12,7 +12,7 @@ import type { PipelineConfig } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { GitSuffixRegex } from '@common/utils/StringUtils'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { GIT_EXTENSION, YAMLVersion } from '@pipeline/utils/CIUtils'
 import {
   BuildType,

@@ -23,8 +23,8 @@ jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(() => {
 const Wrapped = (): React.ReactElement => {
   const [nextStep, setNextStep] = useState(false)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
-    errorHeaderMsg: 'connectors.policyEvaluations.failedToSave',
-    warningHeaderMsg: 'connectors.policyEvaluations.warning',
+    errorHeaderMsg: 'platform.connectors.policyEvaluations.failedToSave',
+    warningHeaderMsg: 'platform.connectors.policyEvaluations.warning',
     considerWarningAsError: false
   })
   const { governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(governanceMetaData)

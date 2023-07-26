@@ -454,7 +454,7 @@ exports[`Service Details component tests should match snapshot with mock data 1`
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
                         style="width: 40%;"
                       >
-                        delegates.commandLineCreation.replicas
+                        platform.delegates.commandLineCreation.replicas
                       </p>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"

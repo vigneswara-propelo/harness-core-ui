@@ -169,12 +169,12 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
         <div className={cx(stepCss.formGroup)}>
           <Layout.Vertical spacing={'medium'}>
             <Text>{getString('cv.monitoredServices.heading')}</Text>
-            <Text>{getString('connectors.cdng.monitoredService.monitoredServiceDef')}</Text>
+            <Text>{getString('platform.connectors.cdng.monitoredService.monitoredServiceDef')}</Text>
             <Container flex>
               <FormInput.Select
                 className={css.dropdown}
                 name="spec.monitoredService.type"
-                label={getString('connectors.cdng.monitoredServiceType')}
+                label={getString('platform.connectors.cdng.monitoredServiceType')}
                 items={monitoredServiceTypes as SelectOption[]}
                 onChange={handleOnChangeMonitoredServiceType}
               />

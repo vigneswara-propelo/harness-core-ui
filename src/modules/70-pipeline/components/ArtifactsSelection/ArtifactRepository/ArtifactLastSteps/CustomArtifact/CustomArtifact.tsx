@@ -55,7 +55,7 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
-import type { DelegateCardInterface } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { DelegateCardInterface } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'

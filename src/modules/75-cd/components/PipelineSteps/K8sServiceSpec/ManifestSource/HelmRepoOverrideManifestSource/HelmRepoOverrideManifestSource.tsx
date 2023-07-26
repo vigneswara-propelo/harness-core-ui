@@ -18,7 +18,7 @@ import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/Manif
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'

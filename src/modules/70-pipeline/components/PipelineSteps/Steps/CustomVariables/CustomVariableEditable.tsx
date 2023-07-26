@@ -39,7 +39,7 @@ import {
   usePipelineVariables
 } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import TextWithExpressions, { MetadataMapObject } from '@common/components/TextWithExpressions/TextWithExpression'

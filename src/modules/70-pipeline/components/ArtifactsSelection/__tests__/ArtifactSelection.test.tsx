@@ -186,7 +186,9 @@ describe('ArtifactsSelection tests', () => {
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifacttLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.artifactRepoType'))
+    const artifacttLabel = await waitFor(() =>
+      findByText(portal as HTMLElement, 'platform.connectors.artifactRepoType')
+    )
     expect(artifacttLabel).toBeDefined()
 
     const closeButton = portal.querySelector("button[class*='bp3-dialog-close-button']") as Element
@@ -206,7 +208,9 @@ describe('ArtifactsSelection tests', () => {
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifacttLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.artifactRepoType'))
+    const artifacttLabel = await waitFor(() =>
+      findByText(portal as HTMLElement, 'platform.connectors.artifactRepoType')
+    )
     expect(artifacttLabel).toBeDefined()
     const artifactTypes = await waitFor(() => findAllByText(portal as HTMLElement, 'dockerRegistry'))
     expect(artifactTypes).toBeDefined()
@@ -431,7 +435,9 @@ describe('ArtifactsSelection tests', () => {
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    const artifactLabel = await waitFor(() =>
+      findByText(portal as HTMLElement, 'platform.connectors.specifyArtifactRepoType')
+    )
     expect(artifactLabel).toBeDefined()
     const nexus = await container.querySelector('input[value="Nexus3Registry"]')
     expect(nexus).toBeDefined()
@@ -459,7 +465,9 @@ describe('ArtifactsSelection tests', () => {
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    const artifactLabel = await waitFor(() =>
+      findByText(portal as HTMLElement, 'platform.connectors.specifyArtifactRepoType')
+    )
     expect(artifactLabel).toBeDefined()
     const nexus = await container.querySelector('input[value="Nexus3Registry"]')
     expect(nexus).toBeDefined()
@@ -487,7 +495,9 @@ describe('ArtifactsSelection tests', () => {
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    const artifactLabel = await waitFor(() =>
+      findByText(portal as HTMLElement, 'platform.connectors.specifyArtifactRepoType')
+    )
     expect(artifactLabel).toBeDefined()
     const nexus = await container.querySelector('input[value="Nexus3Registry"]')
     expect(nexus).toBeDefined()
@@ -521,7 +531,9 @@ describe('ArtifactsSelection tests', () => {
     expect(addPrimaryButton).toBeDefined()
     fireEvent.click(addPrimaryButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    const artifactLabel = await waitFor(() =>
+      findByText(portal as HTMLElement, 'platform.connectors.specifyArtifactRepoType')
+    )
     expect(artifactLabel).toBeDefined()
     // Artifactory, ECR, AmazonS3 should be rendered
     const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
@@ -563,7 +575,9 @@ describe('ArtifactsSelection tests', () => {
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    const artifactLabel = await waitFor(() =>
+      findByText(portal as HTMLElement, 'platform.connectors.specifyArtifactRepoType')
+    )
     expect(artifactLabel).toBeDefined()
     // Artifactory, ECR, AmazonS3 should be rendered
     const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
@@ -606,9 +620,9 @@ describe('ArtifactsSelection tests', () => {
     fireEvent.click(addPrimaryButton)
 
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
-    const firstStepTitle = await waitFor(() => findByText(portal, 'connectors.specifyArtifactRepoType'))
+    const firstStepTitle = await waitFor(() => findByText(portal, 'platform.connectors.specifyArtifactRepoType'))
     expect(firstStepTitle).toBeDefined()
-    const artifactoryTileText = getByText(portal, 'connectors.artifactory.artifactoryLabel')
+    const artifactoryTileText = getByText(portal, 'platform.connectors.artifactory.artifactoryLabel')
     expect(artifactoryTileText).toBeDefined()
     await userEvent.click(artifactoryTileText!)
     const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
@@ -750,7 +764,7 @@ describe('ArtifactsSelection tests', () => {
 
     const dialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
-    const artifactLabel = await findByText(dialog, 'connectors.specifyArtifactRepoType')
+    const artifactLabel = await findByText(dialog, 'platform.connectors.specifyArtifactRepoType')
     expect(artifactLabel).toBeInTheDocument()
 
     const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', dialog, value)

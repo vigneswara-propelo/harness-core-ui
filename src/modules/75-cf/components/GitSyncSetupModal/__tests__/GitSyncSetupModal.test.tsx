@@ -38,7 +38,7 @@ describe('GitSyncSetupModal', () => {
     renderComponent()
 
     expect(screen.getByText('cf.gitSync.setUpGitConnection')).toBeVisible()
-    expect(screen.getByText('connectors.title.gitConnector')).toBeVisible()
+    expect(screen.getByText('platform.connectors.title.gitConnector')).toBeVisible()
     expect(screen.getByText('repository')).toBeVisible()
     expect(screen.getByText('gitBranch')).toBeVisible()
     expect(screen.getByRole('button', { name: 'save' })).toBeVisible()

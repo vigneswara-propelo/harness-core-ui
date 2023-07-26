@@ -8,7 +8,7 @@
 import React from 'react'
 import * as uuid from 'uuid'
 import { fireEvent, render, waitFor, act } from '@testing-library/react'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'

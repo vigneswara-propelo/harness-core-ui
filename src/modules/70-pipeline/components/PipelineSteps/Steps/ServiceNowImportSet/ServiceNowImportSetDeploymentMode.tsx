@@ -19,7 +19,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useGetServiceNowStagingTables } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'

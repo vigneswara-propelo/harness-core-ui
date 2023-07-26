@@ -14,7 +14,7 @@ import { useQueryParams } from '@common/hooks'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { isValueFixed } from '@common/utils/utils'
 
 interface LastStepConnectorValueProps {

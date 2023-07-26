@@ -499,7 +499,7 @@ exports[`Test MergePrStep should render Merge Params when FF is true: Merge Para
                               <span
                                 class="bp3-button-text"
                               >
-                                connectors.addParameter
+                                platform.connectors.addParameter
                               </span>
                             </button>
                           </div>

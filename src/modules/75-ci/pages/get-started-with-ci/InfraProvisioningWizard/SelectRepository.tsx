@@ -28,7 +28,7 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import { ConnectorInfoDTO, useGetListOfAllReposByRefConnector, UserRepoResponse, Error } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'

@@ -42,7 +42,7 @@ import type { Module } from 'framework/types/ModuleName'
 import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { Status } from '@common/utils/Constants'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   eventTypes,

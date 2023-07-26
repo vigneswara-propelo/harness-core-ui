@@ -99,7 +99,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
                   class="Tooltip--acenter"
                   data-tooltip-id="test_baseURL"
                 >
-                  connectors.baseURL
+                  platform.connectors.baseURL
                 </span>
                  
                 <span
@@ -136,7 +136,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
                 class="Tooltip--acenter"
                 data-tooltip-id="test_requestMethod"
               >
-                connectors.requestMethod
+                platform.connectors.requestMethod
               </span>
                
               <span
@@ -966,7 +966,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
                   class="Tooltip--acenter"
                   data-tooltip-id="test_baseURL"
                 >
-                  connectors.baseURL
+                  platform.connectors.baseURL
                 </span>
                  
                 <span
@@ -1003,7 +1003,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
                 class="Tooltip--acenter"
                 data-tooltip-id="test_requestMethod"
               >
-                connectors.requestMethod
+                platform.connectors.requestMethod
               </span>
                
               <span

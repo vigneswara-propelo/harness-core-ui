@@ -13,10 +13,10 @@ import { AllowedTypes, Button, ButtonVariation, FormInput, Layout, MultiTypeInpu
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { regionValues } from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAuthConstants'
+import { regionValues } from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAuthConstants'
 import type { ElastigroupBGStageSetupData } from './ElastigroupBGStageSetupStepTypes'
 import ElastigroupBGStageSetupLoadBalancer from './ElastigroupBGStageSetupLoadbalancers'
 

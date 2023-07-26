@@ -57,8 +57,8 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -582,7 +582,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         key="hosts"
                         name="hosts"
                         className={`${css.hostsTextArea} ${css.inputWidth}`}
-                        label={getString('connectors.pdc.hosts')}
+                        label={getString('platform.connectors.pdc.hosts')}
                         multiTypeTextArea={{
                           expressions,
                           allowableTypes

@@ -9,7 +9,7 @@ import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { FormikProps, FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type {
   ArtifactConfig,

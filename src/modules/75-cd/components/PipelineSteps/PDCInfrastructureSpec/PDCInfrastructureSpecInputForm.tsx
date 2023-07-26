@@ -18,8 +18,8 @@ import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import type { HostAttributesFilter, HostFilter, HostNamesFilter, PdcInfrastructure } from 'services/cd-ng'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeTextAreaField } from '@common/components'
@@ -174,7 +174,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
               key={getString('cd.hosts')}
               name={`${path}.hosts`}
               className={css.hostsTextArea}
-              label={getString('connectors.pdc.hosts')}
+              label={getString('platform.connectors.pdc.hosts')}
               multiTypeTextArea={{
                 expressions,
                 allowableTypes,

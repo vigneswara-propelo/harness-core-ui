@@ -11,7 +11,7 @@ import { Layout, SelectOption, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   ArtifactSource,
   SidecarArtifact,

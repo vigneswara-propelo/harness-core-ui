@@ -62,7 +62,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
         {!isCompositeSLO && (
           <Container>
             <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
-              {getString('connectors.cdng.monitoredService.label')}
+              {getString('platform.connectors.cdng.monitoredService.label')}
             </Text>
             <Link to={monitoredServicePathname}>
               <Text

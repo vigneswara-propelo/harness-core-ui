@@ -1,0 +1,383 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create Common Problems Tab render data 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+    style="width: 630px;"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex"
+      style="border-bottom: 0.5px solid #B0B1C4;"
+    >
+      <button
+        aria-label="back"
+        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          back
+        </span>
+      </button>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium StyledProps--font-weight-bold"
+        style="line-height: 22px; display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue800"
+          data-icon="info"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 12 12"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.hereIsWhatYouCanDo
+      </p>
+      <button
+        aria-label="restart"
+        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          restart
+        </span>
+      </button>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 511px;"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100"
+        >
+          platform.delegates.delegateNotInstalled.statusOfCluster
+        </p>
+        <a
+          href="https://docs.harness.io/"
+          rel="noreferrer"
+          style="text-align: end; font-size: 13px;"
+          target="_blank"
+        >
+          platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot
+        </a>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main podCmndField StyledProps--intent-primary StyledProps--padding-small StyledProps--font-align-center StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          platform.delegates.delegateNotInstalled.podCommand
+        </p>
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <div
+              class=""
+              tabindex="0"
+            >
+              <span
+                class="bp3-icon StyledProps--main copyIcon"
+                data-icon="copy-alt"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  viewBox="0 0 8 9"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main podCmndVerification"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100"
+      >
+        platform.delegates.delegateNotInstalled.podComeUp
+      </p>
+      <div
+        class="StyledProps--font StyledProps--main"
+      >
+        <button
+          aria-label="yes"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            yes
+          </span>
+        </button>
+        <button
+          aria-label="no"
+          class="bp3-button Button--button StyledProps--font StyledProps--main noBtn Button--with-current-color"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            no
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Create Common Problems Tab show event error btn 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+    style="width: 630px;"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex"
+      style="border-bottom: 0.5px solid #B0B1C4;"
+    >
+      <button
+        aria-label="back"
+        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          back
+        </span>
+      </button>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium StyledProps--font-weight-bold"
+        style="line-height: 22px; display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue800"
+          data-icon="info"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 12 12"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.hereIsWhatYouCanDo
+      </p>
+      <button
+        aria-label="restart"
+        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          restart
+        </span>
+      </button>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 511px;"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100"
+        >
+          platform.delegates.delegateNotInstalled.statusOfCluster
+        </p>
+        <a
+          href="https://docs.harness.io/"
+          rel="noreferrer"
+          style="text-align: end; font-size: 13px;"
+          target="_blank"
+        >
+          platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot
+        </a>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main podCmndField StyledProps--intent-primary StyledProps--padding-small StyledProps--font-align-center StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          platform.delegates.delegateNotInstalled.podCommand
+        </p>
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <div
+              class=""
+              tabindex="0"
+            >
+              <span
+                class="bp3-icon StyledProps--main copyIcon"
+                data-icon="copy-alt"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  viewBox="0 0 8 9"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 511px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100"
+      >
+        platform.delegates.delegateNotInstalled.eventErrorBlock
+      </p>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main btnContainer"
+    >
+      <button
+        class="bp3-button Button--button StyledProps--font StyledProps--main error Button--with-current-color Button--iconOnly Button--withRightIcon"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          platform.delegates.delegateNotInstalled.permissionError
+        </span>
+        <span
+          class="bp3-icon bp3-icon-warning-sign StyledProps--main StyledProps--color StyledProps--color-orange400"
+          icon="warning-sign"
+        >
+          <svg
+            data-icon="warning-sign"
+            height="10"
+            viewBox="0 0 16 16"
+            width="10"
+          >
+            <desc>
+              warning-sign
+            </desc>
+            <path
+              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+      <button
+        class="bp3-button Button--button StyledProps--font StyledProps--main error addSpacing Button--with-current-color Button--iconOnly Button--withRightIcon"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          platform.delegates.delegateNotInstalled.crashloopError
+        </span>
+        <span
+          class="bp3-icon bp3-icon-warning-sign StyledProps--main StyledProps--color StyledProps--color-orange400"
+          icon="warning-sign"
+        >
+          <svg
+            data-icon="warning-sign"
+            height="10"
+            viewBox="0 0 16 16"
+            width="10"
+          >
+            <desc>
+              warning-sign
+            </desc>
+            <path
+              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+      <button
+        class="bp3-button Button--button StyledProps--font StyledProps--main error addSpacing Button--with-current-color Button--iconOnly Button--withRightIcon"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          platform.delegates.delegateNotInstalled.pullError
+        </span>
+        <span
+          class="bp3-icon bp3-icon-warning-sign StyledProps--main StyledProps--color StyledProps--color-orange400"
+          icon="warning-sign"
+        >
+          <svg
+            data-icon="warning-sign"
+            height="10"
+            viewBox="0 0 16 16"
+            width="10"
+          >
+            <desc>
+              warning-sign
+            </desc>
+            <path
+              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

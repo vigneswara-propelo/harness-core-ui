@@ -7,7 +7,7 @@
 
 import type React from 'react'
 import type { Diagnostic } from 'vscode-languageserver-types'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { OverviewChartsWithToggleProps } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import type { SchedulePanelPropsInterface } from '@common/components/SchedulePanel/SchedulePanel'
 import type { NavigationCheckProps } from '@common/components/NavigationCheck/NavigationCheck'

@@ -31,7 +31,7 @@ import {
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
+import { ConnectorRouteDestinations } from '@platform/connectors/RouteDestinations'
 import { FileStoreRouteDestinations } from '@filestore/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
 import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'

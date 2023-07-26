@@ -10,7 +10,7 @@ import { act, findAllByText, fireEvent, queryByAttribute, render, waitFor } from
 import { Formik, FormikForm } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitSyncForm, GitSyncFormFields } from '../GitSyncForm'
 import { mockRepos, mockBranches, gitConnectorMock, fetchSupportedConnectorsListPayload } from './mockdata'
 

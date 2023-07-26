@@ -39,7 +39,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
@@ -563,8 +563,8 @@ export default function ServiceV2ArtifactsSelection({
       GoogleCloudSourceRepositoriesInitialValuesType
   > => {
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      key: getString('platform.connectors.stepFourName'),
+      name: getString('platform.connectors.stepFourName'),
       context: artifactContext,
       expressions,
       allowableTypes,
@@ -607,7 +607,7 @@ export default function ServiceV2ArtifactsSelection({
 
   const getLabels = useMemo((): ConnectorRefLabelType => {
     return {
-      firstStepName: getString('connectors.specifyArtifactRepoType'),
+      firstStepName: getString('platform.connectors.specifyArtifactRepoType'),
       secondStepName: `${selectedArtifact && getString(ArtifactTitleIdByType[selectedArtifact])} ${getString(
         'repository'
       )}`
@@ -645,7 +645,7 @@ export default function ServiceV2ArtifactsSelection({
   }
 
   const ConnectorTestConnectionProps = {
-    name: getString('connectors.stepThreeName'),
+    name: getString('platform.connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false

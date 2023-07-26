@@ -30,16 +30,16 @@ import {
   useDeleteConnector,
   useGetTestConnectionResult
 } from 'services/cd-ng'
-import type { StepDetails } from '@connectors/interfaces/ConnectorInterface'
-import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
-import { Connectors } from '@connectors/constants'
+import type { StepDetails } from '@platform/connectors/interfaces/ConnectorInterface'
+import { DialogExtensionContext } from '@platform/connectors/common/ConnectorExtention/DialogExtention'
+import { Connectors } from '@platform/connectors/constants'
 import { useMutateAsGet } from '@common/hooks'
 import { useCloudCostK8sClusterSetup } from 'services/ce'
-import PermissionYAMLPreview from '@connectors/components/CreateConnector/CEK8sConnector/PermissionYAMLPreview'
-import CopyCodeSection from '@connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
+import PermissionYAMLPreview from '@platform/connectors/components/CreateConnector/CEK8sConnector/PermissionYAMLPreview'
+import CopyCodeSection from '@platform/connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
 import { downloadYamlAsFile } from '@common/utils/downloadYamlUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
+import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@platform/connectors/trackingConstants'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
@@ -235,7 +235,7 @@ const EnableCostVisibilityStep: React.FC<Props & StepProps<ConnectorInfoDTO>> = 
                     disabled={yamlLoading}
                     rightIcon="launch"
                     variation={ButtonVariation.SECONDARY}
-                    text={getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
+                    text={getString('platform.connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
                     onClick={handleDownload}
                   />
                   <Button

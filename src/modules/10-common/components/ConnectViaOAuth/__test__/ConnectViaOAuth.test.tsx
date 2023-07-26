@@ -86,10 +86,10 @@ describe('Test ConnectViaOAuth component', () => {
         })}
       />
     )
-    fireEvent.click(getByText('connectors.relinkToGitProvider'))
+    fireEvent.click(getByText('platform.connectors.relinkToGitProvider'))
     expect(global.fetch).toBeCalled()
     await waitFor(() => {
-      expect(getByText('connectors.relinkToGitProvider')).toBeInTheDocument()
+      expect(getByText('platform.connectors.relinkToGitProvider')).toBeInTheDocument()
     })
   })
 
@@ -109,7 +109,7 @@ describe('Test ConnectViaOAuth component', () => {
     )
     const { getByText } = render(<ConnectViaOAuth {...props} />)
     await act(async () => {
-      fireEvent.click(getByText('connectors.relinkToGitProvider'))
+      fireEvent.click(getByText('platform.connectors.relinkToGitProvider'))
     })
 
     jest.runAllTimers()
@@ -134,7 +134,7 @@ describe('Test ConnectViaOAuth component', () => {
     )
     const { getByText } = render(<ConnectViaOAuth {...Object.assign(props, { forceFailOAuthTimeoutId: 123 })} />)
     await act(async () => {
-      fireEvent.click(getByText('connectors.relinkToGitProvider'))
+      fireEvent.click(getByText('platform.connectors.relinkToGitProvider'))
     })
     expect(clearTimeoutSpy).toBeCalled()
   })

@@ -26,7 +26,7 @@ describe('Test MonitoredServiceInputSetsTemplate utils function', () => {
     expect(getLabelByName('serviceInstanceFieldName', getString)).toEqual(
       'cv.monitoringSources.serviceInstanceIdentifier'
     )
-    expect(getLabelByName('connectorRef', getString)).toEqual('connectors.selectConnector')
+    expect(getLabelByName('connectorRef', getString)).toEqual('platform.connectors.selectConnector')
     expect(getLabelByName('query', getString)).toEqual('cv.query')
     expect(getLabelByName('category', getString)).toEqual('Category for cv.monitoringSources.riskCategoryLabel')
     expect(getLabelByName('metricType', getString)).toEqual('Metric type for cv.monitoringSources.riskCategoryLabel')

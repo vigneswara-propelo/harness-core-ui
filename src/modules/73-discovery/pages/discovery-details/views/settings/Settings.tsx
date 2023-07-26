@@ -114,9 +114,11 @@ const Settings: React.FC = () => {
                 padding={{ top: 'medium' }}
               />
               <Divider />
-              <Text font={{ variation: FontVariation.CARD_TITLE }}>{getString('connectors.connectorDetails')}</Text>
+              <Text font={{ variation: FontVariation.CARD_TITLE }}>
+                {getString('platform.connectors.connectorDetails')}
+              </Text>
               <ListItems
-                title={getString('connectors.name')}
+                title={getString('platform.connectors.name')}
                 content={
                   <Text icon={'kubernetes-harness'} color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                     {connectorDetails?.data?.connector?.name}

@@ -36,7 +36,7 @@ import {
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { FormMultiTypeRadioGroupField } from '@common/components/MultiTypeRadioGroup/MultiTypeRadioGroup'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const useGetPropagatedStageById = (

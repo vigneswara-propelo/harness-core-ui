@@ -118,7 +118,7 @@ export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): 
     const menuItems: TemplateMenuItem[] = [
       {
         icon: 'main-view',
-        label: getString('connectors.ceAws.crossAccountRoleExtention.step1.p2'),
+        label: getString('platform.connectors.ceAws.crossAccountRoleExtention.step1.p2'),
         disabled: !canView,
         onClick: () => {
           onPreview(template)

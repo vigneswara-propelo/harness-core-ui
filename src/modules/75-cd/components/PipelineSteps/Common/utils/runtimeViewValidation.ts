@@ -196,7 +196,7 @@ export const validateGCRArtifactFields = ({
     templatePathToField: `${templatePathToField}.registryHostname`,
     isRequired,
     errors,
-    errorMessage: getString?.('fieldRequired', { field: getString?.('connectors.GCR.registryHostname') })
+    errorMessage: getString?.('fieldRequired', { field: getString?.('platform.connectors.GCR.registryHostname') })
   })
 }
 

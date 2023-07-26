@@ -19,7 +19,7 @@ import type { SecurityContext, Toleration } from 'services/ci'
 import type { ListUIType } from '@common/components/List/List'
 import type { MultiTypeListUIType } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import type { MapUIType } from '@common/components/Map/Map'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ConnectorRef } from '../StepsTypes'
 
 interface K8sDirectInfraSpec extends Omit<ContainerInfraYamlSpec, 'resources' | 'volumes'> {

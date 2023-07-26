@@ -29,11 +29,11 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { ConfigureOptions, ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 
 import { Scopes } from './Scopes'
 import { ScriptWizard } from './ScriptWizard/ScriptWizard'

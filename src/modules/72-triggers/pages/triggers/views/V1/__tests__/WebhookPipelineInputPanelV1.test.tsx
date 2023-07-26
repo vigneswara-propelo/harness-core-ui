@@ -13,7 +13,7 @@ import { useGetPipelineInputsQuery } from '@harnessio/react-pipeline-service-cli
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import {
   ConnectorResponse,
   GetEnvironmentList,
@@ -152,7 +152,7 @@ describe('WebhookPipelineInputPanelV1 Triggers tests', () => {
       }
       ;(useGetPipelineInputsQuery as jest.Mock).mockImplementation().mockReturnValue(mockCodebaseInputs)
       const { container } = render(<WrapperComponent />)
-      await waitFor(() => expect(result.current.getString('connectors.parameters')).toBeTruthy())
+      await waitFor(() => expect(result.current.getString('platform.connectors.parameters')).toBeTruthy())
       expect(container).toMatchSnapshot()
     })
   })

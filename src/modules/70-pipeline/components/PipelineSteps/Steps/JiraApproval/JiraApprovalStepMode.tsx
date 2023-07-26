@@ -45,12 +45,12 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type {
   JiraApprovalData,
   JiraApprovalStepModeProps,

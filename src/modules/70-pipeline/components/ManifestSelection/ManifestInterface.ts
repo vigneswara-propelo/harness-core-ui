@@ -6,7 +6,7 @@
  */
 
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type {
   ManifestConfig,

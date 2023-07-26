@@ -11,13 +11,13 @@ import { Color, FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   createCardOptions,
@@ -108,7 +108,7 @@ export function ChangeSourceDrawer({
               })}
               label={
                 <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-                  {getString('connectors.selectConnector')}
+                  {getString('platform.connectors.selectConnector')}
                 </Text>
               }
             />
@@ -157,7 +157,7 @@ export function ChangeSourceDrawer({
                     margin={{ bottom: 'small' }}
                     tooltipProps={{ dataTooltipId: 'changeSourceProviderType' }}
                   >
-                    {getString('connectors.docker.dockerProvideType')}
+                    {getString('platform.connectors.docker.dockerProvideType')}
                   </Text>
                   <FormInput.Select
                     name={ChangeSourceFieldNames.CATEGORY}

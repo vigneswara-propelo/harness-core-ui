@@ -10,7 +10,7 @@ import { queryByAttribute, render, RenderResult } from '@testing-library/react'
 import { Formik, FormikForm, MultiTypeInputType } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'

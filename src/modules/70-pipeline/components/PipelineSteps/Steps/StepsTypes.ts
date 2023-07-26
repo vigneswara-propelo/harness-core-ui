@@ -6,7 +6,7 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
 export type MapType = { [key: string]: string }
 export type MultiTypeMapType = MapType | string

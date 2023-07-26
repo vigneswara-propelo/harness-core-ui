@@ -87,7 +87,7 @@ export default function TestsSummaryView({
             <Text className={cx(styles.mainLabel)}>{getString('pipeline.verification.baselineTest')}</Text>
           )}
 
-          <Text className={styles.subTitle}>{getString('connectors.cdng.artifactTag')}</Text>
+          <Text className={styles.subTitle}>{getString('platform.connectors.cdng.artifactTag')}</Text>
           <Text data-testid="baselineTestName" lineClamp={1} margin={{ bottom: 'small' }}>
             {getTagName(baselineTestName)}
           </Text>
@@ -99,7 +99,7 @@ export default function TestsSummaryView({
         <Container>
           <Text className={styles.mainLabel}>{getString('pipeline.verification.currentTest')}</Text>
 
-          <Text className={styles.subTitle}>{getString('connectors.cdng.artifactTag')}</Text>
+          <Text className={styles.subTitle}>{getString('platform.connectors.cdng.artifactTag')}</Text>
           <Text data-testid="currentTestName" lineClamp={1} margin={{ bottom: 'small' }}>
             {getTagName(currentTestName)}
           </Text>

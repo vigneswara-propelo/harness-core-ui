@@ -29,16 +29,16 @@ import {
   useGetAzureSubscriptions,
   useGetSubscriptionTags
 } from 'services/cd-ng'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -47,7 +47,7 @@ import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import {
   AzureInfrastructureSpecEditableProps,
   getValidationSchema,

@@ -36,7 +36,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'

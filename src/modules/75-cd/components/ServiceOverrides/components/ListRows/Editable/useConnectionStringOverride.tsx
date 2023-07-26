@@ -16,24 +16,24 @@ import { useStrings } from 'framework/strings'
 import type { ConnectionStringsConfiguration, ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { Connectors } from '@connectors/constants'
-import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import { Connectors } from '@platform/connectors/constants'
+import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
   buildBitbucketPayload,
   buildGithubPayload,
   buildGitlabPayload,
   buildGitPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { ApplicationConfigWizard } from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizard'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ApplicationConfigWizardStepTwo from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizardStepTwo'
 import {
   AllowedTypes as AllowedConnectorTypes,
@@ -170,7 +170,7 @@ export default function useApplicationSettingOverride({
     if (type) {
       const buildPayload = getBuildPayload(type)
       return (
-        <StepWizard title={getString('connectors.createNewConnector')}>
+        <StepWizard title={getString('platform.connectors.createNewConnector')}>
           <ConnectorDetailsStep
             type={type}
             name={getString('overview')}
@@ -242,7 +242,7 @@ export default function useApplicationSettingOverride({
             connectorInfo={undefined}
           />
           <ConnectorTestConnection
-            name={getString('connectors.stepThreeName')}
+            name={getString('platform.connectors.stepThreeName')}
             connectorInfo={undefined}
             isStep={true}
             isLastStep={false}

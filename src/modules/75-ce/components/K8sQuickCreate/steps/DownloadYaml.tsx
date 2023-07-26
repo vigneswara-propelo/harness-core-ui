@@ -16,13 +16,13 @@ import type { StringsMap } from 'stringTypes'
 import type { ConnectorConfigDTO, DelegateSetupDetails } from 'services/cd-ng'
 import { useGenerateKubernetesYaml, GenerateKubernetesYamlQueryParams } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
+import { DialogExtensionContext } from '@platform/connectors/common/ConnectorExtention/DialogExtention'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { downloadYamlAsFile } from '@common/utils/downloadYamlUtils'
 import { DelegateFileName } from '@delegates/components/CreateDelegate/K8sDelegate/K8sDelegate.constants'
 import { quickCreateDelegateParams } from '@ce/utils/cloudIntegrationUtils'
-import { CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
-import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import { CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS } from '@platform/connectors/trackingConstants'
+import { useStepLoadTelemetry } from '@platform/connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import StepContainer from './StepContainer'
 
@@ -107,7 +107,7 @@ const DownloadYaml: React.FC<DownloadYamlProps & StepProps<ConnectorConfigDTO>> 
             rightIcon="launch"
             variation={ButtonVariation.SECONDARY}
             margin={{ right: 'medium' }}
-            text={getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
+            text={getString('platform.connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
             onClick={handleDownloadYaml}
           />
           <Button

@@ -181,7 +181,7 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               }
             />
             <ListItems
-              title={getString('delegates.commandLineCreation.replicas')}
+              title={getString('platform.delegates.commandLineCreation.replicas')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                   {totalReplicas}

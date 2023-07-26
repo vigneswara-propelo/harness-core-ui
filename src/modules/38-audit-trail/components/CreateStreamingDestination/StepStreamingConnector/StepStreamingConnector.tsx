@@ -30,9 +30,9 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { useToaster } from '@common/exports'
-import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { Connectors } from '@connectors/constants'
-import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
+import { ConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { Connectors } from '@platform/connectors/constants'
+import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { IStreamingDestinationForm } from '@audit-trail/interfaces/LogStreamingInterface'
 import { StreamingDestinationSpecDTOTypeMap } from '@audit-trail/interfaces/LogStreamingInterface'
@@ -251,7 +251,7 @@ const StepStreamingConnector: React.FC<StepProps<StepStreamingConnectorForm> & S
                         <ConnectorReferenceField
                           className={css.formElm}
                           name="connector_ref"
-                          placeholder={getString('connectors.selectConnector')}
+                          placeholder={getString('platform.connectors.selectConnector')}
                           selected={connectorDetails}
                           error={
                             formikProps.submitCount > 0 ? (formikProps?.errors?.connector_ref as string) : undefined
@@ -263,7 +263,7 @@ const StepStreamingConnector: React.FC<StepProps<StepStreamingConnectorForm> & S
                           }}
                           accountIdentifier={accountId}
                           orgIdentifier={orgIdentifier}
-                          label={getString('connectors.selectConnector')}
+                          label={getString('platform.connectors.selectConnector')}
                           type={connectorType}
                         />
                       )}

@@ -290,7 +290,7 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
         image: noServiceAvailableImage,
         imageClassName: css.noServiceAvailableImage,
         messageTitle: getString('cv.monitoredServices.youDontHaveAnyMonitoredServicesYet'),
-        message: getString('connectors.cdng.monitoredService.monitoredServiceDef'),
+        message: getString('platform.connectors.cdng.monitoredService.monitoredServiceDef'),
         button: createButton
       }}
       className={css.pageBody}

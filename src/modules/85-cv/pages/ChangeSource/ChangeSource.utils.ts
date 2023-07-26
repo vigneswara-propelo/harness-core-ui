@@ -6,7 +6,7 @@
  */
 
 import type { IconName } from '@harness/uicore'
-import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { getConnectorIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
 import type { ChangeSourceDTO } from 'services/cv'
 import { ChangeSourceTypes } from './ChangeSourceDrawer/ChangeSourceDrawer.constants'
 

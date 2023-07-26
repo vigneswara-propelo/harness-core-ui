@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import { getNestedFields } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { TemplateInputs } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import {
   enrichHealthSourceWithVersionForHealthsourceType,

@@ -46,7 +46,7 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -54,8 +54,8 @@ import { ConnectorRefSchema } from '@common/utils/Validation'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowTemplateFieldRenderer'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@platform/connectors/constants'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'

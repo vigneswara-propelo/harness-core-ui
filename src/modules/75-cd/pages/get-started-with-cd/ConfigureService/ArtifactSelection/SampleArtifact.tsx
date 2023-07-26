@@ -12,8 +12,8 @@ import { useParams } from 'react-router-dom'
 import { get, isEmpty, noop, set } from 'lodash-es'
 import produce from 'immer'
 import { useFormikContext } from 'formik'
-import useCreateEditConnector from '@connectors/hooks/useCreateEditConnector'
-import { buildDockerPayload, DockerProviderType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import useCreateEditConnector from '@platform/connectors/hooks/useCreateEditConnector'
+import { buildDockerPayload, DockerProviderType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { StringKeys, useStrings } from 'framework/strings'
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { DelegateSelectorStepData } from './ArtifactAuthStep'
@@ -36,8 +36,8 @@ const SAMPLE_TO_DO_ARTIFACT_VALUES = {
 }
 
 const sampleToDoListFieldKeyLabelMap: Record<string, StringKeys> = {
-  providerType: 'connectors.docker.dockerProvideType',
-  registryURL: 'connectors.docker.dockerRegistryURL',
+  providerType: 'platform.connectors.docker.dockerProvideType',
+  registryURL: 'platform.connectors.docker.dockerRegistryURL',
   authType: 'authentication',
   imagePath: 'pipeline.imagePathLabel',
   tag: 'tagLabel'

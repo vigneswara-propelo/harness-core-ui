@@ -12,7 +12,7 @@ import cx from 'classnames'
 
 import { String, useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import QuickK8sIcon from '@ce/images/quick-kubernetes.svg'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 

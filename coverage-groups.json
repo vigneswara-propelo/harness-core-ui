@@ -1,7 +1,7 @@
 {
   "groups": {
     "Framework": ["src/framework/**"],
-    "Secrets": ["src/modules/30-secrets/**"],
+    "Secrets": ["src/modules/27-platform/secrets/**"],
     "Projects & Orgs": ["src/modules/45-projects-orgs/**"],
     "AuditTrail": ["src/modules/38-audit-trail/**"],
     "CD": ["src/modules/75-cd/**"],
@@ -11,12 +11,12 @@
     "Triggers": ["src/modules/72-triggers/**"],
     "CV": [
       "src/modules/85-cv/**",
-      "src/modules/35-connectors/components/CreateConnector/AppDynamicsConnector/**",
-      "src/modules/35-connectors/components/CreateConnector/SplunkConnector/**"
+      "src/modules/27-platform/connectors/components/CreateConnector/AppDynamicsConnector/**",
+      "src/modules/27-platform/connectors/components/CreateConnector/SplunkConnector/**"
     ],
-    "Variables": ["src/modules/31-variables"],
-    "Connectors": ["src/modules/35-connectors/**", "src/modules/10-common/components/YAMLBuilder/**"],
-    "Delegates": ["src/modules/30-delegates/**"],
+    "Variables": ["src/modules/27-platform/variables/**"],
+    "Connectors": ["src/modules/27-platform/connectors/**", "src/modules/10-common/components/YAMLBuilder/**"],
+    "Delegates": ["src/modules/27-platform/delegates/**"],
     "STO": ["src/modules/85-sto/**"],
     "GitSync": [
       "src/modules/40-gitsync/**",
@@ -25,12 +25,12 @@
     ],
     "CI": ["src/modules/75-ci/**"],
     "CF": ["src/modules/75-cf/**"],
-    "CE": ["src/modules/75-ce/**", "src/modules/35-connectors/CreateConnector/CEK8sConnector/**"],
+    "CE": ["src/modules/75-ce/**", "src/modules/27-platform/connectors/CreateConnector/CEK8sConnector/**"],
     "RBAC": ["src/modules/20-rbac/**"],
     "SHARED": ["src/modules/10-common/**", "src/navigation/**"],
     "DASHBOARDS": ["src/modules/45-dashboards/**"],
     "User Profile": ["src/modules/38-user-profile/**"],
-    "Auth": ["src/modules/33-auth-settings/**"],
+    "Auth": ["src/modules/27-platform/auth-settings/**"],
     "GOVERNANCE": ["src/modules/73-governance/**"]
   },
   "ignore": ["src/**/*.d.ts", "src/**/*.stories.*", "src/**/__tests__/**", "src/**/__test__/**"]

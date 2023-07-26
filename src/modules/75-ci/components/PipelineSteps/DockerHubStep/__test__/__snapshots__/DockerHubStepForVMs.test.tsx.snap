@@ -236,7 +236,7 @@ exports[`DockerHub Step Edit View should render properly for AWS VMs build infra
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                connectors.docker.dockerRepository
+                platform.connectors.docker.dockerRepository
               </p>
             </div>
             <div

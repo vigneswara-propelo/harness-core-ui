@@ -51,11 +51,11 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'

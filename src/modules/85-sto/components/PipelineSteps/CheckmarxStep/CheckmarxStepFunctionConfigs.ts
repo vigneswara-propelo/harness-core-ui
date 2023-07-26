@@ -87,7 +87,7 @@ const extraAuthFieldsValidationConfig = (
         {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'secrets.winRmAuthFormFields.domain',
+          label: 'platform.secrets.winRmAuthFormFields.domain',
           isRequired: true
         },
         {

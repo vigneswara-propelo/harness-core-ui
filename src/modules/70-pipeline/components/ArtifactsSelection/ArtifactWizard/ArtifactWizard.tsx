@@ -9,18 +9,18 @@ import React from 'react'
 import { StepWizard, Icon, AllowedTypes } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { String, StringKeys, useStrings } from 'framework/strings'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import StepDockerAuthentication from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
-import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
-import StepNexusAuthentication from '@connectors/components/CreateConnector/NexusConnector/StepAuth/StepNexusAuthentication'
-import GcrAuthentication from '@connectors/components/CreateConnector/GcrConnector/StepAuth/GcrAuthentication'
-import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
-import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
-import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepJenkinsAuthentication from '@connectors/components/CreateConnector/JenkinsConnector/StepAuth/StepJenkinsAuthentication'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import StepDockerAuthentication from '@platform/connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
+import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import StepNexusAuthentication from '@platform/connectors/components/CreateConnector/NexusConnector/StepAuth/StepNexusAuthentication'
+import GcrAuthentication from '@platform/connectors/components/CreateConnector/GcrConnector/StepAuth/GcrAuthentication'
+import StepArtifactoryAuthentication from '@platform/connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
+import AzureAuthentication from '@platform/connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
+import GcpAuthentication from '@platform/connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepJenkinsAuthentication from '@platform/connectors/components/CreateConnector/JenkinsConnector/StepAuth/StepJenkinsAuthentication'
 import {
   buildArtifactoryPayload,
   buildAWSPayload,
@@ -32,12 +32,12 @@ import {
   buildGithubPayload,
   buildNexusPayload,
   buildBambooPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
-import ConnectivityModeStep from '@connectors/components/CreateConnector/commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import ConnectivityModeStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import StepAzureArtifactAuthentication from '@connectors/components/CreateConnector/AzureArtifactConnector/StepAuth/StepAzureArtifactAuthentication'
-import StepBambooAuthentication from '@connectors/components/CreateConnector/BambooConnector/StepAuth/StepBambooAuthentication'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import StepAzureArtifactAuthentication from '@platform/connectors/components/CreateConnector/AzureArtifactConnector/StepAuth/StepAzureArtifactAuthentication'
+import StepBambooAuthentication from '@platform/connectors/components/CreateConnector/BambooConnector/StepAuth/StepBambooAuthentication'
 
 import { ArtifactoryRepoType } from '../ArtifactRepository/ArtifactoryRepoType'
 import { ArtifactConnector } from '../ArtifactRepository/ArtifactConnector'
@@ -230,7 +230,7 @@ function ArtifactWizard({
       {showArtifactSelectionStep ? (
         <ArtifactoryRepoType
           artifactTypes={types}
-          name={getString('connectors.artifactRepoType')}
+          name={getString('platform.connectors.artifactRepoType')}
           stepName={labels.firstStepName}
           selectedArtifact={selectedArtifact}
           artifactInitialValue={artifactInitialValue}
@@ -239,7 +239,7 @@ function ArtifactWizard({
       ) : null}
       {showConnectorStep ? (
         <ArtifactConnector
-          name={getString('connectors.artifactRepository')}
+          name={getString('platform.connectors.artifactRepository')}
           stepName={labels.secondStepName}
           expressions={expressions}
           isReadonly={isReadonly}
@@ -252,13 +252,13 @@ function ArtifactWizard({
       ) : null}
 
       {newConnectorView && selectedArtifact ? (
-        <StepWizard title={getString('connectors.createNewConnector')}>
+        <StepWizard title={getString('platform.connectors.createNewConnector')}>
           <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...newConnectorProps.connector} />
           {selectedArtifact === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry ? connectorAccountDetailsStep() : null}
           {connectorAuthStep()}
           {hasConnectivityModeStep() ? (
             <ConnectivityModeStep
-              name={getString('connectors.selectConnectivityMode')}
+              name={getString('platform.connectors.selectConnectivityMode')}
               type={ArtifactToConnectorMap[selectedArtifact]}
               {...newConnectorProps?.connectivity}
               buildPayload={getBuildPayload()}

@@ -26,20 +26,20 @@ import type { FormikProps } from 'formik'
 import { get, isEmpty, noop } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepHelmAuth from '@platform/connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import type { ConnectorConfigDTO, PageConnectorResponse } from 'services/cd-ng'
-import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
-import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import {
   buildAWSPayload,
   buildGcpPayload,
   buildHelmPayload,
   buildOCIHelmPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import GcpAuthentication from '@platform/connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -173,7 +173,7 @@ export default function ManifestListView({
   }
 
   const ConnectorTestConnectionProps = {
-    name: getString('connectors.stepThreeName'),
+    name: getString('platform.connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false,
@@ -200,7 +200,7 @@ export default function ManifestListView({
     switch (manifestStore) {
       case ManifestStoreMap.Http:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepHelmAuth {...authenticationStepProps} isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart} />
             <DelegateSelectorStep
@@ -212,7 +212,7 @@ export default function ManifestListView({
         )
       case ManifestStoreMap.S3:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepAWSAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
@@ -222,7 +222,7 @@ export default function ManifestListView({
       case ManifestStoreMap.Gcs:
       default:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GcpAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildGcpPayload} />

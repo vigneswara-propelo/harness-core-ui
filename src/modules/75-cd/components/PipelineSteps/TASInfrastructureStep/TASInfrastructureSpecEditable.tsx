@@ -21,15 +21,15 @@ import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { TanzuApplicationServiceInfrastructure, useGetTasOrganizations, useGetTasSpaces } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -257,7 +257,7 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                     type={
                       <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
                         <Icon name={getIconByType(Connectors.TAS)}></Icon>
-                        <Text>{getString('connectors.title.tas')}</Text>
+                        <Text>{getString('platform.connectors.title.tas')}</Text>
                       </Layout.Horizontal>
                     }
                     variableName="connectorRef"
@@ -275,7 +275,7 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                       projectIdentifier,
                       orgIdentifier,
                       type: Connectors.TAS,
-                      label: getString('connectors.title.tas'),
+                      label: getString('platform.connectors.title.tas'),
                       disabled: readonly,
                       gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
                     }}

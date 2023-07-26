@@ -22,11 +22,11 @@ export function severityString(severity: SeverityCode): keyof StringsMap {
     case SeverityCode.Critical:
       return 'sto.Critical'
     case SeverityCode.High:
-      return 'connectors.cdng.verificationSensitivityLabel.high'
+      return 'platform.connectors.cdng.verificationSensitivityLabel.high'
     case SeverityCode.Medium:
-      return 'connectors.cdng.verificationSensitivityLabel.medium'
+      return 'platform.connectors.cdng.verificationSensitivityLabel.medium'
     case SeverityCode.Low:
-      return 'connectors.cdng.verificationSensitivityLabel.low'
+      return 'platform.connectors.cdng.verificationSensitivityLabel.low'
     case SeverityCode.Info:
       return 'sto.Info'
   }

@@ -44,9 +44,9 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@platform/connectors/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
@@ -317,7 +317,7 @@ function FormContent({
     connectorRefFixedValue && getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
       ? fetchingChildJobs
         ? getString('common.loadingFieldOptions', {
-            fieldName: `${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
+            fieldName: `${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
               'pipeline.jenkinsStep.job'
             )}`
           })
@@ -357,7 +357,7 @@ function FormContent({
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormMultiTypeConnectorField
           name="spec.connectorRef"
-          label={getString('connectors.jenkins.jenkinsConnectorLabel')}
+          label={getString('platform.connectors.jenkins.jenkinsConnectorLabel')}
           width={390}
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
@@ -402,7 +402,7 @@ function FormContent({
               projectIdentifier,
               orgIdentifier,
               type: Connectors.JENKINS,
-              label: getString('connectors.jenkins.jenkinsConnectorLabel'),
+              label: getString('platform.connectors.jenkins.jenkinsConnectorLabel'),
               disabled: readonly,
               gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
             }}
@@ -412,7 +412,7 @@ function FormContent({
 
       <div className={cx(stepCss.formGroup, stepCss.lg, css.jobDetails)}>
         <FormInput.MultiTypeBiLevelInput
-          label={getString('connectors.jenkins.jobNameLabel')}
+          label={getString('platform.connectors.jenkins.jobNameLabel')}
           name={'spec.jobName'}
           value={getJobNameValue()}
           placeholder={jobNamePlaceholder}
@@ -488,8 +488,8 @@ function FormContent({
       {showChildJobField && (
         <div className={cx(stepCss.formGroup, stepCss.lg, css.jobDetails)}>
           <FormInput.MultiTypeBiLevelInput
-            label={`${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
-              'connectors.jenkins.jobs'
+            label={`${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
+              'platform.connectors.jenkins.jobs'
             )}`}
             name={'spec.childJobName'}
             value={childJob}
@@ -682,8 +682,8 @@ function JenkinsStepBase(
           .trim()
           .required(
             getString('common.validation.fieldIsRequired', {
-              name: `${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
-                'connectors.jenkins.jobs'
+              name: `${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
+                'platform.connectors.jenkins.jobs'
               )}`
             })
           )

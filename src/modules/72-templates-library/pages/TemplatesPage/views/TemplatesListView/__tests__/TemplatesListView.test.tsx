@@ -13,7 +13,7 @@ import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { TemplatesListView } from '@templates-library/pages/TemplatesPage/views/TemplatesListView/TemplatesListView'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
-import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 

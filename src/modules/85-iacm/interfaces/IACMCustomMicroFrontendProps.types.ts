@@ -15,7 +15,7 @@ import type { createTemplate } from '@pipeline/utils/templateUtils'
 import type { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import type { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { MultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type { usePermission } from '@rbac/hooks/usePermission'
@@ -24,7 +24,7 @@ import type {
   useGetListOfBranchesByRefConnectorV2,
   useGetListOfReposByRefConnector
 } from 'services/cd-ng'
-import type { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { Duration } from '@common/exports'
 import type { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/components/LogsContent/LogsContent'

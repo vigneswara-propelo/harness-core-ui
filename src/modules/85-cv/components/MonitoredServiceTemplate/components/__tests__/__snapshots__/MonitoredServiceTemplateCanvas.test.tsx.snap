@@ -186,7 +186,7 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for Monitored
                 <p
                   class="StyledProps--font StyledProps--main tableTitle"
                 >
-                  connectors.cdng.healthSources.label
+                  platform.connectors.cdng.healthSources.label
                 </p>
               </div>
               <div
@@ -603,7 +603,7 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for default M
                 <p
                   class="StyledProps--font StyledProps--main tableTitle"
                 >
-                  connectors.cdng.healthSources.label
+                  platform.connectors.cdng.healthSources.label
                 </p>
               </div>
               <div

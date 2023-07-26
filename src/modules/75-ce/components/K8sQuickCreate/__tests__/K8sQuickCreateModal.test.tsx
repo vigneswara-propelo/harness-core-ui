@@ -9,7 +9,7 @@ import React from 'react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockResponse } from '@connectors/components/CreateConnector/K8sConnector/__test__/k8Mocks'
+import { mockResponse } from '@platform/connectors/components/CreateConnector/K8sConnector/__test__/k8Mocks'
 import { testConnectionResponse } from '@ce/pages/cloud-integration/__tests__/mocks'
 import { useCreateConnector } from 'services/cd-ng'
 

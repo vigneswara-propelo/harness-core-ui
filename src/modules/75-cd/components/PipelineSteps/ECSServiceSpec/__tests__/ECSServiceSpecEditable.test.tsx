@@ -23,7 +23,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import {

@@ -49,7 +49,7 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
             </p>
           </div>
           <div>
-            connectors.ECR.name
+            platform.connectors.ECR.name
           </div>
           <div
             class="connectorNameField"
@@ -525,7 +525,7 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
             </p>
           </div>
           <div>
-            connectors.GCR.name
+            platform.connectors.GCR.name
           </div>
           <div
             class="connectorNameField"
@@ -795,7 +795,7 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
             </p>
           </div>
           <div>
-            connectors.GCR.name
+            platform.connectors.GCR.name
           </div>
           <div
             class="connectorNameField"
@@ -1065,7 +1065,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
             </p>
           </div>
           <div>
-            connectors.GCR.name
+            platform.connectors.GCR.name
           </div>
           <div
             class="connectorNameField"
@@ -1617,7 +1617,7 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
               </p>
             </div>
             <div>
-              connectors.GCR.name
+              platform.connectors.GCR.name
             </div>
             <div
               class="connectorNameField"
@@ -2176,7 +2176,7 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
               </p>
             </div>
             <div>
-              connectors.GCR.name
+              platform.connectors.GCR.name
             </div>
             <div
               class="connectorNameField"
@@ -2735,7 +2735,7 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
               </p>
             </div>
             <div>
-              connectors.GCR.name
+              platform.connectors.GCR.name
             </div>
             <div
               class="connectorNameField"

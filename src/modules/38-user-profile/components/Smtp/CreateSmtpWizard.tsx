@@ -13,7 +13,7 @@ import { useStrings } from 'framework/strings'
 import { ConnectorConfigDTO, NgSmtpDTO, useCreateSmtpConfig, useUpdateSmtp } from 'services/cd-ng'
 import DelegateSelectorStepForNonConnectors, {
   CustomHandlerDelegateSelectorProp
-} from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectprStepForNonConnectors'
+} from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectprStepForNonConnectors'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import StepSmtpDetails from './views/StepDetails'
 import StepCredentials from './views/StepCredentials'
@@ -65,7 +65,7 @@ const CreateSmtpWizard: React.FC<CreateSmtpWizardProps & SmtpSharedObj> = props 
           {...props}
           isEditMode={!!props.isEdit}
           connectorInfo={undefined}
-          dialogTitle={getString('connectors.delegate.configureForNonConnectors')}
+          dialogTitle={getString('platform.connectors.delegate.configureForNonConnectors')}
         />
         <StepTestConnection name={getString('common.smtp.testConnection')} {...props} />
       </StepWizard>

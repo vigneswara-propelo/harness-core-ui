@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { StoreConfigWrapper } from 'services/cd-ng'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import {

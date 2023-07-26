@@ -6,7 +6,7 @@
  */
 
 import type { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ConnectedMultiTypeDelegateSelectorProps } from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ConnectedMultiTypeSecretInputProps } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { useGetUserGroupAggregateList } from 'services/cd-ng'

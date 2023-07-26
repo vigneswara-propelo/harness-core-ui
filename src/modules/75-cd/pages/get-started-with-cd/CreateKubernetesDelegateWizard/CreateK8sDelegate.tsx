@@ -221,13 +221,13 @@ export const CreateK8sDelegate = ({
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                {getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
+                {getString('platform.connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
                 <Button
                   id="stepReviewScriptDownloadYAMLButton"
                   icon="arrow-down"
-                  text={getString('delegates.downloadYAMLFile')}
+                  text={getString('platform.delegates.downloadYAMLFile')}
                   className={css.downloadButton}
                   onClick={() => {
                     onDownload()

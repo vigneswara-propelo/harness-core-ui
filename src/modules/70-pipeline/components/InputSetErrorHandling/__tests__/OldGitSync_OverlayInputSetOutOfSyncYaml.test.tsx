@@ -15,7 +15,7 @@ import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'

@@ -1047,7 +1047,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                             class="customVariablesStage"
                           >
                             <button
-                              aria-label="variables.newVariable"
+                              aria-label="platform.variables.newVariable"
                               class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                               type="button"
                             >
@@ -1073,7 +1073,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                               <span
                                 class="bp3-button-text"
                               >
-                                variables.newVariable
+                                platform.variables.newVariable
                               </span>
                             </button>
                           </div>

@@ -8,7 +8,7 @@ import * as Yup from 'yup'
 import { isEmpty, isUndefined } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { AwsPrometheusWorkspaceDTO, HealthSource, ResponseListString } from 'services/cv'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { GCOProduct } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/GoogleCloudOperationsMonitoringSourceUtils'
@@ -212,21 +212,21 @@ export const getFeatureOption = (
       return [
         {
           label: PrometheusProductNames.APM,
-          value: getString('connectors.prometheusLabel')
+          value: getString('platform.connectors.prometheusLabel')
         }
       ]
     case Connectors.NEW_RELIC:
       return [
         {
           value: NewRelicProductNames.APM,
-          label: getString('connectors.newRelic.products.fullStackObservability')
+          label: getString('platform.connectors.newRelic.products.fullStackObservability')
         }
       ]
     case Connectors.DYNATRACE:
       return [
         {
           value: DynatraceProductNames.APM,
-          label: getString('connectors.newRelic.products.fullStackObservability')
+          label: getString('platform.connectors.newRelic.products.fullStackObservability')
         }
       ]
     case Connectors.SPLUNK: {

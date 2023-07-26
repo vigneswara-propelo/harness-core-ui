@@ -38,7 +38,7 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { AuthTypes } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { InfrastructureTypes, InfrastructureType } from '../DeployProvisioningWizard/Constants'
 import {
@@ -250,8 +250,8 @@ const SelectInfrastructureRef = (
       .matches(regexIdentifier, getString('validation.validIdRegex'))
       .notOneOf(illegalIdentifiers),
     delegateType: Yup.string().required(
-      getString('connectors.chooseMethodForConnection', {
-        name: getString('connectors.k8sConnection')
+      getString('platform.connectors.chooseMethodForConnection', {
+        name: getString('platform.connectors.k8sConnection')
       })
     )
   })

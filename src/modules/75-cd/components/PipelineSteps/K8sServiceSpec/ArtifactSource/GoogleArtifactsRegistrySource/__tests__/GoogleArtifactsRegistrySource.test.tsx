@@ -10,7 +10,7 @@ import { fireEvent, queryByAttribute, render, waitFor, RenderResult, act } from 
 import { Formik, FormikForm, MultiTypeInputType } from '@harness/uicore'
 
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'

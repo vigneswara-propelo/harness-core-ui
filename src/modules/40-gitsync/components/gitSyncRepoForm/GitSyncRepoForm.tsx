@@ -28,13 +28,13 @@ import { noop, pick, defaultTo } from 'lodash-es'
 import { useToaster, StringUtils } from '@common/exports'
 import { usePostGitSync, GitSyncConfig, ConnectorInfoDTO } from 'services/cd-ng'
 import { StringKeys, useStrings } from 'framework/strings'
-import { Connectors } from '@connectors/constants'
-import { getConnectorDisplayName, GitUrlType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { Connectors } from '@platform/connectors/constants'
+import { getConnectorDisplayName, GitUrlType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import {
   ConnectorReferenceField,
   ConnectorSelectedValue
-} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
+} from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/utils'
 import {
   ConnectorCardInterface,
   getCompleteGitPath,

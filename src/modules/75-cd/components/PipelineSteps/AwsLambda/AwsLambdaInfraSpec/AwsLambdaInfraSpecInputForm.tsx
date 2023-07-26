@@ -17,7 +17,7 @@ import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
@@ -81,7 +81,7 @@ const AwsLambdaInfraSpecInputForm = ({
             name={connectorFieldName}
             label={getString('connector')}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('platform.connectors.selectConnector')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={connectorTypes.Aws}

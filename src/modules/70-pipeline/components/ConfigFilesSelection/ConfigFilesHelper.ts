@@ -7,7 +7,7 @@
 
 import type { IconName } from '@harness/uicore'
 import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { StringKeys } from 'framework/strings'
 import type { ConfigFileType, ConfigFileHarnessDataType } from './ConfigFilesInterface'
 

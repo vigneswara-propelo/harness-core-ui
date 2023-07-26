@@ -1,0 +1,1860 @@
+defaultSettings:
+  restoreToDefault: Restore to Default
+  allowOverrides: Allow Overrides
+  noSettingToDisplay: No Settings to Display
+  harnessDefault: Harness Default
+  inheritedFrom: Inherited from {{source}}
+  mandateWebhookSecretsGithubTriggers: Mandate Webhook Secrets for Github Triggers
+  mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom Webhook Triggers
+  executeTriggersWithAllCollectedArtifactsOrManifests: Execute Triggers With All Collected Artifacts or Manifests
+  enableForceDelete: Enable Force Delete of Harness Resources
+  enableGitCommands: Use Git client for commits
+  allowDifferentRepoForInputSets: Allow different repo for Pipeline and InputSets
+  defaultGitConnector: Default Connector For Git Experience with Entities - Pipelines/InputSets/Templates
+  fetchingDefaultConnector: Checking for default connector
+  enforceGitExperience: Enforce git experience for pipelines and templates
+  defaultStoreType: Default Store Type For Entities- Pipelines/InputSets/Templates
+  allowedRepositories: Allowed Repositories
+  allowedRepositoriesPlaceholder: Type and press enter to add a repository
+  pipelineTimeout: Pipeline Timeout
+  stageTimeout: Stage Timeout
+  stepTimeout: Step Timeout
+  concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
+  enablePipelineExecutionAuditEvents: Enable Pipeline Execution Audit Events
+  allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
+  defaultImagePullPolicyForAddOnContainer: Default Image Pull Policy For Add On Container
+  emailToNonHarnessUsers: Enable Emails to be sent to non-Harness Users
+  enableMatrixFieldNames: Enable Matrix Labels By Name
+  enableExpressionsJsonSupport: Enable Json Support for expressions
+  perspectivePreferences: PERSPECTIVES PREFERENCES
+  ticketingPreferences: TICKETING PREFERENCES
+  showAnomalies: Show anomalies
+  showOthers: Show "others"
+  showUnallocatedClusterCost: Show "unallocated" costs on Clusters
+  awsIncludeDiscounts: (AWS only) Include Discounts
+  awsIncludeCredit: (AWS only) Include Credit
+  awsIncludeRefunds: (AWS only) Include Refunds
+  awsIncludeTaxes: (AWS only) Include Taxes
+  showAwsCostAs: (AWS only) Show costs as
+  azureIncludeRefunds: (Azure only) Include Refunds
+  showAzureCostAs: (Azure only) Show costs as
+  gcpIncludeDiscounts: (GCP only) Include Discounts
+  gcpIncludeTaxes: (GCP Only) Include Taxes
+  showGcpCostAs: (GCP only) Show costs as
+  enableServiceOverrideV2: Enable Service Override V2
+  exportServiceVariablesAsEnvVariables: Export Service Variables as Env Variables
+  ticketingToolLabel: Ticketing Tool
+  ticketingToolConnectorLabel: Ticketing Tool Connector
+delegates:
+  delegatesTitle: 'Resources: Delegates'
+  newDelegateConfigWizard:
+    overviewTitle: 'Delegate Configuration Overview'
+    scriptTitle: 'Initialization Scripts'
+    successMessage: 'Succesfully created Delegate profile.'
+  delegateInstances: ' ({{current}} of {{total}} instances)'
+  downloadYAMLFile: 'Download YAML file'
+  replicaText: 'Replicas='
+  totalMemUnit: ' GB'
+  delegatePermissions:
+    title: 'Delegate Permissions'
+    clusterWriteTitle: 'Install Delegate with cluster-wide read/write access'
+    clusterWriteContent: 'Creates a new namespace called "harness-delegate-ng" with the service account bound to Cluster Admin role. This Delegate will be able to write tasks (deployments needed for Harness Continuous Delivery and Harness Continuous Integration) and read tasks (capture change events etc., needed for Harness Cloud Cost Management and Harness Continuous Verification) anywhere on the k8s cluster where the Delegate is installed.'
+    clusterReadTitle: 'Install Delegate with cluster-wide read access'
+    clusterReadContent: '(Requires read only Cluster Admin role) Creates a new namespace called "harness-delegate-ng" with the service account bound to Cluster Admin role. This Delegate will be able to perform read-only tasks (capture change events etc., needed for Harness Continuous Integration, Harness Cloud Cost Management and Harness Continuous Verification) anywhere on the k8s cluster where the Delegate is installed.'
+    specificNamespaceTitle: 'Install Delegate with specific namespace access'
+    specificNamespaceContent: '(Requires namespace admin roles) Specify the namespace where the Harness Delegate is installed. This Delegate will be able to perform tasks (deployments, capture change events etc.) only on the specific namespace.'
+  delegateNamespaceRequired: 'Namespace is required'
+  permissionRequired: 'Permission selection is required'
+  delegateSizeUpTo: 'Run up to {{count}} parallel deployments/builds'
+  lastUpdated: 'LAST UPDATED'
+  usedBy: 'USED BY'
+  delegateNameRegexIssue: 'Delegate name should be lowercase and can include only dash(-) between letters and cannot start or end with a number.'
+  delegateNameLength: Length cannot be more than {{length}}.
+  delegateDeleted: 'Delegate {{name}} deleted'
+  infoForDeleteDelegate: 'Deleting the delegate from the Harness Platform does not uninstall the delegate running on your infrastructure. Click on the Delete button after you have uninstalled the delegate from your infrastructure.'
+  questionForceDeleteDelegate: 'Are you sure you want to delete the Delegate {{name}} from the Harness Platform?'
+  reviewYAML: 'Review YML'
+  delSetup: 'Delegate Setup'
+  verification: 'Verification '
+  openTroubleshooter: 'Open Troubleshooter'
+  troubleshootOption: '(Troubleshoot)'
+  harnessDocs: 'Check Harness Documentation'
+  successVerification:
+    applyYAMLTitleForHelm: 'Copy the downloaded yaml on a machine with helm version >= 3.2 installed and access to your kubernetes cluster.'
+    addHelmRepoLabel: 'Add Harness helm repo'
+    addHelmRepoCmd: '$ helm repo add harness-ng https://app.harness.io/storage/harness-download/delegate-helm-chart/'
+    installHelmChartLabel: 'To install the helm chart use the below command'
+    installHelmChartCmd: '$ helm install  --namespace <namespace> --create-namespace harness-ng/harness-delegate-ng -f harness-delegate-values.yaml'
+    checkingForHeartbeat: Checking for heartbeat
+    updateHelmRepoLabel: 'Update Harness helm repo'
+    helmRepoUpdate: helm repo update harness-ng
+  delegateNotInstalled:
+    verifyStatus1: 'docker container ls -a'
+    verifyStatus2: 'docker container ps -a'
+    containerRunning: 'Is your container running?'
+    verifyLogs1: 'docker logs [container_id]'
+    verifyLogs2: 'docker logs [container_id] -f'
+    removeDocker: 'docker rm [container_id]'
+    title: 'Delegate not installed'
+    verifyField2: 'kubectl logs -f <harnessDelegateName> -n <namespace>'
+    verifyField3: 'kubectl describe <pod_name> -n <namespace>'
+    statusOfCluster: 'Check the status of your Delegate on your cluster'
+    podCommand: 'kubectl describe pods -n <namespace>'
+    podComeUp: 'Did the pod come up?'
+    eventErrorBlock: 'Do you see the error in the events block? If so what is the error?'
+    permissionError: 'Permission Error'
+    crashloopError: 'Crashloop BackOff'
+    pullError: 'ErrorImage Pull'
+    logsError: 'Do you see any error in the logs? If the error message in the logs is unclear'
+    heartbeatFailed: 'Heartbeat failed [Check if the token used in the delegate is valid]'
+    checkError: 'Do you see any error in the logs? If so what is the error?'
+    harnessErrorValidation: 'Do you see an error "Failed to connect to Harness SaaS? or Manager?"'
+    contactHarness: 'Contact Harness Support'
+    checkCanClusterConnectToRegistry: 'Can your Cluster connect to Container Registry:[Docker Hub]? Connect to a VM in the cluster and check if it can reach the Docker Registry'
+    checkClusterConfig: 'Check the Cluster Configuration, User may need to provision a VM with more CPU or Memory Reapply Delegate YAML on newly measured infrastructure'
+    checkClusterConfig2: 'Is the Delegate Successfully up? Run Kubectl Describe pods -n <namespace>'
+    CPUorMemError: 'CPU or Memory Error'
+    applicationError: 'Application Error'
+    checkClusterPermission: 'You will need to check your K8s Cluster Permissions. User may have to configure a restricted Delegate yaml.'
+    checkClusterPermission2: 'Need Help? Check our docs If user cannot figure it out'
+    curlHarnessIO: 'Can you curl the app.harness.io URL from the Delegate pod in your cluster?'
+    curlHarnessIO2: 'Parameter that can be provided at runtime for url, it could a vanity url, it could be based off the user’s on prem url as well '
+    curlHarnessIO3: 'Hostname is what the installation is, i.e. (app.ancestry.harness.io)'
+    doYouHaveProxy: 'Do you have a proxy?'
+    checkProxy: 'Check the Proxy Settings. Curl your proxy to see if it is available from your Delegate Pod. Authentication to the proxy. In the Harness Proxy Settings please make sure if it is correctly configured please check the docs. Change and reapply the YAML. Did your Delegate spin up in the cluster? Does it say harness-delegate 1/1?'
+    checkFirewallPorts: 'Make sure your firewall and ports are properly opened in your Network settings, if everything has been done...'
+    goodToGo: 'Good to Go'
+    tabs:
+      commonProblems:
+        removeOlderDelegate: 'Removing older delegate containers'
+        title: 'Common Problems'
+        hereIsWhatYouCanDo: 'Here is what you can do'
+        troubleshoot: 'Troubleshoot'
+        checkTheDelegateLogs: 'Check the Delegate Logs'
+        description1: 'If the pod is not up, in your cluster you see the Delegate pod in a CrashLoopBackOff:Kubernetes Cluster Resources are not available. Check the Kubernetes Cluster Resources (CPU, Memory)'
+        description2: 'If the Delegate didn’t reach a healthy state'
+        checkEndPoint: 'Check the Health Check Endpoint in the Delegate. Search YAML for healthCheckEndpoint'
+      troubleshooting: 'Troubleshooting'
+  reviewScript:
+    docLinkBefore: 'Please refer to '
+    docLink: 'documentation'
+    docLinkAfter: ' page.'
+    descriptionHelmProxySettings: 'If the Delegate will connect to Harness using a proxy, configure the proxy settings.'
+  delegateIdentifier: 'Delegate Identifier'
+  delGroupStatus:
+    WAITING_FOR_APPROVAL: 'Waiting for approval'
+  newDelegate: 'New Delegate'
+  createDelegate: 'Create a Delegate'
+  newDelegateConfiguration: 'New Delegate Configuration'
+  noDelegatesInProject: 'There are no Delegates in your project'
+  noDelegatesInOrganization: 'There are no Delegates in your organization'
+  noDelegatesInAccount: 'There are no Delegates in your account'
+  GBRam: 'GB RAM'
+  selectors: 'Selectors'
+  delegateCreation:
+    installerSelectionRequired: 'Please select the installer'
+    installerText: 'What installer do you want to use?'
+    downloadScript: 'Download Script'
+    dockerPrerequisites:
+      title: 'Docker Prerequisites'
+      ensureInst: 'Ensure that you have docker installed.'
+      sysReq: 'System requirements:'
+      minCPU: 'Default 0.5 CPU.'
+      minMem: 'Default 768MB RAM — There is a cap of 768MB per Delegate, but when the Delegate is updating there might be two Delegates running. Hence, the minimum is 1.5GB. Ensure that you provide the minimum memory for the Delegate and enough memory for the host/node system.'
+      minMemCommunity: '768MB RAM is required for Delegate. Ensure that you provide the minimum memory for the Delegate and enough memory for the host/node system.'
+    docker:
+      scriptTitle: 'Setup instructions'
+      scriptText: 'Edit launch-harness-delegate.sh to set proxy settings or to enter a delegate description. Install the Harness Delegate by executing launch-harness-delegate.sh.'
+      scriptCommandGetIds: 'Get container IDs:'
+      scriptSeeLogs: 'See startup logs:'
+      scriptRunInShell: 'Run a shell in a container:'
+      docLinkBefore: 'For more information, '
+      docLink: 'review documentation'
+      verifyTitle: 'Run the script and verify the connection'
+      verifyDesc1: 'Copy the downloaded script to a machine where you have docker installed.'
+      verifyDesc2: 'Run the following command to install the docker delegate.'
+  delegateNameNotUnique: 'Delegate with that name already exists.'
+  tokens:
+    delegateTokensTitle: 'Resources: Delegate Tokens'
+    delegateTokens: 'Delegate Tokens'
+    revoke: 'Revoke'
+    moreInfo: 'More info'
+    copytoken: 'Copy token'
+    tokenCopied: Token copied to clipboard
+    showRevoked: 'Show Revoked Tokens'
+    tokenNameRequired: 'Token name is required.'
+    tokenNameNotUnique: 'Token with that name already exists.'
+    revokeToken: 'Revoke Token'
+    revokeTokenSubtitle: 'Revoking this token will affect the following delegates. They will no longer function.'
+    moreInfoTitle: 'More information about {{token}}'
+    moreInfoSubtitle: 'The following delegates use this token.'
+    generatedValuePlaceholder: '<generated value>'
+    tokenNotUsedByDelegates: 'Token has not been used by any delegate'
+    tokenBySearchNameNotExisting: 'There are no delegates by that name'
+    noTokens: 'There are no tokens'
+    revoked: 'Revoked'
+    tokenRequired: 'Token is required.'
+    createdBySystem: 'system'
+  delegateProfilesDepricated: 'Delegate profiles are deprecated, please use INIT_SCRIPT instead.'
+  noInstances: 'No instances'
+  successfullyUpdatedConfig: 'Successfully Updated Delegate Configuration'
+  configNameRequired: 'Delegate Configuration name is Required.'
+  instanceStatus: 'Instance Status'
+  runAsRoot: 'Run delegate with root access'
+  commandLineCreation:
+    replicas: Replicas
+    createYourOwnYaml: This template is configured with auto upgrade set to ON so that the delegate version installed will always remain in sync with the version available on the Harness Manager.
+    defaultValuesYaml: Default values.yaml used for command below
+    totalMemory: Total Memory / Total CPU needed on the Kubernetes Cluster
+    numberOfParallel: Number of parallel deployments/builds that can be run across all replicas
+    yamlBasicOptionText: This YAML has all configuration variables pre-populated with values specific to your Harness account. Additionally, the auto upgrade configuration is set to ON so that the delegate version installed will always remain in sync with the version available on the Harness Manager.
+    yamlFileOptions: YAML file options
+    delegateSizing: Delegate sizing guide - modify the replica count to run specific number of parallel deployments/builds
+    installDelegate: Install a Delegate
+    closePreview: Close preview
+    terraForm: Terraform Helm Provider
+    kubernetesManifest: Kubernetes Manifest
+    installYourDelegate: Install your Delegate
+    harenssDelegates: Harness Delegates
+    selectyourDelegate: Select where you want to install your Delegate
+    oldWayToCreateDelegate: Switch back to old delegate install experience
+
+    infoText: Harness Delegate is a service that can run in local network or VPC to connect artifact servers, infrastructure, collaboration, verification and other providers, with the Harness Manager. Harness provides different types of Delegates to give you flexibility in how you manage deployments. You can either deploy a kubernetes based delegate or a docker based delegate
+    installDelegateSubText: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+    firstCommandHeadingHelm: Add Harness helm chart repo to your local helm registry
+    firstCommandHelmFirstLine: helm repo add harness-delegate https://app.harness.io/storage/harness-download/delegate-helm-chart/
+    firstCommandHelmSecondLine: helm repo update harness-delegate
+    secondCommandHeadingHelm: Now we are ready to install the delegate
+    firstComandHeadingKubernetes: Create your own YAML from a Kubernetes manifest template
+    firstComandKubernetesFirstLine: curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml
+    lastCommandKubernetesLastLine: kubectl apply -f harness-delegate.yml
+    lastCommandKubernetesLastLineWithYaml: kubectl apply -f harness-delegate.yaml
+    commandsKubernetesHeading: Update the downloaded template by replacing the placeholders with the following values. You will now have a Kubernetes manifest YAML ready for installation.
+    kubernetesFirstDirectionPartOne: '"PUT_YOUR_DELEGATE_NAME"'
+    kubernetesFirstDirectionPartTwo: with the desired delegate name
+    kubernetesSecondDirectionPartOne: '"PUT_YOUR_ACCOUNT_ID"'
+    kubernetesSecondDirectionPartTwo: with your Account Id
+    kubernetesThirdDirectionPartOne: '"PUT_YOUR_MANAGER_ENDPOINT"'
+    kubernetesThirdDirectionPartTwo: with your cluster url
+    kubernetesFourthDirectionPartOne: '"PUT_YOUR_DELEGATE_TOKEN"'
+    kubernetesFourthDirectionPartThree: 'your delegate token'
+    firstCommandHeadingDocker: Run the following command to install
+    firstCommandHeadingTerraform: Create the main.tf file where you want to install the delegate
+    secondCommandHeadingTerraform: Initialize Terraform
+    thirdCommandHeadingTerraform: Copy the YAML to a machine with kubectl installed and with access to your Kubernetes cluster. Run the following command to install the Harness Delegate in your Kubernetes Cluster.
+    foruthCommandHeading: Apply terraform
+    firstCommandTerraFormFirstLine: terraform apply
+    secondCommandTerraFormFirstLine: terraform init
+    verifyDelegateConnection: Verify Delegate connection to Harness Manager
+    enterYourResponse: Enter your response
+    learnWatch: Learn more or watch video link
+    forAdvancedConfig: For Advanced configuration options, refer to documentation
+    verifyInfo: Verify once you have completed the steps above to make sure its installed properly
+    didDelegateComeUp: Did the Delegate come up?
+    delegateFixed: Can you describe how the issue was fixed
+    delegateNotFixed: Can you describe what the issue was
+    helmTroubleShooting1: Verify helm is installed correctly
+    helmTroubleShooting2: helm
+    helmTroubleShooting3: helm version
+    helmTroubleShootingInfoCommand: 'If you encounter "Error: rendered manifests contain a resource that already exists..." Delete the existing namespace and retry the helm upgrade command to deploy the delegate.'
+    helmTroubleShooting4: To further troubleshoot helm installation refer
+    helmTroubleShooting5: Helm troubleshooting guide
+    helmTroubleShooting6: If the pod is not up,check the Delegate Logs
+    helmTroubleShooting7: If the Delegate pod is in a CrashLoopBackOff state, that means Kubernetes Cluster Resources are not available. Check the Kubernetes Cluster Resources (CPU, Memory).
+    dockerTroubleShooting1: docker container logs <delegatename> -f
+    dockerTroubleShooting2: Restart the delegate container
+    dockerTroubleShooting3: docker container stop <delegatename>
+    dockerTroubleShooting4: docker container start <delegatename>
+    dockerTroubleShooting5: If there is not enough resources (CPU, Memory), remove the older containers
+    dockerTroubleShooting6: docker container rm [container id]
+    terraformTroubleShooting1: Verify terraform is installed correctly
+    terraformTroubleShooting2: terraform -version
+    terraformTroubleShooting3: To further troubleshoot terraform installation refer
+    terraformTroubleShooting4: terraform troubleshooting guide
+    clickDoneAndCheckLater: Checking if the delegate is installed. It might take 1-2 minutes for the installation. Once installation is successful, your delegate will be populated on your delegate listing page.
+    feedBackSaved: Feedback Saved
+    feedBackNotSaved: Error in saving feedback
+    retryConnections: Retry Connection
+    combinedHelmChartCommandsHeading: To install the Harness Delegate in your Kubernetes cluster directly, copy and run the below command to deploy the Harness Delegate with a Helm chart.
+    copyCommand: Copy command
+secrets:
+  selectSecret: Select a Secret
+  selectSecrets: Select Secrets
+  titleCreate: 'Create a new secret'
+  titleSelect: 'Select an existing secret'
+  labelType: 'Secret Type'
+  labelValue: 'Secret Value'
+  labelPath: '{{$.common.path}}'
+  labelSecretsManager: 'Secrets Manager'
+  confirmDelete: Are you sure you want to delete the secret '{{name}}'
+  confirmDeleteTitle: 'Delete Secret'
+  incompleteSecret: 'Incomplete Secret'
+  typeSSH: 'Execution Credential'
+  typeWinRM: 'WinRM Credential'
+  stepTitleVerify: 'Verify Connection'
+  blank: '{{$.common.blank}}'
+  labelSecretName: 'Secret Name'
+  noSecrets: There are no Secrets in your {{resourceName}}
+  fileNotSupported: File Secret is not supported for selected Secret Manager Type.
+
+  sshAuthFormFields:
+    optionKey: 'Username/SSH Key'
+    optionKeypath: 'Username/SSH Key File Path'
+    optionPassword: 'Username/Password'
+    optionKerbNone: 'None (TGT not required)'
+    labelType: 'Select an Auth Scheme'
+    labelKeyReference: 'Key Reference'
+    labelPassphrase: 'Passphrase (optional)'
+    labelKeyFilePath: 'SSH Key File Path'
+    labelSSHPort: 'SSH Port'
+    labelFile: 'Select or create a SSH Key'
+    labelPrincipal: 'Principal'
+    labelRealm: 'Realm'
+    labelTGT: 'TGT Generation'
+    labelKeyTab: 'Key Tab File Path'
+
+  winRmAuthFormFields:
+    ntlm: 'NTLM'
+    domain: 'Domain'
+    labelWinRmPort: 'WinRM Port'
+    skipCertCheck: 'Skip Cert Check'
+    useNoProfile: 'Use No Profile'
+    optionalValue: 'Value (Optional)'
+    parameterName: 'Parameter name'
+    parameterError: 'Parameter name is required'
+    parameterDuplicatedError: 'Parameter name is duplicated'
+  createSSHCredWizard:
+    btnSaving: 'Saving...'
+    titleDetails: 'SSH Details'
+    validName: '{{$.validation.nameRequired}}'
+    validId: '{{$.validation.identifierRequired}}'
+    validIdRegex: '{{$.common.validation.formatMustBeAlphanumeric}}'
+    titleAuth: 'Configuration and Authentication'
+    labelHostname: 'Add a Host Name to start verification'
+    hostnameInfo: 'This URL will only be used for verification process'
+    btnVerifyConnection: '{{$.common.labelTestConnection}}'
+    validateUsername: '{{$.validation.username}}'
+    validateKeypath: 'Key path is required'
+    validateSshKey: 'Key file is required'
+    validatePrincipal: 'Principal is required'
+    validateRealm: 'Realm is required'
+    verifyStepOne: 'Checking for Delegates'
+    verifyStepTwo: 'Verifying Connection'
+  createWinRmCredWizard:
+    titleDetails: 'WinRM Details'
+    validateDomain: 'Domain is required'
+    validatePassword: '{{$.validation.password}}'
+  secret:
+    titleCreateText: 'Add new Encrypted Text'
+    titleCreateFile: 'Add new Encrypted File'
+    titleEditText: 'Edit Encrypted Text'
+    titleEditFile: 'Edit Encrypted File'
+    inlineSecret: 'Inline Secret Value'
+    referenceSecret: 'Reference Secret'
+    secretCreated: Secret Created
+    secretActivity: Secret Activity
+    labelSecretFile: 'Select File'
+    messageSelectSM: 'Please select a Secret Manager'
+    placeholderSecretValue: 'Add your secret value'
+    placeholderSecretReference: 'Add your value of the reference secret'
+    secretNameReferenceAndVersionRequired: 'Secret Name, Reference Secret and Version required'
+    referenceRequired: 'Secret Name and  Reference Secret required'
+    validReferencePath: 'Valid Path'
+    invalidReferencePath: 'Invalid Path'
+    validationNameChars: 'Name can only contain alphanumerics, _, and $'
+    validationKms: 'Secret Manager is required'
+    validationIdentifier: 'Id is required'
+    labelText: 'Text'
+    labelFile: '{{ $.common.file }}'
+    labelSecretType: 'Secret type'
+    noSecretsFound: 'No Secrets Found'
+    configureSecret: 'Configure Secret'
+    updateSuccess: 'Secret updated successfully'
+    newSSHCredential: New SSH Credential
+    newWinRmCredential: New WinRM Credential
+    newSecretText: New Secret Text
+    newSecretFile: New Secret File
+    secretNotFound: 'Secret not found'
+    successMessage: Secret '{{name}}' {{action}} successfully
+    configureRegion: 'Configure Region'
+    region: 'Regions'
+    referenceRqrd: 'Reference is required'
+    referenceSecretVersionRqrd: 'Reference Secret version is required'
+  secretsTitle: 'Resources: Secrets'
+  createSecret: Create a Secret
+  policyEvaluations:
+    failedToSave: Secret cannot be saved due to the policy evaluation failures
+    warning: Secret saved with policy warnings
+  gcpSecretEdit: You cannot modify this once the secret is created in the GCP secret manager.
+filestore:
+  noFilesInStore: 'You have no files stored in your project'
+  noFilesTitle: 'Store and manage configuration files all in one place.'
+  noFilesDescription: 'Directly drag and drop files/folders here, or use  the “+ New” button'
+  noFilesInFolderTitle: 'No files in this folder'
+  view:
+    fileName: 'file name'
+    fileUsage: 'File Usage'
+    replaceFile: 'Replace file'
+    noPreview: 'No preview available'
+    lastModifiedBy: 'Last modified by'
+  newFile: 'New File'
+  editFileDetails: 'Edit File Details'
+  editFolderDetails: 'Edit Folder Details'
+  newFolder: 'New Folder'
+  uploadFileFolder: 'Upload File'
+  confirmDeleteFile: 'Are you sure you want to delete {{entity}} <strong>{{ name }}</strong>?'
+  deletedSuccessMessage: '{{type}} "{{name}}" deleted'
+  folderSuccessCreated: 'Folder "{{name}}" created'
+  fileSuccessCreated: 'File "{{name}}" created'
+  folderSuccessSaved: 'Folder "{{name}}" saved'
+  fileSuccessSaved: 'File "{{name}}" saved'
+  fileReferenceText: 'To delete your files, please remove the reference file from these entities.'
+  cantDeleteFile: 'Unable to delete {{type}}'
+  errors:
+    fileUsage: 'File Usage is required'
+    cannotRender: 'File format not supported'
+    deleted: 'Node is deleted'
+  filter:
+    fileUsagePlaceholder: 'Type to view suggestions'
+  searchResult: 'Search result: {{count}}'
+  sort:
+    byAlphabeticalAz: 'Alphabetical A-Z'
+    byAlphabeticalZa: 'Alphabetical Z-A'
+    firstModified: 'First Modified'
+    nodeBy: 'Sort folder by'
+    byFolderType: 'Folders first'
+    byFileType: 'Files first'
+variables:
+  newVariable: New Variable
+  editVar: Edit Variable
+  defaultValue: Default Value
+  allowedValues: Allowed Values
+  noVariableFound: No Variable Found
+  noVariableExist: There are no variables in your {{resourceName}}.
+  inputValidation: Input Validation
+  confirmDeleteTitle: Delete Variable
+  editVariable: Edit the Variable
+  fixedValue: Fixed Value
+  confirmDelete: Are you sure you want to delete the Variable '{{name}}'?
+  successDelete: Variable '{{name}}' deleted successfully
+  successCreate: Variable '{{name}}' created successfully
+  successUpdate: Variable '{{name}}' updated successfully
+  validation:
+    type: 'Type is a required field'
+    validation: 'Please select a validation type'
+    fixedValue: 'Fixed Value is a required field'
+authSettings:
+  addSAMLProvider: Add SAML Provider
+  editSAMLProvider: Edit SAML Provider
+  selectSAMLProvider: Select a SAML Provider
+  enterSAMLEndPoint: Enter this SAML Endpoint URL as your Harness {{ selectedSAMLProvider }} application's ACS URL.
+  uploadIdentityProvider: Upload the Identity Provider metadata XML downloaded from your {{ selectedSAMLProvider }} app
+  identityProvider: Identity Provider metadata XML downloaded from your {{ selectedSAMLProvider }} app {{ $.titleOptional }}
+  chooseFile: Choose a file...
+  enableAuthorization: Enable Authorization
+  enableClientIdAndSecret: Enable ClientId and Secret
+  groupAttributeName: Group Attribute Name
+  enableEntityIdLabel: Add Entity Id
+  entityIdLabel: Entity Id
+  friendlyReminder: Friendly Reminder
+  friendlyReminderDescription: Email addresses is how Harness identifies Users. Always ensure that the email addresses of your registered Harness Users match the SAML provider users you want to authenticate and authorize.
+  enablingAuthorization: Enabling Authorization
+  enablingAuthorizationDescription: To set up SAML authorization in Harness, you link a user group in Harness to a user group in {{ selectedSAMLProvider }}. When a user from {{ selectedSAMLProvider }} logs into Harness, they are automatically added to the linked Harness User Group, and inherit all the RBAC settings for that User Group.
+  testingSSO: Testing SSO
+  testingSSODescription: A new browser tab will prompt you to log into your SAML provider when you test. Ensure that you have at least two corresponding user accounts when setting up and testing SAML SSO in Harness. This allows you to set up the account with a Harness Administrator account and test it with a Harness user account.
+  azure: '{{ $.common.azure }}'
+  okta: Okta
+  oneLogin: OneLogin
+  samlProviderAddedSuccessfully: SAML provider added successfully
+  samlProviderUpdatedSuccessfully: SAML provider updated successfully
+  authorizationEnabledFor: 'Authorization enabled for: '
+  authorizationEnabled: Authorization is enabled
+  authorizationNotEnabled: Authorization not enabled
+  plusSAMLProvider: + SAML Provider
+  loginViaSAML: Login via SAML
+  loginViaLDAP: Login via LDAP
+  loginViaSAMLorLDAP: Login via SAML / LDAP
+  accountOrOAuthLogin: Login via a Harness Account or Public OAuth Providers
+  usePublicOAuth: Use Public OAuth Providers
+  useHarnessUsernameAndPassword: Use Harness username and password
+  enforcePasswordStrength: Enforce password strength
+  passwordMustFulfillReq: 'Passwords must fulfill the following requirements:'
+  atLeastNChars: At least {{ minNumberOfCharacters }} characters
+  periodicallyExpirePassword: Periodically expire passwords
+  periodicallyExpirePasswordNote: Updated password expiration policy will only apply to newly created or changed user passwords.
+  enforceLockoutPolicy: Enforce lockout policy
+  failedLoginsBeforeLockedAccount: Failed logins before user is locked out of account
+  enforceTwoFA: Enforce Two Factor Authentication
+  passwordStrength: Password Strength
+  minLength: Minimum Length
+  haveOneUppercase: Have at least 1 uppercase letter (A-Z)
+  haveOneLowercase: Have at least 1 lowercase letter (a-z)
+  haveOneDigit: Have at least 1 digit (0-9)
+  haveOneSpecialChar: Have at least 1 special character
+  passwordExpiration: Password Expiration
+  daysBeforePasswordExpires: Days before password expires
+  daysBeforeUserNotified: Days before user is notified of expiration
+  lockoutPolicy: Lockout Policy
+  failedLoginsBeforeLocked: Failed logins before user is locked out
+  lockoutDuration: Lockout duration
+  notifyUsersWhenTheyLocked: Notify users when they are locked out
+  notifyUsersWhenUserLocked: Notify user groups when a user is locked out
+  publicOAuthLoginEnabled: Login via public OAuth providers has been enabled
+  publicOAuthLoginDisabled: Login via public OAuth providers has been disabled
+  pleaseRemoveSAMLOrLDAPToEnableOauth: Please remove SAML/LDAP settings to enable public Oauth providers
+  keepAtLeastOneProviderEnabled: Please either keep at least one provider enabled, or entirely disable login via public OAuth
+  oauthSettingsHaveBeenUpdated: OAuth settings have been updated
+  disableOAuthLogin: Disable login via public OAuth providers
+  confirmDisableOAuthLogin: Are you sure you want to disable login via public OAuth providers?
+  enableAtLeastOneSsoBeforeDisablingUserPasswordLogin: You must enable at least one SSO provider before you can disable login via Harness username/password.
+  loginSettingsHaveBeenUpdated: Login settings have been updated
+  disableUserPasswordLogin: Disable login via Harness username/password
+  confirmDisableUserPasswordLogin: Are you sure you want to disable login via Harness username/password?
+  disablePasswordStrength: Disable password strength
+  confirmDisablePasswordStrength: Are you sure you want to disable password strength policy?
+  passwordStrengthEnabled: Password strength policy has been enabled successfully
+  passwordStrengthUpdated: Password strength policy has been updated successfully
+  passwordStrengthDisabled: Password strength policy has been disabled successfully
+  disablePasswordExpiration: Disable password expiration
+  confirmDisablePasswordExpiration: Are you sure you want to disable password expiration policy?
+  passwordExpirationEnabled: Password expiration policy has been enabled successfully
+  passwordExpirationUpdated: Password expiration policy has been updated successfully
+  passwordExpirationDisabled: Password expiration policy has been disabled successfully
+  disableLockoutPolicy: Disable lockout policy
+  confirmDisableLockoutPolicy: Are you sure you want to disable lockout policy?
+  lockoutPolicyEnabled: Lockout policy has been enabled successfully
+  lockoutPolicyUpdated: Lockout policy has been updated successfully
+  lockoutPolicyDisabled: Lockout policy has been disabled successfully
+  SAMLProvider: SAML Provider
+  deleteSamlProvider: Delete SAML provider
+  deleteLdapProvider: Delete LDAP provider
+  deleteSamlProviderDescription: 'Do you want to delete the SAML Provider: <strong> {{displayName}} </strong> ?'
+  deleteLdapProviderDescription: 'Do you want to delete the LDAP Provider: <strong> {{displayName}} </strong> ?'
+  samlProviderDeleted: SAML provider has been deleted successfully
+  ldapProviderDeleted: LDAP provider has been deleted successfully
+  enableSamlProvider: Enable SAML Provider
+  enableSamlProviderDescription: Before you change the SSO provider to SAML, please use the Test button to ensure your settings are correct.
+  samlLoginEnabled: SAML login enabled successfully
+  enableHarnessAccountOrOauthLogin: Enable Harness account or Oauth login
+  changeLoginToHarnessAccountOrOauth: Do you want to change Login via {{currentAuthMechanism}} Provider to Harness Account or Public OAuth Providers?
+  accountOrOAuthLoginEnabledSuccessfully: '{{ $.platform.authSettings.accountOrOAuthLogin }} enabled successfully'
+  changeLoginToHarnessAccountOrOauthDescription: <strong> Note :</strong> Some Users may not have set their Harness password. They will need to reset their password using this <a href={{forgotPasswordURL}} target="_blank" rel="noreferrer">link</a>
+  samlTestSuccessful: SAML test successful
+  samlTestFailed: SAML test failed. Please check your credentials
+  disableWhitelistedDomains: Disable email restrictions
+  confirmDisableWhitelistedDomains: Are you sure you want to disable email restrictions?
+  WhitelistedDomainsUpdated: Domain restrictions have been updated successfully.
+  whitelistedDomainsDisabled: Domain restrictions have been disabled successfully.
+  allowLoginFromTheseDomains: Allow login from these domains
+  allowUsersWithEmails: 'Only allow users with the following email domains:'
+  typeAndPressEnterToAddADomain: Type and press enter to add a domain
+  restrictUsersToEmailDomains: Restrict users to email domains
+  domainNameRequired: At least one domain name is required
+  yourAccountWillBeLockedOut: Your account will be locked out. Please set up Two Factor Authentication for yourself.
+  goToSettings: Go to settings
+  doYouWantToEnforceTwoFAForAllMembers: 'Do you want to enforce Two Factor Authentication for all members? The following changes will take effect:'
+  newMembersWillNeedToSetUpTwoFADuringSignup: New members will need to set up Two Factor Authentication during signup.
+  existingMembersWillReceiveAnEmailWithQRCode: Existing members who do not have Two Factor Authentication enabled will receive an email with a QR code, and instructions on how to set up Two Factor Authentication.
+  twoFAEnforcementEnabled: Two Factor Authentication enforcement has been enabled successfully
+  disableTwoFAEnforcement: Disable Two Factor Authentication enforcement
+  sureToDisableTwoFAEnforcement: Are you sure you want to disable Two Factor Authentication enforcement?
+  twoFAEnforcementDisabled: Two Factor Authentication enforcement has been disabled successfully
+  authenticationSettings: Authentication Settings
+  updating: Updating, please wait...
+  sessionTimeOut: Session Timeout (in minutes)
+  sessionTimeOutErrorMessage: Session Timeout cannot be less than {{minimum}} minutes
+  sessionTimOutSaved: Session Timeout {{ $.common.savedSuccessfully }}
+  sessionTimeOutErrorMaxMessage: Session Timeout cannot be more than {{maximum}} minutes
+  timeoutRequired: Session timeout is required
+  timeoutNumberRequired: Session timeout should be a number
+  onprem: 'Self Hosted'
+  saas: 'SaaS'
+  multipleOrganizations: Multiple Organizations
+  multipleProjects: Multiple Projects
+  samlSupport: SAML authentication
+  oauthSupport: OAuth authentication
+  twoFactorAuthSupport: Two Factor Auth Support
+  logoutUrl: Logout URL
+  cdCommunityPlan:
+    planLink: 'https://harness.io/pricing'
+    communityPrice: 'Free and Open Software'
+    communityTitle: '{{ $.common.community }}'
+    enterpriseTitle: 'Enterprise'
+    communityTitle2: 'Self-Hosted Only'
+    enterpriseTitle2: 'Upgrade to a self hosted Enterprise Plan'
+    saasTitle2: 'Harness CD is also available in a variety of exciting SaaS plans'
+    communityLinkText: 'Supported by Community'
+    enterpriseLinkText: 'Go to Enterprise'
+    saasLinkText: '{{$.common.exploreSaaSPlans}}'
+    harnessLinkText: 'Explore All Harness Plans'
+    communityPlanStrings:
+      item1: 'Kubernetes, VMs, Serverless Deployments supported on all popular platforms & clouds'
+      item2: 'Advanced Deployment Strategies & Automated Rollback'
+      item3: 'Built-in User & Secret Management'
+      item4: 'Built-in Approvals'
+      item5: 'Git Experience'
+    enterprisePlanStrings:
+      item1: 'Unlimited Scalability & High Availability'
+      item2: 'Enterprise Security & Governance'
+      item3: 'External Approvals & Secrets Management'
+      item4: Multiple Projects & Organizations
+      item5: Template Library & Custom Dashboards
+
+  autoRenewal: Auto renewal on {{date}}
+  proRata: Prorated amount covers for {{date}}
+  salesTax: Plus sales tax
+  unitPrice: Unit Price
+  recommendation: Recommendation
+  priceBreakdown: Subscription Price Breakdown
+  costCalculator:
+    tax: Tax
+    using: Using
+    currentSubscribed: Currently Subscribed
+    maus: MAUs
+    comparePlans: Compare plans
+    next: 'Next: Billing information'
+    switchTooltip: Switch to Yearly subscription to enable premium support
+    alreadySubscribed: Support plan has been defaulted to the option selected on previous subscriptions, as all subscriptions need to have the same support plan
+    premiumSupport: Premier Support
+    premSupport:
+      title: Add Premier Support
+      onCallSupport: (24/7 on call support)
+      includedByDefault: Standard support included by default
+      premierSupport: What is a premier support?
+      premierSupportDefinition: Premier support includes coverage 24 hours a day, 7 days a week.
+    developer:
+      title: How many developers will use Feature Flags?
+      titleCI: How many developers will build with Continuous Integration?
+      developer: Who is a developer?
+      developerDefinition: A Developer is an active Feature Flags user with create/edit/delete permissions on Feature Flags, Targets, or Segments.
+    mau:
+      title: How many Monthly Active Users will view Feature Flags?
+      mau: Who is a Monthly Active User?
+      mauDefinition: '"MAUs" refers to the Monthly Active Users viewing your Feature Flags'
+      perkMau: 'per {{quantity}}K / month'
+      kMauFree: (first 100k included free)
+      permMau: 'per {{quantity}}M / month'
+      mMauFree: '(first {{minValue}} included free)'
+  billing:
+    totalDuetoday: 'Total due today: '
+    next: 'Next: Payment Method'
+  paymentMethod:
+    next: 'Next: Final Review'
+  finalReview:
+    premiumSupport: Premium 24x7
+    ofTotalSpend: (20% of total spend)
+    subscribeNPay: Subscribe and Pay
+    upgradeToPlan: Upgrading to
+  success:
+    woohoo: Woo-Hoo!
+    title: Bravo. You’re all set.
+    msg: Your {{time}} {{module}} subscription is successfully set up.
+  choosePlan: Choose a plan
+  ffPlans:
+    team: Team
+  pricePreview:
+    title: Price preview
+    calculatedNextStep: Calculated in final review
+    discount: ' (2 months free)'
+  ldap:
+    reviewLdapSyncExpression: Review the LDAP User Sync Schedule
+    nextIterations: Scheduled Next Executions as per applied Cron Expression <strong>{{cronExpression}}</strong>
+    authChangeSuccessful: Authentication mechanism changed to LDAP successfuly
+    ldapTestSuccessful: LDAP connection test successful
+    verifyAndEnableConfig: Verify and Enable LDAP Configuration
+    addLdap: + LDAP Provider
+    connectionSettings: Connection Settings
+    userQueries: User Queries
+    groupQueries: Group Queries
+    scheduledSyncs: Scheduled Syncs
+    baseDN: Base DN
+    baseDNRequired: Base DN is required
+    searchFilter: Search Filter
+    searchFilterRequired: Search Filter is required
+    nameAttributes: Name Attribute
+    nameAttributesRequired: Name Attribute is required
+    emailAttributes: Email Attribute
+    emailAttributesRequired: Email Attribute is required
+    descriptionAttributes: Description Attribute
+    descriptionAttributesRequired: Description Attribute is required
+    groupMembershipAttributes: Group Membership Attribute
+    groupMembershipAttributesRequired: Group Membership Attribute is required
+    userQueryTitle: User Query {{index}}
+    groupQueryTitle: Group Query {{index}}
+    setScopeForUserQuery: Set the scope of any searches for LDAP users
+    setScopeForGroupQuery: Set the scope of any searches for LDAP user groups
+    newUserQuery: New User Query
+    newGroupQuery: New Group Query
+    queryTestSuccessful: Query test successful
+    queryTestFail: Query test failed
+    addUserQueryHeading: Add a User Query
+    addUserQueryDescription: With user queries, you are setting the scope within which any searches for LDAP users will be performed by Harness.
+    addGroupQueryHeading: Add a Group Query
+    addGroupQueryDescription: With group queries, you are setting the scope within which any searches for LDAP users will be performed by Harness.
+    editLdapConfiguration: Edit LDAP configuration
+    syncUserGroups: Synchronize User Groups
+    syncUserGroupsResult:
+      success: User Groups synchronization initiated
+      fail: User Groups synchronization failed
+    connSettings:
+      hostAddress: Enter host address
+      maximumReferralHops: Max Referral Hops
+      enableReferrals: Enable Referrals
+      connectionTimeout: Connection Timeout
+      responseTime: Response Time
+      recursiveSearch: Recursive Membership Search
+      bindDN: Bind DN
+      bindDNPlaceholder: Enter Distinguished Name
+      passwordPlaceholder: Enter Password
+      portNumber:
+        required: '{{ $.common.smtp.portRequired }}'
+        number: 'Port must be a number'
+      validateHost:
+        required: 'Hostname or IP is required'
+        number: 'Hostname or IP must be a number'
+      validateReferralHops:
+        required: 'Referral Hops is required'
+        number: 'Referral Hops must be a positive number'
+      validateConnectionTimeout:
+        required: 'Connection timeout is required'
+        number: 'Connection timeout must be a number'
+      validateResponseTime:
+        required: 'Response timeout is required'
+        number: 'Response timeout should be a number'
+      validateBindDN: 'Bind Distinguished Name is required'
+    updateStepFailMessage: 'Update failed'
+    discardChanges: 'Discard changes'
+    userSyncSchedule: 'LDAP User Sync Schedule'
+  billingInfo:
+    address: Address
+    billingContact: '{{$.common.billing}} Contact'
+    paymentMethod: Payment Method
+    paymentMethods: Payment Methods
+    billingAdmin: '{{$.common.billing}} Admin'
+    saveCardWarning: By checking this box, you allow Harness Inc. to charge your card and save it for the future module license charges in accordance with our Terms of Use.
+    emailWarning: This billing email will receive notifications, which can be configured in the Billing page.
+    nobills: There are no Team / Enterprise subscriptions in your Account
+    firstSubscription: Let’s get started with your first subscription.
+    explorePlans: Explore Plans
+    addCC: Add a credit card
+    priceBreakdown: Price breakdown
+    nextBillingDate: 'Next billing date is on {{billingDate}}'
+    monthlyTotal: 'Monthly Total: '
+    annualTotal: 'Annual Total: '
+    endingIn: ending in
+    expires: Expires
+    monthlySubscriptions: Monthly Subscriptions
+    annualSubscriptions: Annual Subscriptions
+    selectPaymentMethod: Select Payment Method
+    formikErrors:
+      city: City is required
+      state: State is required
+      address: Address is required
+      zipCode: Zip is required
+      company: Company Name is required
+  allowlist: Allowlist
+  ipAllowlist: IP Allowlist
+  ipAddress:
+    changesMayTake5Minutes: Changes to IP Allowlist configuration may take upto 5 minutes to reflect
+    determiningCurrentIp: 'Determining your IP Address...'
+    yourIpAddressIs: 'Your IP Address is: {{ipAddress}}'
+    unableToDetermineIp: 'Unable to determine your IP Address'
+    includesYourIpAddress: '(Includes your IP Address)'
+    deleteIpAddressDialogContent: 'Are you sure you want to delete IP Address [{{name}}] from Allowlist?'
+    deleteIpAddressDialogTitle: Delete IP Address
+    enableIpAddressDialogContent: 'Are you sure you want to enable IP Allowlist [{{name}}]?'
+    enableIpAddressDialogWarningFail: 'Your IP Address [{{ipAddress}}] is not a part of this allowlist. If you enable this, you will lose access to Harness and your session will be terminated.'
+    enableIpAddressDialogWarningSuccess: 'Access from other IP Addresses will be blocked once you enable this.'
+    noCurrentIpEnableIpAddressDialogWarning: 'Please make sure that your IP address is part of the IP allowlist that you are enabling—else, you will lose access and your session will be terminated.'
+    enableIpAddressDialogTitle: Enable IP Allowlist
+    deleteSuccessful: 'IP Allowlist [{{name}}] deleted successfully'
+    errorWhileDeleting: 'An error occurred while deleting IP Allowlist [{{name}}]'
+    ipAllowlistCreated: 'IP Allowlist [{{name}}] created successfully'
+    ipAllowlistUpdated: 'IP Allowlist [{{name}}] updated successfully'
+    errorWhileUpdating: 'An error occurred while updating IP Allowlist [{{name}}]'
+    errorWhileCreating: 'An error occurred while creating IP Allowlist [{{name}}]'
+    validateUniqueIdentifierError: 'An error occurred while validating identifier. Please try again.'
+    errorWhileValidating: 'An error occurred while validating IP address'
+    addIpAddresses: Add IP Addresses
+    checkIPForAllowlist: Check any IP for allowlist
+    ipAddressCIDR: IP Address / CIDR
+    required: IP Address / CIDR is required
+    ipRequired: IP Address is required
+    ipInvalid: IP Address must be a valid IP (v4 or v6)
+    invalid: IP Address must be a valid IP (v4 or v6) in CIDR notation
+    invalidApplicableFor: Please select at least one of UI or API
+    applicableFor: 'Applicable For'
+    defineRange: Define Range
+    testIP: Test IP
+    testIPIfInRange: Enter IP to check if it falls in the defined range
+    testIPIfPartOfAllowlist: Enter IP to check if it is a part of allowlist
+    useMyCurrentIP: Use my Current IP Address
+    duplicateIdError: 'Failed to create IP Allowlist: [{{ name }}]. There is already an IP Allowlist with identifier [{{ identifier }}] present or soft deleted. Please provide a new unique identifier.'
+    check: Check
+    checkAnotherIP: Check another IP
+    allowedAsAPartOf: 'Allowed as a part of:'
+    noIPsAllowlisted: No IPs Allowlisted
+    inRange: This IP Address falls in the defined range
+    notInRange: This IP Address does not fall in the defined range
+    aPartOfAllowlist: This IP address is a part of allowlist
+    notAPartOfAllowlist: This IP address is not a part of allowlist
+  samlProviderOverview: SAML Provider Overview
+  selectProvider: Select Provider
+  urlIdentityProvider: URL and Identity Provider
+  newSamlProvider: New SAML Provider
+  identityProviderLabel: Identity Provider
+  yesIamSure: Yes, I am very sure
+  jitProvisioning: JIT Provisioning
+  jitValidationKey: JIT Validation Key
+  jitValidationValue: JIT Validation Value
+  cardIsValidatedAndSaved: Card is validated and saved
+  setAsDefaultCard: Set as Default Card
+  updateCard: Update Card
+  addCard: Add Card
+connectors:
+  createNewConnector: Create New Connector
+  confirmDeleteTitle: Delete Connector
+  editConnector: Edit the Connector
+  confirmDelete: Are you sure you want to delete the Connector
+  deletedSuccssMessage: 'Connector {{name}} deleted'
+  testInProgress: Test in progress
+  artifactRepository: ' Artifact {{ $.repository }}'
+  artifactRepoType: 'Artifact {{$.repositoryType}}'
+  specifyArtifactRepoType: 'Specify Artifact {{ $.repositoryType }}'
+  specifyArtifactRepo: 'Specify Artifact {{ $.repository }}'
+  newArtifactRepository: 'New Artifact Repository Connector'
+  selectConnectorLabel: Select Artifact Repository Connector
+  stepThreeName: '{{$.common.labelTestConnection}}'
+  connectorConnectionTest: 'connectorConnectionTestId'
+  stepFourName: 'Artifact Location'
+  name: Connector Name
+  updating: 'Updating Connector {{name}}'
+  creating: 'Creating Connector {{name}}'
+  successfullCreate: 'Connector {{name}} created successfully'
+  successfullUpdate: 'Connector {{name}} updated successfully'
+  connectorNotFound: Connector not found.
+  scopeError: 'Cannot create a Connector at {{createdAtScope}} scope from {{createdFromScope}} scope.'
+  createFromYaml: 'Create New Connector from YAML'
+  selectConnectivityMode: 'Select Connectivity Mode'
+  successfullyCreated: 'Connector created successfully'
+  secretManagerDetails: 'Secret Manager Details'
+  gcrConnectorDetails: 'Google Container Registry Overview'
+  hashicorpVaultDetails: 'HashiCorp Vault Overview'
+  appDynamicsDetails: 'AppDynamics Connector Details'
+  splunkConnectorDetails: 'Splunk Connector Details'
+  datadogConnectorDetails: 'Datadog Connector Details'
+  pagerDutyConnectorDetails: 'PagerDuty Connector Details'
+  sumoLogicConnectorDetails: 'SumoLogic Connector Details'
+  newRelicConnectorDetails: New Relic Connector Details
+  prometheusConnectorDetails: Prometheus Connector Details
+  customConnectorDetails: Custom Health Connector Details
+  rancherConnectorDetails: Rancher Connector Details
+  prometheusLabel: Prometheus
+  dynatraceLabel: Dynatrace
+  appdLabel: AppDynamics
+  signalFXLabel: Splunk Observability [SignalFX]
+  newRelicLabel: New Relic
+  splunkLabel: Splunk
+  customLabel: Custom Health
+  stackdriverMetricsLabel: Google Cloud Operations (Metrics)
+  stackdriverLogsLabel: Google Cloud Operations (Logs)
+  click: 'Click'
+  dynatraceConnectorDetails: Dynatrace Connector Details
+  connectorDetailsHeader: '{{type}} Connector Details'
+  addConnectorDetails: Add {{type}} Verification Provider
+  unableToCreateConnector: Unable to create Connector
+  unableToUpdateConnector: Unable to update Connector
+  encryptedAPIKeyLabel: Encrypted API Key
+  encryptedAPIKeyValidation: Encrypted API Key is required.
+  tenantId: Tenant Id
+  tenantIdRequired: Tenant Id is required
+  reportNameRequired: '{{ $.common.reportNameRequired }}'
+  connectorAlreadyExist: Connector already exists for the cloud account
+  loginToMasterAccount: and login to your master account
+  roleARN: Create Cross Account Role
+  ifReq: if required.
+  selectConnector: Select Connector
+  selectConnectors: Select Connectors
+  showInstructions: Show instructions
+  apiKey: '{{$.common.apikey}}'
+  apiKeyOrPassword: Password/API Key
+  costVisibility: Cost Visibility
+  chooseMethodForConnection: 'Choose the method for Harness to use when connecting to {{name}}.'
+  k8sConnection: the cluster
+  delegateInClusterInfo: 'Use the credentials of a specific Harness Delegate (IAM role, service account, etc)'
+  createConnector: 'Create a Connector'
+  connectorEmptyState: 'There are no connectors in your project'
+  readMore: 'Read more'
+  connectorsTitle: 'Resources: Connectors'
+  parameters: Parameters
+  validationPath: Validation Path
+  addHeader: Add Header
+  addParameter: Add Parameter
+  baseURL: Base URL
+  requestMethod: Request Method
+  optionalAuthentication: Authentication (optional)
+  bearerToken: Bearer Token(HTTP Header)
+  apiToken: API Token
+  apiTokenValidation: API Token is required.
+  connectivityMode:
+    title: 'Connectivity Mode'
+    validation: 'Please select connectivity mode'
+    connectToProvider: 'Connect to the provider'
+    selectText: 'Select how you would like to connect to the provider'
+  title:
+    customSecretManager: 'Custom Secrets Manager'
+    gcpSecretManager: 'GCP Secrets Manager'
+    azureArtifacts: 'Azure Artifacts'
+    k8sCluster: 'Kubernetes Cluster'
+    gcpConnector: 'Google Cloud Provider'
+    pdcConnector: 'Physical Data Center'
+    helmConnector: 'HTTP Helm Repo'
+    ociHelmConnector: 'OCI Helm Registry'
+    gitConnector: 'Git Connector'
+    githubConnector: 'GitHub Connector'
+    gitlabConnector: 'GitLab Connector'
+    bitbucketConnector: 'Bitbucket Connector'
+    azureRepoConnector: 'Azure Repos Connector'
+    hashicorpVault: 'HashiCorp Vault'
+    jira: 'Jira'
+    serviceNow: 'ServiceNow'
+    secretManager: 'Secret Manager'
+    appdynamics: 'AppDynamics Connector'
+    splunk: 'Splunk Connector'
+    aws: 'AWS Cloud Provider'
+    awsCodeCommit: 'AWS CodeCommit'
+    nexus: 'Nexus Repository'
+    artifactory: 'Artifactory Repository'
+    awsKms: 'AWS Key Management Service'
+    awsSecretManager: 'AWS Secrets Manager'
+    delegateSelection: 'Delegate Selection'
+    ceAzureConnector: '{{$.common.azureConnector}}'
+    datadog: 'Datadog'
+    azureKeyVault: 'Azure Key Vault'
+    sumologic: 'SumoLogic'
+    ceAws: 'AWS Connector '
+    gcpKms: GCP Key Management Service
+    azure: 'Azure Cloud Provider'
+    harnessImageConnectorRef: 'Override Image Connector'
+    spot: 'Spot Cloud Provider'
+    tas: 'Tanzu Application Service'
+    terraform: 'Terraform Cloud Provider'
+    rancherCluster: 'Rancher Cluster'
+  placeholder:
+    harnessImageConnectorRef: 'Select Image Connector'
+  name_labels:
+    Kubernetes: 'Kubernetes Connector Name'
+    HttpHelmRepo: 'Helm Http Connector Name'
+    OCIHelm: 'Helm OCI Connector Name'
+    Git: 'Git Connector Name'
+    Github: 'GitHub Connector Name'
+    Gitlab: 'GitLab Connector Name'
+    Bitbucket: 'Bitbucket Connector Name'
+    Docker: 'Docker Connector Name'
+    GCP: 'GCP Connector Name'
+    PDC: 'PDC Connector Name'
+    gcpKms: 'GCP KMS Connector Name'
+    AWS: 'AWS Connector Name'
+    AwsCodeCommit: 'AWS CodeCommit Name'
+    ECR: ECR Connector Name'
+    Nexus: 'Nexus Connector Name'
+    Artifactory: 'Artifactory Connector Name'
+    SecretManager: 'Secret Manager Name'
+    AppDynamics: 'AppDynamics Connector Name'
+    Splunk: 'Splunk Connector Name'
+    Spot: 'Spot Connector Name'
+    TAS: 'Tanzu Application Service Connector Name'
+    Terraform: 'Terraform Cloud Connector Name'
+    Rancher: 'Rancher Connector Name'
+  testConnectionStep:
+    errorDetails: '{{$.common.viewErrorDetails}}'
+    noDelegate: Unable to get Delegate information
+    executingOn: 'Executed on : '
+    verificationSuccessful: Verification successful
+    viewPermissions: View permissions required
+    installNewDelegate: Install new Delegate
+    placeholderError: Test failed for the Connector
+    url:
+      k8s: 'Master URL : '
+      docker: 'Docker Registry URL : '
+      artifactory: 'Artifactory Repository URL : '
+      nexus: 'Nexus Repository URL : '
+      splunk: 'Splunk URL : '
+      appD: 'Controller URL : '
+      vault: 'Vault URL : '
+      bitbucket: 'URL : '
+      gcr: 'GCR URL : '
+      spot: 'SPOT URL : '
+      tas: 'Tanzu Application Service URL : '
+      rancher: 'Rancher URL :'
+    validationText:
+      k8s: Validating the reachability of provided URL
+      docker: Validating Docker Registry authentication and permissions
+      artifactory: Validating Artifactory Repository authentication and permissions
+      nexus: Validating Nexus Repository authentication and permissions
+      gcp: Validating Google Cloud Provider authentication and permissions
+      gcpSM: Validating Google Cloud Provider Secrets Manager authentication and permissions
+      gcr: Validating Google Container Registry authentication and permissions
+      aws: Validating the AWS Cloud Provider authentication and permissions
+      appD: Validating AppDynamics authentication and permissions
+      splunk: Validating Splunk authentication and permissions
+      vault: Validating HashiCorp Vault authentication and permissions
+      awsSecretManager: Validating AWS Secret Manager authentication and permissions
+      bitbucket: Validating Bitbucket authentication and permissions
+      azureRepos: Validating Azure Repos authentication and permissions
+      gitlab: Validating GitLab authentication and permissions
+      github: Validating GitHub authentication and permissions
+      git: Validating Git authentication and permissions
+      azure: Validating Azure authentication and permissions
+      datadog: Validating Datadog authentication and permissions
+      pagerduty: Validating PagerDuty authentication and permissions
+      azureKeyVault: Validating Azure key vault authentication and permissions
+      jira: Validating Jira authentication and permissions
+      serviceNow: Validating ServiceNow authentication and permissions
+      sumologic: Validating Sumologic authentication and permissions
+      gcpKms: Validating GCP Key Management Service authentication and permissions
+      testingURLReachability: Testing reachability to the URL
+      customSM: Validating Custom Secret Manager authentication and permissions
+      spot: Validating the Spot connector authentication and permissions
+      tas: Validating the Tanzu Application Service Cloud Provider details
+      pdc: Validating the PDC hosts connectivity
+      terraform: Validating the Terraform Cloud Provider details
+
+  validation:
+    serviceNowUrl: 'ServiceNow URL is required.'
+    personalAccessToken: Personal Access Token is required
+    connectorIsRequired: Connector is required.
+    endpointUrl: Endpoint URL is required
+    adfsUrl: ADFS URL is required
+    tokenUrl: Token Url is required
+    refreshToken: Refresh Token is required
+    certificate: Certificate is required
+    clientID: Client ID is required
+    resourceID: Resource ID is required
+    privateKey: Private Key is required
+  httpHelm:
+    httpHelmRepoUrl: 'Helm Repo URL'
+    helmRepoURLValidation: 'The Helm Repository URL can start with an optional oci:// prefix and can contain a valid domain name and an optional port number.'
+  ociHelm:
+    ociHelmUrl: 'OCI Helm URL'
+  jira:
+    jiraUrl: 'Jira URL'
+    usernameAPIKey: 'Username and API Key'
+  serviceNow:
+    serviceNowUrl: 'ServiceNow URL'
+    usernamePasswordAPIKey: 'Username and Password/API Key'
+    adfs: ADFS Client Credentials with Certificate
+    clientSecretOptional: Client Secret (Optional)
+    refreshToken: Refresh Token
+    oidcRefreshToken: OIDC Refresh token
+    scopePlaceholder: Enter Scope
+    scopeHelperText: Scope is not required as it will be fetched from ServiceNow URL
+    adfsUrl: ADFS URL
+    tokenUrl: Token Url
+    resourceID: Resource ID
+    clientID: Client ID
+    privateKey: Private Key
+    serviceNowViewPermissions: View ServiceNow permissions required
+
+  k8:
+    delegateOutClusterInfo: 'Specify master URL and credentials'
+    delegateInClusterInfo: '{{ $.platform.connectors.delegateInClusterInfo }}'
+    delegateSelector: Select how you would like to reach your Kubernetes cluster
+    masterUrlLabel: 'Master URL'
+    serviceAccountToken: 'Service Account Token'
+    serviceAccountKey: 'Service Account Key'
+    skipDefaultValidation: 'Skip default namespace validation'
+    OIDCIssuerUrl: OIDC Issuer URL
+    OIDCUsername: 'OIDC Username'
+    OIDCPassword: 'OIDC Password'
+    OIDCClientId: 'OIDC Client Id'
+    OIDCSecret: 'OIDC Secret'
+    clientSecretOptional: 'Client Secret (optional)'
+    OIDCScopes: 'OIDC Scopes (optional)'
+    clientKey: 'Client Key'
+    clientKeyPassphrase: 'Client Key Passphrase (optional)'
+    clientCertificate: 'Client Certificate'
+    clientKeyAlgorithm: 'Client Key Algorithm'
+    clientKeyAlgorithmPlaceholder: Select or Enter a Client Key Algorithm
+    clientKeyCACertificate: 'CA Certificate (optional)'
+    placeholder:
+      masterUrl: '/URL'
+    authLabels:
+      OIDC: 'OpenID Connect'
+      clientKeyCertificate: 'Client Key Certificate'
+    validation:
+      clientKeyAlgo: Client Key Algorithm is required
+  hashiCorpVault:
+    appRole: App Role
+    appRoleId: 'App Role Id'
+    baseSecretPath: 'Base Secret Path (optional)'
+    secretId: 'Secret Id'
+    stepTwoName: 'HashiCorp Vault Details'
+    vaultUrl: 'Vault URL'
+    secretEngine: Secret Engine
+    engineName: 'Secret Engine Name'
+    engineVersion: 'Secret Engine Version'
+    renewal: 'Renewal Interval (minutes)'
+    renewalIntervalWarningMessage: Harness will not renew the token if Renewal Interval is set to zero
+    readOnly: '{{$.common.readOnly}}'
+    readOnlyVault: 'Read-only Vault'
+    default: '{{$.common.default}}'
+    defaultVault: 'Use as Default Secrets Manager'
+    fetchEngines: Fetch Engines
+    setupEngine: Setup Engine
+    saveInProgress: Saving Connector Details
+    manuallyConfigureEngine: Manually Configure Engine
+    vaultAgent: Vault Agent
+    awsAuth: AWS Auth
+    serverIdHeader: Server Id Header
+    root: '/(Root)'
+    sinkPath: Sink Path
+    sinkPathIsRequired: Sink Path is required
+    k8s_auth: 'Kubernetes Auth'
+    k8sAuthEndpoint: Kubernetes Auth Endpoint
+    vaultK8sAuthRole: Role Name
+    serviceAccountTokenPath: Service Account Token Path
+    vaultK8sAuthRoleRequired: Role Required
+    serviceAccountRequired: Service Account Token Path Required
+  nexus:
+    nexusLabel: Nexus3
+    nexus2Label: Nexus2
+    nexusServerUrl: 'Nexus Repository URL'
+  artifactory:
+    artifactoryLabel: Artifactory
+    artifactoryServerUrl: 'Artifactory Repository URL'
+  GCP:
+    delegateOutClusterInfo: 'Specify credentials here'
+    delegateInClusterInfo: '{{ $.platform.connectors.delegateInClusterInfo }}'
+  ECR:
+    name: ECR
+    fullName: ECR Container Registry
+  GCR:
+    name: GCR
+    fullName: Google Container Registry
+    artifactServer: 'GCR Server'
+    stepTwoName: 'Google Container Registry Details'
+    registryHostname: 'GCR Registry URL'
+  azure:
+    delegateInClusterInfo: 'Use the credentials of a specific Harness Delegate (IAM role, service account, managed identity, etc)'
+    clientId: '{{ $.common.clientId }}'
+    applicationId: 'Application Id'
+    managedIdentity: 'Managed Identity'
+    managedIdentities:
+      userAssigned: 'User Assigned Managed Identity'
+      systemAssigned: 'System Assigned Managed Identity'
+    environments:
+      azureGlobal: 'Azure Global'
+      usGov: 'US Government'
+    auth:
+      certificate: '{{ $.common.certificate }}'
+  GCS:
+    name: GCS
+  S3: S3
+  docker:
+    dockerRegistryURL: 'Docker Registry URL'
+    dockerProvideType: 'Provider Type'
+    dockerHub: 'DockerHub'
+    harbor: 'Harbor'
+    quay: 'Quay'
+    other: 'Other (Docker V2 compliant)'
+    dockerRepository: Docker Repository
+  jenkins:
+    bearerTokenRequired: Bearer token is required
+    usernamePasswordAPIToken: 'Username and Password/APIToken'
+    passwordAPIToken: 'Password/APIToken'
+    jenkinsConnectorLabel: 'Jenkins Connector'
+    jobNameLabel: 'Job/Folder Name'
+    jobs: 'Jobs'
+    child: 'Child'
+    jobParameterLabel: 'Job Parameter (Optional)'
+    jenkins: 'Jenkins'
+    jenkinsUrlRequired: 'Jenkins Registry URL is required'
+    jenkinsUrl: 'Jenkins Registry URL'
+  azureArtifacts:
+    azureArtifactsUrlRequired: Azure Artifacts URL is required
+    tokenRefRequired: Token ref is required
+    azureArtifactsUrl: Azure Artifacts URL
+  helmRepo:
+    helmRepoUrl: 'Helm Repository URL'
+  bamboo:
+    bamboo: 'Bamboo'
+    bambooUrl: 'Bamboo URL'
+    bambooConnectorLabel: 'Bamboo Connector'
+  rancher:
+    delegateSelector: Select how you would like to reach your Rancher cluster
+    delegateOutClusterInfo: Specify rancher URL and credentials
+    rancherUrlLabel: 'Rancher URL'
+    validation: 'Rancher URL is required'
+    title: Rancher
+    rancherConnectorLabel: Rancher Connector
+  aws:
+    awsAccessKey: AWS Access Key
+    accessKey: '{{ $.common.accessKey }}'
+    secretKey: '{{ $.common.secretKey }}'
+    enableCrossAcc: Enable cross-account access (STS Role)
+    crossAccURN: Cross account role ARN
+    externalId: External Id (Optional)
+    testRegion: Test Region
+    assumeIAMRole: Assume IAM role on Delegate
+    useIRSA: Use IRSA
+    awsBackOffStrategy: AWS Backoff Strategy
+    strategyType: Strategy Type
+    selectBackOffStrategyTypeLabel: Select backoff strategy type
+    fixedDelay: Fixed Delay
+    equalJitter: Equal Jitter
+    fullJitter: Full Jitter
+    fixedBackoff: Fixed Backoff
+    retryCount: Retry Count
+    baseDelay: Base Delay
+    maxBackoffTime: Max Backoff Time
+    fixedBackoffPlaceholder: Enter Fixed backoff (in ms)
+    retryCountPlaceholder: Enter Retry Count (in ms)
+    baseDelayPlaceholder: Enter Base Delay (in ms)
+    maxBackoffTimePlaceholder: Enter Max Backoff Time
+    validation:
+      delegateSelector: 'Delegate Tag is required'
+      secretKeyRef: 'Secret key is required'
+      accessKey: 'Access key is required'
+      crossAccountRoleArn: 'Role ARN is required'
+  awsCodeCommit:
+    repoUrl: 'AWS CodeCommit Repository URL'
+  appD:
+    connectionDetailsHeader: AppDynamics Connection Details
+    apiClient: API Client
+    clientId: '{{ $.common.clientId }}'
+    controllerURL: Controller URL
+    accountName: '{{ $.common.accountName }}'
+    validation:
+      controllerURL: Controller URL is a required field
+      clientId: Client Id is a required field
+      clientSecret: Client Secret is a required field
+  newRelic:
+    subTitle: To add New Relic Connector, you will need access to New Relic Insights API. Verification analysis is limited to APM only.
+    urlFieldLabel: New Relic URL
+    accountIdFieldLabel: New Relic Account Id
+    urlValidation: New Relic URL is required.
+    accountIdValidation: New Relic Account Id is required.
+    accountIdTooltip: For steps to get New Relic Account Id
+    products:
+      fullStackObservability: 'Full Stack Observability: APM'
+  elk:
+    elkConnectorDetails: 'ElasticSearch Connector Details'
+    testConnectionStepValidation: 'Validating ELK authentication and permissions'
+    elkLabel: ElasticSearch
+    apiId: API ID
+    noAuthentication: No Authentication
+    validation:
+      apiKeyId: API ID is a required field
+      apiKeyRef: API KEY is a required field
+  prometheus:
+    urlValidation: Prometheus URL is required.
+  datadog:
+    encryptedAPPKeyLabel: Encrypted APP Key
+    urlValidation: Datadog URL is required.
+    encryptedAPPKeyValidation: Encrypted APP Key is required.
+  errorTracking:
+    urlValidation: Error Tracking URL is required.
+  dynatrace:
+    urlValidation: Dynatrace URL is required.
+  signalfx:
+    urlValidation: SignalFX URL is required.
+  sumologic:
+    urlLabel: Sumo Logic API Server URL
+    encryptedAccessIdLabel: Encrypted Access Id
+    encryptedAccessKeyLabel: Encrypted Access Key
+    urlValidation: SumoLogic URL is required.
+    encryptedAccessIdValidation: SumoLogic Access Id is required.
+    encryptedAccessKeyValidation: SumoLogic Access Key is required.
+  customHealth:
+    baseURL: Base URL is required.
+    requestBody: Request Body is required for POST requests.
+    requestMethod: Request Method is required.
+    validationPath: Validation Path is required.
+    valueRequired: Value is required.
+    keyRequired: Key is required.
+  cdng:
+    continousVerificationType: Continuous Verification Type
+    monitoredServiceType: Monitored Service Type
+    verificationTypeHeading: Select a type that matches your deployment strategy.
+    artifactTag: Artifact Tag
+    defineVerificationJob: Define Verification Job
+    baseline: Baseline
+    trafficsplit: Traffic Split (OPTIONAL)
+    continousVerificationStep: Verify Step Details
+    failOnNoAnalysis: Fail On No Analysis
+    createCVJob: Please create a verification job
+    loadingJobs: Loading verification jobs…
+    noJobsConfigured: No verification jobs are configured.
+    selectTheJobNameFirst: Please select the job name first by clicking on Define Verification Job Panel
+    error: Something went wrong , please try again by clicking on CV step again
+    monitoredService:
+      label: Monitored Service Name
+      fetchingMonitoredService: Fetching Monitored service ...
+      fetchingHealthSources: Fetching Health Sources ...
+      creatingMonitoredService: Creating Monitored service ...
+      fetchingMonitoredServiceError: Failed to fetch monitored service . Please try again by reopening the Verify Step
+      autoCreateMonitoredService: Click to autocreate a monitored service
+      creatingMonitoredServiceError: Failed to create monitored service . Please try again by reopening the Verify step and selecting service, environment.
+      monitoredServiceText: A monitored service for the
+      backToVerifyStep: Back to Verify Step
+      monitoredServiceDef: A Monitored Service is a Service and Environment combination that monitors any changes, such as deployments, infrastructure changes and any health trend deviations using logs and metrics obtained from APM and Logging tools.
+    runTimeMonitoredService:
+      pleaseSpecify: Please specify
+      toFetchMonitoredService: to fetch the monitored service.
+      fetchingMonitoredServiceError: Failed to fetch monitored service . Please try again by re-running the Pipeline
+      noMonitoringSercvicePresent: No Monitored Service is present for selected service and environment. Verify step will be skipped.
+      noHealthSourcePresent: No Health source is present . Verify step will be skipped.
+      backToRunPipeline: Back to Run Pipeline
+    healthSources:
+      label: Health Sources
+      healthSourceDef: Monitors changes in health trends of the Service in a deployment environment using logs, metrics and events collected from an APM or logging tools.
+      noHealthSourcesDefined: No health sources have been defined. To complete the verification, you would need at least one healthsource added.
+    validations:
+      deploymentTagRequired: Deployment Tag is required
+      jobNameRequired: Job name is required
+      durationRequired: Duration is required
+      sensitivityRequired: Sensitivity is required
+      verificationTypeRequired: Verification type is required
+      monitoringServiceRequired: Monitored Service is required
+      healthSourceRequired: At least one health source is required
+      timeoutValidation: Timeout should be at least 40 minutes
+      applicationNameValidation: Application Name is required.
+      tierNameValidation: Tier Name is required.
+      completeMetricPathValidation: Complete Metric Path is required.
+      serviceInstanceMetricPathValidation: Service Instance Label Path is required.
+      serviceInstanceFieldNameValidation: Service Instance Field Name is required.
+    verificationSensitivityLabel:
+      high: High
+      medium: Medium
+      low: Low
+    baselineDefaultLabel:
+      lastSuccess: Last Successful job run
+    jobTypes:
+      test: TEST
+      blueGreen: BLUE_GREEN
+      canary: CANARY
+      health: HEALTH
+  connectAndSave: Connect and Save
+  connectorDetails: Connector Details
+  verifyConnection: Verify connection
+  createdSuccessfully: 'Connector {{name}} created successfully'
+  updatedSuccessfully: 'Connector {{name}} updated successfully'
+  spotAccountId: Spot Account Id
+  splunk:
+    connectorDetailsHeader: Splunk Connection Details
+  awsSecretManager:
+    secretNamePrefix: Secret Name Prefix
+  gcpKms:
+    keyRing: Key Ring
+    keyName: Key Name
+    credentialsFile: GCP KMS Credentials File
+    keyRingRequired: Key Ring is required
+    keyNameRequired: Key Name is required
+    credentialsFileRequired: Credentials file is required
+  awsKms:
+    accessKeyLabel: 'AWS - Access Key Id'
+    secretKeyLabel: 'AWS - Secret Access Key'
+    arnLabel: 'AWS ARN'
+    roleArnLabel: 'Role ARN'
+    assumedRoleDuration: 'Assumed Role Duration (seconds)'
+    loggedAt: 'Logged at'
+    validation:
+      selectDelegate: 'Please select a Delegate'
+      selectRegion: 'Please select a Region'
+      selectAWSArn: 'AWS ARN is required'
+      durationNumber: 'Duration must be between 900 and 43200 seconds'
+      durationError: 'Duration must be a number'
+      externalIdRegexError: 'External Id can have upper and lower case alphanumeric characters with no spaces. You can also include underscores or any of the following characters: =,.@:/-'
+      externalIdLengthError: 'External Id must have between 2 and 1224 characters'
+    awsSTS: 'Assume Role using STS on Delegate'
+  delegate:
+    configure: Select the Delegates this Connector will use
+    configureForNonConnectors: Select the Delegates to be used
+    delegateSelectorAny: Use any available Delegate
+    delegateSelectorSelective: Only use Delegates with all of the following tags
+    hearbeat: heartbeat
+    matchesSelectors: Matches
+    testDelegateConnectivity: Test Delegate Connectivity
+    matchingDelegates: matching Delegates
+    waitingForConnection: Waiting for connection
+    noDelegates: You have no Delegates
+    noMatchingDelegate: No eligible Delegates found. Install a new Delegate or continue to save.
+    delegateselectionPlaceholder: Select or Enter Delegates
+    noMatchingDelegatesActive: None of the matching Delegates are in active state.
+    couldNotFetch: Failed to update the Delegate list, Will try again in {{pollingInterval}}
+    delegateSelectors: Delegate Selectors
+  ceK8:
+    infoText: 'If you have previously created a connector to the preferred cluster for any other modules (Deployments, Builds etc.), you may reference the same here to upgrade to support Cloud Cost Management, If this is your first time creating a connector to the cluster, click on “+ Create new Connector”'
+    selectConnectorLabel: 'Select the existing Kubernetes connector'
+    overview:
+      createNewConnectorCta: 'Create a new connector'
+      ccmConnectorNameLabel: Name of the Cloud Cost Connector
+    chooseRequirements:
+      heading: '{{ $.platform.connectors.ceAws.steps.req }}'
+      subheading: '{{ $.platform.connectors.ceAws.crossAccountRoleStep1.description }}'
+      description: '(Deep Kubernetes cost Visibility is selected by default. Select the other option to enable Intelligent Cloud AutoStopping for Kubernetes)'
+      fixFeaturesDescription: 'Both the options below are required for Kubernetes AutoStopping and are selected by default. Click Continue to proceed.'
+      visibility:
+        heading: 'DEEP KUBERNETES'
+        subheading: '{{ $.platform.connectors.costVisibility }}'
+        description: '<ul><li>Costs by pods, nodes, namespaces, workloads </li><li> Idle and unallocated cluster costs</li><li> Cost anomaly detection</li><li> Workload recommendations</li><li> Node recommendations</li><li> Budgets and alerts</li></ul>'
+      optimization:
+        heading: 'KUBERNETES OPTIMIZATION BY'
+        subheading: '{{ $.common.ce.autostopping }}'
+        description: '<ul><li>Works for custom clusters and EKS, AKS, GKE, etc</li><li> Orchestrate pods based on idleness</li><li> Set dependencies between workloads like pods, VMs, etc.</li><li> Granular savings visibility</li><li> Simple one-time setup</li></ul>'
+    secretCreationStep:
+      step1: 'Create an API key'
+      step2: 'Run the following command to create a namespace'
+      step3: 'Replace the API key in the following YAML'
+      step4: 'Run the following command to apply the YAML and create a secret'
+      namespaceCommand: 'kubectl create namespace harness-autostopping'
+      creationCommand: 'kubectl apply -f secret.yaml'
+    providePermissionsStep:
+      heading: 'Provide Permissions - Download YAML'
+      info: 'If you are using a EKS, ensure that the metrics server is installed on your Kubernetes cluster. '
+      downloadYamlText: 'To provide required permissions to your cluster, please download the YAML below and continue to apply it using instructions given in the next step. You can preview the YAML file '
+      fileDescription:
+        heading: 'This YAML file contains:'
+        info1: 'Creation of a delegate'
+        info2: 'Permissions to access the pods and services of the cluster'
+        info3: 'Installing components to create Autostopping rules'
+        info4: 'Permissions to start and stop services as per rules'
+      downloadYamlBtnText: '{{ $.common.downloadYaml }}'
+      downloadComplete: 'Download Complete'
+      applyDelegateText: 'Copy the downloaded YAML to a machine where you have kubectl installed and have access to your Kubernetes cluster. Run the following command to apply the Harness delegate to your Kubernetes Cluster'
+      successfulCommandExec: 'Command executed successfully'
+    featureWarning: You have used {{count}} / {{limit}} free clusters incuded in your current plan. Consider upgrading for unlimited clusters.
+  azureKeyVault:
+    labels:
+      tenantId: '{{ $.platform.connectors.tenantId }}'
+      subscription: '{{ $.common.plans.subscription }}'
+      vaultName: Vault Name
+      fetchVault: Fetch Vault
+      manuallyConfigureVault: Manually Configure Vault
+      setupVault: Setup Vault
+    validation:
+      tenantId: '{{ $.platform.connectors.tenantIdRequired }}'
+      subscription: '{{ $.common.validation.subscription }}'
+      vaultName: Vault Name is required
+      vaultType: Vault Type is required
+  ceAws:
+    steps:
+      overview: '{{ $.overview }}'
+      cur: 'Cost and Usage Report'
+      req: 'Choose Requirements'
+      roleARN: '{{ $.platform.connectors.roleARN }}'
+      test: '{{ $.common.labelTestConnection }}'
+    overview:
+      heading: '{{ $.overview }}'
+      awsAccountId: 'Specify the AWS account ID'
+      alreadyExist: ' {{ $.platform.connectors.connectorAlreadyExist }} '
+      alreadyExistInfo: 'The cloud account {{awsAccountID}} already has a Connector “{{existingConnectorName}}” linked to it. The Connector has permission for {{featureText}}'
+      trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
+      editConnector: '{{ $.platform.connectors.editConnector }}'
+      ifReq: '{{ $.platform.connectors.ifReq }}'
+      govCloudHeader: 'Is this an AWS GovCloud account?'
+      validation:
+        numeric: 'AWS Account Id must be numeric'
+        positive: 'AWS Account Id must be a positive number'
+        required: 'AWS Account Id is required'
+    cur:
+      heading: '{{ $.platform.connectors.ceAws.steps.cur }}'
+      subheading: 'Cost and Usage Report provides detailed billing data across AWS accounts to help you analyze your spend.'
+      followInstruction: 'Please follow the instructions to provide access to the Cost and Usage Report'
+      launchTemplate: 'Launch AWS console'
+      login: 'and login to your account'
+      createNew: 'Create new Cost and Usage report'
+      reportName: 'Cost and Usage Report Name'
+      bucketName: 'Cost and Usage S3 Bucket Name'
+      instructions:
+        i1: Login to your AWS account if not logged in already.
+        i2: Follow these
+        i3: ' instructions to create the Cost and Usage Report '
+        i4: Enter Cost and Usage Report name and S3 bucket name below.
+      validation:
+        reportRequired: '{{ $.common.reportNameRequired }}'
+        bucketRequired: 'Bucket name is required'
+      noAccountLink: 'Don’t have access to add an AWS account?'
+    curExising:
+      subHeading: 'The following {{ reportCount }} Cost and Usage Reports are connected with your Harness Account.'
+      accountID: 'Account ID '
+      nextStepHint1: 'If the AWS Account ID you entered is covered by part of any of the above click “Continue >” to proceed. '
+      nextStepHint2: 'If not, create a new one: '
+      searchCUR: Enter Cost and Usage Report Name
+    curExtention:
+      heading: 'How to Create Cost and Usage Report?'
+      subtext: 'Once logged into the AWS console'
+      stepA:
+        heading: 'Creating a Report'
+        step1:
+          p1: 'Create Report'
+          p2: 'and provide a Cost and Usage Report Name. Copy this and paste it in the space provided on the left.'
+        step2: 'Check Include resource IDs and keep other selections as it is.'
+        step3: 'Click Next.'
+      stepB:
+        heading: 'Delivery options'
+        step1:
+          p1: 'Configure'
+          p2: 'to create an S3 bucket.'
+        step2: 'Provide an S3 bucket name and select Region (preferably US East - N.Virginia).'
+        step3:
+          p1: ', then click '
+        step4: 'Enter a Report path prefix.'
+        step5:
+          heading: 'Configure the report with the following configuration:'
+          subStep1:
+            p1: 'Time granularity: '
+            p2: 'Hourly '
+          subStep2:
+            p1: 'Report versioning: '
+            p2: 'Overwrite Existing Report Version'
+          subStep3: 'You do not need to enable any report data integrations.'
+          subStep4:
+            p1: 'Compression: '
+            p2: 'GZIP'
+        step6:
+          p1: '{{ $.platform.connectors.ceAws.curExtention.stepB.step3.p1 }}'
+          p2: 'Review and Complete'
+        step7: 'Copy and enter S3 bucket name.'
+      moreHelp:
+        heading: 'More help:'
+        step1: '{{$.platform.connectors.ceAzure.billing.extension.video}}'
+        step2: '{{$.platform.connectors.ceAzure.billing.extension.docs}}'
+        step3: 'Creating Cost and Usage Reports'
+        step4: 'Billing and Cost Management Policy Examples'
+    crossAccountRoleStep1:
+      heading: '{{ $.platform.connectors.ceAws.steps.req }}'
+      subHeading:
+        'Harness uses the secure cross-account role to access your AWS account. The role includes a restricted policy to
+        access the cost and usage reports and resources for the sole purpose of cost analysis and cost optimization'
+      description: 'Select the Cloud Cost Management features that you would like to enable.'
+      info: '(Selecting features will add the necessary permissions to the IAM role in the next step. Cost Visibility permissions are required by default)'
+      cost: 'Cost'
+      hoverOver: Hover over feature for more info
+      adding: Adding
+      thesePermissions: these permissions
+      iamRole: to an IAM role in the next step.
+      cards:
+        providedBy: 'Provided by:'
+        permissionsInvolved: 'Permissions involved:'
+        costVisibility:
+          footer2: from the Cost and Usage Report created in the previous step.
+          footer3: This cannot be deselected.
+        autoStopping:
+          prefix: Optimization by
+        governance:
+          header: Cloud Governance
+          feat1: Asset Management (EC2, EBS, RDS, S3)
+          feat2: Automated Actions
+      visibility: '{{ $.common.ce.visibility }}'
+      optimization: '{{ $.common.ce.optimization }}'
+      visibilityDes: '{{ $.platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'
+      optimizationDes: '{{ $.platform.connectors.ceAzure.chooseRequirements.optimizationCardDesc }}'
+      default:
+        feat1: AWS costs by services, accounts, etc.
+        footer: from Cost and Usage Report
+      visible:
+        feat1: EC2, EBS and snapshot inventory dashboards
+        feat2: ECS cluster cost, tasks, lauchtype details
+        prefix: AWS ECS & RESOURCE
+        heading: Inventory management
+      optimize:
+        feat1: Orchestrate VMs and ASGs based on idleness
+        feat2: Run on fully orchesterated spot instances
+        prefix: AWS OPTIMIZATION BY
+        footer: to IAM role
+      existingCurWarning1: for this Linked account is already provided by an existing connector. You must select atleast one additional feature than
+      existingCurWarning2: to proceed adding this linked account.
+    crossAccountRoleStep2:
+      heading: '{{ $.platform.connectors.roleARN }}'
+      subHeading: '{{ $.platform.connectors.ceAws.crossAccountRoleStep1.subHeading }}'
+      instructions:
+        i1: 'Launch the CloudFormation Template on the AWS console: '
+        i2: '(You can preview the template '
+        templateRedirection: here
+        i3: '{{ $.platform.connectors.ceAws.cur.instructions.i1 }}'
+        i4: ' instructions to create the Cross Account Role '
+        i5: Enter Cross Account Role ARN and External ID below.
+      launchTemplate: 'Launch Template on AWS console'
+      followInstructions: 'and follow the instuctions given on the right'
+      roleArn: Cross Account Role ARN
+      extId: 'External ID'
+      dontHaveAccess: '{{ $.platform.connectors.ceAws.cur.noAccountLink }}'
+      validation:
+        roleArnPattern: 'Role ARN does not match the pattern'
+        roleArnRequired: 'Role ARN is Required'
+    crossAccountRoleExtention:
+      heading: 'Create cross-account IAM role using AWS CloudFormation template'
+      subHeading: 'Launch the template in the AWS console to create stack'
+      step1:
+        p1: 'You can '
+        p2: 'Preview Template'
+        p3: ' to understand all the permissions involved.'
+      step2:
+        heading: 'Review and Lauch Harness specified AWS CloudFormation template on AWS console'
+        subStep1: 'Click on the checkbox to acknowledge the IAM role creation.'
+        subStep2:
+          p1: 'Click on '
+          p2: 'Create stack'
+      step3:
+        p1: 'On stack details page click on '
+        p2: 'Outputs'
+        p3: 'tab and copy '
+        p4: 'CrossAccountRoleArn'
+      step4: 'Provide that IAM ARN in Harness UI.'
+      step5: 'External Id is a random unique value to provide additional secure authentication.'
+    testConnection:
+      heading: '{{ $.common.labelTestConnection }}'
+      step1: 'Validating AWS Cloud Provider authentication'
+      step2: 'Verifying the CUR report and S3 bucket name '
+      step3: 'Validating the Cross-account role ARN '
+  ceAzure:
+    guidPlaceholder: 'xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+    guidRegexError: 'It has to match GUID pattern. Example: "123e4567-e89b-12d3-a456-9AC7CBDCEE52"'
+    steps:
+      overview: '{{ $.overview }}'
+      billingExports: Azure Billing Exports
+      requirements: '{{ $.platform.connectors.ceAws.steps.req }}'
+      servicePrincipal: Create Service Principal
+      testConnection: '{{ $.common.labelTestConnection }}'
+    overview:
+      heading: '{{ $.overview }}'
+      tenantId: Azure Tenant ID
+      subscriptionId: Azure Subscription ID
+      alreadyExist: '{{ $.platform.connectors.connectorAlreadyExist }}'
+      existingConnectorInfo: The cloud account {{accountId}} already has a Connector “{{name}}” linked to it. The Connector has permissions for {{featureText}}.
+      trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
+      editConnector: '{{ $.platform.connectors.editConnector }}'
+      required: '{{ $.platform.connectors.ifReq }}'
+    billing:
+      heading: '{{ $.platform.connectors.ceAzure.steps.billingExports }}'
+      subHeading: Billing Export provides detailed billing data across Azure subscriptions to help you analyze your spend.
+      instruction: Please follow the instructions to provide access to the Billing export for the specified Tenant ID
+      login: 'and login to your Azure account'
+      launchAzureConsole: Launch Azure Console
+      instructions:
+        i1: Login to your Azure account if not logged in already.
+        i2: '{{ $.platform.connectors.ceAws.cur.instructions.i2 }}'
+        i3: ' instructions to create the Billing Export '
+        i4: Enter Storage account name, Subscription ID and Storage Container, Directory name below.
+      tooltipInstruction: Provided in the delivery options when the template is opened in the Azure console
+      tooltipBtn: '{{ $.platform.connectors.showInstructions }}'
+      storageAccountName: Storage Account Name
+      storageAccountNameRegexError: It must be 3 to 24 characters long, and can contain only lowercase letters and numbers.
+      subscriptionId: Storage Account Subscription ID
+      containerName: Storage Container
+      directoryName: Storage Directory
+      reportName: '{{ $.common.reportName }}'
+      extension:
+        createBillingExportGuide: How to Create a Billing Export?
+        step0: After logging into Azure billing export
+        step1: Click on Add to create a new Export.
+        step2: In Export Details, provide Name
+        step3: For Export type, select "Daily export of month-to-date costs
+        step4: Leave the Start date as Today
+        step5: For the Storage, select Use existing or Create new.
+        step6: If use existing
+        step7: Select the Subscription where your storage account is present
+        step8: Select the Storage account
+        step9: If create new
+        step10: Select the Subscription where you want to create the storage account
+        step11: Select Resource group name for this storage account
+        step12: Provide the Storage account name
+        step13: Provide the Location
+        step14: Provide the Container name
+        step15: Provide the Directory name
+        step16: Review your export details and click on Create.
+        step17: Your new export appears in the list of exports
+        links: 'Useful links:'
+        video: Watch help video
+        docs: Harness Documentation
+        createExport: Creating a Billing Export
+        soon: coming soon
+    existingExports:
+      instruction: 'The following {{ reportCount }} Billing Exports are connected with your Harness Account.'
+      createNewExportBtn: 'Create new Billing Export'
+      subscriptionId: '{{ $.common.subscriptionId }}'
+      tenantId: '{{ $.platform.connectors.tenantId }}'
+      hints:
+        nextStepHint1: 'If the billing export for the Subscription Id {{ subscriptionId }} is covered by any of the above existing exports, click "Continue >" to proceed.'
+        nextStepHint2: '{{ $.platform.connectors.ceAws.curExising.nextStepHint2 }}'
+      searchBillingReports: Enter billing report name
+    chooseRequirements:
+      heading: '{{ $.platform.connectors.ceAws.steps.req }}'
+      subHeading: Harness uses Multitenant app to sync billing export data from source storage account to Harness. Create a service principal for this app in your Azure account and assign read permissions on that particular storage account.
+      featureDesc: '{{ $.platform.connectors.ceAws.crossAccountRoleStep1.description }}'
+      info: (Selecting features will add the necessary permissions to the Service Principal in the next step. Cost Visibility permissions are required by default)
+      visibilityCardDesc: Cost insights, anomaly detection, service insights, creating budgets perspectives and alerts, utilised/wasted resources in clusters.
+      optimizationCardDesc: Detection of orphaned resources, recommendations to save costs, scaling/tearing down, turning off in non-work hours, reserving instances.
+      atleastOneError: Please select at least one feature other than Visibility
+      billing:
+        feat1: Azure costs by services, accounts, etc.
+        feat2: Cost perspective by various constructs
+        feat3: Cost anomaly detection
+        feat4: Budgets and forecasts
+        feat5: Email and Slack alerts
+        footer: from the Billing Exports created in the previous step.
+      visibility:
+        heading: Inventory Management
+        feat1: Cost saving recommendations for VM
+        feat2: Azure VM inventory dashboards
+        feat3: VM utilization details
+      optimization:
+        feat1: Orchestrate VMs based on idleness
+        feat2: Set dependencies between VMs
+        feat3: Granular savings visibility
+        feat4: Simple one-time setup
+        prefix: AZURE OPTIMIZATION BY
+        footer1: '{{ $.platform.connectors.ceAws.crossAccountRoleStep1.adding }}'
+        footer2: to a Service Principal in the next step.
+      governance:
+        feat1: Asset Management (VMs)
+    servicePrincipal:
+      heading: '{{ $.platform.connectors.ceAzure.steps.servicePrincipal }}'
+      subHeading1: Harness uses a multi-tenant app to sync billing export data from the source storage account to Harness and to perform cost optimization functions.
+      subHeading2: 'Run the following bash commands using your bash terminal or Azure cloud shell:'
+      registerCommand: '# Register the Harness app'
+      costVisibilityCmd: '# Role assignment for enabling Cost Visibility'
+      assignRoleCmd: '# Assign role to the app on the scope fetched above'
+      inventoryMgtCmd: '# Role assignment for enabling Inventory Management'
+      optimisationCmd: '# Role assignment for enabling Cost Optimization using Autostopping'
+      governanceCmd: '# Role assignment for enabling Cloud Governance'
+      govAndOptCmd: '# Role assignment for enabling Cloud Governance and Cost Optimization using Autostopping'
+    testConnection:
+      heading: '{{ $.common.labelTestConnection }}'
+      validatePermission: '{{ $.platform.connectors.testConnectionStep.validationText.azure }}'
+      verifyExport: Verifying Azure Billing Export setup
+    validation:
+      storageAccountName: Storage account name is required
+      directoryName: Directory name is required
+      containerName: Container name is required
+      reportName: '{{ $.common.reportNameRequired }}'
+      subscriptionId: Subscription Id is required
+      tenantId: '{{ $.platform.connectors.tenantIdRequired }}'
+  ceGcp:
+    gcp: 'gcp'
+    overview:
+      heading: '{{ $.overview }}'
+      projectIdLabel: 'Specify Project Id'
+      alreadyExist: 'CCM Connector already exists for this GCP Project'
+      alreadyExistInfo: 'The GCP project {{projectId}} already has a Connector “{{existingConnectorName}}” linked to it. The Connector has permission for {{featureText}}'
+    billingExport:
+      heading: 'Setup Billing Export'
+      subHeading: 'The following {{ reportCount }} billing exports are connected with your Harness Account.'
+      description: 'Cloud Billing export to BigQuery enables you to export detailed Google Cloud billing data (such as usage and cost estimate data) automatically throughout the day to a BigQuery dataset that you specify.'
+      followInstruction: 'Please follow the instructions to provide create a Billing export for the specified Project Id'
+      launchTemplate: 'Launch GCP console'
+      datasetIdLabel: 'Dataset Name'
+      tableIdLabel: 'Table Name'
+      setupNew: 'Setup new billing export'
+    billingExtention:
+      heading: 'How to create GCP Billing Export and find DataSet Name?'
+      prerequisite: 'Pre-Requisite:A project where the Cloud Billing data will be stored with billing enabled on the project.'
+      step1: 'Create a BigQuery dataset in which to store the data(Recommended) / Or use Existing DataSet (Harness Docs)'
+      step2: '{{ $.platform.connectors.ceGcp.grantPermission.step1}}'
+      step3:
+        p1: 'Click on Create Dataset, enter a '
+        p2: '{{ $.platform.connectors.ceGcp.billingExport.datasetIdLabel }}'
+        p3: ' and click on create.'
+      step4: 'Enable Cloud Billing export of cost data and pricing data to be written into the dataset.'
+      step5: 'Open the console -> Navigation menu (menu), and then select Billing.'
+      step6: 'In the Billing navigation menu, select Billing export.'
+      step7: 'Select the BigQuery export tab (this tab is selected by default). On the BigQuery export tab, enable Daily cost detail.'
+      otherLinks: 'Other Links:'
+      link1: 'https://cloud.google.com/billing/docs/how-to/export-data-bigquery-setup'
+      link2: 'Harness Docs (https://docs.harness.io/article/kxnsritjls)'
+    existingCurTable:
+      projectId: 'Project ID'
+      searchPlaceholder: 'Search Project ID'
+      nextStepHint1: 'If the GCP Project Id you entered is covered by any of the above, click “Continue >” to proceed.'
+      nextStepHint2: '{{ $.platform.connectors.ceAws.curExising.nextStepHint2 }}'
+    chooseRequirements:
+      name: '{{ $.platform.connectors.ceAws.steps.req }}'
+      heading: '{{ $.platform.connectors.ceAws.steps.req }}'
+      choosePermissions: Choose Required Permissions
+      description: 'Select the Cloud Cost Management features you would like to use on the GCP account.'
+      info: (GCP cost Visibility is available by default. Select the others as per your requirements)
+      cardDetails:
+        billing:
+          feat1: 'GCP costs by product, project, etc.'
+          feat2: '{{$.platform.connectors.ceAzure.chooseRequirements.billing.feat2}}'
+          feat3: '{{$.platform.connectors.ceAzure.chooseRequirements.billing.feat3}}'
+          feat4: '{{$.platform.connectors.ceAzure.chooseRequirements.billing.feat4}}'
+          feat5: '{{$.platform.connectors.ceAzure.chooseRequirements.billing.feat5}}'
+          footer: 'from Billing Export'
+        visibility:
+          feat1: 'GCE VMs'
+          feat2: 'Unused disks and snapshots'
+        optimization:
+          prefix: '{{$.platform.connectors.ceGcp.gcp}} OPTIMIZATION BY'
+          feat1: 'Orchestrate GCE VMs based on idleness'
+          feat2: '{{$.platform.connectors.ceAzure.chooseRequirements.optimization.feat2}}'
+          feat3: '{{$.platform.connectors.ceAzure.chooseRequirements.optimization.feat3}}'
+          feat4: '{{$.platform.connectors.ceAzure.chooseRequirements.optimization.feat4}}'
+          footer: 'to service account'
+    grantPermission:
+      heading: 'Grant Permissions'
+      bigQueryButtonText: 'Open BigQuery Page'
+      step1: 'Sign in to the Google Cloud Console and go to the BigQuery page.'
+      step2: 'Click Your-Project-Name in the left panel.'
+      step3: 'Select your dataset in your project.'
+      step4: 'Click Share Dataset. The Data permissions panel opens.'
+      step5: 'Specify Harness’ service account to add member:'
+      step6: 'Select BigQuery Data Viewer role.'
+      step7: 'Click Continue.'
+      optimization:
+        step1: 'Navigate to IAM & Admin  in the GCP console'
+        step2: 'Search for the service account: {{serviceAccount}}'
+        step3: 'Click on Edit Principal and add Editor {{otherRole}} role available in the Basic category'
+      inventory:
+        computeEngine: 'Compute Engine'
+        step1: 'apis in your gcp project'
+        step2: 'and Compute Viewer role'
+        completePermissionStep: 'Click on Edit Principal and add Compute Viewer role available in the Basic category'
+    testConnection:
+      heading: '{{ $.common.labelTestConnection }}'
+      step1: 'Verifying GCP connector setup'
+      error: 'Could not verify connectivity'
+  pdc:
+    selectLabel: 'Select how you would like to define your list of hosts'
+    manuallyHosts: 'Manually enter host names'
+    uploadJson: 'Upload JSON file'
+    validateHosts: 'At least one host should be provided'
+    validateHostsJson: 'At least one entry with hostname field should be provided'
+    hosts: 'Hosts'
+    hostsJson: 'JSON content'
+    hostsRule: 'Enter JSON or comma separated list here'
+    hostsUpload1: 'Drop JSON file here'
+    hostsUpload2: 'or click to upload'
+    errorUploading: 'Uploading file error'
+    errorParsingJsonFile: 'File format not supported. Please provide a valid json file.'
+    editHosts: 'Edit hosts'
+  policyEvaluations:
+    failedToSave: Connector cannot be saved due to the policy evaluation failures
+    warning: Connector saved with policy warnings
+  sameCredentialsAsAbove: Same credentials as above
+  linkToGitProvider: 'Link to {{gitProvider}}'
+  relinkToGitProvider: 'Re-link to {{gitProvider}}'
+  gitProviderURLs:
+    github: 'https://github.com'
+    gitlab: 'https://gitlab.com'
+    bitbucket: 'https://bitbucket.org'
+    azureRepos: 'https://dev.azure.com'
+  customSM:
+    details: Custom Secrets Manager Details
+    selectTemplate: Select Template
+    executeOnDelegate: Execute on Delegate
+    templateRef: Template Reference
+    templateVersion: Template Version
+    sshKey: SSH Key Reference
+    validation:
+      template: Please select a template
+  gcpSecretManager:
+    gcpSMSecretFile: Google Secrets Manager Credentials File
+    gcpCredentialsFile: Credentials File
+    validation:
+      credFileRequired: Credentials File is required
+  terraformCloud:
+    url: Terraform Cloud URL
+    urlValidation: Terraform Cloud URL is required

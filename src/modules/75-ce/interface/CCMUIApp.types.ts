@@ -8,11 +8,11 @@
 import type React from 'react'
 import type { OverviewAddClusterProps } from '@ce/components/OverviewPage/OverviewAddCluster'
 import type { AnomalyFiltersProps } from '@ce/components/AnomaliesFilter/AnomaliesFilter'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { GatewayListFiltersProps } from '@ce/components/COGatewayList/GatewayListFilters'
 import type FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import type { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import type useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import type useTestConnectionModal from '@platform/connectors/common/useTestConnectionModal/useTestConnectionModal'
 export interface CCMUIAppCustomProps {
   customComponents: {
     OverviewAddCluster: React.ComponentType<OverviewAddClusterProps>

@@ -28,10 +28,10 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import type { Failure, K8sGcpInfrastructure, K8sAwsInfrastructure, K8sRancherInfrastructure } from 'services/cd-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 
 import { useStrings } from 'framework/strings'
 import type { UseStringsReturn } from 'framework/strings'
@@ -40,7 +40,7 @@ import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema, getValue } from '../../PipelineStepsUtil'
 import css from './CommonKuberetesInfraSpecEditable.module.scss'
 
@@ -95,7 +95,7 @@ export const getClusterValue = (cluster: { label?: string; value?: string } | st
 const connectorDependentFields = {
   Aws: 'pipelineSteps.awsConnectorLabel' as keyof StringsMap,
   Gcp: 'pipelineSteps.gcpConnectorLabel' as keyof StringsMap,
-  Rancher: 'connectors.rancher.rancherUrlLabel' as keyof StringsMap
+  Rancher: 'platform.connectors.rancher.rancherUrlLabel' as keyof StringsMap
 }
 export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpecEditableProps): React.ReactElement {
   const {

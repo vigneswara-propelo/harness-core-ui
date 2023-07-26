@@ -26,7 +26,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   EXPANDABLE_INPUT_SUPPORTED_FIELDS,
   TEXT_INPUT_SUPPORTED_FIELD_TYPES

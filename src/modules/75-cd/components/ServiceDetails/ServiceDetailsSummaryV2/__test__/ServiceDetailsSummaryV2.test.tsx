@@ -16,7 +16,7 @@ import * as commonHooks from '@common/hooks'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
-import { sourceCodeManagers } from '@connectors/mocks/mock'
+import { sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import {
   filterAPI,
   summaryAPI

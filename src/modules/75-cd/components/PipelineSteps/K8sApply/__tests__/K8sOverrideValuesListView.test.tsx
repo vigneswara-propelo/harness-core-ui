@@ -18,7 +18,7 @@ import {
   buildGithubPayload,
   buildGitlabPayload,
   buildGitPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { getBuildPayload } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import K8sOverrideValuesListView from '../K8sOverrideValuesListView'

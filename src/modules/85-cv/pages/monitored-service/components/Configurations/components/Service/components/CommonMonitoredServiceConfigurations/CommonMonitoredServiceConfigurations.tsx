@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Container, Tab, Tabs } from '@harness/uicore'
 import React from 'react'
 import { FormikContextType, useFormikContext } from 'formik'
@@ -138,7 +145,7 @@ export default function CommonMonitoredServiceConfigurations(
         {isHealthSrcSectionHidden ? null : (
           <Tab
             id={'healthSource'}
-            title={getString('connectors.cdng.healthSources.label')}
+            title={getString('platform.connectors.cdng.healthSources.label')}
             panel={
               <HealthSourceTableContainer
                 healthSourceListFromAPI={initialValues.sources?.healthSources}

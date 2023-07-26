@@ -168,7 +168,9 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
   const renderConfiguredMonitoredService = (): JSX.Element => {
     if (monitoredServiceLoading) {
       return (
-        <Container padding="medium">{getString('connectors.cdng.monitoredService.fetchingHealthSources')}</Container>
+        <Container padding="medium">
+          {getString('platform.connectors.cdng.monitoredService.fetchingHealthSources')}
+        </Container>
       )
     } else if (isMonitoredServiceFixedInput(monitoredServiceRef)) {
       return (

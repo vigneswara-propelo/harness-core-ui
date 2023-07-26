@@ -27,8 +27,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { Connectors } from '@connectors/constants'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
@@ -359,7 +359,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       {isRuntime(inputSetData?.template?.spec?.configuration?.roleArn as string) && (
         <SelectInputSetView
           className={cx(stepCss.formGroup, stepCss.sm)}
-          label={getString('connectors.awsKms.roleArnLabel')}
+          label={getString('platform.connectors.awsKms.roleArnLabel')}
           name={`${path}.spec.configuration.roleArn`}
           disabled={readonly || rolesLoading}
           useValue

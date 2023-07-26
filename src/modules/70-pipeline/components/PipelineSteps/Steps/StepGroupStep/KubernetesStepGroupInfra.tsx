@@ -33,8 +33,8 @@ import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { tolerationsCustomMap } from '@common/utils/ContainerRunStepUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { Connectors } from '@connectors/constants'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import Volumes from '@pipeline/components/Volumes/Volumes'
 import type { StepGroupFormikValues } from './StepGroupUtil'
@@ -57,7 +57,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
 
   const runAsUserStringKey = 'pipeline.stepCommonFields.runAsUser'
   const priorityClassNameStringKey = 'pipeline.buildInfra.priorityClassName'
-  const harnessImageConnectorRefKey = 'connectors.title.harnessImageConnectorRef'
+  const harnessImageConnectorRefKey = 'platform.connectors.title.harnessImageConnectorRef'
 
   const renderMultiTypeMap = ({
     fieldName,
@@ -370,7 +370,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           <FormMultiTypeConnectorField
             name="harnessImageConnectorRef"
             label={`${getString(harnessImageConnectorRefKey)} ${getString('common.optionalLabel')}`}
-            placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+            placeholder={getString('platform.connectors.placeholder.harnessImageConnectorRef')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
@@ -397,7 +397,7 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
         <FormMultiTypeConnectorField
           type={'K8sCluster'}
           name="connectorRef"
-          label={getString('connectors.title.k8sCluster')}
+          label={getString('platform.connectors.title.k8sCluster')}
           placeholder={getString('pipelineSteps.build.infraSpecifications.kubernetesClusterPlaceholder')}
           disabled={readonly}
           accountIdentifier={accountId}

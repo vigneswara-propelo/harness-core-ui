@@ -146,7 +146,7 @@ describe('ArtifactTriggerConfigPanel', () => {
     expect(getByText('location')).toBeInTheDocument()
 
     // Artifact Source Values
-    expect(getByText('connectors.GCR.name')).toBeInTheDocument()
+    expect(getByText('platform.connectors.GCR.name')).toBeInTheDocument()
     expect(getByText(connectorRef)).toBeInTheDocument()
     expect(getByText(imagePath)).toBeInTheDocument()
 

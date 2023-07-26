@@ -12,7 +12,7 @@ import { noop } from 'lodash-es'
 import { TestConnectionWidget, TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResponseConnectorValidationResult, useGetTestGitRepoConnectionResult } from 'services/cd-ng'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import css from './GitSyncRepoForm.module.scss'
 

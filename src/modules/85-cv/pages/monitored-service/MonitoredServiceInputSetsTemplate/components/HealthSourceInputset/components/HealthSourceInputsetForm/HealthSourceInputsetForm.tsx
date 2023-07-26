@@ -12,7 +12,7 @@ import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { HealthSource } from 'services/cv'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import { spacingMedium } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.constants'
@@ -70,7 +70,7 @@ export default function HealthSourceInputsetForm({
                     name={input.path}
                     label={
                       <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-                        {getString('connectors.selectConnector')}
+                        {getString('platform.connectors.selectConnector')}
                       </Text>
                     }
                     accountIdentifier={accountId}

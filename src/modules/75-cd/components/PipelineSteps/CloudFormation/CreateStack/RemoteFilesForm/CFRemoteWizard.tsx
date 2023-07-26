@@ -21,10 +21,10 @@ import {
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import {
   ConnectorMap,
   getBuildPayload,
@@ -103,7 +103,7 @@ const CFRemoteWizard = ({
     const connectorType = ConnectorMap[selectedConnector]
     const buildPayload = getBuildPayload(connectorType as ConnectorTypes)
     return (
-      <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+      <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
         <ConnectorDetailsStep
           type={connectorType}
           name={getString('overview')}
@@ -133,7 +133,7 @@ const CFRemoteWizard = ({
           connectorInfo={undefined}
         />
         <ConnectorTestConnection
-          name={getString('connectors.stepThreeName')}
+          name={getString('platform.connectors.stepThreeName')}
           connectorInfo={undefined}
           isStep={true}
           isLastStep={false}

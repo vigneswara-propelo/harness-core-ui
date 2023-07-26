@@ -661,7 +661,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                                     class="Tooltip--acenter"
                                     data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
-                                    secrets.secret.configureSecret (projectsOrgs.optional)
+                                    platform.secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
                                 </label>
                                 <div
@@ -1490,7 +1490,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                                     class="Tooltip--acenter"
                                     data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
-                                    secrets.secret.configureSecret (projectsOrgs.optional)
+                                    platform.secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
                                 </label>
                                 <div
@@ -4707,7 +4707,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                     class="Tooltip--acenter"
                                     data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
-                                    secrets.secret.configureSecret (projectsOrgs.optional)
+                                    platform.secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
                                 </label>
                                 <div
@@ -5927,7 +5927,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                     class="Tooltip--acenter"
                                     data-tooltip-id="encryptedWebhookSecretIdentifier"
                                   >
-                                    secrets.secret.configureSecret (projectsOrgs.optional)
+                                    platform.secrets.secret.configureSecret (projectsOrgs.optional)
                                   </span>
                                 </label>
                                 <div

@@ -6,7 +6,7 @@
  */
 import type { AllowedTypes, IconName } from '@harness/uicore'
 
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { StageElementConfig, PageConnectorResponse, ServiceDefinition, ConnectorInfoDTO } from 'services/cd-ng'
 

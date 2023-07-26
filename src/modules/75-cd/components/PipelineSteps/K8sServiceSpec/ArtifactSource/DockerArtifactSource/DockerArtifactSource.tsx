@@ -11,7 +11,7 @@ import { defaultTo, get } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   ArtifactSource,
   SidecarArtifact,

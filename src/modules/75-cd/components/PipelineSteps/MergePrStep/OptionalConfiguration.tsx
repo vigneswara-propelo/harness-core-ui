@@ -99,7 +99,7 @@ export default function OptionalConfiguration(props: {
                       onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
                       className={css.addButton}
                     >
-                      {getString('connectors.addParameter')}
+                      {getString('platform.connectors.addParameter')}
                     </Button>
                   </div>
                 )

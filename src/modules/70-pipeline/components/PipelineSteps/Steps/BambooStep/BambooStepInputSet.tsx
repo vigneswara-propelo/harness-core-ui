@@ -23,7 +23,7 @@ import { FieldArray, FormikContextType } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
 
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -146,9 +146,9 @@ function BambooStepInputSet(
         {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
           <FormMultiTypeConnectorField
             name={`${prefix}spec.connectorRef`}
-            label={getString('connectors.bamboo.bamboo')}
+            label={getString('platform.connectors.bamboo.bamboo')}
             selected={(initialValues?.spec?.connectorRef as string) || ''}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('platform.connectors.selectConnector')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             disabled={readonly}

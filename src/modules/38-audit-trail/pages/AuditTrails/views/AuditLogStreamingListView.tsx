@@ -49,7 +49,7 @@ import {
   mapAuditServiceConnectorToCDNGConnectorInfoDTO,
   StreamingDestinationSpecDTOTypeMap
 } from '@audit-trail/interfaces/LogStreamingInterface'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { AUDIT_TRAIL_PAGE_SIZE, buildUpdateSDPayload } from '@audit-trail/utils/RequestUtil'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'

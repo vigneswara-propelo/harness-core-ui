@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create PagerDuty Connector Wizard Ensure create flow works 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main credentials"
+  >
+    <div
+      class="StyledProps--font StyledProps--main titleContent"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-small"
+      >
+        platform.connectors.connectorDetailsHeader
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main heading"
+      >
+        platform.connectors.addConnectorDetails
+      </p>
+    </div>
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main form"
+      >
+        <div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+            style="height: 450px;"
+          >
+            <div
+              class="StyledProps--font StyledProps--main secret-mock"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="apiTokenRef-0"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="bp3-input-group"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="apiTokenRef"
+                      type="text"
+                      value="dsf-auto"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main"
+          >
+            <button
+              aria-label="back"
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                back
+              </span>
+            </button>
+            <button
+              aria-label="next"
+              class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+              type="submit"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                next
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

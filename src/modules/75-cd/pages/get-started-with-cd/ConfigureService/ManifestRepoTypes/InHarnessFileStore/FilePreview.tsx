@@ -48,7 +48,7 @@ export default function FilePreview(): JSX.Element {
     try {
       const responseUpdate = await updateNode(formData as any)
       if (responseUpdate.status === 'SUCCESS') {
-        showSuccess(getString('filestore.fileSuccessSaved', { name: drawerData?.fileContent?.name as string }))
+        showSuccess(getString('platform.filestore.fileSuccessSaved', { name: drawerData?.fileContent?.name as string }))
       }
       setInitialContent(value)
     } catch (e: any) {

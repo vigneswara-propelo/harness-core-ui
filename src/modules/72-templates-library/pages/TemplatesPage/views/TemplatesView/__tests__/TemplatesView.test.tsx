@@ -12,7 +12,7 @@ import { defaultTo, set } from 'lodash-es'
 import produce from 'immer'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
-import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import TemplatesView, { TemplatesViewProps } from '../TemplatesView'
 
 jest.mock('@templates-library/pages/TemplatesPage/views/TemplatesGridView/TemplatesGridView', () => ({

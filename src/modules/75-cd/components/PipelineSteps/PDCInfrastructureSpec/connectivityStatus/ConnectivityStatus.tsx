@@ -13,7 +13,7 @@ import type { IconProps } from '@harness/icons'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorValidationResult, ErrorDetail } from 'services/cd-ng'
-import useTestConnectionErrorModal from '@connectors/common/useTestConnectionErrorModal/useTestConnectionErrorModal'
+import useTestConnectionErrorModal from '@platform/connectors/common/useTestConnectionErrorModal/useTestConnectionErrorModal'
 
 import css from './ConnectivityStatus.module.scss'
 
@@ -108,7 +108,7 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
             errors: [data.error]
           } as ErrorMessage)
         }}
-        errorDetailsText={getString('connectors.testConnectionStep.errorDetails')}
+        errorDetailsText={getString('platform.connectors.testConnectionStep.errorDetails')}
         noDetailsText={getString('noDetails')}
       />
     )

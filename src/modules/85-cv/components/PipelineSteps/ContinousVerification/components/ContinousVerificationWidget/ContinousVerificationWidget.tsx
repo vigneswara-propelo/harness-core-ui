@@ -75,7 +75,7 @@ export function ContinousVerificationWidget(
     if (verificationType !== VerificationTypes.SimpleVerification && isEmpty(spec?.sensitivity)) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      errors['spec.spec.sensitivity'] = getString('connectors.cdng.validations.sensitivityRequired')
+      errors['spec.spec.sensitivity'] = getString('platform.connectors.cdng.validations.sensitivityRequired')
     }
 
     const monitoredServiceRef = getMonitoredServiceRefFromType(monitoredService, type, formData)
@@ -104,14 +104,14 @@ export function ContinousVerificationWidget(
     timeout: Yup.string().when(['spec.spec.duration.value'], {
       is: durationValue => durationValue?.length,
       then: getDurationValidationSchema({ minimum: '40m' }).required(
-        getString('connectors.cdng.validations.timeoutValidation')
+        getString('platform.connectors.cdng.validations.timeoutValidation')
       )
     }),
     spec: Yup.object().shape({
-      type: Yup.string().required(getString('connectors.cdng.validations.verificationTypeRequired')),
+      type: Yup.string().required(getString('platform.connectors.cdng.validations.verificationTypeRequired')),
       spec: Yup.object().shape({
-        duration: Yup.string().required(getString('connectors.cdng.validations.durationRequired')),
-        deploymentTag: Yup.string().required(getString('connectors.cdng.validations.deploymentTagRequired'))
+        duration: Yup.string().required(getString('platform.connectors.cdng.validations.durationRequired')),
+        deploymentTag: Yup.string().required(getString('platform.connectors.cdng.validations.deploymentTagRequired'))
       })
     })
   })

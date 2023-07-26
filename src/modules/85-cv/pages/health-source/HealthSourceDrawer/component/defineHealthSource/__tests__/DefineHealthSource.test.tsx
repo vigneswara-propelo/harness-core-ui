@@ -10,7 +10,7 @@ import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
 import { useFormikContext } from 'formik'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
-import * as ConnectorComponent from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import * as ConnectorComponent from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -295,7 +295,7 @@ describe('DefineHealthSource', () => {
         dataSourceType: 'AWS_PROMETHEUS',
         healthSourceIdentifier: 'testName',
         healthSourceName: 'testName',
-        product: { label: 'apm', value: 'connectors.prometheusLabel' },
+        product: { label: 'apm', value: 'platform.connectors.prometheusLabel' },
         region: 'region 1',
         sourceType: 'Prometheus',
         workspaceId: 'sjksm43455n-34x53c45vdssd-fgdfd232sdfad'

@@ -198,13 +198,13 @@ export const CreateDockerDelegate = ({
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                {getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
+                {getString('platform.connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
                 <Button
                   id="stepReviewScriptDownloadYAMLButton"
                   icon="arrow-down"
-                  text={getString('delegates.downloadYAMLFile')}
+                  text={getString('platform.delegates.downloadYAMLFile')}
                   className={css.downloadButton}
                   onClick={() => {
                     trackEvent(CDOnboardingActions.DownloadOnboardingYAML, {
@@ -253,7 +253,7 @@ export const CreateDockerDelegate = ({
               </Text>
               <Layout.Horizontal>
                 <Text font="normal" width={408} color={Color.PRIMARY_7}>
-                  {getString('delegates.delegateCreation.docker.verifyDesc1')}
+                  {getString('platform.delegates.delegateCreation.docker.verifyDesc1')}
                 </Text>
               </Layout.Horizontal>
               <Layout.Horizontal className={css.descriptionVerificationWrapper}>

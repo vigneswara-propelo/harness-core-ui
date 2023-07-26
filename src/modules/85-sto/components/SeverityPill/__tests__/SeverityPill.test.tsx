@@ -28,7 +28,7 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.High} value={7.5} />
       </TestWrapper>
     )
-    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.high')).toBeTruthy()
+    expect(screen.getByText('platform.connectors.cdng.verificationSensitivityLabel.high')).toBeTruthy()
     expect(screen.getByText('7.5')).toBeTruthy()
   })
 
@@ -38,7 +38,7 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.Medium} value={5.5} />
       </TestWrapper>
     )
-    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.medium')).toBeTruthy()
+    expect(screen.getByText('platform.connectors.cdng.verificationSensitivityLabel.medium')).toBeTruthy()
     expect(screen.getByText('5.5')).toBeTruthy()
   })
 
@@ -48,7 +48,7 @@ describe('SeverityPill', () => {
         <SeverityPill severity={SeverityCode.Low} value={3.3} />
       </TestWrapper>
     )
-    expect(screen.getByText('connectors.cdng.verificationSensitivityLabel.low')).toBeTruthy()
+    expect(screen.getByText('platform.connectors.cdng.verificationSensitivityLabel.low')).toBeTruthy()
     expect(screen.getByText('3.3')).toBeTruthy()
   })
 

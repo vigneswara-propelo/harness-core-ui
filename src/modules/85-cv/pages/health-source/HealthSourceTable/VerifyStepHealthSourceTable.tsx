@@ -91,7 +91,7 @@ export default function VerifyStepHealthSourceTable(tableProps: VerifyStepHealth
         isEdit,
         shouldRenderAtVerifyStep: true,
         onClick: () => hideHealthSourceDrawer(),
-        breadCrumbRoute: { routeTitle: getString('connectors.cdng.runTimeMonitoredService.backToRunPipeline') }
+        breadCrumbRoute: { routeTitle: getString('platform.connectors.cdng.runTimeMonitoredService.backToRunPipeline') }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

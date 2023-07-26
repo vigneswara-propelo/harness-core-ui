@@ -154,25 +154,25 @@ export default function MonitoredService({
   if (loading) {
     return (
       <Card>
-        <>{getString('connectors.cdng.monitoredService.fetchingMonitoredService')}</>
+        <>{getString('platform.connectors.cdng.monitoredService.fetchingMonitoredService')}</>
       </Card>
     )
   } else if (createMonitoredServiceLoading) {
     return (
       <Card>
-        <>{getString('connectors.cdng.monitoredService.creatingMonitoredService')}</>
+        <>{getString('platform.connectors.cdng.monitoredService.creatingMonitoredService')}</>
       </Card>
     )
   } else if (error) {
     return (
       <Card>
-        <>{getString('connectors.cdng.monitoredService.fetchingMonitoredServiceError')}</>
+        <>{getString('platform.connectors.cdng.monitoredService.fetchingMonitoredServiceError')}</>
       </Card>
     )
   } else if (errorCreatingMonitoredService) {
     return (
       <Card>
-        <>{getString('connectors.cdng.monitoredService.creatingMonitoredServiceError')}</>
+        <>{getString('platform.connectors.cdng.monitoredService.creatingMonitoredServiceError')}</>
       </Card>
     )
   } else if (formValues.spec.monitoredServiceRef) {
@@ -184,7 +184,7 @@ export default function MonitoredService({
               <Container className={css.monitoredService}>
                 <FormInput.Text
                   name={'spec.monitoredServiceRef'}
-                  label={getString('connectors.cdng.monitoredService.label')}
+                  label={getString('platform.connectors.cdng.monitoredService.label')}
                   disabled
                 />
                 {serviceIdentifier !== RUNTIME_INPUT_VALUE &&
@@ -192,7 +192,7 @@ export default function MonitoredService({
                 formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
                   <div className={css.monitoredServiceText}>
                     {`
-                    ${getString('connectors.cdng.monitoredService.monitoredServiceText')}
+                    ${getString('platform.connectors.cdng.monitoredService.monitoredServiceText')}
                     ${serviceIdentifier} ${getString('and').toLocaleLowerCase()} ${environmentIdentifier}
                   `}
                   </div>
@@ -226,7 +226,7 @@ export default function MonitoredService({
       <Card>
         <FormInput.CustomRender
           name={'spec.monitoredServiceRef'}
-          label={getString('connectors.cdng.monitoredService.label')}
+          label={getString('platform.connectors.cdng.monitoredService.label')}
           render={() => (
             <RbacButton
               variation={ButtonVariation.LINK}
@@ -238,7 +238,7 @@ export default function MonitoredService({
                 }
               }}
               onClick={createMonitoredService}
-              text={getString('connectors.cdng.monitoredService.autoCreateMonitoredService')}
+              text={getString('platform.connectors.cdng.monitoredService.autoCreateMonitoredService')}
               style={{ paddingLeft: 0 }}
             />
           )}

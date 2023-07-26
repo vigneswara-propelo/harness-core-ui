@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { initialValues, multipleStepsInitialView } from './mocks'
 import { ExecutionPanel } from '../ExecutionPanel'
 

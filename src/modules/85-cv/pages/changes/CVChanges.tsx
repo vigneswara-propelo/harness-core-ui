@@ -136,7 +136,7 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
         width: '30%'
       },
       {
-        Header: getString('connectors.cdng.monitoredService.label' as keyof StringsMap),
+        Header: getString('platform.connectors.cdng.monitoredService.label' as keyof StringsMap),
         Cell: RenderImpact,
         accessor: 'serviceIdentifier',
         width: '25%'

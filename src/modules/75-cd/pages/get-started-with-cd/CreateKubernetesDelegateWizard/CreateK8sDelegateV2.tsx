@@ -130,10 +130,10 @@ export const CreateK8sDelegateV2 = ({
   const delegateNameError = (): string | undefined => {
     let errorMessage = undefined
     if (errorDelegateName) {
-      errorMessage = getString('delegates.delegateNameRegexIssue')
+      errorMessage = getString('platform.delegates.delegateNameRegexIssue')
     }
     if (errorDelegateNameLength) {
-      const lengthMessage = getString('delegates.delegateNameLength', { length: DelegateNameLengthLimit })
+      const lengthMessage = getString('platform.delegates.delegateNameLength', { length: DelegateNameLengthLimit })
       errorMessage = errorMessage ? `${errorMessage}${lengthMessage}` : lengthMessage
     }
     return errorMessage
@@ -204,7 +204,7 @@ export const CreateK8sDelegateV2 = ({
                   margin={{ right: 'xlarge' }}
                 />
                 <Text font={{ variation: FontVariation.BODY }}>
-                  {getString('delegates.commandLineCreation.verifyInfo')}
+                  {getString('platform.delegates.commandLineCreation.verifyInfo')}
                 </Text>
               </Layout.Horizontal>
             </>
@@ -258,7 +258,7 @@ export const CreateK8sDelegateV2 = ({
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                {getString('delegates.commandLineCreation.verifyDelegateConnection')}
+                {getString('platform.delegates.commandLineCreation.verifyDelegateConnection')}
               </Text>
               {verifyDelegateConnection}
             </Layout.Vertical>

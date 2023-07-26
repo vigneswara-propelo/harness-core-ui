@@ -53,7 +53,7 @@ import { useStrings } from 'framework/strings'
 
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
@@ -67,16 +67,16 @@ import type { StringNGVariable, TerragruntVarFileWrapper } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import StepArtifactoryAuthentication from '@platform/connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
@@ -150,7 +150,7 @@ function TerragruntPlanWidget(
     const connectorType = ConnectorMap[selectedConnector]
     const buildPayload = getBuildPayload(connectorType)
     return (
-      <StepWizard title={getString('connectors.createNewConnector')}>
+      <StepWizard title={getString('platform.connectors.createNewConnector')}>
         <ConnectorDetailsStep
           type={connectorType}
           name={getString('overview')}
@@ -242,7 +242,7 @@ function TerragruntPlanWidget(
           connectorInfo={undefined}
         />
         <ConnectorTestConnection
-          name={getString('connectors.stepThreeName')}
+          name={getString('platform.connectors.stepThreeName')}
           connectorInfo={undefined}
           isStep={true}
           isLastStep={false}
@@ -554,7 +554,7 @@ function TerragruntPlanWidget(
 
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormMultiTypeConnectorField
-                  label={getString('connectors.title.secretManager')}
+                  label={getString('platform.connectors.title.secretManager')}
                   category={'SECRET_MANAGER'}
                   setRefValue
                   width={261}

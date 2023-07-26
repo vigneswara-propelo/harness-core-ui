@@ -22,11 +22,11 @@ import {
   useGetSubscriptionTagsV2
 } from 'services/cd-ng'
 
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'

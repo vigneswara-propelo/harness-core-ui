@@ -42,7 +42,7 @@ import {
 } from 'services/cd-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -55,8 +55,8 @@ import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'

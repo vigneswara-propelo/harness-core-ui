@@ -12,7 +12,7 @@ import type { ArtifactTriggerValues } from '../utils'
 
 export class Gcr extends ArtifactTrigger<ArtifactTriggerValues> {
   protected type: TriggerArtifactType = 'Gcr'
-  protected triggerDescription: keyof StringsMap = 'connectors.GCR.name'
+  protected triggerDescription: keyof StringsMap = 'platform.connectors.GCR.name'
 
   protected defaultValues = {
     triggerType: this.baseType,

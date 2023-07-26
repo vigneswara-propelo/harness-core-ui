@@ -209,7 +209,7 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeInTheDocument()
+      expect(getByText('platform.connectors.cdng.monitoredService.label')).toBeInTheDocument()
       const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
       expect(monitoredService).toBeInTheDocument()
       expect(monitoredService.value).toBe(mockedMonitoredServiceAndHealthSources.data.monitoredService.name)
@@ -217,7 +217,7 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct health source is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.healthSources.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.label')).toBeTruthy()
       for (const healthSource of mockedMonitoredServiceAndHealthSources.data.monitoredService.sources.healthSources) {
         expect(getByText(healthSource.name)).toBeTruthy()
       }
@@ -269,7 +269,7 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeInTheDocument()
+      expect(getByText('platform.connectors.cdng.monitoredService.label')).toBeInTheDocument()
       const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
       expect(monitoredService).toBeInTheDocument()
       expect(monitoredService.value).toBe(mockedMonitoredServiceAndHealthSources.data.monitoredService.name)
@@ -277,7 +277,7 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct health source is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.healthSources.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.label')).toBeTruthy()
       for (const healthSource of mockedMonitoredServiceAndHealthSources.data.monitoredService.sources.healthSources) {
         expect(getByText(healthSource.name)).toBeTruthy()
       }
@@ -331,7 +331,7 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeInTheDocument()
+      expect(getByText('platform.connectors.cdng.monitoredService.label')).toBeInTheDocument()
       const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
       expect(monitoredService).toBeInTheDocument()
       expect(monitoredService.value).toBe(mockedMonitoredServiceAndHealthSources.data.monitoredService.name)
@@ -339,7 +339,7 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if the correct health sources are present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.healthSources.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.label')).toBeTruthy()
       for (const healthSource of mockedMonitoredServiceAndHealthSources.data.monitoredService.sources.healthSources) {
         expect(getByText(healthSource.name)).toBeTruthy()
       }
@@ -399,7 +399,7 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.monitoredService.label')).toBeTruthy()
       const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
       expect(monitoredService).toBeTruthy()
       expect(monitoredService.value).toBe(mockedMonitoredService.data.monitoredService.name)
@@ -407,8 +407,8 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if no health sources are present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.healthSources.label')).toBeTruthy()
-      expect(getByText('connectors.cdng.healthSources.noHealthSourcesDefined')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.noHealthSourcesDefined')).toBeTruthy()
       const AddHealthSourceLink = getByTestId('plusAdd-button')
       expect(AddHealthSourceLink).toBeTruthy()
     })
@@ -477,8 +477,8 @@ describe('Test ContinousVerificationStep Step', () => {
     // Verify that no monitoring source is present and autocreate link is present to create the monitored service
     let autoCreateMonitoredServiceLink: HTMLElement
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeTruthy()
-      autoCreateMonitoredServiceLink = getByText('connectors.cdng.monitoredService.autoCreateMonitoredService')
+      expect(getByText('platform.connectors.cdng.monitoredService.label')).toBeTruthy()
+      autoCreateMonitoredServiceLink = getByText('platform.connectors.cdng.monitoredService.autoCreateMonitoredService')
       expect(autoCreateMonitoredServiceLink).toBeTruthy()
     })
 
@@ -494,8 +494,8 @@ describe('Test ContinousVerificationStep Step', () => {
 
     // Verify if no health sources are present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.healthSources.label')).toBeTruthy()
-      expect(getByText('connectors.cdng.healthSources.noHealthSourcesDefined')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.noHealthSourcesDefined')).toBeTruthy()
       const AddHealthSourceLink = getByTestId('plusAdd-button')
       expect(AddHealthSourceLink).toBeTruthy()
     })

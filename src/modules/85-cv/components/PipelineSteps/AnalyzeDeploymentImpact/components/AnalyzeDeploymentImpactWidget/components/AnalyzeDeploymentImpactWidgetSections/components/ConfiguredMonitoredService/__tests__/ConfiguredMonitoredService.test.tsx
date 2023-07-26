@@ -98,7 +98,7 @@ describe('ConfiguredMonitoredService', () => {
       </MemoryRouter>
     )
 
-    const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    const monitoredServiceDisplay = screen.getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')
     expect(monitoredServiceDisplay).toBeInTheDocument()
   })
 
@@ -173,7 +173,7 @@ describe('ConfiguredMonitoredService', () => {
       </MemoryRouter>
     )
 
-    const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    const monitoredServiceDisplay = screen.getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')
     expect(monitoredServiceDisplay).toBeInTheDocument()
     expect(getByText('cv.analyzeStep.monitoredService.fetchingMonitoredService')).toBeInTheDocument()
   })
@@ -210,7 +210,7 @@ describe('ConfiguredMonitoredService', () => {
       </MemoryRouter>
     )
 
-    const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    const monitoredServiceDisplay = screen.getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')
     expect(monitoredServiceDisplay).toBeInTheDocument()
     const monitoredServiceInput = container.querySelector(
       '[name="spec.monitoredService.spec.monitoredServiceRef"]'
@@ -254,7 +254,7 @@ describe('ConfiguredMonitoredService', () => {
       </MemoryRouter>
     )
 
-    const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    const monitoredServiceDisplay = screen.getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')
     expect(monitoredServiceDisplay).toBeInTheDocument()
     expect(getByText('cv.analyzeStep.monitoredService.monitoredServiceNotPresent')).toBeInTheDocument()
   })
@@ -291,7 +291,7 @@ describe('ConfiguredMonitoredService', () => {
       </MemoryRouter>
     )
 
-    const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    const monitoredServiceDisplay = screen.getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')
     const monitoredServiceDisabledWarning = screen.getByText('cv.analyzeDeploymentImpact.msDisabledWarning')
     expect(monitoredServiceDisplay).toBeInTheDocument()
     expect(monitoredServiceDisabledWarning).toBeInTheDocument()
@@ -334,7 +334,7 @@ describe('ConfiguredMonitoredService', () => {
       </MemoryRouter>
     )
 
-    const monitoredServiceDisplay = screen.getByText('connectors.cdng.monitoredService.monitoredServiceDef')
+    const monitoredServiceDisplay = screen.getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')
     expect(monitoredServiceDisplay).toBeInTheDocument()
     expect(queryByText('Health Source')).not.toBeInTheDocument()
   })

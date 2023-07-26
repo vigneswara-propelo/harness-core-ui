@@ -30,11 +30,11 @@ import {
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@platform/connectors/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -231,7 +231,7 @@ export function TerraformCloudRunEdit(
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormMultiTypeConnectorField
                     name="spec.spec.connectorRef"
-                    label={getString('connectors.selectConnector')}
+                    label={getString('platform.connectors.selectConnector')}
                     type={[Connectors.TERRAFORM_CLOUD]}
                     placeholder={getString('select')}
                     disabled={readonly}

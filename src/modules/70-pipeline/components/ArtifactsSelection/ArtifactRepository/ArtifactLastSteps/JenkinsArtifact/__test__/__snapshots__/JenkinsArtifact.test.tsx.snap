@@ -36,7 +36,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.jobName"
                   >
-                    connectors.jenkins.jobNameLabel
+                    platform.connectors.jenkins.jobNameLabel
                   </span>
                    
                   <span
@@ -454,7 +454,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.jobName"
                   >
-                    connectors.jenkins.jobNameLabel
+                    platform.connectors.jenkins.jobNameLabel
                   </span>
                    
                   <span
@@ -889,7 +889,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when jobName is p
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.jobName"
                   >
-                    connectors.jenkins.jobNameLabel
+                    platform.connectors.jenkins.jobNameLabel
                   </span>
                    
                   <span

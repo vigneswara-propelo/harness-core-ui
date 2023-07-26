@@ -15,7 +15,7 @@ import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps, accountPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
-import { branchStatusMock, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { useGetPipelineList, useGetRepositoryList } from 'services/pipeline-ng'
 import { PipelineListPage } from '../PipelineListPage'
 import filters from './mocks/filters.json'

@@ -9,7 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type { MetricDashboardItem } from '@cv/components/MetricDashboardWidgetNav/MetricDashboardWidgetNav.type'
 import type { CommonHealthSourceConfigurations } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import type { UseStringsReturn } from 'framework/strings'
-import type { ConnectorConfigureOptionsProps } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import type { ConnectorConfigureOptionsProps } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 
 export interface DefineHealthSourceFormInterface extends CommonHealthSourceConfigurations {
   healthSourceIdentifier: string

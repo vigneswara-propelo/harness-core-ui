@@ -64,7 +64,7 @@ import type {
 import { useGitScope } from '@pipeline/utils/CIUtils'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type {
   K8sDirectInfraYaml,
@@ -83,7 +83,7 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import { isOnPrem } from '@common/utils/utils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { isEnterprisePlan, isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { tolerationsCustomMap } from '@common/utils/ContainerRunStepUtils'
@@ -101,7 +101,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 type VolumeInterface = CIVolume | EmptyDirYaml | PersistentVolumeClaimYaml | HostPathYaml
 const logger = loggerFor(ModuleName.CD)
-const k8sClusterKeyRef = 'connectors.title.k8sCluster'
+const k8sClusterKeyRef = 'platform.connectors.title.k8sCluster'
 const namespaceKeyRef = 'pipelineSteps.build.infraSpecifications.namespace'
 const poolNameKeyRef = 'pipeline.buildInfra.poolName'
 
@@ -165,7 +165,7 @@ type FieldValueType = yup.Ref | yup.Schema<any> | yup.MixedSchema<any>
 
 const runAsUserStringKey = 'pipeline.stepCommonFields.runAsUser'
 const priorityClassNameStringKey = 'pipeline.buildInfra.priorityClassName'
-const harnessImageConnectorRefKey = 'connectors.title.harnessImageConnectorRef'
+const harnessImageConnectorRefKey = 'platform.connectors.title.harnessImageConnectorRef'
 
 const getInitialMapValues: (value: MultiTypeMapType) => MultiTypeMapUIType = value => {
   const map =
@@ -1372,7 +1372,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               {`${getString(harnessImageConnectorRefKey)} ${getString('common.optionalLabel')}`}
             </Text>
           }
-          placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+          placeholder={getString('platform.connectors.placeholder.harnessImageConnectorRef')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}

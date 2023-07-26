@@ -83,7 +83,7 @@ export default function ConfigureFields(props: {
             <div className={stepCss.formGroup}>
               <BaselineSelect
                 name={`spec.spec.baseline`}
-                label={getString('connectors.cdng.baseline')}
+                label={getString('platform.connectors.cdng.baseline')}
                 expressions={expressions}
                 formik={formik}
                 allowableTypes={allowableTypes}
@@ -119,7 +119,7 @@ export default function ConfigureFields(props: {
               {/* Note - This has to be removed for now but might be required in future, hence commenting the code */}
               {/* <TrafficSplit
                 name={`spec.spec.trafficsplit`}
-                label={getString('connectors.cdng.trafficsplit')}
+                label={getString('platform.connectors.cdng.trafficsplit')}
                 expressions={expressions}
                 formik={formik}
               /> */}
@@ -150,14 +150,17 @@ export default function ConfigureFields(props: {
       {renderConfigOptions()}
       <div className={stepCss.formGroup}>
         <FormInput.MultiTextInput
-          label={getString('connectors.cdng.artifactTag')}
+          label={getString('platform.connectors.cdng.artifactTag')}
           name="spec.spec.deploymentTag"
           multiTextInputProps={{ expressions, allowableTypes }}
         />
       </div>
       {canShowFailOnNoAnalysisCheckbox && (
         <div className={stepCss.formGroup}>
-          <FormInput.CheckBox name="spec.spec.failOnNoAnalysis" label={getString('connectors.cdng.failOnNoAnalysis')} />
+          <FormInput.CheckBox
+            name="spec.spec.failOnNoAnalysis"
+            label={getString('platform.connectors.cdng.failOnNoAnalysis')}
+          />
         </div>
       )}
 

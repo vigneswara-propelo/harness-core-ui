@@ -7,7 +7,7 @@
 
 import React, { useCallback, useContext } from 'react'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import type { ConnectorConfigureOptionsProps } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import type { ConnectorConfigureOptionsProps } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import CommonHealthSource from './CommonHealthSource'
 import { createHealthSourcePayload, createHealthSourceConfigurationsData } from './CommonHealthSource.utils'
 import type { CommonHealthSourceConfigurations, HealthSourceConfig } from './CommonHealthSource.types'

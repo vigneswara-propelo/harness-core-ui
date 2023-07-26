@@ -220,7 +220,7 @@ exports[`CreateStreamingDestinationWizard Create Flow Create flow step one and s
                             class="Tooltip--acenter"
                             data-tooltip-id="streamingConnectorForm_connector_ref"
                           >
-                            connectors.selectConnector
+                            platform.connectors.selectConnector
                           </span>
                            
                           <span
@@ -242,7 +242,7 @@ exports[`CreateStreamingDestinationWizard Create Flow Create flow step one and s
                               <span
                                 class="placeholder"
                               >
-                                connectors.selectConnector
+                                platform.connectors.selectConnector
                               </span>
                             </span>
                             <span

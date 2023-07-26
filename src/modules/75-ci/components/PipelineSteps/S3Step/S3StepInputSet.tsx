@@ -8,7 +8,7 @@
 import React from 'react'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { S3StepProps } from './S3Step'
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'

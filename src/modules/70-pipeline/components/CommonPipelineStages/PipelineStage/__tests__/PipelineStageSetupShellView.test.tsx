@@ -154,7 +154,7 @@ describe('Pipeline Stage shell view tests', () => {
 
     // Outputs Tab
     const outputsTab = screen.getByRole('tab', {
-      name: 'connectors.ceAws.crossAccountRoleExtention.step3.p2'
+      name: 'platform.connectors.ceAws.crossAccountRoleExtention.step3.p2'
     })
     userEvent.click(outputsTab)
     expect(await screen.findByText('pipeline.pipelineChaining.pipelineOutputs')).toBeDefined()

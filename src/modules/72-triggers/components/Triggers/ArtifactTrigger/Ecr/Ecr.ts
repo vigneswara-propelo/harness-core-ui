@@ -12,7 +12,7 @@ import type { ArtifactTriggerValues } from '../utils'
 
 export class Ecr extends ArtifactTrigger<ArtifactTriggerValues> {
   protected type: TriggerArtifactType = 'Ecr'
-  protected triggerDescription: keyof StringsMap = 'connectors.ECR.name'
+  protected triggerDescription: keyof StringsMap = 'platform.connectors.ECR.name'
 
   protected defaultValues = {
     triggerType: this.baseType,

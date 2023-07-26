@@ -11,7 +11,7 @@ import SplunkHealthSource from '@cv/pages/health-source/connectors/SplunkHealthS
 import AppDHealthSourceContainer from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSourceContainer'
 import { PrometheusHealthSource } from '@cv/pages/health-source/connectors/PrometheusHealthSource/PrometheusHealthSource'
 import NewrelicMonitoredSourceContainer from '@cv/pages/health-source/connectors/NewRelic/NewRelicHealthSourceContainer'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { GCOMetricsHealthSource } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource'

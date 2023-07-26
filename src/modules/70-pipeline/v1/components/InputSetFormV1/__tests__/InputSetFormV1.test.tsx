@@ -21,7 +21,7 @@ import {
   pipelinePathProps
 } from '@common/utils/routeUtils'
 import * as pipelineng from 'services/pipeline-ng'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { InputSetDTO } from '@pipeline/utils/types'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'

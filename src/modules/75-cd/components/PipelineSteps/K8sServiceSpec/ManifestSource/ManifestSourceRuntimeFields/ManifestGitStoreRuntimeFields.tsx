@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'

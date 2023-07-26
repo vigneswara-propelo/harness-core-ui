@@ -11,7 +11,7 @@ import { act } from 'react-dom/test-utils'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps } from '@common/utils/routeUtils'
-import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
 import GitSyncRepoFormStep from '../GitSyncRepoFormStep'
 

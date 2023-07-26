@@ -44,7 +44,7 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { isApprovalStepFieldDisabled } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import {
   ServiceNowFieldNG,
@@ -58,8 +58,8 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import { StringKeys, useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { Connectors } from '@connectors/constants'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@platform/connectors/constants'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'

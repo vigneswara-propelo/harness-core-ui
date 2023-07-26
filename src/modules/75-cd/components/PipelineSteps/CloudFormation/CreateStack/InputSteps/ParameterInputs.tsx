@@ -14,7 +14,7 @@ import { FormInput, Text, Container, Layout, Icon, Button, ButtonVariation, Mult
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
 import { ConnectorMap, ConnectorLabelMap, ConnectorTypes, isRuntime } from '../../CloudFormationHelper'

@@ -209,7 +209,7 @@ exports[`Bamboo Step Tests should render form when fields are runtime 1`] = `
                 class="Tooltip--acenter bp3-label"
                 data-tooltip-id="BambooStep_spec.connectorRef"
               >
-                connectors.bamboo.bambooConnectorLabel
+                platform.connectors.bamboo.bambooConnectorLabel
               </span>
             </div>
             <div

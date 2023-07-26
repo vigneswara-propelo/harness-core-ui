@@ -23,8 +23,8 @@ import {
   useUpsertEnvironmentV2
 } from 'services/cd-ng'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
-import { buildKubPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import useCreateEditConnector, { BuildPayloadProps } from '@platform/connectors/hooks/useCreateEditConnector'
+import { buildKubPayload } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DelegateTypes } from '@delegates/constants'
 import { StringUtils } from '@common/exports'

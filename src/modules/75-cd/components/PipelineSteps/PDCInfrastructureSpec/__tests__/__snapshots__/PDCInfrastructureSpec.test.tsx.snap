@@ -64,7 +64,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
                   class="Tooltip--acenter"
                   data-tooltip-id="pdcInfra_hosts"
                 >
-                  connectors.pdc.hosts
+                  platform.connectors.pdc.hosts
                 </span>
                  
                 <span

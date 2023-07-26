@@ -228,9 +228,9 @@ export function GCRImagePath({
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput
-                  label={getString('connectors.GCR.registryHostname')}
+                  label={getString('platform.connectors.GCR.registryHostname')}
                   placeholder={getString('common.enterPlaceholder', {
-                    name: getString('connectors.GCR.registryHostname')
+                    name: getString('platform.connectors.GCR.registryHostname')
                   })}
                   name="registryHostname"
                   selectItems={gcrUrlList}

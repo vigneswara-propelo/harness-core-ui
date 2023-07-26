@@ -760,7 +760,7 @@ exports[`Grype Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                secrets.winRmAuthFormFields.domain
+                platform.secrets.winRmAuthFormFields.domain
               </p>
                
               <div
@@ -4123,7 +4123,7 @@ exports[`Grype Step Edit View renders runtime inputs - Orchestration container 1
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                secrets.winRmAuthFormFields.domain
+                platform.secrets.winRmAuthFormFields.domain
               </p>
                
               <div
@@ -5954,7 +5954,7 @@ exports[`Grype Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                secrets.winRmAuthFormFields.domain
+                platform.secrets.winRmAuthFormFields.domain
               </p>
                
               <div

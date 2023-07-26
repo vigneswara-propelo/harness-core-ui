@@ -14,7 +14,7 @@ export default function BaseURL({ path, baseURL }: { path: string; baseURL: stri
   const { getString } = useStrings()
   return (
     <>
-      <Text className={css.label}>{getString('connectors.customHealth.baseURL')}</Text>
+      <Text className={css.label}>{getString('platform.connectors.customHealth.baseURL')}</Text>
       <Container className={css.main}>
         <Text className={css.prvValue}>{baseURL}</Text>
         <Text className={css.currentValue}>{path}</Text>

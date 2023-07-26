@@ -26,8 +26,8 @@ import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeC
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { OsTypes } from '@pipeline/utils/constants'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { Connectors } from '@connectors/constants'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import type { ContainerStepData } from './types'
@@ -398,10 +398,10 @@ export default function OptionalConfiguration(props: {
       </div>
       <div>
         <FormMultiTypeConnectorField
-          label={getString('connectors.title.harnessImageConnectorRef')}
+          label={getString('platform.connectors.title.harnessImageConnectorRef')}
           type={Connectors.DOCKER}
           name="spec.infrastructure.spec.harnessImageConnectorRef"
-          placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+          placeholder={getString('platform.connectors.placeholder.harnessImageConnectorRef')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}

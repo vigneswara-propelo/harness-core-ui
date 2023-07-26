@@ -993,7 +993,7 @@ exports[`SLO Downtime page should render downtime list view 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                       >
-                        FILESTORE.VIEW.LASTMODIFIEDBY
+                        PLATFORM.FILESTORE.VIEW.LASTMODIFIEDBY
                       </p>
                     </div>
                     <div

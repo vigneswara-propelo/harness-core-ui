@@ -183,7 +183,9 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
             text={
               labelText ||
               getString(
-                isExistingConnectionHealthy ? 'connectors.relinkToGitProvider' : 'connectors.linkToGitProvider',
+                isExistingConnectionHealthy
+                  ? 'platform.connectors.relinkToGitProvider'
+                  : 'platform.connectors.linkToGitProvider',
                 {
                   gitProvider: getRelinkLabel()
                 }

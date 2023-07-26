@@ -12,7 +12,7 @@ import type { ArtifactTriggerValues } from '../utils'
 
 export class Nexus3Registry extends ArtifactTrigger<ArtifactTriggerValues> {
   protected type: TriggerArtifactType = 'Nexus3Registry'
-  protected triggerDescription: keyof StringsMap = 'connectors.nexus.nexusLabel'
+  protected triggerDescription: keyof StringsMap = 'platform.connectors.nexus.nexusLabel'
 
   protected defaultValues = {
     triggerType: this.baseType,

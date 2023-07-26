@@ -15,7 +15,7 @@ import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineCon
 import { TestWrapper } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'
 import * as hooks from '@common/hooks'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import {
   GetTemplateFromPipelineResponse,
   GetTemplateStageVariablesFromPipelineResponse,

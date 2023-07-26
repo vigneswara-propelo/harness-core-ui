@@ -7,7 +7,7 @@
 
 import React, { lazy } from 'react'
 import { Redirect, Route, useParams } from 'react-router-dom'
-import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
+import { ConnectorRouteDestinations } from '@platform/connectors/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
 import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'

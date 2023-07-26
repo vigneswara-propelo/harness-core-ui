@@ -1023,7 +1023,7 @@ exports[`Git experience git experience snapshot 1`] = `
                                 class="Tooltip--acenter"
                                 data-tooltip-id="createStepTemplate_connectorRef"
                               >
-                                connectors.title.gitConnector
+                                platform.connectors.title.gitConnector
                               </span>
                                
                               <span

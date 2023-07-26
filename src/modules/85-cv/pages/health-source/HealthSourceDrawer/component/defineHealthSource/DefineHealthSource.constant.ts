@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Connectors } from '@connectors/constants'
-import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { Connectors } from '@platform/connectors/constants'
+import { getConnectorIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 
 export const HEALTHSOURCE_LIST = [

@@ -15,7 +15,7 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { queryByNameAttribute } from '@common/utils/testUtils'
-import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
+import { awsConnectorListResponse } from '@platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'

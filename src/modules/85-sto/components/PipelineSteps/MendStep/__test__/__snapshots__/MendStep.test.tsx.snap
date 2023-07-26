@@ -746,7 +746,7 @@ exports[`Mend Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                secrets.winRmAuthFormFields.domain
+                platform.secrets.winRmAuthFormFields.domain
               </p>
             </div>
             <div
@@ -4330,7 +4330,7 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                secrets.winRmAuthFormFields.domain
+                platform.secrets.winRmAuthFormFields.domain
               </p>
             </div>
             <div
@@ -6338,7 +6338,7 @@ exports[`Mend Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                secrets.winRmAuthFormFields.domain
+                platform.secrets.winRmAuthFormFields.domain
               </p>
             </div>
             <div
@@ -8050,7 +8050,7 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                secrets.winRmAuthFormFields.domain
+                platform.secrets.winRmAuthFormFields.domain
               </p>
             </div>
             <div

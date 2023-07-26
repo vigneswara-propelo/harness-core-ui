@@ -19,7 +19,7 @@ exports[`SLOLogContent should render SLOLogContent component of type Execution L
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
           >
-            connectors.cdng.monitoredService.label
+            platform.connectors.cdng.monitoredService.label
           </p>
           <div
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -344,7 +344,7 @@ exports[`SLOLogContent should render SLOLogContent component of type External AP
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
           >
-            connectors.cdng.monitoredService.label
+            platform.connectors.cdng.monitoredService.label
           </p>
           <div
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"

@@ -74,11 +74,11 @@ export default function RunTimeMonitoredService({
         <div className={css.emptyFields}>
           <div className={css.emptyFieldItem}>
             {`
-              ${getString('connectors.cdng.runTimeMonitoredService.pleaseSpecify')}
+              ${getString('platform.connectors.cdng.runTimeMonitoredService.pleaseSpecify')}
               ${isEmpty(serviceIdentifier) ? getString('service') : ''}
               ${isEmpty(serviceIdentifier) && isEmpty(envIdentifier) ? getString('and') : ''}
               ${isEmpty(envIdentifier) ? getString('environment') : ''}
-              ${getString('connectors.cdng.runTimeMonitoredService.toFetchMonitoredService')}
+              ${getString('platform.connectors.cdng.runTimeMonitoredService.toFetchMonitoredService')}
             `}
           </div>
         </div>
@@ -87,13 +87,13 @@ export default function RunTimeMonitoredService({
   } else if (loading) {
     return (
       <Card>
-        <>{getString('connectors.cdng.monitoredService.fetchingMonitoredService')}</>
+        <>{getString('platform.connectors.cdng.monitoredService.fetchingMonitoredService')}</>
       </Card>
     )
   } else if (error) {
     return (
       <Card>
-        <>{getString('connectors.cdng.runTimeMonitoredService.fetchingMonitoredServiceError')}</>
+        <>{getString('platform.connectors.cdng.runTimeMonitoredService.fetchingMonitoredServiceError')}</>
       </Card>
     )
   } else if (
@@ -106,7 +106,7 @@ export default function RunTimeMonitoredService({
           <div className={cx(stepCss.formGroup)}>
             <FormInput.CustomRender
               name={`${prefix}spec.monitoredServiceRef`}
-              label={getString('connectors.cdng.monitoredService.label')}
+              label={getString('platform.connectors.cdng.monitoredService.label')}
               render={() => (
                 <Container data-testid="monitored-service">{monitoringSource?.monitoredService?.name}</Container>
               )}
@@ -131,14 +131,16 @@ export default function RunTimeMonitoredService({
     return (
       <Card>
         <div className={css.error}>
-          {getString('connectors.cdng.runTimeMonitoredService.noMonitoringSercvicePresent')}
+          {getString('platform.connectors.cdng.runTimeMonitoredService.noMonitoringSercvicePresent')}
         </div>
       </Card>
     )
   } else if (isEmpty(monitoringSource?.monitoredService?.sources?.healthSources)) {
     return (
       <Card>
-        <div className={css.error}>{getString('connectors.cdng.runTimeMonitoredService.noHealthSourcePresent')}</div>
+        <div className={css.error}>
+          {getString('platform.connectors.cdng.runTimeMonitoredService.noHealthSourcePresent')}
+        </div>
       </Card>
     )
   }

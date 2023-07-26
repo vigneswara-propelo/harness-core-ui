@@ -362,7 +362,7 @@ Object {
                 class="Tooltip--acenter bp3-label"
                 data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
               >
-                connectors.title.secretManager
+                platform.connectors.title.secretManager
               </span>
             </div>
             <div
@@ -894,7 +894,7 @@ Object {
               class="Tooltip--acenter bp3-label"
               data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
             >
-              connectors.title.secretManager
+              platform.connectors.title.secretManager
             </span>
           </div>
           <div
@@ -1480,7 +1480,7 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
             class="Tooltip--acenter bp3-label"
             data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
           >
-            connectors.title.secretManager
+            platform.connectors.title.secretManager
           </span>
         </div>
         <div
@@ -3245,7 +3245,7 @@ exports[`Test TerraformPlan should render edit view as edit step 1`] = `
             class="Tooltip--acenter bp3-label"
             data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
           >
-            connectors.title.secretManager
+            platform.connectors.title.secretManager
           </span>
         </div>
         <div
@@ -3776,7 +3776,7 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
             class="Tooltip--acenter bp3-label"
             data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
           >
-            connectors.title.secretManager
+            platform.connectors.title.secretManager
           </span>
         </div>
         <div
@@ -4307,7 +4307,7 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
             class="Tooltip--acenter bp3-label"
             data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
           >
-            connectors.title.secretManager
+            platform.connectors.title.secretManager
           </span>
         </div>
         <div
@@ -5064,7 +5064,7 @@ exports[`Test TerraformPlan should render edit view with command Destroy 1`] = `
             class="Tooltip--acenter bp3-label"
             data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
           >
-            connectors.title.secretManager
+            platform.connectors.title.secretManager
           </span>
         </div>
         <div
@@ -6166,7 +6166,7 @@ exports[`Test TerraformPlan should submit form for terraform plan 1`] = `
             class="Tooltip--acenter bp3-label"
             data-tooltip-id="terraformPlanEditView-tfPlan-_spec.configuration.secretManagerRef"
           >
-            connectors.title.secretManager
+            platform.connectors.title.secretManager
           </span>
         </div>
         <div

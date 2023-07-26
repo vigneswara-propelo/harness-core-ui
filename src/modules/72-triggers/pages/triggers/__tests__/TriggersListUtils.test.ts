@@ -6,7 +6,7 @@
  */
 
 import type { CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
 import type { StringKeys } from 'framework/strings'
 import type { TriggerCatalogResponse } from 'services/pipeline-ng'
@@ -50,12 +50,12 @@ const webhookTriggerCategoryItems = [
 
 const artifactTriggerCategoryItems = [
   {
-    itemLabel: 'connectors.GCR.name',
+    itemLabel: 'platform.connectors.GCR.name',
     value: 'Gcr',
     iconName: 'service-gcp'
   },
   {
-    itemLabel: 'connectors.ECR.name',
+    itemLabel: 'platform.connectors.ECR.name',
     value: 'Ecr',
     iconName: 'ecr-step'
   },
@@ -65,7 +65,7 @@ const artifactTriggerCategoryItems = [
     iconName: 'service-dockerhub'
   },
   {
-    itemLabel: 'connectors.artifactory.artifactoryLabel',
+    itemLabel: 'platform.connectors.artifactory.artifactoryLabel',
     value: 'ArtifactoryRegistry',
     iconName: 'service-artifactory'
   },

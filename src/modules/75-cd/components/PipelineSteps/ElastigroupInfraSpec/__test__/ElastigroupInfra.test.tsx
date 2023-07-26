@@ -446,7 +446,7 @@ describe('Elastigroup - inputSet/runtime view', () => {
         stepViewType={StepViewType.DeploymentForm}
       />
     )
-    expect(getByText('secrets.secret.configureSecret')).toBeTruthy()
+    expect(getByText('platform.secrets.secret.configureSecret')).toBeTruthy()
     expect(getByText('cd.steps.elastigroup.elastigroupConfig')).toBeTruthy()
   })
 })

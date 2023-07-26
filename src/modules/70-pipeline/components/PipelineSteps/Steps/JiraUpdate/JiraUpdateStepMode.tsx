@@ -40,13 +40,13 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { JiraKVFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/JiraKVFieldsRenderer'
 import { useQueryParams } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { isMultiTypeFixed } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
 import {

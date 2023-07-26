@@ -482,7 +482,7 @@ test('getHelpeTextForTags', () => {
   //     (str: string) => str,
   //     true
   //   )
-  // ).toBe('connectors.GCR.registryHostname')
+  // ).toBe('platform.connectors.GCR.registryHostname')
 })
 
 test('getCustomStepProps', () => {

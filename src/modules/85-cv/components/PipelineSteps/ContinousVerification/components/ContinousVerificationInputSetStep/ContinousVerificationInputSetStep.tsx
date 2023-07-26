@@ -180,7 +180,7 @@ export function ContinousVerificationInputSetStep(
         {checkIfRunTimeInput(baseline) && (
           <Container className={css.itemRuntimeSetting}>
             <FormInput.MultiTypeInput
-              label={getString('connectors.cdng.baseline')}
+              label={getString('platform.connectors.cdng.baseline')}
               name={`${prefix}spec.spec.baseline`}
               selectItems={getDefaultBaselineOptions(getString, SRM_ENABLE_BASELINE_BASED_VERIFICATION)}
               useValue
@@ -196,7 +196,7 @@ export function ContinousVerificationInputSetStep(
         {checkIfRunTimeInput(trafficsplit) && (
           <Container className={css.itemRuntimeSetting}>
             <FormInput.MultiTypeInput
-              label={getString('connectors.cdng.trafficsplit')}
+              label={getString('platform.connectors.cdng.trafficsplit')}
               name={`${prefix}spec.spec.trafficsplit`}
               selectItems={trafficSplitPercentageOptions}
               useValue
@@ -212,7 +212,7 @@ export function ContinousVerificationInputSetStep(
         {checkIfRunTimeInput(deploymentTag) && (
           <Container className={css.itemRuntimeSetting}>
             <FormInput.MultiTextInput
-              label={getString('connectors.cdng.artifactTag')}
+              label={getString('platform.connectors.cdng.artifactTag')}
               name={`${prefix}spec.spec.deploymentTag`}
               multiTextInputProps={{
                 expressions,

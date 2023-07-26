@@ -137,7 +137,7 @@ exports[`ImportResource - Pipeline provide required values and click on import b
                       class="Tooltip--acenter"
                       data-tooltip-id="importResource_connectorRef"
                     >
-                      connectors.title.gitConnector
+                      platform.connectors.title.gitConnector
                     </span>
                      
                     <span
@@ -576,7 +576,7 @@ exports[`ImportResource - Pipeline snapshot testing 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="importResource_connectorRef"
                     >
-                      connectors.title.gitConnector
+                      platform.connectors.title.gitConnector
                     </span>
                      
                     <span
@@ -977,7 +977,7 @@ exports[`ImportResource - Pipeline when import throws error WITHOUT message and 
                       class="Tooltip--acenter"
                       data-tooltip-id="importResource_connectorRef"
                     >
-                      connectors.title.gitConnector
+                      platform.connectors.title.gitConnector
                     </span>
                      
                     <span
@@ -1418,7 +1418,7 @@ exports[`ImportResource - Pipeline when import throws error WITHOUT responseMess
                       class="Tooltip--acenter"
                       data-tooltip-id="importResource_connectorRef"
                     >
-                      connectors.title.gitConnector
+                      platform.connectors.title.gitConnector
                     </span>
                      
                     <span
@@ -1859,7 +1859,7 @@ exports[`ImportResource - Pipeline when onSuccess prop is not passed - provide r
                       class="Tooltip--acenter"
                       data-tooltip-id="importResource_connectorRef"
                     >
-                      connectors.title.gitConnector
+                      platform.connectors.title.gitConnector
                     </span>
                      
                     <span

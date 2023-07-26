@@ -207,7 +207,7 @@ exports[`Bamboo Step renders normally 1`] = `
                 class="Tooltip--acenter bp3-label"
                 data-tooltip-id="BambooStep_spec.connectorRef"
               >
-                connectors.bamboo.bambooConnectorLabel
+                platform.connectors.bamboo.bambooConnectorLabel
               </span>
             </div>
             <div
@@ -669,7 +669,7 @@ exports[`Bamboo step tests Basic snapshot - deploymentform mode 1`] = `
               class="Tooltip--acenter bp3-label"
               data-tooltip-id="stepTestUtilForm_spec.connectorRef"
             >
-              connectors.bamboo.bamboo
+              platform.connectors.bamboo.bamboo
             </span>
           </div>
           <div
@@ -699,7 +699,7 @@ exports[`Bamboo step tests Basic snapshot - deploymentform mode 1`] = `
                       <span
                         class="placeholder"
                       >
-                        connectors.selectConnector
+                        platform.connectors.selectConnector
                       </span>
                     </span>
                     <span
@@ -1108,7 +1108,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode 1`] = `
               class="Tooltip--acenter bp3-label"
               data-tooltip-id="stepTestUtilForm_spec.connectorRef"
             >
-              connectors.bamboo.bamboo
+              platform.connectors.bamboo.bamboo
             </span>
           </div>
           <div
@@ -1138,7 +1138,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode 1`] = `
                       <span
                         class="placeholder"
                       >
-                        connectors.selectConnector
+                        platform.connectors.selectConnector
                       </span>
                     </span>
                     <span
@@ -1544,7 +1544,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode but no runtime values 
               class="Tooltip--acenter bp3-label"
               data-tooltip-id="stepTestUtilForm_spec.connectorRef"
             >
-              connectors.bamboo.bamboo
+              platform.connectors.bamboo.bamboo
             </span>
           </div>
           <div
@@ -1574,7 +1574,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode but no runtime values 
                       <span
                         class="placeholder"
                       >
-                        connectors.selectConnector
+                        platform.connectors.selectConnector
                       </span>
                     </span>
                     <span
@@ -2048,7 +2048,7 @@ exports[`Bamboo step tests Edit stage - readonly: edit stage view readonly 1`] =
                 class="Tooltip--acenter bp3-label"
                 data-tooltip-id="BambooStep_spec.connectorRef"
               >
-                connectors.bamboo.bambooConnectorLabel
+                platform.connectors.bamboo.bambooConnectorLabel
               </span>
             </div>
             <div
@@ -2513,7 +2513,7 @@ exports[`Bamboo step tests deploymentform mode - readonly 1`] = `
               class="Tooltip--acenter bp3-label"
               data-tooltip-id="stepTestUtilForm_spec.connectorRef"
             >
-              connectors.bamboo.bamboo
+              platform.connectors.bamboo.bamboo
             </span>
           </div>
           <div
@@ -2543,7 +2543,7 @@ exports[`Bamboo step tests deploymentform mode - readonly 1`] = `
                       <span
                         class="placeholder"
                       >
-                        connectors.selectConnector
+                        platform.connectors.selectConnector
                       </span>
                     </span>
                     <span

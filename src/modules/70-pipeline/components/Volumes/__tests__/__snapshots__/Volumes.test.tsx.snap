@@ -880,7 +880,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main field StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                   >
-                    connectors.cdng.verificationSensitivityLabel.medium
+                    platform.connectors.cdng.verificationSensitivityLabel.medium
                   </p>
                    
                   <div

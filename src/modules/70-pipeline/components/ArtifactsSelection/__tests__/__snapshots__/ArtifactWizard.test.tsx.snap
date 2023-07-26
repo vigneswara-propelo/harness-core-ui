@@ -20,7 +20,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepoType
+          platform.connectors.artifactRepoType
         </p>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -67,7 +67,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepository
+          platform.connectors.artifactRepository
         </p>
       </div>
       <div
@@ -76,7 +76,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
         <div
           style="grid-column: 1/ span 2;"
         >
-          connectors.createNewConnector
+          platform.connectors.createNewConnector
         </div>
         <span
           class="StepWizard--number"
@@ -117,7 +117,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.selectConnectivityMode
+          platform.connectors.selectConnectivityMode
         </p>
       </div>
       <div
@@ -132,7 +132,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.stepThreeName
+          platform.connectors.stepThreeName
         </p>
       </div>
       <div
@@ -386,7 +386,7 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepoType
+          platform.connectors.artifactRepoType
         </p>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -451,7 +451,7 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepository
+          platform.connectors.artifactRepository
         </p>
       </div>
       <div
@@ -460,7 +460,7 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
         <div
           style="grid-column: 1/ span 2;"
         >
-          connectors.createNewConnector
+          platform.connectors.createNewConnector
         </div>
         <span
           class="StepWizard--number"
@@ -501,7 +501,7 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.selectConnectivityMode
+          platform.connectors.selectConnectivityMode
         </p>
       </div>
       <div
@@ -516,7 +516,7 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.stepThreeName
+          platform.connectors.stepThreeName
         </p>
       </div>
       <div
@@ -842,7 +842,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepoType
+          platform.connectors.artifactRepoType
         </p>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -889,7 +889,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepository
+          platform.connectors.artifactRepository
         </p>
       </div>
       <div
@@ -898,7 +898,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
         <div
           style="grid-column: 1/ span 2;"
         >
-          connectors.createNewConnector
+          platform.connectors.createNewConnector
         </div>
         <span
           class="StepWizard--number"
@@ -939,7 +939,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.selectConnectivityMode
+          platform.connectors.selectConnectivityMode
         </p>
       </div>
       <div
@@ -954,7 +954,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.stepThreeName
+          platform.connectors.stepThreeName
         </p>
       </div>
       <div
@@ -1238,7 +1238,7 @@ exports[`Artifact WizardStep tests renders correctly with connector Data 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepoType
+          platform.connectors.artifactRepoType
         </p>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -1285,7 +1285,7 @@ exports[`Artifact WizardStep tests renders correctly with connector Data 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepository
+          platform.connectors.artifactRepository
         </p>
       </div>
       <div
@@ -1458,7 +1458,7 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepoType
+          platform.connectors.artifactRepoType
         </p>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -1488,7 +1488,7 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
             <span
               style="align-self: center;"
             >
-              connectors.GCR.name
+              platform.connectors.GCR.name
             </span>
           </div>
         </p>
@@ -1505,7 +1505,7 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepository
+          platform.connectors.artifactRepository
         </p>
       </div>
       <div
@@ -1664,7 +1664,7 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
                         <p
                           class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
                         >
-                          connectors.GCR.name
+                          platform.connectors.GCR.name
                         </p>
                         <input
                           checked=""
@@ -1794,7 +1794,7 @@ exports[`Artifact WizardStep tests renders without crashing 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepoType
+          platform.connectors.artifactRepoType
         </p>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -1841,7 +1841,7 @@ exports[`Artifact WizardStep tests renders without crashing 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.artifactRepository
+          platform.connectors.artifactRepository
         </p>
       </div>
       <div

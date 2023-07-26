@@ -126,7 +126,7 @@ exports[`K8sServiceSpec tests inputSetMode 1`] = `
                 class="bp3-label"
                 for="test.artifacts.primary.spec.registryHostname"
               >
-                connectors.GCR.registryHostname
+                platform.connectors.GCR.registryHostname
                  
                 <span
                   class="bp3-text-muted"

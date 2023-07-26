@@ -391,7 +391,7 @@ exports[`Test cloudformation delete stack input set should render all input vari
                     class="Tooltip--acenter"
                     data-tooltip-id="wrapperComponentTestForm_test.spec.configuration.spec.roleArn"
                   >
-                    connectors.awsKms.roleArnLabel
+                    platform.connectors.awsKms.roleArnLabel
                   </span>
                    
                   <span

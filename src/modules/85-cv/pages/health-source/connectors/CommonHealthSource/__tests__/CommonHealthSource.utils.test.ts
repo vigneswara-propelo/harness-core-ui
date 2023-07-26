@@ -113,7 +113,7 @@ describe('getFieldName', () => {
     const result = getFieldName(CustomMetricFormFieldNames.INDEX, getString, HealthSourceTypes.AzureLogs)
 
     expect(result).toBe(mockString)
-    expect(getString).toHaveBeenCalledWith('connectors.serviceNow.resourceID')
+    expect(getString).toHaveBeenCalledWith('platform.connectors.serviceNow.resourceID')
   })
 
   test('should return correct string for CustomMetricFormFieldNames.QUERY', () => {

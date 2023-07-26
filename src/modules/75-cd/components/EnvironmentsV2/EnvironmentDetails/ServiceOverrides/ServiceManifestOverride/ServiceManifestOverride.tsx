@@ -63,26 +63,26 @@ import {
 import TasManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
-import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import GcpAuthentication from '@platform/connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import {
   buildAWSPayload,
   buildGcpPayload,
   buildHelmPayload,
   buildOCIHelmPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks'
 import type { EnvironmentPathProps, GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
+import StepHelmAuth from '@platform/connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import { ECSWithS3 } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/ECSWithS3'
@@ -462,7 +462,7 @@ function ServiceManifestOverride({
     connectorInfo: undefined
   }
   const ConnectorTestConnectionProps = {
-    name: getString('connectors.stepThreeName'),
+    name: getString('platform.connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false,
@@ -489,7 +489,7 @@ function ServiceManifestOverride({
       case ManifestStoreMap.Http:
       case ManifestStoreMap.OciHelmChart:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepHelmAuth {...authenticationStepProps} isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart} />
             <DelegateSelectorStep
@@ -501,7 +501,7 @@ function ServiceManifestOverride({
         )
       case ManifestStoreMap.S3:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepAWSAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
@@ -510,7 +510,7 @@ function ServiceManifestOverride({
         )
       case ManifestStoreMap.Gcs:
         return (
-          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+          <StepWizard iconProps={{ size: 37 }} title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GcpAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildGcpPayload} />
@@ -519,7 +519,7 @@ function ServiceManifestOverride({
         )
       default:
         return (
-          <StepWizard title={getString('connectors.createNewConnector')}>
+          <StepWizard title={getString('platform.connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GitDetailsStep
               type={ManifestToConnectorMap[manifestStore]}

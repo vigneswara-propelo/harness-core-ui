@@ -501,7 +501,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
             class="Tooltip--acenter"
             data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
-            connectors.awsKms.roleArnLabel (optional)
+            platform.connectors.awsKms.roleArnLabel (optional)
           </span>
            
           <span
@@ -1275,7 +1275,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
             class="Tooltip--acenter"
             data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
-            connectors.awsKms.roleArnLabel (optional)
+            platform.connectors.awsKms.roleArnLabel (optional)
           </span>
            
           <span
@@ -2744,7 +2744,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
             class="Tooltip--acenter"
             data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
-            connectors.awsKms.roleArnLabel (optional)
+            platform.connectors.awsKms.roleArnLabel (optional)
           </span>
            
           <span
@@ -4820,7 +4820,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
             class="Tooltip--acenter"
             data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
-            connectors.awsKms.roleArnLabel (optional)
+            platform.connectors.awsKms.roleArnLabel (optional)
           </span>
            
           <span

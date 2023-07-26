@@ -22,7 +22,7 @@ import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import {
   AzureWebAppInfrastructure,
   useGetAzureResourceGroupsBySubscription,
@@ -30,14 +30,14 @@ import {
 } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'

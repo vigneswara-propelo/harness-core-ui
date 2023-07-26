@@ -14,7 +14,7 @@ import routes from '@common/RouteDefinitions'
 import { TemplateContextTestWrapper } from '@templates-library/utils/templateContextTestUtils'
 
 import { DefaultTemplate } from 'framework/Templates/templates'
-import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { getMockFor_Generic_useMutate } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 import { TemplateStudioInternal } from '../TemplateStudioInternal'
 import templateContextProps from './__mock__/templateContextProps.json'

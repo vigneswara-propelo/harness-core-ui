@@ -14,24 +14,24 @@ import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
-import { buildKubPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { buildKubPayload } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
-import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { AuthTypes } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import {
   DelegateOptions,
   DelegateSelector,
   DelegatesFoundState
-} from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector'
-import { Connectors } from '@connectors/constants'
+} from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector'
+import { Connectors } from '@platform/connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ResponseConnectorResponse, ResponseMessage } from 'services/cd-ng'
-import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import useCreateEditConnector, { BuildPayloadProps } from '@platform/connectors/hooks/useCreateEditConnector'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { CLIENT_KEY_ALGO_OPTIONS } from '../DeployProvisioningWizard/Constants'
 import { getUniqueEntityIdentifier } from '../CDOnboardingUtils'
-import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
+import commonStyles from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 interface DelegateSelectorStepData extends BuildPayloadProps {
@@ -151,8 +151,8 @@ const SelectAuthenticationMethodRef = (
       }
       const message =
         delegatesFound === DelegatesFoundState.NotConnected
-          ? getString('connectors.delegate.noMatchingDelegatesActive')
-          : getString('connectors.delegate.noMatchingDelegate', { tags: delegateSelectors.join(', ') })
+          ? getString('platform.connectors.delegate.noMatchingDelegatesActive')
+          : getString('platform.connectors.delegate.noMatchingDelegate', { tags: delegateSelectors.join(', ') })
       const dataName =
         delegatesFound === DelegatesFoundState.NotConnected ? 'delegateNoActiveMatchWarning' : 'delegateNoMatchWarning'
       return (
@@ -296,11 +296,11 @@ const SelectAuthenticationMethodRef = (
       value: AuthTypes.SERVICE_ACCOUNT
     },
     {
-      label: getString('connectors.k8.authLabels.OIDC'),
+      label: getString('platform.connectors.k8.authLabels.OIDC'),
       value: AuthTypes.OIDC
     },
     {
-      label: getString('connectors.k8.authLabels.clientKeyCertificate'),
+      label: getString('platform.connectors.k8.authLabels.clientKeyCertificate'),
       value: AuthTypes.CLIENT_KEY_CERT
     }
   ]
@@ -322,8 +322,14 @@ const SelectAuthenticationMethodRef = (
         case AuthTypes.SERVICE_ACCOUNT:
           return (
             <Container className={css.authFormField}>
-              <SecretInput name={'serviceAccountToken'} label={getString('connectors.k8.serviceAccountToken')} />
-              <SecretInput name={'clientKeyCACertificate'} label={getString('connectors.k8.clientKeyCACertificate')} />
+              <SecretInput
+                name={'serviceAccountToken'}
+                label={getString('platform.connectors.k8.serviceAccountToken')}
+              />
+              <SecretInput
+                name={'clientKeyCACertificate'}
+                label={getString('platform.connectors.k8.clientKeyCACertificate')}
+              />
             </Container>
           )
         case AuthTypes.OIDC:
@@ -331,29 +337,32 @@ const SelectAuthenticationMethodRef = (
             <>
               <FormInput.Text
                 name="oidcIssuerUrl"
-                label={getString('connectors.k8.OIDCIssuerUrl')}
+                label={getString('platform.connectors.k8.OIDCIssuerUrl')}
                 className={css.authFormField}
               />
               <Container flex={{ justifyContent: 'flex-start' }}>
                 <Container width={'42%'}>
                   <TextReference
                     name="oidcUsername"
-                    stringId="connectors.k8.OIDCUsername"
+                    stringId="platform.connectors.k8.OIDCUsername"
                     type={_formikProps.values.oidcUsername ? _formikProps.values.oidcUsername.type : ValueType.TEXT}
                   />
 
-                  <SecretInput name={'oidcPassword'} label={getString('connectors.k8.OIDCPassword')} />
+                  <SecretInput name={'oidcPassword'} label={getString('platform.connectors.k8.OIDCPassword')} />
                 </Container>
 
                 <Container width={'42%'} margin={{ top: 'medium', left: 'xxlarge' }}>
-                  <SecretInput name={'oidcCleintId'} label={getString('connectors.k8.OIDCClientId')} />
-                  <SecretInput name={'oidcCleintSecret'} label={getString('connectors.k8.clientSecretOptional')} />
+                  <SecretInput name={'oidcCleintId'} label={getString('platform.connectors.k8.OIDCClientId')} />
+                  <SecretInput
+                    name={'oidcCleintSecret'}
+                    label={getString('platform.connectors.k8.clientSecretOptional')}
+                  />
                 </Container>
               </Container>
 
               <FormInput.Text
                 name="oidcScopes"
-                label={getString('connectors.k8.OIDCScopes')}
+                label={getString('platform.connectors.k8.OIDCScopes')}
                 className={css.authFormField}
               />
             </>
@@ -364,16 +373,22 @@ const SelectAuthenticationMethodRef = (
             <>
               <Container flex={{ justifyContent: 'flex-start' }}>
                 <Container className={css.authFormField}>
-                  <SecretInput name={'clientKey'} label={getString('connectors.k8.clientKey')} />
-                  <SecretInput name={'clientKeyCertificate'} label={getString('connectors.k8.clientCertificate')} />
+                  <SecretInput name={'clientKey'} label={getString('platform.connectors.k8.clientKey')} />
+                  <SecretInput
+                    name={'clientKeyCertificate'}
+                    label={getString('platform.connectors.k8.clientCertificate')}
+                  />
                 </Container>
 
                 <Container className={css.authFormField} margin={{ left: 'xxlarge' }}>
-                  <SecretInput name={'clientKeyPassphrase'} label={getString('connectors.k8.clientKeyPassphrase')} />
+                  <SecretInput
+                    name={'clientKeyPassphrase'}
+                    label={getString('platform.connectors.k8.clientKeyPassphrase')}
+                  />
                   <FormInput.Select
                     items={CLIENT_KEY_ALGO_OPTIONS}
                     name="clientKeyAlgo"
-                    label={getString('connectors.k8.clientKeyAlgorithm')}
+                    label={getString('platform.connectors.k8.clientKeyAlgorithm')}
                     value={
                       // If we pass the value as undefined, formik will kick in and value will be updated as per uicore logic
                       // If we've added a custom value, then just add it as a label value pair
@@ -384,7 +399,7 @@ const SelectAuthenticationMethodRef = (
                     selectProps={{
                       allowCreatingNewItems: true,
                       inputProps: {
-                        placeholder: getString('connectors.k8.clientKeyAlgorithmPlaceholder')
+                        placeholder: getString('platform.connectors.k8.clientKeyAlgorithmPlaceholder')
                       }
                     }}
                   />
@@ -393,7 +408,7 @@ const SelectAuthenticationMethodRef = (
               <Container>
                 <SecretInput
                   name={'clientKeyCACertificate'}
-                  label={getString('connectors.k8.clientKeyCACertificate')}
+                  label={getString('platform.connectors.k8.clientKeyCACertificate')}
                 />
               </Container>
             </>
@@ -419,7 +434,7 @@ const SelectAuthenticationMethodRef = (
             <Button
               className={css.credentialsButton}
               round
-              text={getString('connectors.k8.delegateOutClusterInfo')}
+              text={getString('platform.connectors.k8.delegateOutClusterInfo')}
               onClick={() => {
                 formikProps?.setFieldValue('delegateType', DelegateTypes.DELEGATE_OUT_CLUSTER)
                 setTestConnectionStatus(TestStatus.NOT_INITIATED)
@@ -442,7 +457,7 @@ const SelectAuthenticationMethodRef = (
           {DelegateTypes.DELEGATE_OUT_CLUSTER === formikProps.values.delegateType ? (
             <Layout.Vertical margin={{ bottom: 'small' }}>
               <FormInput.Text
-                label={getString('connectors.k8.masterUrlLabel')}
+                label={getString('platform.connectors.k8.masterUrlLabel')}
                 placeholder={getString('UrlLabel')}
                 name="masterUrl"
                 className={css.authFormField}
@@ -490,7 +505,7 @@ const SelectAuthenticationMethodRef = (
               {(testConnectionStatus === TestStatus.SUCCESS || testConnectionStatus === TestStatus.FAILED) && (
                 <div style={{ paddingTop: '15px' }}>
                   <ConnectorTestConnection
-                    name={getString('connectors.stepThreeName')}
+                    name={getString('platform.connectors.stepThreeName')}
                     connectorInfo={connectorResponse?.data?.connector}
                     type={Connectors.KUBERNETES_CLUSTER}
                     setIsEditMode={() => false}

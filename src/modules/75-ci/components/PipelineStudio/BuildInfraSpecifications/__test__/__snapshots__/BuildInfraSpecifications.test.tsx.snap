@@ -404,7 +404,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                             <p
                               class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                             >
-                              connectors.title.harnessImageConnectorRef common.optionalLabel
+                              platform.connectors.title.harnessImageConnectorRef common.optionalLabel
                             </p>
                           </div>
                         </span>
@@ -1222,7 +1222,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                           <p
                             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                           >
-                            connectors.title.k8sCluster
+                            platform.connectors.title.k8sCluster
                           </p>
                         </span>
                       </div>
@@ -1730,7 +1730,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                               <p
                                                 class="StyledProps--font StyledProps--main field StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                                               >
-                                                connectors.cdng.verificationSensitivityLabel.medium
+                                                platform.connectors.cdng.verificationSensitivityLabel.medium
                                               </p>
                                                
                                               <div
@@ -4583,7 +4583,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                       <p
                                         class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                                       >
-                                        connectors.title.harnessImageConnectorRef common.optionalLabel
+                                        platform.connectors.title.harnessImageConnectorRef common.optionalLabel
                                       </p>
                                     </div>
                                   </span>
@@ -5133,7 +5133,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                       >
-                        connectors.title.k8sCluster
+                        platform.connectors.title.k8sCluster
                       </p>
                     </span>
                   </div>
@@ -5755,7 +5755,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                           <p
                             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                           >
-                            connectors.title.k8sCluster
+                            platform.connectors.title.k8sCluster
                           </p>
                         </span>
                       </div>

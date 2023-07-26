@@ -8,7 +8,7 @@
 import React from 'react'
 import { get, isNumber } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -18,12 +18,12 @@ import {
   buildGitlabPayload,
   buildGitPayload,
   buildAWSPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
-import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'S3']
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'S3'
 

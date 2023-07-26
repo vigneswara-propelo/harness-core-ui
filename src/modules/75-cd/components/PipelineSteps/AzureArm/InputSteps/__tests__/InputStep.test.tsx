@@ -351,6 +351,6 @@ describe('Test Azure ARM template input set', () => {
       }
     }
     const { getByText } = renderComponent(data)
-    expect(getByText('secrets.secret.configureSecret')).toBeInTheDocument()
+    expect(getByText('platform.secrets.secret.configureSecret')).toBeInTheDocument()
   })
 })

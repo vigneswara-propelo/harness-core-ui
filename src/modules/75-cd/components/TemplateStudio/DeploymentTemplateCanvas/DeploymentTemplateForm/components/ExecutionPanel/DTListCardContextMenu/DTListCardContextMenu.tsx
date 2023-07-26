@@ -36,7 +36,7 @@ export const DTListCardContextMenu: React.FC<ContextMenuProps> = (props): JSX.El
     return [
       {
         icon: 'main-view',
-        label: getString('connectors.ceAws.crossAccountRoleExtention.step1.p2'),
+        label: getString('platform.connectors.ceAws.crossAccountRoleExtention.step1.p2'),
         disabled: false,
         onClick: () => {
           onPreview(template)

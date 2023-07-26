@@ -7,7 +7,7 @@
 
 import type { IconName } from '@harness/icons'
 import type { AllowedTypes as MultiTypeAllowedTypes, StepProps } from '@harness/uicore'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { StringKeys } from 'framework/strings'
 import type {
   AzureWebAppServiceSpec,
@@ -18,7 +18,7 @@ import type {
   StageElementConfig,
   StartupCommandConfiguration
 } from 'services/cd-ng'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 export const AllowedTypes: Array<ConnectorTypes> = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Harness']

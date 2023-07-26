@@ -171,7 +171,7 @@ const SLOName = <T,>({
         <>
           <Layout.Vertical spacing="small" margin={{ bottom: 'small', top: 'xlarge' }} width="900px">
             <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
-              {getString('connectors.cdng.monitoredService.label')}
+              {getString('platform.connectors.cdng.monitoredService.label')}
             </Text>
             <Text font={{ size: 'normal', weight: 'light' }}>{getString('cv.slos.monitoredServiceSubTitle')}</Text>
           </Layout.Vertical>

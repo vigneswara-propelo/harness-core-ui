@@ -217,7 +217,7 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
             {getString('cv.monitoredServices.heading')}
           </Text>
           <Text color={Color.BLACK} padding={{ bottom: 'medium' }}>
-            {getString('connectors.cdng.monitoredService.monitoredServiceDef')}
+            {getString('platform.connectors.cdng.monitoredService.monitoredServiceDef')}
           </Text>
           <Container className={stepCss.formGroup}>
             <Layout.Vertical>

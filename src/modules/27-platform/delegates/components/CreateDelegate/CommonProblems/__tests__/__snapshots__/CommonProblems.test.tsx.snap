@@ -1,0 +1,235 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create Common Problems Tab render data 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+    style="width: 630px;"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      style="border-bottom: 0.5px solid #B0B1C4; justify-content: center; align-items: center;"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="support-troubleshoot"
+      >
+        <svg
+          height="18"
+          viewBox="0 0 60 60"
+          width="18"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="30"
+            cy="30"
+            fill="#d4ecfc"
+            r="30"
+          />
+          <path
+            d="M33.7 36.4c-.6 2.4-7.1 2.6-6.6-.6.3-2.2.7-4.3 1.1-6.4.2-1.4-.7-.9-1.5-1.2-.5-.3-.5-.9.1-1 .8-.2 3.6-.1 4.6-.1.5 0 .8.3.8.7.1.5 0 .9-.1 1.3-.4 2.1-.9 4.3-1.1 6.3-.1.5 0 1.3.6 1.3.6-.1.9-.4 1.5-.5.4-.4.6-.1.6.2zm-3.2-14.7c1.3 0 2.2 1 2.2 2.2 0 1.3-1 2.3-2.2 2.2-1.2 0-2.2-1-2.2-2.2s1-2.2 2.2-2.2zm-.5-4.4c-7 0-12.7 5.7-12.7 12.7S23 42.6 30 42.6 42.6 37 42.6 30 37 17.3 30 17.3zm0-2.3c8.3 0 15 6.7 15 15s-6.7 15-15 15-15-6.7-15-15 6.7-15 15-15z"
+            fill="#25a6f7"
+          />
+        </svg>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium StyledProps--font-weight-bold"
+        style="line-height: 22px;"
+      >
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.hereIsWhatYouCanDo
+      </p>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 511px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
+      >
+        platform.delegates.delegateNotInstalled.statusOfCluster
+      </p>
+      <a
+        href="https://docs.harness.io/"
+        rel="noreferrer"
+        style="text-align: end; font-size: 13px;"
+        target="_blank"
+      >
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot
+      </a>
+      <div
+        class="StyledProps--font StyledProps--main verificationField StyledProps--intent-primary StyledProps--padding-small StyledProps--font-align-center StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+          style="margin-right: 24px;"
+        >
+          platform.delegates.delegateNotInstalled.podCommand
+        </p>
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <div
+              class=""
+              tabindex="0"
+            >
+              <span
+                class="bp3-icon StyledProps--main copyIcon"
+                data-icon="copy-alt"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  viewBox="0 0 8 9"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 511px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
+      >
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.checkTheDelegateLogs
+      </p>
+      <a
+        href="https://docs.harness.io/"
+        rel="noreferrer"
+        style="text-align: end; font-size: 13px;"
+        target="_blank"
+      >
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot
+      </a>
+      <div
+        class="StyledProps--font StyledProps--main verificationField StyledProps--intent-primary StyledProps--padding-small StyledProps--font-align-center StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+          style="margin-right: 24px;"
+        >
+          platform.delegates.delegateNotInstalled.verifyField2
+        </p>
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <div
+              class=""
+              tabindex="0"
+            >
+              <span
+                class="bp3-icon StyledProps--main copyIcon"
+                data-icon="copy-alt"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  viewBox="0 0 8 9"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main"
+      style="width: 511px;"
+    >
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal StyledProps--color StyledProps--color-grey700"
+        style="line-height: 24px; --text-line-clamp: 3;"
+      >
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.description1
+      </p>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 511px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold"
+      >
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.description2
+      </p>
+      <a
+        href="https://docs.harness.io/"
+        rel="noreferrer"
+        style="text-align: end; font-size: 13px;"
+        target="_blank"
+      >
+        platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot
+      </a>
+      <div
+        class="StyledProps--font StyledProps--main verificationField StyledProps--intent-primary StyledProps--padding-small StyledProps--font-align-center StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+          style="margin-right: 24px;"
+        >
+          platform.delegates.delegateNotInstalled.verifyField3
+        </p>
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <div
+              class=""
+              tabindex="0"
+            >
+              <span
+                class="bp3-icon StyledProps--main copyIcon"
+                data-icon="copy-alt"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  viewBox="0 0 8 9"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

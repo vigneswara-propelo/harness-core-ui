@@ -59,7 +59,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
                   >
-                    connectors.title.k8sCluster
+                    platform.connectors.title.k8sCluster
                   </p>
                 </span>
               </div>
@@ -698,7 +698,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
                   >
-                    connectors.title.k8sCluster
+                    platform.connectors.title.k8sCluster
                   </p>
                 </span>
               </div>
@@ -1337,7 +1337,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
                   >
-                    connectors.title.k8sCluster
+                    platform.connectors.title.k8sCluster
                   </p>
                 </span>
               </div>
@@ -1976,7 +1976,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
                   >
-                    connectors.title.k8sCluster
+                    platform.connectors.title.k8sCluster
                   </p>
                 </span>
               </div>

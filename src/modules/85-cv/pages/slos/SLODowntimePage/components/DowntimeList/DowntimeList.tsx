@@ -326,7 +326,7 @@ const DowntimeList = ({
       Cell: RenderDowntimeCategory
     },
     {
-      Header: getString('filestore.view.lastModifiedBy').toUpperCase(),
+      Header: getString('platform.filestore.view.lastModifiedBy').toUpperCase(),
       width: '10%',
       Cell: RenderLastModifiedBy
     },

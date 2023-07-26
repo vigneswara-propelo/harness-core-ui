@@ -46,7 +46,7 @@ describe('<DTListCardContextMenu /> tests', () => {
     const popover = findPopoverContainer() as HTMLElement
     await waitFor(() => popover)
 
-    const previewBtn = getByText(popover, 'connectors.ceAws.crossAccountRoleExtention.step1.p2')
+    const previewBtn = getByText(popover, 'platform.connectors.ceAws.crossAccountRoleExtention.step1.p2')
     fireEvent.click(previewBtn)
     expect(baseProps.onPreview).toBeCalledWith(template)
 

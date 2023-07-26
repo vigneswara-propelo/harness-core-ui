@@ -40,7 +40,7 @@ import {
   useGetConnector
 } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import {
@@ -54,7 +54,7 @@ import { getOptionalSubLabel } from '@pipeline/components/Volumes/Volumes'
 import { ConnectionType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import type { PipelineType, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { useQueryParams } from '@common/hooks'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'

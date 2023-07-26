@@ -101,7 +101,7 @@ describe('Custom Variables', () => {
 
     const addBtn = await screen.findByText('common.addVariable')
     await userEvent.click(addBtn)
-    await screen.findByRole('heading', { name: 'variables.newVariable' })
+    await screen.findByRole('heading', { name: 'platform.variables.newVariable' })
     const view = screen.getByTestId('add-edit-variable')
     const saveVariableBtn = within(view).getByText('save')
     const variableNameTextBox = screen.getByPlaceholderText('pipeline.variable.variableNamePlaceholder')
@@ -128,7 +128,7 @@ describe('Custom Variables', () => {
     )
     const addBtn = await screen.findByText('common.addVariable')
     await userEvent.click(addBtn)
-    await screen.findByRole('heading', { name: 'variables.newVariable' })
+    await screen.findByRole('heading', { name: 'platform.variables.newVariable' })
     const view = screen.getByTestId('add-edit-variable')
     const saveVariableBtn = within(view).getByText('save')
     const variableNameTextBox = queryByNameAttribute('name', view)!
@@ -244,7 +244,7 @@ describe('Custom Variables', () => {
       }
     })
     const response = new CustomVariables().getSecretsListForYaml(
-      'variables.0.value',
+      'platform.variables.0.value',
       `
       variables:
         - type: Secret

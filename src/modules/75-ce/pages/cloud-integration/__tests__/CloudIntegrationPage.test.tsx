@@ -192,7 +192,7 @@ describe('Test Cases for K8sClustersTab', () => {
 
     // Create Secret Step
     await waitFor(() => {
-      expect(getByText(autoStoppingDialog, 'secrets.createSecret')).toBeDefined()
+      expect(getByText(autoStoppingDialog, 'platform.secrets.createSecret')).toBeDefined()
     })
     window.open = jest.fn()
     fireEvent.click(getByText(autoStoppingDialog, 'ce.cloudIntegration.autoStoppingModal.createSecret.createKey'))

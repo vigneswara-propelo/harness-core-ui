@@ -28,7 +28,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import {
   ApplicationCofigDataType,
   ApplicationConfigWizardStepTwoProps,

@@ -29,7 +29,7 @@ import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ServiceNowTicketTypeDTO, useGetServiceNowIssueMetadata, useGetServiceNowTicketTypesV2 } from 'services/cd-ng'
 import {
   ServiceNowCreateFieldType,

@@ -22,7 +22,7 @@ import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/
 import {
   FormMultiTypeConnectorField,
   MultiTypeConnectorFieldProps
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

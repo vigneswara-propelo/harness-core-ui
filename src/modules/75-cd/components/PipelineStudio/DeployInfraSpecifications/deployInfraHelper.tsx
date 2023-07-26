@@ -522,7 +522,7 @@ const infraGroupItems: {
     value: InfraDeploymentType.AzureWebApp
   },
   [InfraDeploymentType.PDC]: {
-    label: 'connectors.title.pdcConnector',
+    label: 'platform.connectors.title.pdcConnector',
     icon: 'pdc',
     value: InfraDeploymentType.PDC
   },
@@ -567,7 +567,7 @@ const infraGroupItems: {
     value: InfraDeploymentType.TAS
   },
   [InfraDeploymentType.KubernetesRancher]: {
-    label: 'connectors.rancher.title',
+    label: 'platform.connectors.rancher.title',
     icon: 'rancher',
     value: InfraDeploymentType.KubernetesRancher
   }

@@ -25,14 +25,14 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -146,7 +146,7 @@ function ServiceHooksStore({
         initialValues={getInitialValues()}
         formName="configFilesStore"
         validationSchema={Yup.object().shape({
-          storeType: Yup.string().required(getString('connectors.chooseMethodForConnection'))
+          storeType: Yup.string().required(getString('platform.connectors.chooseMethodForConnection'))
         })}
         onSubmit={formData => {
           submitFirstStep({ ...formData })

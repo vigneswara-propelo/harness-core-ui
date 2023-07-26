@@ -3,7 +3,7 @@ import { Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ConnectorConnectivityDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ConnectorStatus } from '@connectors/constants'
+import { ConnectorStatus } from '@platform/connectors/constants'
 
 interface RenderConnectorStatus {
   status: ConnectorConnectivityDetails['status']

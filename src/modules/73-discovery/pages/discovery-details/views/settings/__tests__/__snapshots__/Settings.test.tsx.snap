@@ -97,7 +97,7 @@ exports[`Overview tab tests should match snapshot 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
           >
-            connectors.connectorDetails
+            platform.connectors.connectorDetails
           </p>
           <div
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
@@ -106,7 +106,7 @@ exports[`Overview tab tests should match snapshot 1`] = `
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
               style="width: 40%;"
             >
-              connectors.name
+              platform.connectors.name
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"

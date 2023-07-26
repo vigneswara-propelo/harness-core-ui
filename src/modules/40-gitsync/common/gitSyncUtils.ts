@@ -6,7 +6,7 @@
  */
 
 import type { IconName } from '@harness/uicore'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { GitSyncConfig, ConnectorInfoDTO, GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { GitSuffixRegex } from '@common/utils/StringUtils'
 

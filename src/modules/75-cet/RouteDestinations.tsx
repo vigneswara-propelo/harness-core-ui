@@ -19,7 +19,7 @@ import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStor
 import { Module, ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import PolicyManagementMFE from '@governance/GovernanceApp'
-import ConnectorsPage from '@connectors/pages/connectors/ConnectorsPage'
+import ConnectorsPage from '@platform/connectors/pages/connectors/ConnectorsPage'
 import SecretsPage from '@secrets/pages/secrets/SecretsPage'
 import DelegatesPage from '@delegates/pages/delegates/DelegatesPage'
 import DelegateListing from '@delegates/pages/delegates/DelegateListing'
@@ -180,7 +180,7 @@ const ETRoutes: FC = () => {
     permissionLabels: {
       [PermissionIdentifier.CET_TOKEN_VIEW]: <LocaleString stringID="rbac.permissionLabels.view" />,
       [PermissionIdentifier.CET_TOKEN_CREATE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-      [PermissionIdentifier.CET_TOKEN_REVOKE]: <LocaleString stringID="delegates.tokens.revoke" />
+      [PermissionIdentifier.CET_TOKEN_REVOKE]: <LocaleString stringID="platform.delegates.tokens.revoke" />
     }
   })
 

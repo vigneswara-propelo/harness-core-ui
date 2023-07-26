@@ -39,7 +39,7 @@ import {
   useTags,
   ExecutionElementConfig
 } from 'services/cd-ng'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -55,7 +55,7 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'

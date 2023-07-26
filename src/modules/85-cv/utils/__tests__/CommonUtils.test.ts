@@ -170,7 +170,7 @@ describe('Test for getRiskColorLogo', () => {
 describe('Test for getDetailsLabel', () => {
   test('test for getting correct details label', () => {
     expect(getDetailsLabel('artifactType', getString)).toEqual(getString('pipeline.artifactsSelection.artifactType'))
-    expect(getDetailsLabel('artifactTag', getString)).toEqual(getString('connectors.cdng.artifactTag'))
+    expect(getDetailsLabel('artifactTag', getString)).toEqual(getString('platform.connectors.cdng.artifactTag'))
     expect(getDetailsLabel('executedBy', getString)).toEqual(getString('common.executedBy'))
     expect(getDetailsLabel('updatedBy', getString)).toEqual(getString('common.updatedBy'))
     expect(getDetailsLabel('eventType', getString)).toEqual(getString('pipeline.verification.logs.eventType'))

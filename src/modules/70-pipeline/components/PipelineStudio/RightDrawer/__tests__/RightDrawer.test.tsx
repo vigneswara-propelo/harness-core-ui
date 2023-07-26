@@ -14,7 +14,7 @@ import * as cdng from 'services/cd-ng'
 import * as pipelineng from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import {
   PipelineContext,
   PipelineContextInterface

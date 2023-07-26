@@ -58,7 +58,7 @@ export default function SelectVerificationType(props: SelectVerificationTypeProp
     <Card>
       <>
         <Layout.Vertical spacing={'medium'}>
-          <Text font={{ size: 'small' }}>{getString('connectors.cdng.verificationTypeHeading')}</Text>
+          <Text font={{ size: 'small' }}>{getString('platform.connectors.cdng.verificationTypeHeading')}</Text>
           <VerificationTypeDropdown verificationTypeOptions={continousVerificationTypeOptions} />
         </Layout.Vertical>
         {formik?.values?.spec?.type ? <ConfigureFields formik={formik} allowableTypes={allowableTypes} /> : null}

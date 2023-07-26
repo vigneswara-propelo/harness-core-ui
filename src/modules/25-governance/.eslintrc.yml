@@ -12,12 +12,7 @@ rules:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
         - group:
-            - modules/30-delegates/*
-            - modules/30-secrets/*
-            - modules/31-filestore/*
-            - modules/31-variables/*
-            - modules/33-auth-settings/*
-            - modules/35-connectors/*
+            - modules/27-platform/*
             - modules/38-audit-trail/*
             - modules/38-user-profile/*
             - modules/40-gitsync/*
@@ -41,12 +36,7 @@ rules:
             - modules/85-iacm/*
             - modules/85-sto/*
             - modules/90-gitops/*
-            - '@delegates/*'
-            - '@secrets/*'
-            - '@filestore/*'
-            - '@variables/*'
-            - '@auth-settings/*'
-            - '@connectors/*'
+            - '@platform/*'
             - '@audit-trail/*'
             - '@user-profile/*'
             - '@gitsync/*'

@@ -279,7 +279,7 @@ describe('Monitored Service list', () => {
     )
 
     expect(getByText('cv.monitoredServices.youDontHaveAnyMonitoredServicesYet')).toBeInTheDocument()
-    expect(getByText('connectors.cdng.monitoredService.monitoredServiceDef')).toBeInTheDocument()
+    expect(getByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')).toBeInTheDocument()
     expect(getByText('common.useTemplate')).toBeInTheDocument()
   })
 
@@ -349,7 +349,7 @@ describe('Monitored Service list', () => {
 
     expect(refetchServiceCountData).toBeCalledTimes(3)
     expect(screen.queryByText(`cv.monitoredServices.showingServiceAtRisk`)).not.toBeInTheDocument()
-    expect(screen.queryByText('connectors.cdng.monitoredService.monitoredServiceDef')).not.toBeInTheDocument()
+    expect(screen.queryByText('platform.connectors.cdng.monitoredService.monitoredServiceDef')).not.toBeInTheDocument()
     expect(screen.queryByText('cv.monitoredServices.youHaveNoMonitoredServices')).toBeInTheDocument()
   })
 

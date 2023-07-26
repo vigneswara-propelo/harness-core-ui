@@ -23,7 +23,7 @@ import { IconName, Spinner } from '@blueprintjs/core'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -256,7 +256,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
         {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
           <FormMultiTypeConnectorField
             name={`${prefix}spec.connectorRef`}
-            label={getString('connectors.jenkins.jenkinsConnectorLabel')}
+            label={getString('platform.connectors.jenkins.jenkinsConnectorLabel')}
             selected={(initialValues?.spec?.connectorRef as string) || ''}
             placeholder={getString('common.entityPlaceholderText')}
             accountIdentifier={accountId}
@@ -361,8 +361,8 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
             {showChildJobField && (
               <div className={cx(css.formGroup, css.lg)}>
                 <FormInput.MultiTypeBiLevelInput
-                  label={`${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
-                    'connectors.jenkins.jobs'
+                  label={`${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
+                    'platform.connectors.jenkins.jobs'
                   )}`}
                   name={`${prefix}spec.jobName`}
                   value={childJob}

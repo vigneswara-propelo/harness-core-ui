@@ -9,7 +9,7 @@ import type { IconName } from '@harness/uicore'
 import type { BitbucketPRSpec, GithubPRSpec, GitlabPRSpec } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO, SecretDTOV2 } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { SelectBuildLocationForwardRef } from './SelectBuildLocation'
 
 export interface InfraProvisioningWizardProps {

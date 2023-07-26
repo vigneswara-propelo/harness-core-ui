@@ -6,7 +6,7 @@ import { AllowedTypesWithRunTime, FormikForm } from '@harness/uicore'
 
 import type { ManifestConfig, ManifestConfigWrapper, ServiceSpec } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'

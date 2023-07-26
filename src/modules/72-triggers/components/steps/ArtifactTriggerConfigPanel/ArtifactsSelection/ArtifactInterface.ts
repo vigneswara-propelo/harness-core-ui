@@ -7,7 +7,7 @@
 
 import type { AllowedTypes, SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ArtifactConfig, ServiceDefinition } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type {

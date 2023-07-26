@@ -76,7 +76,7 @@ exports[`GCR Image Path Artifact tests renders correctly in edit case 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="gcrImagePath_registryHostname"
                   >
-                    connectors.GCR.registryHostname
+                    platform.connectors.GCR.registryHostname
                   </span>
                    
                   <span
@@ -546,7 +546,7 @@ exports[`GCR Image Path Artifact tests renders while adding step first time 1`] 
                     class="Tooltip--acenter"
                     data-tooltip-id="gcrImagePath_registryHostname"
                   >
-                    connectors.GCR.registryHostname
+                    platform.connectors.GCR.registryHostname
                   </span>
                    
                   <span
@@ -1016,7 +1016,7 @@ exports[`GCR Image Path Artifact tests renders without crashing 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="gcrImagePath_registryHostname"
                   >
-                    connectors.GCR.registryHostname
+                    platform.connectors.GCR.registryHostname
                   </span>
                    
                   <span

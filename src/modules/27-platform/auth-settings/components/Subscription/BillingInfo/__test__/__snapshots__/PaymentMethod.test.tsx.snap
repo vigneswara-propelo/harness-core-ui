@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PaymentMethod render 1`] = `
+<div>
+  <div
+    class="bp3-card bp3-elevation-0 Card--card paymentCard"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-start StyledProps--flex-justifyContent-space-between"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+          style="width: 55%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--padding-bottom-large StyledProps--font-variation-h5"
+          >
+            platform.authSettings.billingInfo.paymentMethod
+          </p>
+        </div>
+        <img
+          alt=""
+          aria-hidden="true"
+          class="powerByStripe"
+          src="test-file-stub"
+        />
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main paymentgrid"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+          style="width: 35%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--padding-bottom-small"
+          >
+            common.nameOnCard
+          </p>
+          <div
+            class="TextInput--main"
+          >
+            <div
+              class="bp3-input-group"
+            >
+              <input
+                class="bp3-input"
+                data-testid="nameOnCard"
+                type="text"
+                value="Jane Doe"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--vertical StyledProps--main"
+          style="width: 55%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--padding-bottom-small"
+          >
+            common.cardNumber
+          </p>
+          <div
+            class="creditCard"
+          >
+            <div />
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main"
+      >
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        >
+          <input
+            data-testid="row-checkbox"
+            type="checkbox"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+        </label>
+        <p
+          class="StyledProps--font StyledProps--main warning StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--padding-small"
+        >
+          platform.authSettings.billingInfo.saveCardWarning
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

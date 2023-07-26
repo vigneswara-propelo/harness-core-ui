@@ -6,7 +6,7 @@
  */
 import * as Yup from 'yup'
 import { get, isString } from 'lodash-es'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
 import {
@@ -16,7 +16,7 @@ import {
   buildGitPayload,
   buildArtifactoryPayload,
   buildAWSPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactory']
@@ -49,7 +49,7 @@ export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'common.repo_provider.bitbucketLabel',
-  Artifactory: 'connectors.artifactory.artifactoryLabel',
+  Artifactory: 'platform.connectors.artifactory.artifactoryLabel',
   Harness: 'harness',
   S3: 'pipeline.artifactsSelection.amazonS3Title'
 }

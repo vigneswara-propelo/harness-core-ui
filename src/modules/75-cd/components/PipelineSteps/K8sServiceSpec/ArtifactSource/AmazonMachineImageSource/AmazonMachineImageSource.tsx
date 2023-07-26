@@ -15,7 +15,7 @@ import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/Artif
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { AMITagObject, BuildDetails, useListVersionsForAMIArtifact } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { amiFilters, isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'

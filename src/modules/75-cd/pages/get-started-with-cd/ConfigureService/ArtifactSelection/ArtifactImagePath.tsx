@@ -49,8 +49,8 @@ export default function ArtifactImagePath(): JSX.Element {
 
   const artifactLastStepProps = React.useMemo((): ArtifactLastStepProps => {
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      key: getString('platform.connectors.stepFourName'),
+      name: getString('platform.connectors.stepFourName'),
       context: ModalViewFor.CD_Onboarding,
       expressions,
       allowableTypes: ALLOWABLE_TYPES,

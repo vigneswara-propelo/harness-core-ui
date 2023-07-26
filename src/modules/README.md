@@ -10,7 +10,7 @@ All modules should start with a number, indicating it's layer.
 - Lower numbers **cannot** import from higher numbers.
 - Modules on the same layer **cannot** import from each other.
 
-(eg. `35-connectors` can import from `30-secrets`, but it cannot import from `40-projects`)
+(eg. `45-project-orgs` can import from `27-platform`, but it cannot import from `70-pipeline`)
 
 This ensures:
 
@@ -28,7 +28,7 @@ Criteria for creating a new module:
 
 How to create a new module:
 
-- Create a new folder with correct number in the name (eg. 35-connectors)
+- Create a new folder with correct number in the name (eg. `27-platform`)
 - Try to leave some space above and below your module layer. i.e. avoid putting modules on consecutive layers.
   This allows for inserting new modules in the future. (eg. `30-secrets` and `31-connectors` would not be future-friendly.)
 - Run the script `scripts/generate-eslint-config-for-imports` to automatically generate/update all the required ESLint rules.

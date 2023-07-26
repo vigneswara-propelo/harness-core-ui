@@ -63,7 +63,7 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 
-import { connectorUrlType } from '@connectors/constants'
+import { connectorUrlType } from '@platform/connectors/constants'
 
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'

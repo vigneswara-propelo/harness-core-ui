@@ -21,7 +21,7 @@ import {
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import { branchStatusMock } from '@connectors/mocks/mock'
+import { branchStatusMock } from '@platform/connectors/mocks/mock'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'

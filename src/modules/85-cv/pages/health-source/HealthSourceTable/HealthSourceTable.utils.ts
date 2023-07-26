@@ -8,7 +8,7 @@
 import type { IconName } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import type { ChangeSourceDTO, Sources } from 'services/cv'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { UseStringsReturn } from 'framework/strings'
 import { HealthSourceTypes } from '../types'
 import type { UpdatedHealthSource, RowData } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'

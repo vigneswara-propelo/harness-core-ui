@@ -28,9 +28,9 @@ import { useListAwsRegions } from 'services/portal'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -115,7 +115,7 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('platform.connectors.selectConnector')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   tooltipProps={{

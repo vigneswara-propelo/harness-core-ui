@@ -20,7 +20,7 @@ import {
   TanzuApplicationServiceInfrastructure
 } from 'services/cd-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'

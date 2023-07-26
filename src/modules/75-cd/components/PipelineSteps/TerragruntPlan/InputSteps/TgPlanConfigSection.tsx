@@ -17,7 +17,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useStrings } from 'framework/strings'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'

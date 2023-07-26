@@ -486,7 +486,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           {!isSimpleVerification && (
             <Layout.Horizontal className={css.legend} data-testid="metrics_legend">
               <span className={css.predicted} />
-              <Text font={{ variation: FontVariation.SMALL }}> {getString('connectors.cdng.baseline')}</Text>
+              <Text font={{ variation: FontVariation.SMALL }}> {getString('platform.connectors.cdng.baseline')}</Text>
               <span className={css.actualFail} />
               <span className={css.actualWarning} />
               <span className={css.actualObserve} />

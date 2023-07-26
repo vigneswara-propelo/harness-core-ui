@@ -23,7 +23,7 @@ import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/Artif
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+} from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   BuildDetails,
   SidecarArtifact,

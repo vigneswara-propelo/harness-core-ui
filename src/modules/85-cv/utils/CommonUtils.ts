@@ -342,7 +342,7 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
     case 'artifactType':
       return getString('pipeline.artifactsSelection.artifactType')
     case 'artifactTag':
-      return getString('connectors.cdng.artifactTag')
+      return getString('platform.connectors.cdng.artifactTag')
     case 'executedBy':
       return getString('common.executedBy')
     case 'eventType':

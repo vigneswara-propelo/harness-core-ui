@@ -17,26 +17,26 @@ import {
   buildDockerPayload,
   buildArtifactoryPayload,
   buildAWSPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+} from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
-import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { AuthTypes } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
-import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import useCreateEditConnector, { BuildPayloadProps } from '@platform/connectors/hooks/useCreateEditConnector'
 import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import StepDockerAuthentication, {
   DockerFormInterface
-} from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
+} from '@platform/connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
 import StepArtifactoryAuthentication, {
   ArtifactoryFormInterface
-} from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
-import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import { ModalViewFor } from '@connectors/components/CreateConnector/CreateConnectorUtils'
+} from '@platform/connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
+import { ModalViewFor } from '@platform/connectors/components/CreateConnector/CreateConnectorUtils'
 import StepAWSAuthentication, {
   AWSFormInterface
-} from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
-import { regionValues } from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAuthConstants'
+} from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import { regionValues } from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAuthConstants'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import {
   ALLOWABLE_TYPES,

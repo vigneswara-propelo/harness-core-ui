@@ -9,7 +9,7 @@ import React from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 
 import { queryByNameAttribute } from '@common/utils/testUtils'
-import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
+import { awsConnectorListResponse } from '@platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -174,7 +174,7 @@ describe('StepGroupStepInputSetMode tests', () => {
 
     // Override Image Connector
     const harnessImageConnectorRefLabel = screen.getByText(
-      'connectors.title.harnessImageConnectorRef common.optionalLabel'
+      'platform.connectors.title.harnessImageConnectorRef common.optionalLabel'
     )
     expect(harnessImageConnectorRefLabel).toBeInTheDocument()
   })

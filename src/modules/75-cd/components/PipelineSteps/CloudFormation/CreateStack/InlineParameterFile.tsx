@@ -153,7 +153,7 @@ export const InlineParameterFile = ({
                 <Layout.Horizontal flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                   <Layout.Vertical className={css.overrideSelect}>
                     <Text style={{ color: 'rgb(11, 11, 13)', fontWeight: 'bold' }}>
-                      {getString('connectors.parameters')} ({params.length})
+                      {getString('platform.connectors.parameters')} ({params.length})
                     </Text>
                   </Layout.Vertical>
                   <Layout.Vertical>

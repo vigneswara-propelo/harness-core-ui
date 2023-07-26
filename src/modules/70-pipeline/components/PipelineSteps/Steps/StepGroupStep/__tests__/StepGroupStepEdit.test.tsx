@@ -10,7 +10,7 @@ import { act, fireEvent, render, screen, waitFor, within } from '@testing-librar
 import userEvent from '@testing-library/user-event'
 
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
-import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
+import { awsConnectorListResponse } from '@platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepGroupElementConfig } from 'services/pipeline-ng'
@@ -304,7 +304,7 @@ describe('StepGroupStepEdit tests', () => {
 
     // Override Image Connector
     const harnessImageConnectorRefLabel = screen.getByText(
-      'connectors.title.harnessImageConnectorRef common.optionalLabel'
+      'platform.connectors.title.harnessImageConnectorRef common.optionalLabel'
     )
     expect(harnessImageConnectorRefLabel).toBeInTheDocument()
     // Kubernetes Cluster & Override Image Connector

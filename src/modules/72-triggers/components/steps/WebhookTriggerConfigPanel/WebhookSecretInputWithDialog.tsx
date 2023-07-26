@@ -96,7 +96,7 @@ const WebhookSecretInputWithDialog: React.FC<SecretInputWithDialogProps> = ({ fo
     </Text>
   )
 
-  const secretInputLabel = `${getString('secrets.secret.configureSecret')} ${
+  const secretInputLabel = `${getString('platform.secrets.secret.configureSecret')} ${
     isGithubWebhookAuthenticationEnabled ? `` : `(${getString('projectsOrgs.optional')})`
   }`
 

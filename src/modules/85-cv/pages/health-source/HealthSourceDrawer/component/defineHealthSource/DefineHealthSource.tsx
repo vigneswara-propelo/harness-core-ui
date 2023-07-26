@@ -32,11 +32,11 @@ import { HealthSourcesType } from '@cv/constants'
 import { BGColorWrapper } from '@cv/pages/health-source/common/StyledComponents'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { AllMultiTypeInputTypesForStep } from '@ci/components/PipelineSteps/CIStep/StepUtils'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import {
   healthSourceTypeMapping,
   healthSourceTypeMappingForReferenceField
@@ -146,7 +146,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           disabled={!sourceType}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-              {getString('connectors.selectConnector')}
+              {getString('platform.connectors.selectConnector')}
             </Text>
           }
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
@@ -180,7 +180,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           name={ConnectorRefFieldName}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-              {getString('connectors.selectConnector')}
+              {getString('platform.connectors.selectConnector')}
             </Text>
           }
           accountIdentifier={accountId}

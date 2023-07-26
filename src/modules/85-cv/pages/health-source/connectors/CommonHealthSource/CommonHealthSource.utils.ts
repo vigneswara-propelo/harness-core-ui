@@ -620,7 +620,7 @@ export function getFieldName(
   name?: string
 ): string {
   if (name === HealthSourceTypes.AzureLogs && fieldIdentifier === CustomMetricFormFieldNames.INDEX) {
-    return getString('connectors.serviceNow.resourceID')
+    return getString('platform.connectors.serviceNow.resourceID')
   }
   switch (fieldIdentifier) {
     case CustomMetricFormFieldNames.QUERY:

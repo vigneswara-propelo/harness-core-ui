@@ -19,7 +19,7 @@ import type { GitQueryParams, Module } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import { Connectors, connectorUrlType } from '@connectors/constants'
+import { Connectors, connectorUrlType } from '@platform/connectors/constants'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ConnectorRefWidth } from './constants'
 
@@ -198,13 +198,13 @@ export const getGitUrl = (
   }
   switch (connectorType) {
     case Connectors.GITHUB:
-      return getString('connectors.gitProviderURLs.github')
+      return getString('platform.connectors.gitProviderURLs.github')
     case Connectors.BITBUCKET:
-      return getString('connectors.gitProviderURLs.bitbucket')
+      return getString('platform.connectors.gitProviderURLs.bitbucket')
     case Connectors.GITLAB:
-      return getString('connectors.gitProviderURLs.gitlab')
+      return getString('platform.connectors.gitProviderURLs.gitlab')
     case Connectors.AZURE_REPO:
-      return getString('connectors.gitProviderURLs.azureRepos')
+      return getString('platform.connectors.gitProviderURLs.azureRepos')
     default:
       return ''
   }

@@ -24,7 +24,7 @@ import { get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Utils } from '@ce/common/Utils'
-import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import useCreateConnectorModal from '@platform/connectors/modals/ConnectorModal/useCreateConnectorModal'
 import useK8sQuickCreateModal from '@ce/components/K8sQuickCreate/K8sQuickCreateModal'
 
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -37,7 +37,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import K8sClustersTab from '@ce/components/CloudIntegrationTabs/K8sClustersTab'
 import CloudAccountsTab from '@ce/components/CloudIntegrationTabs/CloudAccountsTab'
 import NoConnectors from '@ce/components/CloudIntegrationTabs/NoConnectors'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { CloudProviderList } from '@ce/components/CreateConnector/CreateConnector'
 import {
   CustomK8sPageConnectorResponse,

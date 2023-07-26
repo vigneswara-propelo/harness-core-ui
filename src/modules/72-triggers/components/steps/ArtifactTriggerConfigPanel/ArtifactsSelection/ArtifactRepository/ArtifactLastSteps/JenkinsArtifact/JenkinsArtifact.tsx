@@ -263,7 +263,7 @@ function FormComponent(
 
   const childJobNamePlaceholder = fetchingChildJobs
     ? getString('common.loadingFieldOptions', {
-        fieldName: `${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
+        fieldName: `${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
           'pipeline.jenkinsStep.job'
         )}`
       })
@@ -276,7 +276,7 @@ function FormComponent(
       <div className={cx(css.connectorForm)}>
         <div className={css.jenkinsFieldContainer}>
           <FormInput.MultiTypeBiLevelInput
-            label={getString('connectors.jenkins.jobNameLabel')}
+            label={getString('platform.connectors.jenkins.jobNameLabel')}
             name={'jobName'}
             value={getJobNameValue()}
             placeholder={jobNamePlaceholder}
@@ -323,8 +323,8 @@ function FormComponent(
         {showChildJobField && (
           <div className={css.jenkinsFieldContainer}>
             <FormInput.MultiTypeBiLevelInput
-              label={`${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
-                'connectors.jenkins.jobs'
+              label={`${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
+                'platform.connectors.jenkins.jobs'
               )}`}
               name={'childJobName'}
               value={childJob}
@@ -451,8 +451,8 @@ export function JenkinsArtifact(
         .trim()
         .required(
           getString('common.validation.fieldIsRequired', {
-            name: `${lastOpenedJob.current || getString('connectors.jenkins.child')} ${getString(
-              'connectors.jenkins.jobs'
+            name: `${lastOpenedJob.current || getString('platform.connectors.jenkins.child')} ${getString(
+              'platform.connectors.jenkins.jobs'
             )}`
           })
         )

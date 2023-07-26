@@ -10,7 +10,7 @@ import { act, fireEvent, render } from '@testing-library/react'
 import produce from 'immer'
 import { set } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import {
   TemplateVariablesContext,

@@ -8,7 +8,7 @@
 import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'

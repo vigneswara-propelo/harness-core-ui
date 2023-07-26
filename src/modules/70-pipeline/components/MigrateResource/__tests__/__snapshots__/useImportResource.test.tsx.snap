@@ -172,7 +172,7 @@ exports[`useImportEntity tests snapshot testing 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="importResource_connectorRef"
                     >
-                      connectors.title.gitConnector
+                      platform.connectors.title.gitConnector
                     </span>
                      
                     <span

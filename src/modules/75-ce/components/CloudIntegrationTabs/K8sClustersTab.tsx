@@ -30,7 +30,7 @@ import { defaultTo } from 'lodash-es'
 
 import routes from '@common/RouteDefinitions'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import useCreateConnectorModal from '@platform/connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { useStrings } from 'framework/strings'
 import { ConnectorInfoDTO, useDeleteConnector } from 'services/cd-ng'
 import type { CcmMetaData } from 'services/ce/services'
@@ -44,7 +44,7 @@ import { CloudProvider } from '@ce/types'
 import { ConnectorStatus } from '@ce/constants'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import useTestConnectionModal from '@platform/connectors/common/useTestConnectionModal/useTestConnectionModal'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import {
   CustomK8sCell,
@@ -211,7 +211,7 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
           tooltip={
             <FeatureWarningTooltip
               featureName={FeatureIdentifier.CCM_K8S_CLUSTERS}
-              warningMessage={getString('connectors.ceK8.featureWarning', {
+              warningMessage={getString('platform.connectors.ceK8.featureWarning', {
                 count: featureInfo.featureDetail?.count,
                 limit: featureInfo.featureDetail?.limit
               })}
@@ -351,7 +351,7 @@ const MenuCell: CustomK8sCell = ({ row, column }) => {
       })
 
       if (k8sConnectorDeleted) {
-        showSuccess(getString('connectors.deletedSuccssMessage', { name: k8sConnector?.name }))
+        showSuccess(getString('platform.connectors.deletedSuccssMessage', { name: k8sConnector?.name }))
       }
     } catch (error) {
       showError(getErrorInfoFromErrorObject(error))
@@ -456,7 +456,7 @@ const K8sClustersTab: React.FC<K8sClustersTabProps> = ({
     () => [
       {
         accessor: 'name',
-        Header: getString('connectors.name'),
+        Header: getString('platform.connectors.name'),
         Cell: ConnectorNameCell,
         width: '20%',
         openConnectorModal

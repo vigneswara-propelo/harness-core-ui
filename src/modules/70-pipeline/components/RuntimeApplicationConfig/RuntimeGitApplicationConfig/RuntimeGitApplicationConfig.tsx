@@ -11,7 +11,7 @@ import {
   ApplicationConfigBase,
   ApplicationConfigRenderProps
 } from '@cd/factory/ApplicationConfigFactory/ApplicationConfigBase'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import RuntimeGitApplicationConfigContent from './RuntimeGitApplicationConfigContent'
 
 export class GitApplicationConfig extends ApplicationConfigBase<ApplicationConfigRenderProps> {

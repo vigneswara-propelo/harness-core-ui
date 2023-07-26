@@ -42,7 +42,7 @@ export function PipelineInputParametersV1Internal(props: PipelineInputParameters
             dataTooltipId: 'runModalParams'
           }}
         >
-          {getString('connectors.parameters')}
+          {getString('platform.connectors.parameters')}
         </Text>
       </Layout.Horizontal>
       <div className={css.topAccordion}>

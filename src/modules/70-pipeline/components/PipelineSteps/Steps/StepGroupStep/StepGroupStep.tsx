@@ -72,7 +72,7 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
       set(
         errors,
         'stepGroupInfra.spec.connectorRef',
-        getString?.('common.validation.fieldIsRequired', { name: getString?.('connectors.title.k8sCluster') })
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('platform.connectors.title.k8sCluster') })
       )
     }
 

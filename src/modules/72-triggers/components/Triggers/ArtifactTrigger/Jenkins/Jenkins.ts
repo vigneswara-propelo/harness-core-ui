@@ -12,7 +12,7 @@ import type { ArtifactTriggerValues } from '../utils'
 
 export class Jenkins extends ArtifactTrigger<ArtifactTriggerValues> {
   protected type: TriggerArtifactType = 'Jenkins'
-  protected triggerDescription: keyof StringsMap = 'connectors.jenkins.jenkins'
+  protected triggerDescription: keyof StringsMap = 'platform.connectors.jenkins.jenkins'
 
   protected defaultValues = {
     triggerType: this.baseType,

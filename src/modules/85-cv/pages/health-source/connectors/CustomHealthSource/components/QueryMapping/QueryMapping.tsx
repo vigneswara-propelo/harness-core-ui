@@ -26,7 +26,7 @@ import Button from '@rbac/components/Button/Button'
 import { useStrings } from 'framework/strings'
 import { getConnectorRef } from '@cv/pages/health-source/common/utils/HealthSource.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { HTTPRequestMethodOption } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthValidationPath/components/HTTPRequestMethod/HTTPRequestMethod'
+import { HTTPRequestMethodOption } from '@platform/connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthValidationPath/components/HTTPRequestMethod/HTTPRequestMethod'
 import { useFetchSampleData } from 'services/cv'
 import { useGetConnector } from 'services/cd-ng'
 import { QueryType } from '@cv/pages/health-source/common/HealthSourceQueryType/HealthSourceQueryType.types'
@@ -138,7 +138,7 @@ export default function QueryMapping({
             <Icon name="spinner" margin={{ bottom: 'medium' }} size={24} />
           ) : (
             <FormInput.Text
-              label={getString('connectors.baseURL')}
+              label={getString('platform.connectors.baseURL')}
               name={CustomHealthSourceFieldNames.BASE_URL}
               disabled
             />

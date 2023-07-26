@@ -486,7 +486,7 @@ export function SyncStepBase(
         is: true,
         then: Yup.object().shape({
           baseBackoffDuration: getDurationValidationSchema().required(
-            getString('connectors.cdng.validations.durationRequired')
+            getString('platform.connectors.cdng.validations.durationRequired')
           ),
           maxBackoffDuration: getDurationValidationSchema().required(
             getString('pipeline.syncStep.validation.maxBackoffDuration')

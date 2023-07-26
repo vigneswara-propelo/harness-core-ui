@@ -12,14 +12,8 @@
  */
 import common from '@common/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
-import defaultSettings from '@default-settings/strings/strings.en.yaml'
 import governance from '@governance/strings/strings.en.yaml'
-import delegates from '@delegates/strings/strings.en.yaml'
-import secrets from '@secrets/strings/strings.en.yaml'
-import filestore from '@filestore/strings/strings.en.yaml'
-import variables from '@variables/strings/strings.en.yaml'
-import authSettings from '@auth-settings/strings/strings.en.yaml'
-import connectors from '@connectors/strings/strings.en.yaml'
+import platform from '@platform/strings/strings.en.yaml'
 import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import userProfile from '@user-profile/strings/strings.en.yaml'
 import gitsync from '@gitsync/strings/strings.en.yaml'
@@ -48,14 +42,8 @@ export default function languageLoader() {
   return {
     common,
     rbac,
-    defaultSettings,
     governance,
-    delegates,
-    secrets,
-    filestore,
-    variables,
-    authSettings,
-    connectors,
+    platform,
     auditTrail,
     userProfile,
     gitsync,

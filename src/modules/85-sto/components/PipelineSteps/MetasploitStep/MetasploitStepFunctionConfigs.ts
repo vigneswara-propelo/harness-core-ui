@@ -21,7 +21,7 @@ const instanceFieldsTransformConfig = [
   {
     name: 'spec.instance.domain',
     type: TransformValuesTypes.Text,
-    label: 'secrets.winRmAuthFormFields.domain'
+    label: 'platform.secrets.winRmAuthFormFields.domain'
   },
   {
     name: 'spec.instance.protocol',
@@ -31,7 +31,7 @@ const instanceFieldsTransformConfig = [
   {
     name: 'spec.instance.port',
     type: TransformValuesTypes.Numeric,
-    label: 'secrets.winRmAuthFormFields.domain'
+    label: 'platform.secrets.winRmAuthFormFields.domain'
   },
   {
     name: 'spec.instance.path',
@@ -44,7 +44,7 @@ const instanceFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = [
   {
     name: 'spec.instance.domain',
     type: ValidationFieldTypes.Text,
-    label: 'secrets.winRmAuthFormFields.domain',
+    label: 'platform.secrets.winRmAuthFormFields.domain',
     isRequired: true
   },
   {

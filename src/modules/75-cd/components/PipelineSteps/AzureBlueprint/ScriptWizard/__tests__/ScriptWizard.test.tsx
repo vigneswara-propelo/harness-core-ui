@@ -139,7 +139,7 @@ describe('ScriptWizard & stepOne', () => {
     expect(newConnectorBtn).toBeDefined()
     await userEvent.click(newConnectorBtn)
 
-    const createNewConnectorLabel = getByText('connectors.createNewConnector')
+    const createNewConnectorLabel = getByText('platform.connectors.createNewConnector')
     expect(createNewConnectorLabel).toBeDefined()
   })
 

@@ -54,7 +54,7 @@ import {
   ModalViewFor
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ArtifactSourceConfigFormData } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/types'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getConnectorListVersionQueryParam } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
@@ -230,8 +230,8 @@ export function ArtifactSourceSpecifications(props: {
       GoogleCloudSourceRepositoriesInitialValuesType
   > => {
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      key: getString('platform.connectors.stepFourName'),
+      name: getString('platform.connectors.stepFourName'),
       context: ModalViewFor.Template,
       expressions,
       allowableTypes: ALLOWABLE_TYPES,
@@ -257,7 +257,7 @@ export function ArtifactSourceSpecifications(props: {
     <FormikForm>
       <Layout.Vertical className={css.specificationsFormContainer}>
         <CardWithOuterTitle
-          title={getString('connectors.artifactRepoType')}
+          title={getString('platform.connectors.artifactRepoType')}
           dataTooltipId="artifactSourceConfig_artifactRepoType"
           headerClassName={css.headerText}
           className={css.artifactRepoTypeCard}

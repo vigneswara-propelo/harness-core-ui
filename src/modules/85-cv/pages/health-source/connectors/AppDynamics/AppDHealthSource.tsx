@@ -29,7 +29,7 @@ import {
   AppdynamicsValidationResponse,
   TimeSeriesMetricPackDTO
 } from 'services/cv'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationStatus'

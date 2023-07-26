@@ -28,7 +28,7 @@ import type {
 import { useQueryParams } from '@common/hooks'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { JiraFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/JiraFieldsRenderer'
 import type { JiraFieldNGWithValue } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/types'
 import { getInitialValueForSelectedField } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/helper'

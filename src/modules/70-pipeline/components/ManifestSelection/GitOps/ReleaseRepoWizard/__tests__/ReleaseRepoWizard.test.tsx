@@ -175,7 +175,7 @@ describe('Release Repo wizard tests', () => {
     // expect(newConnectorLabel).toBeDefined()
 
     // fireEvent.click(newConnectorLabel)
-    // const gcrHostname = await findByText(container, 'connectors.GCR.registryHostname')
+    // const gcrHostname = await findByText(container, 'platform.connectors.GCR.registryHostname')
     // expect(gcrHostname).toBeDefined()
     // fireEvent.click(gcrHostname)
 
@@ -234,7 +234,7 @@ describe('Release Repo wizard tests', () => {
     // expect(newConnectorLabel).toBeDefined()
 
     // fireEvent.click(newConnectorLabel)
-    // const gcrHostname = await findByText(container, 'connectors.GCR.registryHostname')
+    // const gcrHostname = await findByText(container, 'platform.connectors.GCR.registryHostname')
     // expect(gcrHostname).toBeDefined()
     // fireEvent.click(gcrHostname)
 

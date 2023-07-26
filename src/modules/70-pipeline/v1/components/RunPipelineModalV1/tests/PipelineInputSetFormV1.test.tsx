@@ -9,7 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Formik, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import connector from '@connectors/pages/connectors/__tests__/mocks/get-connector-mock.json'
+import connector from '@platform/connectors/pages/connectors/__tests__/mocks/get-connector-mock.json'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { PipelineInputSetFormV1, PipelineInputSetFormV1Props } from '../PipelineInputSetFormV1'
 

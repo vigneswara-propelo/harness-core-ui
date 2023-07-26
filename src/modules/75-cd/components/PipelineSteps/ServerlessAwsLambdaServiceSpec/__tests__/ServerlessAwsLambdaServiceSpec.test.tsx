@@ -16,7 +16,7 @@ import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/Rou
 import routes from '@common/RouteDefinitions'
 import { useMutateAsGet } from '@common/hooks'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
-import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

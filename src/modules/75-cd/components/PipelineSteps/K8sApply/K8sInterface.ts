@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import type { AllowedTypes } from '@harness/uicore'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sApplyStepInfo, ManifestConfigWrapper, StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'

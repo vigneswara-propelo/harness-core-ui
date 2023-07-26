@@ -16,8 +16,8 @@ import { useStrings } from 'framework/strings'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
@@ -61,7 +61,7 @@ export default function SscaOrchestrationStepInputSet(
             type="SecretFile"
             expressions={expressions}
             name={`${prefix}spec.attestation.privateKey`}
-            label={getString('connectors.serviceNow.privateKey')}
+            label={getString('platform.connectors.serviceNow.privateKey')}
             disabled={readonly}
           />
         </div>

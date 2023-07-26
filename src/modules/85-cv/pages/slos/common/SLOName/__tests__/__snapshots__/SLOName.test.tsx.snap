@@ -192,7 +192,7 @@ exports[`Test SLOName component should render SLOName component 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary10 StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
         >
-          connectors.cdng.monitoredService.label
+          platform.connectors.cdng.monitoredService.label
         </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-light"

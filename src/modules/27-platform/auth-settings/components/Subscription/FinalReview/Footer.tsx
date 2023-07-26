@@ -1,0 +1,86 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React, { useState } from 'react'
+import { Layout, Button, ButtonVariation, useToaster } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
+import { useStrings } from 'framework/strings'
+import { usePayInvoice } from 'services/cd-ng/index'
+import { CreditCard, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Module } from 'framework/types/ModuleName'
+import { SubscribeViews } from '@common/constants/SubscriptionTypes'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+
+interface FooterProps {
+  setView: (view: SubscribeViews) => void
+  invoiceId?: string
+  module?: Module
+}
+
+export const Footer: React.FC<FooterProps> = ({ setView, invoiceId = '', module }) => {
+  const { getString } = useStrings()
+  const { showError } = useToaster()
+  const [loading, setLoading] = useState<boolean>(false)
+  const { accountId } = useParams<AccountPathProps>()
+  const { trackEvent } = useTelemetry()
+
+  const { mutate: payInvoice } = usePayInvoice({
+    queryParams: {
+      invoiceId,
+      accountIdentifier: accountId
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+  })
+
+  function handleBack(): void {
+    setView(SubscribeViews.PAYMENT_METHOD)
+  }
+
+  async function handleNext(): Promise<void> {
+    setLoading(true)
+    trackEvent(CreditCard.CalculatorReviewStepSubmitted, {
+      category: Category.CREDIT_CARD,
+      module
+    })
+    try {
+      await payInvoice()
+      setView(SubscribeViews.SUCCESS)
+    } catch (err) {
+      showError(err?.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return <ContainerSpinner />
+  }
+
+  return (
+    <Layout.Horizontal>
+      <Layout.Horizontal spacing={'large'}>
+        <Button variation={ButtonVariation.SECONDARY} onClick={handleBack} icon={'chevron-left'}>
+          {getString('back')}
+        </Button>
+        <Button
+          variation={ButtonVariation.PRIMARY}
+          onClick={() => {
+            handleNext()
+          }}
+        >
+          {getString('platform.authSettings.finalReview.subscribeNPay')}
+        </Button>
+      </Layout.Horizontal>
+    </Layout.Horizontal>
+  )
+}

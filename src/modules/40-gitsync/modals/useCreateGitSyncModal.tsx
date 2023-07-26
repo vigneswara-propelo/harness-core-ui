@@ -86,7 +86,7 @@ const useCreateGitSyncModal = (props: UseCreateGitSyncModalProps): UseCreateGitS
             onClose={closeHandler}
           />
           <GitConnection
-            name={getString('connectors.selectConnectivityMode')}
+            name={getString('platform.connectors.selectConnectivityMode')}
             onSuccess={() => {
               shouldRefreshOnClose = true
             }}

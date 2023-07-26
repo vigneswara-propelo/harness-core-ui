@@ -10,8 +10,8 @@ import { useParams } from 'react-router-dom'
 import { Text, Container, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useValidateK8sConnectivity } from 'services/cv'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationStatus'
 import { useStrings } from 'framework/strings'
@@ -72,7 +72,7 @@ export default function KubernetesChangeSource(props: ChangeSourceProps): JSX.El
         })}
         label={
           <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-            {getString('connectors.selectConnector')}
+            {getString('platform.connectors.selectConnector')}
           </Text>
         }
         tooltipProps={{ dataTooltipId: 'selectKubeConnector' }}

@@ -18,7 +18,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ServerlessAwsLambdaPrepareRollbackV2StepInitialValues } from '@pipeline/utils/types'

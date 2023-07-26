@@ -8,7 +8,7 @@
 import type { IconName } from '@harness/uicore'
 import { once } from 'lodash-es'
 import type { ConnectorInfoDTO, ServiceDefinition, ServiceHookWrapper } from 'services/cd-ng'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { ServiceHookStoreType, ConfigStoreWithoutConnector } from './ServiceHooksInterface'
 

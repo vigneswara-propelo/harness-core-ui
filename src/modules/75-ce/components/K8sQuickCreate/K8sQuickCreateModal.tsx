@@ -13,8 +13,8 @@ import { Classes, IDialogProps, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
-import { CONNECTOR_MODAL_MIN_WIDTH } from '@connectors/constants'
-import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
+import { CONNECTOR_MODAL_MIN_WIDTH } from '@platform/connectors/constants'
+import DialogExtention from '@platform/connectors/common/ConnectorExtention/DialogExtention'
 
 import Overview from './steps/Overview'
 import DownloadYaml from './steps/DownloadYaml'

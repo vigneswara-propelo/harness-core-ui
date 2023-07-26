@@ -17,10 +17,10 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { Connectors } from '@connectors/constants'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@platform/connectors/constants'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
@@ -210,7 +210,7 @@ const SscaOrchestrationStepEdit = <T,>(
               <MultiTypeSecretInput
                 type="SecretFile"
                 name="spec.attestation.spec.privateKey"
-                label={getString('connectors.serviceNow.privateKey')}
+                label={getString('platform.connectors.serviceNow.privateKey')}
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 enableConfigureOptions

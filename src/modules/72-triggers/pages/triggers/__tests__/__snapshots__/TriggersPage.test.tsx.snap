@@ -2535,7 +2535,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                   >
                     <section
                       class="step"
-                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_connectors.GCR.name"
+                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_platform.connectors.GCR.name"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -2618,12 +2618,12 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                       <section
                         class="stepName"
                       >
-                        connectors.GCR.name
+                        platform.connectors.GCR.name
                       </section>
                     </section>
                     <section
                       class="step"
-                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_connectors.ECR.name"
+                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_platform.connectors.ECR.name"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -2746,7 +2746,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                       <section
                         class="stepName"
                       >
-                        connectors.ECR.name
+                        platform.connectors.ECR.name
                       </section>
                     </section>
                     <section
@@ -2786,7 +2786,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                     </section>
                     <section
                       class="step"
-                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_connectors.artifactory.artifactoryLabel"
+                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_platform.connectors.artifactory.artifactoryLabel"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -2814,7 +2814,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                       <section
                         class="stepName"
                       >
-                        connectors.artifactory.artifactoryLabel
+                        platform.connectors.artifactory.artifactoryLabel
                       </section>
                     </section>
                     <section

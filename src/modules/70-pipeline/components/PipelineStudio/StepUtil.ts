@@ -592,7 +592,7 @@ export const validateStage = ({
         errors,
         'spec.infrastructure.spec.connectorRef',
         getString?.('fieldRequired', {
-          field: getString?.('connectors.title.k8sCluster')
+          field: getString?.('platform.connectors.title.k8sCluster')
         })
       )
     }

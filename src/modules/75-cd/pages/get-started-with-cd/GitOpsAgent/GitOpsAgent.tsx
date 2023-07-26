@@ -211,7 +211,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
                   onClick={onBack}
                 />
                 <Button
-                  text={`${getString('next')}: ${getString('connectors.ceAws.curExtention.stepB.step1.p1')}`}
+                  text={`${getString('next')}: ${getString('platform.connectors.ceAws.curExtention.stepB.step1.p1')}`}
                   variation={ButtonVariation.PRIMARY}
                   rightIcon="chevron-right"
                   onClick={() => {

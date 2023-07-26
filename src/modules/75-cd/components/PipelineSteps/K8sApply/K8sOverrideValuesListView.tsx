@@ -28,16 +28,16 @@ import type { IconProps } from '@harness/icons'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
-import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
-import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
+import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -53,7 +53,7 @@ import OpenShiftParamWithGit from '@pipeline/components/ManifestSelection/Manife
 import InlineManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/InlineManifest/InlineManifest'
 import HarnessFileStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HarnessFileStore/HarnessFileStore'
 import { getBuildPayload, isGitTypeManifestStore } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import StepAzureRepoAuthentication from '@connectors/components/CreateConnector/AzureRepoConnector/StepAuth/StepAzureRepoAuthentication'
+import StepAzureRepoAuthentication from '@platform/connectors/components/CreateConnector/AzureRepoConnector/StepAuth/StepAzureRepoAuthentication'
 import {
   allowedManifestTypes,
   K8sManifestDataType,
@@ -255,7 +255,7 @@ function K8sOverrideValuesListView({
     const buildPayload = getBuildPayload(K8sManifestToConnectorMap[manifestStore])
     const connectorType = K8sManifestToConnectorMap[manifestStore]
     return (
-      <StepWizard title={getString('connectors.createNewConnector')}>
+      <StepWizard title={getString('platform.connectors.createNewConnector')}>
         <ConnectorDetailsStep
           type={connectorType}
           name={getString('overview')}
@@ -352,7 +352,7 @@ function K8sOverrideValuesListView({
           connectorInfo={undefined}
         />
         <ConnectorTestConnection
-          name={getString('connectors.stepThreeName')}
+          name={getString('platform.connectors.stepThreeName')}
           connectorInfo={undefined}
           isStep={true}
           isLastStep={false}

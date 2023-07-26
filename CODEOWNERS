@@ -43,11 +43,9 @@ src/modules/38-audit-trail @harness/ui-platform
 src/modules/20-rbac @harness/ui-platform
 src/modules/20-rbac/components/TrialHomePageTemplate @harness/ui-plg
 src/modules/75-cet @harness/error-tracking
-src/modules/33-auth-settings @harness/ui-platform
-src/modules/33-auth-settings/pages/subscriptions @harness/ui-plg
-src/modules/33-auth-settings/pages/AccountOverview @harness/ui-plg
-src/modules/30-secrets @harness/ui-platform
-src/modules/35-connectors @harness/ui-platform
+src/modules/27-platform @harness/ui-platform
+src/modules/27-platform/auth-settings/pages/subscriptions @harness/ui-plg
+src/modules/27-platform/auth-settings/pages/AccountOverview @harness/ui-plg
 src/modules/38-user-profile @harness/ui-platform
 src/modules/40-gitsync @harness/ui-pipeline
 src/modules/45-projects-orgs @harness/ui-platform

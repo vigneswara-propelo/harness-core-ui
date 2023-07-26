@@ -74,7 +74,7 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
   return (
     <>
       <div className={css.header}>
-        <p>{getString('connectors.cdng.healthSources.label')}</p>
+        <p>{getString('platform.connectors.cdng.healthSources.label')}</p>
         {!isRunTimeInput ? (
           <RbacButton
             variation={ButtonVariation.LINK}
@@ -92,7 +92,7 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
           />
         ) : null}
       </div>
-      <Text padding={{ bottom: 'medium' }}>{getString('connectors.cdng.healthSources.healthSourceDef')}</Text>
+      <Text padding={{ bottom: 'medium' }}>{getString('platform.connectors.cdng.healthSources.healthSourceDef')}</Text>
       {isEmpty(healthSources) ? (
         <>
           <NoDataCard
@@ -103,7 +103,7 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
           />
           <FormInput.CustomRender
             name={'spec.healthSources'}
-            render={() => <>{getString('connectors.cdng.healthSources.noHealthSourcesDefined')}</>}
+            render={() => <>{getString('platform.connectors.cdng.healthSources.noHealthSourcesDefined')}</>}
           />
         </>
       ) : (

@@ -63,7 +63,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
     const newMonitoredServiceRef = 'splunk_prod'
     const expectedErrors = {
       spec: {
-        healthSources: 'connectors.cdng.validations.healthSourceRequired'
+        healthSources: 'platform.connectors.cdng.validations.healthSourceRequired'
       }
     }
     expect(
@@ -113,7 +113,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
     const newMonitoredServiceRef = 'splunk_prod'
     const expectedErrors = {
       spec: {
-        healthSources: 'connectors.cdng.validations.healthSourceRequired'
+        healthSources: 'platform.connectors.cdng.validations.healthSourceRequired'
       }
     }
     expect(

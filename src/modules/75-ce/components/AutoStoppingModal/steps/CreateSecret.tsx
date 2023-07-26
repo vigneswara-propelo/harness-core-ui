@@ -11,10 +11,10 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 
-import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
-import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
+import { useStepLoadTelemetry } from '@platform/connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@platform/connectors/trackingConstants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import CopyCodeSection from '@connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
+import CopyCodeSection from '@platform/connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { ConnectorInfoDTO, useUpdateConnector } from 'services/cd-ng'
 import EnableAutoStoppingHeader from '@ce/components/CloudVisibilityModal/steps/EnableAutoStoppingStep'
@@ -81,7 +81,7 @@ const CreateSecret: React.FC<StepProps<ConnectorInfoDTO> & CreateSecretProps> = 
     <Layout.Vertical height={'100%'} spacing={'medium'}>
       {isCloudReportingModal ? <EnableAutoStoppingHeader /> : null}
       <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
-        {getString('secrets.createSecret')}
+        {getString('platform.secrets.createSecret')}
       </Text>
       <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
         {getString('ce.cloudIntegration.autoStoppingModal.createSecret.desc')}
@@ -105,24 +105,24 @@ const CreateSecret: React.FC<StepProps<ConnectorInfoDTO> & CreateSecretProps> = 
         </div>
         <div className={css.stepContainer}>
           <Text className={css.stepLabel}>{`${getString('step')} 2`}</Text>
-          <Text color={Color.GREY_900}>{getString('connectors.ceK8.secretCreationStep.step2')}</Text>
+          <Text color={Color.GREY_900}>{getString('platform.connectors.ceK8.secretCreationStep.step2')}</Text>
         </div>
         <div className={css.copyCodeSection}>
-          <CopyCodeSection snippet={getString('connectors.ceK8.secretCreationStep.namespaceCommand')} />
+          <CopyCodeSection snippet={getString('platform.connectors.ceK8.secretCreationStep.namespaceCommand')} />
         </div>
         <div className={css.stepContainer}>
           <Text className={css.stepLabel}>{`${getString('step')} 3`}</Text>
-          <Text color={Color.GREY_900}>{getString('connectors.ceK8.secretCreationStep.step3')}</Text>
+          <Text color={Color.GREY_900}>{getString('platform.connectors.ceK8.secretCreationStep.step3')}</Text>
         </div>
         <div className={css.copyCodeSection}>
           <CopyCodeSection snippet={secretYaml} />
         </div>
         <div className={css.stepContainer}>
           <Text className={css.stepLabel}>{`${getString('step')} 4`}</Text>
-          <Text color={Color.GREY_900}>{getString('connectors.ceK8.secretCreationStep.step4')}</Text>
+          <Text color={Color.GREY_900}>{getString('platform.connectors.ceK8.secretCreationStep.step4')}</Text>
         </div>
         <div className={css.copyCodeSection}>
-          <CopyCodeSection snippet={getString('connectors.ceK8.secretCreationStep.creationCommand')} />
+          <CopyCodeSection snippet={getString('platform.connectors.ceK8.secretCreationStep.creationCommand')} />
         </div>
       </div>
       <div>

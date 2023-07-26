@@ -39,14 +39,14 @@ describe('Test RunTimeMonitoredService component', () => {
     )
     // Verify if correct monitoring service is present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.monitoredService.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.monitoredService.label')).toBeTruthy()
       const monitoredService = getByTestId('monitored-service')
       expect(monitoredService).toBeTruthy()
     })
 
     // Verify if correct health sources are present.
     await waitFor(() => {
-      expect(getByText('connectors.cdng.healthSources.label')).toBeTruthy()
+      expect(getByText('platform.connectors.cdng.healthSources.label')).toBeTruthy()
       for (const healthSource of mockedMonitoredServiceAndHealthSources.data.monitoredService.sources.healthSources) {
         expect(getByText(healthSource.name)).toBeTruthy()
       }

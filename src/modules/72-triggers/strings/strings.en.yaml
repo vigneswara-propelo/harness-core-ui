@@ -53,7 +53,7 @@ validation:
   triggerName: 'Trigger Name is required.'
   identifier: '{{$.validation.identifierRequired}}'
   event: 'Event is required.'
-  connector: '{{$.connectors.validation.connectorIsRequired}}'
+  connector: '{{$.platform.connectors.validation.connectorIsRequired}}'
   repoName: 'Repository Name is required for connector with Account/Project URL type'
   actions: 'Actions is required.'
   operator: 'Operator is required with Matches Value.'

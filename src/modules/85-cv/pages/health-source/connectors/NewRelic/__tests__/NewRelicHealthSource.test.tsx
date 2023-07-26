@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import routes from '@common/RouteDefinitions'

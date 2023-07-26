@@ -10,7 +10,7 @@ exports[`Verify Duration component should render Baseline 1`] = `
       class="bp3-label"
       for="baseline"
     >
-      connectors.cdng.baseline
+      platform.connectors.cdng.baseline
        
       <span
         class="bp3-text-muted"

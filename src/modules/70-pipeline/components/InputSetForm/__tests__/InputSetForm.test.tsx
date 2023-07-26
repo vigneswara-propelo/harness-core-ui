@@ -22,7 +22,7 @@ import {
 } from '@common/utils/routeUtils'
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import type { ResponseInputSetTemplateWithReplacedExpressionsResponse } from 'services/pipeline-ng'

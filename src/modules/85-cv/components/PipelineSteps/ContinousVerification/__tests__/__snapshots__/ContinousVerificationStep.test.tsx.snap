@@ -23,11 +23,11 @@ exports[`Test ContinousVerificationStep Step renders empty inputSetView 1`] = `
                 class="emptyFieldItem"
               >
                 
-              connectors.cdng.runTimeMonitoredService.pleaseSpecify
+              platform.connectors.cdng.runTimeMonitoredService.pleaseSpecify
               service
               and
               environment
-              connectors.cdng.runTimeMonitoredService.toFetchMonitoredService
+              platform.connectors.cdng.runTimeMonitoredService.toFetchMonitoredService
             
               </div>
             </div>
@@ -84,11 +84,11 @@ exports[`Test ContinousVerificationStep Step renders inputSetView 1`] = `
                 class="emptyFieldItem"
               >
                 
-              connectors.cdng.runTimeMonitoredService.pleaseSpecify
+              platform.connectors.cdng.runTimeMonitoredService.pleaseSpecify
               service
               and
               environment
-              connectors.cdng.runTimeMonitoredService.toFetchMonitoredService
+              platform.connectors.cdng.runTimeMonitoredService.toFetchMonitoredService
             
               </div>
             </div>
@@ -322,7 +322,7 @@ exports[`Test ContinousVerificationStep Step renders inputSetView 1`] = `
                   class="Tooltip--acenter"
                   data-tooltip-id="stepTestUtilForm_spec.spec.baseline"
                 >
-                  connectors.cdng.baseline
+                  platform.connectors.cdng.baseline
                 </span>
                  
                 <span
@@ -427,7 +427,7 @@ exports[`Test ContinousVerificationStep Step renders inputSetView 1`] = `
                   class="Tooltip--acenter"
                   data-tooltip-id="stepTestUtilForm_spec.spec.trafficsplit"
                 >
-                  connectors.cdng.trafficsplit
+                  platform.connectors.cdng.trafficsplit
                 </span>
                  
                 <span
@@ -532,7 +532,7 @@ exports[`Test ContinousVerificationStep Step renders inputSetView 1`] = `
                   class="Tooltip--acenter"
                   data-tooltip-id="stepTestUtilForm_spec.spec.deploymentTag"
                 >
-                  connectors.cdng.artifactTag
+                  platform.connectors.cdng.artifactTag
                 </span>
                  
                 <span
@@ -1041,7 +1041,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-small"
           >
-            connectors.cdng.verificationTypeHeading
+            platform.connectors.cdng.verificationTypeHeading
           </p>
           <div
             class="StyledProps--font StyledProps--main"
@@ -1049,7 +1049,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
             >
-              connectors.cdng.continousVerificationType
+              platform.connectors.cdng.continousVerificationType
             </p>
             <div
               class="bp3-popover-wrapper bp3-fill"
@@ -1341,7 +1341,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                 class="Tooltip--acenter"
                 data-tooltip-id="cvData_spec.spec.deploymentTag"
               >
-                connectors.cdng.artifactTag
+                platform.connectors.cdng.artifactTag
               </span>
                
               <span
@@ -1421,7 +1421,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                   class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                   data-tooltip-id="cvData_spec.spec.failOnNoAnalysis"
                 >
-                  connectors.cdng.failOnNoAnalysis
+                  platform.connectors.cdng.failOnNoAnalysis
                 </span>
               </label>
             </div>
@@ -1452,7 +1452,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                   class="Tooltip--acenter"
                   data-tooltip-id="cvData_spec.monitoredServiceRef"
                 >
-                  connectors.cdng.monitoredService.label
+                  platform.connectors.cdng.monitoredService.label
                 </span>
                  
                 <span
@@ -1480,7 +1480,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
               class="monitoredServiceText"
             >
               
-                    connectors.cdng.monitoredService.monitoredServiceText
+                    platform.connectors.cdng.monitoredService.monitoredServiceText
                      and 
                   
             </div>
@@ -1493,7 +1493,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
           class="header"
         >
           <p>
-            connectors.cdng.healthSources.label
+            platform.connectors.cdng.healthSources.label
           </p>
           <button
             aria-label="plusAdd"
@@ -1512,7 +1512,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
         <p
           class="StyledProps--font StyledProps--main StyledProps--padding-bottom-medium"
         >
-          connectors.cdng.healthSources.healthSourceDef
+          platform.connectors.cdng.healthSources.healthSourceDef
         </p>
         <div
           class="TableV2--table table"
@@ -1886,7 +1886,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-small"
           >
-            connectors.cdng.verificationTypeHeading
+            platform.connectors.cdng.verificationTypeHeading
           </p>
           <div
             class="StyledProps--font StyledProps--main"
@@ -1894,7 +1894,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
             >
-              connectors.cdng.continousVerificationType
+              platform.connectors.cdng.continousVerificationType
             </p>
             <div
               class="bp3-popover-wrapper bp3-fill"
@@ -2186,7 +2186,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                 class="Tooltip--acenter"
                 data-tooltip-id="cvData_spec.spec.deploymentTag"
               >
-                connectors.cdng.artifactTag
+                platform.connectors.cdng.artifactTag
               </span>
                
               <span
@@ -2266,7 +2266,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                   class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                   data-tooltip-id="cvData_spec.spec.failOnNoAnalysis"
                 >
-                  connectors.cdng.failOnNoAnalysis
+                  platform.connectors.cdng.failOnNoAnalysis
                 </span>
               </label>
             </div>
@@ -2297,7 +2297,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                   class="Tooltip--acenter"
                   data-tooltip-id="cvData_spec.monitoredServiceRef"
                 >
-                  connectors.cdng.monitoredService.label
+                  platform.connectors.cdng.monitoredService.label
                 </span>
                  
                 <span
@@ -2325,7 +2325,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
               class="monitoredServiceText"
             >
               
-                    connectors.cdng.monitoredService.monitoredServiceText
+                    platform.connectors.cdng.monitoredService.monitoredServiceText
                      and 
                   
             </div>
@@ -2338,7 +2338,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
           class="header"
         >
           <p>
-            connectors.cdng.healthSources.label
+            platform.connectors.cdng.healthSources.label
           </p>
           <button
             aria-label="plusAdd"
@@ -2357,7 +2357,7 @@ exports[`Test ContinousVerificationStep Step should render editView when current
         <p
           class="StyledProps--font StyledProps--main StyledProps--padding-bottom-medium"
         >
-          connectors.cdng.healthSources.healthSourceDef
+          platform.connectors.cdng.healthSources.healthSourceDef
         </p>
         <div
           class="TableV2--table table"

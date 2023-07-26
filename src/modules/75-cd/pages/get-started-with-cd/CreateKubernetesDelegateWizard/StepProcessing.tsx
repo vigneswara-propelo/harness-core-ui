@@ -139,7 +139,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
                   padding={{ left: 'small' }}
                   onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
                 >
-                  {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
+                  {getString('platform.delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
                 </Button>
               </Layout.Horizontal>
             </Layout.Vertical>

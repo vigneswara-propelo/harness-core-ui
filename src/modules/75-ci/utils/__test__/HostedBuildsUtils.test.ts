@@ -8,7 +8,7 @@ import { get, set } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { YAMLVersion } from '@pipeline/utils/CIUtils'
 import { getBackendServerUrl, isEnvironmentAllowedForOAuth } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import {

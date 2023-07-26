@@ -29,13 +29,13 @@ import {
 import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useListAwsRegions } from 'services/portal'
 import { useGetIamRolesForAws } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { DeleteStackTypes, CloudFormationDeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
@@ -330,7 +330,7 @@ export const CloudFormationDeleteStack = (
                   </Layout.Horizontal>
                   <Layout.Horizontal>
                     <FormInput.MultiTypeInput
-                      label={getString('connectors.awsKms.roleArnLabel')}
+                      label={getString('platform.connectors.awsKms.roleArnLabel')}
                       name="spec.configuration.spec.roleArn"
                       placeholder={rolesLoading ? getString('loading') : getString('select')}
                       multiTypeInputProps={{

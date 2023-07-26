@@ -708,7 +708,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for cl
                               <p
                                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-small StyledProps--margin-bottom-small"
                               >
-                                connectors.selectConnector
+                                platform.connectors.selectConnector
                               </p>
                             </span>
                              
@@ -1568,7 +1568,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for lo
                               <p
                                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-small StyledProps--margin-bottom-small"
                               >
-                                connectors.selectConnector
+                                platform.connectors.selectConnector
                               </p>
                             </span>
                              
@@ -2429,7 +2429,7 @@ exports[`HealthSource table should matchsnapshot 1`] = `
                               <p
                                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-small StyledProps--margin-bottom-small"
                               >
-                                connectors.selectConnector
+                                platform.connectors.selectConnector
                               </p>
                             </span>
                              

@@ -228,7 +228,7 @@ export const DestinationStep = (props: any) => {
         return (
           <Layout.Vertical>
             <Button
-              text={getString('connectors.verifyConnection')}
+              text={getString('platform.connectors.verifyConnection')}
               size={ButtonSize.SMALL}
               width={200}
               style={{ marginTop: '20px' }}
@@ -457,7 +457,7 @@ export const DestinationStep = (props: any) => {
     }),
     bearerToken: Yup.string().when('authType', {
       is: CREDENTIALS_TYPE.SERVICE_ACCOUNT,
-      then: Yup.string().required(getString('connectors.jenkins.bearerTokenRequired'))
+      then: Yup.string().required(getString('platform.connectors.jenkins.bearerTokenRequired'))
     }),
     keyData: Yup.string().when('authType', {
       is: CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE,
@@ -591,7 +591,7 @@ export const DestinationStep = (props: any) => {
                                 <NameId nameLabel={getString('cd.getStartedWithCD.nameYourCluster')} />
                                 <FormInput.Text
                                   name="server"
-                                  label={getString('connectors.k8.masterUrlLabel')}
+                                  label={getString('platform.connectors.k8.masterUrlLabel')}
                                   placeholder={getString('UrlLabel')}
                                 />
                               </div>
@@ -641,7 +641,7 @@ export const DestinationStep = (props: any) => {
                                     authType === CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE ? css.active : undefined
                                   )}
                                 >
-                                  {getString('connectors.k8.clientKey')}
+                                  {getString('platform.connectors.k8.clientKey')}
                                 </Button>
                               </div>
                               <AuthTypeForm authType={authType} />

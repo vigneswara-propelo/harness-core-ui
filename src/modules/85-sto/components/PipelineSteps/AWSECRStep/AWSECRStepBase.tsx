@@ -129,7 +129,7 @@ export const AWSECRStepBase = (
                     tooltipId: tooltipIds.imageType
                   },
                   'spec.image.domain': {
-                    label: 'secrets.winRmAuthFormFields.domain',
+                    label: 'platform.secrets.winRmAuthFormFields.domain',
                     optional: true,
                     inputProps: { placeholder: 'docker.io' },
                     tooltipId: tooltipIds.imageDomain

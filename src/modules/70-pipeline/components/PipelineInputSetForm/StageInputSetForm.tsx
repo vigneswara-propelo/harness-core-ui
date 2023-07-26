@@ -46,8 +46,8 @@ import {
   shouldRenderRunTimeInputViewWithAllowedValues,
   useGitScope
 } from '@pipeline/utils/CIUtils'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import type { StringsMap } from 'stringTypes'
 import {
   getCustomStepProps,
@@ -58,7 +58,7 @@ import {
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
@@ -75,7 +75,7 @@ import type { ChildPipelineMetadataType } from './ChainedPipelineInputSetUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
-const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
+const harnessImageConnectorRef = 'platform.connectors.title.harnessImageConnectorRef'
 const osLabel = 'pipeline.infraSpecifications.os'
 const archLabel = 'pipeline.infraSpecifications.architecture'
 
@@ -427,7 +427,7 @@ export function StageInputSetFormInternal({
               name: `${namePath}infrastructure.spec.spec.harnessImageConnectorRef`,
               tooltipId: 'harnessImageConnectorRef',
               labelKey: harnessImageConnectorRef,
-              placeholderKey: 'connectors.placeholder.harnessImageConnectorRef',
+              placeholderKey: 'platform.connectors.placeholder.harnessImageConnectorRef',
               fieldPath: 'spec.spec.harnessImageConnectorRef',
               allowedTypes: [MultiTypeInputType.FIXED]
             })
@@ -439,7 +439,7 @@ export function StageInputSetFormInternal({
                 label={
                   <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString(harnessImageConnectorRef)}</Text>
                 }
-                placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+                placeholder={getString('platform.connectors.placeholder.harnessImageConnectorRef')}
                 accountIdentifier={accountId}
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
@@ -642,7 +642,7 @@ export function StageInputSetFormInternal({
                     renderMultiTypeInputWithAllowedValues({
                       name: `${namePath}infrastructure.spec.connectorRef`,
                       tooltipId: 'connectorRef',
-                      labelKey: 'connectors.title.k8sCluster',
+                      labelKey: 'platform.connectors.title.k8sCluster',
                       placeholderKey: 'pipelineSteps.build.infraSpecifications.kubernetesClusterPlaceholder',
                       fieldPath: 'spec.connectorRef'
                     })
@@ -653,7 +653,7 @@ export function StageInputSetFormInternal({
                         name={`${namePath}infrastructure.spec.connectorRef`}
                         label={
                           <Text font={{ variation: FontVariation.FORM_LABEL }}>
-                            {getString('connectors.title.k8sCluster')}
+                            {getString('platform.connectors.title.k8sCluster')}
                           </Text>
                         }
                         placeholder={getString('pipelineSteps.build.infraSpecifications.kubernetesClusterPlaceholder')}
@@ -735,7 +735,7 @@ export function StageInputSetFormInternal({
                       name: `${namePath}infrastructure.spec.harnessImageConnectorRef`,
                       tooltipId: 'harnessImageConnectorRef',
                       labelKey: harnessImageConnectorRef,
-                      placeholderKey: 'connectors.placeholder.harnessImageConnectorRef',
+                      placeholderKey: 'platform.connectors.placeholder.harnessImageConnectorRef',
                       fieldPath: 'spec.harnessImageConnectorRef',
                       allowedTypes: [MultiTypeInputType.FIXED]
                     })
@@ -749,7 +749,7 @@ export function StageInputSetFormInternal({
                             {getString(harnessImageConnectorRef)}
                           </Text>
                         }
-                        placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+                        placeholder={getString('platform.connectors.placeholder.harnessImageConnectorRef')}
                         accountIdentifier={accountId}
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}

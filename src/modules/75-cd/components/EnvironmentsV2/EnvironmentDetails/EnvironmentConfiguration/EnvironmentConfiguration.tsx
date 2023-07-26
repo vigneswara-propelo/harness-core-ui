@@ -531,7 +531,7 @@ export default function EnvironmentConfiguration({
                             onUpdate={values => {
                               formikProps.setFieldValue('variables', values.variables)
                             }}
-                            addVariableLabel={'variables.newVariable'}
+                            addVariableLabel={'platform.variables.newVariable'}
                             yamlProperties={defaultTo(formikProps.values.variables, []).map(variable => ({
                               fqn: `env.variables.${variable?.name}`,
                               variableName: variable?.name,

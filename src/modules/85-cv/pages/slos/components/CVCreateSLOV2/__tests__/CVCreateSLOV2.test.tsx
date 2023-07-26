@@ -165,7 +165,7 @@ describe.skip('CVCreateSloV2', () => {
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
     await waitFor(() =>
-      expect(screen.getAllByText('connectors.cdng.validations.monitoringServiceRequired').length).toEqual(2)
+      expect(screen.getAllByText('platform.connectors.cdng.validations.monitoringServiceRequired').length).toEqual(2)
     )
     expect(
       container.querySelector('[data-testid="steptitle_Define_SLO_Identification"] [icon="warning-sign"]')

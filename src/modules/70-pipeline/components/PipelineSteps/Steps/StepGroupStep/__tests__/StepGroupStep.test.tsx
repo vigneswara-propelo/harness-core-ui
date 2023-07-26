@@ -22,7 +22,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import type { StringsMap } from 'stringTypes'
 import { findDialogContainer, queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
-import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
+import { awsConnectorListResponse } from '@platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -484,12 +484,12 @@ describe('StepGroupStep tests', () => {
     expect(container.querySelector('input[name="variables[3].value"]')).toHaveValue('<+input>')
 
     // Addition of new variable flow
-    const add = await findByText('variables.newVariable')
+    const add = await findByText('platform.variables.newVariable')
     act(() => {
       fireEvent.click(add)
     })
     const dialog = findDialogContainer() as HTMLElement
-    await waitFor(() => findAllByText(dialog, 'variables.newVariable'))
+    await waitFor(() => findAllByText(dialog, 'platform.variables.newVariable'))
     const nameField = queryByAttribute('name', dialog, 'name')
     const valueField = queryByAttribute('name', dialog, 'value')
     act(() => {

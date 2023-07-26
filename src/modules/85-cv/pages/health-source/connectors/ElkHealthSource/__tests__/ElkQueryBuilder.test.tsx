@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { Button } from '@harness/uicore'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import { sourceData, mockedElkIndicesData, mockedElkSampleData, mockedElkTimeStampFormat } from './ElkHealthSource.mock'
 import { ElkQueryBuilder } from '../components/MapQueriesToHarnessService/ElkQueryBuilder'

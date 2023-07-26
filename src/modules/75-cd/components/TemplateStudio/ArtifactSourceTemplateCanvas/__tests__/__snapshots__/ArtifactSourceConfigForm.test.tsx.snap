@@ -26,7 +26,7 @@ exports[`<ArtifactSourceConfigForm /> tests Should render artifact source templa
                 <p
                   class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
                 >
-                  connectors.artifactRepoType
+                  platform.connectors.artifactRepoType
                 </p>
               </div>
               <div

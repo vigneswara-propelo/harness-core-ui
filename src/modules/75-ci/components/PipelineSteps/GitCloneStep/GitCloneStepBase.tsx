@@ -31,7 +31,7 @@ import {
 import { useGetConnector, ConnectorInfoDTO } from 'services/cd-ng'
 import { getScopeFromValue, getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { Connectors } from '@connectors/constants'
+import { Connectors } from '@platform/connectors/constants'
 import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './GitCloneStepFunctionConfigs'

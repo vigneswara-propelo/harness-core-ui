@@ -41,10 +41,10 @@ import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import {
   ConnectorReferenceField,
   DefaultSettingConnectorField
-} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+} from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import useTestConnectionModal from '@platform/connectors/common/useTestConnectionModal/useTestConnectionModal'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
 import { SettingGroups } from '@default-settings/interfaces/SettingType.types'
 import { SettingType } from '@common/constants/Utils'
@@ -208,7 +208,7 @@ featureFactory.registerFeaturesByModule('ce', {
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.TICKETING_TOOL_CONNECTOR, {
-  label: 'defaultSettings.ticketingToolConnectorLabel',
+  label: 'platform.defaultSettings.ticketingToolConnectorLabel',
   settingRenderer: props => (
     <DefaultSettingConnectorField
       {...props}

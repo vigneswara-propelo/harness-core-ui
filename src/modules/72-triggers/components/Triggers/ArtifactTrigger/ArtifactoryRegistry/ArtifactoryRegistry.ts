@@ -12,7 +12,7 @@ import type { ArtifactTriggerValues } from '../utils'
 
 export class ArtifactoryRegistry extends ArtifactTrigger<ArtifactTriggerValues> {
   protected type: TriggerArtifactType = 'ArtifactoryRegistry'
-  protected triggerDescription: keyof StringsMap = 'connectors.artifactory.artifactoryLabel'
+  protected triggerDescription: keyof StringsMap = 'platform.connectors.artifactory.artifactoryLabel'
 
   protected defaultValues = {
     triggerType: this.baseType,

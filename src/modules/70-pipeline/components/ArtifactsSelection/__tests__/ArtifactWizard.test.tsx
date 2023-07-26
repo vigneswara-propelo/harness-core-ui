@@ -19,7 +19,7 @@ import {
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper, findDialogContainer, queryByNameAttribute } from '@common/utils/testUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import ArtifactWizard from '../ArtifactWizard/ArtifactWizard'
 import type { ArtifactType, InitialArtifactDataType, TagTypes } from '../ArtifactInterface'
 import { DockerRegistryArtifact } from '../ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
@@ -126,7 +126,7 @@ const newConnectorStepProps = {
     connectorInfo: undefined
   },
   verify: {
-    name: 'connectors.stepThreeName',
+    name: 'platform.connectors.stepThreeName',
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false
@@ -256,7 +256,7 @@ describe('Artifact WizardStep tests', () => {
         />
       </TestWrapper>
     )
-    const artifactLabel = await findByText(container, 'connectors.artifactRepository')
+    const artifactLabel = await findByText(container, 'platform.connectors.artifactRepository')
     expect(artifactLabel).toBeDefined()
     const DockerArtifactType = await findAllByText(container, 'dockerRegistry')
     expect(DockerArtifactType).toBeDefined()
@@ -264,7 +264,7 @@ describe('Artifact WizardStep tests', () => {
     const changeText = await findByText(container, 'Change')
     fireEvent.click(changeText)
 
-    const GCRArtifactType = await findByText(container, 'connectors.GCR.name')
+    const GCRArtifactType = await findByText(container, 'platform.connectors.GCR.name')
     expect(GCRArtifactType).toBeDefined()
 
     const continueButton = await findByText(container, 'continue')
@@ -312,7 +312,7 @@ describe('Artifact WizardStep tests', () => {
         />
       </TestWrapper>
     )
-    const artifactLabel = await findByText(container, 'connectors.artifactRepository')
+    const artifactLabel = await findByText(container, 'platform.connectors.artifactRepository')
     expect(artifactLabel).toBeDefined()
     const DockerArtifactType = await findAllByText(container, 'dockerRegistry')
     expect(DockerArtifactType).toBeDefined()
@@ -320,7 +320,7 @@ describe('Artifact WizardStep tests', () => {
     const changeText = await findByText(container, 'Change')
     fireEvent.click(changeText)
 
-    const GCRArtifactType = await findByText(container, 'connectors.GCR.name')
+    const GCRArtifactType = await findByText(container, 'platform.connectors.GCR.name')
     expect(GCRArtifactType).toBeDefined()
     fireEvent.click(GCRArtifactType)
 
@@ -410,15 +410,15 @@ describe('Artifact WizardStep tests', () => {
     )
 
     // First step
-    const artifactLabel = await findByText(container, 'connectors.artifactRepository')
+    const artifactLabel = await findByText(container, 'platform.connectors.artifactRepository')
     expect(artifactLabel).toBeInTheDocument()
     const AmazonS3ArtifactType = await findAllByText(container, 'pipeline.artifactsSelection.amazonS3Title')
     expect(AmazonS3ArtifactType).toHaveLength(2)
     const changeText = await findByText(container, 'Change')
     fireEvent.click(changeText)
-    const ArtifactoryArtifactType = await findByText(container, 'connectors.artifactory.artifactoryLabel')
+    const ArtifactoryArtifactType = await findByText(container, 'platform.connectors.artifactory.artifactoryLabel')
     expect(ArtifactoryArtifactType).toBeInTheDocument()
-    const ECRArtifactType = await findByText(container, 'connectors.ECR.name')
+    const ECRArtifactType = await findByText(container, 'platform.connectors.ECR.name')
     expect(ECRArtifactType).toBeInTheDocument()
     const continueButton = await findByText(container, 'continue')
     expect(continueButton).toBeInTheDocument()

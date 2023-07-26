@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type {
   AmazonS3InitialValuesType,
   CustomArtifactSource,

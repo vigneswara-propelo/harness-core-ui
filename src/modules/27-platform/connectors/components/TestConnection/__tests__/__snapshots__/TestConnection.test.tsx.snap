@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Connection render test connection 1`] = `
+<div>
+  <button
+    aria-label="platform.connectors.stepThreeName"
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      platform.connectors.stepThreeName
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Test Connection render test connection verify out of cluster  1`] = `
+<div>
+  <button
+    aria-label="platform.connectors.stepThreeName"
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      platform.connectors.stepThreeName
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Test Connection render test connection verify out of cluster  2`] = `
+<div>
+  <button
+    aria-label="platform.connectors.stepThreeName"
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      platform.connectors.stepThreeName
+    </span>
+  </button>
+</div>
+`;

@@ -45,12 +45,12 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { JiraKVFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/JiraKVFieldsRenderer'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
