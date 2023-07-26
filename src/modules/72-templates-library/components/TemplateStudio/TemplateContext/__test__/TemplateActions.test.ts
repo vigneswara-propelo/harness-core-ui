@@ -83,4 +83,9 @@ describe('TemplateActions test', () => {
     const newState = TemplateReducer(initialState, { type: 'none' as TemplateActions })
     expect(newState).toEqual({ ...initialState })
   })
+
+  test('TemplateActions Loading', () => {
+    const newState = TemplateReducer(initialState, { ...TemplateContextActions.setLoading(true) })
+    expect(newState).toEqual({ ...initialState, isLoading: true })
+  })
 })

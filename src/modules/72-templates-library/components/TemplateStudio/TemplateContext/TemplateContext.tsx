@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { merge, cloneDeep, defaultTo, isEqual, maxBy } from 'lodash-es'
+import { merge, cloneDeep, defaultTo, maxBy } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { parse } from 'yaml'
 import type { Color } from '@harness/design-system'
@@ -51,11 +51,12 @@ import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
-import { ActionReturnType, TemplateContextActions } from './TemplateActions'
+import { ActionReturnType, compareTemplates, TemplateContextActions } from './TemplateActions'
 import { isNewTemplate } from '../TemplateStudioUtils'
 const logger = loggerFor(ModuleName.TEMPLATES)
 
 const DBInitializationFailed = 'DB Creation retry exceeded.'
+const DBNotFoundErrorMessage = 'There was no DB found'
 
 let IdbTemplate: IDBPDatabase | undefined
 const IdbTemplateStoreName = 'template-cache'
@@ -101,6 +102,7 @@ export interface FetchTemplateBoundProps {
   gitDetails: EntityGitDetails
   templateType: string
   isGitCacheEnabled?: boolean
+  isDBInitializationFailed?: boolean
 }
 
 export interface FetchTemplateUnboundProps {
@@ -193,7 +195,7 @@ const getTemplatesByIdentifier = (
 
 interface DispatchTemplateSuccessArgs {
   dispatch: React.Dispatch<ActionReturnType>
-  data: TemplatePayload
+  data: TemplatePayload | undefined
   forceUpdate: boolean
   template: NGTemplateInfoConfig
   templateYamlStr: string
@@ -229,8 +231,8 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         error: '',
         template: data.template,
         originalTemplate: cloneDeep(template),
-        isBETemplateUpdated: !isEqual(template, data.originalTemplate),
-        isUpdated: !isEqual(template, data.template),
+        isBETemplateUpdated: compareTemplates(template, data.originalTemplate),
+        isUpdated: compareTemplates(template, data.template),
         versions: versions,
         lastPublishedVersion,
         stableVersion: data.stableVersion,
@@ -315,7 +317,8 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
     versionLabel = '',
     gitDetails,
     templateType,
-    isGitCacheEnabled
+    isGitCacheEnabled,
+    isDBInitializationFailed
   } = props
   const { forceFetch = false, forceUpdate = false, signal, repoName, branch, loadFromCache = true } = params
   let id = getId(
@@ -327,9 +330,14 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
     defaultTo(repoName, ''),
     defaultTo(gitDetails.branch, '')
   )
-  if (IdbTemplate) {
+  if (IdbTemplate || isDBInitializationFailed) {
     dispatch(TemplateContextActions.fetching())
-    let data: TemplatePayload = await IdbTemplate.get(IdbTemplateStoreName, id)
+    let data: TemplatePayload | undefined
+    try {
+      data = await IdbTemplate?.get(IdbTemplateStoreName, id)
+    } catch (_) {
+      logger.info(DBNotFoundErrorMessage)
+    }
     let templateMetadata: TemplateMetadataSummaryResponse[] = []
     if ((!data || forceFetch) && !isNewTemplate(templateIdentifier)) {
       try {
@@ -372,7 +380,11 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           defaultTo(repoName, templateWithGitDetails?.gitDetails?.repoName ?? ''),
           defaultTo(gitDetails.branch, templateWithGitDetails?.gitDetails?.branch ?? '')
         )
-        data = await IdbTemplate.get(IdbTemplateStoreName, id)
+        try {
+          data = await IdbTemplate?.get(IdbTemplateStoreName, id)
+        } catch (_) {
+          logger.info(DBNotFoundErrorMessage)
+        }
         let template: NGTemplateInfoConfig
         const templateYamlStr = defaultTo(templateWithGitDetails?.yaml, '')
         try {
@@ -490,7 +502,15 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
 }
 
 const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTemplateUnboundProps): Promise<void> => {
-  const { dispatch, queryParams, templateIdentifier, versionLabel = '', gitDetails, templateType } = props
+  const {
+    dispatch,
+    queryParams,
+    templateIdentifier,
+    versionLabel = '',
+    gitDetails,
+    templateType,
+    isDBInitializationFailed
+  } = props
   const { forceFetch = false, forceUpdate = false, signal, repoIdentifier, branch } = params
   let id = getId(
     queryParams.accountIdentifier,
@@ -501,9 +521,14 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
     defaultTo(gitDetails.repoIdentifier, ''),
     defaultTo(gitDetails.branch, '')
   )
-  if (IdbTemplate) {
+  if (IdbTemplate || isDBInitializationFailed) {
     dispatch(TemplateContextActions.fetching())
-    let data: TemplatePayload = await IdbTemplate.get(IdbTemplateStoreName, id)
+    let data: TemplatePayload | undefined
+    try {
+      data = await IdbTemplate?.get(IdbTemplateStoreName, id)
+    } catch (_) {
+      logger.info(DBNotFoundErrorMessage)
+    }
     if ((!data || forceFetch) && !isNewTemplate(templateIdentifier)) {
       try {
         const templatesList: TemplateSummaryResponse[] = await getTemplatesByIdentifier(
@@ -531,7 +556,11 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
           defaultTo(gitDetails.repoIdentifier, templateWithGitDetails?.gitDetails?.repoIdentifier ?? ''),
           defaultTo(gitDetails.branch, templateWithGitDetails?.gitDetails?.branch ?? '')
         )
-        data = await IdbTemplate.get(IdbTemplateStoreName, id)
+        try {
+          data = await IdbTemplate?.get(IdbTemplateStoreName, id)
+        } catch (_) {
+          logger.info(DBNotFoundErrorMessage)
+        }
         let template: NGTemplateInfoConfig
         const templateYamlStr = defaultTo(templateWithGitDetails?.yaml, '')
         try {
@@ -608,6 +637,7 @@ interface UpdateTemplateArgs {
   versions: string[]
   stableVersion: string
   gitDetails?: EntityGitDetails
+  template: NGTemplateInfoConfig
 }
 
 const _updateTemplate = async (
@@ -622,7 +652,8 @@ const _updateTemplate = async (
     originalTemplate,
     versions,
     stableVersion,
-    gitDetails
+    gitDetails,
+    template: latestTemplate
   } = args
   const id = getId(
     queryParams.accountIdentifier,
@@ -633,32 +664,38 @@ const _updateTemplate = async (
     defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier ?? ''),
     defaultTo(gitDetails?.branch, '')
   )
-  if (IdbTemplate) {
-    let template = templateArg
 
-    if (typeof templateArg === 'function') {
-      const dbTemplate = await IdbTemplate.get(IdbTemplateStoreName, id)
+  let template = templateArg
+
+  if (typeof templateArg === 'function') {
+    try {
+      const dbTemplate = await IdbTemplate?.get(IdbTemplateStoreName, id)
       if (dbTemplate?.template) {
         template = templateArg(dbTemplate.template)
       } else {
-        template = {} as NGTemplateInfoConfig
+        throw new Error(DBNotFoundErrorMessage) //'Template does not exist in the db'
       }
-    }
-    const isUpdated = !isEqual(originalTemplate, template)
-    const payload: TemplatePayload = {
-      [KeyPath]: id,
-      template: template as NGTemplateInfoConfig,
-      originalTemplate,
-      versions,
-      stableVersion,
-      isUpdated,
-      gitDetails
-    }
-    if (IdbTemplate) {
-      await IdbTemplate.put(IdbTemplateStoreName, payload)
-      dispatch(TemplateContextActions.success({ error: '', template: template as NGTemplateInfoConfig, isUpdated }))
+    } catch (_) {
+      template = templateArg(latestTemplate)
+      logger.info(DBNotFoundErrorMessage)
     }
   }
+  const isUpdated = compareTemplates(originalTemplate, template as NGTemplateInfoConfig)
+  const payload: TemplatePayload = {
+    [KeyPath]: id,
+    template: template as NGTemplateInfoConfig,
+    originalTemplate,
+    versions,
+    stableVersion,
+    isUpdated,
+    gitDetails
+  }
+  try {
+    await IdbTemplate?.put(IdbTemplateStoreName, payload)
+  } catch (_) {
+    logger.info(DBNotFoundErrorMessage)
+  }
+  dispatch(TemplateContextActions.success({ error: '', template: template as NGTemplateInfoConfig, isUpdated }))
 }
 
 const cleanUpDBRefs = (): void => {
@@ -671,14 +708,18 @@ const cleanUpDBRefs = (): void => {
 const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version: number, trial = 0): Promise<void> => {
   if (!IdbTemplate) {
     try {
-      dispatch(TemplateContextActions.updating())
+      // show loading spinner during idb initialization to prevent rendering default/initial state on mount
+      // isLoading is set to false after fetching template (_fetchTemplate)
+      dispatch(TemplateContextActions.setLoading(true))
       IdbTemplate = await openDB(TemplateDBName, version, {
         upgrade(db) {
-          try {
-            db.deleteObjectStore(IdbTemplateStoreName)
-          } catch (_) {
-            // logger.error('There was no DB found')
-            dispatch(TemplateContextActions.error({ error: 'There was no DB found' }))
+          if (db.objectStoreNames.contains(IdbTemplateStoreName)) {
+            try {
+              db.deleteObjectStore(IdbTemplateStoreName)
+            } catch (_) {
+              // logger.error('There was no DB found')
+              dispatch(TemplateContextActions.error({ error: DBNotFoundErrorMessage }))
+            }
           }
           const objectStore = db.createObjectStore(IdbTemplateStoreName, { keyPath: KeyPath, autoIncrement: false })
           objectStore.createIndex(KeyPath, KeyPath, { unique: true })
@@ -694,7 +735,11 @@ const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version
     } catch (e) {
       logger.info('DB downgraded, deleting and re creating the DB')
 
-      await deleteDB(TemplateDBName)
+      try {
+        await deleteDB(TemplateDBName)
+      } catch (_) {
+        // ignore
+      }
       IdbTemplate = undefined
 
       ++trial
@@ -703,7 +748,9 @@ const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version
         await _initializeDb(dispatch, version, trial)
       } else {
         logger.error(DBInitializationFailed)
-        dispatch(TemplateContextActions.error({ error: DBInitializationFailed }))
+        // continue loading if initialization failed, isLoading is set to false after fetching template
+        dispatch(TemplateContextActions.error({ error: DBInitializationFailed, isLoading: true }))
+        dispatch(TemplateContextActions.setDBInitializationFailed(true))
       }
     }
   } else {
@@ -797,7 +844,7 @@ const _updateStoreMetadata = async (
     defaultTo(gitDetails?.repoName, ''),
     defaultTo(gitDetails?.branch, '')
   )
-  const isUpdated = !isEqual(originalTemplate, template)
+  const isUpdated = compareTemplates(originalTemplate, template)
   try {
     if (IdbTemplate) {
       const payload: TemplatePayload = {
@@ -812,7 +859,7 @@ const _updateStoreMetadata = async (
     }
     dispatch(TemplateContextActions.success({ error: '', template, isUpdated, storeMetadata, gitDetails }))
   } catch (_) {
-    logger.info('There was no DB found')
+    logger.info(DBNotFoundErrorMessage)
     dispatch(TemplateContextActions.success({ error: '', template, isUpdated, storeMetadata, gitDetails }))
   }
 }
@@ -831,7 +878,7 @@ const _updateGitDetails = async (args: UpdateGitDetailsArgs, gitDetails: EntityG
     defaultTo(gitDetails.branch, '')
   )
 
-  const isUpdated = !isEqual(originalTemplate, template)
+  const isUpdated = compareTemplates(originalTemplate, template)
   if (IdbTemplate) {
     const payload: TemplatePayload = {
       [KeyPath]: id,
@@ -907,7 +954,8 @@ export const TemplateProvider: React.FC<{
       branch
     },
     templateType,
-    isGitCacheEnabled: true
+    isGitCacheEnabled: true,
+    isDBInitializationFailed: state.isDBInitialized ? false : state.isDBInitializationFailed
   })
 
   const fetchTemplateV2 = _fetchTemplateV2.bind(null, {
@@ -919,7 +967,8 @@ export const TemplateProvider: React.FC<{
       branch
     },
     templateType,
-    isGitCacheEnabled: true
+    isGitCacheEnabled: true,
+    isDBInitializationFailed: state.isDBInitialized ? false : state.isDBInitializationFailed
   })
 
   const fetchTemplate = supportingTemplatesGitx ? fetchTemplateV2 : fetchTemplateV1
@@ -932,7 +981,8 @@ export const TemplateProvider: React.FC<{
     originalTemplate: state.originalTemplate,
     versions: state.versions,
     stableVersion: state.stableVersion,
-    gitDetails: state.gitDetails
+    gitDetails: state.gitDetails,
+    template: state.template
   })
 
   const updateGitDetails = _updateGitDetails.bind(null, {
@@ -1022,7 +1072,8 @@ export const TemplateProvider: React.FC<{
   }, [repoIdentifier, branch])
 
   React.useEffect(() => {
-    if (state.isDBInitialized) {
+    // fetch template after trying to initialize idb
+    if (state.isDBInitialized || state.isDBInitializationFailed) {
       /* istanbul ignore next */
       abortControllerRef.current = new AbortController()
 
@@ -1037,7 +1088,7 @@ export const TemplateProvider: React.FC<{
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isDBInitialized])
+  }, [state.isDBInitialized, state.isDBInitializationFailed])
 
   React.useEffect(() => {
     isMounted.current = true

@@ -6,6 +6,7 @@
  */
 
 import type { GetDataError } from 'restful-react'
+import stableStringify from 'fast-json-stable-stringify'
 import type { Failure } from 'services/cd-ng'
 import type {
   CacheResponseMetadata,
@@ -15,14 +16,19 @@ import type {
   ErrorNodeSummary,
   NGTemplateInfoConfig
 } from 'services/template-ng'
-import type { TemplateViewData } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateReducer'
+import type {
+  TemplateReducerState,
+  TemplateViewData
+} from '@templates-library/components/TemplateStudio/TemplateContext/TemplateReducer'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export enum TemplateActions {
   DBInitialize = 'DBInitialize',
+  DBInitializationFail = 'DBInitializationFail',
   Initialize = 'Initialize',
   Fetching = 'Fetching',
+  Loading = 'Loading',
   UpdateTemplateView = 'UpdateTemplateView',
   UpdateTemplate = 'UpdateTemplate',
   SetYamlHandler = 'SetYamlHandler',
@@ -54,6 +60,7 @@ export interface ActionResponse {
   versions?: string[]
   isLoading?: boolean
   isIntermittentLoading?: boolean
+  isDBInitializationFailed?: boolean
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
   entityValidityDetails?: EntityValidityDetails
@@ -70,6 +77,12 @@ export interface ActionReturnType {
 }
 
 const dbInitialized = (): ActionReturnType => ({ type: TemplateActions.DBInitialize })
+const setDBInitializationFailed = (
+  isDBInitializationFailed: TemplateReducerState['isDBInitializationFailed']
+): ActionReturnType => ({
+  type: TemplateActions.DBInitializationFail,
+  response: { isDBInitializationFailed }
+})
 const initialized = (): ActionReturnType => ({ type: TemplateActions.Initialize })
 const updateTemplateView = (response: ActionResponse): ActionReturnType => ({
   type: TemplateActions.UpdateTemplateView,
@@ -79,7 +92,10 @@ const setYamlHandler = (response: ActionResponse): ActionReturnType => ({
   type: TemplateActions.SetYamlHandler,
   response
 })
-const updating = (): ActionReturnType => ({ type: TemplateActions.UpdateTemplate })
+const setLoading = (isLoading: TemplateReducerState['isLoading']): ActionReturnType => ({
+  type: TemplateActions.Loading,
+  response: { isLoading }
+})
 const fetching = (): ActionReturnType => ({ type: TemplateActions.Fetching })
 const success = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Success, response })
 const error = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Error, response })
@@ -90,12 +106,20 @@ const setIntermittentLoading = (response: ActionResponse): ActionReturnType => (
 
 export const TemplateContextActions = {
   dbInitialized,
+  setDBInitializationFailed,
   initialized,
-  updating,
+  setLoading,
   fetching,
   updateTemplateView,
   setYamlHandler,
   setIntermittentLoading,
   success,
   error
+}
+
+export function compareTemplates(
+  template1: NGTemplateInfoConfig | undefined,
+  template2: NGTemplateInfoConfig | undefined
+): boolean {
+  return stableStringify(template1) !== stableStringify(template2)
 }

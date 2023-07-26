@@ -52,6 +52,7 @@ export interface TemplateReducerState {
   templateView: TemplateViewData
   templateIdentifier: string
   isDBInitialized: boolean
+  isDBInitializationFailed: boolean
   isLoading: boolean
   isIntermittentLoading: boolean
   isInitialized: boolean
@@ -85,6 +86,7 @@ export const initialState: TemplateReducerState = {
   isIntermittentLoading: false,
   isBETemplateUpdated: false,
   isDBInitialized: false,
+  isDBInitializationFailed: false,
   isUpdated: false,
   isInitialized: false,
   gitDetails: {},
@@ -106,6 +108,11 @@ export const TemplateReducer = (state: TemplateReducerState, data: ActionReturnT
       return {
         ...state,
         isDBInitialized: true
+      }
+    case TemplateActions.DBInitializationFail:
+      return {
+        ...state,
+        isDBInitializationFailed: response?.isDBInitializationFailed ?? true
       }
     case TemplateActions.SetYamlHandler:
       return {
@@ -131,6 +138,11 @@ export const TemplateReducer = (state: TemplateReducerState, data: ActionReturnT
         isLoading: true,
         isBETemplateUpdated: false,
         isUpdated: false
+      }
+    case TemplateActions.Loading:
+      return {
+        ...state,
+        isLoading: response?.isLoading ?? true
       }
     case TemplateActions.Success:
     case TemplateActions.Error:

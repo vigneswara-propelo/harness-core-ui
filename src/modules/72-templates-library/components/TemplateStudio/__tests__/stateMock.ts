@@ -733,6 +733,7 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
       isIntermittentLoading: false,
       isBETemplateUpdated: false,
       isDBInitialized: true,
+      isDBInitializationFailed: false,
       isUpdated: false,
       isInitialized: true,
       gitDetails: {},
