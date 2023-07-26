@@ -55,19 +55,17 @@ export default function IDPAdminSideNav(): React.ReactElement {
           {/* <SidebarLink label={getString('idp.adminHome')} to={routes.toAdminHome(params)} /> */}
           <SidebarLink label={getString('common.plugins')} to={routes.toPluginsPage(params)} />
           <SidebarLink label={getString('common.configurations')} to={routes.toConfigurations(params)} />
-          <SidebarLink label={getString('idp.layout')} to={routes.toLayoutConfig(params)} />
-          <SidebarLink label={getString('accessControl')} to={routes.toIDPAccessControl(params)} />
-          <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectorsPage(params)} />
           <SidebarLink label={getString('idp.oAuthConfig')} to={routes.toIDPOAuthConfig(params)} />
-          <SidebarLink label={getString('idp.urlAllowList')} to={routes.toIDPAllowListURL(params)} />
-          <SidebarLink
-            label={getString('common.pipelineExecution')}
-            to={routes.toIDPDeployments({
-              ...params,
-              projectIdentifier: selectedProject?.identifier,
-              orgIdentifier: selectedProject?.orgIdentifier
-            })}
-          />
+          {isProjectSelected && (
+            <SidebarLink
+              label={getString('common.pipelineExecution')}
+              to={routes.toIDPDeployments({
+                ...params,
+                projectIdentifier: selectedProject?.identifier,
+                orgIdentifier: selectedProject?.orgIdentifier
+              })}
+            />
+          )}
           <SidebarLink
             label={getString('pipelines')}
             to={
@@ -80,6 +78,10 @@ export default function IDPAdminSideNav(): React.ReactElement {
                 : routes.toIDPProjectSetup(params)
             }
           />
+          <SidebarLink label={getString('idp.layout')} to={routes.toLayoutConfig(params)} />
+          <SidebarLink label={getString('accessControl')} to={routes.toIDPAccessControl(params)} />
+          <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectorsPage(params)} />
+          <SidebarLink label={getString('idp.urlAllowList')} to={routes.toIDPAllowListURL(params)} />
         </>
       )}
     </Layout.Vertical>

@@ -9,7 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import IDPAdminSideNav from '../IDPAdminSideNav'
 
 jest.mock('@harnessio/react-idp-service-client', () => ({
@@ -23,10 +23,14 @@ describe('IDP Sidenav', () => {
     const { container, getByText } = render(
       <TestWrapper
         path={routes.toIDPAdmin({
-          ...accountPathProps
+          ...accountPathProps,
+          ...projectPathProps,
+          ...orgPathProps
         })}
         pathParams={{
-          accountId: 'accountId'
+          accountId: 'accountId',
+          projectIdentifier: 'projectID',
+          orgIdentifier: 'default'
         }}
       >
         <IDPAdminSideNav />
