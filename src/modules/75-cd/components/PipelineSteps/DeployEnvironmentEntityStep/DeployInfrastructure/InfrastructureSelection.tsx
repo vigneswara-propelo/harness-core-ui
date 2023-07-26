@@ -195,7 +195,11 @@ export default function InfrastructureSelection({
             allowableTypes,
             defaultValueToReset: '',
             onChange: item => {
-              setSelectedInfrastructures(getSelectedInfrastructuresFromOptions([item as SelectOption]))
+              if (item) {
+                setSelectedInfrastructures(getSelectedInfrastructuresFromOptions([item as SelectOption]))
+              } else {
+                setSelectedInfrastructures([])
+              }
             },
             expressions
           }}
