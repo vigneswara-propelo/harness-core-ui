@@ -103,6 +103,7 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
           hideModal()
         }}
         className={css.modal}
+        canOutsideClickClose={false}
       >
         {flagTypeClicked ? (
           <FlagWizard
