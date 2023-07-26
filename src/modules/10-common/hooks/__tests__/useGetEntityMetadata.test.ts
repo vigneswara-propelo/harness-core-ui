@@ -134,7 +134,7 @@ describe('useGetEntityMetadata tests', () => {
 
     const templateeUrl = await result.current.getEntityURL()
     expect(templateeUrl).toBe(
-      '/account/mockAccount/home/orgs/mockOrg/projects/mockProject/setup/resources/template-studio/Pipeline/template/pipline_using_stage_template/?versionLabel=v1&branch=testBranch'
+      '/account/mockAccount/home/orgs/mockOrg/projects/mockProject/setup/resources/templates/pipline_using_stage_template/template-studio/Pipeline/?versionLabel=v1&branch=testBranch'
     )
   })
 

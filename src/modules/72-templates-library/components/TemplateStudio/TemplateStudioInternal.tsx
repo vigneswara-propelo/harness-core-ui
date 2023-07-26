@@ -411,7 +411,7 @@ export function TemplateStudioInternal(): React.ReactElement {
         when={template?.identifier !== ''}
         shouldBlockNavigation={nextLocation => {
           const matchDefault = matchPath(nextLocation.pathname, {
-            path: routes.toTemplateStudio(getPathParams()),
+            path: routes.toTemplateStudioNew(getPathParams()),
             exact: true
           })
           return (
@@ -427,7 +427,7 @@ export function TemplateStudioInternal(): React.ReactElement {
         }}
         navigate={newPath => {
           const isTemplate = matchPath(newPath, {
-            path: routes.toTemplateStudio(getPathParams()),
+            path: routes.toTemplateStudioNew(getPathParams()),
             exact: true
           })
           !isTemplate?.isExact && deleteTemplateCache()

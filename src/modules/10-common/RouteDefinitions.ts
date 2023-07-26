@@ -1444,6 +1444,33 @@ const routes = {
       })
     }
   ),
+  toTemplateStudioNew: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountId: _accountId,
+      templateType,
+      templateIdentifier,
+      ...rest
+    }: Partial<TemplateStudioPathProps & ModulePathParams & TemplateStudioQueryParams>) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      let path
+      if (queryString.length > 0) {
+        path = `resources/templates/${templateIdentifier}/template-studio/${templateType}/?${queryString}`
+      } else {
+        path = `resources/templates/${templateIdentifier}/template-studio/${templateType}/`
+      }
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
   /********************************************************************************************************************/
   toCI: withAccountId(() => `/ci`),
   toCIHome: withAccountId(() => `/ci/home`),

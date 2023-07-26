@@ -202,7 +202,7 @@ const getTemplateUrl = async (scope: EntityScope, identifier: string): Promise<s
     .then(templateMetadata => {
       if (templateMetadata?.storeType) {
         return Promise.resolve(
-          `${routes.toTemplateStudio({
+          `${routes.toTemplateStudioNew({
             accountId: accountIdentifier,
             orgIdentifier,
             projectIdentifier,

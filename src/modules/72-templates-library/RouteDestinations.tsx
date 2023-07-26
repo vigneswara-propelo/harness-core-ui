@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { Redirect, useParams } from 'react-router-dom'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
@@ -21,7 +22,12 @@ import { String } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
-import type { Module, ModulePathParams, TemplateType } from '@common/interfaces/RouteInterfaces'
+import type {
+  Module,
+  ModulePathParams,
+  TemplateStudioPathProps,
+  TemplateType
+} from '@common/interfaces/RouteInterfaces'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import TemplateResourceModal from './components/RbacResourceModals/TemplateResourceModal'
 import TemplateResourceRenderer from './components/RbacResourceModals/TemplateResourceRenderer'
@@ -63,7 +69,7 @@ AuditTrailFactory.registerResourceHandler('TEMPLATE', {
   resourceUrl: (template: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     if (template.identifier && template.labels?.templateEntityType && orgIdentifier && projectIdentifier) {
-      return routes.toTemplateStudio({
+      return routes.toTemplateStudioNew({
         module,
         orgIdentifier,
         projectIdentifier,
@@ -76,6 +82,57 @@ AuditTrailFactory.registerResourceHandler('TEMPLATE', {
     return undefined
   }
 })
+
+const RedirectToAccountTemplateStudio = (): React.ReactElement => {
+  const { accountId, projectIdentifier, templateIdentifier, templateType } = useParams<
+    TemplateStudioPathProps & ModulePathParams
+  >()
+  return (
+    <Redirect
+      to={routes.toTemplateStudioNew({
+        accountId,
+        projectIdentifier,
+        templateIdentifier,
+        templateType
+      })}
+    />
+  )
+}
+
+const RedirectToOrgTemplateStudio = (): React.ReactElement => {
+  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, templateType } = useParams<
+    TemplateStudioPathProps & ModulePathParams
+  >()
+  return (
+    <Redirect
+      to={routes.toTemplateStudioNew({
+        accountId,
+        projectIdentifier,
+        orgIdentifier,
+        templateIdentifier,
+        templateType
+      })}
+    />
+  )
+}
+
+const RedirectToModuleTemplateStudio = (): React.ReactElement => {
+  const { accountId, orgIdentifier, projectIdentifier, templateIdentifier, templateType, module } = useParams<
+    TemplateStudioPathProps & ModulePathParams
+  >()
+  return (
+    <Redirect
+      to={routes.toTemplateStudioNew({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        templateIdentifier,
+        templateType,
+        module
+      })}
+    />
+  )
+}
 
 export default (
   <>
@@ -93,6 +150,19 @@ export default (
       })}
       exact
     >
+      <RedirectToAccountTemplateStudio />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toTemplateStudioNew({
+        ...accountPathProps,
+        ...{
+          templateIdentifier: ':templateIdentifier',
+          templateType: ':templateType'
+        }
+      })}
+      exact
+    >
       <TemplateStudio />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toTemplates({ ...orgPathProps })} exact>
@@ -101,6 +171,19 @@ export default (
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
       path={routes.toTemplateStudio({
+        ...orgPathProps,
+        ...{
+          templateIdentifier: ':templateIdentifier',
+          templateType: ':templateType'
+        }
+      })}
+      exact
+    >
+      <RedirectToOrgTemplateStudio />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toTemplateStudioNew({
         ...orgPathProps,
         ...{
           templateIdentifier: ':templateIdentifier',
@@ -152,12 +235,29 @@ export const TemplateRouteDestinations: React.FC<{
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...moduleParams })}
       pageName={templateStudioPageName}
     >
+      <RedirectToModuleTemplateStudio />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={sidebarProps}
+      path={routes.toTemplateStudioNew({ ...accountPathProps, ...templatePathProps, ...moduleParams })}
+      pageName={templateStudioPageName}
+    >
       <TemplateStudioWrapper />
     </RouteWithLayout>
     <RouteWithLayout
       exact
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps })}
+      pageName={templateStudioPageName}
+    >
+      <RedirectToAccountTemplateStudio />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toTemplateStudioNew({ ...accountPathProps, ...templatePathProps })}
       pageName={templateStudioPageName}
     >
       <TemplateStudioWrapper />

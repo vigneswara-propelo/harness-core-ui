@@ -12,7 +12,7 @@ import CVHomePage from '@cv/pages/home/CVHomePage'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
 
 import './components/PipelineSteps'
@@ -228,6 +228,24 @@ const RedirectToCVProject = (): React.ReactElement => {
   } else {
     return <Redirect to={routes.toCVHome(params)} />
   }
+}
+
+const RedirectToCVTemplateStudio = (): React.ReactElement => {
+  const { accountId, orgIdentifier, projectIdentifier, templateIdentifier, templateType, module } = useParams<
+    TemplateStudioPathProps & ModulePathParams
+  >()
+  return (
+    <Redirect
+      to={routes.toTemplateStudioNew({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        templateIdentifier,
+        templateType,
+        module
+      })}
+    />
+  )
 }
 
 const cvLabel = 'common.purpose.cv.serviceReliability'
@@ -632,6 +650,13 @@ export const SRMRoutes = (
       sidebarProps={CVSideNavProps}
       exact
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
+    >
+      <RedirectToCVTemplateStudio />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={CVSideNavProps}
+      exact
+      path={routes.toTemplateStudioNew({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
     >
       <TemplateStudio />
     </RouteWithLayout>
