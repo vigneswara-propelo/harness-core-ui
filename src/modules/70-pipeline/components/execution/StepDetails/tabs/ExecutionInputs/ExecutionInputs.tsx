@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import React, { useEffect, useState } from 'react'
+import produce from 'immer'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import {
   MultiTypeInputType,
   Formik,
@@ -17,7 +18,8 @@ import {
   useToaster,
   Text,
   useToggleOpen,
-  ConfirmationDialog
+  ConfirmationDialog,
+  EXECUTION_TIME_INPUT_VALUE
 } from '@harness/uicore'
 import { Intent, Spinner } from '@blueprintjs/core'
 import type { FormikErrors } from 'formik'
@@ -38,14 +40,16 @@ import { useStrings } from 'framework/strings'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import pipelineFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import type { StepElementConfig } from 'services/cd-ng'
+import { useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { StepNodeType, NonSelectableStepNodes } from '@pipeline/utils/executionUtils'
-import { StageForm, StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
+import { StageForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { getStageFromPipeline, validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import css from './ExecutionInputs.module.scss'
@@ -59,6 +63,11 @@ export interface ExecutionInputsProps {
   onError?(): void
 }
 
+// react-query staleTime
+const STALE_TIME = 60 * 1000 * 15
+
+type FieldYaml = { step: StepElementConfig; stage: DeploymentStageElementConfig }
+
 export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement {
   const { step, factory = pipelineFactory, executionMetadata, className, onSuccess, onError } = props
   const { accountId, projectIdentifier, orgIdentifier, planExecutionId } = defaultTo(executionMetadata, {})
@@ -66,9 +75,11 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [parsedStage, setParsedStage] = useState<StageElementWrapperConfig>({})
+  const [fieldYaml, setFieldYaml] = useState<FieldYaml>({} as FieldYaml)
 
   const nodeExecutionId = defaultTo(step.uuid, '')
-  const { data, loading } = useGetExecutionInputTemplate({
+  const { data, loading: loadingExecutionInputTemplate } = useGetExecutionInputTemplate({
     nodeExecutionId,
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
     lazy: !step.uuid
@@ -86,20 +97,82 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
 
   const stepType = step.stepType as StepType
   const isStageForm = NonSelectableStepNodes.includes(step.stepType as StepNodeType)
-  const template = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
-    defaultTo(get(data, 'data.inputTemplate'), '{}')
+  const template = React.useMemo(
+    () =>
+      parse<{ step: StepElementConfig; stage: StageElementConfig }>(
+        defaultTo(get(data, 'data.inputTemplate'), '{}') as string
+      ),
+    [data]
   )
   const userInput = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
-    defaultTo(get(data, 'data.userInput'), '{}')
+    defaultTo(get(data, 'data.userInput'), '{}') as string
   )
-  const fieldYaml = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
-    defaultTo(get(data, 'data.fieldYaml'), '{}')
-  )
+  const receivedFieldYaml = defaultTo(get(data, 'data.fieldYaml'), '{}') as string
   const isDone = !isEmpty(userInput) || isExecutionComplete(step.status)
+
+  const shouldFetchServiceInputs = React.useMemo(() => {
+    const receivedFieldYamlValues = parse<FieldYaml>(receivedFieldYaml)
+    return Boolean(
+      receivedFieldYamlValues?.stage?.spec?.service?.serviceRef &&
+        (receivedFieldYamlValues?.stage?.spec?.service?.serviceInputs as unknown as string) ===
+          EXECUTION_TIME_INPUT_VALUE
+    ) as boolean
+  }, [receivedFieldYaml])
+
+  const { data: servicesDataResponse, isInitialLoading: loadingServicesData } = useGetServicesYamlAndRuntimeInputsQuery(
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      body: { serviceIdentifiers: [fieldYaml.stage?.spec?.service?.serviceRef as string] }
+    },
+    {
+      enabled: shouldFetchServiceInputs,
+      staleTime: STALE_TIME
+    }
+  )
+
+  useEffect(() => {
+    if (!shouldFetchServiceInputs && !isEmpty(parse<FieldYaml>(receivedFieldYaml))) {
+      setParsedStage(defaultTo(template, {}) as StageElementWrapperConfig)
+    }
+  }, [template, shouldFetchServiceInputs, receivedFieldYaml])
+
+  useEffect(() => {
+    if (receivedFieldYaml) {
+      const fieldYamlToBeUpdated = parse<FieldYaml>(receivedFieldYaml)
+      setFieldYaml(fieldYamlToBeUpdated)
+    }
+  }, [receivedFieldYaml])
+
+  useEffect(() => {
+    if (servicesDataResponse) {
+      const serviceInputSetYamlValues = parse(
+        defaultTo(get(servicesDataResponse, 'data.serviceV2YamlMetadataList[0].inputSetTemplateYaml'), '{}') as string
+      )
+      const serviceInputsToBeUpdated = get(serviceInputSetYamlValues, 'serviceInputs')
+
+      if (serviceInputsToBeUpdated) {
+        setParsedStage(
+          produce(parsedStage, draft => {
+            set(draft, 'stage.spec.service.serviceInputs', serviceInputsToBeUpdated)
+          })
+        )
+
+        setFieldYaml(
+          produce(fieldYaml, draft => {
+            set(draft, 'stage.spec.service.serviceInputs', serviceInputsToBeUpdated)
+          })
+        )
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [servicesDataResponse])
 
   const finalUserInput = defaultTo(isStageForm ? userInput : userInput.step, {})
   const parsedStep = defaultTo(template.step, {})
-  const parsedStage = defaultTo(template, {}) as StageElementWrapperConfig
   const initialValues = isDone ? finalUserInput : clearRuntimeInput(isStageForm ? parsedStage : parsedStep, true)
 
   const stepDef = factory.getStep<Partial<StepElementConfig>>(stepType)
@@ -193,7 +266,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
 
   let content: React.ReactElement | null = null
 
-  if (loading) {
+  if (loadingExecutionInputTemplate || loadingServicesData) {
     content = <Spinner />
   } else if (hasSubmitted) {
     content = <Text>{getString('pipeline.runtimeInputsSubmittedMsg')}</Text>
@@ -204,6 +277,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
         validate={handleValidation}
         initialValues={initialValues}
         onSubmit={handleSubmit}
+        enableReinitialize={true}
       >
         <FormikForm>
           {isStageForm ? (
@@ -247,9 +321,9 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
                   })
                 }
               })
-            ) : (
-              <StageFormInternal
-                template={parsedStage}
+            ) : !isEmpty(parsedStage) ? (
+              <StageForm
+                template={parsedStage as StageElementWrapperConfig}
                 path="stage"
                 readonly={isDone}
                 viewType={StepViewType.DeploymentForm}
@@ -257,7 +331,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
                 stageClassName={css.stage}
                 allValues={fieldYaml}
               />
-            )
+            ) : null
           ) : (
             <StepWidget<Partial<StepElementConfig>>
               factory={factory}

@@ -8,6 +8,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import {
   AllowedTypes,
+  EXECUTION_TIME_INPUT_VALUE,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
@@ -291,10 +292,10 @@ export function DeployServiceEntityInputStep({
 
   const onServiceInputTypeChange = (type: MultiTypeInputType): void => {
     setServiceInputType(type)
-    // Resetting serviceInputs upon changing type to expression
+    // setting serviceInputs as execution input upon changing type to expression
     if (type === MultiTypeInputType.EXPRESSION) {
-      updateStageFormTemplate(undefined, `${fullPathPrefix}serviceInputs`)
-      formik.setFieldValue(`${localPathPrefix}serviceInputs`, undefined)
+      updateStageFormTemplate(EXECUTION_TIME_INPUT_VALUE, `${fullPathPrefix}serviceInputs`)
+      formik.setFieldValue(`${localPathPrefix}serviceInputs`, EXECUTION_TIME_INPUT_VALUE)
     }
   }
 
@@ -331,9 +332,9 @@ export function DeployServiceEntityInputStep({
                   allowableTypes: allowableTypesWithoutExecution,
                   selectProps: {
                     addClearBtn: !inputSetData?.readonly,
-                    items: selectOptions,
-                    onTypeChange: onServiceInputTypeChange
-                  }
+                    items: selectOptions
+                  },
+                  onTypeChange: onServiceInputTypeChange
                 }}
                 className={css.inputWidth}
                 formik={formik}

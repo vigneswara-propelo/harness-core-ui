@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, isEmpty, isNil, pick, set } from 'lodash-es'
 
-import { Container, SelectOption } from '@harness/uicore'
+import { Container, SelectOption, EXECUTION_TIME_INPUT_VALUE, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import type { DeploymentStageConfig, ServiceSpec } from 'services/cd-ng'
@@ -61,6 +61,10 @@ export default function SingleServiceInputSetForm({
 
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
+
+  const areServiceInputsExecutionTimeInputs =
+    (deploymentStageTemplate.service?.serviceInputs as unknown as string) === EXECUTION_TIME_INPUT_VALUE &&
+    !deploymentStageTemplate.service?.serviceRef
 
   // This is the value of AllValues
   const deploymentStageInputSet = get(formik?.values, path, {})
@@ -170,6 +174,9 @@ export default function SingleServiceInputSetForm({
             subscribeToForm={false}
           />
         </Container>
+      )}
+      {areServiceInputsExecutionTimeInputs && (
+        <Text padding={{ bottom: 'medium' }}>{getString('pipeline.noRuntimeServiceInputsAreRequired')}</Text>
       )}
 
       {deploymentStageTemplate.service && setupModeType === setupMode.DIFFERENT && (

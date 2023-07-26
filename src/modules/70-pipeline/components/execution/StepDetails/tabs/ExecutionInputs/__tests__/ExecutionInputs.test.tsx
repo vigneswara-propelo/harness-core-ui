@@ -26,6 +26,9 @@ jest.mock('services/pipeline-ng', () => ({
   useHandleInterrupt: jest.fn().mockReturnValue({}),
   useSubmitExecutionInput: jest.fn().mockReturnValue({})
 }))
+jest.mock('services/cd-ng-rq', () => ({
+  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: {} } }))
+}))
 
 factory.registerStep(new ShellScriptStep())
 
@@ -40,7 +43,9 @@ describe('<ExecutionInputs /> tests', () => {
         data: {
           data: {
             inputTemplate:
-              'stage:\n  identifier: "app"\n  type: "Approval"\n  variables:\n  - name: "test"\n    type: "String"\n    value: "<+input>.executionInput()"\n'
+              'stage:\n  identifier: "app"\n  type: "Approval"\n  variables:\n  - name: "test"\n    type: "String"\n    value: "<+input>.executionInput()"\n',
+            fieldYaml:
+              'stage:\n  identifier: s1\n  type: Approval\n  name: s1\n  description: ""\n  spec:\n    execution:\n      steps:\n        - step:\n            identifier: some_step\n            type: HarnessApproval\n            name: some step\n            timeout: 1d\n            spec:\n              approvalMessage: |-\n                Please review the following information\n                and approve the pipeline progression\n              includePipelineExecutionHistory: true\n              approvers:\n                minimumCount: 1\n                disallowPipelineExecutor: false\n                userGroups:\n                  - account.UG_Tst_Prat_02\n              isAutoRejectEnabled: false\n              approverInputs: []\n  tags: {}\n  variables:\n    - name: basicVar\n      type: String\n      description: ""\n      required: false\n      value: <+input>.executionInput()\n'
           }
         }
       })
@@ -54,9 +59,8 @@ describe('<ExecutionInputs /> tests', () => {
         </TestWrapper>
       )
 
+      const input = await waitFor(() => queryByAttribute('name', container, 'stage.variables[0].value')!)
       expect(container).toMatchSnapshot()
-
-      const input = queryByAttribute('name', container, 'stage.variables[0].value')!
       await userEvent.type(input, 'Hello')
 
       const submit = await findByTestId('submit')

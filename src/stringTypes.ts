@@ -4776,6 +4776,7 @@ export interface StringsMap {
   'pipeline.noRunsLabel': string
   'pipeline.noRunsSimpleText': string
   'pipeline.noRunsText': string
+  'pipeline.noRuntimeServiceInputsAreRequired': string
   'pipeline.noServicesFound': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string

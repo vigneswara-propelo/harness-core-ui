@@ -12,6 +12,7 @@ import {
   MultiTypeInputType,
   AllowedTypes,
   RUNTIME_INPUT_VALUE,
+  EXECUTION_TIME_INPUT_VALUE,
   useToaster
 } from '@harness/uicore'
 import { defaultTo, get, isNil, noop } from 'lodash-es'
@@ -185,7 +186,7 @@ export default function DeployServiceEntityWidget({
       } else if (isMultiTypeRuntime(typeOfService)) {
         serviceInputs = RUNTIME_INPUT_VALUE
       } else if (isMultiTypeExpression(typeOfService)) {
-        serviceInputs = get(values.serviceInputs, 'service.expression')
+        serviceInputs = EXECUTION_TIME_INPUT_VALUE
       }
 
       onUpdate?.({

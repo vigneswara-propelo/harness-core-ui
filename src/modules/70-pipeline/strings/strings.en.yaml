@@ -84,6 +84,7 @@ filters:
 selectStagePlaceholder: Search/Select Stage
 selectStage: Select Stage
 stepNamePlaceholder: 'Enter Step Name'
+noRuntimeServiceInputsAreRequired: No runtime inputs are required for the service when it is set as expression, inputs can be provided during execution
 rightBar:
   editCodebaseConfiguration: Edit Codebase Configuration
   mergeCommit: Merge Commit
