@@ -44,7 +44,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   const mainRef = useRef<HTMLDivElement>(null)
   const [markerPosition, setMarkerPosition] = useState<number>()
   const [multiMarkerPosition, setMultipleMarkerPosition] = useState<{ startMarker: number; stopMarker?: number }>()
-  const isMultiMarkerStep = eventType === ChangeSourceTypes.SrmStepAnalysis
+  const isMultiMarkerStep = eventType === ChangeSourceTypes.DeploymentImpactAnalysis
 
   const { data, loading, error, refetch } = useGetSLODetails({
     identifier: selectedSLO.identifier ?? '',

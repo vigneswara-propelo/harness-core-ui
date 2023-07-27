@@ -21,7 +21,7 @@ export const getMarkerProps = (
   multiTimeStampMarker?: ColumnChartProps['multiTimeStampMarker']
   timestampMarker?: ColumnChartProps['timestampMarker']
 } => {
-  return eventType === ChangeSourceTypes.SrmStepAnalysis
+  return eventType === ChangeSourceTypes.DeploymentImpactAnalysis
     ? {
         multiTimeStampMarker: {
           markerStartTime: {

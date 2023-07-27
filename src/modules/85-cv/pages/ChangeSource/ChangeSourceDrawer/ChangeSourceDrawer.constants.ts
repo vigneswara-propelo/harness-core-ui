@@ -19,7 +19,7 @@ export enum ChangeSourceTypes {
   CustomIncident = 'CustomIncident',
   CustomInfrastructure = 'CustomInfrastructure',
   CustomFF = 'CustomFF',
-  SrmStepAnalysis = 'SrmStepAnalysis'
+  DeploymentImpactAnalysis = 'DeploymentImpactAnalysis'
 }
 
 export const CustomChangeSourceList = [

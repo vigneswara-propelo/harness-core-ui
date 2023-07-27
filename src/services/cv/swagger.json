@@ -3896,7 +3896,8 @@
               "ServerlessAwsLambdaPackageV2",
               "RevertPR",
               "AwsCdkBootstrap",
-              "AwsCdkSynth"
+              "AwsCdkSynth",
+              "AwsCdkDiff"
             ]
           },
           {
@@ -4139,7 +4140,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4264,7 +4265,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4403,7 +4404,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4553,7 +4554,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4721,7 +4722,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -4885,7 +4886,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -5004,7 +5005,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -5156,7 +5157,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -5269,7 +5270,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             },
             "collectionFormat": "multi"
@@ -8077,43 +8078,6 @@
         }
       }
     },
-    "/monitored-service/all/time-series-health-sources": {
-      "get": {
-        "tags": ["monitored-service"],
-        "summary": "get all of monitored service data with time series health sources",
-        "description": "",
-        "operationId": "getAllMonitoredServicesWithTimeSeriesHealthSources",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListMonitoredServiceWithHealthSources"
-            }
-          }
-        }
-      }
-    },
     "/monitored-service/environments": {
       "get": {
         "tags": ["monitored-service"],
@@ -8146,6 +8110,43 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseListEnvironmentResponse"
+            }
+          }
+        }
+      }
+    },
+    "/monitored-service/all/time-series-health-sources": {
+      "get": {
+        "tags": ["monitored-service"],
+        "summary": "get all of monitored service data with time series health sources",
+        "description": "",
+        "operationId": "getAllMonitoredServicesWithTimeSeriesHealthSources",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListMonitoredServiceWithHealthSources"
             }
           }
         }
@@ -20210,7 +20211,7 @@
             "CustomIncident",
             "CustomInfrastructure",
             "CustomFF",
-            "SrmStepAnalysis"
+            "DeploymentImpactAnalysis"
           ]
         }
       }
@@ -20274,7 +20275,7 @@
                 "CustomIncident",
                 "CustomInfrastructure",
                 "CustomFF",
-                "SrmStepAnalysis"
+                "DeploymentImpactAnalysis"
               ]
             }
           },
@@ -20725,7 +20726,7 @@
             "CustomIncident",
             "CustomInfrastructure",
             "CustomFF",
-            "SrmStepAnalysis"
+            "DeploymentImpactAnalysis"
           ]
         },
         "changeSourceIdentifier": {
@@ -21632,10 +21633,10 @@
             "type": "string"
           }
         },
-        "isManualQuery": {
+        "isCustomCreatedMetric": {
           "type": "boolean"
         },
-        "isCustomCreatedMetric": {
+        "isManualQuery": {
           "type": "boolean"
         }
       }
@@ -23516,7 +23517,7 @@
             "CustomIncident",
             "CustomInfrastructure",
             "CustomFF",
-            "SrmStepAnalysis"
+            "DeploymentImpactAnalysis"
           ]
         },
         "enabled": {
@@ -23634,7 +23635,7 @@
         },
         "version": {
           "type": "string",
-          "enum": ["v2"]
+          "enum": ["v1", "v2"]
         },
         "spec": {
           "$ref": "#/definitions/NextGenHealthSourceSpec"
@@ -23860,7 +23861,7 @@
               "CustomIncident",
               "CustomInfrastructure",
               "CustomFF",
-              "SrmStepAnalysis"
+              "DeploymentImpactAnalysis"
             ]
           }
         }
@@ -24127,56 +24128,6 @@
         }
       }
     },
-    "HealthSourceSummary": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "identifier": {
-          "type": "string"
-        }
-      }
-    },
-    "MonitoredServiceWithHealthSources": {
-      "type": "object",
-      "properties": {
-        "identifier": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "healthSources": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "$ref": "#/definitions/HealthSourceSummary"
-          }
-        }
-      }
-    },
-    "ResponseListMonitoredServiceWithHealthSources": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MonitoredServiceWithHealthSources"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
     "EnvironmentResponse": {
       "type": "object",
       "properties": {
@@ -24246,6 +24197,56 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/EnvironmentResponse"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "HealthSourceSummary": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        }
+      }
+    },
+    "MonitoredServiceWithHealthSources": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "healthSources": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/HealthSourceSummary"
+          }
+        }
+      }
+    },
+    "ResponseListMonitoredServiceWithHealthSources": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MonitoredServiceWithHealthSources"
           }
         },
         "metaData": {
@@ -28978,7 +28979,7 @@
         },
         "versionLabel": {
           "type": "string",
-          "pattern": "^[0-9a-zA-Z][^\\s]{0,63}$"
+          "pattern": "^[0-9a-zA-Z][^\\s/&]{0,63}$"
         },
         "templateInputs": {
           "type": "object",
@@ -31978,6 +31979,9 @@
         "sloError": {
           "$ref": "#/definitions/SLOError"
         },
+        "recalculatingSLI": {
+          "type": "boolean"
+        },
         "errorBudgetRisk": {
           "type": "string",
           "enum": ["EXHAUSTED", "UNHEALTHY", "NEED_ATTENTION", "OBSERVE", "HEALTHY"]
@@ -31986,9 +31990,6 @@
           "type": "boolean"
         },
         "totalErrorBudgetApplicable": {
-          "type": "boolean"
-        },
-        "recalculatingSLI": {
           "type": "boolean"
         }
       }
@@ -32150,10 +32151,10 @@
           "type": "integer",
           "format": "int32"
         },
-        "displayName": {
+        "identifier": {
           "type": "string"
         },
-        "identifier": {
+        "displayName": {
           "type": "string"
         }
       }
@@ -32891,12 +32892,12 @@
           "type": "integer",
           "format": "int64"
         },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
         "number": {
           "type": "integer",
           "format": "int32"
-        },
-        "sort": {
-          "$ref": "#/definitions/Sort"
         },
         "first": {
           "type": "boolean"

@@ -160,7 +160,7 @@ export const statusToColorMapping = (
     case ChangeSourceTypes.HarnessCD:
       return statusToColorMappingHarnessCD(status as keyof typeof EXECUTION_STATUS_HARNESS_CD)
     case ChangeSourceTypes.HarnessCDNextGen:
-    case ChangeSourceTypes.SrmStepAnalysis:
+    case ChangeSourceTypes.DeploymentImpactAnalysis:
       return statusToColorMappingHarnessCDNextGen(status as keyof typeof EXECUTION_STATUS_HARNESS_CD_NEXTGEN)
     default:
       return {

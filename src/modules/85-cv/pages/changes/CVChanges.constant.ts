@@ -33,7 +33,7 @@ export const ChangeSourceConnectorOptions = (
     },
     {
       label: getString('cv.changeSource.DeploymentImpactAnalysis'),
-      value: ChangeSourceTypes.SrmStepAnalysis
+      value: ChangeSourceTypes.DeploymentImpactAnalysis
     }
   ]
 

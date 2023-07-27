@@ -33,13 +33,15 @@ export default function ChangeDetails({
   const { type, status, executedBy, deploymentImpactAnalysis } = ChangeDetailsData
   let { details } = ChangeDetailsData
   const { color, backgroundColor } = statusToColorMapping(status, type) || {}
-  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.SrmStepAnalysis].includes(
+  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.DeploymentImpactAnalysis].includes(
     type as ChangeSourceTypes
   )
   if (
-    [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster, ChangeSourceTypes.SrmStepAnalysis].includes(
-      type as ChangeSourceTypes
-    )
+    [
+      ChangeSourceTypes.HarnessCDNextGen,
+      ChangeSourceTypes.K8sCluster,
+      ChangeSourceTypes.DeploymentImpactAnalysis
+    ].includes(type as ChangeSourceTypes)
   ) {
     details = {
       source: type as string,
@@ -52,7 +54,7 @@ export default function ChangeDetails({
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
   }
 
-  if (type === ChangeSourceTypes.SrmStepAnalysis) {
+  if (type === ChangeSourceTypes.DeploymentImpactAnalysis) {
     details = {
       ...details,
       deploymentImpactAnalysis: deploymentImpactAnalysis

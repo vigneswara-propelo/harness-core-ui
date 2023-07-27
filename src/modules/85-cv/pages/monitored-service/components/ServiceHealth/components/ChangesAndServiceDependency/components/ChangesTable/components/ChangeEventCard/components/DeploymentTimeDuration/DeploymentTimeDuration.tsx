@@ -27,7 +27,7 @@ export default function DeploymentTimeDuration({
   const { getString } = useStrings()
   const durationString = durationAsString(startTime, endTime)
   const timePassed = durationAsString(endTime, moment().valueOf())
-  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.SrmStepAnalysis].includes(
+  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.DeploymentImpactAnalysis].includes(
     type as ChangeSourceTypes
   )
   const marginals = isDeploymentType ? { right: 'medium' } : undefined

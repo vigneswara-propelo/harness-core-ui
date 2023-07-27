@@ -44,7 +44,7 @@ export default function ChangeEventCard({ activityId }: { activityId: string }):
         return <PagerDutyEventCard data={data?.resource} />
       case ChangeSourceTypes.HarnessCD:
         return <HarnessCDEventCard data={data?.resource} />
-      case ChangeSourceTypes.SrmStepAnalysis:
+      case ChangeSourceTypes.DeploymentImpactAnalysis:
         return <SRMStepAnalysis data={data?.resource} />
       case ChangeSourceTypes.HarnessCDNextGen:
         return <HarnessNextGenEventCard data={data?.resource} />

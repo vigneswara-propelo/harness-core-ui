@@ -31,7 +31,7 @@ export const ImpactAnalysis = {
         '/account/-k53qRQAQ1O7DBLb9ACnjQ/cd/orgs/cvng/projects/SRM_PREQA_Sign_Off_Automation/pipelines/analyze_deployment_default/executions/ecYXNSdcRjqroIDK2yXGJg/pipeline?stage=Em5knzwPRuiD0FrlcRI2OQ'
     },
     category: 'Deployment',
-    type: 'SrmStepAnalysis'
+    type: 'DeploymentImpactAnalysis'
   },
   responseMessages: []
 }

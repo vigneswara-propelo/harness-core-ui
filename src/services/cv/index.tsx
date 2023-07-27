@@ -804,7 +804,7 @@ export interface ChangeEventDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
 }
 
 /**
@@ -843,7 +843,7 @@ export interface ChangeSourceDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
 }
 
 /**
@@ -1062,7 +1062,7 @@ export type CustomChangeEventMetadata = ChangeEventMetadata & {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   user?: string
 }
 
@@ -1348,7 +1348,7 @@ export interface DemoChangeEventDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   monitoredServiceIdentifier?: string
 }
 
@@ -2854,7 +2854,7 @@ export interface HealthSource {
     | 'GrafanaLokiLogs'
     | 'AzureLogs'
     | 'AzureMetrics'
-  version?: 'v2'
+  version?: 'v1' | 'v2'
 }
 
 export interface HealthSourceDTO {
@@ -6513,7 +6513,7 @@ export interface ServiceDependencyMetadata {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   )[]
   type?: 'KUBERNETES'
 }
@@ -7799,7 +7799,7 @@ export interface ChangeEventListForAccountQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -7906,7 +7906,7 @@ export interface ChangeEventTimelineForAccountQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -8250,7 +8250,7 @@ export interface ChangeEventListQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -8351,7 +8351,7 @@ export interface ChangeEventTimelineQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   )[]
   searchText?: string
   startTime: number
@@ -11267,7 +11267,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   )[]
   startTime: number
   endTime: number
@@ -11338,7 +11338,7 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'SrmStepAnalysis'
+    | 'DeploymentImpactAnalysis'
   )[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
