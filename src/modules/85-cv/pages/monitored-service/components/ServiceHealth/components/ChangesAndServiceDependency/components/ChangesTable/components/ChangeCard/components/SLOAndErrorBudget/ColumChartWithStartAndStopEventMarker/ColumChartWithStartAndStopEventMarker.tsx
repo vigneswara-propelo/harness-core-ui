@@ -20,6 +20,7 @@ interface ColumChartWithStartAndStopEventMarkerMarker {
   startMarkerPosition: number
   containerWidth: number
   columnHeight?: number
+  leftOffset?: number
 }
 
 export default function ColumChartWithStartAndStopEventMarker({
@@ -27,14 +28,16 @@ export default function ColumChartWithStartAndStopEventMarker({
   columnHeight,
   containerWidth,
   startMarkerPosition,
-  deployedOrStopMarkerPosition
+  deployedOrStopMarkerPosition,
+  leftOffset
 }: ColumChartWithStartAndStopEventMarkerMarker): JSX.Element {
   const columnHeightDerived = defaultTo(columnHeight, DefaultColumnHeight)
   const shadowWidth = deployedOrStopMarkerPosition
     ? deployedOrStopMarkerPosition - startMarkerPosition
     : containerWidth - startMarkerPosition
+  const leftOffsetValue = leftOffset ? { left: leftOffset } : {}
   return (
-    <div style={{ position: 'absolute', top: 20, display: 'flex' }}>
+    <div style={{ position: 'absolute', top: 20, display: 'flex', ...leftOffsetValue }}>
       <ColumnChartEventMarker
         columnHeight={columnHeightDerived}
         customMarker={DeploymentImage}

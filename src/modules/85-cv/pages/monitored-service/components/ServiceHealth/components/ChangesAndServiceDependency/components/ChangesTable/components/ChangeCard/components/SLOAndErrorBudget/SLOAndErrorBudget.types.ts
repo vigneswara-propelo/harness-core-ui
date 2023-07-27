@@ -15,7 +15,6 @@ export interface SLOAndErrorBudgetProps {
   eventType: ChangeEventDTO['type']
   eventEndTime?: number
   eventStatus?: string
-  eventStartTime?: number
 }
 
 export enum SLOCardToggleViews {
@@ -32,5 +31,4 @@ export interface SLOTargetChartWrapperProps {
   eventType: ChangeEventDTO['type']
   eventEndTime?: number
   eventStatus?: string
-  eventStartTime?: number
 }

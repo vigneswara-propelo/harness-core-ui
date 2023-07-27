@@ -36,8 +36,7 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
   eventTime,
   eventType,
   eventStatus,
-  eventEndTime,
-  eventStartTime
+  eventEndTime
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -157,7 +156,6 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
             eventType={eventType}
             eventStatus={eventStatus}
             eventEndTime={eventEndTime}
-            eventStartTime={eventStartTime}
           />
         ))}
       </Layout.Vertical>

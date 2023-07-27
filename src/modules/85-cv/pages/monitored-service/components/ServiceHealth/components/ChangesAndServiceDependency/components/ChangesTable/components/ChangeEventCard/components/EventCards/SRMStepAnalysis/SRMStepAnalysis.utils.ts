@@ -6,7 +6,7 @@
  */
 
 import { UseStringsReturn } from 'framework/strings'
-import { HOUR_IN_MILLISECONDS, ONE_DAY_DURATION } from './SRMStepAnalysis.constants'
+import { ONE_DAY_DURATION } from './SRMStepAnalysis.constants'
 import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
 
 export const convertToDays = (getString: UseStringsReturn['getString'], duration?: number): string => {
@@ -20,15 +20,11 @@ export const convertToDays = (getString: UseStringsReturn['getString'], duration
   return `${getString('cv.analyzeDeploymentImpact.duration')}: ${dayString}`
 }
 
-export const calculateEndtime = (endTime: number, duration: number): number => {
+export const calculateEndtime = (endTime: number): number => {
   const current = Date.now()
   const isEventEndTimeOutofScope = endTime > current
   if (isEventEndTimeOutofScope) {
-    if (duration === ONE_DAY_DURATION) {
-      return current + 12 * HOUR_IN_MILLISECONDS
-    } else if (duration > ONE_DAY_DURATION) {
-      return current + 24 * HOUR_IN_MILLISECONDS
-    }
+    return current + TWO_HOURS_IN_MILLISECONDS
   }
   return endTime + TWO_HOURS_IN_MILLISECONDS
 }

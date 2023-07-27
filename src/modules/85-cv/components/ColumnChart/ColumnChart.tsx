@@ -20,13 +20,7 @@ import {
   getColumnPositions,
   getLoadingColumnPositions
 } from './ColumnChart.utils'
-import {
-  COLUMN_WIDTH,
-  COLUMN_HEIGHT,
-  TOTAL_COLUMNS,
-  LOADING_COLUMN_HEIGHTS,
-  multiMarkerBufferOffset
-} from './ColumnChart.constants'
+import { COLUMN_WIDTH, COLUMN_HEIGHT, TOTAL_COLUMNS, LOADING_COLUMN_HEIGHTS } from './ColumnChart.constants'
 import ColumnChartPopoverContent from './components/ColumnChartPopoverContent/ColumnChartPopoverContent'
 import ColumnChartEventMarker from './components/ColummnChartEventMarker/ColumnChartEventMarker'
 import { AnalysisStatus } from '../AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
@@ -79,15 +73,8 @@ export default function ColumnChart(props: ColumnChartProps): JSX.Element {
         startOfTimestamps: data[0].timeRange.startTime,
         eventEndTime: multiTimeStampMarker?.eventEndTime
       })
-      let updatedEndPosition = endPosition
-      if (endPosition && startPosition) {
-        const shouldAddOffset = endPosition > startPosition && endPosition - startPosition > multiMarkerBufferOffset
-        if (shouldAddOffset) {
-          updatedEndPosition = endPosition + multiMarkerBufferOffset
-        }
-      }
 
-      setMultipleMarkerPosition({ startMarker: startPosition, endMarker: updatedEndPosition })
+      setMultipleMarkerPosition({ startMarker: startPosition, endMarker: endPosition })
     }
   }, [containerRef?.current, data, isLoading])
 

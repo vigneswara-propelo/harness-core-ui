@@ -38,6 +38,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   eventStatus,
   eventEndTime
 }) => {
+  const leftOffset = 35
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const mainRef = useRef<HTMLDivElement>(null)
@@ -61,7 +62,6 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   useLayoutEffect(() => {
     if (serviceLevelObjective && mainRef.current) {
       const containerWidth = defaultTo(mainRef.current.parentElement?.getBoundingClientRect().width, 0)
-      const ignoreMarginLength = 38
       if (eventTime && !isMultiMarkerStep) {
         setMarkerPosition(
           calculatePositionForTimestamp({
@@ -73,31 +73,29 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
         )
       } else if (eventTime && isMultiMarkerStep) {
         const startMarker = calculatePositionForTimestamp({
-          containerWidth,
+          containerWidth: containerWidth,
           startTime: eventTime,
           startOfTimestamps: startTime,
           endOfTimestamps: endTime
         })
         const isEventEndTimeOutofScope = eventEndTime ? endTime < eventEndTime : true
-        const stopMarker = isEventEndTimeOutofScope
+        let stopMarker = isEventEndTimeOutofScope
           ? undefined
           : calculatePositionForTimestamp({
-              containerWidth,
+              containerWidth: containerWidth,
               startTime: eventEndTime || 0,
               startOfTimestamps: startTime,
               endOfTimestamps: endTime
             })
-        let startMarkerPosition = startMarker + ignoreMarginLength
-        let stopMarkerPosition = stopMarker
-        if (eventEndTime && stopMarker) {
-          const shouldRemoveOffset = stopMarker > startMarker && stopMarker - startMarker < ignoreMarginLength
-          if (shouldRemoveOffset) {
-            startMarkerPosition = startMarker + ignoreMarginLength
-            stopMarkerPosition = stopMarker + ignoreMarginLength
+
+        if (startMarker && stopMarker) {
+          const hasOverlap = stopMarker - startMarker < leftOffset
+          if (!hasOverlap) {
+            stopMarker = stopMarker - leftOffset
           }
         }
 
-        const markerPositions = { startMarker: startMarkerPosition, stopMarker: stopMarkerPosition }
+        const markerPositions = { startMarker: startMarker, stopMarker: stopMarker }
 
         setMultipleMarkerPosition(markerPositions)
       }
@@ -158,6 +156,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
               ? !selectedSLO.outOfRange &&
                 !!multiMarkerPosition?.startMarker && (
                   <ColumChartWithStartAndStopEventMarker
+                    leftOffset={leftOffset}
                     isStopped={eventStatus === AnalysisStatus.ABORTED}
                     startMarkerPosition={multiMarkerPosition?.startMarker || 0}
                     deployedOrStopMarkerPosition={multiMarkerPosition?.stopMarker || 0}

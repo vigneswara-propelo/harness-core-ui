@@ -14,6 +14,7 @@ import { TWO_HOURS_IN_MILLISECONDS } from './ChangeEventServiceHealth.constants'
 export const getMarkerProps = (
   eventType: ChangeEventDTO['type'],
   propsStartTime: number,
+  propsEndTime?: number,
   eventEndTime?: number,
   eventStatus?: string
 ): {
@@ -28,7 +29,7 @@ export const getMarkerProps = (
             color: getColorForChangeEventType(eventType)
           },
           markerEndTime: {
-            timestamp: eventEndTime as number,
+            timestamp: propsEndTime as number,
             color: getColorForChangeEventType(eventType)
           },
           eventEndTime,
