@@ -35,7 +35,7 @@ export default function EnvironmentsInputSetForm({
 
   /* istanbul ignore next */
   const isSingleProvisionerInput = React.useMemo(() => {
-    const fieldSpec = deploymentStageTemplate.environment?.infrastructureDefinitions?.[0].inputs?.spec || {}
+    const fieldSpec = deploymentStageTemplate.environment?.infrastructureDefinitions?.[0]?.inputs?.spec || {}
     const specFields = Object.keys(fieldSpec)
     return specFields.length === 1 && specFields.includes('provisioner')
   }, [deploymentStageTemplate?.environment, deploymentStage?.environment])
