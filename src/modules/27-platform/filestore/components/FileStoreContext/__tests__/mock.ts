@@ -97,7 +97,8 @@ export const contextFSMock = {
   unsavedNodes: [],
   sortNode: [{ identifier: 'Root', sortType: SORT_TYPE.ALPHABETICAL }],
   globalSort: SORT_TYPE.ALPHABETICAL,
-  closedNode: ''
+  closedNode: '',
+  forceDeleteEnabled: true
 }
 
 export const getDummyFileStoreContextValue = (): FileStoreContextState => {

@@ -50,7 +50,8 @@ jest.mock('services/cd-ng', () => ({
   fileStoreValue: jest.fn().mockReturnValue('account:/test'),
   prepareFileStoreValue: jest.fn().mockReturnValue('account:/test'),
   useDownloadFile: jest.fn().mockImplementation(() => ({ data: null })),
-  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'true' } }))
 }))
 
 jest.useFakeTimers()

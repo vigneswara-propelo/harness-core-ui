@@ -53,6 +53,7 @@ jest.mock('services/cd-ng', () => ({
   getNode: jest.fn(),
   useDownloadFile: jest.fn().mockImplementation(() => ({ data: null })),
   useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'true' } })),
   getFileStoreNodesOnPathPromise: jest.fn().mockResolvedValue(() => ({
     data: {
       children: []

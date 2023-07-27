@@ -7,12 +7,12 @@
 
 import React, { createContext, useState, useCallback, useEffect } from 'react'
 import type { FileStoreNodeDTO as NodeDTO, FileDTO, NGTag } from 'services/cd-ng'
-import { useGetFolderNodes, getFileStoreNodesOnPathPromise } from 'services/cd-ng'
+import { useGetFolderNodes, getFileStoreNodesOnPathPromise, useGetSettingValue } from 'services/cd-ng'
 import { FILE_VIEW_TAB, FileStoreNodeTypes, SORT_TYPE } from '@filestore/interfaces/FileStore'
 import { FILE_STORE_ROOT } from '@filestore/utils/constants'
 import type { FileUsage, SortType, NodeSortDTO } from '@filestore/interfaces/FileStore'
 import { sortNodesByType } from '@filestore/utils/FileStoreUtils'
-
+import { SettingType } from '@common/constants/Utils'
 import { ScopedObjectDTO, useFileStoreScope } from '../../common/useFileStoreScope/useFileStoreScope'
 
 export interface FileContentDTO extends FileDTO {
@@ -73,6 +73,7 @@ export interface FileStoreContextState {
   scopeValue: string
   getNodeByPath: () => void
   isReadonly: boolean
+  forceDeleteEnabled: boolean
 }
 
 export interface GetNodeConfig {
@@ -121,6 +122,7 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
   const [loading, setLoading] = useState<boolean>(false)
   const [closedNode, setClosedNode] = useState<string>('')
   const [globalSort, setGlobalSort] = useState<SortType>(SORT_TYPE.ALPHABETICAL_FILE_TYPE)
+  const [forceDeleteEnabled, setForceDeleteEnabled] = useState<boolean>(false)
   const [sortNode, setSortNode] = useState<NodeSortDTO[]>([
     { identifier: FILE_STORE_ROOT, sortType: SORT_TYPE.ALPHABETICAL_FILE_TYPE }
   ])
@@ -142,6 +144,19 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
   const updateGlobalSort = (sortType: SortType): void => {
     setGlobalSort(sortType)
   }
+
+  const { data: forceDeleteSettings } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: { accountIdentifier: queryParams.accountIdentifier },
+    lazy: false
+  })
+
+  React.useEffect(() => {
+    if (forceDeleteSettings?.data?.value === 'true') {
+      return setForceDeleteEnabled(true)
+    }
+    setForceDeleteEnabled(false)
+  }, [forceDeleteSettings])
 
   useEffect(() => {
     setSortNode([
@@ -425,7 +440,8 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
         scopeValue,
         pathValue,
         getNodeByPath,
-        isReadonly
+        isReadonly,
+        forceDeleteEnabled
       }}
     >
       {props.children}

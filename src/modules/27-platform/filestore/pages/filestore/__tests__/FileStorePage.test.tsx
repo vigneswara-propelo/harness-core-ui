@@ -29,6 +29,7 @@ jest.mock('services/cd-ng', () => ({
       mutate: jest.fn().mockImplementation(() => Promise.resolve(rootMock))
     }
   }),
+  useGetSettingValue: jest.fn().mockImplementation(() => ({ data: { value: 'true' } })),
   useGetCreatedByList: jest.fn().mockImplementation(() => {
     return {
       data: useGetCreatedByListMock,

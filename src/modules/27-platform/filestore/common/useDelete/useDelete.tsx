@@ -12,6 +12,8 @@ import { Intent } from '@blueprintjs/core'
 import { capitalize as _capitalize, defaultTo as _defaultTo, lowerCase as _lowerCase } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import { FileStoreNodeDTO, useDeleteFile } from 'services/cd-ng'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { FileStorePopoverItem } from '@filestore/common/FileStorePopover/FileStorePopover'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FILE_VIEW_TAB, FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
@@ -29,7 +31,8 @@ const useDelete = (identifier: string, name: string, type: string, notCurrentNod
     currentNode,
     isCachedNode,
     removeFromTempNodes,
-    addDeletedNode
+    addDeletedNode,
+    forceDeleteEnabled
   } = useContext(FileStoreContext)
 
   const getConfirmationDialogContent = (): JSX.Element => {
@@ -51,31 +54,52 @@ const useDelete = (identifier: string, name: string, type: string, notCurrentNod
     queryParams
   })
 
-  const { openDialog: openReferenceErrorDialog } = useConfirmationDialog({
-    contentText: (
-      <span>
-        {errorMessage.replace(/\[.+\]/g, name)}
-        {getString('platform.filestore.fileReferenceText')}
-      </span>
-    ),
-    titleText: getString('platform.filestore.cantDeleteFile'),
-    confirmButtonText: type === FileStoreNodeTypes.FILE ? getString('common.referenceButtonText') : undefined,
-    cancelButtonText: getString('cancel'),
-    intent: Intent.DANGER,
-    onCloseDialog: async (isConfirmed: boolean) => {
-      if (isConfirmed) {
-        setErrorMessage('')
-        setCurrentNode({
-          identifier,
-          name,
-          type: FileStoreNodeTypes.FILE,
-          children: []
-        } as FileStoreNodeDTO)
-        setActiveTab(FILE_VIEW_TAB.REFERENCED_BY)
+  /* istanbul ignore next */
+  const onDelete = async (forceDelete: boolean) => {
+    try {
+      const deleted = await deleteFile(identifier || '', {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          ...queryParams,
+          forceDelete: forceDelete ? forceDeleteEnabled : undefined
+        }
+      })
+      if (deleted) {
+        addDeletedNode(identifier)
+        showSuccess(getString('platform.filestore.deletedSuccessMessage', { name: name, type: _capitalize(type) }))
+        getNode(nodeParams as FileStoreNodeDTO)
       }
+    } catch (err) {
+      handleFileDeleteError(err?.data.code, _defaultTo(err?.data?.message, err?.message))
     }
+  }
+
+  /* istanbul ignore next */
+  const redirectToReferencedBy = () => {
+    setErrorMessage('')
+    setCurrentNode({
+      identifier,
+      name,
+      type: FileStoreNodeTypes.FILE,
+      children: []
+    } as FileStoreNodeDTO)
+    setActiveTab(FILE_VIEW_TAB.REFERENCED_BY)
+    closeDialog()
+  }
+
+  const forceDeleteCallback = forceDeleteEnabled ? () => onDelete(true) : undefined
+
+  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.FILE,
+      name: _defaultTo(currentNode.identifier, '')
+    },
+    customErrorMessage: errorMessage,
+    redirectToReferencedBy,
+    forceDeleteCallback
   })
 
+  /* istanbul ignore next */
   const handleFileDeleteError = (code: string, message: string): void => {
     if (code === 'ENTITY_REFERENCE_EXCEPTION') {
       setErrorMessage(message)
@@ -131,19 +155,7 @@ const useDelete = (identifier: string, name: string, type: string, notCurrentNod
           }
           return
         }
-        try {
-          const deleted = await deleteFile(identifier || '', {
-            headers: { 'content-type': 'application/json' }
-          })
-          if (deleted) {
-            addDeletedNode(identifier)
-
-            showSuccess(getString('platform.filestore.deletedSuccessMessage', { name: name, type: _capitalize(type) }))
-            getNode(nodeParams as FileStoreNodeDTO)
-          }
-        } catch (err) {
-          handleFileDeleteError(err?.data.code, _defaultTo(err?.data?.message, err?.message))
-        }
+        onDelete(false)
       }
     }
   })
