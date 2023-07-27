@@ -152,7 +152,7 @@ function HelmAdvancedStepSection({
         flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
         margin={{ top: 'medium' }}
       >
-        {CDS_HELM_FETCH_CHART_METADATA_NG && deploymentType === ServiceDeploymentType.NativeHelm ? (
+        {CDS_HELM_FETCH_CHART_METADATA_NG ? (
           <>
             <FormMultiTypeCheckboxField
               name="fetchHelmChartMetadata"
