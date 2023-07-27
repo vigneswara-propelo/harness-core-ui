@@ -33,7 +33,6 @@ import type { ElastigroupConfiguration, ElastigroupInfrastructure, StoreConfigWr
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
@@ -215,9 +214,6 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
               !isElastigroupConfigAdded()) as boolean
           return (
             <FormikForm>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

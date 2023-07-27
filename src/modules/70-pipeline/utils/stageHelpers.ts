@@ -1073,6 +1073,6 @@ export enum GoogleCloudFunctionsEnvType {
   GenTwo = 'GenTwo'
 }
 
-export const isAsgDeploymentType = (type: string): boolean => {
-  return type === ServiceDeploymentType.Asg
+export const isDynamicProvisioningRestricted = (type: string): boolean => {
+  return [ServiceDeploymentType.Asg, ServiceDeploymentType.Elastigroup].includes(type as ServiceDeploymentType)
 }

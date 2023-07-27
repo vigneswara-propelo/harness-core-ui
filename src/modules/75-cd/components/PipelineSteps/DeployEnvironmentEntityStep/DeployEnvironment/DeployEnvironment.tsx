@@ -41,7 +41,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
-import { isAsgDeploymentType } from '@pipeline/utils/stageHelpers'
+import { isDynamicProvisioningRestricted } from '@pipeline/utils/stageHelpers'
 import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
@@ -416,7 +416,7 @@ export default function DeployEnvironment({
     isNil(values.propagateFrom) &&
     !isMultiEnvironment &&
     CD_NG_DYNAMIC_PROVISIONING_ENV_V2 &&
-    !isAsgDeploymentType(deploymentType)
+    !isDynamicProvisioningRestricted(deploymentType)
 
   return (
     <>
