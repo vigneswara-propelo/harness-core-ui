@@ -2,22 +2,9 @@ import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import { Features } from 'services/cf'
 import CannotArchiveWarning, { CannotArchiveWarningProps } from '../CannotArchiveWarning'
-
-const prerequisitesMock = [
-  {
-    feature: 'flag_1',
-    variations: ['var1, var2']
-  },
-  {
-    feature: 'flag_2',
-    variations: ['var1, var2']
-  },
-  {
-    feature: 'flag_3',
-    variations: ['var1, var2']
-  }
-]
+import { dependentFlagsResponse } from './__data__/dependentFlagsMock'
 
 const renderComponent = (props: Partial<CannotArchiveWarningProps> = {}): RenderResult => {
   return render(
@@ -25,7 +12,19 @@ const renderComponent = (props: Partial<CannotArchiveWarningProps> = {}): Render
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <CannotArchiveWarning flagIdentifier="my_new_flag" prerequisites={prerequisitesMock} {...props} />
+      <CannotArchiveWarning
+        flagIdentifier="my_new_flag_id"
+        flagName="my_new_flag"
+        dependentFlagsResponse={dependentFlagsResponse as Features}
+        queryParams={{
+          accountIdentifier: 'dummy',
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy'
+        }}
+        pageNumber={0}
+        setPageNumber={jest.fn()}
+        {...props}
+      />
     </TestWrapper>
   )
 }
@@ -33,17 +32,19 @@ describe('CannotArchiveWarning', () => {
   test('it should render the list of flags the current flag is dependent on and take the user to the detail page of the prereq flag', async () => {
     renderComponent()
 
-    expect(screen.getByText('cf.featureFlags.archiving.cannotArchive:')).toBeInTheDocument()
+    expect(screen.getByText('cf.featureFlags.archiving.cannotArchive')).toBeInTheDocument()
     expect(screen.getByText('cf.featureFlags.archiving.removeFlag')).toBeInTheDocument()
-    expect(screen.getAllByTestId('flag-prerequisite-row')).toHaveLength(3)
+    expect(screen.getAllByTestId('dependent-flag-row')).toHaveLength(dependentFlagsResponse.features.length)
 
-    prerequisitesMock.forEach(prereq => expect(screen.getByRole('link', { name: prereq.feature })).toBeInTheDocument())
+    dependentFlagsResponse.features.forEach(dependentFlag =>
+      expect(screen.getByRole('link', { name: dependentFlag.name })).toBeInTheDocument()
+    )
 
-    userEvent.click(screen.getByRole('link', { name: prerequisitesMock[0].feature }))
+    userEvent.click(screen.getByRole('link', { name: dependentFlagsResponse.features[0].name }))
 
     // directing to the feature flag detail page
     expect(await screen.findByTestId('location')).toHaveTextContent(
-      `/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/${prerequisitesMock[0].feature}`
+      `/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/${dependentFlagsResponse.features[0].identifier}`
     )
   })
 })

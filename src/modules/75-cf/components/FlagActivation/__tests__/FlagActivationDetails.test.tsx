@@ -10,6 +10,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServiceMock from 'services/cf'
+import { noDependentFlagsResponse } from '@cf/components/FlagArchiving/__tests__/__data__/dependentFlagsMock'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import FlagActivationDetails from '../FlagActivationDetails'
@@ -73,6 +74,13 @@ describe('FlagActivationDetails', () => {
     jest
       .spyOn(cfServiceMock, 'useRestoreFeatureFlag')
       .mockReturnValue({ data: [], loading: false, mutate: jest.fn() } as any)
+
+    jest.spyOn(cfServiceMock, 'useGetDependentFeatures').mockReturnValue({
+      refetch: jest.fn(),
+      loading: false,
+      error: null,
+      data: noDependentFlagsResponse
+    } as any)
   })
 
   test('it should render rbac menu correctly', async () => {

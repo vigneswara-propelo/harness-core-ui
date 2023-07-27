@@ -1,10 +1,12 @@
-import React, { FC } from 'react'
 import { fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import React, { FC } from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as cfServices from 'services/cf'
 import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
 import type { Feature } from 'services/cf'
 import useArchiveFlagDialog, { ArchiveDialogProps } from '../useArchiveFlagDialog'
+import { dependentFlagsResponse, noDependentFlagsResponse } from './__data__/dependentFlagsMock'
 
 const queryParamsMock = {
   accountIdentifier: 'mockAccountIdentifier',
@@ -15,8 +17,14 @@ const queryParamsMock = {
 
 const openArchiveDialogBtn = 'Open Archive dialog'
 
-const WrapperComponent: FC<ArchiveDialogProps> = ({ flagData, archiveFlag, onArchive, queryParams }) => {
-  const { openDialog } = useArchiveFlagDialog({ flagData, archiveFlag, onArchive, queryParams })
+const WrapperComponent: FC<ArchiveDialogProps> = ({
+  flagData,
+  archiveFlag,
+  onArchive,
+  queryParams,
+  openedArchivedDialog
+}) => {
+  const { openDialog } = useArchiveFlagDialog({ flagData, archiveFlag, onArchive, queryParams, openedArchivedDialog })
 
   return <button onClick={() => openDialog()}>{openArchiveDialogBtn}</button>
 }
@@ -29,6 +37,7 @@ const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult 
         archiveFlag={jest.fn()}
         onArchive={jest.fn()}
         queryParams={queryParamsMock}
+        openedArchivedDialog={false}
         {...props}
       />
     </TestWrapper>
@@ -36,6 +45,43 @@ const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult 
 }
 
 describe('useArchiveDialog', () => {
+  const useGetDependentFeaturesMock = jest.spyOn(cfServices, 'useGetDependentFeatures')
+
+  beforeEach(() => {
+    useGetDependentFeaturesMock.mockReturnValue({
+      data: noDependentFlagsResponse,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    jest.clearAllMocks()
+  })
+
+  test('it should display CannotArchiveWarning component if there are dependent flags associated with selected flag', async () => {
+    useGetDependentFeaturesMock.mockReturnValue({
+      data: dependentFlagsResponse,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    renderComponent()
+
+    await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
+
+    expect(screen.getByText('cf.featureFlags.archiving.cannotArchive')).toBeInTheDocument()
+    expect(screen.getByText('cf.featureFlags.archiving.removeFlag')).toBeInTheDocument()
+
+    expect(screen.getAllByRole('link')).toHaveLength(dependentFlagsResponse.features.length)
+
+    const flagId = screen.getAllByTestId('flagIdentifierLabel')
+
+    expect(flagId[0]).toHaveTextContent(dependentFlagsResponse.features[0].identifier)
+    expect(flagId[1]).toHaveTextContent(dependentFlagsResponse.features[1].identifier)
+
+    expect(screen.queryByRole('button', { name: 'archive' })).not.toBeInTheDocument()
+    expect(screen.queryByText('cf.featureFlags.archiving.warningDescription')).not.toBeInTheDocument()
+  })
+
   test('it should validate the flag identifier and prevent submission if the flag identifier does not match', async () => {
     const incorrectFlagIdentifier = 'foobar'
     const pastedText = 'hello world'
@@ -81,6 +127,31 @@ describe('useArchiveDialog', () => {
       })
       expect(onArchiveMock).toHaveBeenCalled()
     })
+  })
+
+  test('it should close the dialog correctly', async () => {
+    renderComponent()
+    await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
+
+    expect(screen.getByText('cf.featureFlags.archiving.archiveFlag')).toBeInTheDocument()
+
+    await userEvent.click(document.querySelector('[data-icon="main-close"]') as HTMLInputElement)
+
+    expect(screen.queryByText('cf.featureFlags.archiving.archiveFlag')).not.toBeInTheDocument()
+  })
+
+  test('it should display a loading spinner when component is loading dependent flags', async () => {
+    useGetDependentFeaturesMock.mockReturnValue({
+      data: null,
+      error: null,
+      refetch: jest.fn(),
+      loading: true
+    } as any)
+
+    renderComponent()
+
+    await userEvent.click(screen.getByRole('button', { name: openArchiveDialogBtn }))
+    expect(screen.getByTestId('page-spinner')).toBeInTheDocument()
   })
 
   test('it should handle errors if it fails to archive a flag', async () => {

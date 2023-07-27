@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { MutateMethod, MutateRequestOptions } from 'restful-react/dist/Mutate'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
@@ -64,6 +64,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const { withActiveEnvironment, activeEnvironment } = useActiveEnvironment()
   const { FFM_7921_ARCHIVING_FEATURE_FLAGS } = useFeatureFlags()
+  const [openedArchivedDialog, setOpenedArchivedDialog] = useState<boolean>(false)
 
   const featureFlagListURL = withActiveEnvironment(
     routes.toCFFeatureFlags({
@@ -82,11 +83,17 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
   })
 
   const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
-    flagData: featureFlag,
-    queryParams,
     archiveFlag: deleteFeatureFlag,
-    onArchive: () => history.push(featureFlagListURL)
+    flagData: featureFlag,
+    onArchive: () => history.push(featureFlagListURL),
+    openedArchivedDialog,
+    queryParams
   })
+
+  const onClickArchiveButton = useCallback(() => {
+    setOpenedArchivedDialog(true)
+    openArchiveDialog()
+  }, [openArchiveDialog])
 
   const openRestoreFlagDialog = useRestoreFlagDialog({
     flagData: featureFlag,
@@ -118,7 +125,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     archive: {
       icon: 'archive',
       text: getString('archive'),
-      onClick: openArchiveDialog,
+      onClick: onClickArchiveButton,
       permission: {
         resource: { resourceType: ResourceType.FEATUREFLAG },
         permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG

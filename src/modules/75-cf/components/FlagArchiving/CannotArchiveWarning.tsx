@@ -6,50 +6,74 @@
  */
 
 import React, { FC } from 'react'
-import { Layout, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
-import { Link, useParams } from 'react-router-dom'
+import { Layout, Pagination, Text } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
+import { Link } from 'react-router-dom'
+import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import routes from '@common/RouteDefinitions'
-import { useStrings } from 'framework/strings'
-import type { Prerequisite } from 'services/cf'
+import { useStrings, String } from 'framework/strings'
+import type { Features, GetDependentFeaturesQueryParams } from 'services/cf'
 import { ItemContainer } from '../ItemContainer/ItemContainer'
+import css from './useArchiveFlagDialog.module.scss'
 
 export interface CannotArchiveWarningProps {
+  dependentFlagsResponse: Features
   flagIdentifier: string
-  prerequisites: Prerequisite[]
+  flagName: string
+  queryParams: GetDependentFeaturesQueryParams
+  pageNumber: number
+  setPageNumber: (pageNum: number) => void
 }
 
-const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({ flagIdentifier, prerequisites }) => {
+export const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({
+  dependentFlagsResponse,
+  flagName,
+  queryParams,
+  pageNumber,
+  setPageNumber
+}) => {
   const { getString } = useStrings()
   const { withActiveEnvironment } = useActiveEnvironment()
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
 
   return (
     <Layout.Vertical spacing="small">
-      <Text style={{ wordBreak: 'break-word' }} font={{ variation: FontVariation.BODY2 }}>
-        {getString('cf.featureFlags.archiving.cannotArchive', { flagIdentifier })}:
-      </Text>
-      {prerequisites.map(flag => (
-        <ItemContainer data-testid="flag-prerequisite-row" key={flag.feature}>
-          <Layout.Horizontal>
-            <Text padding={{ right: 'xsmall' }}>{getString('common.ID')}:</Text>
-            <Link
-              to={withActiveEnvironment(
-                routes.toCFFeatureFlagsDetail({
-                  orgIdentifier: orgIdentifier as string,
-                  projectIdentifier: projectIdentifier as string,
-                  featureFlagIdentifier: flag.feature,
-                  accountId
-                })
-              )}
-            >
-              {flag.feature}
-            </Link>
-          </Layout.Horizontal>
+      <String
+        className={css.cannotArchiveMessage}
+        stringID="cf.featureFlags.archiving.cannotArchive"
+        useRichText
+        vars={{ flagName }}
+      />
+      {dependentFlagsResponse?.features?.map(flag => (
+        <ItemContainer data-testid="dependent-flag-row" key={flag.identifier}>
+          <Link
+            to={withActiveEnvironment(
+              routes.toCFFeatureFlagsDetail({
+                accountId: queryParams.accountIdentifier,
+                orgIdentifier: queryParams.orgIdentifier as string,
+                projectIdentifier: queryParams.projectIdentifier as string,
+                featureFlagIdentifier: flag.identifier
+              })
+            )}
+          >
+            {flag.name}
+          </Link>
+          <Text data-testId="flagIdentifierLabel">
+            {getString('common.ID')}: {flag.identifier}
+          </Text>
         </ItemContainer>
       ))}
-      <Text font={{ variation: FontVariation.BODY2 }}>{getString('cf.featureFlags.archiving.removeFlag')}</Text>
+      <Text padding={{ top: 'medium' }} color={Color.GREY_500} font={{ variation: FontVariation.BODY2 }}>
+        {getString('cf.featureFlags.archiving.removeFlag')}
+      </Text>
+      <Pagination
+        gotoPage={setPageNumber}
+        itemCount={dependentFlagsResponse.itemCount || 0}
+        pageCount={dependentFlagsResponse.pageCount || 0}
+        pageIndex={pageNumber}
+        pageSize={CF_DEFAULT_PAGE_SIZE}
+        showPagination={dependentFlagsResponse.pageCount > 1}
+      />
     </Layout.Vertical>
   )
 }

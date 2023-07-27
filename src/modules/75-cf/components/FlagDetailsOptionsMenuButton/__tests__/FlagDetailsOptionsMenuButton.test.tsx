@@ -14,6 +14,10 @@ import { TestWrapper } from '@common/utils/testUtils'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockFeatureResponse from '@cf/utils/testData/data/mockFeatureResponse'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
+import {
+  dependentFlagsResponse,
+  noDependentFlagsResponse
+} from '@cf/components/FlagArchiving/__tests__/__data__/dependentFlagsMock'
 import * as gitSync from '@cf/hooks/useGitSync'
 import * as useFeaturesMock from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -51,17 +55,6 @@ const renderComponent = (
 
 describe('FlagDetailsOptionsMenuButton', () => {
   beforeEach(() => jest.spyOn(useFeaturesMock, 'useGetFirstDisabledFeature').mockReturnValue({ featureEnabled: true }))
-
-  test('it should render menu correctly when options button clicked', async () => {
-    renderComponent()
-
-    await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-    expect(document.querySelector('[data-icon="edit"]')).toBeInTheDocument()
-    expect(document.querySelector('[data-icon="trash"]')).toBeInTheDocument()
-
-    expect(screen.getAllByText('edit')[1]).toBeInTheDocument()
-    expect(screen.getByText('delete')).toBeInTheDocument()
-  })
 
   describe('FlagDetailsOptionMenuButton - Delete', () => {
     test('it should render a DELETE and EDIT button when FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled OFF', async () => {
@@ -293,7 +286,15 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
   describe('FlagDetailsOptionMenuButton - Archive', () => {
     const isArchivingFFOn = true
+
     test('it should render an ARCHIVE and EDIT button when FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled ON', async () => {
+      jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
+        data: noDependentFlagsResponse,
+        error: null,
+        loading: false,
+        refetch: jest.fn()
+      } as any)
+
       renderComponent(isArchivingFFOn)
 
       await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
@@ -326,6 +327,43 @@ describe('FlagDetailsOptionsMenuButton', () => {
       await userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
       await waitFor(() => expect(deleteFlagMock).toHaveBeenCalled())
+    })
+
+    test('it should render a CannotArchiveWarning dialog when the user attempts to archive a flag with dependent flags', async () => {
+      jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
+        data: dependentFlagsResponse,
+        error: null,
+        loading: false,
+        refetch: jest.fn()
+      } as any)
+
+      renderComponent(isArchivingFFOn)
+
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
+
+      await waitFor(() => {
+        expect(screen.getByText('cf.featureFlags.archiving.cannotArchive')).toBeInTheDocument()
+        expect(screen.getAllByRole('link')).toHaveLength(dependentFlagsResponse.features.length)
+      })
+    })
+
+    test('it should handle any error if api fails to return dependent flags', async () => {
+      const error = 'FAILED TO GET DEPENDENT FLAGS'
+
+      jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
+        data: dependentFlagsResponse,
+        error,
+        loading: false,
+        refetch: jest.fn()
+      } as any)
+
+      renderComponent(isArchivingFFOn)
+
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
+
+      expect(screen.getByText(error)).toBeInTheDocument()
     })
   })
 

@@ -166,7 +166,7 @@ featureFlags:
   archiving:
     archiveFlag: Archive Flag
     archiveSuccess: Flag successfully archived
-    cannotArchive: '<strong>{{ flagIdentifier }}</strong> cannot be archived because it is still being used by the following flags as a prerequisite'
+    cannotArchive: '<strong>{{ flagName }}</strong> cannot be archived because it is still being used by the following flags as a prerequisite'
     confirmFlag: Type the flag identifier to confirm
     mismatchIdentifierError: The flag identifier does not match
     removeFlag: You must remove the flag as a prerequisite before you can archive it.

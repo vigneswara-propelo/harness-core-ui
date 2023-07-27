@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
@@ -15,7 +15,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
-import type { DeleteFeatureFlagQueryParams, Feature } from 'services/cf'
+import { DeleteFeatureFlagQueryParams, Feature } from 'services/cf'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
@@ -56,6 +56,7 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
   const { FFM_7921_ARCHIVING_FEATURE_FLAGS } = useFeatureFlags()
+  const [openedArchivedDialog, setOpenedArchivedDialog] = useState<boolean>(false)
 
   const planEnforcementProps = isPlanEnforcementEnabled
     ? {
@@ -81,10 +82,11 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   })
 
   const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
+    archiveFlag: deleteFlag,
     flagData,
-    queryParams,
-    onArchive: () => refetchFlags(),
-    archiveFlag: deleteFlag
+    onArchive: refetchFlags,
+    openedArchivedDialog,
+    queryParams
   })
 
   const openRestoreFlagDialog = useRestoreFlagDialog({
@@ -112,11 +114,16 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     )
   }
 
+  const onClickArchiveButton = (): void => {
+    setOpenedArchivedDialog(true)
+    openArchiveDialog()
+  }
+
   const options: Record<string, RbacMenuItemProps> = {
     archive: {
       icon: 'archive',
       text: getString('archive'),
-      onClick: openArchiveDialog,
+      onClick: onClickArchiveButton,
       permission: {
         resource: { resourceType: ResourceType.FEATUREFLAG },
         permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG

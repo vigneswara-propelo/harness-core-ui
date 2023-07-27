@@ -3793,6 +3793,10 @@ export interface GetFeatureFlagQueryParams {
    * Parameter to indicate if metrics data is requested in response
    */
   metrics?: boolean
+  /**
+   * Status of the feature flag
+   */
+  archived?: boolean
 }
 
 export interface GetFeatureFlagPathParams {
@@ -4072,6 +4076,210 @@ export const patchFeaturePromise = (
     FeaturePatchRequestRequestBody,
     PatchFeaturePathParams
   >('PATCH', getConfig('cf'), `/admin/features/${identifier}`, props, signal)
+
+export interface GetDependentFeaturesQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment
+   */
+  environmentIdentifier?: string
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+  /**
+   * SortOrder
+   */
+  sortOrder?: 'ASCENDING' | 'DESCENDING'
+  /**
+   * SortByField
+   */
+  sortByField?: 'name' | 'identifier' | 'archived' | 'kind' | 'modifiedAt'
+  /**
+   * Name of the field
+   */
+  name?: string
+  /**
+   * Status of the feature flag
+   */
+  archived?: boolean
+  /**
+   * Kind of the feature flag
+   */
+  kind?: 'json' | 'string' | 'int' | 'boolean'
+  /**
+   * Identifier of a target
+   */
+  targetIdentifier?: string
+  /**
+   * Identifier of the target to filter on
+   */
+  targetIdentifierFilter?: string
+  /**
+   * Parameter to indicate if metrics data is requested in response
+   */
+  metrics?: boolean
+  /**
+   * Comma separated identifiers for multiple Features
+   */
+  featureIdentifiers?: string
+  /**
+   * Comma separated identifiers to exclude from the response
+   */
+  excludedFeatures?: string
+  /**
+   * Filter for flags based on their status (active,never-requested,recently-accessed,potentially-stale)
+   */
+  status?: string
+  /**
+   * Filter for flags based on their lifetime (permanent/temporary)
+   */
+  lifetime?: string
+  /**
+   * Filter for flags based on if they are enabled or disabled
+   */
+  enabled?: boolean
+  /**
+   * Returns counts for the different types of flags e.g num active, potentially-stale, recently-accessed etc
+   */
+  flagCounts?: boolean
+  /**
+   * Returns summary info on flags if set to true
+   */
+  summary?: boolean
+}
+
+export interface GetDependentFeaturesPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type GetDependentFeaturesProps = Omit<
+  GetProps<
+    FeaturesResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetDependentFeaturesQueryParams,
+    GetDependentFeaturesPathParams
+  >,
+  'path'
+> &
+  GetDependentFeaturesPathParams
+
+/**
+ * Return a list of dependant flags
+ *
+ * Given identifier return list all the flags which depend on it.
+ */
+export const GetDependentFeatures = ({ identifier, ...props }: GetDependentFeaturesProps) => (
+  <Get<
+    FeaturesResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetDependentFeaturesQueryParams,
+    GetDependentFeaturesPathParams
+  >
+    path={`/admin/features/${identifier}/dependants`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetDependentFeaturesProps = Omit<
+  UseGetProps<
+    FeaturesResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetDependentFeaturesQueryParams,
+    GetDependentFeaturesPathParams
+  >,
+  'path'
+> &
+  GetDependentFeaturesPathParams
+
+/**
+ * Return a list of dependant flags
+ *
+ * Given identifier return list all the flags which depend on it.
+ */
+export const useGetDependentFeatures = ({ identifier, ...props }: UseGetDependentFeaturesProps) =>
+  useGet<
+    FeaturesResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetDependentFeaturesQueryParams,
+    GetDependentFeaturesPathParams
+  >((paramsInPath: GetDependentFeaturesPathParams) => `/admin/features/${paramsInPath.identifier}/dependants`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Return a list of dependant flags
+ *
+ * Given identifier return list all the flags which depend on it.
+ */
+export const getDependentFeaturesPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    FeaturesResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetDependentFeaturesQueryParams,
+    GetDependentFeaturesPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    FeaturesResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetDependentFeaturesQueryParams,
+    GetDependentFeaturesPathParams
+  >(getConfig('cf'), `/admin/features/${identifier}/dependants`, props, signal)
 
 export interface GetFeatureEvaluationsQueryParams {
   /**

@@ -10,6 +10,10 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
+import {
+  dependentFlagsResponse,
+  noDependentFlagsResponse
+} from '@cf/components/FlagArchiving/__tests__/__data__/dependentFlagsMock'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import * as gitSync from '@cf/hooks/useGitSync'
@@ -359,9 +363,16 @@ describe('FlagOptionsMenuButton', () => {
       expect(screen.getAllByText('archive')[1]).toBeInTheDocument()
     })
 
-    test('it should render archive modal when user clicks archive menu button', async () => {
-      const isArchivingFFOn = true
+    test('it should render archive modal when user clicks on the archive menu button', async () => {
+      // archive modal will only render if there are no dependent flags returned from this api call
+      jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
+        refetch: jest.fn(),
+        loading: false,
+        error: null,
+        data: noDependentFlagsResponse
+      } as any)
 
+      const isArchivingFFOn = true
       renderComponent(isArchivingFFOn)
 
       await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
@@ -369,6 +380,45 @@ describe('FlagOptionsMenuButton', () => {
 
       expect(screen.getByText('cf.featureFlags.archiving.archiveFlag')).toBeInTheDocument()
       expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+
+    test('it should render the CannotArchiveWarning modal when user clicks on the archive menu button on a flag with dependent flags ', async () => {
+      jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
+        refetch: jest.fn(),
+        loading: false,
+        error: null,
+        data: dependentFlagsResponse
+      } as any)
+
+      const isArchivingFFOn = true
+      renderComponent(isArchivingFFOn)
+
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
+
+      expect(screen.getByText('cf.featureFlags.archiving.archiveFlag')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.archiving.cannotArchive')).toBeInTheDocument()
+
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    })
+
+    test('it should handle error if api fails to return dependent flags', async () => {
+      const error = 'FAIL TO GET DEPENDENT FLAGS'
+
+      jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
+        refetch: jest.fn(),
+        loading: false,
+        error,
+        data: null
+      } as any)
+
+      const isArchivingFFOn = true
+      renderComponent(isArchivingFFOn)
+
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
+
+      await waitFor(() => expect(screen.getByText(error)).toBeInTheDocument())
     })
 
     test('it should render a RESTORE button when FFM_7921_ARCHIVING_FEATURE_FLAGS is toggled ON and the selected flag is an ARCHIVED flag', async () => {
