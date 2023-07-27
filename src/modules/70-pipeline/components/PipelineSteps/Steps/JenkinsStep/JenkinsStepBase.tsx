@@ -13,17 +13,20 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
+  Layout,
+  Text,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectWithSubmenuOption
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { FieldArray } from 'formik'
 import cx from 'classnames'
 import { IconName, Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, isArray, isEqual, memoize } from 'lodash-es'
+import { cloneDeep, isArray, isEqual, memoize, uniq } from 'lodash-es'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -77,6 +80,7 @@ function FormContent({
   const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(formValues.spec.jobName)
   )
+  const [showJobParameterWarning, setShowJobParameterWarning] = useState<boolean>(true)
   const [childJobDetails, setChildJobDetails] = useState<SelectWithBiLevelOption[]>([])
   const [childJob, setChildJob] = useState<SelectWithBiLevelOption>(
     (formValues.spec.childJobName !== undefined
@@ -326,6 +330,14 @@ function FormContent({
         : getString('select')
       : getString('select')
 
+  const checkDuplicateJobParameter = () => {
+    if (isArray(formValues.spec?.jobParameter)) {
+      const jobParameters = (formValues.spec?.jobParameter as jobParameterInterface[])?.map(item => item.name)
+      return uniq(jobParameters).length !== jobParameters?.length
+    }
+    return false
+  }
+
   return (
     <React.Fragment>
       {stepViewType !== StepViewType.Template && (
@@ -532,101 +544,124 @@ function FormContent({
       )}
 
       <div className={stepCss.formGroup}>
-        <MultiTypeFieldSelector
-          name="spec.jobParameter"
-          key={getMultiTypeFromValue(formik.values.spec.jobParameter as string)}
-          label={getString('pipeline.jenkinsStep.jobParameter')}
-          isOptional
-          optionalLabel={getString('titleOptional')}
-          defaultValueToReset={[]}
-          disableTypeSelection={false}
-        >
-          <FieldArray
+        <Layout.Vertical>
+          {showJobParameterWarning && checkDuplicateJobParameter() && (
+            <Layout.Horizontal background={Color.ORANGE_100} padding="medium" spacing="small" flex>
+              <Text
+                icon="warning-sign"
+                intent="warning"
+                iconProps={{ size: 18, color: Color.RED_800, padding: { right: 'small' } }}
+                color={Color.RED_700}
+                font={{ weight: 'semi-bold' }}
+              >
+                {getString('pipeline.jenkinsStep.jobParameterDuplicateWarning')}
+              </Text>
+              <Button
+                aria-label={getString('pipeline.jenkinsStep.hideWarning')}
+                minimal
+                icon="cross"
+                iconProps={{ size: 18 }}
+                onClick={() => setShowJobParameterWarning(false)}
+              />
+            </Layout.Horizontal>
+          )}
+
+          <MultiTypeFieldSelector
             name="spec.jobParameter"
-            render={({ push, remove }) => {
-              return (
-                <div className={css.panel}>
-                  <div className={css.jobParameter}>
-                    <span className={css.label}>Name</span>
-                    <span className={css.label}>Type</span>
-                    <span className={css.label}>Value</span>
+            key={getMultiTypeFromValue(formik.values.spec.jobParameter as string)}
+            label={getString('pipeline.jenkinsStep.jobParameter')}
+            isOptional
+            optionalLabel={getString('titleOptional')}
+            defaultValueToReset={[]}
+            disableTypeSelection={false}
+          >
+            <FieldArray
+              name="spec.jobParameter"
+              render={({ push, remove }) => {
+                return (
+                  <div className={css.panel}>
+                    <div className={css.jobParameter}>
+                      <span className={css.label}>Name</span>
+                      <span className={css.label}>Type</span>
+                      <span className={css.label}>Value</span>
+                    </div>
+                    {fetchingJobParameters ? (
+                      <Spinner />
+                    ) : (
+                      isArray(formValues.spec.jobParameter) &&
+                      formValues.spec.jobParameter?.map((type: jobParameterInterface, i: number) => {
+                        return (
+                          <div className={css.jobParameter} key={type.id}>
+                            <FormInput.Text
+                              name={`spec.jobParameter.[${i}].name`}
+                              placeholder={getString('name')}
+                              disabled={readonly}
+                            />
+                            <FormInput.Select
+                              items={scriptInputType}
+                              name={`spec.jobParameter.[${i}].type`}
+                              placeholder={getString('typeLabel')}
+                              disabled={readonly}
+                            />
+                            <FormInput.MultiTextInput
+                              name={`spec.jobParameter.[${i}].value`}
+                              placeholder={getString('valueLabel')}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                expressions,
+                                defaultValueToReset: '',
+                                disabled: readonly
+                              }}
+                              label=""
+                              disabled={readonly}
+                            />
+                            <Button
+                              variation={ButtonVariation.ICON}
+                              icon="main-trash"
+                              data-testid={`remove-environmentVar-${i}`}
+                              onClick={() => remove(i)}
+                              disabled={readonly}
+                            />
+                          </div>
+                        )
+                      })
+                    )}
+                    <Button
+                      icon="plus"
+                      variation={ButtonVariation.LINK}
+                      data-testid="add-environmentVar"
+                      disabled={readonly}
+                      onClick={() => push({ name: '', type: 'String', value: '' })}
+                      className={css.addButton}
+                    >
+                      {getString('pipeline.jenkinsStep.addJobParameters')}
+                    </Button>
                   </div>
-                  {fetchingJobParameters ? (
-                    <Spinner />
-                  ) : (
-                    isArray(formValues.spec.jobParameter) &&
-                    formValues.spec.jobParameter?.map((type: jobParameterInterface, i: number) => {
-                      return (
-                        <div className={css.jobParameter} key={type.id}>
-                          <FormInput.Text
-                            name={`spec.jobParameter.[${i}].name`}
-                            placeholder={getString('name')}
-                            disabled={readonly}
-                          />
-                          <FormInput.Select
-                            items={scriptInputType}
-                            name={`spec.jobParameter.[${i}].type`}
-                            placeholder={getString('typeLabel')}
-                            disabled={readonly}
-                          />
-                          <FormInput.MultiTextInput
-                            name={`spec.jobParameter.[${i}].value`}
-                            placeholder={getString('valueLabel')}
-                            multiTextInputProps={{
-                              allowableTypes,
-                              expressions,
-                              defaultValueToReset: '',
-                              disabled: readonly
-                            }}
-                            label=""
-                            disabled={readonly}
-                          />
-                          <Button
-                            variation={ButtonVariation.ICON}
-                            icon="main-trash"
-                            data-testid={`remove-environmentVar-${i}`}
-                            onClick={() => remove(i)}
-                            disabled={readonly}
-                          />
-                        </div>
-                      )
-                    })
-                  )}
-                  <Button
-                    icon="plus"
-                    variation={ButtonVariation.LINK}
-                    data-testid="add-environmentVar"
-                    disabled={readonly}
-                    onClick={() => push({ name: '', type: 'String', value: '' })}
-                    className={css.addButton}
-                  >
-                    {getString('pipeline.jenkinsStep.addJobParameters')}
-                  </Button>
-                </div>
-              )
-            }}
-          />
-        </MultiTypeFieldSelector>
-        {getMultiTypeFromValue(formik.values?.spec?.jobParameter as string) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formik.values?.spec?.jobParameter as string}
-            type="String"
-            variableName="spec.jobParameter"
-            className={css.minConfigBtn}
-            showRequiredField={false}
-            showDefaultField={false}
-            onChange={value => {
-              formik.setValues({
-                ...formik.values,
-                spec: {
-                  ...formik.values.spec,
-                  jobParameter: value
-                }
-              })
-            }}
-            isReadonly={readonly}
-          />
-        )}
+                )
+              }}
+            />
+          </MultiTypeFieldSelector>
+          {getMultiTypeFromValue(formik.values?.spec?.jobParameter as string) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={formik.values?.spec?.jobParameter as string}
+              type="String"
+              variableName="spec.jobParameter"
+              className={css.minConfigBtn}
+              showRequiredField={false}
+              showDefaultField={false}
+              onChange={value => {
+                formik.setValues({
+                  ...formik.values,
+                  spec: {
+                    ...formik.values.spec,
+                    jobParameter: value
+                  }
+                })
+              }}
+              isReadonly={readonly}
+            />
+          )}
+        </Layout.Vertical>
       </div>
 
       <div className={cx(stepCss.formGroup)}>

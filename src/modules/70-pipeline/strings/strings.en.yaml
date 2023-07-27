@@ -168,6 +168,8 @@ queueStep:
 jenkinsStep:
   job: job
   addJobParameters: Add Job Parameter
+  hideWarning: hide warning
+  jobParameterDuplicateWarning: Duplicate job parameters found, latest value will be picked.
   validations:
     jobName: Job Name is a required field
   jobNamePlaceholder: Select Job Name
