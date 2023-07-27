@@ -35,7 +35,6 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import RbacButton from '@rbac/components/Button/Button'
-import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useRevokeTokenModal } from './modals/useRevokeTokenModal'
 import { useCreateTokenModal } from './modals/useCreateTokenModal'
@@ -202,20 +201,9 @@ export const DelegateListing: React.FC = () => {
                 openMoreTokenInfoModal(row.original.name || '')
               }}
             />
-            <RbacMenuItem
+            <MenuItem
               icon="clipboard"
               text={getString('platform.delegates.tokens.copytoken')}
-              permission={{
-                resource: {
-                  resourceType: ResourceType.DELEGATE
-                },
-                resourceScope: {
-                  accountIdentifier: accountId,
-                  orgIdentifier,
-                  projectIdentifier
-                },
-                permission: PermissionIdentifier.UPDATE_DELEGATE
-              }}
               onClick={(event: React.MouseEvent<HTMLElement>) => {
                 event.stopPropagation()
                 getTokenForCopy({
