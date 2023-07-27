@@ -21,7 +21,7 @@ import type {
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { PubSubPipelineActions } from '@pipeline/factories/PubSubPipelineAction'
@@ -78,6 +78,7 @@ export interface PipelineInputSetFormProps {
   childPipelineMetadata?: ChildPipelineMetadataType
   chainedPipelineStagePath?: string
 }
+const allowedViewTypeForTemplateUpdate = [StepViewType.DeploymentForm, StepViewType.InputSet, StepViewType.TriggerForm]
 
 export function StageFormInternal({
   allValues,
@@ -213,14 +214,17 @@ export function StageForm({
       })
     )
 
-    dispatchEvent(
-      new CustomEvent('UPDATE_INPUT_SET_TEMPLATE', {
-        detail: {
-          path: isEmpty(path) ? templatePath : `${path}.${templatePath}`,
-          data: updatedData
-        }
-      })
-    )
+    if (allowedViewTypeForTemplateUpdate.includes(viewType)) {
+      // Pipeline studio inputs should not dispatch template update event as it is specific to RPF
+      dispatchEvent(
+        new CustomEvent('UPDATE_INPUT_SET_TEMPLATE', {
+          detail: {
+            path: isEmpty(path) ? templatePath : `${path}.${templatePath}`,
+            data: updatedData
+          }
+        })
+      )
+    }
   }
 
   return (
