@@ -430,7 +430,8 @@ export const triggersListData = {
     'Custom',
     'Github Package Registry',
     'Google Artifact Registry',
-    'Google Cloud Storage'
+    'Google Cloud Storage',
+    'Bamboo'
   ],
   Manifest: ['Helm Chart'],
   Scheduled: ['Cron']

@@ -68,7 +68,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     size = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE,
     searchTerm
   } = useQueryParams<GitQueryParams & Pick<GetTriggerListForTargetQueryParams, 'page' | 'size' | 'searchTerm'>>()
-  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED, BAMBOO_ARTIFACT_NG } = useFeatureFlags()
+  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const { getString } = useStrings()
@@ -181,7 +181,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2, BAMBOO_ARTIFACT_NG)}
+        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}

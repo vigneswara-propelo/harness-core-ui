@@ -227,7 +227,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
+    ENABLED_ARTIFACT_TYPES.Bamboo
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -241,7 +242,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
+    ENABLED_ARTIFACT_TYPES.Bamboo
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -280,7 +282,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
     ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
     ENABLED_ARTIFACT_TYPES.AmazonMachineImage,
-    ENABLED_ARTIFACT_TYPES.AzureArtifacts
+    ENABLED_ARTIFACT_TYPES.AzureArtifacts,
+    ENABLED_ARTIFACT_TYPES.Bamboo
   ],
   TAS: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -295,7 +298,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
     ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
     ENABLED_ARTIFACT_TYPES.AzureArtifacts,
-    ENABLED_ARTIFACT_TYPES.Jenkins
+    ENABLED_ARTIFACT_TYPES.Jenkins,
+    ENABLED_ARTIFACT_TYPES.Bamboo
   ],
   GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
   AwsLambda: [

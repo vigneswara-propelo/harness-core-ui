@@ -70,7 +70,6 @@ import {
   ModalViewFor,
   isSidecarAllowed,
   showArtifactStoreStepDirectly,
-  isAllowedBambooArtifactDeploymentTypes,
   getInitialSelectedArtifactValue
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -107,17 +106,10 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { BAMBOO_ARTIFACT_NG, CDS_GITHUB_PACKAGES, CDS_SERVERLESS_V2 } = useFeatureFlags()
+  const { CDS_GITHUB_PACKAGES, CDS_SERVERLESS_V2 } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
-    if (
-      BAMBOO_ARTIFACT_NG &&
-      isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
-      !artifactTypes?.includes(ENABLED_ARTIFACT_TYPES.Bamboo)
-    ) {
-      setArtifactTypes([...artifactTypes, ENABLED_ARTIFACT_TYPES.Bamboo])
-    }
     if (!CDS_GITHUB_PACKAGES && isSshOrWinrmDeploymentType(deploymentType)) {
       setArtifactTypes(
         artifactTypes.filter((artifact: string) => artifact !== ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)

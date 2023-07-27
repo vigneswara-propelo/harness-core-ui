@@ -77,6 +77,11 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
         configureOptionsProps={{
           isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
         }}
+        onChange={val => {
+          if (!val) {
+            formik.setFieldValue(name, '')
+          }
+        }}
         className={cx(stepCss.formGroup, stepCss.md)}
       />
     ),

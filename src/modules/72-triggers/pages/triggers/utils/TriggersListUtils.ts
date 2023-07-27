@@ -79,8 +79,7 @@ export const getTriggerIcon = ({
 const triggerDrawerMap = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
-  allowV2Artifacts: boolean | undefined,
-  isBambooArtifactNg: boolean | undefined
+  allowV2Artifacts: boolean | undefined
 ): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
@@ -211,16 +210,12 @@ const triggerDrawerMap = (
               }
             ]
           : []),
-        ...(isBambooArtifactNg
-          ? [
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo]),
-                value: ENABLED_ARTIFACT_TYPES.Bamboo,
-                iconName: ArtifactIconByType.Bamboo as IconName,
-                disabled: isNewService
-              }
-            ]
-          : []),
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo]),
+          value: ENABLED_ARTIFACT_TYPES.Bamboo,
+          iconName: ArtifactIconByType.Bamboo as IconName,
+          disabled: isNewService
+        },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]),
           value: ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
@@ -266,9 +261,8 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
 export const getCategoryItems = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
-  allowV2Artifacts: boolean | undefined,
-  isBambooArtifactNg: boolean | undefined
-): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts, isBambooArtifactNg)
+  allowV2Artifacts: boolean | undefined
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts)
 
 export interface ItemInterface {
   itemLabel: string
