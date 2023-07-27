@@ -14,7 +14,6 @@ declare const styles: {
   readonly overflowScroll: string
   readonly parentPipelineDetails: string
   readonly popover: string
-  readonly separator: string
   readonly singleExecutionTag: string
   readonly trigger: string
   readonly userLabelContainer: string
