@@ -135,6 +135,10 @@ describe('FlagPipelineTab', () => {
       expect(screen.getByText('cf.featureFlags.flagPipeline.noDataMessage')).toBeInTheDocument()
       expect(addFlagPipelineButton).toBeInTheDocument()
       expect(screen.getByText('cf.featureFlags.flagPipeline.noDataDescription')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute(
+        'href',
+        'https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-build-pipeline/default-pipeline-ff/'
+      )
 
       // assert drawer opens with correct text. Save button hidden initially
       await userEvent.click(addFlagPipelineButton)

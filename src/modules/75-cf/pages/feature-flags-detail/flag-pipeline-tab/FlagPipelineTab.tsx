@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Container, Layout } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { NoData } from '@cf/components/NoData/NoData'
 import imageUrl from '@cf/images/pipeline_flags_empty_state.svg'
@@ -98,7 +99,22 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
                 })
               }}
               imgWidth={650}
-            />
+            >
+              <a
+                href="https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-build-pipeline/default-pipeline-ff/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Text
+                  font={{ variation: FontVariation.BODY }}
+                  color={Color.PRIMARY_7}
+                  icon="learning"
+                  iconProps={{ color: Color.PRIMARY_7, size: 14 }}
+                >
+                  {getString('cf.shared.readDocumentation')}
+                </Text>
+              </a>
+            </NoData>
           </Container>
         </Layout.Vertical>
       )}
