@@ -3061,7 +3061,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                     </section>
                     <section
                       class="step"
-                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_connectors.bamboo.bamboo"
+                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_platform.connectors.bamboo.bamboo"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -3127,7 +3127,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                       <section
                         class="stepName"
                       >
-                        connectors.bamboo.bamboo
+                        platform.connectors.bamboo.bamboo
                       </section>
                     </section>
                     <section

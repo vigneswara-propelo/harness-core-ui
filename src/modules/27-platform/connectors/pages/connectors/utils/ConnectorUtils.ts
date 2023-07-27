@@ -1960,7 +1960,7 @@ export const buildAzureKeyVaultMetadataPayload = (
   const isDelegateInCluster = delegateType === DelegateTypes.DELEGATE_IN_CLUSTER
   const delegateOutClusterFields = isDelegateOutCluster
     ? {
-        secretKey: (connectorInfo as any)?.spec?.secretKey || formData.secretKey?.referenceString,
+        secretKey: formData.secretKey?.referenceString || (connectorInfo as any)?.spec?.secretKey,
         clientId: formData.clientId?.trim()
       }
     : {}
