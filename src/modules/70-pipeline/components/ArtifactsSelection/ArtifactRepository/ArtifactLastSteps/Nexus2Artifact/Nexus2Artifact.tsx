@@ -536,7 +536,7 @@ export function Nexus2Artifact({
                         if (isValueFixed(val)) {
                           formik.setValues({
                             ...formik.values,
-                            repository: val.value,
+                            repository: val?.value,
                             spec: {
                               ...formik.values.spec,
                               groupId: '',
