@@ -63,6 +63,7 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
           <div className={stepCss.formGroup}>
             <FormInput.MultiTextInput
               label={getString('cv.verifyStep.controlNodeLabel')}
+              tooltipProps={{ dataTooltipId: 'controlNodeRegexFilterInput' }}
               name="spec.spec.controlNodeRegExPattern"
               placeholder={getString('cv.verifyStep.controlNodePlaceholder')}
               multiTextInputProps={{ expressions, allowableTypes }}
@@ -72,6 +73,7 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
           <div className={stepCss.formGroup}>
             <FormInput.MultiTextInput
               label={getString('cv.verifyStep.testNodeLabel')}
+              tooltipProps={{ dataTooltipId: 'testNodeRegexFilterInput' }}
               name="spec.spec.testNodeRegExPattern"
               placeholder={getString('cv.verifyStep.testNodePlaceholder')}
               multiTextInputProps={{ expressions, allowableTypes }}
