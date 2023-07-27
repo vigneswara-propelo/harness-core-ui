@@ -284,11 +284,7 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
           />
         )}
       </Layout.Horizontal>
-      <Accordion
-        panelClassName={css.accordionPanel}
-        detailsClassName={css.accordionDetails}
-        activeId={!isEmpty(formik.errors?.releaseName) ? 'advanced' : ''}
-      >
+      <Accordion panelClassName={css.accordionPanel} detailsClassName={css.accordionDetails} activeId={'advanced'}>
         <Accordion.Panel
           id="advanced"
           addDomId={true}
