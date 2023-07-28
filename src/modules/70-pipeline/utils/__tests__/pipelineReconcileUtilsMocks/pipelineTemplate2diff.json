@@ -1,0 +1,88 @@
+{
+  "name": "new pipeline 1",
+  "identifier": "new_pipeline_1",
+  "template": {
+    "templateRef": "new_template_1",
+    "versionLabel": "1",
+    "templateInputs": {
+      "stages": [
+        {
+          "stage": {
+            "identifier": "s1",
+            "type": "Custom",
+            "spec": {
+              "execution": {
+                "steps": [
+                  {
+                    "stepGroup": {
+                      "identifier": "sg1",
+                      "steps": [
+                        {
+                          "step": {
+                            "identifier": "JenkinsBuild_1",
+                            "type": "JenkinsBuild",
+                            "spec": {
+                              "connectorRef": "<+input>",
+                              "jobName": "<+input>",
+                              "jobParameter": []
+                            },
+                            "timeout": "1d"
+                          }
+                        }
+                      ],
+                      "delegateSelectors": "<+input>"
+                    }
+                  },
+                  {
+                    "step": {
+                      "identifier": "ShellScript_1",
+                      "type": "ShellScript",
+                      "spec": {
+                        "source": {
+                          "type": "Inline",
+                          "spec": {
+                            "script": ""
+                          }
+                        }
+                      },
+                      "timeout": ""
+                    }
+                  },
+                  {
+                    "step": {
+                      "identifier": "ShellScript_2",
+                      "type": "ShellScript",
+                      "spec": {
+                        "source": {
+                          "type": "Inline",
+                          "spec": {
+                            "script": "<+input>"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "variables": [
+              {
+                "name": "qwe",
+                "type": "String",
+                "value": "<+input>"
+              }
+            ],
+            "delegateSelectors": [""],
+            "when": "<+input>",
+            "strategy": "<+input>",
+            "failureStrategies": "<+input>"
+          }
+        }
+      ],
+      "delegateSelectors": "<+input>"
+    }
+  },
+  "tags": {},
+  "projectIdentifier": "srdjantest",
+  "orgIdentifier": "default1"
+}

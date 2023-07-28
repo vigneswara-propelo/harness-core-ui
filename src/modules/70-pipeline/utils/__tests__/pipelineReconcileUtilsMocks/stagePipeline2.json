@@ -1,0 +1,158 @@
+{
+  "stage": {
+    "name": "s3",
+    "identifier": "s3",
+    "template": {
+      "templateRef": "StageTemplate",
+      "versionLabel": "1",
+      "templateInputs": {
+        "type": "Deployment",
+        "spec": {
+          "service": {
+            "serviceRef": "<+input>",
+            "serviceInputs": "<+input>"
+          },
+          "environment": {
+            "useFromStage": {
+              "stage": "s1"
+            }
+          },
+          "execution": {
+            "steps": [
+              {
+                "stepGroup": {
+                  "identifier": "g1",
+                  "steps": [
+                    {
+                      "step": {
+                        "identifier": "shell_12",
+                        "template": {
+                          "templateInputs": {
+                            "type": "ShellScript",
+                            "spec": {
+                              "delegateSelectors": "<+input>",
+                              "environmentVariables": [
+                                {
+                                  "name": "TICKET_NUMBER",
+                                  "type": "String",
+                                  "value": "67"
+                                },
+                                {
+                                  "name": "JIRA_TOKEN",
+                                  "type": "String",
+                                  "value": "<+input>"
+                                }
+                              ]
+                            },
+                            "failureStrategies": "<+input>",
+                            "when": {
+                              "condition": "<+input>"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "stepGroup": {
+                  "identifier": "g2",
+                  "steps": [
+                    {
+                      "step": {
+                        "identifier": "shell_1",
+                        "template": {
+                          "templateInputs": {
+                            "type": "ShellScript",
+                            "spec": {
+                              "delegateSelectors": "<+input>",
+                              "environmentVariables": [
+                                {
+                                  "name": "TICKET_NUMBER",
+                                  "type": "String",
+                                  "value": "<+input>"
+                                },
+                                {
+                                  "name": "JIRA_TOKEN",
+                                  "type": "String",
+                                  "value": "<+input>"
+                                }
+                              ]
+                            },
+                            "failureStrategies": "<+input>",
+                            "when": {
+                              "condition": "<+input>"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "step": {
+                  "identifier": "shell_1",
+                  "template": {
+                    "templateInputs": {
+                      "type": "ShellScript",
+                      "spec": {
+                        "delegateSelectors": "<+input>",
+                        "environmentVariables": [
+                          {
+                            "name": "TICKET_NUMBER",
+                            "type": "String",
+                            "value": "<+input>"
+                          },
+                          {
+                            "name": "JIRA_TOKEN",
+                            "type": "String",
+                            "value": "<+input>"
+                          }
+                        ]
+                      },
+                      "failureStrategies": "<+input>",
+                      "when": {
+                        "condition": "<+input>"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "step": {
+                  "identifier": "shell_12",
+                  "template": {
+                    "templateInputs": {
+                      "type": "ShellScript",
+                      "spec": {
+                        "delegateSelectors": "<+input>",
+                        "environmentVariables": [
+                          {
+                            "name": "TICKET_NUMBER",
+                            "type": "String",
+                            "value": "<+input>"
+                          },
+                          {
+                            "name": "JIRA_TOKEN",
+                            "type": "String",
+                            "value": "<+input>"
+                          }
+                        ]
+                      },
+                      "failureStrategies": "<+input>",
+                      "when": {
+                        "condition": "<+input>"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

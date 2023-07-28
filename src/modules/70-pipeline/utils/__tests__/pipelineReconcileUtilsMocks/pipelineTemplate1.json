@@ -1,0 +1,39 @@
+{
+  "stages": [
+    {
+      "stage": {
+        "identifier": "Application_Deployment",
+        "template": {
+          "templateInputs": {
+            "type": "Deployment",
+            "spec": {
+              "service": {
+                "serviceRef": "<+input>",
+                "serviceInputs": "<+input>"
+              },
+              "environment": {
+                "environmentRef": "<+input>",
+                "environmentInputs": "<+input>",
+                "serviceOverrideInputs": "<+input>",
+                "infrastructureDefinitions": "<+input>"
+              }
+            },
+            "variables": [
+              {
+                "name": "app_config_branch",
+                "type": "String",
+                "default": "development",
+                "value": "<+input>.default(development)"
+              },
+              {
+                "name": "causedBy",
+                "type": "String",
+                "value": "<+input>"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

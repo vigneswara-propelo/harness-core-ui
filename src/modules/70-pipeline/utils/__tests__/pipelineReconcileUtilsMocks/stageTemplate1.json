@@ -1,0 +1,99 @@
+{
+  "type": "Custom",
+  "spec": {
+    "execution": {
+      "steps": [
+        {
+          "step": {
+            "identifier": "JenkinsBuild_1",
+            "type": "JenkinsBuild",
+            "spec": {
+              "connectorRef": "<+input>",
+              "jobName": "<+input>",
+              "jobParameter": "<+input>"
+            }
+          }
+        },
+        {
+          "step": {
+            "identifier": "ShellScript_3",
+            "type": "ShellScript",
+            "spec": {
+              "source": {
+                "type": "Inline",
+                "spec": {
+                  "script": "<+input>"
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": {
+            "identifier": "ShellScript_2",
+            "type": "ShellScript",
+            "spec": {
+              "source": {
+                "type": "Inline",
+                "spec": {
+                  "script": "<+input>"
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": {
+            "identifier": "ServiceNowCreate_1",
+            "type": "ServiceNowCreate",
+            "spec": {
+              "connectorRef": "<+input>",
+              "ticketType": "<+input>",
+              "fields": [
+                {
+                  "name": "description",
+                  "value": "<+input>"
+                },
+                {
+                  "name": "short_description",
+                  "value": "<+input>"
+                }
+              ]
+            },
+            "timeout": "<+input>"
+          }
+        },
+        {
+          "step": {
+            "identifier": "Container_1",
+            "type": "Container",
+            "spec": {
+              "connectorRef": "<+input>",
+              "image": "<+input>",
+              "command": "<+input>",
+              "shell": "<+input>",
+              "infrastructure": {
+                "type": "KubernetesDirect",
+                "spec": {
+                  "connectorRef": "<+input>",
+                  "namespace": "<+input>"
+                }
+              }
+            },
+            "timeout": "<+input>"
+          }
+        },
+        {
+          "step": {
+            "identifier": "Queue_1",
+            "type": "Queue",
+            "spec": {
+              "key": "<+input>"
+            },
+            "timeout": "<+input>"
+          }
+        }
+      ]
+    }
+  }
+}
