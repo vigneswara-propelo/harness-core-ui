@@ -33,7 +33,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
   prefix,
   variations = [],
   fieldValues,
-  targetGroups = [],
+  targetGroups,
   targetGroupValue,
   distributionWidth = '100%',
   addClearButton = false,
@@ -43,7 +43,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
   const { getString } = useStrings()
 
   const targetGroupItems = useMemo<SelectOption[]>(
-    () => targetGroups.map(({ name, identifier }) => ({ label: name, value: identifier })),
+    () => (targetGroups || []).map(({ name, identifier }) => ({ label: name, value: identifier })),
     [targetGroups]
   )
 
@@ -67,7 +67,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
 
   return (
     <Layout.Vertical spacing="large" {...restProps}>
-      {!!targetGroups.length && (
+      {targetGroups && (
         <FormInput.Select
           value={targetGroupValue}
           className={css.targetGroup}

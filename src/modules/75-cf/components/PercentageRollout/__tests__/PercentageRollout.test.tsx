@@ -67,6 +67,12 @@ describe('PercentageRollout', () => {
       })
     })
 
+    test('it should display a drop down when target groups is an empty array', async () => {
+      renderComponent({ targetGroups: [] })
+
+      expect(screen.getByText('cf.percentageRollout.toTargetGroup')).toBeInTheDocument()
+    })
+
     test('it should not display the drop down if targetGroups is undefined', async () => {
       renderComponent({ targetGroups: undefined })
 
