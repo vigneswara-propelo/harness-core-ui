@@ -155,14 +155,14 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                     formName={formName}
                     allowedVarialblesTypes={allowedVarialblesTypes}
                   />
-                  {values.variables?.length > 0 ? (
+                  {values?.variables && values.variables?.length > 0 ? (
                     <div className={cx(css.tableRow, css.headerRow, 'variablesTableRow')}>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('description')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('valueLabel')}</Text>
                     </div>
                   ) : null}
-                  {values.variables.map?.((variable, index) => {
+                  {values?.variables?.map?.((variable, index) => {
                     // generated uuid if they are not present
                     if (!uids.current[index]) {
                       uids.current[index] = uuid()

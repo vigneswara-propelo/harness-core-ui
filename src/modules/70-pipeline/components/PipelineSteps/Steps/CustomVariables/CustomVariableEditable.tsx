@@ -50,7 +50,7 @@ import type { VariablesCustomValidationSchemaType } from './CustomVariablesEdita
 import css from './CustomVariables.module.scss'
 
 export interface CustomVariablesData {
-  variables: AllNGVariables[]
+  variables?: AllNGVariables[]
   isPropagating?: boolean
   canAddVariable?: boolean
 }
@@ -214,13 +214,14 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                 {headerComponent
                   ? headerComponent
                   : props.showHeaders &&
-                    values.variables.length > 0 && (
+                    values?.variables &&
+                    values.variables?.length > 0 && (
                       <section className={css.subHeader}>
                         <String stringID="variableLabel" />
                         <String stringID="valueLabel" />
                       </section>
                     )}
-                {values.variables.map?.((variable, index) => {
+                {values?.variables?.map?.((variable, index) => {
                   // generated uuid if they are not present
                   if (!uids.current[index]) {
                     uids.current[index] = uuid()

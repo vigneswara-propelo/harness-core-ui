@@ -34,7 +34,7 @@ import {
 import { NameTypeColumn, VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
-  variables: AllNGVariables[]
+  variables?: AllNGVariables[]
   isPropagating?: boolean
   canAddVariable?: boolean
 }
@@ -116,7 +116,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
 
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
-      {initialValues.variables.length > 0 && (
+      {initialValues?.variables && initialValues.variables?.length > 0 && (
         <section className={css.subHeader}>
           <Text font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }} color={Color.GREY_500}>
             {getString('name')}

@@ -40,7 +40,7 @@ export interface MonitoredServiceConfig {
   serviceRef: string
   sources: string
   type: string
-  variables: AllNGVariables[]
+  variables?: AllNGVariables[]
   __uuid: string
   spec?: any
 }

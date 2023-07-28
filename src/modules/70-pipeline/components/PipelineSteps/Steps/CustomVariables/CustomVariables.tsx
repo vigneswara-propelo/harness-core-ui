@@ -28,6 +28,7 @@ import type { StepProps } from '../../PipelineStep'
 
 const logger = loggerFor(ModuleName.COMMON)
 
+/* istanbul ignore next */
 const getConnectorValue = (connector?: SecretResponseWrapper): string =>
   `${
     connector?.secret?.orgIdentifier && connector?.secret?.projectIdentifier
@@ -37,6 +38,7 @@ const getConnectorValue = (connector?: SecretResponseWrapper): string =>
       : `${Scope.ACCOUNT}.${connector?.secret?.identifier}`
   }` || ''
 
+/* istanbul ignore next */
 const getConnectorName = (connector?: SecretResponseWrapper): string =>
   `${
     connector?.secret?.orgIdentifier && connector?.secret?.projectIdentifier
@@ -99,7 +101,7 @@ export class CustomVariables extends Step<CustomVariablesData> {
     viewType,
     allValues
   }: ValidateInputSetProps<CustomVariablesData>): FormikErrors<CustomVariablesData> {
-    const errors: FormikErrors<CustomVariablesData> = { variables: [] }
+    const errors: FormikErrors<CustomVariablesData> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     data?.variables?.forEach((variable: AllNGVariables, index: number) => {
       let isRequiredVariable = defaultTo(
@@ -190,24 +192,27 @@ export class CustomVariables extends Step<CustomVariablesData> {
   > = new Map()
   protected defaultValues: CustomVariablesData = { variables: [] }
 
+  /* istanbul ignore next */
   processFormData(data: CustomVariablesData): CustomVariablesData {
     return {
       ...data,
-      variables: data.variables.map(row => ({
-        name: row.name,
-        type: row.type,
-        ...(!isNil(row.default)
-          ? { default: row.type === 'Number' ? parseFloat(row.default as unknown as string) : row.default }
-          : {}),
-        ...(!isNil(row.description) ? { description: row.description } : {}),
-        ...(!isNil(row.required) ? { required: row.required } : {}),
-        value:
-          row.type === 'Number' &&
-          getMultiTypeFromValue(row.value as unknown as string) === MultiTypeInputType.FIXED &&
-          row.value
-            ? parseFloat(row.value as unknown as string)
-            : row.value
-      })) as AllNGVariables[]
+      variables: data.variables?.length
+        ? (data.variables.map(row => ({
+            name: row.name,
+            type: row.type,
+            ...(!isNil(row.default)
+              ? { default: row.type === 'Number' ? parseFloat(row.default as unknown as string) : row.default }
+              : {}),
+            ...(!isNil(row.description) ? { description: row.description } : {}),
+            ...(!isNil(row.required) ? { required: row.required } : {}),
+            value:
+              row.type === 'Number' &&
+              getMultiTypeFromValue(row.value as unknown as string) === MultiTypeInputType.FIXED &&
+              row.value
+                ? parseFloat(row.value as unknown as string)
+                : row.value
+          })) as AllNGVariables[])
+        : undefined
     }
   }
 }

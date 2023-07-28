@@ -109,7 +109,7 @@ export default function MonitoredServiceCard(props: MonitoredServiceCardProps): 
               <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
                 factory={stepsFactory}
                 initialValues={{
-                  variables: defaultTo(originalMonitoredService.variables, []) as AllNGVariables[],
+                  variables: defaultTo(originalMonitoredService?.variables, []) as AllNGVariables[],
                   canAddVariable: true
                 }}
                 allowableTypes={allowableTypes}

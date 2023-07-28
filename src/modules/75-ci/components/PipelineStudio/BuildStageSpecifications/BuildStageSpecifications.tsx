@@ -221,7 +221,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
 
         spec = set(spec, 'caching.key', values.cacheIntelligenceKey)
 
-        if (values.variables && values.variables.length > 0) {
+        if (values?.variables && values.variables?.length > 0) {
           stageData.variables = values.variables
         } else {
           delete stageData.variables
@@ -454,7 +454,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                               type={StepType.CustomVariable}
                               stepViewType={StepViewType.StageVariable}
                               onUpdate={({ variables }: CustomVariablesData) => {
-                                if (!variables.length) {
+                                if (!variables?.length) {
                                   const clonedStage = stage?.stage
                                   delete clonedStage?.variables
                                   handleStepWidgetUpdate({ ...clonedStage } as StageElementConfig)
