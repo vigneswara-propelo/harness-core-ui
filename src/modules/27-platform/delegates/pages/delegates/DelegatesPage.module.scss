@@ -196,8 +196,17 @@
 }
 
 .instancesContainer {
+  display: flex;
   margin: var(--spacing-small) 0 !important;
   padding-top: var(--spacing-medium) !important;
+
+  .row {
+    width: calc(100% - 5px);
+
+    .tags {
+      width: calc(17% - 13px) !important;
+    }
+  }
 }
 
 .podDetailsSeparator {

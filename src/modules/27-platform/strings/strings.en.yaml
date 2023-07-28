@@ -200,6 +200,7 @@ delegates:
   successfullyUpdatedConfig: 'Successfully Updated Delegate Configuration'
   configNameRequired: 'Delegate Configuration name is Required.'
   instanceStatus: 'Instance Status'
+  autoUpgrade: 'Auto Upgrade'
   runAsRoot: 'Run delegate with root access'
   commandLineCreation:
     replicas: Replicas

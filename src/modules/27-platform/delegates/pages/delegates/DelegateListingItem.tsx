@@ -58,13 +58,9 @@ const RenderDelegateIcon: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) 
 }
 
 const RenderDelegateName: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
-  const [autoUpgradeColor, autoUpgradeText] = !row.original?.activelyConnected
-    ? []
-    : getAutoUpgradeTextColor(row.original?.autoUpgrade)
-
   return (
-    <Layout.Horizontal>
-      <Layout.Vertical width={'55%'} margin={{ right: 'large' }}>
+    <>
+      <Layout.Vertical margin={{ right: 'large' }}>
         <Text color={Color.BLACK} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
           {row.original?.groupName}
         </Text>
@@ -72,15 +68,7 @@ const RenderDelegateName: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) 
           {row.original.delegateGroupIdentifier}
         </Text>
       </Layout.Vertical>
-      <Text
-        background={autoUpgradeColor}
-        color={Color.WHITE}
-        font={{ weight: 'semi-bold', size: 'xsmall' }}
-        className={css.statusText}
-      >
-        {autoUpgradeText}
-      </Text>
-    </Layout.Horizontal>
+    </>
   )
 }
 
@@ -90,7 +78,7 @@ const RenderTags: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
   return (
     delegate?.groupImplicitSelectors && (
       <>
-        <Text lineClamp={1}>
+        <Text lineClamp={1} margin={{ right: 'medium' }}>
           <TagsViewer key="tags" tags={allSelectors.slice(0, 3)} />
           <span key="hidenTags">{allSelectors.length > 3 ? '+' + (allSelectors.length - 3) : ''}</span>
         </Text>
@@ -116,6 +104,24 @@ const RenderHeartbeat: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => 
 const RenderConnectivityStatus: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
   const delegate = row.original
   return <DelegateConnectivityStatus delegate={delegate} />
+}
+
+const RenderAutoUpgradeColumn: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  const [autoUpgradeColor, autoUpgradeText] = !row.original?.activelyConnected
+    ? []
+    : getAutoUpgradeTextColor(row.original?.autoUpgrade)
+
+  return (
+    <Text
+      background={autoUpgradeColor}
+      color={Color.WHITE}
+      font={{ variation: FontVariation.TINY_SEMI }}
+      className={css.statusText}
+      margin={{ right: 'medium' }}
+    >
+      {autoUpgradeText}
+    </Text>
+  )
 }
 
 const RenderColumnMenu: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
@@ -308,13 +314,19 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
       {
         Header: getString('delegate.DelegateName'),
         id: 'delegateName',
-        width: '24%',
+        width: '15%',
         Cell: RenderDelegateName
+      },
+      {
+        Header: getString('connectivityStatus'),
+        id: 'connectivityStatus',
+        width: '12%',
+        Cell: RenderConnectivityStatus
       },
       {
         Header: getString('tagsLabel'),
         id: 'tags',
-        width: '15%',
+        width: '17%',
         Cell: RenderTags
       },
       {
@@ -326,25 +338,25 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
       {
         Header: getString('platform.delegates.instanceStatus'),
         id: 'instanceStatus',
-        width: '18%',
+        width: '15%',
         Cell: RenderInstanceStatus
       },
       {
         Header: getString('delegate.LastHeartBeat'),
         id: 'heartbeat',
-        width: '14%',
+        width: '12%',
         Cell: RenderHeartbeat
       },
       {
-        Header: getString('connectivityStatus'),
-        id: 'connectivityStatus',
-        width: '12%',
-        Cell: RenderConnectivityStatus
+        Header: 'Auto Upgrade',
+        id: 'autoUpgrade',
+        width: '11%',
+        Cell: RenderAutoUpgradeColumn
       },
       {
         Header: '',
         id: 'actions',
-        width: '1%',
+        width: '2%',
         Cell: RenderColumnMenu
       }
     ]

@@ -7,8 +7,9 @@
 
 import React, { Fragment, ReactElement } from 'react'
 import type { Row } from 'react-table'
-import { Layout, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import classNames from 'classnames'
 import ReactTimeago from 'react-timeago'
 import { killEvent } from '@common/utils/eventUtils'
 import type { DelegateGroupDetails } from 'services/cd-ng'
@@ -22,13 +23,13 @@ export function DelegateInstanceList({ row }: { row: Row<DelegateGroupDetails> }
 
   const columnWidths = {
     icon: '5%',
-    name: '24%',
-    tags: '15%',
+    name: '15%',
+    tags: '17%',
     version: '11%',
-    instanceStatus: '18%',
-    heartbeat: '14%',
-    status: '12%',
-    actions: '1%'
+    instanceStatus: '15%',
+    heartbeat: '12%',
+    status: '13%',
+    actions: '12%'
   }
   return (
     <div role="list" onClick={killEvent}>
@@ -38,25 +39,17 @@ export function DelegateInstanceList({ row }: { row: Row<DelegateGroupDetails> }
             data?.delegateInstanceDetails?.map(del => {
               return (
                 <div
-                  className={`${css.instancesContainer} ${css.podDetailsContainer}`}
+                  className={classNames(css.instancesContainer, css.podDetailsContainer)}
                   key={data.delegateGroupIdentifier}
                 >
-                  <Layout.Horizontal key={del?.uuid} width="100%" spacing={'small'}>
+                  <Layout.Horizontal key={del?.uuid} width="100%" spacing={'small'} className={css.row}>
                     <Layout.Horizontal width={columnWidths.icon} />
                     <Layout.Horizontal width={columnWidths.name}>
-                      <Text lineClamp={1}>{del?.hostName} </Text>
-                    </Layout.Horizontal>
-                    <Layout.Horizontal width={columnWidths.tags}></Layout.Horizontal>
-                    <Layout.Horizontal width={columnWidths.version}>
-                      <Text>{del.version}</Text>
-                    </Layout.Horizontal>
-                    <Layout.Horizontal width={columnWidths?.instanceStatus}>
-                      {getInstanceStatus(data)}
-                    </Layout.Horizontal>
-                    <Layout.Horizontal width={columnWidths.heartbeat}>
-                      <Text>
-                        {del.lastHeartbeat ? <ReactTimeago date={del.lastHeartbeat} live /> : getString('na')}
-                      </Text>
+                      <Container margin={{ right: 'large' }}>
+                        <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
+                          {del?.hostName}
+                        </Text>
+                      </Container>
                     </Layout.Horizontal>
                     <Layout.Vertical width={columnWidths.status}>
                       <Text
@@ -70,6 +63,19 @@ export function DelegateInstanceList({ row }: { row: Row<DelegateGroupDetails> }
                         {del.activelyConnected ? getString('connected') : getString('delegate.notConnected')}
                       </Text>
                     </Layout.Vertical>
+                    <Layout.Horizontal width={columnWidths.tags} className={css.tags}></Layout.Horizontal>
+                    <Layout.Horizontal width={columnWidths.version}>
+                      <Text>{del.version}</Text>
+                    </Layout.Horizontal>
+                    <Layout.Horizontal width={columnWidths?.instanceStatus}>
+                      {getInstanceStatus(data)}
+                    </Layout.Horizontal>
+                    <Layout.Horizontal width={columnWidths.heartbeat}>
+                      <Text>
+                        {del.lastHeartbeat ? <ReactTimeago date={del.lastHeartbeat} live /> : getString('na')}
+                      </Text>
+                    </Layout.Horizontal>
+
                     <Layout.Vertical width={columnWidths.actions} />
                   </Layout.Horizontal>
                 </div>

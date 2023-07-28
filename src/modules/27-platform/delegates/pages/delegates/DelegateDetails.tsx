@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, Text, IconName } from '@harness/uicore'
+import { Container, Layout, Text, IconName, PageSpinner } from '@harness/uicore'
+
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -20,7 +21,6 @@ import type {
 import { delegateTypeToIcon } from '@common/utils/delegateUtils'
 import { useStrings } from 'framework/strings'
 import { useGetDelegateGroupByIdentifier, useGetV2 } from 'services/portal'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { DelegateOverview } from './DelegateOverview'
@@ -83,47 +83,27 @@ export default function DelegateDetails(): JSX.Element {
     )
   }
 
-  if (loading) {
-    return (
-      <Container
-        style={{
-          position: 'fixed',
-          top: '0',
-          left: '270px',
-          width: 'calc(100% - 270px)',
-          height: '100%'
-        }}
-      >
-        <ContainerSpinner />
-      </Container>
-    )
-  }
-
   if (error) {
     return <Page.Error message={error.message} onClick={() => refetch()} />
   }
 
   return (
     <>
-      <Container
-        height={116}
-        padding={{ top: 'large', right: 'xlarge', bottom: 'large', left: 'xlarge' }}
-        className={css.detailsContainer}
-      >
-        {renderTitle()}
-      </Container>
-      <Page.Body className={css.main}>
-        <Layout.Vertical>
-          <Layout.Horizontal spacing="large">
+      <Page.Header title={renderTitle()} size="large" />
+      <Page.Body>
+        {loading ? (
+          <PageSpinner />
+        ) : (
+          <Layout.Horizontal padding="large">
             <Container className={css.cardContainer}>
               {delegate && (
                 <Layout.Vertical spacing="large" width="50%">
-                  <DelegateOverview delegate={delegate} delegateProfile={delegateProfile} />
+                  <DelegateOverview delegate={delegate} delegateProfile={delegateProfile} showConnectivityStatus />
                 </Layout.Vertical>
               )}
             </Container>
           </Layout.Horizontal>
-        </Layout.Vertical>
+        )}
       </Page.Body>
     </>
   )

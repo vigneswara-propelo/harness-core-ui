@@ -22,6 +22,7 @@ declare const styles: {
   readonly overview: string
   readonly panel: string
   readonly selected: string
+  readonly statusText: string
   readonly tagTitle: string
   readonly tagsContainer: string
 }

@@ -128,21 +128,63 @@ exports[`Delegates Overview Page render data 1`] = `
         </div>
       </div>
       <div
+        class="StyledProps--font StyledProps--main StyledProps--flex"
+        style="border-bottom: 0.5px solid #dce0e7;"
+      >
+        <div
+          class="StyledProps--font StyledProps--main entry ignoreLast"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+          >
+            platform.delegates.delegateIdentifier
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+          >
+            id1
+          </p>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-variation-tiny-semi"
+        >
+          AUTO UPGRADE: OFF
+        </p>
+      </div>
+      <div
         class="StyledProps--font StyledProps--main entry"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
         >
-          platform.delegates.delegateIdentifier
+          rbac.userDetails.linkToSSOProviderModal.groupNameLabel
         </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
         >
-          id1
+          group-name-1
         </p>
       </div>
       <div
         class="StyledProps--font StyledProps--main entry"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+        >
+          platform.delegates.instanceStatus
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+        >
+          <p
+            class="StyledProps--font StyledProps--main"
+          >
+            
+          </p>
+        </p>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main entry ignoreLast"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
@@ -263,6 +305,22 @@ exports[`Delegates Overview Page render data 1`] = `
           connected
         </p>
       </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main entry"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+      >
+        version
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        />
+      </p>
     </div>
   </div>
 </div>

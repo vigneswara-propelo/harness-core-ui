@@ -41,7 +41,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 24%;"
+          style="width: 15%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -53,7 +53,19 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 12%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            connectivityStatus
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 17%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -77,7 +89,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 18%;"
+          style="width: 15%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -89,7 +101,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 14%;"
+          style="width: 12%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -101,19 +113,19 @@ exports[`Delegates Listing With Groups render data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 12%;"
+          style="width: 11%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
-            connectivityStatus
+            Auto Upgrade
           </p>
         </div>
         <div
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 1%;"
+          style="width: 2%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -212,42 +224,67 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 24%;"
+              style="width: 15%;"
             >
               <div
-                class="Layout--horizontal StyledProps--main"
+                class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
               >
-                <div
-                  class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
-                  style="width: 55%;"
-                >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
-                    style="--text-line-clamp: 1;"
-                  >
-                    delegate-1
-                  </p>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
-                    style="--text-line-clamp: 1;"
-                  >
-                    delGroupIdentifier1
-                  </p>
-                </div>
                 <p
-                  class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
+                  style="--text-line-clamp: 1;"
                 >
-                  AUTO UPGRADE: ON
+                  delegate-1
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  delGroupIdentifier1
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                  style="display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-small StyledProps--color StyledProps--color-green600"
+                    icon="full-circle"
+                  >
+                    <svg
+                      data-icon="full-circle"
+                      height="6"
+                      viewBox="0 0 16 16"
+                      width="6"
+                    >
+                      <desc>
+                        full-circle
+                      </desc>
+                      <path
+                        d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  connected
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 17%;"
             >
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-medium"
                 style="--text-line-clamp: 1;"
               >
                 <div
@@ -288,7 +325,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 18%;"
+              style="width: 15%;"
             >
               <p
                 class="StyledProps--font StyledProps--main"
@@ -299,49 +336,25 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 14%;"
+              style="width: 12%;"
             >
               dummy date
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 12%;"
+              style="width: 11%;"
             >
-              <div
-                class="Layout--vertical StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-variation-tiny-semi StyledProps--margin-right-medium"
               >
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="display: flex; align-items: center;"
-                >
-                  <span
-                    class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-small StyledProps--color StyledProps--color-green600"
-                    icon="full-circle"
-                  >
-                    <svg
-                      data-icon="full-circle"
-                      height="6"
-                      viewBox="0 0 16 16"
-                      width="6"
-                    >
-                      <desc>
-                        full-circle
-                      </desc>
-                      <path
-                        d="M8 0a8 8 0 100 16A8 8 0 108 0z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  connected
-                </p>
-              </div>
+                AUTO UPGRADE: ON
+              </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 1%;"
+              style="width: 2%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"
@@ -479,75 +492,24 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 24%;"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main"
-              >
-                <div
-                  class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
-                  style="width: 55%;"
-                >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
-                    style="--text-line-clamp: 1;"
-                  >
-                    Group1
-                  </p>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
-                    style="--text-line-clamp: 1;"
-                  >
-                    delGroupIdentifier2
-                  </p>
-                </div>
-                <p
-                  class="StyledProps--font StyledProps--main statusText StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
-                />
-              </div>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
               style="width: 15%;"
             >
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1;"
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
               >
-                <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
-                />
-                <span />
-              </p>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 11%;"
-            >
-              <p
-                class="StyledProps--font StyledProps--main"
-              />
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 18%;"
-            >
-              <p
-                class="StyledProps--font StyledProps--main"
-              >
-                
-              </p>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 14%;"
-            >
-              dummy date
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
+                  style="--text-line-clamp: 1;"
+                >
+                  Group1
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  delGroupIdentifier2
+                </p>
+              </div>
             </div>
             <div
               class="TableV2--cell"
@@ -592,7 +554,59 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 1%;"
+              style="width: 17%;"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-medium"
+                style="--text-line-clamp: 1;"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  style="display: inline-flex; flex-wrap: wrap;"
+                />
+                <span />
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 11%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              />
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 12%;"
+            >
+              dummy date
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 11%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main statusText StyledProps--color StyledProps--color-white StyledProps--font-variation-tiny-semi StyledProps--margin-right-medium"
+              />
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 2%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"
@@ -730,42 +744,67 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 24%;"
+              style="width: 15%;"
             >
               <div
-                class="Layout--horizontal StyledProps--main"
+                class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
               >
-                <div
-                  class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
-                  style="width: 55%;"
-                >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
-                    style="--text-line-clamp: 1;"
-                  >
-                    cdp-workload-identity-gcp
-                  </p>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
-                    style="--text-line-clamp: 1;"
-                  >
-                    cdpworkloadidentitygcp
-                  </p>
-                </div>
                 <p
-                  class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
+                  style="--text-line-clamp: 1;"
                 >
-                  AUTO UPGRADE: OFF
+                  cdp-workload-identity-gcp
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  cdpworkloadidentitygcp
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 12%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                  style="display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-small StyledProps--color StyledProps--color-green600"
+                    icon="full-circle"
+                  >
+                    <svg
+                      data-icon="full-circle"
+                      height="6"
+                      viewBox="0 0 16 16"
+                      width="6"
+                    >
+                      <desc>
+                        full-circle
+                      </desc>
+                      <path
+                        d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  connected
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 17%;"
             >
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-medium"
                 style="--text-line-clamp: 1;"
               >
                 <div
@@ -796,7 +835,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 18%;"
+              style="width: 15%;"
             >
               <p
                 class="StyledProps--font StyledProps--main"
@@ -807,49 +846,25 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 14%;"
+              style="width: 12%;"
             >
               dummy date
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 12%;"
+              style="width: 11%;"
             >
-              <div
-                class="Layout--vertical StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-variation-tiny-semi StyledProps--margin-right-medium"
               >
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="display: flex; align-items: center;"
-                >
-                  <span
-                    class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-small StyledProps--color StyledProps--color-green600"
-                    icon="full-circle"
-                  >
-                    <svg
-                      data-icon="full-circle"
-                      height="6"
-                      viewBox="0 0 16 16"
-                      width="6"
-                    >
-                      <desc>
-                        full-circle
-                      </desc>
-                      <path
-                        d="M8 0a8 8 0 100 16A8 8 0 108 0z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  connected
-                </p>
-              </div>
+                AUTO UPGRADE: OFF
+              </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 1%;"
+              style="width: 2%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"
@@ -987,86 +1002,24 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 24%;"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main"
-              >
-                <div
-                  class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
-                  style="width: 55%;"
-                >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
-                    style="--text-line-clamp: 1;"
-                  >
-                    test-old
-                  </p>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
-                    style="--text-line-clamp: 1;"
-                  >
-                    testold
-                  </p>
-                </div>
-                <p
-                  class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
-                >
-                  AUTO UPGRADE: ON
-                </p>
-              </div>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
               style="width: 15%;"
             >
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1;"
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
               >
-                <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body2"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
-                  >
-                    test-old
-                  </p>
-                </div>
-                <span />
-              </p>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 11%;"
-            >
-              <p
-                class="StyledProps--font StyledProps--main"
-              >
-                1.0.76200
-              </p>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 18%;"
-            >
-              <p
-                class="StyledProps--font StyledProps--main"
-              >
-                Upgrade Required
-              </p>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 14%;"
-            >
-              dummy date
+                  test-old
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  testold
+                </p>
+              </div>
             </div>
             <div
               class="TableV2--cell"
@@ -1106,7 +1059,70 @@ exports[`Delegates Listing With Groups render data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 1%;"
+              style="width: 17%;"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-medium"
+                style="--text-line-clamp: 1;"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  style="display: inline-flex; flex-wrap: wrap;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                  >
+                    test-old
+                  </p>
+                </div>
+                <span />
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 11%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                1.0.76200
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                Upgrade Required
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 12%;"
+            >
+              dummy date
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 11%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-variation-tiny-semi StyledProps--margin-right-medium"
+              >
+                AUTO UPGRADE: ON
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 2%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main itemActionContainer"

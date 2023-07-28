@@ -3008,6 +3008,7 @@ export interface StringsMap {
   'platform.defaultSettings.ticketingToolConnectorLabel': string
   'platform.defaultSettings.ticketingToolLabel': string
   'platform.delegates.GBRam': string
+  'platform.delegates.autoUpgrade': string
   'platform.delegates.commandLineCreation.clickDoneAndCheckLater': string
   'platform.delegates.commandLineCreation.closePreview': string
   'platform.delegates.commandLineCreation.combinedHelmChartCommandsHeading': string

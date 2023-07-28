@@ -41,11 +41,13 @@ declare const styles: {
   readonly profileCard: string
   readonly profileContainer: string
   readonly profileDetailsContainer: string
+  readonly row: string
   readonly search: string
   readonly section1: string
   readonly statusPadding: string
   readonly statusText: string
   readonly successIcon: string
+  readonly tags: string
   readonly tickerContainer: string
   readonly toggleAccordion: string
   readonly troubleshootLink: string

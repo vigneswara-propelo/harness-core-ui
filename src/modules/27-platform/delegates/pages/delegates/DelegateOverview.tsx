@@ -9,7 +9,7 @@ import React from 'react'
 import { useParams, NavLink } from 'react-router-dom'
 import cx from 'classnames'
 import { Container, Text, FlexExpander, Layout } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { delegateTypeToIcon } from '@common/utils/delegateUtils'
 import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import routes from '@common/RouteDefinitions'
@@ -27,6 +27,7 @@ import {
   SectionLabelValuePair
 } from '@delegates/components/SectionContainer/SectionContainer'
 import DelegateConnectivityStatus from './DelegateConnectivityStatus'
+import { getAutoUpgradeTextColor, getInstanceStatus } from './utils/DelegateHelper'
 import css from './DelegateDetails.module.scss'
 
 interface DelegateOverviewProps {
@@ -46,6 +47,9 @@ export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<
     Partial<DelegateConfigProps & ProjectPathProps & ModulePathParams> & AccountPathProps
   >()
+  const [autoUpgradeColor, autoUpgradeText] = !delegate?.activelyConnected
+    ? []
+    : getAutoUpgradeTextColor(delegate?.autoUpgrade)
 
   let tags = Object.entries(delegate?.groupImplicitSelectors || {})
     .filter(([, tag]) => tag !== 'PROFILE_SELECTORS')
@@ -79,14 +83,36 @@ export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
           />
         </Container>
 
+        <Container flex style={{ borderBottom: '0.5px solid #dce0e7' }}>
+          <SectionLabelValuePair
+            label={getString('platform.delegates.delegateIdentifier')}
+            value={delegate.delegateGroupIdentifier}
+            ignoreLastElementStyling
+          />
+          <Text
+            background={autoUpgradeColor}
+            color={Color.WHITE}
+            font={{ variation: FontVariation.TINY_SEMI }}
+            className={css.statusText}
+          >
+            {autoUpgradeText}
+          </Text>
+        </Container>
+
         <SectionLabelValuePair
-          label={getString('platform.delegates.delegateIdentifier')}
-          value={delegate.delegateGroupIdentifier}
+          label={getString('rbac.userDetails.linkToSSOProviderModal.groupNameLabel')}
+          value={delegate.groupName}
+        />
+
+        <SectionLabelValuePair
+          label={getString('platform.delegates.instanceStatus')}
+          value={<Text>{getInstanceStatus(delegate)}</Text>}
         />
 
         {delegateProfile && (
           <SectionLabelValuePair
             label={getString('delegate.delegateConfiguration')}
+            ignoreLastElementStyling
             value={
               <NavLink
                 to={routes.toDelegateConfigsDetails({
@@ -134,6 +160,8 @@ export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
           <DelegateConnectivityStatus delegate={delegate} />
         </Layout.Vertical>
       )}
+
+      <SectionLabelValuePair label={getString('version')} value={<Text>{delegate.groupVersion}</Text>} />
     </SectionContainer>
   )
 }
