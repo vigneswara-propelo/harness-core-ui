@@ -83,11 +83,12 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
   })
 
   const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
-    archiveFlag: deleteFeatureFlag,
     flagData: featureFlag,
+    gitSync,
+    queryParams,
+    archiveFlag: deleteFeatureFlag,
     onArchive: () => history.push(featureFlagListURL),
-    openedArchivedDialog,
-    queryParams
+    openedArchivedDialog
   })
 
   const onClickArchiveButton = useCallback(() => {
@@ -97,6 +98,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
 
   const openRestoreFlagDialog = useRestoreFlagDialog({
     flagData: featureFlag,
+    gitSync,
     queryParams,
     onRestore: () => refetchFlag()
   })

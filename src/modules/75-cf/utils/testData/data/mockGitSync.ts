@@ -45,4 +45,33 @@ const mockGitSync: UseGitSync = {
   }))
 }
 
+export const mockDisabledGitSync = {
+  isAutoCommitEnabled: false,
+  isGitSyncEnabled: false,
+  isGitSyncPaused: false,
+  isGitSyncActionsEnabled: false,
+  gitSyncLoading: false,
+  apiError: '',
+  getGitSyncFormMeta: jest.fn(() => ({
+    gitSyncInitialValues: {
+      gitDetails: {
+        branch: '',
+        filePath: '',
+        repoIdentifier: '',
+        rootFolder: '',
+        commitMsg: ''
+      },
+      autoCommit: false
+    },
+    gitSyncValidationSchema: yup.object().shape({
+      commitMsg: yup.string()
+    })
+  })),
+  saveWithGit: jest.fn(),
+  handleAutoCommit: jest.fn(),
+  handleGitPause: jest.fn(),
+  handleError: jest.fn(),
+  refetchGitRepo: jest.fn()
+}
+
 export default mockGitSync

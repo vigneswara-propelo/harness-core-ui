@@ -86,11 +86,13 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     flagData,
     onArchive: refetchFlags,
     openedArchivedDialog,
+    gitSync,
     queryParams
   })
 
   const openRestoreFlagDialog = useRestoreFlagDialog({
     flagData,
+    gitSync,
     queryParams,
     onRestore: () => {
       refetchFlags()

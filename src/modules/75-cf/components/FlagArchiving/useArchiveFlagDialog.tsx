@@ -2,8 +2,11 @@ import React, { FormEvent, useEffect, useMemo, useState } from 'react'
 import { Layout, PageError, Text, TextInput, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
+import { useModalHook } from '@harness/use-modal'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useToaster } from '@common/exports'
+import { GitSyncFormValues, UseGitSync } from '@cf/hooks/useGitSync'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { String, useStrings } from 'framework/strings'
 import {
   DeleteFeatureFlagQueryParams,
@@ -14,12 +17,14 @@ import {
 } from 'services/cf'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import useResponseError from '@cf/hooks/useResponseError'
+import SaveFlagToGitModal from '../SaveFlagToGitModal/SaveFlagToGitModal'
 import ArchiveFlagButtons from './ArchiveFlagButtons'
 import CannotArchiveWarning from './CannotArchiveWarning'
 import css from './useArchiveFlagDialog.module.scss'
 
 export interface ArchiveDialogProps {
   flagData: Feature
+  gitSync: UseGitSync
   archiveFlag: (
     data: string,
     mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void> | undefined
@@ -35,6 +40,7 @@ interface UseArchiveFlagDialogReturn {
 
 const useArchiveFlagDialog = ({
   flagData,
+  gitSync,
   archiveFlag,
   queryParams,
   onArchive,
@@ -95,9 +101,39 @@ const useArchiveFlagDialog = ({
     STATUS.ok
   ])
 
-  const handleArchive = async (): Promise<void> => {
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(
+    GIT_COMMIT_MESSAGES.ARCHIVED_FLAG
+  )
+
+  const [showGitModal, hideGitModal] = useModalHook(() => {
+    return (
+      <SaveFlagToGitModal
+        flagName={flagData.name}
+        flagIdentifier={flagData.identifier}
+        gitSyncInitialValues={gitSyncInitialValues}
+        gitSyncValidationSchema={gitSyncValidationSchema}
+        onSubmit={handleArchive}
+        onClose={hideGitModal}
+      />
+    )
+  }, [flagData.name, flagData.identifier])
+
+  const handleArchive = async (gitSyncFormValues?: GitSyncFormValues): Promise<void> => {
+    let commitMsg
+
+    if (gitSync.isGitSyncEnabled && gitSync.isAutoCommitEnabled) {
+      commitMsg = gitSyncInitialValues.gitDetails.commitMsg
+    } else {
+      commitMsg = gitSyncFormValues?.gitDetails.commitMsg || ''
+    }
+
     try {
-      await archiveFlag(flagData.identifier, { queryParams: { ...queryParams, forceDelete: false } })
+      await archiveFlag(flagData.identifier, { queryParams: { ...queryParams, forceDelete: false, commitMsg } })
+
+      if (gitSync.isGitSyncEnabled && gitSyncFormValues?.autoCommit) {
+        await gitSync.handleAutoCommit(gitSyncFormValues?.autoCommit)
+      }
+
       showSuccess(getString('cf.featureFlags.archiving.archiveSuccess'))
       onArchive()
       setValidationFlagIdentifier('')
@@ -199,7 +235,13 @@ const useArchiveFlagDialog = ({
         onClose={() => {
           closeDialog()
         }}
-        onArchive={handleArchive}
+        onArchive={() => {
+          if (gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled) {
+            showGitModal()
+          } else {
+            handleArchive()
+          }
+        }}
       />
     )
   })

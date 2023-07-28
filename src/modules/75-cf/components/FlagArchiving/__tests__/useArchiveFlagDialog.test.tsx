@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
+import { mockDisabledGitSync } from '@cf/utils/testData/data/mockGitSync'
 import type { Feature } from 'services/cf'
 import useArchiveFlagDialog, { ArchiveDialogProps } from '../useArchiveFlagDialog'
 import { dependentFlagsResponse, noDependentFlagsResponse } from './__data__/dependentFlagsMock'
@@ -12,19 +13,28 @@ const queryParamsMock = {
   accountIdentifier: 'mockAccountIdentifier',
   orgIdentifier: 'mockOrgIdentifier',
   projectIdentifier: 'mockProjectIdentifier',
-  forceDelete: false
+  forceDelete: false,
+  commitMsg: ''
 }
 
 const openArchiveDialogBtn = 'Open Archive dialog'
 
 const WrapperComponent: FC<ArchiveDialogProps> = ({
-  flagData,
   archiveFlag,
+  flagData,
+  gitSync,
   onArchive,
-  queryParams,
-  openedArchivedDialog
+  openedArchivedDialog,
+  queryParams
 }) => {
-  const { openDialog } = useArchiveFlagDialog({ flagData, archiveFlag, onArchive, queryParams, openedArchivedDialog })
+  const { openDialog } = useArchiveFlagDialog({
+    archiveFlag,
+    flagData,
+    gitSync,
+    onArchive,
+    openedArchivedDialog,
+    queryParams
+  })
 
   return <button onClick={() => openDialog()}>{openArchiveDialogBtn}</button>
 }
@@ -33,11 +43,12 @@ const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult 
   return render(
     <TestWrapper>
       <WrapperComponent
-        flagData={mockFeature as Feature}
         archiveFlag={jest.fn()}
+        flagData={mockFeature as Feature}
+        gitSync={mockDisabledGitSync}
         onArchive={jest.fn()}
-        queryParams={queryParamsMock}
         openedArchivedDialog={false}
+        queryParams={queryParamsMock}
         {...props}
       />
     </TestWrapper>

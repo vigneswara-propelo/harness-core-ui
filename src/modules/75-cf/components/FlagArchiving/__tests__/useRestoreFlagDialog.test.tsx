@@ -3,15 +3,16 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
 import type { Feature } from 'services/cf'
+import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
+import { mockDisabledGitSync } from '@cf/utils/testData/data/mockGitSync'
 import * as cfServices from 'services/cf'
 import useRestoreFlagDialog, { RestoreFlagDialogProps } from '../useRestoreFlagDialog'
 
 const openRestoreDialogBtn = 'Open Restore dialog'
 
-const WrapperComponent: FC<RestoreFlagDialogProps> = ({ flagData, queryParams, onRestore }) => {
-  const openRestoreDialog = useRestoreFlagDialog({ flagData, queryParams, onRestore })
+const WrapperComponent: FC<RestoreFlagDialogProps> = ({ flagData, gitSync, queryParams, onRestore }) => {
+  const openRestoreDialog = useRestoreFlagDialog({ flagData, gitSync, queryParams, onRestore })
 
   return <button onClick={() => openRestoreDialog()}>{openRestoreDialogBtn}</button>
 }
@@ -24,6 +25,7 @@ const renderComponent = (props: Partial<RestoreFlagDialogProps> = {}): RenderRes
     <TestWrapper>
       <WrapperComponent
         flagData={archivedMockFeature as Feature}
+        gitSync={mockDisabledGitSync}
         onRestore={jest.fn()}
         queryParams={{
           accountIdentifier: 'mockAccountIdentifier',

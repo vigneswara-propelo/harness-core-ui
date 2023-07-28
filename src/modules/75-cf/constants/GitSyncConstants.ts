@@ -17,5 +17,7 @@ export const GIT_COMMIT_MESSAGES: Record<string, string> = {
   UPDATES_FLAG_PREREQS: 'Updated feature flag prerequisites',
   UPDATED_FLAG_TARGETS: 'Updated feature flag targets',
   DELETED_FLAG: 'Deleted feature flag',
-  ADDED_FLAG_TARGETS: 'Added feature flag to targets'
+  ADDED_FLAG_TARGETS: 'Added feature flag to targets',
+  ARCHIVED_FLAG: 'Archived feature flag',
+  RESTORED_FLAG: 'Restored feature flag'
 }
