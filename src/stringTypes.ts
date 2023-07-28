@@ -6714,7 +6714,6 @@ export interface StringsMap {
   'cd.steps.awsSamBuildStep.awsSamBuildCommandOptions': string
   'cd.steps.awsSamBuildStep.samBuildDockerContainerRegistry': string
   'cd.steps.awsSamDeployStep.awsSamDeployCommandOptions': string
-  'cd.steps.awsSamDeployStep.containerConfigurationText': string
   'cd.steps.azureInfraStep.azure': string
   'cd.steps.azureInfraStep.clusterError': string
   'cd.steps.azureInfraStep.resourceGroupError': string
@@ -6758,6 +6757,7 @@ export interface StringsMap {
   'cd.steps.common.skipUnchangedManifest': string
   'cd.steps.common.specifyCredentials': string
   'cd.steps.common.undefinedType': string
+  'cd.steps.containerStepsCommon.containerConfigurationText': string
   'cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListener': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN': string

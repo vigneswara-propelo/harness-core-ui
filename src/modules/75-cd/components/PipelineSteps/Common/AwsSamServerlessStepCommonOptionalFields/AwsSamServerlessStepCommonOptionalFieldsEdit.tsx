@@ -27,6 +27,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { AwsSamDeployStepFormikValues } from '../../AwsSam/AwsSamDeployStep/AwsSamDeployStepEdit'
 import type { AwsSamBuildStepFormikValues } from '../../AwsSam/AwsSamBuildStep/AwsSamBuildStepEdit'
 import type { ServerlessAwsLambdaPrepareRollbackV2StepFormikValues } from '../../ServerlessAwsLambda/ServerlessAwsLambdaPrepareRollbackV2Step/ServerlessAwsLambdaPrepareRollbackV2StepEdit'
+import { ServerlessAwsLambdaRollbackV2StepFormikValues } from '../../ServerlessAwsLambda/ServerlessAwsLambdaRollbackV2Step/ServerlessAwsLambdaRollbackV2StepEdit'
 import { serverlessStepAllowedConnectorTypes } from '../utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -34,6 +35,7 @@ export type AwsSamServerlessCommonStepFormikVaues =
   | AwsSamDeployStepFormikValues
   | AwsSamBuildStepFormikValues
   | ServerlessAwsLambdaPrepareRollbackV2StepFormikValues
+  | ServerlessAwsLambdaRollbackV2StepFormikValues
 
 interface AwsSamServerlessStepCommonOptionalFieldsEditProps {
   allowableTypes: AllowedTypes

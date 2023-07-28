@@ -202,3 +202,21 @@ export interface ServerlessAwsLambdaDeployV2StepInitialValues extends StepElemen
     envVariables?: { [key: string]: string }
   }
 }
+
+export interface ServerlessAwsLambdaRollbackV2StepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+    serverlessVersion?: string
+    runAsUser?: string
+    envVariables?: { [key: string]: string }
+  }
+}

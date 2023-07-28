@@ -160,7 +160,7 @@ describe('AwsSamDeployStep tests', () => {
     fireEvent.change(timeoutInput, { target: { value: '20m' } })
     expect(timeoutInput.value).toBe('20m')
 
-    const containerConfigurationText = screen.getByText('cd.steps.awsSamDeployStep.containerConfigurationText')
+    const containerConfigurationText = screen.getByText('cd.steps.containerStepsCommon.containerConfigurationText')
     expect(containerConfigurationText).toBeInTheDocument()
 
     const connnectorRefInput = screen.getByTestId(/spec.connectorRef/)
@@ -359,7 +359,7 @@ describe('AwsSamDeployStep tests', () => {
     fireEvent.change(timeoutInput, { target: { value: '30m' } })
     expect(timeoutInput.value).toBe('30m')
 
-    const containerConfigurationText = screen.getByText('cd.steps.awsSamDeployStep.containerConfigurationText')
+    const containerConfigurationText = screen.getByText('cd.steps.containerStepsCommon.containerConfigurationText')
     expect(containerConfigurationText).toBeInTheDocument()
 
     expect(screen.getByText('Kubernetes Connector 1')).toBeInTheDocument()
@@ -614,7 +614,7 @@ describe('AwsSamDeployStep tests', () => {
     userEvent.clear(timeoutInput!)
     expect(timeoutInput).toBeInTheDocument()
 
-    const containerConfigurationText = screen.getByText('cd.steps.awsSamDeployStep.containerConfigurationText')
+    const containerConfigurationText = screen.getByText('cd.steps.containerStepsCommon.containerConfigurationText')
     expect(containerConfigurationText).toBeInTheDocument()
 
     const connnectorRefInput = screen.getByTestId(/spec.connectorRef/)

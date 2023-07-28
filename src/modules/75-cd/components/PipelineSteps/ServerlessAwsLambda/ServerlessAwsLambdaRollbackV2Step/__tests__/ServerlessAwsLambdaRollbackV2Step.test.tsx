@@ -13,7 +13,6 @@ import {
   render,
   screen,
   waitFor,
-  within,
   findByText as findElementByText,
   getByText as getElementByText
 } from '@testing-library/react'
@@ -26,10 +25,10 @@ import { kubernetesConnectorListResponse } from '@connectors/components/Connecto
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
-import { AwsSamBuildStep } from '../AwsSamBuildStep'
-import { AwsSamBuildStepFormikValues } from '../AwsSamBuildStepEdit'
-import { testConnectorRefChange } from '../../AwsSamInfraSpec/__tests__/helper'
+import { ServerlessAwsLambdaRollbackV2StepInitialValues } from '@pipeline/utils/types'
+import { testConnectorRefChange } from '@cd/components/PipelineSteps/AwsSam/AwsSamInfraSpec/__tests__/helper'
+import { ServerlessAwsLambdaRollbackV2Step } from '../ServerlessAwsLambdaRollbackV2Step'
+import { ServerlessAwsLambdaRollbackV2StepFormikValues } from '../ServerlessAwsLambdaRollbackV2StepEdit'
 
 const fetchConnector = jest.fn().mockReturnValue({ data: kubernetesConnectorListResponse?.data?.content?.[0] })
 jest.mock('services/cd-ng', () => ({
@@ -58,15 +57,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   await userEvent.click(cogSubmit)
 }
 
-const existingInitialValues: AwsSamBuildStepInitialValues = {
+const existingInitialValues: ServerlessAwsLambdaRollbackV2StepInitialValues = {
   identifier: 'Step_1',
   name: 'Step 1',
   spec: {
     connectorRef: 'account.Kubernetes_Connector_2',
     image: 'aws-sam-prod:latest',
-    samVersion: '2',
-    buildCommandOptions: ['--command2', '--command3'],
-    samBuildDockerRegistryConnectorRef: 'account.Kubernetes_Connector_3',
+    serverlessVersion: '2',
     privileged: true,
     imagePullPolicy: 'Never',
     runAsUser: '5000',
@@ -81,18 +78,16 @@ const existingInitialValues: AwsSamBuildStepInitialValues = {
     }
   },
   timeout: '20m',
-  type: StepType.AwsSamBuild
+  type: StepType.ServerlessAwsLambdaRollbackV2
 }
 
-const awsSamBuildRuntimeTemplate: AwsSamBuildStepInitialValues = {
+const awsSamDeployRuntimeTemplate: ServerlessAwsLambdaRollbackV2StepInitialValues = {
   identifier: 'Step_1',
   name: 'Step 1',
   spec: {
     connectorRef: RUNTIME_INPUT_VALUE,
     image: RUNTIME_INPUT_VALUE,
-    samVersion: RUNTIME_INPUT_VALUE,
-    buildCommandOptions: RUNTIME_INPUT_VALUE,
-    samBuildDockerRegistryConnectorRef: RUNTIME_INPUT_VALUE,
+    serverlessVersion: RUNTIME_INPUT_VALUE,
     privileged: RUNTIME_INPUT_VALUE as unknown as boolean,
     imagePullPolicy: RUNTIME_INPUT_VALUE,
     runAsUser: RUNTIME_INPUT_VALUE,
@@ -107,38 +102,38 @@ const awsSamBuildRuntimeTemplate: AwsSamBuildStepInitialValues = {
     }
   },
   timeout: RUNTIME_INPUT_VALUE,
-  type: StepType.AwsSamBuild
+  type: StepType.ServerlessAwsLambdaRollbackV2
 }
 
 const onUpdate = jest.fn()
 const onChange = jest.fn()
 
-factory.registerStep(new AwsSamBuildStep())
+factory.registerStep(new ServerlessAwsLambdaRollbackV2Step())
 
 const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined): string => {
   return vars?.stringToAppend ? `${str}_${vars.stringToAppend}` : str
 }
 
-describe('AwsSamBuildStep tests', () => {
+describe('ServerlessAwsLambdaRollbackV2Step tests', () => {
   beforeEach(() => {
     onUpdate.mockReset()
     onChange.mockReset()
   })
 
   test('it should create step with correct data', async () => {
-    const ref = React.createRef<StepFormikRef<AwsSamBuildStepFormikValues>>()
+    const ref = React.createRef<StepFormikRef<ServerlessAwsLambdaRollbackV2StepFormikValues>>()
     const { container } = render(
       <TestStepWidget
         initialValues={{
           identifier: '',
           name: '',
           timeout: '10m',
-          type: StepType.AwsSamBuild,
+          type: StepType.ServerlessAwsLambdaRollbackV2,
           spec: {
             connectorRef: ''
           }
         }}
-        type={StepType.AwsSamBuild}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
         onChange={onChange}
         onUpdate={onUpdate}
         stepViewType={StepViewType.Edit}
@@ -178,57 +173,29 @@ describe('AwsSamBuildStep tests', () => {
     const optionalConfigAccordion = screen.getByText('common.optionalConfig')
     userEvent.click(optionalConfigAccordion)
 
-    const optionalConfigAccordionPanel = screen.getByTestId('aws-sam-deploy-optional-accordion-panel')
+    const optionalConfigAccordionPanel = screen.getByTestId('serverless-step-optional-accordion-panel')
     await waitFor(() => expect(optionalConfigAccordionPanel).toHaveAttribute('data-open', 'true'))
 
-    const samVersionInput = queryByNameAttribute('spec.samVersion', container) as HTMLInputElement
-    expect(samVersionInput).toBeInTheDocument()
-    expect(samVersionInput.value).toBe('')
-    fireEvent.change(samVersionInput, { target: { value: '3' } })
-    expect(samVersionInput.value).toBe('3')
-
-    let buildCommandOptionsInput1 = queryByNameAttribute(
-      'spec.buildCommandOptions[0].value',
-      container
-    ) as HTMLInputElement
-    expect(buildCommandOptionsInput1).toBeInTheDocument()
-    expect(buildCommandOptionsInput1.value).toBe('')
-    fireEvent.change(buildCommandOptionsInput1, { target: { value: '--command1' } })
-    buildCommandOptionsInput1 = queryByNameAttribute('spec.buildCommandOptions[0].value', container) as HTMLInputElement
-    await waitFor(() => expect(buildCommandOptionsInput1.value).toBe('--command1'))
-    const addCommandButton = screen.getByTestId('add-spec.buildCommandOptions')
-    expect(addCommandButton).toBeInTheDocument()
-    await userEvent.click(addCommandButton)
-    const buildCommandOptionsInput2 = queryByNameAttribute(
-      'spec.buildCommandOptions[1].value',
-      container
-    ) as HTMLInputElement
-    await waitFor(() => expect(buildCommandOptionsInput2).toBeInTheDocument())
-    expect(buildCommandOptionsInput2.value).toBe('')
-    fireEvent.change(buildCommandOptionsInput2, { target: { value: '--command2' } })
-    expect(buildCommandOptionsInput2.value).toBe('--command2')
-
-    const samBuildDockerRegistryConnectorRef = within(optionalConfigAccordionPanel).getByTestId(
-      /spec.samBuildDockerRegistryConnectorRef/
-    )
-    expect(samBuildDockerRegistryConnectorRef).toBeInTheDocument()
-    userEvent.click(samBuildDockerRegistryConnectorRef)
-    await testConnectorRefChange('Kubernetes Connector 3', 'Kubernetes Connector 2', '')
+    const serverlessVersionInput = queryByNameAttribute('spec.serverlessVersion', container) as HTMLInputElement
+    expect(serverlessVersionInput).toBeInTheDocument()
+    expect(serverlessVersionInput.value).toBe('')
+    fireEvent.change(serverlessVersionInput, { target: { value: '3' } })
+    expect(serverlessVersionInput.value).toBe('3')
 
     const privilegedCheckbox = queryByNameAttribute('spec.privileged', container) as HTMLInputElement
     expect(privilegedCheckbox).not.toBeChecked()
     await userEvent.click(privilegedCheckbox)
 
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
-    expect(dropdownIcons.length).toBe(3)
+    expect(dropdownIcons.length).toBe(2)
     const portalDivs = document.getElementsByClassName('bp3-portal')
-    expect(portalDivs.length).toBe(2)
+    expect(portalDivs.length).toBe(1)
 
     const imagePullPolicySelect = queryByNameAttribute('spec.imagePullPolicy', container) as HTMLInputElement
-    const imagePullPolicyDropdownIcon = dropdownIcons[2].parentElement
+    const imagePullPolicyDropdownIcon = dropdownIcons[1].parentElement
     await userEvent.click(imagePullPolicyDropdownIcon!)
-    await waitFor(() => expect(portalDivs.length).toBe(3))
-    const portalDiv = portalDivs[2] as HTMLElement
+    await waitFor(() => expect(portalDivs.length).toBe(2))
+    const portalDiv = portalDivs[1] as HTMLElement
     const alwaysImagePullPolicy = await findElementByText(portalDiv, 'pipelineSteps.pullAlwaysLabel')
     expect(alwaysImagePullPolicy).toBeInTheDocument()
     await userEvent.click(alwaysImagePullPolicy)
@@ -255,7 +222,6 @@ describe('AwsSamBuildStep tests', () => {
     const addEnvVariableButton = screen.getByTestId('add-spec.envVariables')
     expect(addEnvVariableButton).toBeInTheDocument()
     await userEvent.click(addEnvVariableButton)
-
     const envVariableKeyInput = queryByNameAttribute('spec.envVariables[0].key', container) as HTMLInputElement
     await waitFor(() => expect(envVariableKeyInput).toBeInTheDocument())
     expect(envVariableKeyInput.value).toBe('')
@@ -271,14 +237,12 @@ describe('AwsSamBuildStep tests', () => {
       expect(onChange).toHaveBeenLastCalledWith({
         identifier: 'AwsSam_Build_Step',
         name: 'AwsSam Build Step',
-        type: StepType.AwsSamBuild,
+        type: StepType.ServerlessAwsLambdaRollbackV2,
         timeout: '20m',
         spec: {
           connectorRef: 'account.Kubernetes_Connector_2',
           image: 'aws-sam-dev:latest',
-          samVersion: '3',
-          buildCommandOptions: ['--command1', '--command2'],
-          samBuildDockerRegistryConnectorRef: 'account.Kubernetes_Connector_3',
+          serverlessVersion: '3',
           privileged: true,
           imagePullPolicy: 'Always',
           runAsUser: '1000',
@@ -304,14 +268,12 @@ describe('AwsSamBuildStep tests', () => {
       expect(onUpdate).toHaveBeenCalledWith({
         identifier: 'AwsSam_Build_Step',
         name: 'AwsSam Build Step',
-        type: StepType.AwsSamBuild,
+        type: StepType.ServerlessAwsLambdaRollbackV2,
         timeout: '20m',
         spec: {
           connectorRef: 'account.Kubernetes_Connector_2',
           image: 'aws-sam-dev:latest',
-          samVersion: '3',
-          buildCommandOptions: ['--command1', '--command2'],
-          samBuildDockerRegistryConnectorRef: 'account.Kubernetes_Connector_3',
+          serverlessVersion: '3',
           privileged: true,
           imagePullPolicy: 'Always',
           runAsUser: '1000',
@@ -330,11 +292,11 @@ describe('AwsSamBuildStep tests', () => {
   })
 
   test('it should display correct initial values for existing step', async () => {
-    const ref = React.createRef<StepFormikRef<AwsSamBuildStepFormikValues>>()
+    const ref = React.createRef<StepFormikRef<ServerlessAwsLambdaRollbackV2StepFormikValues>>()
     const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.AwsSamBuild}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
         onChange={onChange}
         onUpdate={onUpdate}
         isNewStep={false}
@@ -373,51 +335,27 @@ describe('AwsSamBuildStep tests', () => {
 
     const optionalConfigAccordion = screen.getByText('common.optionalConfig')
     userEvent.click(optionalConfigAccordion)
-    const optionalConfigAccordionPanel = screen.getByTestId('aws-sam-deploy-optional-accordion-panel')
+    const optionalConfigAccordionPanel = screen.getByTestId('serverless-step-optional-accordion-panel')
     await waitFor(() => expect(optionalConfigAccordionPanel).toHaveAttribute('data-open', 'true'))
 
-    const samVersionInput = queryByNameAttribute('spec.samVersion', container) as HTMLInputElement
-    await waitFor(() => expect(samVersionInput).toBeInTheDocument())
-    expect(samVersionInput.value).toBe('2')
-    fireEvent.change(samVersionInput, { target: { value: '1' } })
-    expect(samVersionInput.value).toBe('1')
-
-    const buildCommandOptionsInput1 = queryByNameAttribute(
-      'spec.buildCommandOptions[0].value',
-      container
-    ) as HTMLInputElement
-    expect(buildCommandOptionsInput1).toBeInTheDocument()
-    expect(buildCommandOptionsInput1.value).toBe('--command2')
-    fireEvent.change(buildCommandOptionsInput1, { target: { value: '--command4' } })
-    expect(buildCommandOptionsInput1.value).toBe('--command4')
-    const buildCommandOptionsInput2 = queryByNameAttribute(
-      'spec.buildCommandOptions[1].value',
-      container
-    ) as HTMLInputElement
-    await waitFor(() => expect(buildCommandOptionsInput2).toBeInTheDocument())
-    expect(buildCommandOptionsInput2.value).toBe('--command3')
-    fireEvent.change(buildCommandOptionsInput2, { target: { value: '--command5' } })
-    expect(buildCommandOptionsInput2.value).toBe('--command5')
-    const addCommandButton = screen.getByTestId('add-spec.buildCommandOptions')
-    expect(addCommandButton).toBeInTheDocument()
-
-    const samBuildDockerRegistryConnectorRef = within(optionalConfigAccordionPanel).getByTestId(
-      /spec.samBuildDockerRegistryConnectorRef/
-    )
-    expect(samBuildDockerRegistryConnectorRef).toBeInTheDocument()
+    const serverlessVersionInput = queryByNameAttribute('spec.serverlessVersion', container) as HTMLInputElement
+    await waitFor(() => expect(serverlessVersionInput).toBeInTheDocument())
+    expect(serverlessVersionInput.value).toBe('2')
+    fireEvent.change(serverlessVersionInput, { target: { value: '1' } })
+    expect(serverlessVersionInput.value).toBe('1')
 
     const privilegedCheckbox = queryByNameAttribute('spec.privileged', container) as HTMLInputElement
     expect(privilegedCheckbox).toBeChecked()
     await userEvent.click(privilegedCheckbox)
 
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
-    expect(dropdownIcons.length).toBe(3)
+    expect(dropdownIcons.length).toBe(2)
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
 
     const imagePullPolicySelect = queryByNameAttribute('spec.imagePullPolicy', container) as HTMLInputElement
     expect(imagePullPolicySelect.value).toBe('pipelineSteps.pullNeverLabel')
-    const imagePullPolicyDropdownIcon = dropdownIcons[2].parentElement
+    const imagePullPolicyDropdownIcon = dropdownIcons[1].parentElement
     await userEvent.click(imagePullPolicyDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const portalDiv = portalDivs[0] as HTMLElement
@@ -466,14 +404,14 @@ describe('AwsSamBuildStep tests', () => {
       expect(onUpdate).toHaveBeenCalledWith({
         identifier: 'Step_1',
         name: 'Step 1 Updated',
-        type: StepType.AwsSamBuild,
+        type: StepType.ServerlessAwsLambdaRollbackV2,
         timeout: '30m',
         spec: {
           connectorRef: 'account.Kubernetes_Connector_2',
           image: 'aws-sam-prod2:latest',
-          samVersion: '1',
-          buildCommandOptions: ['--command4', '--command5'],
-          samBuildDockerRegistryConnectorRef: 'account.Kubernetes_Connector_3',
+
+          serverlessVersion: '1',
+
           privileged: false,
           imagePullPolicy: 'IfNotPresent',
           runAsUser: '6000',
@@ -492,11 +430,11 @@ describe('AwsSamBuildStep tests', () => {
   })
 
   test('it should display Runtime input as initial values for all fields in edit view', async () => {
-    const ref = React.createRef<StepFormikRef<AwsSamBuildStepFormikValues>>()
+    const ref = React.createRef<StepFormikRef<ServerlessAwsLambdaRollbackV2StepFormikValues>>()
     const { container } = render(
       <TestStepWidget
-        initialValues={awsSamBuildRuntimeTemplate}
-        type={StepType.AwsSamBuild}
+        initialValues={awsSamDeployRuntimeTemplate}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
         onChange={onChange}
         onUpdate={onUpdate}
         isNewStep={false}
@@ -524,8 +462,16 @@ describe('AwsSamBuildStep tests', () => {
     const cogConnectorRef = document.getElementById('configureOptions_spec.connectorRef')
     await userEvent.click(cogConnectorRef!)
     await waitFor(() => expect(modals.length).toBe(1))
-    const connectorRefCOG = modals[0] as HTMLElement
-    await doConfigureOptionsTesting(connectorRefCOG)
+    const connectorRefCOGModal = modals[0] as HTMLElement
+    await doConfigureOptionsTesting(connectorRefCOGModal)
+
+    const imageInput = queryByNameAttribute('spec.image', container) as HTMLInputElement
+    expect(imageInput.value).toBe(RUNTIME_INPUT_VALUE)
+    const cogImageInput = document.getElementById('configureOptions_spec.image')
+    await userEvent.click(cogImageInput!)
+    await waitFor(() => expect(modals.length).toBe(1))
+    const imageCOGModal = modals[0] as HTMLElement
+    await doConfigureOptionsTesting(imageCOGModal)
 
     // submit form and verify
     act(() => {
@@ -538,10 +484,8 @@ describe('AwsSamBuildStep tests', () => {
         name: 'Step 1',
         spec: {
           connectorRef: '<+input>.regex(<+input>.includes(/test/))',
-          image: RUNTIME_INPUT_VALUE,
-          samVersion: RUNTIME_INPUT_VALUE,
-          buildCommandOptions: RUNTIME_INPUT_VALUE,
-          samBuildDockerRegistryConnectorRef: RUNTIME_INPUT_VALUE,
+          image: '<+input>.regex(<+input>.includes(/test/))',
+          serverlessVersion: RUNTIME_INPUT_VALUE,
           privileged: RUNTIME_INPUT_VALUE as unknown as boolean,
           imagePullPolicy: RUNTIME_INPUT_VALUE,
           runAsUser: RUNTIME_INPUT_VALUE,
@@ -556,17 +500,17 @@ describe('AwsSamBuildStep tests', () => {
           }
         },
         timeout: RUNTIME_INPUT_VALUE,
-        type: StepType.AwsSamBuild
+        type: StepType.ServerlessAwsLambdaRollbackV2
       })
     )
   })
 
   test('it should not call onUpdate and onChange if it not passed as a prop', async () => {
-    const ref = React.createRef<StepFormikRef<AwsSamBuildStepFormikValues>>()
+    const ref = React.createRef<StepFormikRef<ServerlessAwsLambdaRollbackV2StepFormikValues>>()
     const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.AwsSamBuild}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
         isNewStep={false}
         stepViewType={StepViewType.Edit}
         ref={ref}
@@ -590,6 +534,12 @@ describe('AwsSamBuildStep tests', () => {
     })
 
     await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
+
+    const timeoutInput = queryByNameAttribute('timeout', container) as HTMLInputElement
+    expect(timeoutInput).toBeInTheDocument()
+    expect(timeoutInput.value).toBe('20m')
+    fireEvent.change(timeoutInput, { target: { value: '30m' } })
+    expect(timeoutInput.value).toBe('30m')
   })
 
   test('it should show validation errors for required fields in edit view', async () => {
@@ -597,7 +547,7 @@ describe('AwsSamBuildStep tests', () => {
     const { container, getByText, getAllByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.AwsSamBuild}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -628,6 +578,65 @@ describe('AwsSamBuildStep tests', () => {
     expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(1)
   })
 
+  test('it should render fine when stepViewType is DeploymentForm', async () => {
+    const { container, getByText, getAllByText } = render(
+      <TestStepWidget
+        testWrapperProps={{ defaultFeatureFlagValues: { NG_SVC_ENV_REDESIGN: false } }}
+        initialValues={{
+          identifier: 'Step_1',
+          name: 'Step 1',
+          timeout: '',
+          spec: {
+            connectorRef: ''
+          },
+          type: StepType.ServerlessAwsLambdaRollbackV2
+        }}
+        template={awsSamDeployRuntimeTemplate}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
+        stepViewType={StepViewType.DeploymentForm}
+        onUpdate={onUpdate}
+        onChange={onChange}
+      />
+    )
+
+    const submitBtn = getByText('Submit')
+
+    const timeoutInput = queryByNameAttribute('timeout', container) as HTMLInputElement
+    expect(timeoutInput).toBeInTheDocument()
+    expect(timeoutInput.value).toBe('')
+
+    const connnectorRefInput = screen.getByTestId(/spec.connectorRef/)
+    expect(connnectorRefInput).toBeInTheDocument()
+
+    const imageInput = queryByNameAttribute('spec.image', container) as HTMLInputElement
+    expect(imageInput).toBeInTheDocument()
+    expect(imageInput.value).toBe('')
+
+    const serverlessVersionInput = queryByNameAttribute('spec.serverlessVersion', container) as HTMLInputElement
+    await waitFor(() => expect(serverlessVersionInput).toBeInTheDocument())
+    expect(serverlessVersionInput.value).toBe('')
+
+    await userEvent.click(submitBtn)
+    expect(onUpdate).not.toHaveBeenCalled()
+    await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
+    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(1)
+
+    fireEvent.change(timeoutInput, { target: { value: '30m' } })
+    expect(timeoutInput.value).toBe('30m')
+
+    userEvent.click(connnectorRefInput)
+    await testConnectorRefChange('Kubernetes Connector 2', 'Kubernetes Connector 1', '')
+
+    fireEvent.change(imageInput, { target: { value: 'aws-sam-prod2:latest' } })
+    expect(imageInput.value).toBe('aws-sam-prod2:latest')
+
+    fireEvent.change(serverlessVersionInput, { target: { value: '1' } })
+    expect(serverlessVersionInput.value).toBe('1')
+
+    await userEvent.click(submitBtn)
+    expect(onUpdate).toHaveBeenCalled()
+  })
+
   test('it should show errors for required fields when stepViewType is DeploymentForm', async () => {
     const { container, getByText, getAllByText } = render(
       <TestStepWidget
@@ -639,10 +648,10 @@ describe('AwsSamBuildStep tests', () => {
           spec: {
             connectorRef: ''
           },
-          type: StepType.AwsSamBuild
+          type: StepType.ServerlessAwsLambdaRollbackV2
         }}
-        template={awsSamBuildRuntimeTemplate}
-        type={StepType.AwsSamBuild}
+        template={awsSamDeployRuntimeTemplate}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
         stepViewType={StepViewType.DeploymentForm}
         onUpdate={onUpdate}
         onChange={onChange}
@@ -671,12 +680,12 @@ describe('AwsSamBuildStep tests', () => {
       type: StepType.AwsSamBuild
     }
 
-    const step = new AwsSamBuildStep()
+    const step = new ServerlessAwsLambdaRollbackV2Step()
 
     step.renderStep({
       initialValues,
       inputSetData: {
-        template: awsSamBuildRuntimeTemplate,
+        template: awsSamDeployRuntimeTemplate,
         path: ''
       },
       factory,
@@ -684,9 +693,9 @@ describe('AwsSamBuildStep tests', () => {
       path: ''
     })
 
-    const errors = await step.validateInputSet({
+    const errors = step.validateInputSet({
       data: initialValues,
-      template: awsSamBuildRuntimeTemplate,
+      template: awsSamDeployRuntimeTemplate,
       getString,
       viewType: StepViewType.TriggerForm
     })
@@ -699,7 +708,7 @@ describe('AwsSamBuildStep tests', () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.AwsSamBuild}
+        type={StepType.ServerlessAwsLambdaRollbackV2}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}
@@ -710,14 +719,14 @@ describe('AwsSamBuildStep tests', () => {
           metadataMap: {
             'Step 1': {
               yamlProperties: {
-                fqn: 'pipeline.stages.qaStage.execution.steps.AwsSamBuild.name',
-                localName: 'step.AwsSamBuild.name'
+                fqn: 'pipeline.stages.qaStage.execution.steps.AwsSamDeploy.name',
+                localName: 'step.AwsSamDeploy.name'
               }
             },
             '20m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.qaStage.execution.steps.AwsSamBuild.timeout',
-                localName: 'step.AwsSamBuild.timeout'
+                fqn: 'pipeline.stages.qaStage.execution.steps.AwsSamDeploy.timeout',
+                localName: 'step.AwsSamDeploy.timeout'
               }
             }
           }

@@ -688,7 +688,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details',
   [ServiceDeploymentType.Asg]: 'AWS Details',
   [ServiceDeploymentType.GoogleCloudFunctions]: 'Google Cloud Provider Details',
-  [ServiceDeploymentType.AwsSam]: 'Amazon Web Services Details'
+  [ServiceDeploymentType.AwsSam]: 'Amazon Web Services Details',
+  [ServiceDeploymentType.AwsLambda]: 'Amazon Web Services Details'
 }
 
 export const getSelectedDeploymentType = (

@@ -89,6 +89,14 @@ const AwsSamBuildStepEdit = (
     spec: Yup.object().shape({
       connectorRef: Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.connectorLabel') })
+      ),
+      envVariables: Yup.array().of(
+        Yup.object().shape({
+          key: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('keyLabel') })),
+          value: Yup.string().required(
+            getString('common.validation.fieldIsRequired', { name: getString('valueLabel') })
+          )
+        })
       )
     })
   })
@@ -191,7 +199,7 @@ const AwsSamBuildStepEdit = (
               />
 
               <Text className={css.containerConfiguration} tooltipProps={{ dataTooltipId: 'containerConfiguration' }}>
-                {getString('cd.steps.awsSamDeployStep.containerConfigurationText')}
+                {getString('cd.steps.containerStepsCommon.containerConfigurationText')}
               </Text>
 
               {renderConnectorField(formik, 'spec.connectorRef', getString('pipelineSteps.connectorLabel'))}

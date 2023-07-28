@@ -175,8 +175,9 @@ steps:
     envTypes:
       gen1: '1st gen'
       gen2: '2nd gen'
-  awsSamDeployStep:
+  containerStepsCommon:
     containerConfigurationText: Container Configuration
+  awsSamDeployStep:
     awsSamDeployCommandOptions: AWS SAM Deploy Command Options
   awsSamBuildStep:
     samBuildDockerContainerRegistry: SAM Build Docker Container Registry

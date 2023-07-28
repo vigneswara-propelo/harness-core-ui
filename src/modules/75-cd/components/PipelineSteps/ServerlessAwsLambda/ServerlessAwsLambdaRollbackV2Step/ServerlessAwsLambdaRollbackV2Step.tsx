@@ -7,19 +7,25 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { isEmpty } from 'lodash-es'
-import type { IconName } from '@harness/uicore'
+import { isEmpty, set } from 'lodash-es'
+import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import { MapValue } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { GenericExecutionStepEditRef } from '../../Common/GenericExecutionStep/GenericExecutionStepEdit'
-import { GenericExecutionStepInputSet } from '../../Common/GenericExecutionStep/GenericExecutionStepInputSet'
+import { ServerlessAwsLambdaRollbackV2StepInitialValues } from '@pipeline/utils/types'
+import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
+import {
+  ServerlessAwsLambdaRollbackV2StepEditRef,
+  ServerlessAwsLambdaRollbackV2StepFormikValues
+} from './ServerlessAwsLambdaRollbackV2StepEdit'
+import { ServerlessAwsLambdaRollbackV2StepInputSetMode } from './ServerlessAwsLambdaRollbackV2StepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface ServerlessAwsLambdaRollbackV2VariableStepProps {
@@ -30,17 +36,20 @@ interface ServerlessAwsLambdaRollbackV2VariableStepProps {
   variablesData: StepElementConfig
 }
 
-export class ServerlessAwsLambdaRollbackV2Step extends PipelineStep<StepElementConfig> {
+export class ServerlessAwsLambdaRollbackV2Step extends PipelineStep<ServerlessAwsLambdaRollbackV2StepInitialValues> {
   protected type = StepType.ServerlessAwsLambdaRollbackV2
   protected stepName = 'Serverless Aws Lambda Rollback'
   protected stepIcon: IconName = 'serverless-aws-lambda-rollback-v2'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessLambdaRollback'
   protected isHarnessSpecific = false
-  protected defaultValues: StepElementConfig = {
+  protected defaultValues: ServerlessAwsLambdaRollbackV2StepInitialValues = {
     identifier: '',
     name: '',
     type: StepType.ServerlessAwsLambdaRollbackV2,
-    timeout: '10m'
+    timeout: '10m',
+    spec: {
+      connectorRef: ''
+    }
   }
 
   constructor() {
@@ -49,7 +58,7 @@ export class ServerlessAwsLambdaRollbackV2Step extends PipelineStep<StepElementC
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<StepElementConfig>): JSX.Element {
+  renderStep(props: StepProps<ServerlessAwsLambdaRollbackV2StepInitialValues>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -65,10 +74,10 @@ export class ServerlessAwsLambdaRollbackV2Step extends PipelineStep<StepElementC
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <GenericExecutionStepInputSet
+        <ServerlessAwsLambdaRollbackV2StepInputSetMode
+          initialValues={initialValues}
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<StepElementConfig>}
-          stepViewType={stepViewType}
+          inputSetData={inputSetData as InputSetData<ServerlessAwsLambdaRollbackV2StepInitialValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
@@ -84,16 +93,19 @@ export class ServerlessAwsLambdaRollbackV2Step extends PipelineStep<StepElementC
     }
 
     return (
-      <GenericExecutionStepEditRef
+      <ServerlessAwsLambdaRollbackV2StepEditRef
         initialValues={initialValues}
-        onUpdate={onUpdate}
+        onUpdate={(formData: ServerlessAwsLambdaRollbackV2StepFormikValues) =>
+          onUpdate?.(this.processFormData(formData))
+        }
+        onChange={(formData: ServerlessAwsLambdaRollbackV2StepFormikValues) =>
+          onChange?.(this.processFormData(formData))
+        }
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
-        onChange={onChange}
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
-        formikFormName={'ecsRollingRollbackStepForm'}
       />
     )
   }
@@ -103,18 +115,58 @@ export class ServerlessAwsLambdaRollbackV2Step extends PipelineStep<StepElementC
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
+  }: ValidateInputSetProps<ServerlessAwsLambdaRollbackV2StepInitialValues>): FormikErrors<ServerlessAwsLambdaRollbackV2StepInitialValues> {
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
-    })
+    }) as FormikErrors<ServerlessAwsLambdaRollbackV2StepInitialValues>
+
+    if (
+      isEmpty(data?.spec?.connectorRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `spec.connectorRef`,
+        getString?.('common.validation.fieldIsRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+      )
+    }
 
     if (isEmpty(errors.spec)) {
       delete errors.spec
     }
 
     return errors
+  }
+
+  processFormData(formData: any): ServerlessAwsLambdaRollbackV2StepInitialValues {
+    let envVariables
+    if (formData.spec?.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = (formData.spec.envVariables as MapValue).reduce(
+        (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
+          ...agg,
+          [envVar.key]: envVar.value
+        }),
+        {}
+      )
+    }
+
+    return {
+      ...formData,
+      spec: {
+        ...formData.spec,
+        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
+        imagePullPolicy:
+          formData.spec.imagePullPolicy && formData.spec.imagePullPolicy.length > 0
+            ? formData.spec.imagePullPolicy
+            : undefined,
+        envVariables
+      }
+    }
   }
 }
