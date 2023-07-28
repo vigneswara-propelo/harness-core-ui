@@ -205,21 +205,23 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
           delete spec.sharedPaths
         }
 
-        set(spec, 'caching.enabled', values.cacheIntelligenceEnabled)
+        if (formikRef.current?.dirty) {
+          set(spec, 'caching.enabled', values.cacheIntelligenceEnabled)
 
-        if (values.cacheIntelligencePaths && values.cacheIntelligencePaths.length > 0) {
-          set(
-            spec,
-            'caching.paths',
-            typeof values.cacheIntelligencePaths === 'string'
-              ? values.cacheIntelligencePaths
-              : values.cacheIntelligencePaths.map((listValue: { id: string; value: string }) => listValue.value)
-          )
-        } else {
-          set(spec, 'caching.paths', [])
+          if (values.cacheIntelligencePaths && values.cacheIntelligencePaths.length > 0) {
+            set(
+              spec,
+              'caching.paths',
+              typeof values.cacheIntelligencePaths === 'string'
+                ? values.cacheIntelligencePaths
+                : values.cacheIntelligencePaths.map((listValue: { id: string; value: string }) => listValue.value)
+            )
+          } else {
+            set(spec, 'caching.paths', [])
+          }
+
+          spec = set(spec, 'caching.key', values.cacheIntelligenceKey)
         }
-
-        spec = set(spec, 'caching.key', values.cacheIntelligenceKey)
 
         if (values?.variables && values.variables?.length > 0) {
           stageData.variables = values.variables
