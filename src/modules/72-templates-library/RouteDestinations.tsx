@@ -84,13 +84,14 @@ AuditTrailFactory.registerResourceHandler('TEMPLATE', {
 })
 
 const RedirectToAccountTemplateStudio = (): React.ReactElement => {
-  const { accountId, projectIdentifier, templateIdentifier, templateType } = useParams<
+  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, templateType } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
   return (
     <Redirect
       to={routes.toTemplateStudioNew({
         accountId,
+        orgIdentifier,
         projectIdentifier,
         templateIdentifier,
         templateType
