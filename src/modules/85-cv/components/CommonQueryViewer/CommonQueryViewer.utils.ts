@@ -7,8 +7,21 @@
 
 import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import type {
+  CommonCustomMetricFormikInterface,
+  FieldMapping
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { getRunQueryButtonTooltip } from './components/CommonQueryContent/CommonQueryContent.utils'
+
+export function getIsQueryButtonDisabledWhenFieldsPresent({
+  loading,
+  areAllFieldsNotPopulated
+}: {
+  loading: boolean
+  areAllFieldsNotPopulated: boolean
+}): boolean {
+  return loading || areAllFieldsNotPopulated
+}
 
 export function getIsQueryButtonDisabled({
   query,
@@ -24,6 +37,20 @@ export function getIsQueryButtonDisabled({
   return Boolean(isEmpty(query) || loading || getIsQueryFieldNotPresent(queryFieldIdentifier, values))
 }
 
+export function getAreAllFieldsNotPopulated(
+  fieldsToFetchRecords: FieldMapping[],
+  values: CommonCustomMetricFormikInterface
+): boolean {
+  let numOfFieldsPopulated = 0
+  for (const fieldToFetchRecords of fieldsToFetchRecords) {
+    if (!getIsQueryFieldNotPresent(fieldToFetchRecords?.identifier, values)) {
+      numOfFieldsPopulated++
+    }
+  }
+  const areAllFieldsNotPopulated = numOfFieldsPopulated !== fieldsToFetchRecords.length
+  return areAllFieldsNotPopulated
+}
+
 export function getIsQueryFieldNotPresent(
   queryFieldIdentifier: string | undefined,
   values: CommonCustomMetricFormikInterface
@@ -31,14 +58,29 @@ export function getIsQueryFieldNotPresent(
   return Boolean(queryFieldIdentifier && !values[queryFieldIdentifier as keyof CommonCustomMetricFormikInterface])
 }
 
-export function getRunQueryBtnTooltip(
-  queryFieldIdentifier: string | undefined,
-  values: CommonCustomMetricFormikInterface,
-  query: string,
+export function getRunQueryBtnTooltip({
+  queryFieldIdentifier,
+  values,
+  query,
+  getString,
+  fieldsToFetchRecords
+}: {
+  queryFieldIdentifier?: string
+  values: CommonCustomMetricFormikInterface
+  query: string
   getString: UseStringsReturn['getString']
-): string {
-  const isQueryFieldNotPresent = getIsQueryFieldNotPresent(queryFieldIdentifier, values)
-  const tooltipMessage = getRunQueryButtonTooltip(query, isQueryFieldNotPresent, queryFieldIdentifier, getString)
+  fieldsToFetchRecords?: FieldMapping[]
+}): string {
+  let tooltipMessage = ''
+  if (fieldsToFetchRecords) {
+    const areAllFieldsNotPopulated = getAreAllFieldsNotPopulated(fieldsToFetchRecords, values)
+    tooltipMessage = areAllFieldsNotPopulated
+      ? getString('cv.monitoringSources.commonHealthSource.query.selectAllFieldsToFetchRecords')
+      : ''
+  } else {
+    const isQueryFieldNotPresent = getIsQueryFieldNotPresent(queryFieldIdentifier, values)
+    tooltipMessage = getRunQueryButtonTooltip(query, isQueryFieldNotPresent, queryFieldIdentifier, getString)
+  }
   return tooltipMessage
 }
 

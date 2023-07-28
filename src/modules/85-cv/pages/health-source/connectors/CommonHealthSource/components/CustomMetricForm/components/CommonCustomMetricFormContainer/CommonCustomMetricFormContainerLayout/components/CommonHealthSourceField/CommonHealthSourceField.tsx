@@ -37,7 +37,9 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   const { showError } = useToaster()
   const { label, identifier, placeholder, type, isTemplateSupportEnabled, allowCreatingNewItems } = field
   const shouldShowTemplatisedComponent = isTemplate && isTemplateSupportEnabled
-  const shouldFetchDropdownOptions = !(isTemplate && isTemplateSupportEnabled && isConnectorRuntimeOrExpression)
+  const fixedValues = field?.fixedValues
+  const shouldFetchDropdownOptions =
+    !(isTemplate && isTemplateSupportEnabled && isConnectorRuntimeOrExpression) && !fixedValues
   const fieldValue = values?.[identifier] as string
 
   const { mutate: fetchParamValues, loading } = useGetParamValues({
@@ -68,11 +70,15 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   }
 
   useEffect(() => {
-    if (type === FIELD_ENUM.DROPDOWN && shouldFetchDropdownOptions) {
-      fetchParamValuesData()
+    if (type === FIELD_ENUM.DROPDOWN) {
+      if (shouldFetchDropdownOptions) {
+        fetchParamValuesData()
+      } else if (fixedValues) {
+        setListOptions(fixedValues)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldFetchDropdownOptions, type])
+  }, [fixedValues, shouldFetchDropdownOptions, type])
 
   const renderField = (): JSX.Element => {
     switch (type) {

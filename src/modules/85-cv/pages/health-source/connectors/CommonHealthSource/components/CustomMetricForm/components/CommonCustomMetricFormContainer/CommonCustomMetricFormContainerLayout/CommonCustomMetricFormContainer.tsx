@@ -51,6 +51,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
   const queryField = healthSourceConfig.customMetrics?.queryAndRecords?.queryField
+  const fieldsToFetchRecords = healthSourceConfig.customMetrics?.queryAndRecords?.fieldsToFetchRecords
   const queryFieldValue = (queryField ? values[queryField.identifier] : '') as string
   const healthSourceType = getHealthsourceType(product, sourceType)
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
@@ -102,7 +103,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }, [values?.identifier])
 
   const handleBuildChart = async (): Promise<void> => {
-    const fetchMetricsRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, healthSourceType, query)
+    const fetchMetricsRecordsRequestBody = getRecordsRequestBody({ connectorIdentifier, healthSourceType, query })
     fetchHealthSourceTimeSeriesData(fetchMetricsRecordsRequestBody).then(data => {
       const timeSeriesData = data?.resource?.timeSeriesData || []
       setHealthSourceTimeSeriesData(timeSeriesData)
@@ -111,15 +112,17 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }
 
   const handleFetchRecords = async (): Promise<void> => {
-    if (query) {
+    if (query || fieldsToFetchRecords) {
       setIsQueryExecuted(true)
-      const fetchRecordsRequestBody = getRecordsRequestBody(
+      const fetchRecordsRequestBody = getRecordsRequestBody({
         connectorIdentifier,
         healthSourceType,
         query,
         queryField,
-        queryFieldValue
-      )
+        queryFieldValue,
+        fieldsToFetchRecords,
+        values
+      })
       const recordsInfo = await queryHealthSource(fetchRecordsRequestBody)
       const recordsData = recordsInfo?.resource?.rawRecords || []
       if (recordsData.length) {
@@ -150,6 +153,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           providerType={healthSourceType as HealthSourceParamValuesRequest['providerType']}
         />
       ) : null}
+
       <CommonQueryViewer
         isQueryExecuted={isQueryExecuted}
         records={records}
@@ -165,7 +169,11 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
             'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'
         )}
         queryFieldIdentifier={queryField?.identifier}
+        fieldsToFetchRecords={fieldsToFetchRecords}
+        connectorIdentifier={connectorIdentifier}
+        healthSourceType={healthSourceType}
       />
+
       {shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression) ? (
         <CommonChart
           timeSeriesDataLoading={timeSeriesDataLoading}

@@ -74,6 +74,9 @@ export const CustomMetricFormFieldNames: { [x: string]: keyof CommonCustomMetric
   QUERY: 'query',
   RECORD_COUNT: 'recordCount',
   INDEX: 'index',
+  QUERY_METRIC_NAME: 'healthSourceMetricName',
+  QUERY_METRIC_NAMESPACE: 'healthSourceMetricNamespace',
+  QUERY_AGGREGATION_TYPE: 'aggregationType',
 
   TIMESTAMP_IDENTIFIER: 'timeStampIdentifier',
   TIMESTAMP_FORMAT: 'timeStampFormat',

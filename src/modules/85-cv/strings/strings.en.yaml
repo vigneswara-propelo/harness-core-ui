@@ -255,6 +255,7 @@ monitoringSources:
       enterQuery: Please enter query
       selectQueryField: 'Please select {{queryFieldIdentifier}}'
       enterQueryAndQueryField: 'Please enter query and select {{queryFieldIdentifier}}'
+      selectAllFieldsToFetchRecords: Please fill all the above fields to fetch records
     records:
       fetchingRecords: Fetching records ...
       runQueryToSeeRecords: Run query to fetch the records

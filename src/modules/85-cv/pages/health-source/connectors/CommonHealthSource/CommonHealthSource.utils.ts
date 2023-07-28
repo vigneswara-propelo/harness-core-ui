@@ -172,7 +172,7 @@ export function getTemplateValuesForConfigFields(
 export function getRequestBodyForSampleLogs(
   healthSourceType: QueryRecordsRequest['healthSourceType'],
   otherValues: {
-    query: string
+    query?: string
     connectorIdentifier: string | { connector: { identifier: string } }
     fieldMappings?: FieldMapping[]
     queryField?: FieldMapping
@@ -196,7 +196,7 @@ export function getRequestBodyForSampleLogs(
     startTime,
     endTime: Date.now(),
     healthSourceType,
-    query,
+    query: query as string,
     connectorIdentifier:
       typeof connectorIdentifier === 'string' ? connectorIdentifier : connectorIdentifier?.connector?.identifier,
     healthSourceQueryParams: {

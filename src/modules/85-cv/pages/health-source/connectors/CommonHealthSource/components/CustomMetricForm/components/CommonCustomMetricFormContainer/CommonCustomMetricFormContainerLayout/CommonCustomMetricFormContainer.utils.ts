@@ -2,7 +2,10 @@ import { MultiTypeInputType } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { HealthSourceRecordsRequest, QueryRecordsRequest, QueryRecordsRequestRequestBody } from 'services/cv'
-import type { FieldMapping } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import type {
+  CommonCustomMetricFormikInterface,
+  FieldMapping
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { DefineHealthSourceFormInterface } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.types'
 import type { LogFieldsMultiTypeState } from '../../../CustomMetricForm.types'
@@ -21,13 +24,23 @@ export function shouldShowChartComponent(
   return Boolean(chartConfig?.enabled && !(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression))
 }
 
-export function getRecordsRequestBody(
-  connectorIdentifier: any,
-  healthSourceType: string | undefined,
-  query: string,
-  queryField?: FieldMapping,
+export function getRecordsRequestBody({
+  connectorIdentifier,
+  healthSourceType,
+  query,
+  queryField,
+  queryFieldValue,
+  fieldsToFetchRecords,
+  values
+}: {
+  connectorIdentifier: any
+  healthSourceType: string | undefined
+  query: string
+  queryField?: FieldMapping
   queryFieldValue?: string
-): HealthSourceRecordsRequest | QueryRecordsRequestRequestBody {
+  fieldsToFetchRecords?: FieldMapping[]
+  values?: CommonCustomMetricFormikInterface
+}): HealthSourceRecordsRequest | QueryRecordsRequestRequestBody {
   const { endTime, startTime } = getStartAndEndTime()
   const { identifier } = (queryField || {}) as FieldMapping
 
@@ -36,12 +49,52 @@ export function getRecordsRequestBody(
     endTime,
     startTime,
     healthSourceType: healthSourceType as QueryRecordsRequest['healthSourceType'],
-    query,
-    healthSourceQueryParams: {
-      ...(identifier && { [identifier]: queryFieldValue })
+    ...(query && { query }),
+    healthSourceQueryParams: generateHealthSourceQueryParams({
+      identifier,
+      queryFieldValue,
+      fieldsToFetchRecords,
+      values
+    })
+  } as HealthSourceRecordsRequest | QueryRecordsRequestRequestBody
+  return recordsRequestBody
+}
+
+export function generateHealthSourceQueryParams({
+  identifier,
+  queryFieldValue,
+  fieldsToFetchRecords,
+  values
+}: {
+  identifier: string
+  queryFieldValue: string | undefined
+  fieldsToFetchRecords?: FieldMapping[]
+  values?: CommonCustomMetricFormikInterface
+}): HealthSourceRecordsRequest['healthSourceQueryParams'] {
+  let healthSourceQueryParams: HealthSourceRecordsRequest['healthSourceQueryParams'] = {}
+  if (fieldsToFetchRecords) {
+    for (const fieldToFetchRecords of fieldsToFetchRecords) {
+      const fieldIdentifier = fieldToFetchRecords?.identifier
+      const fieldValue = values?.[fieldIdentifier] as string
+      healthSourceQueryParams = {
+        ...healthSourceQueryParams,
+        ...populateHealthSourceQueryParams(fieldIdentifier, fieldValue)
+      }
+    }
+  } else {
+    healthSourceQueryParams = {
+      ...healthSourceQueryParams,
+      ...populateHealthSourceQueryParams(identifier, queryFieldValue)
     }
   }
-  return recordsRequestBody
+  return healthSourceQueryParams
+}
+
+export function populateHealthSourceQueryParams(
+  fieldIdentifier: string,
+  fieldValue?: string
+): HealthSourceRecordsRequest['healthSourceQueryParams'] {
+  return { ...(fieldIdentifier && { [fieldIdentifier]: fieldValue }) }
 }
 
 export function getStartAndEndTime(): { endTime: number; startTime: number } {

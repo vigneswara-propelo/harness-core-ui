@@ -31,9 +31,8 @@ export interface FieldMapping {
   placeholder?: string
   isTemplateSupportEnabled: boolean
   allowCreatingNewItems?: boolean
+  fixedValues?: SelectOption[]
 }
-
-export type ServiceInstanceType = FieldMapping
 
 export interface AssignSectionType {
   enabled: boolean
@@ -41,7 +40,7 @@ export interface AssignSectionType {
   hideCV?: boolean
   hideServiceIdentifier?: boolean
   hideSLIAndHealthScore?: boolean
-  serviceInstance?: Array<ServiceInstanceType>
+  serviceInstance?: FieldMapping[]
   updateServiceInstanceBasedOnQuery?: boolean
 }
 
@@ -57,6 +56,7 @@ export interface HealthSourceConfig {
       enabled: boolean
       titleStringKey: StringKeys
       queryField?: FieldMapping
+      fieldsToFetchRecords?: FieldMapping[]
     }
     fieldMappings?: FieldMapping[]
     metricsChart?: {
@@ -127,9 +127,12 @@ export interface CommonCustomMetricFormikInterface {
   groupName: string | SelectOption
 
   // Define Query
-  query: string
+  query?: string
   index?: string
   recordCount?: number
+  healthSourceMetricName?: string
+  healthSourceMetricNamespace?: string
+  aggregationType?: string
 
   //Metric Chart Mapping & Log fields Mappings
   valueJsonPath?: string // for logs its log message and for metrics its metric path

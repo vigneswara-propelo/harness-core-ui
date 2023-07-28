@@ -22,7 +22,14 @@ import { CommonQueryContent } from './components/CommonQueryContent/CommonQueryC
 import { SetupSourceTabsContext } from '../CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { CommonRecords } from '../CommonRecords/CommonRecords'
 import type { CommonQueryViewerProps } from './types'
-import { getIsQueryButtonDisabled, getRunQueryBtnTooltip, shouldShowCommonRecords } from './CommonQueryViewer.utils'
+import {
+  getAreAllFieldsNotPopulated,
+  getIsQueryButtonDisabled,
+  getIsQueryButtonDisabledWhenFieldsPresent,
+  getRunQueryBtnTooltip,
+  shouldShowCommonRecords
+} from './CommonQueryViewer.utils'
+import FieldsToFetchRecords from './components/FieldsToFetchRecords/FieldsToFetchRecords'
 
 export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -40,19 +47,27 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     dataTooltipId,
     querySectionTitle,
     queryFieldIdentifier,
-    healthSourceConfig
+    healthSourceConfig,
+    fieldsToFetchRecords,
+    connectorIdentifier,
+    healthSourceType
   } = props
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { getString } = useStrings()
   const { isTemplate, expressions } = useContext(SetupSourceTabsContext)
   const { updateHelperContext, isQueryRuntimeOrExpression } = useCommonHealthSource()
-  const isQueryButtonDisabled = useMemo(() => {
-    return getIsQueryButtonDisabled({ query, loading, queryFieldIdentifier, values })
-  }, [loading, query, queryFieldIdentifier, values])
-
   const queryField = healthSourceConfig?.customMetrics?.queryAndRecords?.queryField
   const queryFieldValue = (queryField ? values[queryField.identifier] : '') as string
+
+  const isQueryButtonDisabled = useMemo(() => {
+    if (fieldsToFetchRecords) {
+      const areAllFieldsNotPopulated = getAreAllFieldsNotPopulated(fieldsToFetchRecords, values)
+      return getIsQueryButtonDisabledWhenFieldsPresent({ loading, areAllFieldsNotPopulated })
+    } else {
+      return getIsQueryButtonDisabled({ query, loading, queryFieldIdentifier, values })
+    }
+  }, [fieldsToFetchRecords, loading, query, queryFieldIdentifier, values])
 
   const hideRecords = useMemo(() => {
     const queryFieldValueType = getMultiTypeFromValue(queryFieldValue)
@@ -61,9 +76,9 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   }, [queryField, queryFieldValue])
 
   const runQueryBtnTooltip = useMemo(
-    () => getRunQueryBtnTooltip(queryFieldIdentifier, values, query, getString),
+    () => getRunQueryBtnTooltip({ queryFieldIdentifier, values, query, getString, fieldsToFetchRecords }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [query, queryFieldIdentifier, values]
+    [fieldsToFetchRecords, query, queryFieldIdentifier, values]
   )
 
   useEffect(() => {
@@ -89,50 +104,63 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
 
   return (
     <Container className={cx(className)}>
-      <CustomMetricsSectionHeader
-        sectionTitle={getString('cv.monitoringSources.commonHealthSource.defineQuery')}
-        sectionSubTitle={`
-        ${querySectionTitle}
-        
-        ${getString('cv.monitoringSources.commonHealthSource.defineQuerySubDescription')}
-        `}
-      />
-
-      {!isTemplate && (
-        <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'small' }} tooltipProps={{ dataTooltipId }}>
-          {getString('cv.query')}
-        </Text>
-      )}
-      {isTemplate ? (
-        <CVMultiTypeQuery
-          name={CustomMetricFormFieldNames.QUERY}
-          expressions={defaultTo(expressions, [])}
-          fetchRecords={handleFetchRecords}
-          disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}
-          onTypeChange={handleQueryTemplateTypeChange}
-          allowedTypes={
-            isConnectorRuntimeOrExpression
-              ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-          }
-          fetchButtonProps={{
-            text: getString('cv.monitoringSources.commonHealthSource.runQuery'),
-            variation: ButtonVariation.SECONDARY
-          }}
-          hideFetchButton={hideRecords}
-          runQueryBtnTooltip={runQueryBtnTooltip}
-        />
-      ) : (
-        <CommonQueryContent
-          onClickExpand={setIsDialogOpen}
-          query={query}
-          isDialogOpen={isDialogOpen}
-          loading={loading}
+      {fieldsToFetchRecords ? (
+        <FieldsToFetchRecords
+          fieldsToFetchRecords={fieldsToFetchRecords}
+          connectorIdentifier={connectorIdentifier}
+          healthSourceType={healthSourceType}
           handleFetchRecords={handleFetchRecords}
           isQueryButtonDisabled={isQueryButtonDisabled}
           runQueryBtnTooltip={runQueryBtnTooltip}
         />
+      ) : (
+        <>
+          <CustomMetricsSectionHeader
+            sectionTitle={getString('cv.monitoringSources.commonHealthSource.defineQuery')}
+            sectionSubTitle={`
+        ${querySectionTitle}
+        
+        ${getString('cv.monitoringSources.commonHealthSource.defineQuerySubDescription')}
+        `}
+          />
+          {!isTemplate && (
+            <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'small' }} tooltipProps={{ dataTooltipId }}>
+              {getString('cv.query')}
+            </Text>
+          )}
+          {isTemplate ? (
+            <CVMultiTypeQuery
+              name={CustomMetricFormFieldNames.QUERY}
+              expressions={defaultTo(expressions, [])}
+              fetchRecords={handleFetchRecords}
+              disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}
+              onTypeChange={handleQueryTemplateTypeChange}
+              allowedTypes={
+                isConnectorRuntimeOrExpression
+                  ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+                  : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+              }
+              fetchButtonProps={{
+                text: getString('cv.monitoringSources.commonHealthSource.runQuery'),
+                variation: ButtonVariation.SECONDARY
+              }}
+              hideFetchButton={hideRecords}
+              runQueryBtnTooltip={runQueryBtnTooltip}
+            />
+          ) : (
+            <CommonQueryContent
+              onClickExpand={setIsDialogOpen}
+              query={query}
+              isDialogOpen={isDialogOpen}
+              loading={loading}
+              handleFetchRecords={handleFetchRecords}
+              isQueryButtonDisabled={isQueryButtonDisabled}
+              runQueryBtnTooltip={runQueryBtnTooltip}
+            />
+          )}
+        </>
       )}
+
       {shouldShowCommonRecords({ hideRecords, isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression }) ? (
         <CommonRecords
           fetchRecords={handleFetchRecords}

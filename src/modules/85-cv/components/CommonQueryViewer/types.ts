@@ -7,8 +7,12 @@
 
 import { IDrawerProps, Position } from '@blueprintjs/core'
 import type { TextAreaProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
-import type { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
-import type { TimeSeriesSampleDTO } from 'services/cv'
+import type {
+  FieldMapping,
+  HealthSourceConfig
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import type { TimeSeriesSampleDTO, QueryRecordsRequest } from 'services/cv'
+import { CommonCustomMetricFormContainerProps } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.types'
 import type { RecordsProps } from '../Records/types'
 
 export interface QueryContentProps {
@@ -52,6 +56,9 @@ export interface CommonQueryViewerProps {
   querySectionTitle?: string
   queryFieldIdentifier?: string
   healthSourceConfig: HealthSourceConfig
+  fieldsToFetchRecords?: FieldMapping[]
+  connectorIdentifier?: CommonCustomMetricFormContainerProps['connectorIdentifier']
+  healthSourceType?: QueryRecordsRequest['healthSourceType']
 }
 
 export interface CommonQueryViewDialogProps extends RecordsProps {

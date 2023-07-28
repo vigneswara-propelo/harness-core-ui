@@ -287,5 +287,80 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     metricThresholds: {
       enabled: false
     }
+  },
+  [HealthSourceTypes.AzureMetrics]: {
+    addQuery: {
+      label: 'Metric',
+      enableDefaultGroupName: false
+    },
+    customMetrics: {
+      enabled: true,
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics',
+        fieldsToFetchRecords: [
+          {
+            type: FIELD_ENUM.TEXT_INPUT,
+            label: 'Resource ID',
+            identifier: CustomMetricFormFieldNames.INDEX,
+            placeholder: 'Please provide Resource ID ',
+            isTemplateSupportEnabled: true,
+            allowCreatingNewItems: true
+          },
+          {
+            type: FIELD_ENUM.TEXT_INPUT,
+            label: 'Metric name',
+            identifier: CustomMetricFormFieldNames.QUERY_METRIC_NAME,
+            placeholder: 'Please provide metric name',
+            isTemplateSupportEnabled: true,
+            allowCreatingNewItems: true
+          },
+          {
+            type: FIELD_ENUM.TEXT_INPUT,
+            label: 'Metric namespace',
+            identifier: CustomMetricFormFieldNames.QUERY_METRIC_NAMESPACE,
+            placeholder: 'Please provide metric namespace',
+            isTemplateSupportEnabled: true,
+            allowCreatingNewItems: true
+          },
+          {
+            type: FIELD_ENUM.DROPDOWN,
+            label: 'Aggregation',
+            identifier: CustomMetricFormFieldNames.QUERY_AGGREGATION_TYPE,
+            placeholder: 'Please select aggregation value',
+            isTemplateSupportEnabled: true,
+            allowCreatingNewItems: true,
+            fixedValues: [
+              { label: 'average', value: 'average' },
+              { label: 'maximum', value: 'maximum' },
+              { label: 'minimum', value: 'minimum' },
+              { label: 'total', value: 'total' },
+              { label: 'count', value: 'count' }
+            ]
+          }
+        ]
+      },
+      metricsChart: {
+        enabled: true,
+        chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
+      },
+      assign: {
+        enabled: true,
+        hideCV: false,
+        hideServiceIdentifier: false,
+        hideSLIAndHealthScore: false,
+        defaultServiceInstance: '_sourceHost',
+        updateServiceInstanceBasedOnQuery: true
+      }
+    },
+    metricPacks: {
+      enabled: false
+    },
+    sideNav: {
+      shouldBeAbleToDeleteLastMetric: false
+    },
+    metricThresholds: {
+      enabled: true
+    }
   }
 }
