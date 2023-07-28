@@ -176,7 +176,7 @@ export default function DeployEnvironment({
   }, [])
 
   useEffect(() => {
-    if (!values.environment) {
+    if (!values.environment && isEmpty(values.environments)) {
       setSelectedEnvironments(
         getSelectedEnvironmentsWhenPropagating(values.propagateFrom?.value as string, previousStages)
       )

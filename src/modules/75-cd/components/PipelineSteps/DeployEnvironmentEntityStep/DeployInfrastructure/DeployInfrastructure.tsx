@@ -167,7 +167,7 @@ export default function DeployInfrastructure({
   })
 
   useEffect(() => {
-    if (!values.infrastructure) {
+    if (!values.infrastructure && isEmpty(values.infrastructures)) {
       setSelectedInfrastructures(
         getSelectedInfrastructuresWhenPropagating(values.propagateFrom?.value as string, previousStages)
       )
