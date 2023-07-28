@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo, useRef } from 'react'
 import { Container, Formik } from '@harness/uicore'
 import { debounce, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -31,14 +31,17 @@ export default function ConditionalExecution(props: ConditionalExecutionProps): 
     isReadonly
   } = props
 
-  const formikRef = React.useRef<FormikProps<FormState> | null>(null)
+  const formikRef = useRef<FormikProps<FormState> | null>(null)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedUpdate = React.useCallback(
-    debounce((data: FormState): void => {
-      onUpdate(data.when)
-    }, 300),
-    [onUpdate]
+  const onUpdateRef = useRef(onUpdate)
+  onUpdateRef.current = onUpdate
+
+  const debouncedUpdate = useMemo(
+    () =>
+      debounce((data: FormState): void => {
+        onUpdateRef.current(data.when)
+      }, 300),
+    []
   )
 
   return (
