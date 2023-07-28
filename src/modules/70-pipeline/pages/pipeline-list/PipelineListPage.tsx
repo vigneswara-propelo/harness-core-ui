@@ -273,10 +273,11 @@ function _PipelineListPage(): React.ReactElement {
             width={200}
             placeholder={getString('search')}
             onChange={text => {
-              updateQueryParams(text ? { searchTerm: text, page: DEFAULT_PAGE_INDEX } : { searchTerm: undefined })
+              updateQueryParams({ searchTerm: text || undefined, page: DEFAULT_PAGE_INDEX })
             }}
             defaultValue={searchTerm}
             ref={searchRef}
+            key={[accountId, orgIdentifier, projectIdentifier].join()}
           />
           <PipelineListFilter onFilterListUpdate={setFilterList} />
         </div>

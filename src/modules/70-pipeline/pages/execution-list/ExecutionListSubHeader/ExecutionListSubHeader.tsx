@@ -87,11 +87,7 @@ function _ExecutionListSubHeader(
     key: T,
     value: GetListOfExecutionsQueryParams[T]
   ): void => {
-    if (value) {
-      updateQueryParams({ [key]: value, page: DEFAULT_PAGE_INDEX })
-    } else {
-      updateQueryParams({ [key]: undefined }) // removes the specific param
-    }
+    updateQueryParams({ [key]: value || undefined, page: DEFAULT_PAGE_INDEX })
   }
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -213,6 +209,7 @@ function _ExecutionListSubHeader(
             onChange={value => changeQueryParam('searchTerm', value)}
             width={Width.LARGE}
             ref={ref}
+            key={[accountId, orgIdentifier, projectIdentifier].join()}
           />
           <ExecutionListFilter />
         </div>
