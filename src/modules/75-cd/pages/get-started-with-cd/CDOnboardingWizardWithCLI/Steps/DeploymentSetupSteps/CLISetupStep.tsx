@@ -6,8 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, OverlaySpinner, RadioButtonGroup, Tab, Tabs, Text } from '@harness/uicore'
-import { isEmpty, once } from 'lodash-es'
+import { Button, ButtonSize, Layout, OverlaySpinner, Tab, Tabs, Text } from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
@@ -30,7 +30,7 @@ export default function CLISetupStep({
             stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle"
           />
         </Text>
-        <Text color={Color.BLACK} padding={{ top: 'large' }}>
+        <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
           <String
             color={Color.BLACK}
             className={css.marginBottomLarge}
@@ -39,18 +39,16 @@ export default function CLISetupStep({
             vars={{ sampleAppURL: 'https://github.com/harness-community/harnesscd-example-apps/' }}
           />
         </Text>
-        <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
-          <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsIntro2" />
-        </Text>
+
         <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }}>
           <String
             color={Color.BLACK}
             stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.preparation"
           />
         </Text>
-        <ApiKeySetup state={state} onKeyGenerate={onKeyGenerate} />
       </Layout.Vertical>
       <InstallCLIInfo />
+      <ApiKeySetup state={state} onKeyGenerate={onKeyGenerate} />
       <Layout.Vertical>
         <Text className={css.bold} color={Color.BLACK} padding={{ top: 'large' }}>
           <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
@@ -82,84 +80,73 @@ function InstallCLIInfo(): JSX.Element {
   return (
     <OverlaySpinner show={isEmpty(version)}>
       <Layout.Vertical className={css.tabsLine}>
-        <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
+        <Text color={Color.BLACK}>
           <String
             className={css.marginBottomLarge}
             stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.title"
           />
         </Text>
-        <Tabs id="selectedOS">
-          <Tab
-            id="mac"
-            title={getString('pipeline.infraSpecifications.osTypes.macos')}
-            panel={
-              <CommandBlock
-                darkmode
-                allowCopy={true}
-                commandSnippet={getCommandStrWithNewline([
-                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac', { version }),
-                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract'),
-                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
-                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
-                ])}
-                ignoreWhiteSpaces={false}
-                downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
-                copyButtonText={getString('common.copy')}
-              />
-            }
-          />
-          <Tab
-            id="linux"
-            title={getString('delegate.cardData.linux.name')}
-            panel={<CLIDownloadLinux version={version} />}
-          />
-          <Tab
-            id="win"
-            title={getString('pipeline.infraSpecifications.osTypes.windows')}
-            panel={<CLIDownloadWin version={version} />}
-          />
-        </Tabs>
+        <Layout.Vertical padding={{ left: 'medium' }}>
+          <Tabs id="selectedOS">
+            <Tab
+              id="mac"
+              title={getString('pipeline.infraSpecifications.osTypes.macos')}
+              panel={<CLIDownloadMac version={version} />}
+            />
+            <Tab
+              id="linux"
+              title={getString('delegate.cardData.linux.name')}
+              panel={<CLIDownloadLinux version={version} />}
+            />
+            <Tab
+              id="win"
+              title={getString('pipeline.infraSpecifications.osTypes.windows')}
+              panel={<CLIDownloadWin version={version} />}
+            />
+          </Tabs>
+        </Layout.Vertical>
       </Layout.Vertical>
     </OverlaySpinner>
   )
 }
 
-const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
+const CLIDownloadMac = ({ version }: { version: string }): JSX.Element => {
   const { getString } = useStrings()
-  const [selectedValue, setSelectedValue] = React.useState<string>('ARM')
-  const getOptions = once(
-    (): {
-      label: string
-      value: string
-    }[] => {
-      return Object.entries(SYSTEM_ARCH_TYPES).map(([key, val]: string[]) => ({ label: val, value: key }))
-    }
-  )
 
   const getCommands = (): string => {
     return getCommandStrWithNewline([
-      getString(
-        selectedValue === SYSTEM_ARCH_TYPES.ARM
-          ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.arm'
-          : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd',
-        { version }
-      ),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract'),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
     ])
   }
   return (
     <Layout.Vertical>
-      <RadioButtonGroup
-        asPills
-        margin={{ bottom: 'medium' }}
-        options={getOptions()}
-        selectedValue={selectedValue}
-        onChange={e => {
-          setSelectedValue(e.currentTarget.value)
-        }}
+      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.download"
+        />
+      </Text>
+      <CommandBlock
+        darkmode
+        allowCopy
+        ignoreWhiteSpaces={false}
+        commandSnippet={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac', { version })}
+        downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+        copyButtonText={getString('common.copy')}
       />
+      <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract"
+        />
+      </Text>
+      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move"
+        />
+      </Text>
       <CommandBlock
         darkmode
         allowCopy
@@ -168,6 +155,95 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
+      <Text color={Color.BLACK} padding={{ top: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart"
+        />
+      </Text>
+    </Layout.Vertical>
+  )
+}
+const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
+  const { getString } = useStrings()
+  const [selectedValue, setSelectedValue] = React.useState<string>('ARM')
+
+  const getCommands = (): string => {
+    return getCommandStrWithNewline([
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
+    ])
+  }
+  return (
+    <Layout.Vertical>
+      <Layout.Horizontal>
+        <Button
+          size={ButtonSize.MEDIUM}
+          onClick={() => {
+            setSelectedValue(SYSTEM_ARCH_TYPES.ARM)
+          }}
+          round
+          margin={{ right: 'large', bottom: 'large' }}
+          intent={selectedValue === SYSTEM_ARCH_TYPES.ARM ? 'primary' : 'none'}
+          text={SYSTEM_ARCH_TYPES.ARM}
+        />
+
+        <Button
+          size={ButtonSize.MEDIUM}
+          onClick={() => {
+            setSelectedValue(SYSTEM_ARCH_TYPES.AMD)
+          }}
+          round
+          intent={selectedValue === SYSTEM_ARCH_TYPES.AMD ? 'primary' : 'none'}
+          text={SYSTEM_ARCH_TYPES.AMD}
+        />
+      </Layout.Horizontal>
+
+      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.download"
+        />
+      </Text>
+      <CommandBlock
+        darkmode
+        allowCopy
+        ignoreWhiteSpaces={false}
+        commandSnippet={getString(
+          selectedValue === SYSTEM_ARCH_TYPES.ARM
+            ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.arm'
+            : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd',
+          { version }
+        )}
+        downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+        copyButtonText={getString('common.copy')}
+      />
+      <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract"
+        />
+      </Text>
+      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move"
+        />
+      </Text>
+      <CommandBlock
+        darkmode
+        allowCopy
+        ignoreWhiteSpaces={false}
+        commandSnippet={getCommands()}
+        downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+        copyButtonText={getString('common.copy')}
+      />
+      <Text color={Color.BLACK} padding={{ top: 'large' }}>
+        <String
+          className={css.marginBottomLarge}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart"
+        />
+      </Text>
     </Layout.Vertical>
   )
 }
@@ -188,19 +264,33 @@ const CLIDownloadWin = ({ version }: { version: string }): JSX.Element => {
         allowCopy
         ignoreWhiteSpaces={false}
         commandSnippet={getCommandStrWithNewline([
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win', { version }),
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract'),
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description3'),
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win', { version })
+        ])}
+        downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+        copyButtonText={getString('common.copy')}
+      />
+      <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
+        <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract" />
+      </Text>
+      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+        <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move" />
+      </Text>
+      <CommandBlock
+        darkmode
+        allowCopy
+        ignoreWhiteSpaces={false}
+        commandSnippet={getCommandStrWithNewline([
           getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup1'),
           getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup2')
         ])}
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
+
       <Text color={Color.BLACK} padding={{ top: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description4"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart"
         />
       </Text>
     </Layout.Vertical>

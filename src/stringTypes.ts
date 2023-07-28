@@ -6145,6 +6145,10 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.arm': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.download': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness': string
@@ -6153,15 +6157,14 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description1': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description3': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description4': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup1': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step3.title': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubHint': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubpat': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubusername': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.title': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.whereToFindGitPat': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.whyGitDetails': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.cddir': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.clonecmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.cdDir': string

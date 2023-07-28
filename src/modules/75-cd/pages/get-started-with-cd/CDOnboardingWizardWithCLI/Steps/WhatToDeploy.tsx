@@ -54,10 +54,10 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
   }, [state])
   return (
     <Layout.Vertical>
-      <Text color={Color.BLACK} font={{ size: 'medium' }} margin={{ bottom: 'xlarge' }}>
+      <Text color={Color.BLACK} margin={{ bottom: 'xlarge' }}>
         {getString('cd.getStartedWithCD.flowByQuestions.what.samplesvc')}
       </Text>
-      <Text color={Color.BLACK} className={css.bold} font={{ size: 'medium' }} margin={{ bottom: 'xxlarge' }}>
+      <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'xxlarge' }}>
         {getString('cd.getStartedWithCD.flowByQuestions.what.aboutSvc')}
       </Text>
 

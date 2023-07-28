@@ -272,7 +272,7 @@ HTMLCollection [
                       >
                         <button
                           aria-label="common.copied"
-                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
                         >
@@ -320,7 +320,7 @@ HTMLCollection [
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >
@@ -394,7 +394,7 @@ HTMLCollection [
                       >
                         <button
                           aria-label="common.copied"
-                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
                         >
@@ -838,7 +838,7 @@ HTMLCollection [
                       >
                         <button
                           aria-label="common.copied"
-                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
                         >
@@ -886,7 +886,7 @@ HTMLCollection [
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >
@@ -960,7 +960,7 @@ HTMLCollection [
                       >
                         <button
                           aria-label="common.copied"
-                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
                         >
@@ -1393,7 +1393,7 @@ HTMLCollection [
                       >
                         <button
                           aria-label="common.copied"
-                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
                         >
@@ -1441,7 +1441,7 @@ HTMLCollection [
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >
@@ -1515,7 +1515,7 @@ HTMLCollection [
                       >
                         <button
                           aria-label="common.copied"
-                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
                         >

@@ -195,7 +195,7 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >
@@ -631,7 +631,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
                 >
                   <button
                     aria-label="common.copied"
-                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                     tabindex="0"
                     type="button"
                   >
@@ -1035,7 +1035,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                       >
                         <button
                           aria-label="common.copied"
-                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
                         >
@@ -1108,7 +1108,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                   >
                     <button
                       aria-label="common.copied"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                       tabindex="0"
                       type="button"
                     >
@@ -1161,7 +1161,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                 >
                   <button
                     aria-label="common.copied"
-                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                     tabindex="0"
                     type="button"
                   >
@@ -1562,7 +1562,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >
@@ -1610,7 +1610,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                   >
                     <button
                       aria-label="common.copied"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                       tabindex="0"
                       type="button"
                     >
@@ -1684,7 +1684,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >
@@ -2087,7 +2087,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >
@@ -2135,7 +2135,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                   >
                     <button
                       aria-label="common.copied"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                       tabindex="0"
                       type="button"
                     >
@@ -2209,7 +2209,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                     >
                       <button
                         aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
                         tabindex="0"
                         type="button"
                       >

@@ -32,6 +32,7 @@ interface CommandBlockProps {
   copySnippet?: string
   copyButtonText?: string
   darkmode?: boolean
+  commentPrefix?: string
 }
 enum DownloadFile {
   DEFAULT_NAME = 'commandBlock',
@@ -47,7 +48,8 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
   telemetryProps,
   copySnippet,
   copyButtonText,
-  darkmode
+  darkmode,
+  commentPrefix
 }) => {
   const { trackEvent } = useTelemetry()
   const downloadFileDefaultName = downloadFileProps?.downloadFileName || DownloadFile.DEFAULT_NAME
@@ -64,7 +66,17 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
       linkRef.current.click()
     }
   }
-  return (
+  return commentPrefix ? (
+    <CommandBlockWithComments
+      darkmode
+      allowCopy
+      ignoreWhiteSpaces={false}
+      commandSnippet={commandSnippet}
+      downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+      copyButtonText={getString('common.copy')}
+      commentPrefix={commentPrefix}
+    />
+  ) : (
     <Layout.Horizontal
       flex={{ justifyContent: 'space-between', alignItems: 'start' }}
       className={cx(css.commandBlock, { [css.darkmode]: darkmode })}
@@ -90,6 +102,7 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
               }
             }}
             primaryBtn={darkmode}
+            className={cx({ [css.copyButtonHover]: darkmode })}
           />
         )}
         {allowDownload && (
@@ -118,3 +131,93 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
 }
 
 export default CommandBlock
+
+const CommandBlockWithComments: React.FC<CommandBlockProps> = ({
+  commandSnippet,
+  allowCopy,
+  ignoreWhiteSpaces = true,
+  allowDownload = false,
+  downloadFileProps,
+  telemetryProps,
+  copySnippet,
+  copyButtonText,
+  darkmode,
+  commentPrefix = ''
+}) => {
+  const { trackEvent } = useTelemetry()
+  const downloadFileDefaultName = downloadFileProps?.downloadFileName || DownloadFile.DEFAULT_NAME
+  const downloadeFileDefaultExtension =
+    (downloadFileProps && downloadFileProps.downloadFileExtension) || DownloadFile.DEFAULT_TYPE
+  const linkRef = React.useRef<HTMLAnchorElement>(null)
+
+  const { getString } = useStrings()
+  const onDownload = (): void => {
+    const content = new Blob([commandSnippet as BlobPart], { type: 'data:text/plain;charset=utf-8' })
+    if (linkRef?.current) {
+      linkRef.current.href = window.URL.createObjectURL(content)
+      linkRef.current.download = `${downloadFileDefaultName}.${downloadeFileDefaultExtension}`
+      linkRef.current.click()
+    }
+  }
+  return (
+    <Layout.Horizontal
+      flex={{ justifyContent: 'space-between', alignItems: 'start' }}
+      className={cx(css.commandBlock, { [css.darkmode]: darkmode })}
+    >
+      <Layout.Vertical className={css.commandText}>
+        {commandSnippet.split('\n').map(str => {
+          const isComment = str && str.startsWith(commentPrefix)
+
+          return (
+            <Text
+              key={str}
+              color={isComment ? Color.YELLOW_300 : darkmode ? Color.WHITE : undefined}
+              className={cx(!ignoreWhiteSpaces && css.ignoreWhiteSpaces)}
+              font={{ variation: FontVariation.YAML }}
+            >
+              {str}
+            </Text>
+          )
+        })}
+      </Layout.Vertical>
+      <Layout.Horizontal flex={{ justifyContent: 'center', alignItems: 'center' }} spacing="medium">
+        {(allowCopy || copySnippet) && (
+          <CopyButton
+            textToCopy={copySnippet || commandSnippet}
+            text={copyButtonText}
+            onCopySuccess={() => {
+              if (telemetryProps?.copyTelemetryProps) {
+                trackEvent(
+                  telemetryProps?.copyTelemetryProps?.eventName,
+                  telemetryProps?.copyTelemetryProps?.properties
+                )
+              }
+            }}
+            primaryBtn={darkmode}
+            className={cx({ [css.copyButtonHover]: darkmode })}
+          />
+        )}
+        {allowDownload && (
+          <>
+            <Button
+              className={css.downloadBtn}
+              variation={ButtonVariation.LINK}
+              text={getString('common.download')}
+              onClick={event => {
+                event.stopPropagation()
+                if (telemetryProps?.downloadTelemetryProps) {
+                  trackEvent(
+                    telemetryProps?.downloadTelemetryProps.eventName,
+                    telemetryProps?.downloadTelemetryProps.properties
+                  )
+                }
+                onDownload()
+              }}
+            />
+            <a className="hide" ref={linkRef} target={'_blank'} />
+          </>
+        )}
+      </Layout.Horizontal>
+    </Layout.Horizontal>
+  )
+}

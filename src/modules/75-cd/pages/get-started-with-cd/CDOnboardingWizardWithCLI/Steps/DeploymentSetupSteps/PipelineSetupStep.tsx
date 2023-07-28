@@ -39,6 +39,14 @@ export default function PipelineSetupStep({
             vars={{ guestBookURL: 'https://github.com/harness-community/harnesscd-example-apps/tree/master/guestbook' }}
           />
         </Text>
+        <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
+          <String
+            useRichText
+            color={Color.BLACK}
+            className={css.marginBottomLarge}
+            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.whyGitDetails"
+          />
+        </Text>
         <Layout.Vertical margin={{ top: 'medium' }}>
           <Layout.Vertical width={400}>
             <Label>{getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubusername')}</Label>
@@ -168,6 +176,7 @@ function CLISteps({
         ignoreWhiteSpaces={false}
         downloadFileProps={{ downloadFileName: 'harness-cli-setup', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
+        commentPrefix="#"
       />
     </Layout.Vertical>
   )

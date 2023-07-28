@@ -43,6 +43,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, onCopySuccess, ...r
           onCopySuccess()
         }
       }}
+      withoutCurrentColor
       tooltip={getString('common.copied')}
       tooltipProps={{ isOpen: openTooltip, isDark: true }}
       {...rest}

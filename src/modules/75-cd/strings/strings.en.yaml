@@ -687,19 +687,19 @@ getStartedWithCD:
         createEntities: '2. Create the required Harness entities'
         verifyPipeline: '4. Verify that pipeline has been created'
       createEntitytitle: Run these commands to create the Harness entities necessary to deploy your pipeline. Learn more
-      title: Here are the steps to deploy!
+      title: Set up your deployment
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
       stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" href="{{sampleAppURL}}">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
       steps:
         step1:
-          title: '1. Create an API key for CLI authentication.'
+          title: '1.2 Create an API key for CLI authentication.'
           generateButton: Generate API key
           regenerateButton: Re-Generate API key
           apiKeyPlacholder: HARNESS-API-KEY
           fetchingApiKeys: Fetching Api Keys
         step2:
-          title: 2. Download the Harness CLI.
+          title: 1.1 Download the Harness CLI.
           arm: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-arm64.tar.gz'
           amd: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-amd64.tar.gz'
           mac: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-darwin-amd64.tar.gz'
@@ -707,22 +707,26 @@ getStartedWithCD:
           extract: '# Extract the downloaded zip file and change directory to extracted file location'
           mvharness: 'mv harness /usr/local/bin/'
           chmod: 'chmod +x /usr/local/bin/harness'
+          commmonInstallSteps:
+            download: a. Download the zip file below.
+            extract: b. Extract the downloaded zip file and change directory to extracted file location
+            move: c. Follow the steps below to make it accessible via terminal
+            restart: d. Restart terminal
           wininstall:
-            description1: '1. Open Windows Powershell and run the command below to download the Harness CLI'
-            description2: Extract the zip file and run commands below to install Harness CLI
-            description3: '# Set Path variables by running commands below'
-            description4: '2. Restart Terminal.'
+            description1: 'a. Open Windows Powershell and run the command below to download the Harness CLI'
+            description2: b. Extract the zip file and run commands below to install Harness CLI
+            description3: 'c. Set Path variables by running commands below'
             winpathsetup1: '$currentPath = Get-Location'
             winpathsetup2: '[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$currentPath", [EnvironmentVariableTarget]::Machine)'
 
         step3:
-          title: '3. Fork <a href="https://github.com/harness-community/harnesscd-example-apps">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
+          title: '1.3. Fork <a href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
         step4:
-          title: '4. Provide GitHub access details.'
+          title: '1.4. Provide GitHub access details.'
           githubusername: 'GitHub username'
           githubpat: 'GitHub Personal Access Token (PAT)'
           whereToFindGitPat: How do I find this?
-          githubHint: As you’ll eventually control deployment configuration by editing YAML definitions, Harness CD needs to read from your repository.
+          whyGitDetails: As you’ll eventually control deployment configuration by editing YAML definitions, Harness CD needs to read from your repository.
         step5:
           title: '5. Pipeline Setup'
           description1: 'Run the steps to deploy the sample guestbook application located at <a target="_blank" href="{{guestBookURL}}">{{guestBookURL}}</a>.'

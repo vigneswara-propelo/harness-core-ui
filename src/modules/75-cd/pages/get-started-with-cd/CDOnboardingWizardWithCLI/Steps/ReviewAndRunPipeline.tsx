@@ -73,7 +73,8 @@ export default function ReviewAndRunPipeline({ saveProgress }: ReviewAndRunPipel
         projectIdentifier,
         orgIdentifier,
         accountId,
-        pipelineIdentifier: PIPELINE_TO_STRATEGY_MAP[pipelineStepsdata?.strategy?.id as string]
+        pipelineIdentifier: PIPELINE_TO_STRATEGY_MAP[pipelineStepsdata?.strategy?.id as string],
+        runPipeline: true
       })
     )
   }

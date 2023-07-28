@@ -94,7 +94,7 @@ export default function DeploymentStrategySelection({
         <Layout.Vertical margin={{ bottom: 'xlarge' }}>
           <PipelineCommandStep strategy={state} />
           <Layout.Horizontal>
-            <video key={state.id} className={css.videoPlayer} autoPlay data-testid="videoPlayer">
+            <video key={state.id} loop={true} className={css.videoPlayer} autoPlay={true} data-testid="videoPlayer">
               <source src={StrategyVideoByType[state.id]} type="video/mp4"></source>
               <Text tooltipProps={{ dataTooltipId: 'videoNotSupportedError' }}>
                 {getString('common.videoNotSupportedError')}

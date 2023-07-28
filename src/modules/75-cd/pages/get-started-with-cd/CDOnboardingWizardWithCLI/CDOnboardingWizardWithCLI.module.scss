@@ -52,6 +52,7 @@
 .deploymentStrategySteps {
   display: flex;
   justify-content: space-between;
+  flex: 1 1 0 !important;
   .deploymentStrategyStep {
     background: var(--grey-100) !important;
     padding: var(--spacing-xxlarge) !important;

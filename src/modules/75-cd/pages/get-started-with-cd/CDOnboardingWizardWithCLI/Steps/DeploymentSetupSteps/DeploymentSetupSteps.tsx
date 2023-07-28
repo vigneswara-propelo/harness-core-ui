@@ -27,7 +27,9 @@ export default function DeploymentSetupSteps({ saveProgress }: DeploymentSetupSt
   React.useEffect(() => {
     saveProgress(CDOnboardingSteps.DEPLOYMENT_STEPS, {
       ...state,
-      pipelineVerified: stepsProgress?.pipelineVerified
+      pipelineVerified: stepsProgress?.pipelineVerified,
+      apiKey: undefined,
+      githubPat: undefined
     })
   }, [state])
 

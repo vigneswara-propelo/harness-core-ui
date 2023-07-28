@@ -20,6 +20,9 @@
       color: var(--primary-7) !important;
     }
   }
+  .commandText {
+    flex: 80%;
+  }
 }
 .ignoreWhiteSpaces {
   white-space: pre-wrap !important;
@@ -28,4 +31,11 @@
   cursor: pointer;
   margin-left: 0px !important;
   padding-left: var(--spacing-xsmall) !important;
+}
+.copyButtonHover {
+  :global(.bp3-icon) {
+    svg > path {
+      fill: var(--white) !important;
+    }
+  }
 }
