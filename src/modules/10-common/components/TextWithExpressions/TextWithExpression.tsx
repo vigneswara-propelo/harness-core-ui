@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { ExpressionEvaluation } from 'services/pipeline-ng'
+import { useStrings } from 'framework/strings'
 import CopyToClipBoard from '../CopyToClipBoard/CopyToClipBoard'
 import css from './TextWithExpressions.module.scss'
 
@@ -34,6 +35,7 @@ interface ResolvedValueComponentProps {
 
 interface ExpressionTooltipContentProps {
   hasError: boolean
+  isUnresolvedExpression: boolean
   resolvedValueObject: ExpressionEvaluation
   word: string
 }
@@ -42,9 +44,11 @@ const VAR_REGEX = /(<\+[a-zA-z0-9_.]+?>)/g
 
 const ExpressionTooltipContent = ({
   hasError,
+  isUnresolvedExpression,
   resolvedValueObject,
   word
 }: ExpressionTooltipContentProps): JSX.Element => {
+  const { getString } = useStrings()
   if (hasError) {
     return (
       <Layout.Vertical padding="medium" flex={{ alignItems: 'flex-start' }} className={css.popoverMaxWidth}>
@@ -53,12 +57,48 @@ const ExpressionTooltipContent = ({
           color={Color.RED_200}
           iconProps={{ className: css.expressionIcon }}
           margin={{ bottom: 'small' }}
+          padding={{ bottom: 'small' }}
           lineClamp={1}
+          font={{ mono: true }}
+          border={{ bottom: true, color: Color.GREY_500 }}
+          width="100%"
         >
           {defaultTo(resolvedValueObject?.originalExpression, word)}
         </Text>
         <Text icon="error-outline" color={Color.WHITE} iconProps={{ className: css.errorIcon }} lineClamp={1}>
           {resolvedValueObject?.error}
+        </Text>
+      </Layout.Vertical>
+    )
+  }
+  if (isUnresolvedExpression) {
+    return (
+      <Layout.Vertical padding="medium" flex={{ alignItems: 'flex-start' }} className={css.popoverMaxWidth}>
+        <Layout.Horizontal padding={{ bottom: 'small' }} border={{ bottom: true, color: Color.GREY_500 }} width="100%">
+          <Text
+            icon="expression-input"
+            color={Color.WHITE}
+            iconProps={{ className: css.expressionIcon }}
+            margin={{ right: 'small' }}
+            font={{ mono: true }}
+            lineClamp={1}
+          >
+            {defaultTo(resolvedValueObject?.originalExpression, word)}
+          </Text>
+          <CopyToClipBoard
+            content={defaultTo(resolvedValueObject?.originalExpression, word)}
+            showFeedback
+            hidePopover
+          />
+        </Layout.Horizontal>
+        <Text
+          icon="warning-icon"
+          color={Color.WHITE}
+          iconProps={{ className: css.expressionIcon }}
+          flex={{ alignItems: 'flex-start' }}
+          padding={{ top: 'small' }}
+        >
+          {getString('common.expressionDefaultError')}
         </Text>
       </Layout.Vertical>
     )
@@ -71,6 +111,7 @@ const ExpressionTooltipContent = ({
         margin={{ right: 'small' }}
         iconProps={{ className: css.expressionIcon }}
         lineClamp={1}
+        font={{ mono: true }}
       >
         {defaultTo(resolvedValueObject?.originalExpression, word)}
       </Text>
@@ -84,17 +125,27 @@ const ResolvedValueComponent = ({ metadataMap, word, fqnPath }: ResolvedValueCom
 
   const hasError = !!valueObject?.error?.length
 
+  const isUnresolvedExpression = !valueObject?.resolvedValue?.length
+
   return (
     <Text
       key={`${fqnPath}+${word}`}
-      tooltip={<ExpressionTooltipContent hasError={hasError} resolvedValueObject={valueObject} word={word} />}
+      tooltip={
+        <ExpressionTooltipContent
+          hasError={hasError}
+          isUnresolvedExpression={isUnresolvedExpression}
+          resolvedValueObject={valueObject}
+          word={word}
+        />
+      }
       tooltipProps={{
         isDark: true,
         interactionKind: PopoverInteractionKind.HOVER,
         position: Position.TOP
       }}
-      background={hasError ? Color.RED_100 : Color.PRIMARY_1}
-      color={hasError ? Color.RED_800 : Color.BLACK}
+      background={hasError ? Color.RED_100 : isUnresolvedExpression ? Color.YELLOW_100 : Color.GREEN_50}
+      color={hasError ? Color.RED_900 : Color.BLACK}
+      font={{ weight: 'semi-bold' }}
       inline
       lineClamp={1}
       alwaysShowTooltip

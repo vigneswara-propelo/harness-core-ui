@@ -264,6 +264,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                           onMouseOver={() => {
                             setHoveredVariable({ [index]: true })
                           }}
+                          color={Color.GREY_700}
                         >
                           <span
                             className={cx({

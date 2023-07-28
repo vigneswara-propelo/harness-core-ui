@@ -45,7 +45,7 @@ exports[`Custom Variables can add a string variable 1`] = `
       class="variableListTable variable-list-row"
     >
       <p
-        class="StyledProps--font Text--lineclamp StyledProps--main variableNameCell"
+        class="StyledProps--font Text--lineclamp StyledProps--main variableNameCell StyledProps--color StyledProps--color-grey700"
         style="--text-line-clamp: 1;"
       >
         <span
