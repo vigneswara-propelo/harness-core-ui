@@ -182,7 +182,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
 
   React.useEffect(() => {
     // if clone codebase is not enabled at least one stage, then remove properties from pipeline
-    if (!isCloneCodebaseEnabledAtLeastOneStage(pipeline)) {
+    if (!isCloneCodebaseEnabledAtLeastOneStage(pipeline) && contextType !== PipelineContextType.PipelineTemplate) {
       const newPipeline = pipeline
       delete newPipeline.properties
       updatePipeline(newPipeline)
