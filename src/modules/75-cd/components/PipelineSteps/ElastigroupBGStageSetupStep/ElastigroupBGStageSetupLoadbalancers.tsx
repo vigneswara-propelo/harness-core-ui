@@ -435,7 +435,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
                     const selectedValueString =
                       typeof selectedValue === 'string'
                         ? selectedValue
-                        : ((selectedValue as SelectOption).label as string)
+                        : ((selectedValue as SelectOption)?.label as string)
                     const updatedValues = produce(formik.values, draft => {
                       draft.spec.loadBalancers[index].spec.prodListenerPort = selectedValueString
                       if (
@@ -510,7 +510,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
                     const selectedValueString =
                       typeof selectedValue === 'string'
                         ? selectedValue
-                        : ((selectedValue as SelectOption).label as string)
+                        : ((selectedValue as SelectOption)?.label as string)
                     const updatedValues = produce(formik.values, draft => {
                       draft.spec.loadBalancers[index].spec.stageListenerPort = selectedValueString
                       if (

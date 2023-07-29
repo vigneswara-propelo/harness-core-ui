@@ -394,7 +394,7 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
             expressions,
             onChange: selectedValue => {
               const selectedValueString =
-                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption).value as string)
+                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption)?.value as string)
               const updatedValues = produce(formik?.values, draft => {
                 if (draft) {
                   set(draft, `${prefix}spec.prodListener`, selectedValueString)
@@ -458,7 +458,7 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
             expressions,
             onChange: selectedValue => {
               const selectedValueString =
-                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption).value as string)
+                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption)?.value as string)
               const updatedValues = produce(formik?.values, draft => {
                 if (draft) {
                   set(draft, `${prefix}spec.stageListener`, selectedValueString)

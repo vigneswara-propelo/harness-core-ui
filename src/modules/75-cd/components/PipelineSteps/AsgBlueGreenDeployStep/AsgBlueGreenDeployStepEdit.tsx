@@ -452,7 +452,7 @@ const AsgBlueGreenDeployStepEdit = (
                       const selectedValueString =
                         typeof selectedValue === 'string'
                           ? selectedValue
-                          : ((selectedValue as SelectOption).value as string)
+                          : ((selectedValue as SelectOption)?.value as string)
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.prodListener = selectedValueString
                         if (getMultiTypeFromValue(draft.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
@@ -546,7 +546,7 @@ const AsgBlueGreenDeployStepEdit = (
                       const selectedValueString =
                         typeof selectedValue === 'string'
                           ? selectedValue
-                          : ((selectedValue as SelectOption).value as string)
+                          : ((selectedValue as SelectOption)?.value as string)
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.stageListener = selectedValueString
                         if (getMultiTypeFromValue(draft.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
