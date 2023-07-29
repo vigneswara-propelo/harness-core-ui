@@ -56,6 +56,7 @@ const codePathProps: Required<CODEPathProps> = {
   diffRefs: ':diffRefs*',
   pullRequestId: ':pullRequestId',
   pullRequestSection: ':pullRequestSection',
+  commitSHA: ':commitSHA',
   webhookId: ':webhookId'
 }
 
@@ -135,6 +136,12 @@ export default function CODERouteDestinations(): React.ReactElement {
 
       <RouteWithLayout
         path={[
+          routes.toCODEPullRequest({
+            repoPath,
+            pullRequestId: codePathProps.pullRequestId,
+            pullRequestSection: codePathProps.pullRequestSection,
+            commitSHA: codePathProps.commitSHA
+          }),
           routes.toCODEPullRequest({
             repoPath,
             pullRequestId: codePathProps.pullRequestId,

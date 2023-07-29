@@ -21,6 +21,7 @@ export interface CODEProps {
   pullRequestId?: string
   pullRequestSection?: string // commits | diffs | checks ...
   webhookId?: string
+  commitSHA?: string
 }
 
 export type CODEPathProps = RequiredField<
@@ -83,15 +84,16 @@ export default {
   toCODEPullRequest: ({
     repoPath,
     pullRequestId,
-    pullRequestSection
+    pullRequestSection,
+    commitSHA
   }: RequiredField<
-    Pick<CODEProps, 'repoPath' | 'pullRequestId' | 'pullRequestSection'>,
+    Pick<CODEProps, 'repoPath' | 'pullRequestId' | 'pullRequestSection' | 'commitSHA'>,
     'repoPath' | 'pullRequestId'
   >) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls/${pullRequestId}${
       pullRequestSection ? '/' + pullRequestSection : ''
-    }`
+    }${commitSHA ? '/' + commitSHA : ''}`
   },
   toCODECompare: ({ repoPath, diffRefs }: Required<Pick<CODEProps, 'repoPath' | 'diffRefs'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
