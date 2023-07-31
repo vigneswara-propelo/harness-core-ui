@@ -1053,8 +1053,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const renderEditorControls = useCallback((): React.ReactElement => {
     return (
       <Layout.Horizontal spacing="small">
-        {showCopyIcon && currentYaml ? (
-          <CopyToClipboard content={defaultTo(currentYaml, '')} showFeedback={true} />
+        {showCopyIcon && currentYamlRef.current ? (
+          <CopyToClipboard content={defaultTo(currentYamlRef.current, '')} showFeedback={true} />
         ) : null}
         {shouldShowPluginsPanel ? (
           <Icon
@@ -1067,7 +1067,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ) : null}
       </Layout.Horizontal>
     )
-  }, [currentYaml, showCopyIcon, isEditorExpanded, shouldShowPluginsPanel])
+  }, [currentYamlRef.current, showCopyIcon, isEditorExpanded, shouldShowPluginsPanel])
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>
