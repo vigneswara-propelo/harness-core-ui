@@ -7,14 +7,18 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { Avatar, Button, ButtonVariation, Icon, Layout, Text, useToggleOpen } from '@harness/uicore'
+import { Avatar, Button, ButtonVariation, Icon, Layout, Popover, Text, useToggleOpen } from '@harness/uicore'
+import { Menu, MenuItem } from '@blueprintjs/core'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { SubmitTicketModal } from '@common/components/ResourceCenter/SubmitTicketModal/SubmitTicketModal'
+import { useDeepCompareEffect, useLocalStorage } from '@common/hooks'
 import css from './DocsChat.module.scss'
+
+const CHAT_HISTORY_KEY = 'aida_chat_history'
 
 interface Message {
   author: 'harness' | 'user'
@@ -86,7 +90,6 @@ function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps)
 }
 
 function DocsChat(): JSX.Element {
-  const [messages, setMessages] = useState<Array<Message>>(sampleMessages)
   const [userInput, setUserInput] = useState('')
   const { currentUserInfo } = useAppStore()
   const { getString } = useStrings()
@@ -94,6 +97,8 @@ function DocsChat(): JSX.Element {
   const { mutate: askQuestion, loading } = useHarnessSupportBot({})
   const { trackEvent } = useTelemetry()
   const { isOpen, close: closeSubmitTicketModal, open: openSubmitTicketModal } = useToggleOpen()
+  const [chatHistory, setChatHistory] = useLocalStorage<Array<Message>>(CHAT_HISTORY_KEY, [], sessionStorage)
+  const [messages, setMessages] = useState<Array<Message>>(chatHistory.length > 0 ? chatHistory : sampleMessages)
   useTrackEvent(AIChatActions.ChatStarted, {})
 
   const getAnswer = async (oldMessages: Array<Message>, query: string): Promise<void> => {
@@ -159,8 +164,18 @@ function DocsChat(): JSX.Element {
   }
 
   useLayoutEffect(() => {
+    // scroll to bottom on every message
     messageList.current?.scrollTo(0, messageList.current?.scrollHeight)
   }, [messages])
+
+  useDeepCompareEffect(() => {
+    setChatHistory(messages)
+  }, [messages])
+
+  const clearHistory = (): void => {
+    sessionStorage.removeItem(CHAT_HISTORY_KEY)
+    setMessages(sampleMessages)
+  }
 
   const loadingMessage = (
     <div className={cx(css.messageContainer, css.left)}>
@@ -172,7 +187,15 @@ function DocsChat(): JSX.Element {
 
   return (
     <div className={css.container}>
-      <div className={css.header}>{getString('common.csBot.title')}</div>
+      <Layout.Horizontal className={css.header} flex>
+        <String stringID="common.csBot.title" />
+        <Popover minimal position="bottom-left">
+          <Button icon="menu" variation={ButtonVariation.ICON} />
+          <Menu>
+            <MenuItem text="Clear History" onClick={clearHistory} />
+          </Menu>
+        </Popover>
+      </Layout.Horizontal>
       <div className={css.messagesContainer} ref={messageList}>
         {messages.map((message, index) => {
           return (
@@ -203,7 +226,7 @@ function DocsChat(): JSX.Element {
                   )}
                 </div>
                 {message.author === 'user' ? (
-                  <Avatar size={'small'} name={currentUserInfo.name} email={currentUserInfo.email} />
+                  <Avatar size={'small'} name={currentUserInfo.name} email={currentUserInfo.email} hoverCard={false} />
                 ) : null}
               </div>
               {message.author === 'harness' && index > 1 ? (
