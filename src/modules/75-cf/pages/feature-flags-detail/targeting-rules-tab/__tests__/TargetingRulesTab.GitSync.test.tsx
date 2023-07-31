@@ -107,8 +107,7 @@ describe('TargetingRulesTab GitSync', () => {
     setUseGitRepoMock()
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('it should open Git Modal and send correct data on save', async () => {
+  test('it should open Git Modal and send correct data on save', async () => {
     renderComponent()
 
     // toggle flag off
@@ -123,11 +122,9 @@ describe('TargetingRulesTab GitSync', () => {
     await userEvent.click(saveButton)
     await waitFor(() => expect(screen.getByTestId('save-flag-to-git-modal-body')).toBeInTheDocument())
 
-    // clear prepopulated messsage and add commit message
     await waitFor(() =>
       expect(screen.getByPlaceholderText('common.git.commitMessage')).toHaveValue('Updated feature flag targeting')
     )
-    await userEvent.clear(screen.getByPlaceholderText('common.git.commitMessage'))
 
     // select autocommit checkbox
     const autoCommitCheckbox = document.querySelector('input[name="autoCommit"]') as HTMLInputElement
