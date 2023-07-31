@@ -33,7 +33,6 @@ import FieldsToFetchRecords from './components/FieldsToFetchRecords/FieldsToFetc
 
 export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
-
   const {
     className,
     records,
@@ -50,9 +49,9 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     healthSourceConfig,
     fieldsToFetchRecords,
     connectorIdentifier,
-    healthSourceType
+    healthSourceType,
+    isAnyFieldToFetchRecordsNonFixed
   } = props
-
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { getString } = useStrings()
   const { isTemplate, expressions } = useContext(SetupSourceTabsContext)
@@ -69,9 +68,8 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     }
   }, [fieldsToFetchRecords, loading, query, queryFieldIdentifier, values])
 
-  const hideRecords = useMemo(() => {
+  const isQueryFieldNonFixed = useMemo(() => {
     const queryFieldValueType = getMultiTypeFromValue(queryFieldValue)
-
     return queryField && queryFieldValueType !== MultiTypeInputType.FIXED
   }, [queryField, queryFieldValue])
 
@@ -144,7 +142,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
                 text: getString('cv.monitoringSources.commonHealthSource.runQuery'),
                 variation: ButtonVariation.SECONDARY
               }}
-              hideFetchButton={hideRecords}
+              hideFetchButton={isQueryFieldNonFixed}
               runQueryBtnTooltip={runQueryBtnTooltip}
             />
           ) : (
@@ -161,7 +159,12 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
         </>
       )}
 
-      {shouldShowCommonRecords({ hideRecords, isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression }) ? (
+      {shouldShowCommonRecords({
+        isQueryFieldNonFixed,
+        isConnectorRuntimeOrExpression,
+        isQueryRuntimeOrExpression,
+        isAnyFieldToFetchRecordsNonFixed
+      }) ? (
         <CommonRecords
           fetchRecords={handleFetchRecords}
           loading={loading}

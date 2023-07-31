@@ -14,11 +14,19 @@ import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { CustomHealthMetric } from '@cv/pages/health-source/HealthSourceDrawer/component/customiseHealthSource/CustomiseHealthSource.constant'
 import type { MonitoredServiceDTO } from 'services/cv'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputSetsTemplate.types'
 import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
 
-export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
+export const getLabelByName = (
+  name: string,
+  getString: UseStringsReturn['getString'],
+  type?: HealthSourceTypes
+): string => {
+  if (type === HealthSourceTypes.Azure && name === CustomMetricFormFieldNames.INDEX) {
+    return getString('platform.connectors.serviceNow.resourceID')
+  }
   switch (name) {
     case 'applicationName':
       return getString('pipeline.applicationName')
@@ -53,6 +61,12 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
     case 'timestampJsonPath':
     case 'timeStampIdentifier':
       return getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')
+    case CustomMetricFormFieldNames.QUERY_METRIC_NAME:
+      return getString('cv.monitoringSources.commonHealthSource.query.metricName')
+    case CustomMetricFormFieldNames.QUERY_METRIC_NAMESPACE:
+      return getString('cv.monitoringSources.commonHealthSource.query.metricNamespace')
+    case CustomMetricFormFieldNames.QUERY_AGGREGATION_TYPE:
+      return getString('cv.monitoringSources.commonHealthSource.query.aggregation')
     default:
       return name
   }
@@ -145,6 +159,9 @@ export const healthSourceTypeMapping = (type: HealthSourceTypes): ConnectorInfoD
     case HealthSourceTypes.SumologicLogs:
     case HealthSourceTypes.SumologicMetrics:
       return Connectors.SUMOLOGIC
+    case HealthSourceTypes.AzureLogs:
+    case HealthSourceTypes.AzureMetrics:
+      return Connectors.AZURE
     case HealthSourceTypes.SignalFX:
     case HealthSourceTypes.SplunkSignalFXMetrics:
       return Connectors.SignalFX

@@ -9462,8 +9462,11 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts': string
   'cv.monitoringSources.commonHealthSource.metricsChart.runQueryToFetchResults': string
   'cv.monitoringSources.commonHealthSource.noQueries': string
+  'cv.monitoringSources.commonHealthSource.query.aggregation': string
   'cv.monitoringSources.commonHealthSource.query.enterQuery': string
   'cv.monitoringSources.commonHealthSource.query.enterQueryAndQueryField': string
+  'cv.monitoringSources.commonHealthSource.query.metricName': string
+  'cv.monitoringSources.commonHealthSource.query.metricNamespace': string
   'cv.monitoringSources.commonHealthSource.query.selectAllFieldsToFetchRecords': string
   'cv.monitoringSources.commonHealthSource.query.selectQueryField': string
   'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle': string

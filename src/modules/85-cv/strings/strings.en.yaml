@@ -256,6 +256,9 @@ monitoringSources:
       selectQueryField: 'Please select {{queryFieldIdentifier}}'
       enterQueryAndQueryField: 'Please enter query and select {{queryFieldIdentifier}}'
       selectAllFieldsToFetchRecords: Please fill all the above fields to fetch records
+      aggregation: Aggregation
+      metricNamespace: Metric namespace
+      metricName: Metric name
     records:
       fetchingRecords: Fetching records ...
       runQueryToSeeRecords: Run query to fetch the records

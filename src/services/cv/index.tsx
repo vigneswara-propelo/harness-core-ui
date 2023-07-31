@@ -2983,7 +2983,32 @@ export interface HealthSourceRecordsRequest {
     | 'GRAFANA_LOKI_LOGS'
     | 'AZURE_LOGS'
     | 'AZURE_METRICS'
-  query: string
+  query?: string
+  skipQueryValidationDataSourceTypes?: (
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
+  )[]
   startTime: number
 }
 
@@ -4719,7 +4744,32 @@ export interface QueryRecordsRequest {
     | 'GRAFANA_LOKI_LOGS'
     | 'AZURE_LOGS'
     | 'AZURE_METRICS'
-  query: string
+  query?: string
+  skipQueryValidationDataSourceTypes?: (
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+    | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
+    | 'AZURE_LOGS'
+    | 'AZURE_METRICS'
+  )[]
   startTime: number
 }
 

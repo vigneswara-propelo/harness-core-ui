@@ -15,15 +15,18 @@ import {
   getNestedRuntimeInputs
 } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { spacingMedium } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.constants'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 
 interface MetricDefinitionInptsetFormInterface {
   path: string
   metricDefinitions: any
+  sourceType?: HealthSourceTypes
 }
 
 export default function MetricDefinitionInptsetForm({
   metricDefinitions,
-  path
+  path,
+  sourceType
 }: MetricDefinitionInptsetFormInterface): JSX.Element {
   const { getString } = useStrings()
   const { setFieldValue: onChange } = useFormikContext()
@@ -46,7 +49,7 @@ export default function MetricDefinitionInptsetForm({
                   <FormInput.MultiTextInput
                     key={input.name}
                     name={input.path}
-                    label={getLabelByName(input.name, getString)}
+                    label={getLabelByName(input.name, getString, sourceType)}
                     onChange={value => {
                       onChange?.(input.path, value?.toString()?.split(','))
                     }}
@@ -58,7 +61,7 @@ export default function MetricDefinitionInptsetForm({
                 <FormInput.MultiTextInput
                   key={input.name}
                   name={input.path}
-                  label={getLabelByName(input.name, getString)}
+                  label={getLabelByName(input.name, getString, sourceType)}
                   multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
                 />
               )

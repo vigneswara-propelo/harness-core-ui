@@ -19,16 +19,21 @@ import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSourc
 import { HealthSourceParamValuesRequest, useGetParamValues } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import {
+  generateRequestBodyForParamValues,
+  getListOptionsFromParams
+} from '../../CommonCustomMetricFormContainer.utils'
 
 export interface CommonHealthSourceFieldProps {
   field: FieldMapping
   isConnectorRuntimeOrExpression?: boolean
   connectorIdentifier: string
   providerType: HealthSourceParamValuesRequest['providerType']
+  fieldsToFetchRecords?: FieldMapping[]
 }
 
 export default function CommonHealthSourceField(props: CommonHealthSourceFieldProps): JSX.Element {
-  const { field, isConnectorRuntimeOrExpression, connectorIdentifier, providerType } = props
+  const { field, isConnectorRuntimeOrExpression, connectorIdentifier, providerType, fieldsToFetchRecords } = props
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { isTemplate, expressions } = useContext(SetupSourceTabsContext)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -49,20 +54,16 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   })
 
   const fetchParamValuesData = async (): Promise<void> => {
-    const requestBody = {
+    const requestBody = generateRequestBodyForParamValues({
+      fieldsToFetchRecords,
+      values,
       connectorIdentifier,
       providerType,
-      paramName: identifier
-    }
+      identifier
+    })
     try {
       const data = await fetchParamValues(requestBody)
-      const paramValues = data?.resource?.paramValues || []
-      const listOptionsData = paramValues.map(el => {
-        return {
-          label: el?.name as string,
-          value: el?.value as string
-        }
-      })
+      const listOptionsData = getListOptionsFromParams(data)
       setListOptions(listOptionsData)
     } catch (errorData) {
       showError(getErrorMessage(errorData) as string)

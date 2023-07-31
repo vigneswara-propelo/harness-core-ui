@@ -8,9 +8,10 @@ import { metricThresholdsValidationMock } from './CommonHealthSource.mock'
 import {
   getSelectedProductInfo,
   handleValidateHealthSourceConfigurationsForm,
-  getFieldName
+  getFieldName,
+  validateFieldsToFetchRecords
 } from '../CommonHealthSource.utils'
-import { CustomMetricFormFieldNames } from '../CommonHealthSource.constants'
+import { CustomMetricFormFieldNames, FIELD_ENUM } from '../CommonHealthSource.constants'
 
 jest.mock('framework/strings', () => ({
   useStrings: () => ({
@@ -133,5 +134,43 @@ describe('getFieldName', () => {
 
     expect(result).toBe('')
     expect(getString).not.toHaveBeenCalled()
+  })
+
+  test('should not call setFieldError when all fields are present in formData', () => {
+    const fieldMappingMock = [
+      {
+        identifier: 'field1' as keyof CommonCustomMetricFormikInterface,
+        type: FIELD_ENUM.TEXT_INPUT,
+        label: 'field1',
+        isTemplateSupportEnabled: true
+      },
+      {
+        identifier: 'field2' as keyof CommonCustomMetricFormikInterface,
+        type: FIELD_ENUM.TEXT_INPUT,
+        label: 'field2',
+        isTemplateSupportEnabled: true
+      }
+    ]
+    const formDataMock = {
+      field1: 'Value 1'
+    }
+    const errorsMock = {}
+    const getStringMock = jest.fn(key => key)
+    const setFieldError = jest.fn()
+    const nameMock = 'testName'
+    validateFieldsToFetchRecords({
+      fieldsToFetchRecords: fieldMappingMock,
+      formData: {
+        ...formDataMock,
+        serviceInstanceField: 'Value 2' as keyof CommonCustomMetricFormikInterface,
+        identifier: 'identifier',
+        metricName: 'identifier',
+        groupName: 'g1'
+      },
+      errors: errorsMock,
+      getString: getStringMock,
+      name: nameMock
+    })
+    expect(setFieldError).not.toHaveBeenCalled()
   })
 })

@@ -1,7 +1,16 @@
-import { MultiTypeInputType } from '@harness/uicore'
+import { MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
-import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
-import type { HealthSourceRecordsRequest, QueryRecordsRequest, QueryRecordsRequestRequestBody } from 'services/cv'
+import {
+  CHART_VISIBILITY_ENUM,
+  DEFAULT_VALUE
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import type {
+  HealthSourceParamValuesRequest,
+  HealthSourceRecordsRequest,
+  QueryRecordsRequest,
+  QueryRecordsRequestRequestBody,
+  RestResponseHealthSourceParamValuesResponse
+} from 'services/cv'
 import type {
   CommonCustomMetricFormikInterface,
   FieldMapping
@@ -16,12 +25,22 @@ export function shouldAutoBuildChart(
   return !!(chartConfig?.enabled && chartConfig?.chartVisibilityMode === CHART_VISIBILITY_ENUM.AUTO)
 }
 
-export function shouldShowChartComponent(
-  chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined,
-  isQueryRuntimeOrExpression?: boolean,
+export function shouldShowChartComponent({
+  chartConfig,
+  isQueryRuntimeOrExpression,
+  isConnectorRuntimeOrExpression,
+  isAnyFieldToFetchRecordsNonFixed
+}: {
+  chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined
+  isQueryRuntimeOrExpression?: boolean
   isConnectorRuntimeOrExpression?: boolean
-): boolean {
-  return Boolean(chartConfig?.enabled && !(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression))
+  isAnyFieldToFetchRecordsNonFixed?: boolean
+}): boolean {
+  return Boolean(
+    chartConfig?.enabled &&
+      !(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) &&
+      !isAnyFieldToFetchRecordsNonFixed
+  )
 }
 
 export function getRecordsRequestBody({
@@ -49,7 +68,7 @@ export function getRecordsRequestBody({
     endTime,
     startTime,
     healthSourceType: healthSourceType as QueryRecordsRequest['healthSourceType'],
-    ...(query && { query }),
+    query: query || DEFAULT_VALUE,
     healthSourceQueryParams: generateHealthSourceQueryParams({
       identifier,
       queryFieldValue,
@@ -66,8 +85,8 @@ export function generateHealthSourceQueryParams({
   fieldsToFetchRecords,
   values
 }: {
-  identifier: string
-  queryFieldValue: string | undefined
+  identifier?: string
+  queryFieldValue?: string
   fieldsToFetchRecords?: FieldMapping[]
   values?: CommonCustomMetricFormikInterface
 }): HealthSourceRecordsRequest['healthSourceQueryParams'] {
@@ -91,7 +110,7 @@ export function generateHealthSourceQueryParams({
 }
 
 export function populateHealthSourceQueryParams(
-  fieldIdentifier: string,
+  fieldIdentifier?: string,
   fieldValue?: string
 ): HealthSourceRecordsRequest['healthSourceQueryParams'] {
   return { ...(fieldIdentifier && { [fieldIdentifier]: fieldValue }) }
@@ -158,4 +177,42 @@ export function getHealthsourceType(
     default:
       return sourceTypeInfo as QueryRecordsRequest['healthSourceType']
   }
+}
+
+export function generateRequestBodyForParamValues({
+  fieldsToFetchRecords,
+  values,
+  connectorIdentifier,
+  providerType,
+  identifier
+}: {
+  fieldsToFetchRecords?: FieldMapping[]
+  values: CommonCustomMetricFormikInterface
+  connectorIdentifier: string
+  providerType: string
+  identifier: string
+}): HealthSourceParamValuesRequest {
+  const healthSourceQueryParams = generateHealthSourceQueryParams({
+    fieldsToFetchRecords,
+    values
+  })
+  const requestBody = {
+    connectorIdentifier,
+    providerType: providerType as HealthSourceParamValuesRequest['providerType'],
+    paramName: identifier,
+    ...(healthSourceQueryParams && { healthSourceQueryParams })
+  }
+  return requestBody
+}
+
+export function getListOptionsFromParams(data?: RestResponseHealthSourceParamValuesResponse): SelectOption[] {
+  const paramValues = data?.resource?.paramValues || []
+  const listOptionsData = paramValues.map(el => {
+    const { name = '', value = '' } = el
+    return {
+      label: (name || value) as string,
+      value
+    }
+  })
+  return listOptionsData
 }

@@ -10066,55 +10066,6 @@
         }
       }
     },
-    "/splunk/saved-searches": {
-      "get": {
-        "tags": ["splunk"],
-        "summary": "gets saved searches in splunk",
-        "description": "",
-        "operationId": "getSplunkSavedSearches",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "requestGuid",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListSplunkSavedSearch"
-            }
-          }
-        }
-      }
-    },
     "/splunk/sample-data": {
       "get": {
         "tags": ["splunk"],
@@ -10275,6 +10226,55 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseListLinkedHashMap"
+            }
+          }
+        }
+      }
+    },
+    "/splunk/saved-searches": {
+      "get": {
+        "tags": ["splunk"],
+        "summary": "gets saved searches in splunk",
+        "description": "",
+        "operationId": "getSplunkSavedSearches",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "requestGuid",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListSplunkSavedSearch"
             }
           }
         }
@@ -22764,7 +22764,7 @@
     },
     "QueryRecordsRequest": {
       "type": "object",
-      "required": ["connectorIdentifier", "endTime", "query", "startTime"],
+      "required": ["connectorIdentifier", "endTime", "startTime"],
       "properties": {
         "connectorIdentifier": {
           "type": "string"
@@ -22840,6 +22840,37 @@
         },
         "healthSourceParams": {
           "$ref": "#/definitions/HealthSourceParamsDTO"
+        },
+        "skipQueryValidationDataSourceTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "APP_DYNAMICS",
+              "SPLUNK",
+              "SPLUNK_METRIC",
+              "STACKDRIVER",
+              "STACKDRIVER_LOG",
+              "KUBERNETES",
+              "NEW_RELIC",
+              "PROMETHEUS",
+              "DATADOG_METRICS",
+              "DATADOG_LOG",
+              "ERROR_TRACKING",
+              "DYNATRACE",
+              "CUSTOM_HEALTH_METRIC",
+              "CUSTOM_HEALTH_LOG",
+              "ELASTICSEARCH",
+              "CLOUDWATCH_METRICS",
+              "AWS_PROMETHEUS",
+              "SUMOLOGIC_METRICS",
+              "SUMOLOGIC_LOG",
+              "SPLUNK_SIGNALFX_METRICS",
+              "GRAFANA_LOKI_LOGS",
+              "AZURE_LOGS",
+              "AZURE_METRICS"
+            ]
+          }
         }
       }
     },
@@ -22904,7 +22935,7 @@
     },
     "HealthSourceRecordsRequest": {
       "type": "object",
-      "required": ["connectorIdentifier", "endTime", "query", "startTime"],
+      "required": ["connectorIdentifier", "endTime", "startTime"],
       "properties": {
         "connectorIdentifier": {
           "type": "string"
@@ -22980,6 +23011,37 @@
         },
         "healthSourceParams": {
           "$ref": "#/definitions/HealthSourceParamsDTO"
+        },
+        "skipQueryValidationDataSourceTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "APP_DYNAMICS",
+              "SPLUNK",
+              "SPLUNK_METRIC",
+              "STACKDRIVER",
+              "STACKDRIVER_LOG",
+              "KUBERNETES",
+              "NEW_RELIC",
+              "PROMETHEUS",
+              "DATADOG_METRICS",
+              "DATADOG_LOG",
+              "ERROR_TRACKING",
+              "DYNATRACE",
+              "CUSTOM_HEALTH_METRIC",
+              "CUSTOM_HEALTH_LOG",
+              "ELASTICSEARCH",
+              "CLOUDWATCH_METRICS",
+              "AWS_PROMETHEUS",
+              "SUMOLOGIC_METRICS",
+              "SUMOLOGIC_LOG",
+              "SPLUNK_SIGNALFX_METRICS",
+              "GRAFANA_LOKI_LOGS",
+              "AZURE_LOGS",
+              "AZURE_METRICS"
+            ]
+          }
         }
       }
     },
@@ -29609,40 +29671,6 @@
         }
       }
     },
-    "RestResponseListSplunkSavedSearch": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SplunkSavedSearch"
-          }
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
-        }
-      }
-    },
-    "SplunkSavedSearch": {
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "string"
-        },
-        "searchQuery": {
-          "type": "string"
-        }
-      }
-    },
     "RestResponseListLinkedHashMap": {
       "type": "object",
       "properties": {
@@ -29690,6 +29718,40 @@
           "items": {
             "$ref": "#/definitions/ResponseMessage"
           }
+        }
+      }
+    },
+    "RestResponseListSplunkSavedSearch": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SplunkSavedSearch"
+          }
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "SplunkSavedSearch": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "searchQuery": {
+          "type": "string"
         }
       }
     },

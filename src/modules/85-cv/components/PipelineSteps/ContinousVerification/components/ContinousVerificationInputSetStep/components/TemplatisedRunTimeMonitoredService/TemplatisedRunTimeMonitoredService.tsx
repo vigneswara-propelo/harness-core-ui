@@ -23,7 +23,7 @@ import {
   setCommaSeperatedList,
   showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
-import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
+import type { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
@@ -76,6 +76,7 @@ export default function TemplatisedRunTimeMonitoredService(
         )
 
         const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(healthSource, path)
+        const sourceType = getSourceTypeForConnector(healthSource)
 
         return (
           <Card key={`${healthSource?.name}.${index}`} className={css.card}>
@@ -95,12 +96,12 @@ export default function TemplatisedRunTimeMonitoredService(
                         name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
                         label={getString('connector')}
                         placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                          sourceType: getSourceTypeForConnector(healthSource)
+                          sourceType
                         })}
-                        disabled={!getSourceTypeForConnector(healthSource)}
+                        disabled={!sourceType}
                         setRefValue
                         multiTypeProps={{ allowableTypes, expressions }}
-                        type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
+                        type={sourceType as ConnectorInfoDTO['type']}
                         enableConfigureOptions={false}
                       />
                     )
@@ -110,7 +111,7 @@ export default function TemplatisedRunTimeMonitoredService(
                         <FormInput.MultiTextInput
                           key={input.name}
                           name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                          label={getLabelByName(input.name, getString)}
+                          label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                           multiTextInputProps={{
                             expressions,
                             allowableTypes
@@ -139,7 +140,7 @@ export default function TemplatisedRunTimeMonitoredService(
                             <FormInput.MultiTextInput
                               key={input.name}
                               name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                              label={getLabelByName(input.name, getString)}
+                              label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                               onChange={value => {
                                 setCommaSeperatedList(
                                   value as string,
@@ -158,7 +159,7 @@ export default function TemplatisedRunTimeMonitoredService(
                             <FormInput.MultiTextInput
                               key={input.name}
                               name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                              label={getLabelByName(input.name, getString)}
+                              label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                               multiTextInputProps={{
                                 expressions,
                                 allowableTypes

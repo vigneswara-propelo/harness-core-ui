@@ -59,6 +59,7 @@ export interface CommonQueryViewerProps {
   fieldsToFetchRecords?: FieldMapping[]
   connectorIdentifier?: CommonCustomMetricFormContainerProps['connectorIdentifier']
   healthSourceType?: QueryRecordsRequest['healthSourceType']
+  isAnyFieldToFetchRecordsNonFixed?: boolean
 }
 
 export interface CommonQueryViewDialogProps extends RecordsProps {

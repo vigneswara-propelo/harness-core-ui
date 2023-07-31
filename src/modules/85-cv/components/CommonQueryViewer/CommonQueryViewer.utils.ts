@@ -87,11 +87,17 @@ export function getRunQueryBtnTooltip({
 export const shouldShowCommonRecords = ({
   isQueryRuntimeOrExpression,
   isConnectorRuntimeOrExpression,
-  hideRecords
+  isQueryFieldNonFixed,
+  isAnyFieldToFetchRecordsNonFixed
 }: {
   isQueryRuntimeOrExpression?: boolean
   isConnectorRuntimeOrExpression?: boolean
-  hideRecords?: boolean
+  isQueryFieldNonFixed?: boolean
+  isAnyFieldToFetchRecordsNonFixed?: boolean
 }): boolean => {
-  return !(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) && !hideRecords
+  return (
+    !(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) &&
+    !isQueryFieldNonFixed &&
+    !isAnyFieldToFetchRecordsNonFixed
+  )
 }

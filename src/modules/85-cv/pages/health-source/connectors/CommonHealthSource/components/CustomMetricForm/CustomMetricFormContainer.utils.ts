@@ -151,11 +151,19 @@ export function setVisibleFieldsTouched(
   setFieldTouched: FormikProps<CommonCustomMetricFormikInterface>['setFieldTouched']
 ): void {
   const queryField = healthSourceConfig?.customMetrics?.queryAndRecords?.queryField
+  const fieldsToFetchRecords = healthSourceConfig?.customMetrics?.queryAndRecords?.fieldsToFetchRecords
   const isQueryEnabled = healthSourceConfig?.customMetrics?.queryAndRecords?.enabled
   const fieldMappings = healthSourceConfig?.customMetrics?.fieldMappings
+  const serviceInstanceField = healthSourceConfig?.customMetrics?.assign?.serviceInstance?.[0]
 
   if (queryField) {
     setFieldTouched(queryField?.identifier)
+  }
+
+  if (fieldsToFetchRecords) {
+    for (const field of fieldsToFetchRecords) {
+      setFieldTouched(field?.identifier)
+    }
   }
 
   if (isQueryEnabled) {
@@ -166,5 +174,9 @@ export function setVisibleFieldsTouched(
     for (const field of fieldMappings) {
       setFieldTouched(field?.identifier)
     }
+  }
+
+  if (serviceInstanceField) {
+    setFieldTouched(CustomMetricFormFieldNames.SERVICE_INSTANCE)
   }
 }

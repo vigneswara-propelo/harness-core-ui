@@ -44,7 +44,10 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
 
   const { customMetrics } = healthSourceConfig
 
-  const { assign } = customMetrics as NonNullable<HealthSourceConfig['customMetrics']>
+  const {
+    assign,
+    queryAndRecords: { fieldsToFetchRecords }
+  } = customMetrics as NonNullable<HealthSourceConfig['customMetrics']>
 
   const { serviceInstance: serviceInstanceConfig } = assign as NonNullable<AssignSectionType>
 
@@ -63,6 +66,7 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
           defaultServiceInstance={defaultServiceInstance}
           continuousVerificationEnabled={continuousVerificationEnabled}
           recordProps={recordProps}
+          fieldsToFetchRecords={fieldsToFetchRecords}
         />
       </Layout.Vertical>
     </>

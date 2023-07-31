@@ -121,3 +121,5 @@ export const logsTableDefaultConfigs = {
 export const PRODUCT_MAP: { [key: string]: HealthSourceTypes } = {
   [HealthSourceTypes.Elk]: HealthSourceTypes.ElasticSearch_Logs
 }
+
+export const DEFAULT_VALUE = 'default'

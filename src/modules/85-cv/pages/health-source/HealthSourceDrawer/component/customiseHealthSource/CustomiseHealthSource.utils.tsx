@@ -172,6 +172,7 @@ export const LoadSourceByType = ({
         />
       )
     case HealthSourceTypes.Azure:
+    case HealthSourceTypes.AzureMetrics:
     case HealthSourceTypes.AzureLogs: {
       if (!isAzureLogsEnabled) {
         return null

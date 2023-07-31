@@ -289,6 +289,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     }
   },
   [HealthSourceTypes.AzureMetrics]: {
+    name: HealthSourceTypes.AzureMetrics,
     addQuery: {
       label: 'Metric',
       enableDefaultGroupName: false
@@ -309,17 +310,17 @@ export const healthSourcesConfig: HealthSourcesConfig = {
           },
           {
             type: FIELD_ENUM.TEXT_INPUT,
-            label: 'Metric name',
-            identifier: CustomMetricFormFieldNames.QUERY_METRIC_NAME,
-            placeholder: 'Please provide metric name',
+            label: 'Metric namespace',
+            identifier: CustomMetricFormFieldNames.QUERY_METRIC_NAMESPACE,
+            placeholder: 'Please provide metric namespace',
             isTemplateSupportEnabled: true,
             allowCreatingNewItems: true
           },
           {
             type: FIELD_ENUM.TEXT_INPUT,
-            label: 'Metric namespace',
-            identifier: CustomMetricFormFieldNames.QUERY_METRIC_NAMESPACE,
-            placeholder: 'Please provide metric namespace',
+            label: 'Metric name',
+            identifier: CustomMetricFormFieldNames.QUERY_METRIC_NAME,
+            placeholder: 'Please provide metric name',
             isTemplateSupportEnabled: true,
             allowCreatingNewItems: true
           },
@@ -349,8 +350,16 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         hideCV: false,
         hideServiceIdentifier: false,
         hideSLIAndHealthScore: false,
-        defaultServiceInstance: '_sourceHost',
-        updateServiceInstanceBasedOnQuery: true
+        serviceInstance: [
+          {
+            type: FIELD_ENUM.DROPDOWN,
+            label: 'Service Instance Identifier',
+            identifier: CustomMetricFormFieldNames.SERVICE_INSTANCE,
+            placeholder: 'Select Service Instance Identifier',
+            isTemplateSupportEnabled: true,
+            allowCreatingNewItems: true
+          }
+        ]
       }
     },
     metricPacks: {

@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import type { HealthSource } from 'services/cv'
 import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
-import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
+import type { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import { spacingMedium } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.constants'
 import {
   enrichHealthSourceWithVersionForHealthsourceType,
@@ -54,6 +54,7 @@ export default function HealthSourceInputsetForm({
       path
     )
     const areMetricDefinitionsPresent = Boolean(Array.isArray(metricDefinitions) && metricDefinitions?.length)
+    const sourceType = getSourceTypeForConnector(healthSource)
 
     return (
       <Card key={`${healthSource?.name}.${index}`} className={css.healthSourceInputSet}>
@@ -66,7 +67,7 @@ export default function HealthSourceInputsetForm({
                 return (
                   <FormConnectorReferenceField
                     width={400}
-                    type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
+                    type={sourceType as ConnectorInfoDTO['type']}
                     name={input.path}
                     label={
                       <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
@@ -77,7 +78,7 @@ export default function HealthSourceInputsetForm({
                     projectIdentifier={projectIdentifier}
                     orgIdentifier={orgIdentifier}
                     placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                      sourceType: getSourceTypeForConnector(healthSource)
+                      sourceType
                     })}
                     tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
                   />
@@ -88,7 +89,7 @@ export default function HealthSourceInputsetForm({
                     <FormInput.MultiTextInput
                       key={input.name}
                       name={input.path}
-                      label={getLabelByName(input.name, getString)}
+                      label={getLabelByName(input.name, getString, sourceType as HealthSourceTypes)}
                       multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
                     />
                   </>
@@ -97,7 +98,11 @@ export default function HealthSourceInputsetForm({
             })
           : null}
         {Boolean(areMetricDefinitionsPresent) && (
-          <MetricDefinitionInptsetForm path={metricDefinitionInptsetFormPath} metricDefinitions={metricDefinitions} />
+          <MetricDefinitionInptsetForm
+            path={metricDefinitionInptsetFormPath}
+            metricDefinitions={metricDefinitions}
+            sourceType={sourceType as HealthSourceTypes}
+          />
         )}
       </Card>
     )

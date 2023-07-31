@@ -24,6 +24,7 @@ import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupS
 import { getIsLogsTableVisible } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { getIsAnyFieldNonFixed } from '@cv/components/CommonQueryViewer/components/FieldsToFetchRecords/FieldsToFetchRecords.utils'
 import CommonChart from '../../CommonChart/CommonChart'
 import type { CommonCustomMetricFormContainerProps } from './CommonCustomMetricFormContainer.types'
 import LogsTableContainer from '../../LogsTable/LogsTableContainer'
@@ -103,7 +104,13 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }, [values?.identifier])
 
   const handleBuildChart = async (): Promise<void> => {
-    const fetchMetricsRecordsRequestBody = getRecordsRequestBody({ connectorIdentifier, healthSourceType, query })
+    const fetchMetricsRecordsRequestBody = getRecordsRequestBody({
+      connectorIdentifier,
+      healthSourceType,
+      query,
+      fieldsToFetchRecords,
+      values
+    })
     fetchHealthSourceTimeSeriesData(fetchMetricsRecordsRequestBody).then(data => {
       const timeSeriesData = data?.resource?.timeSeriesData || []
       setHealthSourceTimeSeriesData(timeSeriesData)
@@ -143,6 +150,10 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
     [fetchingSampleRecordLoading, isDataAvailableForLogsTable, records]
   )
 
+  const isAnyFieldToFetchRecordsNonFixed = useMemo(() => {
+    return fieldsToFetchRecords ? getIsAnyFieldNonFixed(fieldsToFetchRecords, values) : false
+  }, [fieldsToFetchRecords, values])
+
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
       {queryField ? (
@@ -172,9 +183,15 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         fieldsToFetchRecords={fieldsToFetchRecords}
         connectorIdentifier={connectorIdentifier}
         healthSourceType={healthSourceType}
+        isAnyFieldToFetchRecordsNonFixed={isAnyFieldToFetchRecordsNonFixed}
       />
 
-      {shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression) ? (
+      {shouldShowChartComponent({
+        chartConfig,
+        isQueryRuntimeOrExpression,
+        isConnectorRuntimeOrExpression,
+        isAnyFieldToFetchRecordsNonFixed
+      }) ? (
         <CommonChart
           timeSeriesDataLoading={timeSeriesDataLoading}
           timeseriesDataError={timeseriesDataError}

@@ -9,7 +9,7 @@ import type { FormikErrors, FormikProps } from 'formik'
 import { cloneDeep, isNumber, set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import type { HealthSource, NextGenHealthSourceSpec, QueryRecordsRequest } from 'services/cv'
+import type { HealthSource, NextGenHealthSourceSpec, QueryParamsDTO, QueryRecordsRequest } from 'services/cv'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { V2 } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 import { initializeSelectedMetricsMap } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
@@ -19,7 +19,8 @@ import {
   FIELD_ENUM,
   DEFAULT_HEALTH_SOURCE_QUERY,
   CustomMetricFormFieldNames,
-  PRODUCT_MAP
+  PRODUCT_MAP,
+  DEFAULT_VALUE
 } from './CommonHealthSource.constants'
 import type {
   HealthSourcePayload,
@@ -258,13 +259,18 @@ export const handleValidateCustomMetricForm = ({
   const isAssignComponentEnabled = customMetricsConfig?.assign?.enabled
   const isLogsTableEnabled = customMetricsConfig?.logsTable?.enabled
   const queryFieldIdentifier = customMetricsConfig?.queryAndRecords?.queryField?.identifier
+  const fieldsToFetchRecords = customMetricsConfig?.queryAndRecords?.fieldsToFetchRecords
 
   let errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
   const { query = '', recordCount } = formData
 
-  // Validate query section
-  if (!query) {
-    set(errors, CustomMetricFormFieldNames.QUERY, getString('fieldRequired', { field: 'Query' }))
+  if (!fieldsToFetchRecords) {
+    // Validate query section
+    if (!query) {
+      set(errors, CustomMetricFormFieldNames.QUERY, getString('fieldRequired', { field: 'Query' }))
+    }
+  } else {
+    validateFieldsToFetchRecords({ fieldsToFetchRecords, formData, errors, getString, name })
   }
 
   // validate query section when multiple records are returned
@@ -273,11 +279,7 @@ export const handleValidateCustomMetricForm = ({
   }
 
   if (queryFieldIdentifier && !formData[queryFieldIdentifier as keyof CommonCustomMetricFormikInterface]) {
-    set(
-      errors,
-      queryFieldIdentifier,
-      getString('fieldRequired', { field: getFieldName(queryFieldIdentifier, getString, name) })
-    )
+    setFieldError({ errors, fieldIdentifier: queryFieldIdentifier, getString, name })
   }
 
   // Validate Assign section
@@ -385,6 +387,41 @@ export const handleValidateHealthSourceConfigurationsForm = ({
   return errors
 }
 
+export function validateFieldsToFetchRecords({
+  fieldsToFetchRecords,
+  formData,
+  errors,
+  getString,
+  name
+}: {
+  fieldsToFetchRecords: FieldMapping[]
+  formData: CommonCustomMetricFormikInterface
+  errors: FormikErrors<CommonCustomMetricFormikInterface>
+  getString: UseStringsReturn['getString']
+  name?: string
+}): void {
+  for (const fieldToFetchRecords of fieldsToFetchRecords) {
+    const fieldIdentifier = fieldToFetchRecords?.identifier
+    if (!formData[fieldIdentifier as keyof CommonCustomMetricFormikInterface]) {
+      setFieldError({ errors, fieldIdentifier, getString, name })
+    }
+  }
+}
+
+export function setFieldError({
+  errors,
+  fieldIdentifier,
+  getString,
+  name
+}: {
+  errors: FormikErrors<CommonCustomMetricFormikInterface>
+  fieldIdentifier: keyof CommonCustomMetricFormikInterface
+  getString: UseStringsReturn['getString']
+  name?: string
+}): void {
+  set(errors, fieldIdentifier, getString('fieldRequired', { field: getFieldName(fieldIdentifier, getString, name) }))
+}
+
 export function checkIfCurrentCustomMetricFormIsValid(
   customMetricFormRef: React.MutableRefObject<FormikProps<CommonCustomMetricFormikInterface> | undefined>
 ): boolean {
@@ -423,7 +460,10 @@ export const createHealthSourcePayload = (
       metricName,
       groupName,
       index,
-      query,
+      healthSourceMetricName,
+      healthSourceMetricNamespace,
+      aggregationType,
+      query = DEFAULT_VALUE,
       sli,
       continuousVerification,
       healthScore,
@@ -448,7 +488,10 @@ export const createHealthSourcePayload = (
           ...(timeStampIdentifier && { timeStampIdentifier: timeStampIdentifier as string }),
           ...(timeStampFormat && { timeStampFormat: timeStampFormat as string }),
           ...(messageIdentifier && { messageIdentifier: messageIdentifier as string }),
-          ...(index && { index: index as string })
+          ...(index && { index: index as string }),
+          ...(healthSourceMetricName && { healthSourceMetricName: healthSourceMetricName as string }),
+          ...(healthSourceMetricNamespace && { healthSourceMetricNamespace: healthSourceMetricNamespace as string }),
+          ...(aggregationType && { aggregationType: aggregationType as QueryParamsDTO['aggregationType'] })
         },
         liveMonitoringEnabled: Boolean(healthScore),
         continuousVerificationEnabled: Boolean(continuousVerification),
@@ -619,14 +662,15 @@ export function getFieldName(
   getString: UseStringsReturn['getString'],
   name?: string
 ): string {
-  if (name === HealthSourceTypes.AzureLogs && fieldIdentifier === CustomMetricFormFieldNames.INDEX) {
-    return getString('platform.connectors.serviceNow.resourceID')
-  }
   switch (fieldIdentifier) {
     case CustomMetricFormFieldNames.QUERY:
       return getString('cv.query')
     case CustomMetricFormFieldNames.INDEX:
-      return getString('cv.monitoringSources.elk.logIndexesInputLabel')
+      if (name === HealthSourceTypes.AzureLogs || name === HealthSourceTypes.AzureMetrics) {
+        return getString('platform.connectors.serviceNow.resourceID')
+      } else {
+        return getString('cv.monitoringSources.elk.logIndexesInputLabel')
+      }
     case CustomMetricFormFieldNames.TIMESTAMP_FORMAT:
       return getString('cv.monitoringSources.commonHealthSource.fields.timestampFormat')
     case CustomMetricFormFieldNames.TIMESTAMP_IDENTIFIER:
@@ -635,6 +679,12 @@ export function getFieldName(
       return getString('cv.monitoringSources.commonHealthSource.fields.serviceInstance')
     case CustomMetricFormFieldNames.MESSAGE_IDENTIFIER:
       return getString('cv.monitoringSources.commonHealthSource.fields.messageIdentifier')
+    case CustomMetricFormFieldNames.QUERY_METRIC_NAME:
+      return getString('cv.monitoringSources.commonHealthSource.query.metricName')
+    case CustomMetricFormFieldNames.QUERY_METRIC_NAMESPACE:
+      return getString('cv.monitoringSources.commonHealthSource.query.metricNamespace')
+    case CustomMetricFormFieldNames.QUERY_AGGREGATION_TYPE:
+      return getString('cv.monitoringSources.commonHealthSource.query.aggregation')
     default:
       return ''
   }

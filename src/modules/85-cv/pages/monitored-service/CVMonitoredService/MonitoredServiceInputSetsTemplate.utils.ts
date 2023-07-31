@@ -9,6 +9,7 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { cloneDeep } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { INDEXES } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 
 export const getNestedRuntimeInputs = (
   spec: any,
@@ -57,31 +58,6 @@ export const getNestedFields = (
   return clonedList
 }
 
-export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
-  switch (name) {
-    case 'applicationName':
-      return getString('cv.healthSource.connectors.AppDynamics.applicationLabel')
-    case 'tierName':
-      return getString('cv.healthSource.connectors.AppDynamics.trierLabel')
-    case 'completeMetricPath':
-      return getString('cv.healthSource.connectors.AppDynamics.metricPathType.text')
-    case 'serviceInstanceMetricPath':
-      return getString('cv.healthSource.connectors.AppDynamics.serviceInstance')
-    case 'serviceInstanceFieldName':
-      return getString('cv.monitoringSources.serviceInstanceIdentifier')
-    case 'connectorRef':
-      return getString('platform.connectors.selectConnector')
-    case 'query':
-      return getString('cv.query')
-    case 'category':
-      return `Category for ${getString('cv.monitoringSources.riskCategoryLabel')}`
-    case 'metricType':
-      return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
-    default:
-      return name
-  }
-}
-
 export const getValidationLabelByNameForTemplateInputs = (
   name: string,
   getString: UseStringsReturn['getString']
@@ -120,6 +96,12 @@ export const getValidationLabelByNameForTemplateInputs = (
       return `${getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')} is required`
     case 'messageIdentifier':
       return `${getString('cv.monitoringSources.gcoLogs.messageIdentifierTitle')} is required`
+    case CustomMetricFormFieldNames.QUERY_METRIC_NAME:
+      return getString('cv.monitoringSources.commonHealthSource.query.metricName')
+    case CustomMetricFormFieldNames.QUERY_METRIC_NAMESPACE:
+      return getString('cv.monitoringSources.commonHealthSource.query.metricNamespace')
+    case CustomMetricFormFieldNames.QUERY_AGGREGATION_TYPE:
+      return getString('cv.monitoringSources.commonHealthSource.query.aggregation')
     default:
       return `${name} is required`
   }
