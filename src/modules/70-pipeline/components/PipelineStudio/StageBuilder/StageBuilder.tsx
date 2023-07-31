@@ -264,7 +264,7 @@ function StageBuilder(): JSX.Element {
         const cloned = cloneDeep(pipeline)
         const stageToDelete = getStageFromPipeline(deleteId, cloned)
         const isRemove = removeNodeFromPipeline(stageToDelete, cloned, stageMap)
-        const isStripped = mayBeStripCIProps(cloned, templateTypes)
+        const isStripped = mayBeStripCIProps(cloned)
         if (isRemove || isStripped) {
           updatePipeline(cloned)
           showSuccess(getString('deleteStageSuccess'))

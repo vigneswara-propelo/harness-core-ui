@@ -238,11 +238,10 @@ export const getFlattenedStages = (
   return { stages }
 }
 
-export const mayBeStripCIProps = (pipeline: PipelineInfoConfig, templateTypes: { [key: string]: string }): boolean => {
+export const mayBeStripCIProps = (pipeline: PipelineInfoConfig): boolean => {
   // no CI stages exist
   const areCIStagesAbsent = pipeline?.stages?.every(stage => {
-    const templateRef = stage.stage?.template?.templateRef
-    return stage.stage?.type !== 'CI' && (!templateRef || templateTypes[templateRef] !== 'CI')
+    return stage.stage?.type !== 'CI'
   })
   if (areCIStagesAbsent) {
     const props = Object.keys(pipeline.properties || {})
