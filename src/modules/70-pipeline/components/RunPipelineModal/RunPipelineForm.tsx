@@ -90,6 +90,7 @@ import type { IRemoteFetchError } from '@pipeline/pages/utils/NoEntityFound/NoEn
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { usePrevious } from '@common/hooks/usePrevious'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -264,6 +265,7 @@ function RunPipelineFormBasic({
 
   const getPipelineBranch = (): string | undefined => branch || pipelineResponse?.data?.gitDetails?.branch
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(getPipelineBranch())
+  const previousSelectedBranch = usePrevious(selectedBranch)
 
   useEffect(() => {
     setResolvedPipeline(
@@ -297,7 +299,7 @@ function RunPipelineFormBasic({
     pipelineIdentifier,
     selectedStageData,
     rerunInputSetYaml: inputSetYAML,
-    branch,
+    branch: selectedBranch ?? branch,
     repoIdentifier,
     connectorRef,
     executionIdentifier,
@@ -765,15 +767,20 @@ function RunPipelineFormBasic({
   const onGitBranchChange = (selectedFilter: GitFilterScope, defaultSelected?: boolean): void => {
     const pipelineBranch = selectedFilter?.branch
     setSelectedBranch(pipelineBranch)
-    if (!defaultSelected) {
-      refetchPipeline({
-        queryParams: {
-          ...pipelineDefaultQueryParam,
-          branch: pipelineBranch
-        },
-        requestOptions: { headers: { 'Load-From-Cache': 'true' } }
-      })
-      getTemplateFromPipeline({ branch: pipelineBranch })
+
+    // Removing duplicate API calls on selecting the same branch again
+    if (previousSelectedBranch !== pipelineBranch) {
+      setSelectedInputSets([])
+      if (!defaultSelected) {
+        refetchPipeline({
+          queryParams: {
+            ...pipelineDefaultQueryParam,
+            branch: pipelineBranch
+          },
+          requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+        })
+        getTemplateFromPipeline({ branch: pipelineBranch })
+      }
     }
   }
 
