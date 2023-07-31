@@ -240,6 +240,8 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
         environmentTypes: sortFilter
       }
     })
+    setEnvId(undefined)
+    setSelectedEnv(undefined)
   }, [])
 
   const afterSaveActions = (): void => {
