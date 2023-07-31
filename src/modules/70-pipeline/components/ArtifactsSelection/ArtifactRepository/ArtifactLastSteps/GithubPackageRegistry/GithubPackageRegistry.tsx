@@ -25,6 +25,7 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, isNil, memoize, omit, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { FormikProps } from 'formik'
 import { Menu } from '@blueprintjs/core'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -103,14 +104,14 @@ function FormComponent({
     repoIdentifier,
     branch
   }
-  const packageTypeValue = getGenuineValue(formik.values.spec.packageType || initialValues?.spec?.packageType)
+  const packageTypeValue = getGenuineValue(formik.values.spec.packageType || get(initialValues, 'spec.packageType'))
   const connectorRefValue = getGenuineValue(
     defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   )
   const isSshOrWinrm = React.useMemo(() => {
     return isSshOrWinrmDeploymentType(deploymentType)
   }, [deploymentType])
-  const packageNameValue = getGenuineValue(formik.values.spec.packageName || initialValues?.spec?.packageName)
+  const packageNameValue = getGenuineValue(formik.values.spec.packageName || get(initialValues, 'spec.packageName'))
   const orgValue = getGenuineValue(formik.values.spec.org)
 
   const defaultPackageType = React.useMemo(
@@ -668,8 +669,11 @@ const getExtraDataForMavenIfApplicable = (formData: GithubPackageRegistryInitial
     : packageSourceData
 }
 
+type FormikRefType = React.MutableRefObject<FormikProps<GithubPackageRegistryInitialValuesType>>
+
 export function GithubPackageRegistry(
-  props: StepProps<ConnectorConfigDTO> & GithubPackageRegistryProps
+  props: StepProps<ConnectorConfigDTO> & GithubPackageRegistryProps,
+  formikRef: React.ForwardedRef<FormikProps<GithubPackageRegistryInitialValuesType>>
 ): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -832,9 +836,12 @@ export function GithubPackageRegistry(
         }}
       >
         {formik => {
+          ;(formikRef as FormikRefType).current = formik
           return <FormComponent {...props} formik={formik} deploymentType={selectedDeploymentType} />
         }}
       </Formik>
     </Layout.Vertical>
   )
 }
+
+export const GithubPackageRegistryWithRef = React.forwardRef(GithubPackageRegistry)

@@ -33,7 +33,7 @@ import { CustomArtifact } from '@pipeline/components/ArtifactsSelection/Artifact
 import { ACRArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { JenkinsArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import { GoogleArtifactRegistry } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
-import { GithubPackageRegistry } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
+import { GithubPackageRegistryWithRef } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import { DockerRegistryArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { AmazonMachineImage } from '../ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
 import { AzureArtifacts } from '../ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzureArtifacts'
@@ -106,7 +106,11 @@ export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastSteps
       )
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
       return (
-        <GithubPackageRegistry {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />
+        <GithubPackageRegistryWithRef
+          ref={artifactLastStepProps.formikRef}
+          {...artifactLastStepProps}
+          {...(shouldPassPrevStepData ? artifactPrevStepData : {})}
+        />
       )
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
       return <AmazonMachineImage {...artifactLastStepProps} {...(shouldPassPrevStepData ? artifactPrevStepData : {})} />

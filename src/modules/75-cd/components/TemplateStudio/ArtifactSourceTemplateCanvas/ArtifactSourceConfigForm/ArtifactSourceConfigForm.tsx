@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { defaultTo, noop } from 'lodash-es'
+import { FormikProps } from 'formik'
 import { Container, Formik } from '@harness/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { useStrings } from 'framework/strings'
@@ -15,7 +16,7 @@ import type {
   ArtifactSourceConfigFormData
 } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/types'
 import { getValidationSchema } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/ArtifactSourceConfigForm/ArtifactSourceConfigFormUtils'
-import { ArtifactSourceSpecifications } from './ArtifactSourceSpecifications'
+import { ArtifactSourceSpecificationsWithRef } from './ArtifactSourceSpecifications'
 import css from './ArtifactSourceConfigForm.module.scss'
 
 export interface ArtifactSourceConfigFormProps {
@@ -25,7 +26,8 @@ export interface ArtifactSourceConfigFormProps {
 
 function ArtifactSourceConfigForm(props: ArtifactSourceConfigFormProps, formikRef: TemplateFormRef): JSX.Element {
   const { artifactSourceConfigInitialValues, updateTemplate } = props
-  const ref = React.useRef<any | null>()
+  const artifactSourceConfigFormRef = React.useRef<FormikProps<ArtifactSourceConfigFormData> | null>()
+  const artifactDetailsFormRef = React.useRef<any | null>()
   const { getString } = useStrings()
 
   const getArtifactSourceConfigInitialValues = (): ArtifactSourceConfigFormData => {
@@ -38,13 +40,18 @@ function ArtifactSourceConfigForm(props: ArtifactSourceConfigFormProps, formikRe
 
   /* istanbul ignore next */ React.useImperativeHandle(formikRef, () => ({
     resetForm() {
-      return ref?.current?.resetForm()
+      artifactSourceConfigFormRef?.current?.resetForm()
+      artifactDetailsFormRef?.current?.resetForm()
     },
-    submitForm() {
-      return ref?.current?.submitForm()
+    async submitForm() {
+      await artifactSourceConfigFormRef?.current?.submitForm()
+      await artifactDetailsFormRef?.current?.submitForm()
     },
     getErrors() {
-      return defaultTo(ref?.current.errors, {})
+      return {
+        ...defaultTo(artifactSourceConfigFormRef?.current?.errors, {}),
+        ...defaultTo(artifactDetailsFormRef?.current?.errors, {})
+      }
     }
   }))
 
@@ -58,8 +65,14 @@ function ArtifactSourceConfigForm(props: ArtifactSourceConfigFormProps, formikRe
         validate={updateTemplate}
       >
         {formik => {
-          ref.current = formik
-          return <ArtifactSourceSpecifications formik={formik} updateTemplate={updateTemplate} />
+          artifactSourceConfigFormRef.current = formik
+          return (
+            <ArtifactSourceSpecificationsWithRef
+              ref={artifactDetailsFormRef}
+              formik={formik}
+              updateTemplate={updateTemplate}
+            />
+          )
         }}
       </Formik>
     </Container>

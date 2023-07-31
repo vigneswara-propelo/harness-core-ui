@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React from 'react'
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { FormikProps, FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
@@ -158,6 +159,7 @@ export interface ImagePathProps<T> {
   formClassName?: string
   prevStepData?: ConnectorConfigDTO
   editArtifactModePrevStepData?: ArtifactConnectorStepDataToLastStep
+  formikRef?: React.ForwardedRef<FormikProps<any>>
 }
 
 export interface AzureArtifactsInitialValues {

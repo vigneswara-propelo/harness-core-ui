@@ -159,10 +159,13 @@ function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
   )
 }
 
-export function ArtifactSourceSpecifications(props: {
-  formik: FormikProps<ArtifactSourceConfigFormData>
-  updateTemplate: (values: ArtifactSourceConfigFormData) => void
-}): React.ReactElement {
+export function ArtifactSourceSpecifications(
+  props: {
+    formik: FormikProps<ArtifactSourceConfigFormData>
+    updateTemplate: (values: ArtifactSourceConfigFormData) => void
+  },
+  formikRef: React.ForwardedRef<FormikProps<any>>
+): React.ReactElement {
   const { formik, updateTemplate } = props
   const {
     state: { template },
@@ -243,7 +246,8 @@ export function ArtifactSourceSpecifications(props: {
       isReadonly: isReadonly,
       prevStepData: { connectorId: formValues.connectorId } as ConnectorConfigDTO,
       formClassName: css.connectorFormOverride,
-      selectedArtifact: selectedArtifactType
+      selectedArtifact: selectedArtifactType,
+      formikRef: formikRef
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expressions, isReadonly, selectedArtifactType, getString, formValues, updateTemplate, template, setFieldValue])
@@ -307,3 +311,5 @@ export function ArtifactSourceSpecifications(props: {
     </FormikForm>
   )
 }
+
+export const ArtifactSourceSpecificationsWithRef = React.forwardRef(ArtifactSourceSpecifications)
