@@ -67,8 +67,8 @@ const TargetingRulesTab: FC<TargetingRulesTabProps> = ({ featureFlagData, refetc
     debounce
   })
 
-  const { data: segmentsData, refetch: refetchSegments } = useGetAllSegments({
-    queryParams: queryParams as GetAllSegmentsQueryParams,
+  const { data: segmentsData } = useGetAllSegments({
+    queryParams: { ...(queryParams as GetAllSegmentsQueryParams), pageSize: 500 },
     debounce
   })
 
@@ -88,15 +88,21 @@ const TargetingRulesTab: FC<TargetingRulesTabProps> = ({ featureFlagData, refetc
   const { featureEnabled, canEdit, canToggle } = useFeatureEnabled()
   const disabled = patchFeatureLoading || refetchFlagLoading || !featureEnabled || !!featureFlagData?.archived
 
-  const handleRefetchSegments = async (searchTerm: string): Promise<void> =>
-    await refetchSegments({
-      queryParams: { ...queryParams, identifier: searchTerm, name: searchTerm },
-      debounce
-    })
+  // const handleRefetchSegments = async (searchTerm: string): Promise<void> => {
+  //   await refetchSegments({
+  //     queryParams: searchTerm.trim()
+  //       ? { ...queryParams, identifier: searchTerm.trim(), name: searchTerm.trim() }
+  //       : queryParams,
+  //     debounce
+  //   })
+
+  const handleRefetchSegments = async (): Promise<void> => void 0
 
   const handleRefetchTargets = async (searchTerm: string): Promise<void> =>
     await refetchTargets({
-      queryParams: { ...queryParams, targetIdentifier: searchTerm, targetName: searchTerm },
+      queryParams: searchTerm.trim()
+        ? { ...queryParams, targetIdentifier: searchTerm.trim(), targetName: searchTerm.trim() }
+        : queryParams,
       debounce
     })
 
