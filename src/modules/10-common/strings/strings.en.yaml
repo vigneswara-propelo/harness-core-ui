@@ -207,7 +207,7 @@ validation:
   variableAlreadyExists: Variable with same name already exists
   fieldIsRequired: '{{ name }} is required'
   fieldCanNotHaveWhitespace: '{{ name }} should not contain whitespaces'
-  fieldMustStartWithAlphanumericAndCanNotHaveSpace: '{{ name }} must start with alphanumerics and should not contain whitespaces'
+  fieldMustStartWithAlphanumericAndCanNotHaveSpace: '{{ name }} must start with alphanumerics and should not contain whitespaces, / or &'
   fieldCannotbeLongerThanN: '{{ name }} cannot be longer than {{ n }} characters'
   fieldMustBeAlphanumeric: '{{ name }} can only contain alphanumerics, _ and $'
   groupAttributeIsRequired: Group Attribute is required

@@ -58,7 +58,7 @@ export const regexUsernameDisallowedChars = /^[^/:<>=()]+$/ // for username
 
 export const regexPositiveNumbers = /^[1-9]+[0-9]*$/
 
-export const regexIdentifier = /^[a-zA-Z_.][0-9a-zA-Z_$]*$/
+export const regexIdentifier = /^[a-zA-Z_][0-9a-zA-Z_]*$/
 
 export const keyRegexIdentifier = /^([a-zA-Z_])([0-9a-zA-Z_$]*)+((\.[0-9a-zA-Z_$]+)*)$/
 
@@ -67,7 +67,7 @@ export const k8sLabelRegex = /[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]
 // https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#syntax-and-character-set
 export const k8sAnnotationRegex = /^[a-z0-9A-Z]([a-z0-9A-Z-_./])*[a-z0-9A-Z]$/
 
-export const regexVersionLabel = /^[0-9a-zA-Z][\S]*$/
+export const regexVersionLabel = /^[0-9a-zA-Z][^\s/&]*$/
 
 export const HarnessFolderName = /^[A-Za-z0-9_\-/][A-Za-z0-9 _\-/]*$/
 

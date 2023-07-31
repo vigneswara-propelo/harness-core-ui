@@ -943,7 +943,7 @@ validation:
   valueRequired: Value is required
   branchName: 'Branch Name is required'
   commitId: 'Commit Id / Git Tag is required'
-  validIdRegex: Identifier must start with a letter or _ and can then be followed by alphanumerics, _, or $
+  validIdRegex: Identifier must start with a letter or _ and can then be followed by alphanumerics or _
   # Replace if validIdRegex will apply the same rules
   validStepIdRegex: Identifier can only contain alphanumerics and _
   validKeyRegex: Keys can only contain alphanumerics and _ with an optional dot(.) in the middle
