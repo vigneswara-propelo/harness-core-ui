@@ -239,7 +239,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
                 <div className={css.projectContainer}>
                   {data.data.content.map(projectAggregate => (
                     <ProjectCard
-                      key={projectAggregate.projectResponse.project.identifier}
+                      key={`${projectAggregate.projectResponse.project.orgIdentifier}${projectAggregate.projectResponse.project.identifier}`}
                       data={projectAggregate}
                       minimal={true}
                       selected={
