@@ -106,7 +106,7 @@ const ResourceGroupDetails: React.FC = () => {
 
   // Following is to be triggered only once after fetch call response data is updated
   useEffect(() => {
-    if (selectedScope === null && resourceGroupDetails?.data?.resourceGroup) {
+    if (resourceGroupDetails?.data?.resourceGroup) {
       setSelectedScope(
         getSelectedScopeType(
           getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier }),
@@ -114,6 +114,7 @@ const ResourceGroupDetails: React.FC = () => {
         )
       )
     }
+
     setSelectedResourceMap(
       getSelectedResourcesMap(resourceTypes, resourceGroupDetails?.data?.resourceGroup.resourceFilter)
     )
