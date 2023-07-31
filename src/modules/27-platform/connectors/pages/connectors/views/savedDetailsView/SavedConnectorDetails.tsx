@@ -934,11 +934,11 @@ const getSplunkSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
       value: connector?.spec?.username
     },
     {
-      label: 'connectors.jenkins.passwordAPIToken',
+      label: 'platform.connectors.jenkins.passwordAPIToken',
       value: connector?.spec?.passwordRef
     },
     {
-      label: 'connectors.bearerToken',
+      label: 'platform.connectors.bearerToken',
       value: connector?.spec?.tokenRef
     }
   ]
@@ -951,7 +951,7 @@ const getSignalFXSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRo
       value: connector?.spec?.url
     },
     {
-      label: 'connectors.apiToken',
+      label: 'platform.connectors.apiToken',
       value: connector?.spec?.apiTokenRef
     }
   ]
@@ -960,7 +960,7 @@ const getSignalFXSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRo
 const getAppDSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
-      label: 'connectors.appD.controllerURL',
+      label: 'platform.connectors.appD.controllerURL',
       value: connector?.spec?.controllerUrl
     },
     {
@@ -972,7 +972,7 @@ const getAppDSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInt
       value: connector?.spec?.username
     },
     {
-      label: 'connectors.jenkins.passwordAPIToken',
+      label: 'platform.connectors.jenkins.passwordAPIToken',
       value: connector?.spec?.passwordRef
     },
     {
@@ -997,7 +997,7 @@ const getPrometheusSchema = (connector: ConnectorInfoDTO): Array<ActivityDetails
       value: connector?.spec?.username
     },
     {
-      label: 'connectors.jenkins.passwordAPIToken',
+      label: 'platform.connectors.jenkins.passwordAPIToken',
       value: connector?.spec?.passwordRef
     }
   ]
@@ -1018,11 +1018,11 @@ const getELKSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInte
       value: connector?.spec?.username
     },
     {
-      label: 'connectors.jenkins.passwordAPIToken',
+      label: 'platform.connectors.jenkins.passwordAPIToken',
       value: connector?.spec?.passwordRef
     },
     {
-      label: 'connectors.elk.apiId',
+      label: 'platform.connectors.elk.apiId',
       value: connector?.spec?.apiKeyId
     },
     {
