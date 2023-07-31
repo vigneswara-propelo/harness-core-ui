@@ -12,7 +12,7 @@ import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { AwsSamInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
+import { AwsSamInfrastructure, getConnectorListV2Promise, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -40,6 +40,7 @@ export interface AwsSamInfraSpecCustomStepProps {
   serviceRef?: string
   environmentRef?: string
   infrastructureRef?: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const connectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
@@ -130,6 +131,7 @@ export class AwsSamInfraSpec extends PipelineStep<AwsSamInfrastructureStep> {
           readonly={inputSetData?.readonly}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
+          {...(customStepProps as AwsSamInfraSpecEditableProps)}
           allowableTypes={allowableTypes}
         />
       )

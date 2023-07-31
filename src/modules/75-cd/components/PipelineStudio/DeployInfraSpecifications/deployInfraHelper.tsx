@@ -288,11 +288,12 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.AwsSam: {
-      const { connectorRef, region } = infrastructure?.spec || {}
+      const { connectorRef, region, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         region,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     default: {

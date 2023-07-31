@@ -100,6 +100,11 @@ describe('AwsSamInfraSpecEditable tests', () => {
       </TestWrapper>
     )
 
+    const mapDynamicallyProvisionedInfraCheckboxText = screen.queryByText('cd.steps.pdcStep.dynamicProvision')
+    expect(mapDynamicallyProvisionedInfraCheckboxText).not.toBeInTheDocument()
+    const provisionerInput = queryByNameAttribute('provisioner', container) as HTMLInputElement
+    await waitFor(() => expect(provisionerInput).not.toBeInTheDocument())
+
     // Region
     const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
     expect(regionInput.value).toBe('GovCloud (US-East)')

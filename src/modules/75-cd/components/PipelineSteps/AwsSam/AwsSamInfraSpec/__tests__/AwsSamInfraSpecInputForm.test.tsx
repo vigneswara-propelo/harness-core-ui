@@ -38,12 +38,14 @@ jest.mock('services/portal', () => ({
 
 const existingInitialValues = {
   connectorRef: 'Aws_Connector_2',
-  region: 'us-gov-east-1'
+  region: 'us-gov-east-1',
+  provisioner: 'Terraform_1'
 }
 
 const template = {
   connectorRef: RUNTIME_INPUT_VALUE,
-  region: RUNTIME_INPUT_VALUE
+  region: RUNTIME_INPUT_VALUE,
+  provisioner: RUNTIME_INPUT_VALUE
 }
 
 const TEST_PATH = routes.toInputSetForm({ ...accountPathProps, ...inputSetFormPathProps, ...pipelineModuleParams })
@@ -70,7 +72,8 @@ describe('AwsSamInfraSpecInputForm tests', () => {
       <TestStepWidget
         testWrapperProps={{
           path: TEST_PATH,
-          pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>
+          pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>,
+          defaultFeatureFlagValues: { CD_NG_DYNAMIC_PROVISIONING_ENV_V2: true }
         }}
         initialValues={existingInitialValues}
         allValues={existingInitialValues}
@@ -81,7 +84,25 @@ describe('AwsSamInfraSpecInputForm tests', () => {
         template={template}
         customStepProps={{
           environmentRef: 'Env_1',
-          infrastructureRef: 'Infra_Def_1'
+          infrastructureRef: 'Infra_Def_1',
+          provisioner: [
+            {
+              step: {
+                identifier: 'Terraform_1',
+                name: 'Terraform 1',
+                type: StepType.TerraformApply,
+                spec: {}
+              }
+            },
+            {
+              step: {
+                identifier: 'Terraform_2',
+                name: 'Terraform 2',
+                type: StepType.TerraformApply,
+                spec: {}
+              }
+            }
+          ]
         }}
       />
     )
@@ -94,6 +115,18 @@ describe('AwsSamInfraSpecInputForm tests', () => {
     // Check initial existing values
     const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
     expect(regionInput.value).toBe('GovCloud (US-East)')
+    const privisionerInput = queryByNameAttribute('provisioner', container) as HTMLInputElement
+    expect(privisionerInput.value).toBe('Terraform 1')
+
+    // Provisioner field
+    const privisionerDropdownIcon = allDropDownIcons[0]
+    await userEvent.click(privisionerDropdownIcon!)
+    expect(portalDivs.length).toBe(1)
+    const privisionerDropdownPortalDiv = portalDivs[0]
+    const privisionerSelectListMenu = privisionerDropdownPortalDiv.querySelector('.bp3-menu')
+    const secondOption = await findByText(privisionerSelectListMenu as HTMLElement, 'Terraform 2')
+    expect(secondOption).not.toBeNull()
+    userEvent.click(secondOption)
 
     // Choose connectorRef
     const connnectorRefInput = getByTestId(/connectorRef/)
@@ -115,10 +148,10 @@ describe('AwsSamInfraSpecInputForm tests', () => {
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 
     // Choose region
-    const regionDropdownIcon = allDropDownIcons[1]
+    const regionDropdownIcon = allDropDownIcons[2]
     await userEvent.click(regionDropdownIcon!)
-    expect(portalDivs.length).toBe(2)
-    const regionDropdownPortalDiv = portalDivs[1]
+    expect(portalDivs.length).toBe(3)
+    const regionDropdownPortalDiv = portalDivs[2]
     const regionSelectListMenu = regionDropdownPortalDiv.querySelector('.bp3-menu')
     const usEastNVirginiaOption = await findByText(regionSelectListMenu as HTMLElement, 'US East (N. Virginia)')
     expect(usEastNVirginiaOption).not.toBeNull()
@@ -129,7 +162,8 @@ describe('AwsSamInfraSpecInputForm tests', () => {
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
         connectorRef: 'Aws_Connector_1',
-        region: 'us-east-1'
+        region: 'us-east-1',
+        provisioner: 'Terraform_2'
       })
     )
   })

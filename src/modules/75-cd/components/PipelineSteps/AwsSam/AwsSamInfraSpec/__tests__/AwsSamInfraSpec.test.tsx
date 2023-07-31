@@ -7,7 +7,8 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { findByText, render, waitFor } from '@testing-library/react'
+import { findByText, render, screen, waitFor, within } from '@testing-library/react'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import type { AwsSamInfrastructure } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -73,7 +74,8 @@ describe('AwsSamInfraSpec tests', () => {
       <TestStepWidget
         testWrapperProps={{
           path: TEST_PATH,
-          pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>
+          pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>,
+          defaultFeatureFlagValues: { CD_NG_DYNAMIC_PROVISIONING_ENV_V2: true }
         }}
         initialValues={emptyInitialValues}
         allValues={emptyInitialValues}
@@ -88,6 +90,20 @@ describe('AwsSamInfraSpec tests', () => {
     const allDropDownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
+
+    const mapDynamicallyProvisionedInfraCheckboxLabel = screen.getByText(
+      'cd.steps.pdcStep.dynamicProvision'
+    ).parentElement
+    const mapDynamicallyProvisionedInfraCheckbox = within(mapDynamicallyProvisionedInfraCheckboxLabel!).getByRole(
+      'checkbox'
+    )
+    expect(mapDynamicallyProvisionedInfraCheckbox).toBeInTheDocument()
+    expect(mapDynamicallyProvisionedInfraCheckbox).not.toBeChecked()
+    await userEvent.click(mapDynamicallyProvisionedInfraCheckbox)
+    await waitFor(() => expect(mapDynamicallyProvisionedInfraCheckbox).toBeChecked())
+    const provisionerInput = queryByNameAttribute('provisioner', container) as HTMLInputElement
+    await waitFor(() => expect(provisionerInput).toBeInTheDocument())
+    expect(provisionerInput.value).toBe(RUNTIME_INPUT_VALUE)
 
     // Choose connectorRef
     const connnectorRefInput = getByTestId(/connectorRef/)
@@ -115,7 +131,8 @@ describe('AwsSamInfraSpec tests', () => {
       expect(onUpdate).toHaveBeenCalledWith({
         connectorRef: 'Aws_Connector_1',
         region: 'us-east-1',
-        allowSimultaneousDeployments: true
+        allowSimultaneousDeployments: true,
+        provisioner: RUNTIME_INPUT_VALUE
       })
     )
   })
