@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React, { PropsWithChildren, ReactElement } from 'react'
+
 export const getCICodebaseInputSetFormInitialValues = () => ({
   identifier: 's',
   properties: {
@@ -687,3 +689,11 @@ export const getCICodebaseParallelTemplateProps = ({ formik }: { formik: any }):
     orgIdentifier: 'default'
   }
 })
+
+export function MockedIACMMFE({ children }: PropsWithChildren<unknown>): ReactElement {
+  return <div>{children}</div>
+}
+
+export function MockedIACMInputSet(): ReactElement {
+  return <div>IACMInputSet</div>
+}

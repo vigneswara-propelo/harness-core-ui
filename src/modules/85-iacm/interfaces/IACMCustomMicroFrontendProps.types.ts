@@ -28,6 +28,9 @@ import type { ConnectorReferenceField } from '@platform/connectors/components/Co
 import type { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { Duration } from '@common/exports'
 import type { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/components/LogsContent/LogsContent'
+import type { FormMultiTypeCheckbox } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
+import type { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { FormMultiTypeDuration } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -57,5 +60,8 @@ export interface IACMCustomMicroFrontendProps {
     MultiTypeSecretInput: typeof MultiTypeSecretInput
     Duration: typeof Duration
     DefaultConsoleViewStepDetails: typeof DefaultConsoleViewStepDetails
+    FormMultiTypeCheckbox: typeof FormMultiTypeCheckbox
+    ConfigureOptions: typeof ConfigureOptions
+    FormMultiTypeDuration: typeof FormMultiTypeDuration
   }
 }

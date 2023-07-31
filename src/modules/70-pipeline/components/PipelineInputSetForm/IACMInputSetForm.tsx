@@ -3,6 +3,12 @@ import { connect } from 'formik'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
+import { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { FormMultiTypeCheckbox } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
+import { FormMultiTypeDuration } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+
 import type { StageInputSetFormProps } from './StageInputSetForm'
 import pipelineInputSetCss from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -26,7 +32,13 @@ function RemoteComponentMounter({
   return (
     <ChildAppMounter
       ChildApp={RemoteIACMApp}
-      customComponents={{}}
+      customComponents={{
+        MultiTypeConnectorField,
+        MultiTypeFieldSelector,
+        ConfigureOptions,
+        FormMultiTypeCheckbox,
+        FormMultiTypeDuration
+      }}
       customFunctions={{ isRuntimeInput, getStyles }}
       customHooks={{ useVariablesExpression }}
       {...rest}
@@ -36,8 +48,7 @@ function RemoteComponentMounter({
   )
 }
 
-// eslint-disable-next-line react/function-component-definition
-const IACMInputSetForm = (props: IACMInputSetFormProps): JSX.Element => {
+function IACMInputSetForm(props: IACMInputSetFormProps): JSX.Element {
   return <RemoteComponentMounter RemoteComponent={IACMInputForm} childProps={props} />
 }
 

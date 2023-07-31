@@ -32,6 +32,9 @@ import { useGetConnector, useGetListOfBranchesByRefConnectorV2, useGetListOfRepo
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { Duration } from '@common/exports'
 import { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/components/LogsContent/LogsContent'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { FormMultiTypeDuration } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { FormMultiTypeCheckbox } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -43,7 +46,10 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ConnectorReferenceField,
   MultiTypeSecretInput,
   Duration,
-  DefaultConsoleViewStepDetails
+  DefaultConsoleViewStepDetails,
+  FormMultiTypeCheckbox,
+  ConfigureOptions,
+  FormMultiTypeDuration
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {

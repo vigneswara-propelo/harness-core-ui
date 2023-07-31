@@ -11,6 +11,7 @@ import { merge } from 'lodash-es'
 import { Form } from 'formik'
 import { Formik, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 // eslint-disable-next-line no-restricted-imports
 import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
@@ -18,6 +19,7 @@ import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/
 import { Dependency } from '@ci/components/PipelineSteps/Dependency/Dependency'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StageInputSetForm } from '../StageInputSetForm'
+import { MockedIACMMFE, MockedIACMInputSet } from './mocks'
 
 factory.registerStep(new Dependency())
 factory.registerStep(new GenericServiceSpec())
@@ -33,6 +35,9 @@ jest.mock('services/cd-ng', () => ({
   ...jest.requireActual('services/cd-ng'),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
+
+jest.mock('iacm/MicroFrontendApp', () => MockedIACMMFE, { virtual: true })
+jest.mock('iacm/IACMStageInputSet', () => MockedIACMInputSet, { virtual: true })
 
 const props = (withNewProp = false): any => ({
   deploymentStageTemplate: {
@@ -411,6 +416,34 @@ describe('stageinputset tests', () => {
       )
       expect(getByText('infrastructureText')).toBeDefined()
       expect(getByText('executionText')).toBeDefined()
+    })
+    test('initial render with IACM as stageType', () => {
+      const IACMprops = {
+        deploymentStageTemplate: {
+          serviceConfig: {},
+          execution: {},
+          serviceDependencies: [],
+          infrastructure: {}
+        },
+        deploymentStage: {
+          serviceConfig: {},
+          execution: {},
+          serviceDependencies: [],
+          infrastructure: {}
+        },
+        stageType: StageType.IACM
+      } as any
+
+      const { getByText } = render(
+        <TestWrapper defaultFeatureFlagValues={{ IACM_ENABLED: true }}>
+          <Formik formName="test-form" initialValues={{}} onSubmit={jest.fn()}>
+            <Form>
+              <StageInputSetForm {...IACMprops} viewType={StepViewType.DeploymentForm} />
+            </Form>
+          </Formik>
+        </TestWrapper>
+      )
+      expect(getByText('IACMInputSet')).toBeInTheDocument()
     })
   })
 })
