@@ -108,7 +108,7 @@ function ExecutionListTable({
         disableSortBy: true
       },
       {
-        Header: getString('common.executedBy').toUpperCase(),
+        Header: getString('pipeline.executionStartTime'),
         accessor: 'startTs',
         Cell: ExecutionCell,
         serverSortProps: getServerSortProps('startTs')

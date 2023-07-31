@@ -4308,6 +4308,7 @@ export interface StringsMap {
   'pipeline.executionList.artifactDeployedText': string
   'pipeline.executionList.servicesDeployed': string
   'pipeline.executionList.servicesDeployedText': string
+  'pipeline.executionStartTime': string
   'pipeline.executionStatus.Aborted': string
   'pipeline.executionStatus.AbortedByFreeze': string
   'pipeline.executionStatus.Aborting': string
@@ -5078,6 +5079,8 @@ export interface StringsMap {
   'pipeline.stageVariables': string
   'pipeline.stagetoRetryFrom': string
   'pipeline.startTime': string
+  'pipeline.startTimeAsc': string
+  'pipeline.startTimeDesc': string
   'pipeline.startedOn': string
   'pipeline.startup.command.fileDetails': string
   'pipeline.startup.command.fileSource': string

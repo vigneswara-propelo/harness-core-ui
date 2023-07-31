@@ -1940,3 +1940,6 @@ templatePipelineUpdatedWarning: Template has been changed. Update pipeline to en
 updateStage: Update stage
 updatePipeline: Update pipeline
 abortedDetails: Aborted Details
+executionStartTime: execution start time
+startTimeDesc: Start Time (New -> Old)
+startTimeAsc: Start Time (Old -> New)

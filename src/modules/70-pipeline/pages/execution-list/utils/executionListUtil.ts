@@ -46,7 +46,12 @@ export const useExecutionListQueryParams = (): ProcessedExecutionListPageQueryPa
 export const useExecutionListSortOptions = (): SelectOption[] => {
   const { getString } = useStrings()
   const options = useMemo(() => {
-    return [...sortByName, ...sortByStatus, { label: getString('common.executedBy'), value: 'startTs,DESC' }] // executedBy column is used to sort by startTs
+    return [
+      ...sortByName,
+      ...sortByStatus,
+      { label: getString('pipeline.startTimeDesc'), value: 'startTs,DESC' },
+      { label: getString('pipeline.startTimeAsc'), value: 'startTs,ASC' }
+    ]
   }, [getString])
 
   return options
