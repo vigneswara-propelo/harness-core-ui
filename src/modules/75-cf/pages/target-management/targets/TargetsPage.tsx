@@ -352,10 +352,7 @@ export const TargetsPage: React.FC = () => {
       headerContent={
         <TargetManagementHeader environmentSelect={<EnvironmentSelect />} hasEnvironments={!!environments?.length} />
       }
-      headerLinks={{
-        docsURL:
-          'https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-target-management/targeting-users-with-flags/'
-      }}
+      docsURL="https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-target-management/targeting-users-with-flags/"
       toolbar={displayToolbar && toolbar}
       pagination={
         !noEnvironmentExists &&

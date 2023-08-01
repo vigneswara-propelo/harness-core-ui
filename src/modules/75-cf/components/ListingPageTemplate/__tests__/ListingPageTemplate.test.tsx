@@ -9,7 +9,7 @@
 import React, { ReactNode } from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import * as documentTitle from '@common/hooks/useDocumentTitle'
 import ListingPageTemplate, { ListingPageTemplateProps } from '../ListingPageTemplate'
 
@@ -22,9 +22,13 @@ jest.mock('@harness/uicore', () => {
   }
 })
 
-const renderComponent = (content: ReactNode, props: Partial<ListingPageTemplateProps> = {}): RenderResult =>
+const renderComponent = (
+  content: ReactNode,
+  props: Partial<ListingPageTemplateProps> = {},
+  wrapperProps?: Partial<TestWrapperProps>
+): RenderResult =>
   render(
-    <TestWrapper>
+    <TestWrapper {...wrapperProps}>
       <ListingPageTemplate title="Test Listing Page" {...props}>
         {content}
       </ListingPageTemplate>
@@ -97,18 +101,39 @@ describe('ListingPageTemplate', () => {
     const testUrl = 'https://google.com'
 
     renderComponent('content', {
-      headerLinks: { docsURL: testUrl }
+      docsURL: testUrl
     })
 
-    await waitFor(() =>
-      expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute('href', testUrl)
-    )
+    expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute('href', testUrl)
   })
 
-  test('it should not display link to page documentation under the header if not passed', async () => {
+  test('it should display link to video tutorial under the header if passed & flag is toggled ON', async () => {
+    renderComponent(
+      'content',
+      {
+        videoHelp: { trackingConst: 'test tracking', label: 'Video Help Label' }
+      },
+      { defaultFeatureFlagValues: { FFM_7258_INTERCOM_VIDEO_LINKS: true } }
+    )
+    expect(screen.getByRole('link', { name: /Video Help Label/ })).toBeInTheDocument()
+  })
+
+  test('it should not display link to video tutorial under the header if flag is toggled OFF', async () => {
+    renderComponent(
+      'content',
+      {
+        videoHelp: { trackingConst: 'test tracking', label: 'Video Help Label' }
+      },
+      { defaultFeatureFlagValues: { FFM_7258_INTERCOM_VIDEO_LINKS: false } }
+    )
+    expect(screen.queryByRole('link', { name: /Video Help Label/ })).not.toBeInTheDocument()
+  })
+
+  test('it should not display link to page documentation or video help under the header if not passed', async () => {
     renderComponent('content')
 
     expect(screen.queryByRole('link', { name: /cf.shared.readDocumentation/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Video Help Label/ })).not.toBeInTheDocument()
   })
 
   test('it should display the toolbar if passed', async () => {

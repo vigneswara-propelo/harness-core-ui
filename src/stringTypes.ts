@@ -8191,6 +8191,7 @@ export interface StringsMap {
   'cf.environments.noEnvironmentSection.message': string
   'cf.environments.nonProd': string
   'cf.environments.prod': string
+  'cf.featureFlagDetail.flagPipelineVideoLabel': string
   'cf.featureFlagDetail.jiraIssuesDescription': string
   'cf.featureFlagDetail.jiraIssuesTitle': string
   'cf.featureFlagDetail.noServices': string
@@ -8257,6 +8258,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups': string
   'cf.featureFlags.flagPipeline.validation.setFlagSwitch.state': string
+  'cf.featureFlags.flagVideoLabel': string
   'cf.featureFlags.flagWillTurnOff': string
   'cf.featureFlags.flagWillTurnOn': string
   'cf.featureFlags.flagsDescription': string

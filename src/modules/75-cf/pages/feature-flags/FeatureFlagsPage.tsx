@@ -33,6 +33,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import type { FilterProps } from '@cf/components/TableFilters/TableFilters'
 import routes from '@common/RouteDefinitions'
+import { FeatureActions } from '@common/constants/TrackingConstants'
 import { FlagTableFilters } from './components/FlagTableFilters'
 import { NoFeatureFlags } from './components/NoFeatureFlags'
 import AllEnvironmentsFlagsListing from './components/AllEnvironmentsFlagsListing'
@@ -175,9 +176,8 @@ const FeatureFlagsPage: FC = () => {
       title={title}
       titleTooltipId="ff_ffListing_heading"
       headerContent={!!environments?.length && <CFEnvironmentSelect component={<EnvironmentSelect />} />}
-      headerLinks={{
-        docsURL: 'https://developer.harness.io/docs/feature-flags/ff-onboarding/cf-feature-flag-overview'
-      }}
+      docsURL="https://developer.harness.io/docs/feature-flags/ff-onboarding/cf-feature-flag-overview"
+      videoHelp={{ trackingConst: FeatureActions.FlagsVideoHelp, label: getString('cf.featureFlags.flagVideoLabel') }}
       toolbar={
         hasFeatureFlags && (
           <>

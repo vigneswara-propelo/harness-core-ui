@@ -14,6 +14,7 @@ import imageUrl from '@cf/images/pipeline_flags_empty_state.svg'
 import { useStrings } from 'framework/strings'
 import { useGetFeaturePipeline, Variation } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
@@ -30,6 +31,7 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { trackEvent } = useTelemetry()
+  const { FFM_7258_INTERCOM_VIDEO_LINKS } = useFeatureFlags()
 
   const queryParams = useMemo(
     () => ({
@@ -100,20 +102,42 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
               }}
               imgWidth={650}
             >
-              <a
-                href="https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-build-pipeline/default-pipeline-ff/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Text
-                  font={{ variation: FontVariation.BODY }}
-                  color={Color.PRIMARY_7}
-                  icon="learning"
-                  iconProps={{ color: Color.PRIMARY_7, size: 14 }}
+              <Layout.Horizontal spacing="large" flex={{ align: 'center-center' }}>
+                <a
+                  href="https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-build-pipeline/default-pipeline-ff/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {getString('cf.shared.readDocumentation')}
-                </Text>
-              </a>
+                  <Text
+                    font={{ variation: FontVariation.BODY }}
+                    color={Color.PRIMARY_7}
+                    icon="learning"
+                    iconProps={{ color: Color.PRIMARY_7, size: 14 }}
+                  >
+                    {getString('cf.shared.readDocumentation')}
+                  </Text>
+                </a>
+                {FFM_7258_INTERCOM_VIDEO_LINKS && (
+                  <a
+                    href=""
+                    onClick={e => {
+                      e.preventDefault()
+                      trackEvent(FeatureActions.FlagPipelinesVideoHelp, {
+                        category: Category.FEATUREFLAG
+                      })
+                    }}
+                  >
+                    <Text
+                      font={{ variation: FontVariation.BODY }}
+                      color={Color.PRIMARY_7}
+                      icon="command-start"
+                      iconProps={{ color: Color.PRIMARY_7, size: 12 }}
+                    >
+                      {getString('cf.featureFlagDetail.flagPipelineVideoLabel')}
+                    </Text>
+                  </a>
+                )}
+              </Layout.Horizontal>
             </NoData>
           </Container>
         </Layout.Vertical>

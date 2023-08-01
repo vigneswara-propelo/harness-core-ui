@@ -40,7 +40,8 @@ const renderComponent = (isArchivingFFOn = false): RenderResult =>
         STALE_FLAGS_FFM_1510: true,
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
         FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
-        FFM_7921_ARCHIVING_FEATURE_FLAGS: isArchivingFFOn
+        FFM_7921_ARCHIVING_FEATURE_FLAGS: isArchivingFFOn,
+        FFM_7258_INTERCOM_VIDEO_LINKS: true
       }}
     >
       <FeatureFlagsPage />
@@ -139,13 +140,14 @@ describe('FeatureFlagsPage', () => {
     })
   })
 
-  test('It should have a link to FF documentation', async () => {
+  test('it should display a link to FF docs and a video help link', async () => {
     renderComponent()
 
     expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute(
       'href',
       'https://developer.harness.io/docs/feature-flags/ff-onboarding/cf-feature-flag-overview'
     )
+    expect(screen.getByRole('link', { name: /cf.featureFlags.flagVideoLabel/ })).toBeInTheDocument()
   })
 
   test('It should show All Environments Flags view on click of "All Environments" in the EnvironmentSelect dropdown', async () => {

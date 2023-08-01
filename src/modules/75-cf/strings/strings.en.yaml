@@ -18,7 +18,7 @@ shared:
   pleaseSelectVariation: Please select a variation first.
   getStarted: '{{ $.getStarted }}'
   quickGuide: Quick Guide
-  readDocumentation: Read Documentation
+  readDocumentation: Read the docs
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.
@@ -262,6 +262,7 @@ featureFlags:
         variationTargetGroups: Target Groups/variation is required
       servePercentageRollout:
         targetGroup: Target Group is required
+  flagVideoLabel: 'What is a feature flag?'
 featureFlagDetail:
   variationCount: '{{ count }} variations'
   serviceDescription: Monitored Services this flag is associated with
@@ -270,6 +271,7 @@ featureFlagDetail:
   searchService: 'Search for Monitored Service name'
   jiraIssuesTitle: Jira Issues
   jiraIssuesDescription: Jira Issues associated with this Flag
+  flagPipelineVideoLabel: 'What is a flag pipeline?'
 flagFilters:
   active: Active Flags
   allFlags: All Flags

@@ -29,6 +29,8 @@
   grid-area: links;
   padding: 0 var(--spacing-xlarge) var(--spacing-small) !important;
   height: auto;
+  justify-content: flex-start !important;
+  --layout-spacing: var(--spacing-medium) !important;
 }
 
 .toolbar {

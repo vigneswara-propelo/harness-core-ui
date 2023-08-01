@@ -8,19 +8,20 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import type { FeaturePipelineExecution } from 'services/cf'
 import * as cfServicesMock from 'services/cf'
 import FlagPipelineTab, { FlagPipelineTabProps } from '../FlagPipelineTab'
 import mockAvailablePipelines from './__data__/mockAvailablePipelines'
 import mockExecutionHistory from './__data__/mockExecutionHistory'
 
-const renderComponent = (props: Partial<FlagPipelineTabProps> = {}): void => {
+const renderComponent = (props?: Partial<FlagPipelineTabProps>, wrapperProps?: Partial<TestWrapperProps>): void => {
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags/TEST_FLAG"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       queryParams={{ tab: 'flag_pipeline', activeEnvironment: 'TEST_ENV' }}
+      {...wrapperProps}
     >
       <FlagPipelineTab
         flagIdentifier="TEST_FLAG"
@@ -125,10 +126,9 @@ describe('FlagPipelineTab', () => {
       } as any)
     })
 
-    test('it should create flag pipeline correctly', async () => {
-      renderComponent()
+    test('it should display help links in empty state', async () => {
+      renderComponent({}, { defaultFeatureFlagValues: { FFM_7258_INTERCOM_VIDEO_LINKS: true } })
 
-      // assert empty state initially
       const addFlagPipelineButton = screen.getByRole('button', {
         name: 'cf.featureFlags.flagPipeline.title'
       })
@@ -139,6 +139,37 @@ describe('FlagPipelineTab', () => {
         'href',
         'https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-build-pipeline/default-pipeline-ff/'
       )
+      expect(screen.getByRole('link', { name: /cf.featureFlagDetail.flagPipelineVideoLabel/ })).toBeInTheDocument()
+    })
+
+    test('it should not display video link in empty state when flag toggled OFF', async () => {
+      renderComponent({}, { defaultFeatureFlagValues: { FFM_7258_INTERCOM_VIDEO_LINKS: false } })
+
+      const addFlagPipelineButton = screen.getByRole('button', {
+        name: 'cf.featureFlags.flagPipeline.title'
+      })
+      expect(screen.getByText('cf.featureFlags.flagPipeline.noDataMessage')).toBeInTheDocument()
+      expect(addFlagPipelineButton).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.flagPipeline.noDataDescription')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /cf.shared.readDocumentation/ })).toHaveAttribute(
+        'href',
+        'https://developer.harness.io/docs/feature-flags/ff-using-flags/ff-build-pipeline/default-pipeline-ff/'
+      )
+      expect(
+        screen.queryByRole('link', { name: /cf.featureFlagDetail.flagPipelineVideoLabel/ })
+      ).not.toBeInTheDocument()
+    })
+
+    test('it should create flag pipeline correctly', async () => {
+      renderComponent()
+
+      // assert empty state initially
+      const addFlagPipelineButton = screen.getByRole('button', {
+        name: 'cf.featureFlags.flagPipeline.title'
+      })
+      expect(screen.getByText('cf.featureFlags.flagPipeline.noDataMessage')).toBeInTheDocument()
+      expect(addFlagPipelineButton).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.flagPipeline.noDataDescription')).toBeInTheDocument()
 
       // assert drawer opens with correct text. Save button hidden initially
       await userEvent.click(addFlagPipelineButton)

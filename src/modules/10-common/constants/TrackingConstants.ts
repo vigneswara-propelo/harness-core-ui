@@ -348,7 +348,11 @@ export enum FeatureActions {
   CreateSDKKeyClick = 'Create SDK Key Clicked',
   CreateSDKKeySubmit = 'Create SDK Key Submitted',
   CreateSDKKeyCancel = 'Create SDK Key Cancel Clicked',
-  JiraAddedToFlag = 'Jira Added To Flag'
+  JiraAddedToFlag = 'Jira Added To Flag',
+  FlagsVideoHelp = 'Flags Video Help Clicked',
+  TargetsVideoHelp = 'Targets Video Help Clicked',
+  TargetGroupsVideoHelp = 'Target Groups Video Help Clicked',
+  FlagPipelinesVideoHelp = 'Flag Pipelines Video Help Clicked'
 }
 
 export enum CCMActions {
