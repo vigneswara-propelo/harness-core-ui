@@ -28,7 +28,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   AuthenticationSettingsResponse,
   LDAPSettings,
-  syncLdapGroupsPromise,
+  syncLdapGroupsV2Promise,
   useDeleteLdapSettings
 } from 'services/cd-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
@@ -185,10 +185,11 @@ const LDAPProvider: React.FC<Props> = ({ authSettings, refetchAuthSettings, perm
                       onClick={async () => {
                         try {
                           setIsLdapSyncInProgress(true)
-                          const { resource } = await syncLdapGroupsPromise({
+                          const { resource } = await syncLdapGroupsV2Promise({
                             queryParams: {
                               accountIdentifier: accountId
-                            }
+                            },
+                            body: undefined
                           })
                           if (resource) {
                             showSuccess(getString('platform.authSettings.ldap.syncUserGroupsResult.success'), 5000)

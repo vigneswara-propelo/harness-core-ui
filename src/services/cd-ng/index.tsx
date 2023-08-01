@@ -52535,6 +52535,58 @@ export const syncLdapGroupsPromise = (
     signal
   )
 
+export interface SyncLdapGroupsV2QueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type SyncLdapGroupsV2Props = Omit<
+  MutateProps<RestResponseBoolean, Failure | Error, SyncLdapGroupsV2QueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Sync Ldap groups within an account
+ */
+export const SyncLdapGroupsV2 = (props: SyncLdapGroupsV2Props) => (
+  <Mutate<RestResponseBoolean, Failure | Error, SyncLdapGroupsV2QueryParams, void, void>
+    verb="PUT"
+    path={`/ldap/sync-groups`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSyncLdapGroupsV2Props = Omit<
+  UseMutateProps<RestResponseBoolean, Failure | Error, SyncLdapGroupsV2QueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Sync Ldap groups within an account
+ */
+export const useSyncLdapGroupsV2 = (props: UseSyncLdapGroupsV2Props) =>
+  useMutate<RestResponseBoolean, Failure | Error, SyncLdapGroupsV2QueryParams, void, void>('PUT', `/ldap/sync-groups`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Sync Ldap groups within an account
+ */
+export const syncLdapGroupsV2Promise = (
+  props: MutateUsingFetchProps<RestResponseBoolean, Failure | Error, SyncLdapGroupsV2QueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, Failure | Error, SyncLdapGroupsV2QueryParams, void, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/ldap/sync-groups`,
+    props,
+    signal
+  )
+
 export interface SearchLdapGroupsQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
