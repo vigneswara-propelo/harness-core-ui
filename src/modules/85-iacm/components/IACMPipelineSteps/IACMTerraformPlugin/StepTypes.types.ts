@@ -59,5 +59,6 @@ export enum CommandTypes {
   PLAN = 'plan',
   DESTROY = 'destroy',
   PLANDESTROY = 'plan-destroy',
-  APPLY = 'apply'
+  APPLY = 'apply',
+  VALIDATE = 'validate'
 }
