@@ -55,7 +55,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
+import { isSshOrWinrmDeploymentType, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isValueFixed } from '@common/utils/utils'
@@ -65,10 +65,12 @@ import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../Artifact
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
-export const packageTypeOptions: SelectOption[] = [
+export const PACKAGE_TYPE_OPTIONS: SelectOption[] = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
 ]
+
+const UNIVERSAL_PACKAGES_OPTION = { label: 'Universal', value: RepositoryFormatTypes.Upack }
 
 function FormComponent(
   props: StepProps<ConnectorConfigDTO> & ImagePathProps<AzureArtifactsInitialValues> & { formik: FormikProps<any> }
@@ -83,7 +85,8 @@ function FormComponent(
     formik,
     isMultiArtifactSource,
     formClassName = '',
-    editArtifactModePrevStepData
+    editArtifactModePrevStepData,
+    selectedDeploymentType
   } = props
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -280,6 +283,13 @@ function FormComponent(
     setVersionData([])
   }
 
+  const updatedPackageTypeOptions = React.useMemo(() => {
+    // Currently only ssh and winrm swimlanes support Universal packages.
+    return isSshOrWinrmDeploymentType(defaultTo(selectedDeploymentType, ''))
+      ? [...PACKAGE_TYPE_OPTIONS, UNIVERSAL_PACKAGES_OPTION]
+      : PACKAGE_TYPE_OPTIONS
+  }, [selectedDeploymentType])
+
   return (
     <FormikForm>
       <div className={cx(css.artifactForm, formClassName)}>
@@ -436,7 +446,7 @@ function FormComponent(
           <FormInput.Select
             name="packageType"
             label={getString('pipeline.packageType')}
-            items={packageTypeOptions}
+            items={updatedPackageTypeOptions}
             onChange={e => {
               formik.setFieldValue('packageType', e.value)
 
