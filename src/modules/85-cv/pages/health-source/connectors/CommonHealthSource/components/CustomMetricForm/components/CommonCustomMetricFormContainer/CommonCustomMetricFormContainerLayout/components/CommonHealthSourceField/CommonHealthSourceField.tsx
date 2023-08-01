@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { FormInput, MultiTypeInputType, SelectOption, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
@@ -23,6 +23,7 @@ import {
   generateRequestBodyForParamValues,
   getListOptionsFromParams
 } from '../../CommonCustomMetricFormContainer.utils'
+import { getCommonHealthSourceDropdownValue } from './CommonHealthSourceField.utils'
 
 export interface CommonHealthSourceFieldProps {
   field: FieldMapping
@@ -45,7 +46,6 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   const fixedValues = field?.fixedValues
   const shouldFetchDropdownOptions =
     !(isTemplate && isTemplateSupportEnabled && isConnectorRuntimeOrExpression) && !fixedValues
-  const fieldValue = values?.[identifier] as string
 
   const { mutate: fetchParamValues, loading } = useGetParamValues({
     accountIdentifier: accountId,
@@ -81,6 +81,13 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fixedValues, shouldFetchDropdownOptions, type])
 
+  const dropdownFieldValue = useMemo(() => {
+    const fieldValue = values?.[identifier] as string
+    if (listOptions.length && fieldValue) {
+      return getCommonHealthSourceDropdownValue(listOptions, fieldValue)
+    }
+  }, [identifier, listOptions, values])
+
   const renderField = (): JSX.Element => {
     switch (type) {
       case FIELD_ENUM.DROPDOWN:
@@ -113,9 +120,9 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
             ) : (
               <FormInput.Select
                 label={label}
-                value={fieldValue ? { label: fieldValue, value: fieldValue } : undefined}
                 name={identifier}
                 disabled={loading}
+                value={dropdownFieldValue}
                 placeholder={loading ? getString('loading') : placeholder}
                 items={listOptions}
                 data-testid={identifier}
