@@ -10,12 +10,35 @@ import { BUILD_TYPE, getCIModuleProperties, getValidFilterArguments } from '../P
 describe('Test util methods', () => {
   test('Test getCIModuleProperties method', () => {
     expect(
-      getCIModuleProperties(BUILD_TYPE.PULL_OR_MERGE_REQUEST, {
-        buildType: BUILD_TYPE.PULL_OR_MERGE_REQUEST,
-        repositoryName: 'harness-core-ui',
-        sourceBranch: 'feature-branch',
-        targetBranch: 'develop'
-      })
+      getCIModuleProperties(
+        BUILD_TYPE.PULL_OR_MERGE_REQUEST,
+        {
+          buildType: BUILD_TYPE.PULL_OR_MERGE_REQUEST,
+          repositoryName: 'harness-core-ui',
+          sourceBranch: 'feature-branch',
+          targetBranch: 'develop'
+        },
+        'PipelineExecution'
+      )
+    ).toEqual({
+      ciExecutionInfoDTO: {
+        event: 'pullRequest',
+        pullRequest: { sourceBranch: 'feature-branch', targetBranch: 'develop' }
+      },
+      repoName: 'harness-core-ui'
+    })
+
+    expect(
+      getCIModuleProperties(
+        BUILD_TYPE.PULL_OR_MERGE_REQUEST,
+        {
+          buildType: BUILD_TYPE.PULL_OR_MERGE_REQUEST,
+          repositoryName: 'harness-core-ui',
+          sourceBranch: 'feature-branch',
+          targetBranch: 'develop'
+        },
+        'PipelineSetup'
+      )
     ).toEqual({
       ciExecutionInfoDTO: {
         event: 'pullRequest',
@@ -25,15 +48,23 @@ describe('Test util methods', () => {
     })
 
     expect(
-      getCIModuleProperties(BUILD_TYPE.BRANCH, {
-        branch: 'develop'
-      })
+      getCIModuleProperties(
+        BUILD_TYPE.BRANCH,
+        {
+          branch: 'develop'
+        },
+        'PipelineExecution'
+      )
     ).toEqual({ branch: 'develop' })
 
     expect(
-      getCIModuleProperties(BUILD_TYPE.TAG, {
-        tag: 'release'
-      })
+      getCIModuleProperties(
+        BUILD_TYPE.TAG,
+        {
+          tag: 'release'
+        },
+        'PipelineExecution'
+      )
     ).toEqual({
       tag: 'release'
     })
@@ -41,13 +72,16 @@ describe('Test util methods', () => {
 
   test('Test method getValidFilterArguments', () => {
     expect(
-      getValidFilterArguments({
-        pipelineName: 'test-pipeline',
-        repositoryName: 'harness-core-ui',
-        sourceBranch: 'develop',
-        targetBranch: 'master',
-        buildType: 'PULL_OR_MERGE_REQUEST'
-      })
+      getValidFilterArguments(
+        {
+          pipelineName: 'test-pipeline',
+          repositoryName: 'harness-core-ui',
+          sourceBranch: 'develop',
+          targetBranch: 'master',
+          buildType: 'PULL_OR_MERGE_REQUEST'
+        },
+        'PipelineExecution'
+      )
     ).toEqual({
       pipelineName: 'test-pipeline',
       pipelineTags: [],
@@ -57,7 +91,7 @@ describe('Test util methods', () => {
             event: 'pullRequest',
             pullRequest: { sourceBranch: 'develop', targetBranch: 'master' }
           },
-          repoNames: 'harness-core-ui'
+          repoName: 'harness-core-ui'
         },
         cd: {}
       }

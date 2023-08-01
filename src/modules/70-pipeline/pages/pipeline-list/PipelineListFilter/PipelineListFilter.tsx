@@ -199,7 +199,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
 
   const onApply = (inputFormData: FormikProps<PipelineFormType>['values']): void => {
     if (!isObjectEmpty(inputFormData)) {
-      const filterFromFormData = getValidFilterArguments({ ...inputFormData })
+      const filterFromFormData = getValidFilterArguments({ ...inputFormData }, 'PipelineSetup')
       updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} })
       hideFilterDrawer()
       trackEvent(CDActions.ApplyAdvancedFilter, {

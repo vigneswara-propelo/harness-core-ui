@@ -151,11 +151,7 @@ const FilterComponent = <T extends FormikValues, U extends FilterInterface>(
             >
               <div className={css.main}>
                 <section className={css.formSection}>
-                  <Layout.Vertical
-                    spacing="large"
-                    padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
-                    height="100%"
-                  >
+                  <Layout.Vertical spacing="large" padding="xlarge" height="100vh">
                     {getDrawerTitle(isUpdate, name)}
                     <Layout.Vertical className={css.layout} padding={{ top: 'medium' }}>
                       {isRefreshingFilters ? (
@@ -164,10 +160,10 @@ const FilterComponent = <T extends FormikValues, U extends FilterInterface>(
                         </OverlaySpinner>
                       ) : (
                         <>
-                          <div>
+                          <div className={css.fieldsContainer}>
                             {formFields && React.cloneElement(formFields, { ...formFields.props, formikProps: formik })}
                           </div>
-                          <Layout.Horizontal spacing={'medium'} padding={{ bottom: 'xsmall' }}>
+                          <Layout.Horizontal spacing={'medium'}>
                             <Button
                               variation={ButtonVariation.PRIMARY}
                               type="submit"

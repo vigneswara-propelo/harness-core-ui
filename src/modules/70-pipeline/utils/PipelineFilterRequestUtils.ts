@@ -7,7 +7,7 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { get, omit } from 'lodash-es'
-import type { PipelineFilterProperties, FilterDTO, NGTag } from 'services/pipeline-ng'
+import type { PipelineFilterProperties, FilterDTO, NGTag, FilterProperties } from 'services/pipeline-ng'
 
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
@@ -27,7 +27,10 @@ const exclusionList = [
   'infrastructureType'
 ]
 
-export const getValidFilterArguments = (formData: Record<string, any>): PipelineFilterProperties => {
+export const getValidFilterArguments = (
+  formData: Record<string, any>,
+  filterType: FilterProperties['filterType']
+): PipelineFilterProperties => {
   const {
     buildType,
     repositoryName,
@@ -46,13 +49,17 @@ export const getValidFilterArguments = (formData: Record<string, any>): Pipeline
       return { key, value: pipelineTags[key] } as NGTag
     }),
     moduleProperties: {
-      ci: getCIModuleProperties(buildType as BUILD_TYPE, {
-        repositoryName,
-        sourceBranch,
-        targetBranch,
-        branch,
-        tag
-      }),
+      ci: getCIModuleProperties(
+        buildType as BUILD_TYPE,
+        {
+          repositoryName,
+          sourceBranch,
+          targetBranch,
+          branch,
+          tag
+        },
+        filterType
+      ),
       cd: {
         deploymentTypes: deploymentType,
         infrastructureTypes: infrastructureType ? [infrastructureType] : undefined,
@@ -83,12 +90,13 @@ export const createRequestBodyPayload = ({
     metadata: { name: _name, filterVisibility, identifier },
     formValues
   } = data
+  const filterType: FilterProperties['filterType'] = 'PipelineSetup'
   const {
     name: _pipelineName,
     pipelineTags: _pipelineTags,
     moduleProperties: _moduleProperties,
     description: _description
-  } = getValidFilterArguments(formValues)
+  } = getValidFilterArguments(formValues, filterType)
   return {
     name: _name,
     identifier: isUpdate ? identifier : StringUtils.getIdentifierFromName(_name),
@@ -96,7 +104,7 @@ export const createRequestBodyPayload = ({
     projectIdentifier,
     orgIdentifier,
     filterProperties: {
-      filterType: 'PipelineSetup',
+      filterType,
       pipelineTags: _pipelineTags || [],
       description: _description,
       name: _pipelineName,

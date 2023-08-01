@@ -202,7 +202,7 @@ export function ExecutionListFilter(): React.ReactElement {
     gitOpsAppIdentifiers,
     artifactDisplayNames
   } = cd || {}
-  const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
+  const { branch, tag, ciExecutionInfoDTO, repoName: repositoryName } = ci || {}
   const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
   const buildType = getBuildType(moduleProperties || {})
 
@@ -239,7 +239,7 @@ export function ExecutionListFilter(): React.ReactElement {
 
   const onApply = (inputFormData: FormikProps<PipelineExecutionFormType>['values']) => {
     if (!isObjectEmpty(inputFormData)) {
-      const filterFromFormData = getValidFilterArguments({ ...inputFormData })
+      const filterFromFormData = getValidFilterArguments({ ...inputFormData }, 'PipelineExecution')
       updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} })
       hideFilterDrawer()
       trackEvent(CDActions.ApplyAdvancedFilter, {
@@ -317,7 +317,7 @@ export function ExecutionListFilter(): React.ReactElement {
           formValues: {
             pipelineName,
             pipelineTags: _pipelineTags?.reduce((obj, item) => Object.assign(obj, { [item.key]: item.value }), {}),
-            repositoryName: repoName,
+            repositoryName,
             status: getMultiSelectFormOptions(status),
             branch,
             tag,

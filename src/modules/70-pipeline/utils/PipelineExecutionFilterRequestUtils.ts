@@ -7,7 +7,7 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { get, omit, startCase } from 'lodash-es'
-import type { PipelineExecutionFilterProperties, FilterDTO, NGTag } from 'services/pipeline-ng'
+import type { PipelineExecutionFilterProperties, FilterDTO, NGTag, FilterProperties } from 'services/pipeline-ng'
 
 import { EXECUTION_STATUS } from '@pipeline/utils/statusHelpers'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
@@ -47,7 +47,10 @@ const exclusionList = [
   'gitOpsAppIdentifiers'
 ]
 
-export const getValidFilterArguments = (formData: Record<string, any>): PipelineExecutionFilterProperties => {
+export const getValidFilterArguments = (
+  formData: Record<string, any>,
+  filterType: FilterProperties['filterType']
+): PipelineExecutionFilterProperties => {
   const {
     status,
     buildType,
@@ -70,13 +73,17 @@ export const getValidFilterArguments = (formData: Record<string, any>): Pipeline
     }),
     status: status?.map((statusOption: MultiSelectOption) => statusOption?.value),
     moduleProperties: {
-      ci: getCIModuleProperties(buildType as BUILD_TYPE, {
-        repositoryName,
-        sourceBranch,
-        targetBranch,
-        branch,
-        tag
-      }),
+      ci: getCIModuleProperties(
+        buildType as BUILD_TYPE,
+        {
+          repositoryName,
+          sourceBranch,
+          targetBranch,
+          branch,
+          tag
+        },
+        filterType
+      ),
       cd: {
         serviceDefinitionTypes: deploymentType,
         infrastructureType: infrastructureType,
@@ -135,13 +142,14 @@ export const createRequestBodyPayload = ({
     metadata: { name: _name, filterVisibility, identifier },
     formValues
   } = data
+  const filterType: FilterProperties['filterType'] = 'PipelineExecution'
   const {
     pipelineName,
     pipelineTags: _pipelineTags,
     status: _statuses,
     timeRange,
     moduleProperties: _moduleProperties
-  } = getValidFilterArguments(formValues)
+  } = getValidFilterArguments(formValues, filterType)
   return {
     name: _name,
     identifier: isUpdate ? identifier : StringUtils.getIdentifierFromName(_name),
@@ -149,7 +157,7 @@ export const createRequestBodyPayload = ({
     projectIdentifier,
     orgIdentifier,
     filterProperties: {
-      filterType: 'PipelineExecution',
+      filterType,
       pipelineTags: _pipelineTags || [],
       pipelineName: pipelineName || '',
       status: _statuses,
@@ -159,31 +167,40 @@ export const createRequestBodyPayload = ({
   }
 }
 
-export const getCIModuleProperties = (buildType: BUILD_TYPE, contextInfo: BuildTypeContext): Record<string, any> => {
+export const getCIModuleProperties = (
+  buildType: BUILD_TYPE,
+  contextInfo: BuildTypeContext,
+  filterType: FilterProperties['filterType']
+): Record<string, any> => {
   const { repositoryName, sourceBranch, targetBranch, branch, tag } = contextInfo
-  let moduleProperties = {}
+  const moduleProperties: Record<string, any> = {}
+
   switch (buildType) {
     case BUILD_TYPE.PULL_OR_MERGE_REQUEST:
-      moduleProperties = {
-        ciExecutionInfoDTO: {
-          event: 'pullRequest',
-          pullRequest: { sourceBranch: sourceBranch, targetBranch: targetBranch }
-        } as CIWebhookInfoDTO
-      }
+      moduleProperties.ciExecutionInfoDTO = {
+        event: 'pullRequest',
+        pullRequest: { sourceBranch: sourceBranch, targetBranch: targetBranch }
+      } as CIWebhookInfoDTO
       break
     case BUILD_TYPE.BRANCH:
-      moduleProperties = {
-        branch: branch
-      }
+      moduleProperties.branch = branch
       break
     case BUILD_TYPE.TAG:
-      moduleProperties = {
-        tag: tag
-      }
+      moduleProperties.tag = tag
       break
   }
 
-  return repositoryName ? Object.assign(moduleProperties, { repoNames: repositoryName }) : moduleProperties
+  if (!repositoryName) return moduleProperties
+
+  switch (filterType) {
+    case 'PipelineSetup':
+      moduleProperties.repoNames = repositoryName
+      break
+    case 'PipelineExecution':
+      moduleProperties.repoName = repositoryName
+  }
+
+  return moduleProperties
 }
 
 export const enum BUILD_TYPE {

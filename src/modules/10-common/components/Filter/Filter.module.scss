@@ -36,9 +36,22 @@
 
 .layout {
   display: flex;
-  height: calc(100% - 5vh);
   flex-direction: column;
   justify-content: space-between;
+  flex: 1 !important;
+  min-height: 0;
+}
+
+.fieldsContainer {
+  overflow-y: auto;
+
+  // to move scrollbar to the right
+  margin-inline: calc(-1 * var(--spacing-xlarge));
+  padding-inline: var(--spacing-xlarge);
+
+  :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .titleLayout {

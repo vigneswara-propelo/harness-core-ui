@@ -1995,8 +1995,8 @@ exports[`Connectors Page Test Render and check filter panel: New Filter 1`] = `
               class="formSection"
             >
               <div
-                class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-top-xlarge StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
-                style="height: 100%;"
+                class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-xlarge"
+                style="height: 100vh;"
               >
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main titleLayout"
@@ -2011,7 +2011,9 @@ exports[`Connectors Page Test Render and check filter panel: New Filter 1`] = `
                 <div
                   class="Layout--vertical StyledProps--main layout StyledProps--padding-top-medium"
                 >
-                  <div>
+                  <div
+                    class="fieldsContainer"
+                  >
                     <div
                       class="bp3-form-group"
                       data-id="types-0"
@@ -2229,7 +2231,7 @@ exports[`Connectors Page Test Render and check filter panel: New Filter 1`] = `
                     </div>
                   </div>
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-bottom-xsmall"
+                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                   >
                     <button
                       aria-label="filters.apply"
