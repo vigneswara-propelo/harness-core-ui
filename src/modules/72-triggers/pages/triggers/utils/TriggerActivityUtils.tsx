@@ -28,7 +28,7 @@ export const RenderColumnEventId: CellType = ({ row }) => {
   const data = row.original
   return (
     <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }} spacing="xsmall">
-      <Text>{data.eventCorrelationId}</Text>
+      <Text lineClamp={1}>{data.eventCorrelationId}</Text>
     </Layout.Horizontal>
   )
 }

@@ -158,8 +158,15 @@ activityHistory:
 triggerExplorer:
   tabName: Trigger Explorer
   pageHeading: 'Trigger Matching Activity'
-  pageSubHeading: 'This page lists the matching Triggers and its status in the current scope based on the event identifier from the web hook.'
-  enterEventCorrelationId: 'Enter eventCorrelationId from the Webhook'
+  pageSubHeading: 'Trigger explorer enables debugging of registered triggers in Harness platform.'
+  selectTriggerType: 'Select Trigger Type'
+  searchTriggers: 'Search Triggers with Event Correlation id'
   searchPlaceholder: 'Enter Event Correlation id'
   emptyStateMessage: 'No matching trigger for this event correlation id'
+  showPanel: 'Show Panel'
+  hidePanel: '- Hide Panel'
+  webhookHelp:
+    step1: '1. Search for registered and activated Triggers using Event Co-relation id'
+    step2: '2. Check for events received by the Trigger'
+    step3: '3. View Related Pipeline Executions'
 triggerListing: Trigger Listing

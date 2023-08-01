@@ -16,3 +16,39 @@
 .statusMessage {
   padding-top: var(--spacing-small);
 }
+
+.infoMessage {
+  svg path {
+    fill: var(--blue-700);
+  }
+}
+
+.helpPanelIconBg {
+  width: 41px;
+  height: 41px;
+  border-radius: 50%;
+  border: 1px solid var(--ai-purple-200);
+  background: var(--ai-purple-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.helpPanel {
+  width: 100%;
+  height: 160px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--aix-50, #f8f5ff);
+}
+
+.pageBody {
+  min-height: 400px !important;
+  height: fit-content !important;
+
+  :global {
+    .NoDataCard--noDataCard {
+      height: 400px !important;
+    }
+  }
+}

@@ -8,6 +8,10 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly divider: string
+  readonly helpPanel: string
+  readonly helpPanelIconBg: string
+  readonly infoMessage: string
+  readonly pageBody: string
   readonly statusMessage: string
   readonly table: string
 }

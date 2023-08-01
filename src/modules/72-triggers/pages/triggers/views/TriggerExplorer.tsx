@@ -6,14 +6,29 @@
  */
 
 import React, { useMemo } from 'react'
-import { ExpandingSearchInput, Layout, Text, Button, ButtonVariation, TableV2, Page } from '@harness/uicore'
+import {
+  ExpandingSearchInput,
+  Layout,
+  Text,
+  Button,
+  ButtonVariation,
+  TableV2,
+  Page,
+  Card,
+  Container,
+  Icon
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Link, useParams } from 'react-router-dom'
 import { capitalize, defaultTo, get, isEmpty } from 'lodash-es'
 import { Column } from 'react-table'
-import { Divider } from '@blueprintjs/core'
+import { Radio, RadioGroup } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { NGTriggerEventHistoryResponse, useTriggerHistoryEventCorrelationV2 } from 'services/pipeline-ng'
+import {
+  NGTriggerEventHistoryResponse,
+  NGTriggerSourceV2,
+  useTriggerHistoryEventCorrelationV2
+} from 'services/pipeline-ng'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
@@ -24,6 +39,7 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import routes from '@common/RouteDefinitions'
 import { CellType, PayloadDrawer, RenderColumnEventId, RenderColumnPayload } from '../utils/TriggerActivityUtils'
 import TriggerExplorerEmptyState from '../TriggerLandingPage/images/trigger_explorer_empty_state.svg'
+import { WebhookTriggerHelpPanel } from '../TriggerExplorerHelpPanel/WebhookTriggerHelpPanel'
 import css from './TriggerExplorer.module.scss'
 
 const RenderColumnMessage: CellType = ({ row }) => {
@@ -106,13 +122,23 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
 
   const [showPayload, setShowPayload] = React.useState<boolean>(true)
   const [selectedPayloadRow, setSelectedPayloadRow] = React.useState<string | undefined>()
+  const [triggerType, setTriggerType] = React.useState<NGTriggerSourceV2['type']>('Webhook')
+  const [showHelpPanel, setShowHelpPanel] = React.useState<boolean>(true)
+
+  React.useEffect(() => {
+    if (content) {
+      setShowHelpPanel(false)
+    } else {
+      setShowHelpPanel(true)
+    }
+  }, [content])
 
   const columns: Column<NGTriggerEventHistoryResponse>[] = useMemo(
     () => [
       {
         Header: getString('triggers.activityHistory.eventCorrelationId'),
         id: 'eventCorrelationId',
-        width: '20%',
+        width: '22%',
         Cell: RenderColumnEventId
       },
       {
@@ -124,7 +150,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
       {
         Header: getString('triggers.activityHistory.triggerStatus'),
         id: 'status',
-        width: '20%',
+        width: '18%',
         Cell: RenderColumnStatus
       },
       {
@@ -148,42 +174,83 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
 
   return (
     <Layout.Vertical padding={'xlarge'}>
-      <Text font={{ weight: 'bold', variation: FontVariation.H4 }}>
-        {getString('triggers.triggerExplorer.pageHeading')}
-      </Text>
-      <Text font={{ weight: 'light', variation: FontVariation.BODY }} padding={{ top: 'medium' }}>
-        {getString('triggers.triggerExplorer.pageSubHeading')}
-      </Text>
-      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing={'medium'}>
-        <Text font={{ weight: 'semi-bold', variation: FontVariation.H6 }}>
-          {getString('triggers.triggerExplorer.enterEventCorrelationId')}
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+        <Text font={{ weight: 'semi-bold', variation: FontVariation.BODY }}>
+          {getString('triggers.triggerExplorer.pageSubHeading')}
         </Text>
-        <ExpandingSearchInput
-          alwaysExpanded
-          width={300}
-          name="eventCorrelationIdSearch"
-          placeholder={getString('triggers.triggerExplorer.searchPlaceholder')}
-          onChange={text => {
-            setSearchId(text.trim())
-          }}
-          throttle={200}
-        />
-        <Button
-          small
-          variation={ButtonVariation.PRIMARY}
-          data-testid="searchBasedOnEventCorrelationId"
-          text={getString('search')}
-          onClick={() => {
-            if (previousSearchId !== searchId) {
-              refetch()
-            }
-          }}
-          disabled={isEmpty(searchId)}
-        />
+        <Button onClick={() => setShowHelpPanel(!showHelpPanel)} intent="none" minimal>
+          {showHelpPanel
+            ? getString('triggers.triggerExplorer.hidePanel')
+            : getString('triggers.triggerExplorer.showPanel')}
+        </Button>
       </Layout.Horizontal>
-      <div className={css.divider}>
-        <Divider />
-      </div>
+      <Container padding={{ top: 'medium', bottom: 'medium' }}>
+        {showHelpPanel
+          ? triggerType === 'Webhook' && (
+              <Card className={css.helpPanel}>
+                <Layout.Horizontal>
+                  <Icon name="info-message" size={24} className={css.infoMessage} padding={{ right: 'xsmall' }} />
+                  <Text font={{ weight: 'semi-bold', variation: FontVariation.H5 }}>
+                    {getString('triggers.triggerExplorer.tabName')}
+                  </Text>
+                </Layout.Horizontal>
+                <Text
+                  font={{ weight: 'semi-bold', variation: FontVariation.BODY }}
+                  padding={{ top: 'small', left: 'xlarge' }}
+                >
+                  {getString('triggers.triggerExplorer.pageSubHeading')}
+                </Text>
+                <WebhookTriggerHelpPanel />
+              </Card>
+            )
+          : null}
+      </Container>
+      <Layout.Vertical border={{ radius: 8, color: Color.GREY_100 }} background={Color.WHITE} padding={'large'}>
+        <Text font={{ weight: 'semi-bold', variation: FontVariation.H5 }} padding={{ bottom: 'medium' }}>
+          {getString('triggers.triggerExplorer.searchTriggers')}
+        </Text>
+        <RadioGroup
+          inline
+          selectedValue={triggerType}
+          onChange={(e: any) => {
+            setTriggerType(e.target.value)
+          }}
+          label={getString('triggers.triggerExplorer.selectTriggerType')}
+        >
+          <Radio value={'Webhook'} label={getString('execution.triggerType.WEBHOOK')} />
+          <Radio value={'Artifact'} label={getString('pipeline.artifactTriggerConfigPanel.artifact')} disabled />
+        </RadioGroup>
+        {triggerType === 'Webhook' && (
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing={'medium'}>
+            <Text font={{ weight: 'semi-bold', variation: FontVariation.H6 }}>
+              {getString('triggers.triggerExplorer.searchPlaceholder')}
+            </Text>
+            <ExpandingSearchInput
+              alwaysExpanded
+              width={300}
+              name="eventCorrelationIdSearch"
+              placeholder={getString('triggers.triggerExplorer.searchPlaceholder')}
+              onChange={text => {
+                setSearchId(text.trim())
+              }}
+              throttle={200}
+            />
+            <Button
+              small
+              variation={ButtonVariation.PRIMARY}
+              data-testid="searchBasedOnEventCorrelationId"
+              text={getString('search')}
+              onClick={() => {
+                if (previousSearchId !== searchId) {
+                  refetch()
+                }
+              }}
+              disabled={isEmpty(searchId)}
+            />
+          </Layout.Horizontal>
+        )}
+      </Layout.Vertical>
+
       <Page.Body
         loading={loading}
         error={error ? getRBACErrorMessage(error) : ''}
@@ -193,6 +260,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
           image: TriggerExplorerEmptyState,
           messageTitle: getString('triggers.triggerExplorer.emptyStateMessage')
         }}
+        className={css.pageBody}
       >
         {!isEmpty(content) && searchId && (
           <TableV2<NGTriggerEventHistoryResponse>

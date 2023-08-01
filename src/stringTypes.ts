@@ -5707,11 +5707,17 @@ export interface StringsMap {
   'triggers.triggerCouldNotBeSavedGenericError': string
   'triggers.triggerCouldNotBeSavedTitle': string
   'triggers.triggerExplorer.emptyStateMessage': string
-  'triggers.triggerExplorer.enterEventCorrelationId': string
+  'triggers.triggerExplorer.hidePanel': string
   'triggers.triggerExplorer.pageHeading': string
   'triggers.triggerExplorer.pageSubHeading': string
   'triggers.triggerExplorer.searchPlaceholder': string
+  'triggers.triggerExplorer.searchTriggers': string
+  'triggers.triggerExplorer.selectTriggerType': string
+  'triggers.triggerExplorer.showPanel': string
   'triggers.triggerExplorer.tabName': string
+  'triggers.triggerExplorer.webhookHelp.step1': string
+  'triggers.triggerExplorer.webhookHelp.step2': string
+  'triggers.triggerExplorer.webhookHelp.step3': string
   'triggers.triggerListing': string
   'triggers.triggerOverviewPanel.title': string
   'triggers.triggerSaveWithError': string
