@@ -57,7 +57,11 @@ export function HttpStepWidget(
           url: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
               return Yup.string()
-                .matches(/((http)+s?:\/\/)(www.)?[a-z0-9]+\..*$/, getString('validation.urlIsNotValid'))
+                .matches(
+                  //https://regex101.com/r/HUNasA/2
+                  /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g,
+                  getString('validation.urlIsNotValid')
+                )
                 .required(getString('common.validation.urlIsRequired'))
             }
             return Yup.string().required(getString('common.validation.urlIsRequired'))
