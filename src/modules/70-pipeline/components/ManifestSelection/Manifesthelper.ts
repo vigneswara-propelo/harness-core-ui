@@ -469,7 +469,8 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
     case manifestType === ManifestDataType.HelmChart &&
       ([ManifestStoreMap.S3, ManifestStoreMap.Gcs].includes(manifestStore) || isGitTypeManifestStore(manifestStore)):
       return 'store.spec.folderPath'
-    case manifestType === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Http:
+    case manifestType === ManifestDataType.HelmChart &&
+      [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart].includes(manifestStore):
       return 'chartName'
     default:
       return 'paths'
