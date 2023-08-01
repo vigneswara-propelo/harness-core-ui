@@ -458,9 +458,52 @@ describe('Nexus Artifact tests', () => {
     act(() => {
       fireEvent.click(repoFormatSelect)
     })
+    await act(() => {
+      const groupIdInput = queryByAttribute('name', container, 'spec.groupId')
+      groupIdInput?.focus()
+      const artifactIdInput = queryByAttribute('name', container, 'spec.artifactId')
+      artifactIdInput?.focus()
+    })
     expect(repoFormatDropdown.value).toBe('Maven')
-    expect(container).toMatchSnapshot()
+    expect(getByText('pipeline.artifactsSelection.groupId')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.artifactId')).toBeDefined()
     expect(getByText('pipeline.artifactsSelection.extension')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.classifier')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.extension')).toBeDefined()
+  })
+
+  test('render form correctly when repositoryFormat is Maven and all fields runtime', async () => {
+    const defaultValues: any = {
+      identifier: '',
+      tag: '',
+      tagType: TagTypes.Value,
+      tagRegex: '',
+      repository: RUNTIME_INPUT_VALUE,
+      repositoryFormat: 'maven',
+      type: 'Nexus3Registry',
+      spec: {
+        connectorRef: 'account.testAmNexusAnon',
+        repository: RUNTIME_INPUT_VALUE,
+        repositoryFormat: 'maven',
+        spec: {
+          artifactId: RUNTIME_INPUT_VALUE,
+          groupId: RUNTIME_INPUT_VALUE,
+          extension: RUNTIME_INPUT_VALUE,
+          classifier: RUNTIME_INPUT_VALUE
+        }
+      }
+    }
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Nexus3Artifact key={'key'} initialValues={defaultValues} {...props} isMultiArtifactSource={true} />
+      </TestWrapper>
+    )
+    const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
+    expect(repoFormatDropdown.value).toBe('Maven')
+    expect(getByText('pipeline.artifactsSelection.groupId')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.artifactId')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.extension')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.classifier')).toBeDefined()
   })
 
   test('render form correctly when repositoryFormat is NPM', async () => {

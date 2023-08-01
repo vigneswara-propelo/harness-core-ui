@@ -90,7 +90,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     artifacts,
     useArtifactV1Data = false
   } = props
-  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const [groupIds, setGroupIds] = useState<SelectOption[]>([])
   const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
@@ -567,11 +567,37 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
 
   const getGroupIdComponent = (): React.ReactElement => {
-    if (CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN) {
-      return (
-        <SelectInputSetView
-          selectItems={
-            fetchingGroupIds
+    return (
+      <SelectInputSetView
+        selectItems={
+          fetchingGroupIds
+            ? [
+                {
+                  label: getString('common.loadingFieldOptions', {
+                    fieldName: getString('pipeline.artifactsSelection.groupId')
+                  }),
+                  value: getString('common.loadingFieldOptions', {
+                    fieldName: getString('pipeline.artifactsSelection.groupId')
+                  })
+                }
+              ]
+            : groupIds
+        }
+        disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.groupId`)}
+        label={getString('pipeline.artifactsSelection.groupId')}
+        name={`${path}.artifacts.${artifactPath}.spec.spec.groupId`}
+        placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
+        useValue
+        fieldPath={`artifacts.${artifactPath}.spec.groupId`}
+        template={template}
+        multiTypeInputProps={{
+          expressions,
+          allowableTypes,
+          selectProps: {
+            usePortal: true,
+
+            itemRenderer: (item, groupProps) => itemRenderer(item, groupProps, fetchingGroupIds),
+            items: fetchingGroupIds
               ? [
                   {
                     label: getString('common.loadingFieldOptions', {
@@ -582,71 +608,61 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     })
                   }
                 ]
-              : groupIds
-          }
-          disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.groupId`)}
-          label={getString('pipeline.artifactsSelection.groupId')}
-          name={`${path}.artifacts.${artifactPath}.spec.spec.groupId`}
-          placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-          useValue
-          fieldPath={`artifacts.${artifactPath}.spec.groupId`}
-          template={template}
-          multiTypeInputProps={{
-            expressions,
-            allowableTypes,
-            selectProps: {
-              usePortal: true,
-
-              itemRenderer: (item, groupProps) => itemRenderer(item, groupProps, fetchingGroupIds),
-              items: fetchingGroupIds
-                ? [
-                    {
-                      label: getString('common.loadingFieldOptions', {
-                        fieldName: getString('pipeline.artifactsSelection.groupId')
-                      }),
-                      value: getString('common.loadingFieldOptions', {
-                        fieldName: getString('pipeline.artifactsSelection.groupId')
-                      })
-                    }
-                  ]
-                : groupIds,
-              allowCreatingNewItems: true
-            },
-            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-              if (
-                e?.target?.type !== 'text' ||
-                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-              ) {
-                return
-              }
-              refetchGroupIds()
+              : groupIds,
+            allowCreatingNewItems: true
+          },
+          onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+            if (
+              e?.target?.type !== 'text' ||
+              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+            ) {
+              return
             }
-          }}
-        />
-      )
-    } else {
-      return (
-        <TextFieldInputSetView
-          label={getString('pipeline.artifactsSelection.groupId')}
-          name={`${path}.artifacts.${artifactPath}.spec.spec.groupId`}
-          placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-          multiTextInputProps={{
-            expressions,
-            allowableTypes
-          }}
-          fieldPath={`artifacts.${artifactPath}.spec.spec.groupId`}
-          template={template}
-        />
-      )
-    }
+            refetchGroupIds()
+          }
+        }}
+      />
+    )
   }
 
   const getArtifactIdComponent = (): React.ReactElement => {
-    if (CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN) {
-      return (
-        <SelectInputSetView
-          selectItems={
-            fetchingArtifactIds
+    return (
+      <SelectInputSetView
+        selectItems={
+          fetchingArtifactIds
+            ? [
+                {
+                  label: getString('common.loadingFieldOptions', {
+                    fieldName: getString('pipeline.artifactsSelection.artifactId')
+                  }),
+                  value: getString('common.loadingFieldOptions', {
+                    fieldName: getString('pipeline.artifactsSelection.artifactId')
+                  })
+                }
+              ]
+            : artifactIds
+        }
+        disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactId`)}
+        label={getString('pipeline.artifactsSelection.artifactId')}
+        name={`${path}.artifacts.${artifactPath}.spec.spec.artifactId`}
+        placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+        useValue
+        fieldPath={`artifacts.${artifactPath}.spec.artifactId`}
+        template={template}
+        multiTypeInputProps={{
+          expressions,
+          allowableTypes,
+          selectProps: {
+            usePortal: true,
+            noResults: (
+              <NoTagResults
+                tagError={artifactIdError}
+                isServerlessDeploymentTypeSelected={false}
+                defaultErrorText={getString('pipeline.artifactsSelection.errors.noArtifactIds')}
+              />
+            ),
+            itemRenderer: (item, artifactProps) => itemRenderer(item, artifactProps, fetchingGroupIds),
+            items: fetchingArtifactIds
               ? [
                   {
                     label: getString('common.loadingFieldOptions', {
@@ -657,70 +673,22 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     })
                   }
                 ]
-              : artifactIds
-          }
-          disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactId`)}
-          label={getString('pipeline.artifactsSelection.artifactId')}
-          name={`${path}.artifacts.${artifactPath}.spec.spec.artifactId`}
-          placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
-          useValue
-          fieldPath={`artifacts.${artifactPath}.spec.artifactId`}
-          template={template}
-          multiTypeInputProps={{
-            expressions,
-            allowableTypes,
-            selectProps: {
-              usePortal: true,
-              noResults: (
-                <NoTagResults
-                  tagError={artifactIdError}
-                  isServerlessDeploymentTypeSelected={false}
-                  defaultErrorText={getString('pipeline.artifactsSelection.errors.noArtifactIds')}
-                />
-              ),
-              itemRenderer: (item, artifactProps) => itemRenderer(item, artifactProps, fetchingGroupIds),
-              items: fetchingArtifactIds
-                ? [
-                    {
-                      label: getString('common.loadingFieldOptions', {
-                        fieldName: getString('pipeline.artifactsSelection.artifactId')
-                      }),
-                      value: getString('common.loadingFieldOptions', {
-                        fieldName: getString('pipeline.artifactsSelection.artifactId')
-                      })
-                    }
-                  ]
-                : artifactIds,
-              allowCreatingNewItems: true,
-              loadingItems: fetchingArtifactIds
-            },
-            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-              if (
-                e?.target?.type !== 'text' ||
-                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-              ) {
-                return
-              }
-              refetchArtifacts()
+              : artifactIds,
+            allowCreatingNewItems: true,
+            loadingItems: fetchingArtifactIds
+          },
+          onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+            if (
+              e?.target?.type !== 'text' ||
+              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+            ) {
+              return
             }
-          }}
-        />
-      )
-    } else {
-      return (
-        <TextFieldInputSetView
-          label={getString('pipeline.artifactsSelection.artifactId')}
-          name={`${path}.artifacts.${artifactPath}.spec.spec.artifactId`}
-          placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
-          multiTextInputProps={{
-            expressions,
-            allowableTypes
-          }}
-          fieldPath={`artifacts.${artifactPath}.spec.spec.artifactId`}
-          template={template}
-        />
-      )
-    }
+            refetchArtifacts()
+          }
+        }}
+      />
+    )
   }
   return (
     <>

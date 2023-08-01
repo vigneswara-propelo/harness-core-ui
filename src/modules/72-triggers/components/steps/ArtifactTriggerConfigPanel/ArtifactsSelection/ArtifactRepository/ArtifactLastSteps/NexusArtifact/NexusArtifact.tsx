@@ -40,7 +40,6 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { repositoryPortOrServer } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { isValueFixed } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getRequestOptions } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/helper'
 
 import { ImagePathProps, RepositoryPortOrServer } from '../../../ArtifactInterface'
@@ -59,7 +58,6 @@ export function NexusArtifact({
   previousStep
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<NexusRegistrySpec>): React.ReactElement {
   const { getString } = useStrings()
-  const { CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN = true } = useFeatureFlags()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -294,60 +292,51 @@ export function NexusArtifact({
                 {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven && (
                   <>
                     <div className={css.imagePathContainer}>
-                      {CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN ? (
-                        <FormInput.MultiTypeInput
-                          selectItems={groupIds}
-                          label={getString('pipeline.artifactsSelection.groupId')}
-                          name="groupId"
-                          placeholder={
-                            fetchingGroupIds
-                              ? getString('common.loadingFieldOptions', {
-                                  fieldName: getString('pipeline.artifactsSelection.groupId')
-                                })
-                              : getString('pipeline.artifactsSelection.groupIdPlaceholder')
-                          }
-                          useValue
-                          multiTypeInputProps={{
-                            allowableTypes: [MultiTypeInputType.FIXED],
-                            selectProps: {
-                              noResults: (
-                                <NoTagResults
-                                  tagError={groupIdError}
-                                  defaultErrorText={
-                                    fetchingGroupIds ? getString('loading') : getString('common.filters.noResultsFound')
-                                  }
-                                />
-                              ),
-                              itemRenderer: groupIdItemRenderer,
-                              items: groupIds,
-                              allowCreatingNewItems: true
-                            },
-                            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                              if (
-                                e?.target?.type !== 'text' ||
-                                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-                              ) {
-                                return
-                              }
-                              refetchGroupIds({
-                                queryParams: {
-                                  ...commonParams,
-                                  connectorRef: getConnectorIdValue(prevStepData),
-                                  repository: formik.values?.repository,
-                                  repositoryFormat: formik.values?.repositoryFormat
-                                }
+                      <FormInput.MultiTypeInput
+                        selectItems={groupIds}
+                        label={getString('pipeline.artifactsSelection.groupId')}
+                        name="groupId"
+                        placeholder={
+                          fetchingGroupIds
+                            ? getString('common.loadingFieldOptions', {
+                                fieldName: getString('pipeline.artifactsSelection.groupId')
                               })
+                            : getString('pipeline.artifactsSelection.groupIdPlaceholder')
+                        }
+                        useValue
+                        multiTypeInputProps={{
+                          allowableTypes: [MultiTypeInputType.FIXED],
+                          selectProps: {
+                            noResults: (
+                              <NoTagResults
+                                tagError={groupIdError}
+                                defaultErrorText={
+                                  fetchingGroupIds ? getString('loading') : getString('common.filters.noResultsFound')
+                                }
+                              />
+                            ),
+                            itemRenderer: groupIdItemRenderer,
+                            items: groupIds,
+                            allowCreatingNewItems: true
+                          },
+                          onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                            if (
+                              e?.target?.type !== 'text' ||
+                              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                            ) {
+                              return
                             }
-                          }}
-                        />
-                      ) : (
-                        <FormInput.MultiTextInput
-                          label={getString('pipeline.artifactsSelection.groupId')}
-                          name="groupId"
-                          placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-                          multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
-                        />
-                      )}
+                            refetchGroupIds({
+                              queryParams: {
+                                ...commonParams,
+                                connectorRef: getConnectorIdValue(prevStepData),
+                                repository: formik.values?.repository,
+                                repositoryFormat: formik.values?.repositoryFormat
+                              }
+                            })
+                          }
+                        }}
+                      />
                     </div>
                     <div className={css.imagePathContainer}>
                       <FormInput.MultiTypeInput

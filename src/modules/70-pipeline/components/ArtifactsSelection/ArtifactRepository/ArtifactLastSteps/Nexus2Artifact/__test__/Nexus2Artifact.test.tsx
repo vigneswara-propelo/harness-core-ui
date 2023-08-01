@@ -9,7 +9,7 @@ import React from 'react'
 
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   ArtifactType,
@@ -143,6 +143,13 @@ describe('Nexus Artifact tests', () => {
 
       fireEvent.change(queryByNameAttribute('spec.extension')!, { target: { value: 'test-extension' } })
     })
+
+    await act(() => {
+      const groupIdInput = queryByNameAttribute('spec.groupId')
+      groupIdInput?.focus()
+      const artifactIdInput = queryByNameAttribute('spec.artifactId')
+      artifactIdInput?.focus()
+    })
     const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
     const repoFormatCaret = container
       .querySelector(`input[name="repositoryFormat"] + [class*="bp3-input-action"]`)
@@ -157,6 +164,41 @@ describe('Nexus Artifact tests', () => {
     expect(repoFormatDropdown.value).toBe('Maven')
     expect(container).toMatchSnapshot()
     expect(getByText('pipeline.artifactsSelection.groupId')).toBeDefined()
+  })
+
+  test('render form correctly when repositoryFormat is Maven and all fields runtime', async () => {
+    const defaultValues: any = {
+      identifier: '',
+      tag: '',
+      tagType: TagTypes.Value,
+      tagRegex: '',
+      repository: RUNTIME_INPUT_VALUE,
+      repositoryFormat: 'maven',
+      type: 'Nexus2Registry',
+      spec: {
+        connectorRef: 'account.testAmNexusAnon',
+        repository: RUNTIME_INPUT_VALUE,
+        repositoryFormat: 'maven',
+        tag: RUNTIME_INPUT_VALUE,
+        spec: {
+          artifactId: RUNTIME_INPUT_VALUE,
+          groupId: RUNTIME_INPUT_VALUE,
+          extension: RUNTIME_INPUT_VALUE,
+          classifier: RUNTIME_INPUT_VALUE
+        }
+      }
+    }
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Nexus2Artifact key={'key'} initialValues={defaultValues} {...props} isMultiArtifactSource={true} />
+      </TestWrapper>
+    )
+    const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
+    expect(repoFormatDropdown.value).toBe('Maven')
+    expect(getByText('pipeline.artifactsSelection.groupId')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.artifactId')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.extension')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.classifier')).toBeDefined()
   })
 
   test('render form correctly when repositoryFormat is NPM', async () => {
