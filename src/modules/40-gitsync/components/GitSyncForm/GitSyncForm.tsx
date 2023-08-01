@@ -26,10 +26,17 @@ import RepositorySelect from '@common/components/RepositorySelect/RepositorySele
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
+import { getSettingValue } from '@platform/default-settings/utils/utils'
 import { Connectors } from '@platform/connectors/constants'
 import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/utils'
 import { yamlPathRegex } from '@common/utils/StringUtils'
-import { ConnectorInfoDTO, GetConnectorQueryParams, useGetConnector, useGetSettingValue } from 'services/cd-ng'
+import {
+  ConnectorInfoDTO,
+  GetConnectorQueryParams,
+  useGetConnector,
+  useGetSettingsList,
+  validateRepoPromise
+} from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import css from './GitSyncForm.module.scss'
@@ -231,12 +238,12 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
   }
 
   const {
-    data: defaultConnectorSetting,
-    error: defaultConnectorSettingError,
+    data: gitXSetting,
+    error: gitXSettingError,
     loading: loadingSetting
-  } = useGetSettingValue({
-    identifier: SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE,
+  } = useGetSettingsList({
     queryParams: {
+      category: 'GIT_EXPERIENCE',
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
@@ -257,14 +264,14 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
 
   useEffect(() => {
     if (!loadingSetting) {
-      if (defaultConnectorSettingError) {
-        showError(defaultConnectorSettingError.message)
+      if (gitXSettingError) {
+        showError(gitXSettingError.message)
       } else if (
-        defaultConnectorSetting?.data?.value &&
-        defaultConnectorSetting?.data?.value !== 'false' &&
+        getSettingValue(gitXSetting, SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE) &&
         !(formikConnectorRef || connectorRef)
       ) {
-        defaultSettingConnector.current = defaultConnectorSetting?.data?.value
+        defaultSettingConnector.current =
+          getSettingValue(gitXSetting, SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE) || ''
         refetch({
           pathParams: { identifier: getConnectorId() },
           queryParams: getConnectorQueryParams()
@@ -272,24 +279,45 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultConnectorSettingError, loadingSetting])
+  }, [gitXSettingError, loadingSetting])
 
-  const preSelectedConnector = connectorRef || defaultConnectorSetting?.data?.value
+  const preSelectedConnector =
+    connectorRef ||
+    (skipDefaultConnectorSetting
+      ? undefined
+      : getSettingValue(gitXSetting, SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE))
+
+  const validateAndSetRepo = async (settingRepoName: string): Promise<void> => {
+    const validateRepoResponse = await validateRepoPromise({
+      queryParams: {
+        connectorRef: preSelectedConnector,
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        repoName: settingRepoName
+      }
+    })
+
+    if (validateRepoResponse.data?.isValid) {
+      // No need to select or show error if setting repo is not in allowed list
+      formikProps.setFieldValue?.('repo', settingRepoName)
+      return
+    }
+  }
 
   useEffect(() => {
-    if (!loadingDefaultConnector) {
-      if (defaultConnectorSettingError) {
-        showError(connectorFetchError?.message)
-      } else if (connectorData?.data?.connector) {
-        const value = connectorData?.data?.connector
-        formikProps.setFieldValue('connectorRef', {
-          label: defaultTo(value?.name, ''),
-          value: defaultSettingConnector.current,
-          scope: getConnectorScope(),
-          live: connectorData?.data?.status?.status === 'SUCCESS',
-          connector: value
-        })
-      }
+    if (!loadingDefaultConnector && connectorData?.data?.connector) {
+      const value = connectorData?.data?.connector
+      formikProps.setFieldValue('connectorRef', {
+        label: defaultTo(value?.name, ''),
+        value: defaultSettingConnector.current,
+        scope: getConnectorScope(),
+        live: connectorData?.data?.status?.status === 'SUCCESS',
+        connector: value
+      })
+      // Prefilling repo from setting only if setting has connector too
+      const repoNameInSetting = getSettingValue(gitXSetting, SettingType.DEFAULT_REPO_FOR_GIT_EXPERIENCE)
+      repoNameInSetting && validateAndSetRepo(repoNameInSetting)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorFetchError, loadingDefaultConnector])

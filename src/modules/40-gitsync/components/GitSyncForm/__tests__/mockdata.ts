@@ -124,7 +124,7 @@ export const fetchSupportedConnectorsListPayload = {
   },
   queryParams: {
     accountIdentifier: 'dummy',
-    includeAllConnectorsAvailableAtScope: true,
+    includeAllConnectorsAvailableAtScope: false,
     orgIdentifier: 'default',
     pageIndex: 0,
     pageSize: 10,
@@ -132,4 +132,107 @@ export const fetchSupportedConnectorsListPayload = {
     searchTerm: '',
     sortOrders: 'createdAt,DESC'
   }
+}
+
+export const gitXSettingMock = {
+  status: 'SUCCESS',
+  data: [
+    {
+      setting: {
+        identifier: 'default_store_type_for_entities',
+        name: 'Default Store Type For Entities- Pipelines/InputSets/Templates',
+        orgIdentifier: 'default',
+        projectIdentifier: 'sunnyQA_test',
+        category: 'GIT_EXPERIENCE',
+        groupIdentifier: null,
+        valueType: 'String',
+        allowedValues: ['INLINE', 'REMOTE'],
+        allowOverrides: true,
+        value: 'REMOTE',
+        defaultValue: 'INLINE',
+        settingSource: 'PROJECT',
+        isSettingEditable: true,
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT']
+      },
+      lastModifiedAt: 1689737175125
+    },
+    {
+      setting: {
+        identifier: 'enforce_git_experience',
+        name: 'Enforce Git Experience For Entities- Pipelines/InputSets/Templates',
+        orgIdentifier: 'default',
+        projectIdentifier: 'sunnyQA_test',
+        category: 'GIT_EXPERIENCE',
+        groupIdentifier: null,
+        valueType: 'Boolean',
+        allowedValues: null,
+        allowOverrides: true,
+        value: 'false',
+        defaultValue: 'false',
+        settingSource: 'PROJECT',
+        isSettingEditable: true,
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT']
+      },
+      lastModifiedAt: 1690793003784
+    },
+    {
+      setting: {
+        identifier: 'git_experience_repo_allowlist',
+        name: 'Git Experience Repo Allowlist',
+        orgIdentifier: null,
+        projectIdentifier: null,
+        category: 'GIT_EXPERIENCE',
+        groupIdentifier: null,
+        valueType: 'String',
+        allowedValues: null,
+        allowOverrides: true,
+        value: null,
+        defaultValue: null,
+        settingSource: 'DEFAULT',
+        isSettingEditable: true,
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT']
+      },
+      lastModifiedAt: null
+    },
+    {
+      setting: {
+        identifier: 'default_connector_for_git_experience',
+        name: 'Default Connector For Git Experience with Entities- Pipelines/InputSets/Templates',
+        orgIdentifier: 'default',
+        projectIdentifier: 'DevX',
+        category: 'GIT_EXPERIENCE',
+        groupIdentifier: null,
+        valueType: 'String',
+        allowedValues: null,
+        allowOverrides: true,
+        value: 'ValidGithubRepo',
+        defaultValue: null,
+        settingSource: 'PROJECT',
+        isSettingEditable: true,
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT']
+      },
+      lastModifiedAt: 1690793003847
+    },
+    {
+      setting: {
+        identifier: 'default_repo_for_git_experience',
+        name: 'Default Repo For Git Experience with Entities- Pipelines/InputSets/Templates',
+        orgIdentifier: null,
+        projectIdentifier: null,
+        category: 'GIT_EXPERIENCE',
+        groupIdentifier: null,
+        valueType: 'String',
+        allowedValues: null,
+        allowOverrides: true,
+        value: 'gitX2',
+        defaultValue: 'gitX2',
+        settingSource: 'ACCOUNT',
+        isSettingEditable: true,
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT']
+      },
+      lastModifiedAt: 1690462502543
+    }
+  ],
+  metaData: null,
+  correlationId: '76c48d8b-d5f4-48d0-aad3-1fbfd4c5b0db'
 }

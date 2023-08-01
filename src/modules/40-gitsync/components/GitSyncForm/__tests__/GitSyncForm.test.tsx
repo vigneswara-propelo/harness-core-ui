@@ -8,13 +8,27 @@
 import React from 'react'
 import { act, findAllByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
+import * as cdNg from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import routes from '@common/RouteDefinitions'
+import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { GitSyncForm, GitSyncFormFields } from '../GitSyncForm'
-import { mockRepos, mockBranches, gitConnectorMock, fetchSupportedConnectorsListPayload } from './mockdata'
+import {
+  mockRepos,
+  mockBranches,
+  gitConnectorMock,
+  gitXSettingMock,
+  fetchSupportedConnectorsListPayload
+} from './mockdata'
 
-const pathParams = { accountId: 'dummy', orgIdentifier: 'default', projectIdentifier: 'DevX' }
+const pathParams = {
+  accountId: 'dummy',
+  orgIdentifier: 'default',
+  projectIdentifier: 'DevX',
+  module: 'cd'
+}
 const getGitConnector = jest.fn(() => Promise.resolve(gitConnectorMock))
 const fetchRepos = jest.fn(() => Promise.resolve(mockRepos))
 const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
@@ -23,7 +37,7 @@ const fetchSupportedConnectorsList = jest.fn(_arg => Promise.resolve(gitConnecto
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn().mockImplementation(arg => fetchSupportedConnectorsList(arg)),
   useGetConnector: jest.fn().mockImplementation(() => {
-    return { data: gitConnectorMock.data.content[0], refetch: getGitConnector, loading: false }
+    return { data: { data: gitConnectorMock.data.content[1] }, refetch: getGitConnector, loading: false }
   }),
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
     return { data: mockRepos, refetch: fetchRepos, loading: false }
@@ -31,14 +45,19 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches }
   }),
-  useGetSettingValue: jest.fn().mockImplementation(() => {
-    return { data: { allowDifferentRepoSettings: { data: { value: null } }, loading: false } }
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
+  }),
+  validateRepoPromise: jest.fn().mockImplementation(() => {
+    return { data: { isValid: true } }
   })
 }))
 
 describe('GitSyncForm test', () => {
   afterEach(() => {
     fetchRepos.mockReset()
+    fetchBranches.mockReset()
+    fetchSupportedConnectorsList.mockReset()
   })
 
   test('Rendering GitSyncForm for while create and filling form', async () => {
@@ -131,5 +150,97 @@ describe('GitSyncForm test', () => {
     await waitFor(() => expect(fetchRepos).not.toBeCalled())
     expect(getByText('repository')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
+  })
+  test('Rendering GitSyncForm while create pre-populated with settings', async () => {
+    jest.spyOn(cdNg, 'useGetSettingsList').mockImplementation((): any => {
+      return { data: gitXSettingMock, refetch: () => Promise.resolve(gitXSettingMock) }
+    })
+    const { container, getByText } = render(
+      <TestWrapper
+        path={routes.toPipelineStudio({
+          ...projectPathProps,
+          ...pipelinePathProps,
+          ...modulePathProps
+        })}
+        pathParams={{ ...pathParams, pipelineIdentifier: '-1' }}
+        queryParams={{ storeType: 'REMOTE' }}
+      >
+        <Formik<GitSyncFormFields>
+          initialValues={{
+            identifier: '',
+            connectorRef: '',
+            repo: '',
+            branch: '',
+            filePath: ''
+          }}
+          onSubmit={() => undefined}
+          formName="GitSyncForm"
+        >
+          {formikProps => (
+            <FormikForm>
+              <GitSyncForm formikProps={formikProps} isEdit={false} />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getGitConnector).toBeCalled())
+    expect(getByText('ValidGithubRepo')).toBeInTheDocument()
+    const repoInput = queryByAttribute('name', container, 'repo')
+    expect(repoInput).toHaveValue('gitX2')
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
+    await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
+    const branchInput = queryByAttribute('name', container, 'branch')
+    expect(branchInput).toHaveValue('main')
+  })
+
+  test('Rendering GitSyncForm while create with repo in settings not in allowed list', async () => {
+    jest.spyOn(cdNg, 'useGetSettingsList').mockImplementation((): any => {
+      return { data: gitXSettingMock, refetch: () => Promise.resolve(gitXSettingMock) }
+    })
+    jest.spyOn(cdNg, 'validateRepoPromise').mockImplementation((): any => {
+      return { data: { isValid: false } }
+    })
+
+    const { container, getByText } = render(
+      <TestWrapper
+        path={routes.toPipelineStudio({
+          ...projectPathProps,
+          ...pipelinePathProps,
+          ...modulePathProps
+        })}
+        pathParams={{ ...pathParams, pipelineIdentifier: '-1' }}
+        queryParams={{ storeType: 'REMOTE' }}
+      >
+        <Formik<GitSyncFormFields>
+          initialValues={{
+            identifier: '',
+            connectorRef: '',
+            repo: '',
+            branch: '',
+            filePath: ''
+          }}
+          onSubmit={() => undefined}
+          formName="GitSyncForm"
+        >
+          {formikProps => (
+            <FormikForm>
+              <GitSyncForm formikProps={formikProps} isEdit={false} />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getGitConnector).toBeCalled())
+    expect(getByText('ValidGithubRepo')).toBeInTheDocument()
+    // Connector should get auto filled but not repo and branch
+    const repoInput = queryByAttribute('name', container, 'repo')
+    expect(repoInput).toHaveValue('')
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
+    await waitFor(() => expect(fetchBranches).toBeCalledTimes(0))
+    const branchInput = queryByAttribute('name', container, 'branch')
+    expect(branchInput).not.toHaveValue('')
   })
 })

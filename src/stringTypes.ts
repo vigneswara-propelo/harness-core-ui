@@ -2973,6 +2973,8 @@ export interface StringsMap {
   'platform.defaultSettings.azureIncludeRefunds': string
   'platform.defaultSettings.concurrentActivePipelineExecutions': string
   'platform.defaultSettings.defaultGitConnector': string
+  'platform.defaultSettings.defaultGitExperienceRepo': string
+  'platform.defaultSettings.defaultGitExperienceRepoPlaceholder': string
   'platform.defaultSettings.defaultImagePullPolicyForAddOnContainer': string
   'platform.defaultSettings.defaultStoreType': string
   'platform.defaultSettings.emailToNonHarnessUsers': string

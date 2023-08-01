@@ -8,10 +8,24 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
+import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import { SetUpGitSync } from '../SetUpGitSync'
+
+jest.mock('services/cd-ng', () => ({
+  useGetConnector: jest.fn().mockImplementation(() => ({ data: null, refetch: noop })),
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
+  }),
+  useGetListOfBranchesByConnector: jest.fn().mockImplementation(() => ({ data: [], refetch: noop })),
+  useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: noop }
+  }),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: noop, error: null, loading: false }
+  })
+}))
 
 const renderComponent = (gitExFlag = true): RenderResult => {
   return render(

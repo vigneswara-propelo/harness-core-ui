@@ -51,8 +51,8 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
     return { refetch: fetchRepos, data: mockRepos }
   }),
-  useGetSettingValue: jest.fn().mockImplementation(() => {
-    return { data: { allowDifferentRepoSettings: { data: { value: null } }, loading: false } }
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
   })
 }))
 

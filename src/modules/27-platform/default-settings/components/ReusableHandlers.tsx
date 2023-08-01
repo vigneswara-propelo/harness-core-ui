@@ -125,7 +125,7 @@ export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadi
     </Layout.Vertical>
   )
 }
-export const DefaultSettingTextbox: React.FC<SettingRendererProps> = ({
+export const DefaultSettingMultiTextbox: React.FC<SettingRendererProps> = ({
   onSettingSelectionChange,
   identifier,
   settingValue
@@ -144,6 +144,31 @@ export const DefaultSettingTextbox: React.FC<SettingRendererProps> = ({
       multiTextInputProps={{
         allowableTypes: [MultiTypeInputType.FIXED]
       }}
+      onChange={handleChange}
+    />
+  )
+}
+
+export const DefaultSettingTextbox: React.FC<SettingRendererProps & { placeholderKey?: keyof StringsMap }> = ({
+  onSettingSelectionChange,
+  identifier,
+  settingValue,
+  placeholderKey
+}) => {
+  const { getString } = useStrings()
+  const handleChange = React.useCallback(
+    val => {
+      onSettingSelectionChange(val?.target?.value)
+    },
+    [onSettingSelectionChange]
+  )
+  return (
+    <FormInput.Text
+      name={identifier}
+      className={css.defaultSettingRenderer}
+      placeholder={placeholderKey ? getString(placeholderKey) : ''}
+      label=""
+      disabled={settingValue && !settingValue.isSettingEditable}
       onChange={handleChange}
     />
   )

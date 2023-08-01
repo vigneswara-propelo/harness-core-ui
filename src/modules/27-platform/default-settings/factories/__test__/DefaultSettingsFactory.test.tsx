@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import { SettingType, SettingGroups } from '@default-settings/pages/__test__/DefaultFactoryMock'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
-import { DefaultSettingNumberTextbox, DefaultSettingTextbox } from '@default-settings/components/ReusableHandlers'
+import { DefaultSettingNumberTextbox, DefaultSettingMultiTextbox } from '@default-settings/components/ReusableHandlers'
 jest.mock('@default-settings/interfaces/SettingType.types', () => ({
   SettingType: SettingType,
   SettingGroups: SettingGroups
@@ -40,28 +40,28 @@ describe('Default Settings Factory', () => {
   })
   DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_3 as any, {
     label: 'secretType',
-    settingRenderer: props => <DefaultSettingTextbox {...props} />,
+    settingRenderer: props => <DefaultSettingMultiTextbox {...props} />,
     yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
     settingCategory: 'CI',
     groupId: SettingGroups.group_1 as any
   })
   DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_4 as any, {
     label: 'platform.secrets.confirmDelete',
-    settingRenderer: props => <DefaultSettingTextbox {...props} />,
+    settingRenderer: props => <DefaultSettingMultiTextbox {...props} />,
     yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
     settingCategory: 'CI',
     groupId: SettingGroups.group_2 as any
   })
   DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_5 as any, {
     label: 'platform.secrets.createSSHCredWizard.btnVerifyConnection',
-    settingRenderer: props => <DefaultSettingTextbox {...props} />,
+    settingRenderer: props => <DefaultSettingMultiTextbox {...props} />,
     yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
     settingCategory: 'CI',
     groupId: SettingGroups.group_1 as any
   })
   DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_6 as any, {
     label: 'platform.secrets.createSSHCredWizard.titleAuth',
-    settingRenderer: props => <DefaultSettingTextbox {...props} />,
+    settingRenderer: props => <DefaultSettingMultiTextbox {...props} />,
     yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
     settingCategory: 'CI'
   })
@@ -75,7 +75,7 @@ describe('Default Settings Factory', () => {
   })
   DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_7 as any, {
     label: 'platform.secrets.createSSHCredWizard.validateKeypath',
-    settingRenderer: props => <DefaultSettingTextbox {...props} />,
+    settingRenderer: props => <DefaultSettingMultiTextbox {...props} />,
     yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
     settingCategory: 'CI'
   })

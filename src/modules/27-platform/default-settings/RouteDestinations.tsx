@@ -35,6 +35,7 @@ import {
   DefaultSettingNumberTextbox,
   DefaultSettingRadioBtnWithTrueAndFalse,
   DefaultSettingStringDropDown,
+  DefaultSettingTextbox,
   DefaultSettingsTagInput,
   DefaultSettingsToggle
 } from './components/ReusableHandlers'
@@ -274,6 +275,14 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENFORCE_GIT_EXPERIENCE
 DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_STORE_TYPE_FOR_ENTITIES, {
   label: 'platform.defaultSettings.defaultStoreType',
   settingRenderer: props => <DefaultSettingStringDropDown {...props} />,
+  settingCategory: 'GIT_EXPERIENCE'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_REPO_FOR_GIT_EXPERIENCE, {
+  label: 'platform.defaultSettings.defaultGitExperienceRepo',
+  settingRenderer: props => (
+    <DefaultSettingTextbox {...props} placeholderKey={'platform.defaultSettings.defaultGitExperienceRepoPlaceholder'} />
+  ),
   settingCategory: 'GIT_EXPERIENCE'
 })
 

@@ -93,6 +93,9 @@ jest.mock('services/cd-ng', () => ({
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
   useGetSettingValue: jest.fn(() => noop),
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
+  }),
   useGetFileContent: jest.fn(() => noop),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(gitHubMock)),
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {

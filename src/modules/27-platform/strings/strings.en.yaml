@@ -14,6 +14,8 @@ defaultSettings:
   fetchingDefaultConnector: Checking for default connector
   enforceGitExperience: Enforce git experience for pipelines and templates
   defaultStoreType: Default Store Type For Entities- Pipelines/InputSets/Templates
+  defaultGitExperienceRepo: Default Repository For Git Experience with Entities - Pipelines/InputSets/Templates
+  defaultGitExperienceRepoPlaceholder: Enter a repository name
   allowedRepositories: Allowed Repositories
   allowedRepositoriesPlaceholder: Type and press enter to add a repository
   pipelineTimeout: Pipeline Timeout

@@ -75,6 +75,7 @@ export enum SettingType {
   ENFORCE_GIT_EXPERIENCE = 'enforce_git_experience',
   DEFAULT_STORE_TYPE_FOR_ENTITIES = 'default_store_type_for_entities',
   DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE = 'default_connector_for_git_experience',
+  DEFAULT_REPO_FOR_GIT_EXPERIENCE = 'default_repo_for_git_experience',
   ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS = 'allow_different_repo_for_pipeline_and_input_sets',
   GIT_EXPERIENCE_REPO_ALLOWLIST = 'git_experience_repo_allowlist',
   DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER = 'disable_harness_built_in_secret_manager',

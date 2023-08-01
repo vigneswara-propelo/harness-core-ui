@@ -98,7 +98,7 @@ const DependendentValues: React.FC<SettingRendererProps> = ({
   return (
     <span>
       <span>Dependent Value</span>
-      <DefaultSettingTextbox setFieldValue={setFieldValue} {...otherProps} allSettings={allSettings} />
+      <DefaultSettingMultiTextbox setFieldValue={setFieldValue} {...otherProps} allSettings={allSettings} />
     </span>
   )
 }

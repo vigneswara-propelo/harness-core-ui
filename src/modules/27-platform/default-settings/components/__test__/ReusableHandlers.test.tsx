@@ -13,7 +13,7 @@ import {
   DefaultSettingNumberTextbox,
   DefaultSettingCheckBoxWithTrueAndFalse,
   DefaultSettingStringDropDown,
-  DefaultSettingTextbox,
+  DefaultSettingMultiTextbox,
   DefaultSettingRadioBtnWithTrueAndFalse,
   DefaultSettingsToggle
 } from '@default-settings/components/ReusableHandlers'
@@ -54,7 +54,7 @@ describe('Reusable Components', () => {
   test('text box', () => {
     const renderObj = render(
       <Formik initialValues={{ textbx: 'abcd' }} onSubmit={noop} formName="testing">
-        <DefaultSettingTextbox {...props} identifier="textbx" />
+        <DefaultSettingMultiTextbox {...props} identifier="textbx" />
       </Formik>
     )
 
@@ -102,7 +102,7 @@ describe('Reusable Components', () => {
     const { container } = renderObj
     expect(container).toMatchSnapshot()
   })
-  test('DefaultSettingTextbox', () => {
+  test('DefaultSettingNumberTextbox', () => {
     const renderObj = render(<DefaultSettingNumberTextbox {...props} identifier="nbr" />)
 
     const { container } = renderObj
