@@ -68,17 +68,14 @@ describe('ServicesList', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('go to service details new tab on row click', async () => {
+  test('go to service details on row click', async () => {
     const responseData = serviceDetails.data?.serviceDeploymentDetailsList as unknown as ServiceDetailsDTOV2[]
-    const { container } = renderSetup(responseData)
-    window.open = jest.fn()
+    const { container, getByTestId } = renderSetup(responseData)
     const row = container.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0]
     await fireEvent.click(row!)
-    expect(window.open).toHaveBeenCalledTimes(1)
-    expect(window.open).toHaveBeenCalledWith(
-      '/account/dummy/home/orgs/dummy/projects/dummy/services/asdfasdf',
-      '_blank'
-    )
+    await waitFor(() => getByTestId('location'))
+
+    expect(getByTestId('location')).toHaveTextContent('/account/dummy/home/orgs/dummy/projects/dummy/services/asdfasdf')
   })
 
   test('should go to latest execution after click', async () => {
