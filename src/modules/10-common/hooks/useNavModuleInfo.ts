@@ -210,8 +210,6 @@ const getModuleInfo = (
   }
 }
 
-const MODULES_NOT_APPLICABLE_FOR_COMMUNITY = new Set([ModuleName.CV, ModuleName.STO])
-
 const shouldBeVisible = (
   module: NavModuleName,
   featureFlags: Partial<Record<FeatureFlag, boolean>>,
@@ -219,7 +217,8 @@ const shouldBeVisible = (
   isCommunity: boolean
 ): boolean => {
   const featureFlagName = moduleInfoMap[module]?.featureFlagName
-  if (isCommunity && MODULES_NOT_APPLICABLE_FOR_COMMUNITY.has(module)) {
+  // For community version - only CD module is applicable, all the other modules are hidden.
+  if (isCommunity && module !== ModuleName.CD) {
     return false
   } else if (module === ModuleName.CV) {
     return Boolean(
