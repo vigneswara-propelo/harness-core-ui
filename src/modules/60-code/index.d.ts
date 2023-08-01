@@ -79,3 +79,8 @@ declare module 'code/WebhookDetails' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
+
+declare module 'code/NewRepoModalButton' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}

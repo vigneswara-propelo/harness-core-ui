@@ -7,7 +7,7 @@
 
 import React, { Suspense, lazy, useMemo, useState } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import { Container } from '@harness/uicore'
+import { ButtonProps, Container } from '@harness/uicore'
 import { omit } from 'lodash-es'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
@@ -67,6 +67,9 @@ const RemotePullRequest = lazy(() => import('code/PullRequest'))
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteCompare = lazy(() => import('code/Compare'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemoteNewRepoModalButton = lazy(() => import('code/NewRepoModalButton'))
 
 const CODERemoteComponentMounter: React.FC<{
   component: JSX.Element
@@ -203,4 +206,36 @@ export const WebhookDetails: React.FC<RemoteViewProps> = props => (
 
 export const Settings: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemoteSettings {...props} />} />
+)
+
+interface TypesRepository {
+  created?: number
+  created_by?: number
+  default_branch?: string
+  description?: string
+  fork_id?: number
+  git_url?: string
+  id?: number
+  is_public?: boolean
+  num_closed_pulls?: number
+  num_forks?: number
+  num_merged_pulls?: number
+  num_open_pulls?: number
+  num_pulls?: number
+  parent_id?: number
+  path?: string
+  uid?: string
+  updated?: number
+}
+
+interface NewRepoModalButtonProps extends Omit<ButtonProps, 'onClick' | 'onSubmit'> {
+  space: string
+  modalTitle: string
+  submitButtonTitle?: string
+  cancelButtonTitle?: string
+  onSubmit: (data: TypesRepository) => void
+}
+
+export const NewRepoModalButton: React.FC<NewRepoModalButtonProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteNewRepoModalButton {...props} />} />
 )
