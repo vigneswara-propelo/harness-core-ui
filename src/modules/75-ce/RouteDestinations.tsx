@@ -209,16 +209,18 @@ featureFactory.registerFeaturesByModule('ce', {
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.TICKETING_TOOL_CONNECTOR, {
   label: 'platform.defaultSettings.ticketingToolConnectorLabel',
-  settingRenderer: props => (
-    <DefaultSettingConnectorField
-      {...props}
-      type={
-        props.categoryAllSettings.get(SettingType.TICKETING_TOOL)?.value === 'Servicenow'
-          ? [Connectors.SERVICE_NOW]
-          : [Connectors.JIRA]
-      }
-    />
-  ),
+  settingRenderer: props => {
+    return (
+      <DefaultSettingConnectorField
+        {...props}
+        type={
+          props.categoryAllSettings.get(SettingType.TICKETING_TOOL)?.value === 'Servicenow'
+            ? [Connectors.SERVICE_NOW]
+            : [Connectors.Jira]
+        }
+      />
+    )
+  },
   settingCategory: 'CE',
   groupId: SettingGroups.TICKETING_PREFERENCES
 })
