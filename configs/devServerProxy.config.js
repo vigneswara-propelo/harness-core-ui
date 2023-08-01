@@ -195,7 +195,7 @@ module.exports = {
   },
   '/ssca': {
     pathRewrite: { '^/ssca': '' },
-    target: 'http://localhost:8186'
+    target: 'https://localhost:8186'
   },
   '/servicediscovery': {
     pathRewrite: { '^/servicediscovery': '' },

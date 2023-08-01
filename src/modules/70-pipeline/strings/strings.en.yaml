@@ -1903,7 +1903,7 @@ requiredFieldDuringRuntime: This is a required field during runtime
 setVariableRequiredDuringRuntime: Set Variable as required during runtime
 stageExecutedBefore: This stage has been re-executed.
 enableContainerBasedExecution: Enable container based execution
-artifactViolationDetails: Artifact violation details
+policyViolationDetails: Policy violation details
 violationDetails: Violation details
 supplier: Supplier
 copilot:

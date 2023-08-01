@@ -42,19 +42,19 @@ import {
 DefaultSettingsFactory.registerCategory('CORE', {
   icon: 'cog',
   label: 'common.settingCategory.general',
-  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto', 'ssca']
 })
 
 DefaultSettingsFactory.registerCategory('CONNECTORS', {
   icon: 'cog',
   label: 'connectorsLabel',
-  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto', 'ssca']
 })
 
 DefaultSettingsFactory.registerCategory('CD', {
   icon: 'cd',
   label: 'common.purpose.cd.fullText',
-  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto'],
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto', 'ssca'],
   settingsAndGroupDisplayOrder: [SettingType.EMAIL_TO_NON_HARNESS_USERS, SettingType.ENABLE_SERVICE_OVERRIDE_V2]
 })
 
@@ -62,7 +62,7 @@ DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
   icon: 'git-experience-setting',
   iconProps: { color: Color.GREY_900, size: 16 },
   label: 'platform.authSettings.cdCommunityPlan.communityPlanStrings.item5',
-  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto', 'ssca']
 })
 
 DefaultSettingsFactory.registerCategory('PMS', {

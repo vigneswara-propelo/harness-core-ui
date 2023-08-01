@@ -111,7 +111,7 @@ describe('ExecutionArtifactListView', () => {
     )
     expect(
       await screen.findByRole('heading', {
-        name: 'pipeline.artifactViolationDetails'
+        name: 'pipeline.policyViolationDetails'
       })
     ).toBeInTheDocument()
 

@@ -20,8 +20,14 @@ import './components/PipelineSteps'
 import { Duration } from '@common/exports'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import SSCASideNav from './components/SSCASideNav'
+import { ConnectorRouteDestinations } from '@platform/connectors/RouteDestinations'
+import { DefaultSettingsRouteDestinations } from '@platform/default-settings/RouteDestinations'
+import { SecretRouteDestinations } from '@platform/secrets/RouteDestinations'
+import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
+import { DelegateRouteDestinations } from '@platform/delegates/RouteDestinations'
+import { VariableRouteDestinations } from '@platform/variables/RouteDestinations'
 import { SSCACustomMicroFrontendProps } from './interfaces/SSCACustomMicroFrontendProps.types'
+import SSCASideNav from './components/SSCASideNav'
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteSSCAApp = lazy(() => import('ssca/MicroFrontendApp'))
@@ -66,8 +72,10 @@ export default (
       exact
       sidebarProps={SSCASideNavProps}
       path={[
-        routes.toSSCAOverview({ ...accountPathProps }),
-        routes.toProjectOverview({ ...projectPathProps, ...moduleParams })
+        routes.toSSCAOverview({ ...projectPathProps, ...moduleParams }),
+        routes.toProjectOverview({ ...projectPathProps, ...moduleParams }),
+        routes.toSSCAArtifacts({ ...projectPathProps, ...moduleParams }),
+        routes.toSSCAComponents({ ...projectPathProps, ...moduleParams })
       ]}
     >
       <ChildAppMounter<SSCACustomMicroFrontendProps>
@@ -84,6 +92,13 @@ export default (
         pipelineStudioComponent={PipelineStudio}
         pipelineDeploymentListComponent={PipelineDeploymentList}
       />
+
+      <ConnectorRouteDestinations moduleParams={moduleParams} sidebarProps={SSCASideNavProps} />
+      <SecretRouteDestinations moduleParams={moduleParams} sidebarProps={SSCASideNavProps} />
+      <VariableRouteDestinations moduleParams={moduleParams} sidebarProps={SSCASideNavProps} />
+      <AccessControlRouteDestinations moduleParams={moduleParams} sidebarProps={SSCASideNavProps} />
+      <DelegateRouteDestinations moduleParams={moduleParams} sidebarProps={SSCASideNavProps} />
+      <DefaultSettingsRouteDestinations moduleParams={moduleParams} sidebarProps={SSCASideNavProps} />
     </Route>
   </>
 )

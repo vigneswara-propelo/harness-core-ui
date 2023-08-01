@@ -11,3 +11,4 @@ enforcementStep:
   policyConfiguration: Policy Configuration
   attestedImage: Attested Image
 publicKey: Public Key
+components: Components

@@ -3867,7 +3867,6 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
   'pipeline.artifactTriggerConfigPanel.selectAnArtifact': string
   'pipeline.artifactTriggerConfigPanel.tagArtifactPathBuild': string
-  'pipeline.artifactViolationDetails': string
   'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository': string
   'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
   'pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder': string
@@ -4890,6 +4889,7 @@ export interface StringsMap {
   'pipeline.policyEvaluations.policySetsApplied': string
   'pipeline.policyEvaluations.title': string
   'pipeline.policyEvaluations.warningHeadingEvaluationDetail': string
+  'pipeline.policyViolationDetails': string
   'pipeline.poweredByHarness': string
   'pipeline.prTitle': string
   'pipeline.previewTemplateLabel': string
@@ -8840,6 +8840,7 @@ export interface StringsMap {
   'idp.oAuthConfig': string
   'idp.urlAllowList': string
   'ssca.allowDenyList': string
+  'ssca.components': string
   'ssca.enforcementStep.attestedImage': string
   'ssca.enforcementStep.policyConfiguration': string
   'ssca.enforcementStep.verifyAttestation': string

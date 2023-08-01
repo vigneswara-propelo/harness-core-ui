@@ -50,8 +50,8 @@ export default function SSCASideNav(): React.ReactElement {
       {showLinks && (
         <>
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
-          <SidebarLink label={getString('common.pipelineExecution')} to={routes.toDeployments(params)} />
-          <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
+          <SidebarLink label={getString('artifacts')} to={routes.toSSCAArtifacts(params)} />
+          <SidebarLink label={getString('ssca.components')} to={routes.toSSCAComponents(params)} />
           <ProjectSetupMenu module={module} />
         </>
       )}

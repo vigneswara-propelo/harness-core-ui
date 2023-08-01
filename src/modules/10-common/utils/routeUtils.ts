@@ -36,7 +36,8 @@ import type {
   EnvironmentGroupPathProps,
   VariablesPathProps,
   AccountRoutePlacement,
-  DiscoveryPathProps
+  DiscoveryPathProps,
+  Module
 } from '@common/interfaces/RouteInterfaces'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 
@@ -193,6 +194,23 @@ export function withProjectIdentifier<T>(fn: (args: T) => string) {
   }
 }
 
+/**Most routes at project level follow this pattern */
+export function withProjectLevelRoute<T>(fn: (args: T) => string) {
+  return (
+    params: T & { accountId: string; projectIdentifier: string; orgIdentifier: string; module: Module }
+  ): string => {
+    const path = fn(params)
+
+    const { accountId, orgIdentifier, projectIdentifier, module = 'home' } = params
+
+    return `/account/${accountId}/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/${path.replace(
+      /^\//,
+      ''
+    )}`
+  }
+}
+
+/** Used for settings resources at Account, Org and Project levels */
 export const getScopeBasedRoute = ({
   scope: { orgIdentifier, projectIdentifier, module },
   path

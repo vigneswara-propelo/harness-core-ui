@@ -7,7 +7,7 @@
 
 import qs from 'qs'
 import { omit as _omit } from 'lodash-es'
-import { getEnvServiceRoute, getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
+import { getEnvServiceRoute, getScopeBasedRoute, withAccountId, withProjectLevelRoute } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
   ConnectorPathProps,
@@ -2282,7 +2282,8 @@ const routes = {
   // SSCA
   toSSCA: withAccountId(() => '/ssca'),
   toSSCAOverview: withAccountId(() => '/ssca/overview'),
-  toSSCAGettingStarted: withAccountId(() => '/ssca/getting-started'),
+  toSSCAArtifacts: withProjectLevelRoute(() => '/artifacts'),
+  toSSCAComponents: withProjectLevelRoute(() => '/components'),
   // IDP
   toIDPDefaultPath: withAccountId(() => '/idp-default'),
   toIDP: withAccountId(() => '/idp'),
