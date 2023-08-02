@@ -174,10 +174,13 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     if (searchParam) {
       searchRef.current.clear()
     }
+    if (selectedRepo) {
+      setSelectedRepo('')
+    }
     setSelectedChildType(childTypes.length === 1 ? childTypes[0] : undefined)
     setSelectedScope(scopeOptions[0])
     setSelectedTemplateRefs(templateIdentifiers)
-  }, [searchParam, searchRef.current, childTypes, templateIdentifiers])
+  }, [searchParam, searchRef.current, childTypes, templateIdentifiers, selectedRepo])
 
   const getName = React.useCallback(
     (item: string): string => {
