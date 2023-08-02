@@ -287,6 +287,7 @@ export function StepGroupNode(props: any): JSX.Element {
                     : { childStage: childPipelineData[0]?.id.split('|')[0] }))
               }
               delete params?.step
+              delete params?.collapsedNode
               if (!isNodeTypeMatrixOrFor(childPipelineData[0]?.type)) delete params?.stageExecId
               if (isUndefined(childPipelineData) || isEmpty(childPipelineData)) delete params?.childStage
               replaceQueryParams(params)

@@ -13,7 +13,7 @@ import { defaultTo, get } from 'lodash-es'
 import type { CellProps, Column, HeaderProps, Renderer } from 'react-table'
 import type { CheckboxProps } from '@harness/uicore/dist/components/Checkbox/Checkbox'
 import { useStrings } from 'framework/strings'
-import type { ExecutionNode } from 'services/pipeline-ng'
+import type { ExecutionGraph, ExecutionNode, PipelineExecutionDetail } from 'services/pipeline-ng'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { getExecutionStatusOptions } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
@@ -28,11 +28,27 @@ type CellRenderer = Renderer<CellProps<ExecutionNode>>
 
 const statusOptions = getExecutionStatusOptions()
 
+const getExecutionGraph = ({
+  selectedCollapsedNodeId,
+  pipelineExecutionDetail
+}: {
+  selectedCollapsedNodeId: string
+  pipelineExecutionDetail: PipelineExecutionDetail | null
+}): ExecutionGraph | undefined => {
+  const executionGraphs = [
+    pipelineExecutionDetail?.executionGraph,
+    pipelineExecutionDetail?.childGraph?.executionGraph,
+    pipelineExecutionDetail?.rollbackGraph?.executionGraph
+  ]
+
+  return executionGraphs.find(graph => Boolean(graph?.nodeAdjacencyListMap?.[selectedCollapsedNodeId]))
+}
+
 const GlobalCheckboxHeader: HeaderRenderer = () => {
   const [{ visibilityMap }, collapsedNodeDispatch] = useCollapsedNodeStore()
   const { selectedCollapsedNodeId, pipelineExecutionDetail } = useExecutionContext()
-  const nodeAdjacencyListMap = pipelineExecutionDetail?.executionGraph?.nodeAdjacencyListMap
-  const childNodeIds = nodeAdjacencyListMap?.[selectedCollapsedNodeId]?.children
+  const executionGraph = getExecutionGraph({ selectedCollapsedNodeId, pipelineExecutionDetail })
+  const childNodeIds = executionGraph?.nodeAdjacencyListMap?.[selectedCollapsedNodeId]?.children
 
   const checkedCount = useMemo(() => {
     if (!Array.isArray(childNodeIds)) return 0
@@ -131,9 +147,11 @@ export function InstanceListPanel(): JSX.Element | null {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<string | null>(null)
 
-  const nodeAdjacencyListMap = pipelineExecutionDetail?.executionGraph?.nodeAdjacencyListMap
-  const nodeMap = pipelineExecutionDetail?.executionGraph?.nodeMap
+  const executionGraph = getExecutionGraph({ selectedCollapsedNodeId, pipelineExecutionDetail })
+  const nodeAdjacencyListMap = executionGraph?.nodeAdjacencyListMap
+  const nodeMap = executionGraph?.nodeMap
   const node = nodeMap?.[selectedCollapsedNodeId]
+
   const childNodeIds: string[] = useMemo(
     () => defaultTo(get(nodeAdjacencyListMap, [selectedCollapsedNodeId, 'children']), []),
     [nodeAdjacencyListMap, selectedCollapsedNodeId]

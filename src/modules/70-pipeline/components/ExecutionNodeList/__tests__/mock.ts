@@ -3727,3 +3727,684 @@ export const executionContextMock = {
     }
   }
 }
+
+export const executionContextMockWithChildGraph = {
+  selectedCollapsedNodeId: '-9bZNr_MSICWSDg7hzgWog',
+  pipelineExecutionDetail: {
+    childGraph: {
+      executionGraph: {
+        rootNodeId: '2ZjX_V4ARSOziFy4tf3Uvw',
+        nodeMap: {
+          OP8aw3cgSxSEi1ApH6c91g: {
+            uuid: 'OP8aw3cgSxSEi1ApH6c91g',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_9',
+            identifier: 'ShellScript_1_9',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_9',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_9',
+              name: 'ShellScript_1_9',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157676,
+            endTs: 1690896161795,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+
+            interruptHistories: [],
+            stepDetails: null,
+            strategyMetadata: {
+              currentiteration: 9,
+              totaliterations: 10
+            },
+            executionInputConfigured: false
+          },
+          Qdb0eCa4TXCTOojcSldLQw: {
+            uuid: 'Qdb0eCa4TXCTOojcSldLQw',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_1',
+            identifier: 'ShellScript_1_1',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_1',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_1',
+              name: 'ShellScript_1_1',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157689,
+            endTs: 1690896161617,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null
+          },
+          gE4v2DDpRyGA5loG2FmkNw: {
+            uuid: 'gE4v2DDpRyGA5loG2FmkNw',
+            setupId: 'bsqTkAk7TfqoPZAOAAYnqA',
+            name: 'Execution',
+            identifier: 'execution',
+            baseFqn: 'pipeline.stages.s1.spec.execution',
+            outcomes: {},
+            stepParameters: {
+              childNodeId: 'bsqTkAk7TfqoPZAOAAYnqAsteps',
+              logMessage: 'Execution Element'
+            },
+            startTs: 1690896157134,
+            endTs: 1690896169942,
+            stepType: 'NG_SECTION',
+            status: 'Success'
+          },
+          AxEjdFDBRAqY1teuye4g7g: {
+            uuid: 'AxEjdFDBRAqY1teuye4g7g',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_2',
+            identifier: 'ShellScript_1_2',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_2',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_2',
+              name: 'ShellScript_1_2',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157675,
+            endTs: 1690896161413,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null
+          },
+          pOQEZMZ2Rz6m2o5Gr0D9OA: {
+            uuid: 'pOQEZMZ2Rz6m2o5Gr0D9OA',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_4',
+            identifier: 'ShellScript_1_4',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_4',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_4',
+              name: 'ShellScript_1_4',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157684,
+            endTs: 1690896161621,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            }
+          },
+          EJURFRI8RNqWoOJhWUnIrQ: {
+            uuid: 'EJURFRI8RNqWoOJhWUnIrQ',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_3',
+            identifier: 'ShellScript_1_3',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_3',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_3',
+              name: 'ShellScript_1_3',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157691,
+            endTs: 1690896161207,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+            nodeRunInfo: {
+              whenCondition: '<+OnStageSuccess>',
+              evaluatedCondition: true,
+              expressions: [
+                {
+                  expression: 'OnStageSuccess',
+                  expressionValue: 'true',
+                  count: 1
+                }
+              ]
+            }
+          },
+          oPuns3PmSGeuvR2O2uY7kQ: {
+            uuid: 'oPuns3PmSGeuvR2O2uY7kQ',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_6',
+            identifier: 'ShellScript_1_6',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_6',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_6',
+              name: 'ShellScript_1_6',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157686,
+            endTs: 1690896161003,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+            nodeRunInfo: {
+              whenCondition: '<+OnStageSuccess>',
+              evaluatedCondition: true,
+              expressions: [
+                {
+                  expression: 'OnStageSuccess',
+                  expressionValue: 'true',
+                  count: 1
+                }
+              ]
+            }
+          },
+          '-9bZNr_MSICWSDg7hzgWog': {
+            uuid: '-9bZNr_MSICWSDg7hzgWog',
+            setupId: 'k8npgQuTT52uFpr7S9uxxA',
+            name: 'ShellScript_1',
+            identifier: 'ShellScript_1',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps',
+            outcomes: {},
+            stepParameters: {
+              strategyConfig: {
+                uuid: 'hskaADmZRJiw87oc9Pyaog',
+                repeat: {
+                  times: 10
+                }
+              },
+              childNodeId: 'hskaADmZRJiw87oc9Pyaog',
+              strategyType: 'LOOP',
+              shouldProceedIfFailed: true
+            },
+            startTs: 1690896157340,
+            endTs: 1690896169535,
+            stepType: 'STRATEGY',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+            nodeRunInfo: null,
+
+            unitProgresses: [],
+            progressData: null,
+            delegateInfoList: [],
+            interruptHistories: [],
+            stepDetails: null,
+            strategyMetadata: null,
+            executionInputConfigured: false
+          },
+          '8Y4sGwcJRPWP7TWCheQ7ug': {
+            uuid: '8Y4sGwcJRPWP7TWCheQ7ug',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_0',
+            identifier: 'ShellScript_1_0',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_0',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_0',
+              name: 'ShellScript_1_0',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157569,
+            endTs: 1690896169296,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+            nodeRunInfo: {
+              whenCondition: '<+OnStageSuccess>',
+              evaluatedCondition: true,
+              expressions: [
+                {
+                  expression: 'OnStageSuccess',
+                  expressionValue: 'true',
+                  count: 1
+                }
+              ]
+            },
+
+            interruptHistories: [],
+            stepDetails: null,
+            strategyMetadata: {
+              currentiteration: 0,
+              totaliterations: 10
+            },
+            executionInputConfigured: false
+          },
+          GQrSfzzgSHyD671zy63bYw: {
+            uuid: 'GQrSfzzgSHyD671zy63bYw',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_5',
+            identifier: 'ShellScript_1_5',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_5',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_5',
+              name: 'ShellScript_1_5',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157685,
+            endTs: 1690896161619,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+            nodeRunInfo: {
+              whenCondition: '<+OnStageSuccess>',
+              evaluatedCondition: true,
+              expressions: [
+                {
+                  expression: 'OnStageSuccess',
+                  expressionValue: 'true',
+                  count: 1
+                }
+              ]
+            },
+
+            interruptHistories: [],
+            stepDetails: null,
+            strategyMetadata: {
+              currentiteration: 5,
+              totaliterations: 10
+            },
+            executionInputConfigured: false
+          },
+          JvdVADA1R3uXiKEy_vaHzQ: {
+            uuid: 'JvdVADA1R3uXiKEy_vaHzQ',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_8',
+            identifier: 'ShellScript_1_8',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_8',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_8',
+              name: 'ShellScript_1_8',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157676,
+            endTs: 1690896161415,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+            nodeRunInfo: {
+              whenCondition: '<+OnStageSuccess>',
+              evaluatedCondition: true,
+              expressions: [
+                {
+                  expression: 'OnStageSuccess',
+                  expressionValue: 'true',
+                  count: 1
+                }
+              ]
+            },
+
+            interruptHistories: [],
+            stepDetails: null,
+            strategyMetadata: {
+              currentiteration: 8,
+              totaliterations: 10
+            },
+            executionInputConfigured: false
+          },
+          '2ZjX_V4ARSOziFy4tf3Uvw': {
+            uuid: '2ZjX_V4ARSOziFy4tf3Uvw',
+            setupId: 'el12rgvvRgC7qShon6qPMA',
+            name: 's1',
+            identifier: 's1',
+            baseFqn: 'pipeline.stages.s1',
+            outcomes: {},
+            stepParameters: {
+              identifier: 's1',
+              name: 's1',
+              description: '',
+              variables: {},
+              tags: {},
+              type: 'Custom',
+              specConfig: {
+                childNodeID: '2rCMucinTo2KM5xrYTKBuw'
+              }
+            },
+            startTs: 1690896156972,
+            endTs: 1690896170148,
+            stepType: 'CUSTOM_STAGE',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+
+            unitProgresses: [],
+            progressData: null,
+            delegateInfoList: [],
+            interruptHistories: [],
+            stepDetails: null,
+            strategyMetadata: null,
+            executionInputConfigured: false
+          },
+          'tP4O-eeTQ42zFnjYPAbELg': {
+            uuid: 'tP4O-eeTQ42zFnjYPAbELg',
+            setupId: 'hskaADmZRJiw87oc9Pyaog',
+            name: 'ShellScript_1_7',
+            identifier: 'ShellScript_1_7',
+            baseFqn: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1_7',
+            outcomes: {
+              output: {
+                outputVariables: {}
+              }
+            },
+            stepParameters: {
+              identifier: 'ShellScript_1_7',
+              name: 'ShellScript_1_7',
+              timeout: '10m',
+              type: 'ShellScript',
+              spec: {
+                outputVariables: {},
+                environmentVariables: {},
+                shell: 'Bash',
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo 0'
+                  }
+                },
+                onDelegate: true
+              }
+            },
+            startTs: 1690896157698,
+            endTs: 1690896161208,
+            stepType: 'ShellScript',
+            status: 'Success',
+            failureInfo: {
+              message: '',
+              failureTypeList: [],
+              responseMessages: []
+            },
+            skipInfo: null,
+            nodeRunInfo: {
+              whenCondition: '<+OnStageSuccess>',
+              evaluatedCondition: true,
+              expressions: [
+                {
+                  expression: 'OnStageSuccess',
+                  expressionValue: 'true',
+                  count: 1
+                }
+              ]
+            },
+            interruptHistories: [],
+            stepDetails: null,
+            strategyMetadata: {
+              currentiteration: 7,
+              totaliterations: 10
+            },
+            executionInputConfigured: false
+          }
+        },
+        nodeAdjacencyListMap: {
+          OP8aw3cgSxSEi1ApH6c91g: {
+            children: [],
+            nextIds: []
+          },
+          Qdb0eCa4TXCTOojcSldLQw: {
+            children: [],
+            nextIds: []
+          },
+          gE4v2DDpRyGA5loG2FmkNw: {
+            children: ['-9bZNr_MSICWSDg7hzgWog'],
+            nextIds: []
+          },
+          AxEjdFDBRAqY1teuye4g7g: {
+            children: [],
+            nextIds: []
+          },
+          pOQEZMZ2Rz6m2o5Gr0D9OA: {
+            children: [],
+            nextIds: []
+          },
+          EJURFRI8RNqWoOJhWUnIrQ: {
+            children: [],
+            nextIds: []
+          },
+          oPuns3PmSGeuvR2O2uY7kQ: {
+            children: [],
+            nextIds: []
+          },
+          '-9bZNr_MSICWSDg7hzgWog': {
+            children: [
+              '8Y4sGwcJRPWP7TWCheQ7ug',
+              'JvdVADA1R3uXiKEy_vaHzQ',
+              'AxEjdFDBRAqY1teuye4g7g',
+              'pOQEZMZ2Rz6m2o5Gr0D9OA',
+              'EJURFRI8RNqWoOJhWUnIrQ',
+              'OP8aw3cgSxSEi1ApH6c91g',
+              'GQrSfzzgSHyD671zy63bYw',
+              'Qdb0eCa4TXCTOojcSldLQw',
+              'tP4O-eeTQ42zFnjYPAbELg',
+              'oPuns3PmSGeuvR2O2uY7kQ'
+            ],
+            nextIds: []
+          },
+          '8Y4sGwcJRPWP7TWCheQ7ug': {
+            children: [],
+            nextIds: []
+          },
+          GQrSfzzgSHyD671zy63bYw: {
+            children: [],
+            nextIds: []
+          },
+          JvdVADA1R3uXiKEy_vaHzQ: {
+            children: [],
+            nextIds: []
+          },
+          '2ZjX_V4ARSOziFy4tf3Uvw': {
+            children: ['gE4v2DDpRyGA5loG2FmkNw'],
+            nextIds: []
+          },
+          'tP4O-eeTQ42zFnjYPAbELg': {
+            children: [],
+            nextIds: []
+          }
+        },
+        executionMetadata: {
+          accountId: 'accountId',
+          pipelineIdentifier: 'p_step_loop',
+          orgIdentifier: 'default',
+          projectIdentifier: 'projectIdentifier',
+          planExecutionId: 'planExecutionId'
+        },
+        representationStrategy: 'camelCase'
+      }
+    }
+  }
+}

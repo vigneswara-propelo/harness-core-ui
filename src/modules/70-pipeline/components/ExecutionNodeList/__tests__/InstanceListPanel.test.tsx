@@ -9,10 +9,10 @@ import React from 'react'
 import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import mockImport from 'framework/utils/mockImport'
 import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
+import * as executionContext from '@pipeline/context/ExecutionContext'
 import { InstanceListPanel } from '../InstanceListPanel'
-import { executionContextMock } from './mock'
+import { executionContextMock, executionContextMockWithChildGraph } from './mock'
 import { CollapsedNodeProvider } from '../CollapsedNodeStore'
 
 const renderInstanceListPanel = (): RenderResult =>
@@ -31,15 +31,22 @@ const getNodeNames = (): string[] => {
   return nodeAdjacencyListMap[selectedCollapsedNodeId].children!.map(id => nodeMap[id].name) as string[]
 }
 
-mockImport('@pipeline/context/ExecutionContext', {
-  useExecutionContext: () => executionContextMock
-})
-
 describe('InstanceListPanel', () => {
+  beforeEach(() => {
+    jest.spyOn(executionContext, 'useExecutionContext').mockReturnValue(executionContextMock as any)
+  })
+
   test('should render correct total count', () => {
     renderInstanceListPanel()
 
     expect(screen.getByTestId('nodes-total-count')).toHaveTextContent('9')
+  })
+
+  test('should find and use the correct execution graph based on selectedCollapsedNodeId', () => {
+    jest.spyOn(executionContext, 'useExecutionContext').mockReturnValue(executionContextMockWithChildGraph as any)
+
+    renderInstanceListPanel()
+    expect(screen.getByTestId('nodes-total-count')).toHaveTextContent('10')
   })
 
   test('should filter nodes based on search term', async () => {
