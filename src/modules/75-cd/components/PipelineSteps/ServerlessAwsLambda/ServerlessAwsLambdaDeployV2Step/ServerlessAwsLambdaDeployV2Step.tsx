@@ -145,7 +145,7 @@ export class ServerlessAwsLambdaDeployV2Step extends PipelineStep<ServerlessAwsL
       set(
         errors,
         `spec.connectorRef`,
-        getString?.('fieldRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('pipelineSteps.connectorLabel') })
       )
     }
 
