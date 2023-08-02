@@ -225,16 +225,17 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                   popoverClassName={css.retryMenu}
                 >
                   <Layout.Horizontal border={{ bottom: true, color: Color.GREY_50 }} padding={{ bottom: 'small' }}>
-                    <Text margin={{ left: 'medium', top: 'small' }} style={{ cursor: 'pointer' }}>
+                    <Text margin={{ left: 'xxlarge' }} style={{ cursor: 'pointer' }} font={{ size: 'small' }}>
                       {getString('pipeline.retryHistory')}
                     </Text>
                     <Text
                       rightIcon="chevron-down"
                       rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
-                      margin={{ left: 'medium', top: 'small' }}
+                      margin={{ left: 'medium' }}
                       padding={{ left: 'xsmall' }}
                       style={{ cursor: 'pointer' }}
                       color={Color.PRIMARY_7}
+                      font={{ size: 'small' }}
                     >
                       {` #${retryCount + 1}`}
                     </Text>

@@ -255,7 +255,9 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                         size={23}
                       />
                     )}
-                    <Text lineClamp={1}>{stage.name}</Text>
+                    <Text lineClamp={1} font={{ weight: 'semi-bold' }}>
+                      {stage.name}
+                    </Text>
                   </div>
                   {shouldShowExecutionInputs ? (
                     <button
@@ -299,7 +301,9 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                               <div className={css.stageName}>
                                 <div>
                                   <StatusIcon className={css.icon} status={childStage.status as ExecutionStatus} />
-                                  <Text lineClamp={1}>{childStage.name}</Text>
+                                  <Text lineClamp={1} font={{ weight: 'semi-bold' }}>
+                                    {childStage.name}
+                                  </Text>
                                 </div>
                               </div>
                             }
