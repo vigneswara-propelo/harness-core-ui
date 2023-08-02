@@ -840,7 +840,9 @@ export function GithubPackageRegistry(
         }}
       >
         {formik => {
-          ;(formikRef as FormikRefType).current = formik
+          if (formikRef) {
+            ;(formikRef as FormikRefType).current = formik
+          }
           return <FormComponent {...props} formik={formik} deploymentType={selectedDeploymentType} />
         }}
       </Formik>
