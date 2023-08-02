@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { Icon, Text } from '@harness/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
-import { get, omit, defaultTo } from 'lodash-es'
+import { Color } from '@harness/design-system'
+import { get, omit, defaultTo, isEmpty } from 'lodash-es'
 
+import { Menu, Popover } from '@blueprintjs/core'
 import type { ExecutionNode, InterruptEffectDTO } from 'services/pipeline-ng'
 import { String as Template, useStrings } from 'framework/strings'
 import type {
@@ -27,13 +29,16 @@ import {
   isExecutionWaitingForInput
 } from '@pipeline/utils/statusHelpers'
 import { getInterruptHistoriesFromType, getStepsTreeStatus, Interrupt } from '@pipeline/utils/executionUtils'
+import { useGetRetryStepGroupData } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/useGetRetryStepGroupData'
 import { StatusIcon } from './StatusIcon'
 
 import css from './StepsTree.module.scss'
 import stageCss from '../StageSelection/StageSelection.module.scss'
 
 function getRetryInterrupts(step: ExecutionPipelineNode<ExecutionNode>): InterruptEffectDTO[] {
-  return defaultTo(step?.item?.data?.interruptHistories, []).filter(row => row.interruptType === 'RETRY')
+  return defaultTo(step?.item?.data?.interruptHistories, defaultTo(step?.group?.data?.interruptHistories, [])).filter(
+    row => row.interruptType === 'RETRY'
+  )
 }
 
 export interface StepsTreeProps {
@@ -49,6 +54,7 @@ export interface StepsTreeProps {
 export function StepsTree(props: StepsTreeProps): React.ReactElement {
   const { nodes, selectedStepId, onStepSelect, isRoot, retryStep, allNodeMap, openExecutionTimeInputsForStep } = props
   const { getString } = useStrings()
+  const [currentStepGroupRetryId, setCurrentStepGroupRetryId] = React.useState<string>('')
   const commonProps: Omit<StepsTreeProps, 'nodes' | 'isRoot'> = {
     selectedStepId,
     onStepSelect,
@@ -56,6 +62,8 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
     allNodeMap,
     openExecutionTimeInputsForStep
   }
+  const { retryStepGroupParams, retryStepGroupStepsData, goToRetryStepExecution, goToCurrentExecution } =
+    useGetRetryStepGroupData({ currentStepGroupRetryId })
 
   function handleStepSelect(identifier: string, status?: string, retryId?: string): void {
     if (isExecutionNotStarted(status) || isExecutionQueued(status)) {
@@ -163,6 +171,28 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
           const status = getStepsTreeStatus({ step, allNodeMap }) || step.group.status
           const statusLower = status.toLowerCase()
 
+          const interruptHistories = getRetryInterrupts(step)
+
+          if (interruptHistories.length > 0) {
+            let currentStepGrpRetryId = retryStepGroupParams[`${step.group.data.baseFqn}`]
+            const isRelated = interruptHistories?.some(
+              ({ interruptConfig }) => currentStepGrpRetryId === interruptConfig?.retryInterruptConfig?.retryId
+            )
+
+            if (!isRelated) {
+              currentStepGrpRetryId = ''
+            }
+            if (currentStepGrpRetryId !== currentStepGroupRetryId) {
+              setCurrentStepGroupRetryId(currentStepGrpRetryId)
+            }
+          }
+          let retryCount = interruptHistories.length
+          if (currentStepGroupRetryId) {
+            retryCount = interruptHistories.findIndex(
+              ({ interruptConfig }) => interruptConfig?.retryInterruptConfig?.retryId === currentStepGroupRetryId
+            )
+          }
+
           return (
             <li className={css.item} key={step.group.identifier} data-type="group">
               <div className={css.step} data-status={statusLower}>
@@ -186,7 +216,57 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                   icon={null}
                 />
               </div>
-              <StepsTree nodes={step.group.items} {...commonProps} />
+              {interruptHistories.length > 0 && (
+                <Popover
+                  wrapperTagName="div"
+                  targetTagName="div"
+                  minimal
+                  position="bottom-left"
+                  popoverClassName={css.retryMenu}
+                >
+                  <Layout.Horizontal border={{ bottom: true, color: Color.GREY_50 }} padding={{ bottom: 'small' }}>
+                    <Text margin={{ left: 'medium', top: 'small' }} style={{ cursor: 'pointer' }}>
+                      {getString('pipeline.retryHistory')}
+                    </Text>
+                    <Text
+                      rightIcon="chevron-down"
+                      rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                      margin={{ left: 'medium', top: 'small' }}
+                      padding={{ left: 'xsmall' }}
+                      style={{ cursor: 'pointer' }}
+                      color={Color.PRIMARY_7}
+                    >
+                      {` #${retryCount + 1}`}
+                    </Text>
+                  </Layout.Horizontal>
+                  <Menu>
+                    {interruptHistories.map(({ interruptId, interruptConfig }, ind) => (
+                      <Menu.Item
+                        active={currentStepGroupRetryId === interruptConfig?.retryInterruptConfig?.retryId}
+                        key={interruptId}
+                        text={getString('pipeline.execution.retryStepCount', { num: ind + 1 })}
+                        onClick={() =>
+                          goToRetryStepExecution(
+                            interruptConfig.retryInterruptConfig?.retryId || /* istanbul ignore next */ '',
+                            step.group
+                          )
+                        }
+                      />
+                    ))}
+                    <Menu.Item
+                      active={!currentStepGroupRetryId}
+                      text={getString('pipeline.execution.retryStepCount', {
+                        num: interruptHistories.length + 1
+                      })}
+                      onClick={() => goToCurrentExecution(step.group)}
+                    />
+                  </Menu>
+                </Popover>
+              )}
+              <StepsTree
+                nodes={!isEmpty(currentStepGroupRetryId) ? retryStepGroupStepsData : step.group.items}
+                {...commonProps}
+              />
             </li>
           )
         }

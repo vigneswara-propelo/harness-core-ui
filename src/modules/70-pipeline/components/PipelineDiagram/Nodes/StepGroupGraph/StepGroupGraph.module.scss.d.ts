@@ -9,6 +9,7 @@
 declare const styles: {
   readonly floatingAddNodeWrapper: string
   readonly main: string
+  readonly spinner: string
   readonly stepGroupSvg: string
 }
 export default styles

@@ -14,15 +14,21 @@ import { StepsTree } from '../StepsTree'
 import data from './data.json'
 import retryData from './retryData.json'
 describe('<StepsTree /> tests', () => {
+  jest.mock('services/pipeline-ng', () => ({
+    useGetExecutionSubGraphForNodeExecution: jest.fn()
+  }))
+
   test('snapshot test', () => {
     const { container } = render(
-      <StepsTree
-        openExecutionTimeInputsForStep={jest.fn()}
-        nodes={data as any}
-        onStepSelect={jest.fn()}
-        allNodeMap={{}}
-        isRoot
-      />
+      <TestWrapper>
+        <StepsTree
+          openExecutionTimeInputsForStep={jest.fn()}
+          nodes={data as any}
+          onStepSelect={jest.fn()}
+          allNodeMap={{}}
+          isRoot
+        />
+      </TestWrapper>
     )
     expect(container).toMatchSnapshot()
   })
@@ -30,13 +36,15 @@ describe('<StepsTree /> tests', () => {
   test('step selection works', async () => {
     const onStepSelect = jest.fn()
     const { findByText } = render(
-      <StepsTree
-        openExecutionTimeInputsForStep={jest.fn()}
-        nodes={data as any}
-        onStepSelect={onStepSelect}
-        allNodeMap={{}}
-        isRoot
-      />
+      <TestWrapper>
+        <StepsTree
+          openExecutionTimeInputsForStep={jest.fn()}
+          nodes={data as any}
+          onStepSelect={onStepSelect}
+          allNodeMap={{}}
+          isRoot
+        />
+      </TestWrapper>
     )
 
     const step = await findByText('Step 1')
@@ -49,13 +57,15 @@ describe('<StepsTree /> tests', () => {
   test('step selection does not work not started steps', async () => {
     const onStepSelect = jest.fn()
     const { findByText } = render(
-      <StepsTree
-        openExecutionTimeInputsForStep={jest.fn()}
-        nodes={data as any}
-        onStepSelect={onStepSelect}
-        allNodeMap={{}}
-        isRoot
-      />
+      <TestWrapper>
+        <StepsTree
+          openExecutionTimeInputsForStep={jest.fn()}
+          nodes={data as any}
+          onStepSelect={onStepSelect}
+          allNodeMap={{}}
+          isRoot
+        />
+      </TestWrapper>
     )
 
     const step = await findByText('step_4_1_2')

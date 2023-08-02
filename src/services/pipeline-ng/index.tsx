@@ -3909,6 +3909,10 @@ export interface NodeErrorInfo {
   type?: string
 }
 
+export interface NodeExecutionDetails {
+  executionGraph?: ExecutionGraph
+}
+
 export interface NodeInfo {
   identifier?: string
   localFqn?: string
@@ -5762,6 +5766,13 @@ export interface ResponseNGTriggerResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseNodeExecutionDetails {
+  correlationId?: string
+  data?: NodeExecutionDetails
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseNotificationRules {
   correlationId?: string
   data?: NotificationRules
@@ -6650,6 +6661,7 @@ export interface StepData {
     | 'MULTIPLE_PROJECTS'
     | 'MULTIPLE_SECRETS'
     | 'MULTIPLE_USER_GROUPS'
+    | 'MULTIPLE_USERS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
@@ -13230,6 +13242,101 @@ export const getExecutionRepositoriesListPromise = (
     signal
   )
 
+export interface GetExecutionSubGraphForNodeExecutionQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetExecutionSubGraphForNodeExecutionPathParams {
+  planExecutionId: string
+  nodeExecutionId: string
+}
+
+export type GetExecutionSubGraphForNodeExecutionProps = Omit<
+  GetProps<
+    ResponseNodeExecutionDetails,
+    Failure | Error,
+    GetExecutionSubGraphForNodeExecutionQueryParams,
+    GetExecutionSubGraphForNodeExecutionPathParams
+  >,
+  'path'
+> &
+  GetExecutionSubGraphForNodeExecutionPathParams
+
+/**
+ * Gets Execution SubGraph for nodeExecutionId
+ */
+export const GetExecutionSubGraphForNodeExecution = ({
+  planExecutionId,
+  nodeExecutionId,
+  ...props
+}: GetExecutionSubGraphForNodeExecutionProps) => (
+  <Get<
+    ResponseNodeExecutionDetails,
+    Failure | Error,
+    GetExecutionSubGraphForNodeExecutionQueryParams,
+    GetExecutionSubGraphForNodeExecutionPathParams
+  >
+    path={`/pipelines/execution/subGraph/${planExecutionId}/${nodeExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionSubGraphForNodeExecutionProps = Omit<
+  UseGetProps<
+    ResponseNodeExecutionDetails,
+    Failure | Error,
+    GetExecutionSubGraphForNodeExecutionQueryParams,
+    GetExecutionSubGraphForNodeExecutionPathParams
+  >,
+  'path'
+> &
+  GetExecutionSubGraphForNodeExecutionPathParams
+
+/**
+ * Gets Execution SubGraph for nodeExecutionId
+ */
+export const useGetExecutionSubGraphForNodeExecution = ({
+  planExecutionId,
+  nodeExecutionId,
+  ...props
+}: UseGetExecutionSubGraphForNodeExecutionProps) =>
+  useGet<
+    ResponseNodeExecutionDetails,
+    Failure | Error,
+    GetExecutionSubGraphForNodeExecutionQueryParams,
+    GetExecutionSubGraphForNodeExecutionPathParams
+  >(
+    (paramsInPath: GetExecutionSubGraphForNodeExecutionPathParams) =>
+      `/pipelines/execution/subGraph/${paramsInPath.planExecutionId}/${paramsInPath.nodeExecutionId}`,
+    { base: getConfig('pipeline/api'), pathParams: { planExecutionId, nodeExecutionId }, ...props }
+  )
+
+/**
+ * Gets Execution SubGraph for nodeExecutionId
+ */
+export const getExecutionSubGraphForNodeExecutionPromise = (
+  {
+    planExecutionId,
+    nodeExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseNodeExecutionDetails,
+    Failure | Error,
+    GetExecutionSubGraphForNodeExecutionQueryParams,
+    GetExecutionSubGraphForNodeExecutionPathParams
+  > & { planExecutionId: string; nodeExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseNodeExecutionDetails,
+    Failure | Error,
+    GetExecutionSubGraphForNodeExecutionQueryParams,
+    GetExecutionSubGraphForNodeExecutionPathParams
+  >(getConfig('pipeline/api'), `/pipelines/execution/subGraph/${planExecutionId}/${nodeExecutionId}`, props, signal)
+
 export interface GetListOfExecutionsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -18803,6 +18910,7 @@ export interface GetSchemaYamlQueryParams {
     | 'RevertPR'
     | 'AwsCdkBootstrap'
     | 'AwsCdkSynth'
+    | 'AwsCdkDiff'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19129,6 +19237,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'RevertPR'
     | 'AwsCdkBootstrap'
     | 'AwsCdkSynth'
+    | 'AwsCdkDiff'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -19453,6 +19562,7 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'RevertPR'
     | 'AwsCdkBootstrap'
     | 'AwsCdkSynth'
+    | 'AwsCdkDiff'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

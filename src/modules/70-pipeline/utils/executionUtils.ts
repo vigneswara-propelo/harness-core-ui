@@ -617,7 +617,7 @@ export const processLiteEngineTask = (
   rootNodes.unshift(stepNode)
 }
 
-const processNodeData = (
+export const processNodeData = (
   children: string[],
   nodeMap: ExecutionGraph['nodeMap'],
   nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap'],

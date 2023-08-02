@@ -15,6 +15,7 @@ declare const styles: {
   readonly name: string
   readonly nameWrapper: string
   readonly parallelIcon: string
+  readonly retryMenu: string
   readonly root: string
   readonly step: string
 }

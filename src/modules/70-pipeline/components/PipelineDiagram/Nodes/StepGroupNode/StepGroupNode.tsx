@@ -11,9 +11,14 @@ import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harnes
 import { FontVariation, Color } from '@harness/design-system'
 import { cloneDeep, debounce, defaultTo, get, isEmpty, isUndefined, set, unset } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
-import { Switch } from '@blueprintjs/core'
+import { Menu, Popover, Switch } from '@blueprintjs/core'
 import { produce } from 'immer'
-import { isNodeTypeMatrixOrFor, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
+import {
+  getInterruptHistoriesFromType,
+  Interrupt,
+  isNodeTypeMatrixOrFor,
+  STATIC_SERVICE_GROUP_NAME
+} from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import {
   isExecutionRunning,
@@ -32,6 +37,7 @@ import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { updateStepWithinStageViaPath } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
 import { getParentPath } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import { processExecutionDataV1 } from '@pipeline/utils/execUtils'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
@@ -39,17 +45,19 @@ import { getBaseDotNotationWithoutEntityIdentifier, getPositionOfAddIcon } from 
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { DiagramDrag, DiagramType, Event, IS_NODE_TOGGLE_DISABLED } from '../../Constants'
+import { useGetRetryStepGroupData } from './useGetRetryStepGroupData'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
 export function StepGroupNode(props: any): JSX.Element {
   const { replaceQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
-  const { queryParams, selectedStageId, pipelineExecutionDetail } = useExecutionContext()
+  const { queryParams, selectedStageId, pipelineExecutionDetail, addNewNodeToMap } = useExecutionContext()
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(stageGroupTypes.includes(props?.type))
   const [childPipelineData, setChildPipelineData] = React.useState<PipelineGraphState[]>([])
+  const [retryStepGroupStepsData, setRetryStepGroupStepsData] = React.useState<any>([])
   const [executionMetaData, setExecutionMetaData] = React.useState<ExecutionGraph['executionMetadata'] | undefined>(
     undefined
   )
@@ -72,6 +80,38 @@ export function StepGroupNode(props: any): JSX.Element {
   const stepsData = stepGroupData?.steps || stepGroupData?.template?.templateInputs?.steps
   const isParentMatrix = defaultTo(props?.isParentMatrix, false)
   const { module, source = 'executions' } = useParams<PipelineType<ExecutionPathProps>>()
+  const [currentStepGroupRetryId, setCurrentStepGroupRetryId] = React.useState<string>('')
+  const interruptHistories = React.useMemo(() => {
+    return getInterruptHistoriesFromType(stepGroupData?.data?.interruptHistories, Interrupt.RETRY)
+  }, [stepGroupData?.data?.interruptHistories])
+
+  const { executionNode, retryStepGroupParams, loading, goToCurrentExecution, goToRetryStepExecution } =
+    useGetRetryStepGroupData({
+      currentStepGroupRetryId
+    })
+
+  React.useEffect(() => {
+    let currentStepGrpRetryId = retryStepGroupParams[`${stepGroupData.data?.baseFqn}`]
+    const isRelated = interruptHistories?.some(
+      ({ interruptConfig }) => currentStepGrpRetryId === interruptConfig?.retryInterruptConfig?.retryId
+    )
+
+    if (!isRelated) {
+      currentStepGrpRetryId = ''
+    }
+    setCurrentStepGroupRetryId(currentStepGrpRetryId)
+  }, [retryStepGroupParams, interruptHistories, stepGroupData.data])
+
+  React.useEffect(() => {
+    if (executionNode?.data?.executionGraph) {
+      setRetryStepGroupStepsData(processExecutionDataV1(executionNode.data.executionGraph))
+      const newNodeMap = executionNode?.data?.executionGraph?.nodeMap
+      for (const nodeId in newNodeMap) {
+        Object.assign(newNodeMap[nodeId], { __isInterruptNode: true })
+        addNewNodeToMap(nodeId, newNodeMap[nodeId])
+      }
+    }
+  }, [executionNode?.data])
 
   const stepStatus = defaultTo(props?.status || props?.data?.status, props?.data?.step?.status as ExecutionStatus)
   const isExecutionView = Boolean(stepStatus)
@@ -179,6 +219,16 @@ export function StepGroupNode(props: any): JSX.Element {
   }
 
   const isToggleAllowed = stepStatus || !IS_NODE_TOGGLE_DISABLED
+
+  const retryCount = React.useMemo(() => {
+    let rtryCount = interruptHistories.length
+    if (currentStepGroupRetryId) {
+      rtryCount = interruptHistories.findIndex(
+        ({ interruptConfig }) => interruptConfig?.retryInterruptConfig?.retryId === currentStepGroupRetryId
+      )
+    }
+    return rtryCount
+  }, [interruptHistories, currentStepGroupRetryId])
 
   return (
     <>
@@ -350,64 +400,112 @@ export function StepGroupNode(props: any): JSX.Element {
               })}
             >
               <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-                <Layout.Horizontal
-                  onMouseOver={e => {
-                    e.stopPropagation()
-                  }}
-                  onMouseOut={e => {
-                    e.stopPropagation()
-                  }}
-                  flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                  width={showExecutionMetaDataForChainedPipeline ? '50%' : '100%'}
-                >
-                  <Icon
-                    className={css.collapseIcon}
-                    name="minus"
-                    margin={{ right: 'small' }}
-                    onClick={e => {
+                <Layout.Vertical>
+                  <Layout.Horizontal
+                    onMouseOver={e => {
                       e.stopPropagation()
-                      setNodeCollapsed(true)
                     }}
-                  />
-                  <Text
-                    data-nodeid={props.id}
-                    className={css.cursor}
-                    data-test-id="step-group-name"
-                    onMouseEnter={event => {
-                      event.stopPropagation()
-                      props?.fireEvent?.({
-                        type: Event.MouseEnterNode,
-                        target: event.target,
-                        data: { ...props }
-                      })
+                    onMouseOut={e => {
+                      e.stopPropagation()
                     }}
-                    onMouseLeave={event => {
-                      event.stopPropagation()
-                      debounceHideVisibility()
-                      props?.fireEvent?.({
-                        type: Event.MouseLeaveNode,
-                        target: event.target,
-                        data: { ...props }
-                      })
-                    }}
-                    lineClamp={1}
-                    onClick={event => {
-                      event.stopPropagation()
-                      debounceHideVisibility()
-                      props?.fireEvent?.({
-                        type: Event.StepGroupClicked,
-                        target: event.target,
-                        data: { ...props }
-                      })
-                    }}
-                    tooltipProps={{
-                      position: 'bottom'
-                    }}
+                    flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+                    width={showExecutionMetaDataForChainedPipeline ? '50%' : '100%'}
                   >
-                    {displayName}
-                  </Text>
-                  {showTemplateIcon && <Icon size={12} name={'template-library'} margin={{ left: 'xsmall' }} />}
-                </Layout.Horizontal>
+                    <Icon
+                      className={css.collapseIcon}
+                      name="minus"
+                      margin={{ right: 'small' }}
+                      onClick={e => {
+                        e.stopPropagation()
+                        setNodeCollapsed(true)
+                      }}
+                    />
+                    <Text
+                      data-nodeid={props.id}
+                      className={css.cursor}
+                      data-test-id="step-group-name"
+                      onMouseEnter={event => {
+                        event.stopPropagation()
+                        props?.fireEvent?.({
+                          type: Event.MouseEnterNode,
+                          target: event.target,
+                          data: { ...props }
+                        })
+                      }}
+                      onMouseLeave={event => {
+                        event.stopPropagation()
+                        debounceHideVisibility()
+                        props?.fireEvent?.({
+                          type: Event.MouseLeaveNode,
+                          target: event.target,
+                          data: { ...props }
+                        })
+                      }}
+                      lineClamp={1}
+                      onClick={event => {
+                        event.stopPropagation()
+                        debounceHideVisibility()
+                        props?.fireEvent?.({
+                          type: Event.StepGroupClicked,
+                          target: event.target,
+                          data: { ...props }
+                        })
+                      }}
+                      tooltipProps={{
+                        position: 'bottom'
+                      }}
+                    >
+                      {displayName}
+                    </Text>
+                    {showTemplateIcon && <Icon size={12} name={'template-library'} margin={{ left: 'xsmall' }} />}
+                  </Layout.Horizontal>
+                  {interruptHistories.length > 0 ? (
+                    <Popover
+                      wrapperTagName="div"
+                      targetTagName="div"
+                      minimal
+                      position="bottom-left"
+                      popoverClassName={css.retryMenu}
+                    >
+                      <Layout.Horizontal>
+                        <Text margin={{ left: 'medium', top: 'small' }} style={{ cursor: 'pointer' }}>
+                          {getString('retry')}
+                        </Text>
+                        <Text
+                          rightIcon="chevron-down"
+                          rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                          margin={{ left: 'medium', top: 'small' }}
+                          padding={{ left: 'xsmall' }}
+                          style={{ cursor: 'pointer' }}
+                          color={Color.PRIMARY_7}
+                        >
+                          {` #${retryCount + 1}`}
+                        </Text>
+                      </Layout.Horizontal>
+
+                      <Menu>
+                        {interruptHistories.map(({ interruptId, interruptConfig }, i) => (
+                          <Menu.Item
+                            active={currentStepGroupRetryId === interruptConfig?.retryInterruptConfig?.retryId}
+                            key={interruptId}
+                            text={getString('pipeline.execution.retryStepCount', { num: i + 1 })}
+                            onClick={() =>
+                              goToRetryStepExecution(
+                                interruptConfig.retryInterruptConfig?.retryId || /* istanbul ignore next */ '',
+                                stepGroupData
+                              )
+                            }
+                          />
+                        ))}
+                        <Menu.Item
+                          active={!currentStepGroupRetryId}
+                          text={getString('pipeline.execution.retryStepCount', { num: interruptHistories.length + 1 })}
+                          onClick={() => goToCurrentExecution(stepGroupData)}
+                        />
+                      </Menu>
+                    </Popover>
+                  ) : null}
+                </Layout.Vertical>
                 {showExecutionMetaDataForChainedPipeline && (
                   <Link
                     to={routes.toExecutionPipelineView({
@@ -450,7 +548,13 @@ export function StepGroupNode(props: any): JSX.Element {
                 isContainerStepGroup={
                   (props?.data?.stepGroup as StepGroupElementConfig)?.stepGroupInfra?.type === 'KubernetesDirect'
                 }
-                data={stageGroupTypes.includes(props?.type) ? childPipelineData : stepsData}
+                data={
+                  stageGroupTypes.includes(props?.type)
+                    ? childPipelineData
+                    : !isEmpty(currentStepGroupRetryId)
+                    ? retryStepGroupStepsData
+                    : stepsData
+                }
                 isNodeCollapsed={isNodeCollapsed}
                 parentIdentifier={props?.identifier}
                 hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
@@ -458,6 +562,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 type={props?.type}
                 baseFqn={baseFqn}
                 relativeBasePath={relativeBasePath}
+                loadingStepGroupGraphData={loading}
               />
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (

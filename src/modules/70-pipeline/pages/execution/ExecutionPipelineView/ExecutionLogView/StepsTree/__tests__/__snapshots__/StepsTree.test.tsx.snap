@@ -589,8 +589,10 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               <div
                 class="parallelIcon"
               />
-              <span>
-                No valid template with id "parallelSteps" found in any namespace
+              <span
+                class="name"
+              >
+                parallelSteps
               </span>
             </div>
           </div>
@@ -712,8 +714,10 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               <div
                 class="parallelIcon"
               />
-              <span>
-                No valid template with id "parallelSteps" found in any namespace
+              <span
+                class="name"
+              >
+                parallelSteps
               </span>
             </div>
           </div>
@@ -837,8 +841,10 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               <div
                 class="parallelIcon"
               />
-              <span>
-                No valid template with id "parallelSteps" found in any namespace
+              <span
+                class="name"
+              >
+                parallelSteps
               </span>
             </div>
           </div>
@@ -1058,8 +1064,10 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
         <div
           class="nameWrapper"
         >
-          <span>
-            No valid template with id "stepGroup" found in any namespace
+          <span
+            class="name"
+          >
+            stepGroup
           </span>
         </div>
         <span

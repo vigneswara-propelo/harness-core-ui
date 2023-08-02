@@ -175,3 +175,12 @@ $height: 40px;
     left: 8px;
   }
 }
+.retryMenu {
+  box-shadow: var(--elevation-3);
+
+  :global(.bp3-menu) {
+    padding: var(--spacing-3) 0;
+    border-radius: 4px;
+    min-width: 115px;
+  }
+}

@@ -11,10 +11,14 @@ import { Container } from '@harness/uicore'
 import { PageSpinner } from '@common/components'
 import css from './ContainerSpinner.module.scss'
 
-export const ContainerSpinner: React.FC<React.ComponentProps<typeof Container>> = ({ className, ...props }) => {
+export const ContainerSpinner: React.FC<React.ComponentProps<typeof Container> & { message?: string }> = ({
+  className,
+  ...props
+}) => {
+  const { message, ...rest } = props
   return (
-    <Container className={cx(css.spinner, className)} {...props}>
-      <PageSpinner />
+    <Container className={cx(css.spinner, className)} {...rest}>
+      <PageSpinner message={message} />
     </Container>
   )
 }

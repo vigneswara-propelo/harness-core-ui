@@ -11,6 +11,8 @@ import { defaultTo } from 'lodash-es'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useStrings } from 'framework/strings'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
 import {
@@ -49,6 +51,7 @@ interface StepGroupGraphProps {
   baseFqn?: string
   isContainerStepGroup?: boolean
   relativeBasePath?: string
+  loadingStepGroupGraphData?: boolean
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -63,6 +66,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     const rectBoundary = treeContainer?.getBoundingClientRect()
     setTreeRectangle(rectBoundary)
   }
+  const { getString } = useStrings()
 
   const { errorMap } = useValidationErrors()
   const {
@@ -72,6 +76,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
 
   const baseFQN = `${props?.baseFqn || ''}.steps`
   const relativeBasePath = `${props?.relativeBasePath || ''}.steps`
+  const { loadingStepGroupGraphData = false } = props
   useLayoutEffect(() => {
     if (stageGroupTypes.includes(props?.type as StageType)) setState(props.data as PipelineGraphState[])
     else if (props?.data?.length) {
@@ -159,7 +164,9 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
       }}
     >
       <SVGComponent svgPath={svgPath} className={cx(css.stepGroupSvg)} />
-      {props?.data?.length ? (
+      {loadingStepGroupGraphData ? (
+        <ContainerSpinner padding={'small'} className={css.spinner} message={getString('loading')} />
+      ) : props?.data?.length ? (
         <>
           <PipelineGraphRecursive
             getDefaultNode={props?.getDefaultNode}
