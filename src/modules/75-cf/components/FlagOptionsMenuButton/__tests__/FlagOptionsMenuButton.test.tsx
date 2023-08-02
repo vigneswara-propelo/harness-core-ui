@@ -41,8 +41,6 @@ const renderComponent = (isArchivingFFOn: boolean, props: Partial<FlagOptionsMen
           commitMsg: 'test message'
         }}
         refetchFlags={jest.fn()}
-        clearFilter={jest.fn()}
-        isLastArchivedFlag={false}
         {...props}
       />
     </TestWrapper>
@@ -436,73 +434,6 @@ describe('FlagOptionsMenuButton', () => {
 
       expect(screen.getByText('cf.featureFlags.archiving.restore')).toBeInTheDocument()
       expect(screen.getByText('trash')).toBeInTheDocument()
-    })
-
-    test('it should clear the flag filter if user DELETES the last archived flag', async () => {
-      const isArchivingFFOn = true
-
-      const archivedFlagMock = cloneDeep(mockFeature)
-      archivedFlagMock.archived = true
-
-      const clearFilterMock = jest.fn()
-      const refetchFlagsMock = jest.fn()
-
-      renderComponent(isArchivingFFOn, {
-        flagData: archivedFlagMock,
-        clearFilter: clearFilterMock,
-        isLastArchivedFlag: true,
-        refetchFlags: refetchFlagsMock
-      })
-
-      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-
-      expect(document.querySelector('[data-icon="redo"]')).toBeInTheDocument()
-      expect(document.querySelector('[data-icon="trash"]')).toBeInTheDocument()
-
-      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
-
-      // confirm delete flag modal appears
-      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
-
-      expect(refetchFlagsMock).toHaveBeenCalled()
-      expect(clearFilterMock).toHaveBeenCalled()
-    })
-
-    test('it should clear the flag filter if user RESTORES the last archived flag', async () => {
-      jest.spyOn(cfServices, 'useRestoreFeatureFlag').mockReturnValue({
-        mutate: jest.fn(),
-        loading: false,
-        error: null,
-        cancel: jest.fn()
-      })
-
-      const isArchivingFFOn = true
-
-      const archivedFlagMock = cloneDeep(mockFeature)
-      archivedFlagMock.archived = true
-
-      const clearFilterMock = jest.fn()
-      const refetchFlagsMock = jest.fn()
-
-      renderComponent(isArchivingFFOn, {
-        isLastArchivedFlag: true,
-        flagData: archivedFlagMock,
-        clearFilter: clearFilterMock,
-        refetchFlags: refetchFlagsMock
-      })
-
-      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-
-      expect(document.querySelector('[data-icon="redo"]')).toBeInTheDocument()
-      expect(document.querySelector('[data-icon="trash"]')).toBeInTheDocument()
-
-      await userEvent.click(document.querySelector('[data-icon="redo"]') as HTMLButtonElement)
-
-      // confirm restore flag modal appears
-      await userEvent.click(screen.getByRole('button', { name: 'cf.featureFlags.archiving.restore' }))
-
-      expect(refetchFlagsMock).toHaveBeenCalled()
-      expect(clearFilterMock).toHaveBeenCalled()
     })
   })
 })

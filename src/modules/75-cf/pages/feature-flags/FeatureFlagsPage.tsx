@@ -241,17 +241,16 @@ const FeatureFlagsPage: FC = () => {
             />
           ) : (
             <FeatureFlagsListing
-              features={features}
+              deleteFlag={deleteFlag.mutate}
               featureMetrics={featureMetrics as FeatureMetric[]}
               featureMetricsLoading={featureMetricsLoading}
+              features={features}
+              governance={governance}
+              numberOfEnvs={environments?.length}
+              onRowClick={onRowClick}
+              queryParams={queryParams}
               refetchFlags={refetchFlags}
               toggleFeatureFlag={toggleFeatureFlag}
-              deleteFlag={deleteFlag.mutate}
-              queryParams={queryParams}
-              numberOfEnvs={environments?.length}
-              governance={governance}
-              onRowClick={onRowClick}
-              clearFilter={onClearFilter}
             />
           )}
         </Container>

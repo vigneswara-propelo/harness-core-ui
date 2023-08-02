@@ -30,7 +30,6 @@ import { FlagResult } from '../FlagResult'
 import { RenderFeatureFlag } from './RenderFeatureFlag'
 
 export interface FeatureFlagsListingProps {
-  clearFilter: () => void
   features?: Features | null
   toggleFeatureFlag: UseToggleFeatureFlag
   featureMetrics?: FeatureMetric[]
@@ -56,13 +55,10 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
   refetchFlags,
   deleteFlag,
   queryParams,
-  onRowClick,
-  clearFilter
+  onRowClick
 }) => {
   const gitSync = useFFGitSyncContext()
   const { getString } = useStrings()
-
-  const isLastArchivedFlag = features?.features?.filter(flag => flag.archived === true).length === 1
 
   const RenderColumnDetails: Renderer<CellProps<Feature>> = ({ row }) => {
     const data = row.original
@@ -174,8 +170,6 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
               deleteFlag={deleteFlag}
               gitSync={gitSync}
               refetchFlags={refetchFlags}
-              clearFilter={clearFilter}
-              isLastArchivedFlag={isLastArchivedFlag}
             />
           </Container>
         ),
