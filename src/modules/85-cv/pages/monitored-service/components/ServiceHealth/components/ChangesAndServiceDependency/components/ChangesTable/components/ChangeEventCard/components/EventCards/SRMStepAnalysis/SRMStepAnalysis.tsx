@@ -111,11 +111,13 @@ export default function SRMStepAnalysis({ data }: { data: ChangeEventDTO }): JSX
                       time={data.metadata.analysisStartTime}
                     />
                   </Layout.Horizontal>
-                  <DeploymentTimeDuration
-                    startTime={data.metadata.analysisStartTime}
-                    endTime={data.metadata.analysisEndTime}
-                    type={data.type}
-                  />
+                  {pipelineExecutionSummary?.startTs && pipelineExecutionSummary?.endTs && (
+                    <DeploymentTimeDuration
+                      startTime={pipelineExecutionSummary?.startTs}
+                      endTime={pipelineExecutionSummary?.endTs}
+                      type={data.type}
+                    />
+                  )}
                 </Layout.Vertical>
               </>
             )

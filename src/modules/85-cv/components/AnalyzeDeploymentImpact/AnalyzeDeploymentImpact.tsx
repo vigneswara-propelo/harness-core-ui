@@ -20,7 +20,7 @@ import { getActivityId } from '../ExecutionVerification/ExecutionVerificationVie
 import CVProgressBar from '../ExecutionVerification/components/DeploymentProgressAndNodes/components/CVProgressBar/CVProgressBar'
 import VerificationStatusCard from '../ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
 import { StopAnalysisButton } from './components/StopAnalysisButton'
-import { createDetailsData } from './AnalyzeDeploymentImpact.utils'
+import { calculateProgressPercentage, createDetailsData } from './AnalyzeDeploymentImpact.utils'
 import { POLLING_INTERVAL } from '../ExecutionVerification/components/DeploymentMetrics/DeploymentMetrics.constants'
 import { AnalysisStatus } from './AnalyzeDeploymentImpact.constants'
 import css from './AnalyzeDeploymentImpact.module.scss'
@@ -54,6 +54,8 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
   })
   const { analysisStatus, executionDetailIdentifier } = resource || {}
 
+  const progressPercentage = useMemo(() => calculateProgressPercentage(data), [data])
+
   useEffect(() => {
     if (!activityId) {
       setPollingIntervalId(oldIntervalId => {
@@ -77,50 +79,53 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
     return () => clearInterval(intervalId)
   }, [activityId, analysisStatus])
 
+  let content = <></>
+
   if (error) {
     if (status === ExecutionStatusEnum.Skipped) {
-      return (
+      content = (
         <Container margin={'xlarge'} data-testid={'errorContainer'}>
-          <PageError message={failureInfo?.responseMessages?.[0]?.message} onClick={() => refetch()} />
+          <PageError message={failureInfo?.responseMessages?.[0]?.message} />
+        </Container>
+      )
+    } else {
+      content = (
+        <Container margin={'xlarge'} data-testid={'errorContainer'}>
+          <PageError message={getErrorMessage(error)} />
         </Container>
       )
     }
-    return (
-      <Container margin={'xlarge'} data-testid={'errorContainer'}>
-        <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
-      </Container>
+  } else {
+    content = (
+      <Layout.Vertical margin={isConsoleView ? '' : 'xlarge'} spacing={'small'}>
+        <Layout.Horizontal spacing={'small'} className={css.statusContainer}>
+          <Layout.Vertical spacing={'small'}>
+            {detailsData.map(item => {
+              return (
+                <Layout.Horizontal key={item.label} margin={'xsmall'} spacing={'small'}>
+                  <Text className={loadingClass}>{item.label} : </Text>
+                  <Text className={loadingClass}>{item.value}</Text>
+                </Layout.Horizontal>
+              )
+            })}
+          </Layout.Vertical>
+          <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <VerificationStatusCard status={analysisStatus} />
+            {showStopAnalysis && <StopAnalysisButton eventId={executionDetailIdentifier as string} refetch={refetch} />}
+          </Layout.Horizontal>
+        </Layout.Horizontal>
+        <CVProgressBar value={progressPercentage} status={analysisStatus} className={css.progressBar} />
+        <Link to={linkTo} target="_blank" className={css.redirectLink}>
+          <Layout.Horizontal spacing="small">
+            <Text font={{ weight: 'semi-bold', size: 'normal' }} color={Color.PRIMARY_7}>
+              {getString('cv.analyzeDeploymentImpact.redirectLabel')}
+            </Text>
+            <Icon name="share" size={14} flex={{ alignItems: 'center' }} color={Color.PRIMARY_7} />
+          </Layout.Horizontal>
+        </Link>
+      </Layout.Vertical>
     )
   }
-
-  const content = (
-    <Layout.Vertical margin={isConsoleView ? '' : 'xlarge'} spacing={'small'}>
-      <Layout.Horizontal spacing={'small'} className={css.statusContainer}>
-        <Layout.Vertical spacing={'small'}>
-          {detailsData.map(item => {
-            return (
-              <Layout.Horizontal key={item.label} margin={'xsmall'} spacing={'small'}>
-                <Text className={loadingClass}>{item.label} : </Text>
-                <Text className={loadingClass}>{item.value}</Text>
-              </Layout.Horizontal>
-            )
-          })}
-        </Layout.Vertical>
-        <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <VerificationStatusCard status={analysisStatus} />
-          {showStopAnalysis && <StopAnalysisButton eventId={executionDetailIdentifier as string} refetch={refetch} />}
-        </Layout.Horizontal>
-      </Layout.Horizontal>
-      <CVProgressBar value={100} status={analysisStatus} className={css.progressBar} />
-      <Link to={linkTo} target="_blank" className={css.redirectLink}>
-        <Layout.Horizontal spacing="small">
-          <Text font={{ weight: 'semi-bold', size: 'normal' }} color={Color.PRIMARY_7}>
-            {getString('cv.analyzeDeploymentImpact.redirectLabel')}
-          </Text>
-          <Icon name="share" size={14} flex={{ alignItems: 'center' }} color={Color.PRIMARY_7} />
-        </Layout.Horizontal>
-      </Link>
-    </Layout.Vertical>
-  )
 
   return isConsoleView ? (
     <Container margin={'xlarge'}>

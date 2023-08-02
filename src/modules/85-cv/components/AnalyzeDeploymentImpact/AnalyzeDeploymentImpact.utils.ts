@@ -89,3 +89,15 @@ export const createDetailsData = ({
 
   return { detailsData, resource: data?.resource, linkTo, showStopAnalysis }
 }
+
+export const calculateProgressPercentage = (data: RestResponseSRMAnalysisStepDetailDTO | null): number => {
+  const { analysisStartTime, analysisEndTime } = data?.resource || {}
+  if (analysisEndTime && analysisStartTime) {
+    const hasTimePassed = analysisEndTime < Date.now()
+    if (hasTimePassed) {
+      return 100
+    }
+    return Number(((1 - (analysisEndTime - Date.now()) / (analysisEndTime - analysisStartTime)) * 100).toFixed(1))
+  }
+  return 0
+}

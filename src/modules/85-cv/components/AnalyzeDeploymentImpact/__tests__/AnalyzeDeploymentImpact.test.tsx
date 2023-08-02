@@ -14,6 +14,7 @@ import * as cvService from 'services/cv'
 import AnalyzeDeploymentImpact from '../AnalyzeDeploymentImpact'
 import { stepMock, summaryMock } from './AnalyzeDeploymentImpact.mock'
 import AnalyzeDeploymentImpactConsoleView from '../AnalyzeDeploymentImpactConsoleView'
+import { calculateProgressPercentage } from '../AnalyzeDeploymentImpact.utils'
 
 Date.now = jest.fn(() => 1689424620000)
 
@@ -90,7 +91,7 @@ describe('AnalyzeDeploymentImpact', () => {
       return { data: {}, loading: true } as any
     })
 
-    const { container, rerender, getByTestId, getByText } = render(
+    const { container, rerender, getByTestId } = render(
       <TestWrapper>
         <AnalyzeDeploymentImpact step={stepMock} />
       </TestWrapper>
@@ -110,7 +111,20 @@ describe('AnalyzeDeploymentImpact', () => {
     )
 
     expect(getByTestId('errorContainer')).toBeInTheDocument()
-    await userEvent.click(getByText('Retry'))
-    waitFor(() => expect(refetchOnFail).toHaveBeenCalled())
+  })
+
+  test('calculateProgressPercentage', () => {
+    jest.spyOn(global.Date, 'now').mockReturnValue(1689487675000)
+    const data = { resource: summaryMock } as cvService.RestResponseSRMAnalysisStepDetailDTO
+    // no data
+    expect(calculateProgressPercentage(null)).toEqual(0)
+    // running state
+    expect(calculateProgressPercentage(data)).toEqual(56.3)
+    // complete
+    jest.spyOn(global.Date, 'now').mockReturnValue(1689525436318)
+    expect(calculateProgressPercentage(data)).toEqual(100)
+    // past event
+    jest.spyOn(global.Date, 'now').mockReturnValue(1689574075000)
+    expect(calculateProgressPercentage(data)).toEqual(100)
   })
 })
