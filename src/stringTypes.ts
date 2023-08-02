@@ -142,6 +142,7 @@ export interface StringsMap {
   'common.cantDeleteEntity': string
   'common.capsAll': string
   'common.cardNumber': string
+  'common.cardSuccessMessage': string
   'common.category': string
   'common.cdAndGitops': string
   'common.ce.autostopping': string

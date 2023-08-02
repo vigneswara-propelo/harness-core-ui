@@ -15,6 +15,7 @@ perModule: Per Module
 application: Application
 certificate: Certificate
 subscriptionId: Subscription Id
+cardSuccessMessage: Card successfully saved
 repositoryCertificates: Repository Certificates
 selectRepository: Select Repository
 notEnabled: 'Not Enabled'

@@ -66,8 +66,7 @@ export const FooterCreditCard: React.FC<FooterCreditCardProps> = ({
         accountIdentifier: accountId,
         creditCardIdentifier: res?.setupIntent?.payment_method as string
       })
-
-      showSuccess('Card is validated and saved')
+      showSuccess(getString('common.cardSuccessMessage'))
     } catch (err) {
       /* istanbul ignore next */
       showError(getErrorMessage(err))

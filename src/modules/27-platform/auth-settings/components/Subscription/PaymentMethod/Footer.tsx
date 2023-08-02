@@ -141,7 +141,7 @@ export const Footer: React.FC<FooterProps> = ({
             creditCardIdentifier: res?.paymentMethod?.id as string
           })
         }
-        showSuccess(getString('platform.authSettings.cardIsValidatedAndSaved'))
+        showSuccess(getString('common.cardSuccessMessage'))
         setView(SubscribeViews.FINALREVIEW)
       } catch (err) {
         /* istanbul ignore next */
