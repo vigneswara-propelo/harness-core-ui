@@ -148,7 +148,7 @@ export class ServerlessAwsLambdaPrepareRollbackV2Step extends PipelineStep<Serve
       set(
         errors,
         `spec.connectorRef`,
-        getString?.('fieldRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('pipelineSteps.connectorLabel') })
       )
     }
 
@@ -161,8 +161,8 @@ export class ServerlessAwsLambdaPrepareRollbackV2Step extends PipelineStep<Serve
 
   processFormData(formData: any): ServerlessAwsLambdaPrepareRollbackV2StepInitialValues {
     let envVariables
-    if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
-      envVariables = formData.spec?.envVariables.reduce(
+    if (formData.spec?.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = formData.spec.envVariables.reduce(
         (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
           ...agg,
           [envVar.key]: envVar.value

@@ -62,8 +62,8 @@ export interface ServerlessAwsLambdaPrepareRollbackV2StepFormikValues extends St
 }
 export interface ServerlessAwsLambdaPrepareRollbackV2StepProps {
   initialValues: ServerlessAwsLambdaPrepareRollbackV2StepInitialValues
-  onUpdate?: (data: ServerlessAwsLambdaPrepareRollbackV2StepFormikValues) => void
-  onChange?: (data: ServerlessAwsLambdaPrepareRollbackV2StepFormikValues) => void
+  onUpdate: (data: ServerlessAwsLambdaPrepareRollbackV2StepFormikValues) => void
+  onChange: (data: ServerlessAwsLambdaPrepareRollbackV2StepFormikValues) => void
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
   readonly?: boolean
@@ -133,7 +133,7 @@ const ServerlessAwsLambdaPrepareRollbackV2StepEdit = (
           multiTypeProps={{ expressions, allowableTypes }}
           type={serverlessStepAllowedConnectorTypes}
           enableConfigureOptions={false}
-          selected={get(formik?.values, fieldName) as string}
+          selected={get(formik.values, fieldName) as string}
           setRefValue
           disabled={readonly}
           gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
@@ -167,10 +167,10 @@ const ServerlessAwsLambdaPrepareRollbackV2StepEdit = (
     <>
       <Formik<ServerlessAwsLambdaPrepareRollbackV2StepFormikValues>
         onSubmit={values => {
-          onUpdate?.(values)
+          onUpdate(values)
         }}
         validate={values => {
-          onChange?.(values)
+          onChange(values)
         }}
         formName="ServerlessAwsLambdaPrepareRollbackV2StepEdit"
         initialValues={getInitialValues()}
@@ -207,9 +207,9 @@ const ServerlessAwsLambdaPrepareRollbackV2StepEdit = (
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(formik.values.spec?.image) === MultiTypeInputType.RUNTIME && !readonly && (
+                {getMultiTypeFromValue(get(formik.values, 'spec.image')) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={formik.values.spec?.image as string}
+                    value={get(formik.values, 'spec.image')}
                     type="String"
                     variableName="spec.image"
                     showRequiredField={false}

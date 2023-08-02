@@ -149,7 +149,7 @@ export class ServerlessAwsLambdaPackageV2Step extends PipelineStep<ServerlessAws
       set(
         errors,
         `spec.connectorRef`,
-        getString?.('fieldRequired', { field: getString?.('pipelineSteps.connectorLabel') })
+        getString?.('common.validation.fieldIsRequired', { name: getString?.('pipelineSteps.connectorLabel') })
       )
     }
 
@@ -162,8 +162,8 @@ export class ServerlessAwsLambdaPackageV2Step extends PipelineStep<ServerlessAws
 
   processFormData(formData: any): ServerlessAwsLambdaPackageV2StepInitialValues {
     let envVariables
-    if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
-      envVariables = formData.spec?.envVariables.reduce(
+    if (formData.spec?.envVariables && !isEmpty(formData.spec.envVariables)) {
+      envVariables = formData.spec.envVariables.reduce(
         (agg: { [key: string]: string }, envVar: { key: string; value: string }) => ({
           ...agg,
           [envVar.key]: envVar.value

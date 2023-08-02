@@ -64,8 +64,8 @@ export interface ServerlessAwsLambdaPackageV2StepFormikValues extends StepElemen
 }
 export interface ServerlessAwsLambdaPackageV2StepProps {
   initialValues: ServerlessAwsLambdaPackageV2StepInitialValues
-  onUpdate?: (data: ServerlessAwsLambdaPackageV2StepFormikValues) => void
-  onChange?: (data: ServerlessAwsLambdaPackageV2StepFormikValues) => void
+  onUpdate: (data: ServerlessAwsLambdaPackageV2StepFormikValues) => void
+  onChange: (data: ServerlessAwsLambdaPackageV2StepFormikValues) => void
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
   readonly?: boolean
@@ -142,7 +142,7 @@ const ServerlessAwsLambdaPackageV2StepEdit = (
           multiTypeProps={{ expressions, allowableTypes }}
           type={serverlessStepAllowedConnectorTypes}
           enableConfigureOptions={false}
-          selected={get(formik?.values, fieldName) as string}
+          selected={get(formik.values, fieldName) as string}
           setRefValue
           disabled={readonly}
           gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
@@ -176,10 +176,10 @@ const ServerlessAwsLambdaPackageV2StepEdit = (
     <>
       <Formik<ServerlessAwsLambdaPackageV2StepFormikValues>
         onSubmit={values => {
-          onUpdate?.(values)
+          onUpdate(values)
         }}
         validate={values => {
-          onChange?.(values)
+          onChange(values)
         }}
         formName="ServerlessAwsLambdaPackageV2StepEdit"
         initialValues={getInitialValues()}
@@ -216,9 +216,9 @@ const ServerlessAwsLambdaPackageV2StepEdit = (
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(formik.values.spec?.image) === MultiTypeInputType.RUNTIME && !readonly && (
+                {getMultiTypeFromValue(get(formik.values, 'spec.image')) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={formik.values.spec?.image as string}
+                    value={get(formik.values, 'spec.image')}
                     type="String"
                     variableName="spec.image"
                     showRequiredField={false}
@@ -241,7 +241,7 @@ const ServerlessAwsLambdaPackageV2StepEdit = (
                       <AwsSamServerlessStepCommonOptionalFieldsEdit
                         readonly={readonly}
                         allowableTypes={allowableTypes}
-                        formik={formik as FormikProps<ServerlessAwsLambdaPackageV2StepFormikValues>}
+                        formik={formik}
                         versionFieldName={'spec.serverlessVersion'}
                         versionFieldLabel={getString('cd.serverlessVersionLabel')}
                         commandOptionsFieldName={'spec.packageCommandOptions'}
