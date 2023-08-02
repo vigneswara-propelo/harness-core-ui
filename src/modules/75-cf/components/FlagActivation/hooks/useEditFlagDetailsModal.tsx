@@ -6,18 +6,10 @@
  */
 
 import React from 'react'
-import {
-  Button,
-  ButtonVariation,
-  Container,
-  Formik,
-  FormikForm as Form,
-  FormInput,
-  Layout,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonVariation, Container, FormInput, Layout, ModalDialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, Divider } from '@blueprintjs/core'
+import { Divider } from '@blueprintjs/core'
+import { Form, Formik } from 'formik'
 import * as yup from 'yup'
 import type { MutateMethod } from 'restful-react/dist/Mutate'
 import type {
@@ -36,7 +28,6 @@ import { useStrings } from 'framework/strings'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import patch from '../../../utils/instructions'
 import SaveFlagToGitSubForm from '../../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
-import css from '../FlagActivationDetails.module.scss'
 
 interface UseEditFlagDetailsModalProps {
   featureFlag: Feature
@@ -48,7 +39,7 @@ interface UseEditFlagDetailsModalProps {
     PatchFeaturePathParams
   >
   refetchFlag: () => void
-  setGovernanceMetadata: (governanceMetadata: any) => void
+  setGovernanceMetadata: (governanceMetadata: unknown) => void
 }
 
 interface UseEditFlagDetailsModalReturn {
@@ -123,33 +114,49 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
     }
 
     return (
-      <Dialog enforceFocus={false} onClose={hideEditDetailsModal} isOpen={true} title="" className={css.editFlagModal}>
-        <Formik
-          enableReinitialize={true}
-          initialValues={initialValues}
-          validationSchema={yup.object().shape({
-            name: yup.string().required(getString('cf.creationModal.aboutFlag.nameRequired')),
-            gitDetails: gitSyncFormMeta.gitSyncValidationSchema
-          })}
-          formName="flagActivationDetails"
-          onSubmit={handleSubmit}
-        >
-          {() => (
+      <Formik
+        enableReinitialize
+        initialValues={initialValues}
+        validationSchema={yup.object().shape({
+          name: yup.string().required(getString('cf.creationModal.aboutFlag.nameRequired')),
+          gitDetails: gitSyncFormMeta.gitSyncValidationSchema
+        })}
+        onSubmit={handleSubmit}
+      >
+        {({ submitForm, isValid }) => (
+          <ModalDialog
+            enforceFocus={false}
+            onClose={hideEditDetailsModal}
+            isOpen
+            title={getString('cf.editDetails.editDetailsHeading')}
+            footer={
+              <Layout.Horizontal spacing="small">
+                <Button
+                  intent="primary"
+                  text={getString('save')}
+                  onClick={submitForm}
+                  variation={ButtonVariation.PRIMARY}
+                  disabled={!isValid}
+                />
+                <Button
+                  text={getString('cancel')}
+                  variation={ButtonVariation.TERTIARY}
+                  onClick={hideEditDetailsModal}
+                />
+              </Layout.Horizontal>
+            }
+          >
             <Form data-testid="edit-flag-form">
-              <Layout.Vertical className={css.editDetailsModalContainer} spacing="large">
-                <Text>{getString('cf.editDetails.editDetailsHeading')}</Text>
-
+              <Layout.Vertical spacing="medium">
                 <FormInput.Text name="name" label={getString('name')} />
 
-                <FormInput.TextArea name="description" label={getString('description')} />
+                <FormInput.TextArea
+                  name="description"
+                  label={getString('description')}
+                  textArea={{ style: { minHeight: '5rem' } }}
+                />
 
-                <Container>
-                  <FormInput.CheckBox
-                    name="permanent"
-                    label={getString('cf.editDetails.permaFlag')}
-                    className={css.checkboxEditDetails}
-                  />
-                </Container>
+                <FormInput.CheckBox name="permanent" label={getString('cf.editDetails.permaFlag')} />
                 {gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled && (
                   <>
                     <Container>
@@ -158,24 +165,11 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
                     <SaveFlagToGitSubForm subtitle={getString('cf.gitSync.commitChanges')} hideNameField />
                   </>
                 )}
-
-                <Layout.Horizontal spacing="small">
-                  <Button intent="primary" text={getString('save')} type="submit" variation={ButtonVariation.PRIMARY} />
-                  <Button
-                    minimal
-                    text={getString('cancel')}
-                    variation={ButtonVariation.SECONDARY}
-                    onClick={e => {
-                      e.preventDefault()
-                      hideEditDetailsModal()
-                    }}
-                  />
-                </Layout.Horizontal>
               </Layout.Vertical>
             </Form>
-          )}
-        </Formik>
-      </Dialog>
+          </ModalDialog>
+        )}
+      </Formik>
     )
   }, [featureFlag, gitSync?.isAutoCommitEnabled, gitSync?.isGitSyncEnabled])
 

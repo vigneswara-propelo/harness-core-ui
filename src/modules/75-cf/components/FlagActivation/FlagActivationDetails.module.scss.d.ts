@@ -8,12 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly breadcrumb: string
-  readonly checkboxEditDetails: string
   readonly collapseFeatures: string
   readonly collapseFeaturesPrerequisites: string
   readonly deleteFlagModalText: string
-  readonly editDetailsModalContainer: string
-  readonly editFlagModal: string
   readonly flagVariationValue: string
   readonly module: string
   readonly newEnvRulesContainer: string
