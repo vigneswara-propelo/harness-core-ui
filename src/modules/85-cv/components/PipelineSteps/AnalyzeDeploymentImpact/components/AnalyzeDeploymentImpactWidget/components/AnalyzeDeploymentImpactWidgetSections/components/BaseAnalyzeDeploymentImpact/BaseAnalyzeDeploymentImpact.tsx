@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
 import { AllowedTypes, Container, FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
@@ -31,14 +30,14 @@ export default function BaseAnalyzeDeploymentImpact(props: {
     <Card>
       <>
         {stepViewType !== StepViewType.Template && (
-          <Container className={cx(stepCss.formGroup, stepCss.md)}>
+          <Container className={stepCss.formGroup}>
             <FormInput.InputWithIdentifier
               isIdentifierEditable={isNewStep}
               inputLabel={getString('pipelineSteps.stepNameLabel')}
             />
           </Container>
         )}
-        <Container className={cx(stepCss.formGroup, stepCss.md)}>
+        <Container className={stepCss.formGroup}>
           <FormInput.MultiTypeInput
             name={'spec.duration'}
             data-testid="duration"
@@ -48,7 +47,7 @@ export default function BaseAnalyzeDeploymentImpact(props: {
             useValue
           />
         </Container>
-        <Container className={cx(stepCss.formGroup, stepCss.sm)}>
+        <Container className={stepCss.formGroup}>
           <FormMultiTypeDurationField
             name="timeout"
             label={getString('pipelineSteps.timeoutLabel')}
