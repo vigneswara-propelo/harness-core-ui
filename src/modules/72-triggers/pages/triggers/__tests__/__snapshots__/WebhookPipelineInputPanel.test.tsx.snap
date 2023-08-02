@@ -384,12 +384,17 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                           </defs>
                         </svg>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="pipelineInputStage"
                       >
-                        Stage: 
-                        stage1
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+                        >
+                          Stage: 
+                          stage1
+                        </p>
+                      </div>
                     </div>
                     <div
                       class="topAccordion"

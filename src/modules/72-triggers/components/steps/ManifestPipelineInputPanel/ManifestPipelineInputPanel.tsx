@@ -57,6 +57,7 @@ import {
   usePipelineVariables
 } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import css from '@triggers/pages/triggers/views/WebhookPipelineInputPanel.module.scss'
 
 interface ManifestTriggerInputPanelFormProps {
@@ -495,6 +496,7 @@ function ManifestTriggerInputPanelForm({
                   readonly={isNewGitSyncRemotePipeline || !isEmpty(selectedInputSets)}
                   gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
                   disableRuntimeInputConfigureOptions
+                  stageTooltip={{ [StageType.BUILD]: 'pipelineInputStage' }}
                 />
               )}
           </div>

@@ -77,6 +77,9 @@ export interface PipelineInputSetFormProps {
   disableRuntimeInputConfigureOptions?: boolean
   childPipelineMetadata?: ChildPipelineMetadataType
   chainedPipelineStagePath?: string
+  stageTooltip?: {
+    [key in StageType]?: string
+  }
 }
 const allowedViewTypeForTemplateUpdate = [StepViewType.DeploymentForm, StepViewType.InputSet, StepViewType.TriggerForm]
 
@@ -179,7 +182,8 @@ export function StageForm({
   allowableTypes,
   executionIdentifier,
   childPipelineMetadata,
-  viewTypeMetadata
+  viewTypeMetadata,
+  stageTooltip
 }: {
   allValues?: StageElementWrapperConfig
   template?: StageElementWrapperConfig
@@ -192,6 +196,9 @@ export function StageForm({
   allowableTypes: AllowedTypes
   childPipelineMetadata?: ChildPipelineMetadataType
   viewTypeMetadata?: Record<string, boolean>
+  stageTooltip?: {
+    [key in StageType]?: string
+  }
 }): JSX.Element {
   const [stageFormTemplate, setStageFormTemplate] = React.useState(template)
   const isTemplateStage = !!stageFormTemplate?.stage?.template
@@ -250,6 +257,7 @@ export function StageForm({
             color={Color.BLACK_100}
             font={{ weight: 'semi-bold' }}
             className={cx({ [css.childPipelineStageName]: !!childPipelineMetadata })}
+            tooltipProps={{ dataTooltipId: stageTooltip && type ? stageTooltip[type as StageType] : '' }}
           >
             Stage: {defaultTo(allValues?.stage?.name, defaultTo(allValues?.stage?.identifier, ''))}
           </Text>
@@ -377,7 +385,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     selectedStageData,
     disableRuntimeInputConfigureOptions: disableConfigureOptions,
     childPipelineMetadata,
-    chainedPipelineStagePath
+    chainedPipelineStagePath,
+    stageTooltip
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template?.template
@@ -518,6 +527,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                       executionIdentifier={executionIdentifier}
                       childPipelineMetadata={childPipelineMetadata}
                       viewTypeMetadata={viewTypeMetadata}
+                      stageTooltip={stageTooltip}
                     />
                   )}
                 </Layout.Vertical>
@@ -555,6 +565,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         allowableTypes={allowableTypes}
                         childPipelineMetadata={childPipelineMetadata}
                         viewTypeMetadata={viewTypeMetadata}
+                        stageTooltip={stageTooltip}
                       />
                     )}
                   </Layout.Vertical>

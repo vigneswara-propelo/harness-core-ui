@@ -3174,12 +3174,17 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                     </defs>
                                   </svg>
                                 </span>
-                                <p
-                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+                                <div
+                                  class="Text--withDocsTooltip"
+                                  data-tooltip-id="pipelineInputStage"
                                 >
-                                  Stage: 
-                                  adwaitUser
-                                </p>
+                                  <p
+                                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+                                  >
+                                    Stage: 
+                                    adwaitUser
+                                  </p>
+                                </div>
                               </div>
                               <div
                                 class="topAccordion"

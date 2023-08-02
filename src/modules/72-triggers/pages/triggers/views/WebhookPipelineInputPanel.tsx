@@ -49,6 +49,7 @@ import {
   PipelineVariablesContextProvider,
   usePipelineVariables
 } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -611,6 +612,7 @@ function WebhookPipelineInputPanelForm({
                 readonly={gitAwareForTriggerEnabled || !isEmpty(selectedInputSets)}
                 gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
                 disableRuntimeInputConfigureOptions
+                stageTooltip={{ [StageType.BUILD]: 'pipelineInputStage' }}
               />
             ) : null}
           </div>
