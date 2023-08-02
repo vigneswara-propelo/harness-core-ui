@@ -30,7 +30,7 @@ import InfrastructureModal from './InfrastructureModal'
 
 import css from './InfrastructureDefinition.module.scss'
 
-export default function InfrastructureDefinition(): JSX.Element {
+export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boolean }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
@@ -138,6 +138,7 @@ export default function InfrastructureDefinition(): JSX.Element {
             openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
             handleInfrastructureUpdate={handleInfrastructureUpdate}
             updatedInfra={updatedInfrastructure}
+            isSingleEnv
           />
         ) : (
           <ModalDialog
@@ -159,6 +160,7 @@ export default function InfrastructureDefinition(): JSX.Element {
               selectedInfrastructure={selectedInfrastructure}
               getTemplate={getTemplate}
               scope={scopeFromDTO}
+              isSingleEnv={isEnvPage}
             />
           </ModalDialog>
         )}

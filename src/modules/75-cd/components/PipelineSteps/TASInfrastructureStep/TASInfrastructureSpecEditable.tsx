@@ -51,7 +51,8 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -222,9 +223,11 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
           formikRef.current = formik
           return (
             <FormikForm>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
+              {isSingleEnv ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

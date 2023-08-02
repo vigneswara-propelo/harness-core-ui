@@ -295,7 +295,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                       {
                         id: EnvironmentDetailsTab.INFRASTRUCTURE,
                         title: getString('cd.infrastructure.infrastructureDefinitions'),
-                        panel: <InfrastructureDefinition />
+                        panel: <InfrastructureDefinition isEnvPage />
                       },
                       {
                         id: EnvironmentDetailsTab.GITOPS,

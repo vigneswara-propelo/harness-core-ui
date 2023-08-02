@@ -27,7 +27,8 @@ export default function InfrastructureModal({
   scope,
   isInfraUpdated,
   handleInfrastructureUpdate,
-  updatedInfra
+  updatedInfra,
+  isSingleEnv
 }: {
   hideModal: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,6 +42,7 @@ export default function InfrastructureModal({
   isInfraUpdated?: boolean
   handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
   updatedInfra?: InfrastructureConfig
+  isSingleEnv?: boolean
 }): React.ReactElement {
   return (
     <BootstrapDeployInfraDefinitionWrapper
@@ -55,6 +57,7 @@ export default function InfrastructureModal({
       handleInfrastructureUpdate={handleInfrastructureUpdate}
       updatedInfra={updatedInfra}
       isInfraUpdated={isInfraUpdated}
+      isSingleEnv={isSingleEnv}
     />
   )
 }

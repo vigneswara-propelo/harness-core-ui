@@ -72,4 +72,5 @@ export interface AzureWebAppInfrastructureSpecEditableProps {
   variablesData: AzureWebAppInfrastructure
   allowableTypes: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }

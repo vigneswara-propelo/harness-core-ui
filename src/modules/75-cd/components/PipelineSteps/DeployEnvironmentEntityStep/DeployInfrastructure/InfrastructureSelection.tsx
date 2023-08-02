@@ -60,6 +60,7 @@ interface InfrastructureSelectionProps {
   lazyInfrastructure?: boolean
   environmentPermission?: ButtonProps['permission']
   canPropagateFromStage?: boolean
+  isSingleEnv?: boolean
 }
 
 function getSelectedInfrastructuresFromOptions(items: SelectOption[]): string[] {
@@ -86,7 +87,8 @@ export default function InfrastructureSelection({
   deploymentType,
   customDeploymentRef,
   lazyInfrastructure,
-  environmentPermission
+  environmentPermission,
+  isSingleEnv
 }: InfrastructureSelectionProps): JSX.Element {
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
@@ -239,6 +241,7 @@ export default function InfrastructureSelection({
           stageCustomDeploymentData={customDeploymentRef}
           getTemplate={getTemplate}
           scope={getScopeFromValue(environmentIdentifier)}
+          isSingleEnv={isSingleEnv}
         />
       </ModalDialog>
     </Layout.Horizontal>

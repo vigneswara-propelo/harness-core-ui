@@ -396,9 +396,6 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with empty 
         <div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
-          />
-          <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div
               class="connectorLabel connectorRef"
@@ -888,9 +885,6 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with runtim
         class="FormikForm--main"
       >
         <div>
-          <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
-          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
@@ -1428,9 +1422,6 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with values
         class="FormikForm--main"
       >
         <div>
-          <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
-          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >

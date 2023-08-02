@@ -29,7 +29,8 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -146,6 +147,7 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
                 clusterOptions={clusterOptions}
                 setClusterOptions={setClusterOptions}
                 fetchClusters={fetchClusters}
+                isSingleEnv={isSingleEnv}
               />
             </FormikForm>
           )

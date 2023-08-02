@@ -127,6 +127,7 @@ export const deploymentTypeInfraTypeMap: Record<ServiceDefinition['type'], Infra
 
 export interface DeployInfraDefinitionProps {
   selectedInfrastructure?: string
+  isSingleEnv?: boolean
 }
 
 type InfraTypes =
@@ -164,6 +165,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
     updateStage,
     contextType
   } = usePipelineContext()
+  const { isSingleEnv = false } = props
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = React.useCallback(
     debounce(
@@ -422,6 +424,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.KubernetesDirect
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -448,6 +451,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.KubernetesGcp
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -474,6 +478,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.KubernetesRancher
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -500,6 +505,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.KubernetesAws
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -529,6 +535,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.KubernetesAzure
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -554,6 +561,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.AzureWebApp
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -579,7 +587,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.ServerlessAwsLambda
               )
             }
-            customStepProps={getCustomStepProps('ServerlessAwsLambda', getString)}
+            customStepProps={{ ...getCustomStepProps('ServerlessAwsLambda', getString), isSingleEnv }}
           />
         )
       }
@@ -604,7 +612,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.ServerlessGoogleFunctions
               )
             }
-            customStepProps={getCustomStepProps('ServerlessGoogleFunctions', getString)}
+            customStepProps={{ ...getCustomStepProps('ServerlessGoogleFunctions', getString), isSingleEnv }}
           />
         )
       }
@@ -629,7 +637,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.ServerlessAzureFunctions
               )
             }
-            customStepProps={getCustomStepProps('ServerlessAzureFunctions', getString)}
+            customStepProps={{ ...getCustomStepProps('ServerlessAzureFunctions', getString), isSingleEnv }}
           />
         )
       }
@@ -660,6 +668,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.PDC
               )
             }}
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -686,6 +695,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.SshWinRmAws
               )
             }}
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -714,6 +724,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.SshWinRmAzure
               )
             }}
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -739,6 +750,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.ECS
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -763,6 +775,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.Asg
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -786,6 +799,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.CustomDeployment
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -810,6 +824,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.Elastigroup
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -835,6 +850,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.TAS
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -860,6 +876,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.GoogleCloudFunctions
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -884,6 +901,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.AwsLambda
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }
@@ -908,6 +926,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.AwsSam
               )
             }
+            customStepProps={{ isSingleEnv }}
           />
         )
       }

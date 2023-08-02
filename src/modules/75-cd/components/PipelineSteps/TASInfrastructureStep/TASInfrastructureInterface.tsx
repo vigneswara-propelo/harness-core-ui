@@ -72,4 +72,5 @@ export interface TASInfrastructureSpecEditableProps {
   variablesData: TanzuApplicationServiceInfrastructure
   allowableTypes: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }

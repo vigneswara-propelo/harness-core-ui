@@ -81,7 +81,7 @@ describe('Infrastructure Definition tests', () => {
         }}
         queryParams={{ sectionId: 'INFRASTRUCTURE' }}
       >
-        <InfrastructureDefinition />
+        <InfrastructureDefinition isEnvPage />
       </TestWrapper>
     )
 
@@ -116,7 +116,7 @@ describe('Infrastructure Definition tests', () => {
         }}
         queryParams={{ sectionId: 'INFRASTRUCTURE' }}
       >
-        <InfrastructureDefinition />
+        <InfrastructureDefinition isEnvPage />
       </TestWrapper>
     )
 
@@ -153,7 +153,7 @@ describe('Infrastructure Definition tests', () => {
         }}
         queryParams={{ sectionId: 'INFRASTRUCTURE' }}
       >
-        <InfrastructureDefinition />
+        <InfrastructureDefinition isEnvPage />
       </TestWrapper>
     )
 
@@ -192,7 +192,7 @@ describe('Infrastructure Definition tests', () => {
         }}
         queryParams={{ sectionId: 'INFRASTRUCTURE' }}
       >
-        <InfrastructureDefinition />
+        <InfrastructureDefinition isEnvPage />
       </TestWrapper>
     )
 
@@ -246,7 +246,7 @@ describe('Infrastructure Definition tests', () => {
         }}
         queryParams={{ sectionId: 'INFRASTRUCTURE' }}
       >
-        <InfrastructureDefinition />
+        <InfrastructureDefinition isEnvPage />
       </TestWrapper>
     )
 
@@ -305,7 +305,7 @@ describe('Infrastructure Definition tests', () => {
         }}
         queryParams={{ sectionId: 'INFRASTRUCTURE' }}
       >
-        <InfrastructureDefinition />
+        <InfrastructureDefinition isEnvPage />
       </TestWrapper>
     )
 

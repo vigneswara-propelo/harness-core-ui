@@ -93,6 +93,7 @@ interface BootstrapDeployInfraDefinitionProps {
   handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
   isInfraUpdated?: boolean
   updatedInfra?: InfrastructureConfig
+  isSingleEnv?: boolean
 }
 
 interface CustomDeploymentMetaData {
@@ -152,7 +153,8 @@ function BootstrapDeployInfraDefinition(
     setInfraSaveInProgress,
     handleInfrastructureUpdate,
     isInfraUpdated,
-    updatedInfra
+    updatedInfra,
+    isSingleEnv
   }: BootstrapDeployInfraDefinitionProps,
   infraDefinitionFormRef: React.ForwardedRef<InfraDefinitionWrapperRef>
 ): JSX.Element {
@@ -735,7 +737,11 @@ function BootstrapDeployInfraDefinition(
                 addOrUpdateTemplate={isEmpty(stageCustomDeploymentData) ? addOrUpdateTemplate : undefined}
               />
               {selectedDeploymentType && (
-                <DeployInfraDefinition key={deployInfraRemountCount} selectedInfrastructure={selectedInfrastructure} />
+                <DeployInfraDefinition
+                  key={deployInfraRemountCount}
+                  selectedInfrastructure={selectedInfrastructure}
+                  isSingleEnv={isSingleEnv}
+                />
               )}
             </>
           ) : (

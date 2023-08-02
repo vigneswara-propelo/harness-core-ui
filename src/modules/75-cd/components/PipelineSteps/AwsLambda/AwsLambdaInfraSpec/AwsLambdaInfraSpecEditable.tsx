@@ -47,13 +47,15 @@ export interface AwsLambdaInfraSpecEditableProps {
   readonly?: boolean
   allowableTypes: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }
 
 export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProps> = ({
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -108,9 +110,11 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
+              {isSingleEnv ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

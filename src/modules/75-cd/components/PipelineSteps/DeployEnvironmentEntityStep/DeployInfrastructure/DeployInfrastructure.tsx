@@ -337,6 +337,7 @@ export default function DeployInfrastructure({
           customDeploymentRef={customDeploymentRef}
           lazyInfrastructure={lazyInfrastructure}
           environmentPermission={environmentPermission}
+          isSingleEnv={!!(values?.category === 'single' && values?.environment)}
         />
       ) : (
         <Text color={Color.BLACK}>

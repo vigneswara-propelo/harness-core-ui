@@ -72,13 +72,15 @@ interface GcpInfrastructureSpecEditableProps {
   variablesData: K8sGcpInfrastructure
   allowableTypes: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }
 
 const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -179,6 +181,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                 clusterLoading={loadingClusterNames}
                 clusterOptions={clusterOptions}
                 setClusterOptions={setClusterOptions}
+                isSingleEnv={isSingleEnv}
               />
             </FormikForm>
           )

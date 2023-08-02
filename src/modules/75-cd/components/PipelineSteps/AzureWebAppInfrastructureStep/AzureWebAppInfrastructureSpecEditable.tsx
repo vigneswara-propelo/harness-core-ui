@@ -58,7 +58,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -245,9 +246,11 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   {isSvcEnvEnabled ? getString('cd.steps.azureWebAppInfra.webAppInfraheader') : ''}
                 </Text>
               </Layout.Vertical>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
+              {isSingleEnv ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

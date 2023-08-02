@@ -82,13 +82,15 @@ interface RancherInfrastructureSpecEditableProps {
   variablesData: K8sRancherInfrastructure
   allowableTypes: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }
 
 const RancherInfrastructureSpecEditable: React.FC<RancherInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -203,6 +205,7 @@ const RancherInfrastructureSpecEditable: React.FC<RancherInfrastructureSpecEdita
                       setLoadingClusterNames(false)
                     })
                 }}
+                isSingleEnv={isSingleEnv}
               />
             </FormikForm>
           )

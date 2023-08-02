@@ -50,6 +50,7 @@ interface WrapperProps {
   handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
   updatedInfra?: InfrastructureConfig
   isInfraUpdated?: boolean
+  isSingleEnv?: boolean
 }
 
 export function BootstrapDeployInfraDefinitionWrapper(
@@ -69,7 +70,8 @@ export function BootstrapDeployInfraDefinitionWrapper(
     setInfraSaveInProgress,
     handleInfrastructureUpdate,
     updatedInfra,
-    isInfraUpdated
+    isInfraUpdated,
+    isSingleEnv = false
   } = props
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -157,6 +159,7 @@ export function BootstrapDeployInfraDefinitionWrapper(
             handleInfrastructureUpdate={handleInfrastructureUpdate}
             isInfraUpdated={isInfraUpdated}
             updatedInfra={updatedInfra}
+            isSingleEnv={isSingleEnv}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>

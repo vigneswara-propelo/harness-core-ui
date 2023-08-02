@@ -88,6 +88,7 @@ export interface AzureInfrastructureSpecEditableProps {
   variablesData: K8sAzureInfrastructure
   allowableTypes: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }
 
 export type K8sAzureInfrastructureUI = Infrastructure & {
@@ -98,4 +99,5 @@ export type K8sAzureInfrastructureUI = Infrastructure & {
   resourceGroup?: string
   subscriptionId?: string
   useClusterAdminCredentials?: boolean
+  isSingleEnv?: boolean
 }

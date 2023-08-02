@@ -50,13 +50,15 @@ export interface GoogleCloudFunctionInfraSpecEditableProps {
   onUpdate?: (data: GoogleCloudFunctionInfrastructure) => void
   readonly?: boolean
   allowableTypes: AllowedTypes
+  isSingleEnv?: boolean
 }
 
 export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionInfraSpecEditableProps> = ({
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier = '', branch = '' } = useQueryParams<GitQueryParams>()
@@ -181,9 +183,11 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
+              {isSingleEnv ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

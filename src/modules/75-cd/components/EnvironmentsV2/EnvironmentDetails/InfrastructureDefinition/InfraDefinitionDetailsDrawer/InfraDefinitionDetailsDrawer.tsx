@@ -44,6 +44,7 @@ interface Props {
   openUnsavedChangesDiffModal: () => void
   handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
   updatedInfra?: InfrastructureConfig
+  isSingleEnv?: boolean
 }
 
 export enum InfraDefinitionTabs {
@@ -65,7 +66,8 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
     isInfraUpdated,
     openUnsavedChangesDiffModal,
     handleInfrastructureUpdate,
-    updatedInfra
+    updatedInfra,
+    isSingleEnv
   } = props
 
   const { infraDetailsTab } = useQueryParams<EnvironmentQueryParams>()
@@ -205,6 +207,7 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
                 setInfraSaveInProgress={setInfraSaveInProgress}
                 handleInfrastructureUpdate={handleInfrastructureUpdate}
                 updatedInfra={updatedInfra}
+                isSingleEnv={isSingleEnv}
               />
             }
           />

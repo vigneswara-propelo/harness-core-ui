@@ -44,6 +44,7 @@ export interface K8sAwsInfrastructureSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8sAwsInfrastructure
   allowableTypes: AllowedTypes
+  isSingleEnv?: boolean
 }
 
 const K8sAwsInfrastructureSpecVariablesForm: React.FC<K8sAwsInfrastructureSpecEditableProps> = ({

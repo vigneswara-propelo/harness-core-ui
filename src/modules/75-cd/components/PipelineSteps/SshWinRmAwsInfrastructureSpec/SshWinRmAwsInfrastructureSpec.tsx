@@ -97,12 +97,14 @@ interface SshWinRmAwsInfrastructureSpecEditableProps {
   variablesData: SshWinRmAwsInfrastructure
   allowableTypes: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }
 
 const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -247,9 +249,11 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
             formikRef.current = formik as FormikProps<unknown> | null
             return (
               <FormikForm>
-                <Layout.Horizontal className={css.formRow} spacing="medium">
-                  <ProvisionerField name="provisioner" isReadonly />
-                </Layout.Horizontal>
+                {isSingleEnv ? (
+                  <Layout.Horizontal className={css.formRow} spacing="medium">
+                    <ProvisionerField name="provisioner" isReadonly />
+                  </Layout.Horizontal>
+                ) : null}
                 <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
                   <Layout.Vertical>
                     <FormMultiTypeConnectorField

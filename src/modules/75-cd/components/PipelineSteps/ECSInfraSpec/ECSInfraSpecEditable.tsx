@@ -51,13 +51,15 @@ export interface ECSInfraSpecEditableProps {
   onUpdate?: (data: EcsInfrastructure) => void
   readonly?: boolean
   allowableTypes: AllowedTypes
+  isSingleEnv?: boolean
 }
 
 export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -173,9 +175,11 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
+              {isSingleEnv ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

@@ -19,6 +19,8 @@ import { useInfrastructureUnsavedChanges } from '@cd/hooks/useInfrastructureUnsa
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import type { DeployEnvironmentEntityCustomStepProps, InfrastructureData } from '../types'
@@ -51,6 +53,19 @@ export default function InfrastructureEntitiesList({
 }: InfrastructureEntitiesListProps): React.ReactElement {
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
+
+  const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+
+  const isSingleEnv = React.useMemo(() => {
+    return !!stage?.stage?.spec?.environment
+  }, [stage])
 
   const [infrastructureToEdit, setInfrastructureToEdit] = React.useState<InfrastructureData | null>(null)
   const [infrastructureToDelete, setInfrastructureToDelete] = React.useState<InfrastructureData | null>(null)
@@ -142,6 +157,7 @@ export default function InfrastructureEntitiesList({
           isInfraUpdated={isInfraUpdated}
           handleInfrastructureUpdate={handleInfrastructureUpdate}
           updatedInfra={updatedInfrastructure}
+          isSingleEnv={isSingleEnv}
         />
       </ModalDialog>
 

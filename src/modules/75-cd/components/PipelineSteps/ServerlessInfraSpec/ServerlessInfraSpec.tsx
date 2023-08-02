@@ -64,6 +64,7 @@ export interface ServerlessSpecEditableProps {
       stage: string
     }
   }
+  isSingleEnv?: boolean
 }
 
 export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
@@ -72,7 +73,8 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
   readonly,
   allowableTypes,
   hasRegion,
-  formInfo
+  formInfo,
+  isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -121,9 +123,11 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
+              {isSingleEnv ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

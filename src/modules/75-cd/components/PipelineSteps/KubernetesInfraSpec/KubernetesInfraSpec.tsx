@@ -74,23 +74,22 @@ interface KubernetesInfraSpecEditableProps {
   variablesData: K8SDirectInfrastructure
   allowableTypes?: AllowedTypes
   provisioner?: ExecutionElementConfig['steps']
+  isSingleEnv?: boolean
 }
 
-const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = ({
-  initialValues,
-  onUpdate,
-  readonly,
-  allowableTypes
-}): JSX.Element => {
+const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = (props): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
     accountId: string
   }>()
+  const { initialValues, onUpdate, readonly, allowableTypes, isSingleEnv } = props
+
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+
   const validationSchema = Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     namespace: getNameSpaceSchema(getString),
@@ -132,9 +131,11 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
-              <Layout.Horizontal className={css.formRow} spacing="medium">
-                <ProvisionerField name="provisioner" isReadonly />
-              </Layout.Horizontal>
+              {isSingleEnv ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <ProvisionerField name="provisioner" isReadonly />
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal spacing="medium" className={css.formRow}>
                 <FormMultiTypeConnectorField
                   name="connectorRef"

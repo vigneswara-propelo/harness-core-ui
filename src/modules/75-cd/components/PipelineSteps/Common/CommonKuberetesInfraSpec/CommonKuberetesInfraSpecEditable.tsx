@@ -64,6 +64,7 @@ export interface CommonKuberetesInfraSpecEditableProps {
   clusterOptions: SelectOption[]
   setClusterOptions: React.Dispatch<React.SetStateAction<SelectOption[]>>
   fetchClusters?: (connectorRef: string) => void
+  isSingleEnv?: boolean
 }
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
@@ -106,7 +107,8 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
     clusterLoading,
     clusterOptions,
     setClusterOptions,
-    fetchClusters
+    fetchClusters,
+    isSingleEnv
   } = props
   const connectorTypeLowerCase = connectorType.toLowerCase()
   const formik = useFormikContext<K8sAwsInfrastructureUI | K8sGcpInfrastructureUI>()
@@ -129,9 +131,11 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
 
   return (
     <React.Fragment key={connectorType}>
-      <Layout.Horizontal className={css.formRow} spacing="medium">
-        <ProvisionerField name="provisioner" isReadonly />
-      </Layout.Horizontal>
+      {isSingleEnv ? (
+        <Layout.Horizontal className={css.formRow} spacing="medium">
+          <ProvisionerField name="provisioner" isReadonly />
+        </Layout.Horizontal>
+      ) : null}
       <Layout.Horizontal className={css.formRow} spacing="medium">
         <FormMultiTypeConnectorField
           name="connectorRef"
