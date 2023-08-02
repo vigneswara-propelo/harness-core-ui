@@ -44,6 +44,10 @@ export const defaultLicensesByModule: {
   },
   CV: {
     edition: Editions.FREE
+  },
+  // TODO: change to free when free plan is supported
+  STO: {
+    edition: Editions.ENTERPRISE
   }
 }
 
@@ -93,5 +97,10 @@ export const getModuleToDefaultURLMap = (
     projectIdentifier: DEFAULT_PROJECT_ID,
     orgIdentifier: DEFAULT_ORG,
     module
+  }),
+  sto: routes.toSTOProjectOverview({
+    accountId,
+    projectIdentifier: DEFAULT_PROJECT_ID,
+    orgIdentifier: DEFAULT_ORG
   })
 })

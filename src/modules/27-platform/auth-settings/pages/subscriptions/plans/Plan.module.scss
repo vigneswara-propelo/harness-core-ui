@@ -92,6 +92,9 @@
 .chaosColor {
   color: var(--magenta-700) !important;
 }
+.stoColor {
+  color: var(--primary-8) !important;
+}
 
 .cdBgColor {
   background-color: var(--green-500) !important;
@@ -108,6 +111,9 @@
 .chaosBgColor {
   background-color: var(--magenta-700) !important;
 }
+.stoBgColor {
+  background-color: var(--primary-8) !important;
+}
 
 .cdBorder {
   border: solid 1px var(--green-500) !important;
@@ -123,6 +129,9 @@
 }
 .chaosBorder {
   border: solid 1px var(--magenta-700) !important;
+}
+.stoBorder {
+  border: solid 1px var(--primary-8) !important;
 }
 
 .cdFill {
@@ -162,6 +171,14 @@
     > circle:nth-child(1),
     > path {
       fill: var(--magenta-700) !important;
+    }
+  }
+}
+.stoFill {
+  > svg {
+    > circle:nth-child(1),
+    > path {
+      fill: var(--primary-8) !important;
     }
   }
 }

@@ -114,7 +114,7 @@ const SubscriptionsPage: React.FC = () => {
           FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
           break
         case ModuleName.STO:
-          licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
+          accumulator.push(card)
           break
         case ModuleName.CHAOS:
           licenseInformation['CHAOS']?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)

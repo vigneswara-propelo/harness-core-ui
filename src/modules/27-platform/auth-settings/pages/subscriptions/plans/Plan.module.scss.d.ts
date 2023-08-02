@@ -40,6 +40,10 @@ declare const styles: {
   readonly li: string
   readonly noPadding: string
   readonly plan: string
+  readonly stoBgColor: string
+  readonly stoBorder: string
+  readonly stoColor: string
+  readonly stoFill: string
   readonly subCaption: string
   readonly support: string
   readonly tooltip: string

@@ -74,6 +74,15 @@ const PlanTabs: React.FC<PlanTabsProps> = ({ module, plans }) => {
             featureGroup={plans?.ceFeatureGroup}
           />
         )
+      case ModuleName.STO:
+        return (
+          <Plans
+            module={module}
+            plans={plans?.stoPlans}
+            featureCaption={plans?.stoFeatureCaption}
+            featureGroup={plans?.stoFeatureGroup}
+          />
+        )
     }
     return <></>
   }

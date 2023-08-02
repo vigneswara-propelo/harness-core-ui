@@ -121,6 +121,9 @@ export const FetchPlansDocument = gql`
       cePlans {
         ...Plans
       }
+      stoPlans {
+        ...Plans
+      }
       ciFeatureCaption {
         ...FeatureCaption
       }
@@ -163,6 +166,12 @@ export const FetchPlansDocument = gql`
       ceFeatureGroup {
         ...FeatureGroup
       }
+      stoFeatureCaption {
+        ...FeatureCaption
+      }
+      stoFeatureGroup {
+        ...FeatureGroup
+      }
       cdFaq {
         ...Faq
       }
@@ -176,6 +185,9 @@ export const FetchPlansDocument = gql`
         ...Faq
       }
       ceFaq {
+        ...Faq
+      }
+      stoFaq {
         ...Faq
       }
       caseStudies {
@@ -492,6 +504,35 @@ export type FetchPlansQuery = {
         link: string | null
       } | null> | null
     } | null> | null
+    stoPlans: Array<{
+      __typename?: 'ComponentPricingPagePlansZone'
+      id: string
+      title: string | null
+      desc: string | null
+      price: string | null
+      yearlyPrice: string | null
+      unit: string | null
+      link: string | null
+      buttonText: string | null
+      primaryButton: boolean | null
+      comingSoon: boolean | null
+      priceTips: string | null
+      priceTerm: string | null
+      priceTermTips: string | null
+      yearlyPriceTips: string | null
+      yearlyPriceTerm: string | null
+      yearlyPriceTermTips: string | null
+      support: string | null
+      featureTitle: string | null
+      unitTips: string | null
+      img: { __typename?: 'UploadFile'; url: string; width: number | null; height: number | null } | null
+      featureListZone: Array<{
+        __typename?: 'ComponentPageFeatureLIstZone'
+        id: string
+        title: string | null
+        link: string | null
+      } | null> | null
+    } | null> | null
     ciFeatureCaption: Array<{
       __typename?: 'ComponentPricingPageFeatureCaption'
       id: string
@@ -547,6 +588,14 @@ export type FetchPlansQuery = {
       } | null> | null
     } | null> | null
     ccFeatureCaption: Array<{
+      __typename?: 'ComponentPricingPageFeatureCaption'
+      id: string
+      title: string | null
+      btnText: string | null
+      btnLink: string | null
+      primaryButton: boolean | null
+    } | null> | null
+    stoFeatureCaption: Array<{
       __typename?: 'ComponentPricingPageFeatureCaption'
       id: string
       title: string | null
@@ -681,6 +730,25 @@ export type FetchPlansQuery = {
         enterpriseText: string | null
       } | null> | null
     } | null> | null
+    stoFeatureGroup: Array<{
+      __typename?: 'ComponentPricingPageFeatureGroup'
+      id: string
+      title: string | null
+      detailedFeature: Array<{
+        __typename?: 'ComponentPricingPageDetailedFeature'
+        id: string
+        title: string | null
+        link: string | null
+        communityValue: Enum_Componentpricingpagedetailedfeature_Communityvalue | null
+        communityText: string | null
+        freeValue: Enum_Componentpricingpagedetailedfeature_Freevalue | null
+        freeText: string | null
+        teamValue: Enum_Componentpricingpagedetailedfeature_Teamvalue | null
+        teamText: string | null
+        enterpriseValue: Enum_Componentpricingpagedetailedfeature_Enterprisevalue | null
+        enterpriseText: string | null
+      } | null> | null
+    } | null> | null
     cdFaq: Array<{
       __typename?: 'ComponentPricingPageFaq'
       id: string
@@ -710,6 +778,13 @@ export type FetchPlansQuery = {
       anchor: string | null
     } | null> | null
     ceFaq: Array<{
+      __typename?: 'ComponentPricingPageFaq'
+      id: string
+      faqTitle: string | null
+      faqAnswer: string | null
+      anchor: string | null
+    } | null> | null
+    stoFaq: Array<{
       __typename?: 'ComponentPricingPageFaq'
       id: string
       faqTitle: string | null

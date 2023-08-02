@@ -28,7 +28,8 @@ const fillMap: Record<string, string> = {
   ce: css.ccmFill,
   cf: css.ffFill,
   ci: css.ciFill,
-  chaos: css.chaosFill
+  chaos: css.chaosFill,
+  sto: css.stoFill
 }
 
 const bgColorMap: Record<string, string> = {
@@ -36,7 +37,8 @@ const bgColorMap: Record<string, string> = {
   ce: css.ccmBgColor,
   cf: css.ffBgColor,
   ci: css.ciBgColor,
-  chaos: css.chaosBgColor
+  chaos: css.chaosBgColor,
+  sto: css.stoBgColor
 }
 
 const CurrentPlanHeader = ({

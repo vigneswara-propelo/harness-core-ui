@@ -2675,6 +2675,7 @@ type Pricing {
   ccPlans: [ComponentPricingPagePlansZone]
   srmPlans: [ComponentPricingPagePlansZone]
   cePlans: [ComponentPricingPagePlansZone]
+  stoPlans: [ComponentPricingPagePlansZone]
   caseStudies: [ComponentPageCaseStudyZone]
   ciSaasPlans: [ComponentPricingPagePlansZone]
   ciFeatureGroup: [ComponentPricingPageFeatureGroup]
@@ -2691,11 +2692,14 @@ type Pricing {
   ceFeatureGroup: [ComponentPricingPageFeatureGroup]
   ceFeatureCaption: [ComponentPricingPageFeatureCaption]
   srmFeatureGroup: [ComponentPricingPageFeatureGroup]
+  stoFeatureGroup: [ComponentPricingPageFeatureGroup]
+  stoFeatureCaption: [ComponentPricingPageFeatureCaption]
   cdFaq: [ComponentPricingPageFaq]
   ciFaq: [ComponentPricingPageFaq]
   ffFaq: [ComponentPricingPageFaq]
   ccFaq: [ComponentPricingPageFaq]
   ceFaq: [ComponentPricingPageFaq]
+  stoFaq: [ComponentPricingPageFaq]
   openSource: ComponentPricingPageCallOut
   tooltips: [ComponentPricingPageTooltipsZone]
   published_at: DateTime
@@ -2710,6 +2714,7 @@ input PricingInput {
   ffPlans: [ComponentPricingPagePlansZoneInput]
   ccPlans: [ComponentPricingPagePlansZoneInput]
   srmPlans: [ComponentPricingPagePlansZoneInput]
+  stoPlans: [ComponentPricingPagePlansZoneInput]
   caseStudies: [ComponentPageCaseStudyZoneInput]
   ciSaasPlans: [ComponentPricingPagePlansZoneInput]
   ciFeatureGroup: [ComponentPricingPageFeatureGroupInput]
@@ -2724,10 +2729,13 @@ input PricingInput {
   ciSaasFeatureGroup: [ComponentPricingPageFeatureGroupInput]
   srmFeatureCaption: [ComponentPricingPageFeatureCaptionInput]
   srmFeatureGroup: [ComponentPricingPageFeatureGroupInput]
+  stoFeatureCaption: [ComponentPricingPageFeatureCaptionInput]
+  stoFeatureGroup: [ComponentPricingPageFeatureGroupInput]
   cdFaq: [ComponentPricingPageFaqInput]
   ciFaq: [ComponentPricingPageFaqInput]
   ffFaq: [ComponentPricingPageFaqInput]
   ccFaq: [ComponentPricingPageFaqInput]
+  stoFaq: [ComponentPricingPageFaqInput]
   openSource: ComponentPricingPageCallOutInput
   tooltips: [ComponentPricingPageTooltipsZoneInput]
   published_at: DateTime
@@ -2742,6 +2750,7 @@ input editPricingInput {
   ffPlans: [editComponentPricingPagePlansZoneInput]
   ccPlans: [editComponentPricingPagePlansZoneInput]
   srmPlans: [editComponentPricingPagePlansZoneInput]
+  stoPlans: [editComponentPricingPagePlansZoneInput]
   caseStudies: [editComponentPageCaseStudyZoneInput]
   ciSaasPlans: [editComponentPricingPagePlansZoneInput]
   ciFeatureGroup: [editComponentPricingPageFeatureGroupInput]
@@ -2756,10 +2765,13 @@ input editPricingInput {
   ciSaasFeatureGroup: [editComponentPricingPageFeatureGroupInput]
   srmFeatureCaption: [editComponentPricingPageFeatureCaptionInput]
   srmFeatureGroup: [editComponentPricingPageFeatureGroupInput]
+  stoFeatureCaption: [editComponentPricingPageFeatureCaptionInput]
+  stoFeatureGroup: [editComponentPricingPageFeatureGroupInput]
   cdFaq: [editComponentPricingPageFaqInput]
   ciFaq: [editComponentPricingPageFaqInput]
   ffFaq: [editComponentPricingPageFaqInput]
   ccFaq: [editComponentPricingPageFaqInput]
+  stoFaq: [editComponentPricingPageFaqInput]
   openSource: editComponentPricingPageCallOutInput
   tooltips: [editComponentPricingPageTooltipsZoneInput]
   published_at: DateTime
@@ -3980,6 +3992,7 @@ enum ENUM_USERSPERMISSIONSUSER_INTEREST {
   CV
   CE
   CF
+  STO
 }
 
 type UsersPermissionsUser {
