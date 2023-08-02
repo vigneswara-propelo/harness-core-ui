@@ -237,6 +237,10 @@ function FormComponent({
     )
   }
 
+  const getValue = (value: string): SelectOption => {
+    return packageTypesList.find((item: SelectOption) => value === item?.value) || defaultPackageType
+  }
+
   return (
     <FormikForm>
       <div className={css.artifactForm}>
@@ -248,7 +252,7 @@ function FormComponent({
               items={packageTypesList}
               name="spec.packageType"
               // Fixing the default value to container since the input is disabled, this ensures value doesn't get cleared in case of artifact source template
-              value={isSshOrWinrm ? formik.values?.spec?.packageType : defaultPackageType}
+              value={isSshOrWinrm ? getValue(formik.values?.spec?.packageType) : defaultPackageType}
               disabled={!isSshOrWinrm}
               onChange={value => {
                 formik.setValues({
