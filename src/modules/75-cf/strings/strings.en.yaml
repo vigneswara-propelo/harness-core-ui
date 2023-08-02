@@ -172,7 +172,7 @@ featureFlags:
     removeFlag: You must remove the flag as a prerequisite before you can archive it.
     restore: Restore
     restoreFlag: Restore Flag
-    restoreDescription: 'Restoring makes <strong>{{ flagName }}</strong> available for evaluation if there are references in your code.'
+    restoreDescription: 'Restoring <strong>{{ flagName }}</strong> restores it to all environments. All flag configurations in an environment (including enabled or disabled) will be restored to the state they were in when the flag was archived. If new environments were created since it was archived, the flag will be disabled in those.'
     restoreSuccess: Flag successfully restored
     warningDescription: '<strong>{{ flagIdentifier }}</strong> is being served in at least one environment.<br/><br/>
       Archiving a flag removes it from all environments, but you can restore it within 30 days.<br/><br/>
