@@ -186,6 +186,8 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     return !isEmpty(parentRollbackStageId) && parentRollbackStageId === selectedStageId
   }, [pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary, selectedStageId])
 
+  const hideAIDAButtonForStageLevelErrors = true
+
   const renderErrorMssgWrapper = useCallback(
     (renderWithAIDA?: boolean): React.ReactElement => {
       return renderWithAIDA ? (
@@ -330,7 +332,8 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
 
       {shouldShowError ? (
         <div className={css.errorMsgWrapper}>
-          {showHarnessCoPilot({
+          {!hideAIDAButtonForStageLevelErrors &&
+          showHarnessCoPilot({
             pipelineStagesMap,
             selectedStageId,
             pipelineExecutionDetail,

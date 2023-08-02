@@ -462,6 +462,8 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
     )
   }, [stageErrorMessage])
 
+  const hideAIDAButtonForStageLevelErrors = true
+
   return (
     <div className={css.tabs}>
       <Tabs
@@ -511,7 +513,8 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
         )}
         {stageErrorMessage && (
           <div className={css.errorMsgWrapper}>
-            {showHarnessCoPilot({
+            {!hideAIDAButtonForStageLevelErrors &&
+            showHarnessCoPilot({
               pipelineStagesMap,
               selectedStageId,
               pipelineExecutionDetail,
