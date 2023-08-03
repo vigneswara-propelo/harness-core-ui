@@ -8,6 +8,7 @@ export const deploymentActivitySummaryAPI = `cv/api/verify-step/GZNwefkdR2aBhc7o
 export const deploymentTimeseriesDataAPI = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-timeseries-data?routingId=${accountId}&accountId=${accountId}&anomalousMetricsOnly=*&anomalousNodesOnly=*&pageNumber=0&pageSize=10`
 export const deploymentTimeseriesDataWithNodeFilterAPI = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-timeseries-data?routingId=${accountId}&accountId=${accountId}&anomalousMetricsOnly=*&anomalousNodesOnly=*&hostNames=harness-deployment-canary-7445f86dbf-ml857&pageNumber=0&pageSize=10`
 export const healthSourceAPI = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/healthSources?routingId=${accountId}&accountId=${accountId}`
+export const healthSourceMetricsAPI = `/cv/api/account/${accountId}/orgs/${org}/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/health-sources?*`
 export const nodeNamesFilterAPI = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/all-node-names?routingId=${accountId}&accountId=${accountId}`
 export const transactionsFilterAPI = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/all-transaction-names?routingId=${accountId}&accountId=${accountId}`
 export const deploymentTimeseriesDataWithFilters = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-timeseries-data?routingId=${accountId}&accountId=${accountId}&anomalousMetricsOnly=true&anomalousNodesOnly=true&hostNames=harness-deployment-canary-7445f86dbf-ml857&pageNumber=0&pageSize=10&healthSources=appd_prod%2Fappdtest&transactionNames=%2Ftodolist%2Fregister`
@@ -35,6 +36,7 @@ export const serviceEnvironmentTest1Call = `/cv/api/monitored-service/service-en
 export const serviceEnvironmentTest2Call = `/cv/api/monitored-service/service-environment?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&environmentIdentifier=prod&serviceIdentifier=testService2`
 export const serviceEnvironmentTest3Call = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=${ENV}&serviceIdentifier=testService3`
 export const overviewCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/overview?routingId=${accountId}`
+export const metricsCallSimpleVerification = `/cv/api/account/accountId/orgs/default/projects/project1/verifications/GZNwefkdR2aBhc7owmJ1-w/analysis/metrics?*`
 export const updateBaselineCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/baseline?routingId=${accountId}`
 
 // Jira calls
@@ -2405,6 +2407,115 @@ export const overviewCallResponseWithBaseline = {
   }
 }
 
+export const overviewCallResponseWithSimpleVerification = {
+  spec: {
+    analysedServiceIdentifier: 'svc1',
+    analysedEnvIdentifier: 'env1',
+    monitoredServiceType: 'DEFAULT',
+    monitoredServiceIdentifier: 'svc1_env1',
+    analysisType: 'SIMPLE',
+    sensitivity: 'MEDIUM',
+    durationInMinutes: 5,
+    isFailOnNoAnalysis: false,
+    baselineType: 'LAST'
+  },
+  appliedDeploymentAnalysisType: 'SIMPLE',
+  verificationStatus: 'VERIFICATION_PASSED',
+  verificationProgressPercentage: 100,
+  verificationStartTimestamp: 1691045715314,
+  metricsAnalysis: {
+    healthy: 0,
+    warning: 0,
+    unhealthy: 1,
+    noAnalysis: 0
+  },
+  logClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  },
+  errorClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  },
+  testDataStartTimestamp: 1691044800000
+}
+
+export const metricsResponseWithSimpleVerification = {
+  totalPages: 1,
+  totalItems: 1,
+  pageItemCount: 1,
+  pageSize: 10,
+  content: [
+    {
+      metricIdentifier: 'm1',
+      metricName: 'm1',
+      transactionGroup: 'g1',
+      metricType: 'PERFORMANCE_OTHER',
+      healthSource: {
+        identifier: 'svc1_env1/slm',
+        name: 'sl-m',
+        type: 'SumologicMetrics',
+        providerType: 'METRICS'
+      },
+      thresholds: [],
+      analysisResult: 'HEALTHY',
+      testDataNodes: [
+        {
+          nodeIdentifier: 'Current-test',
+          analysisResult: 'HEALTHY',
+          analysisReason: 'ML_ANALYSIS',
+          controlDataType: 'MINIMUM_DEVIATION',
+          controlNodeIdentifier: 'control-host-1',
+          testData: [
+            {
+              timestampInMillis: 1691044920000,
+              value: 147.0
+            },
+            {
+              timestampInMillis: 1691044980000,
+              value: 224.0
+            },
+            {
+              timestampInMillis: 1691044800000,
+              value: 185.0
+            },
+            {
+              timestampInMillis: 1691045040000,
+              value: 193.0
+            },
+            {
+              timestampInMillis: 1691044860000,
+              value: 195.0
+            }
+          ],
+          normalisedControlData: [
+            {
+              value: 29.0
+            },
+            {
+              value: 27.0
+            }
+          ],
+          normalisedTestData: [
+            {
+              timestampInMillis: 1691044890000,
+              value: 203.0
+            },
+            {
+              timestampInMillis: 1691045070000,
+              value: 163.0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  pageIndex: 0,
+  empty: false
+}
+
 export const feedbackHistoryResponse = {
   metaData: {},
   resource: [
@@ -2561,3 +2672,12 @@ export const overviewDataWithNoBaselineData = {
     ]
   }
 }
+
+export const healthSourcesResponse = [
+  {
+    identifier: 'svc1_env1/slm',
+    name: 'sl-m',
+    type: 'SumologicMetrics',
+    providerType: 'METRICS'
+  }
+]

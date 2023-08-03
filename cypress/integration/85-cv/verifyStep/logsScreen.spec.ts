@@ -15,6 +15,8 @@ import {
   feedbackHistoryResponse,
   gitSyncCall,
   healthSourceAPI,
+  healthSourceMetricsAPI,
+  healthSourcesResponse,
   jiraCreatePayload,
   jiraCreatePostCall,
   jiraIssueTypeMock,
@@ -38,10 +40,13 @@ import {
   logsRadarChartDataCLusterFilterCall,
   logsRadarChartDataNodeFilterCall,
   logsRadarChartDataNoFiltersCall,
+  metricsCallSimpleVerification,
+  metricsResponseWithSimpleVerification,
   nodeNamesFilterAPI,
   overviewCall,
   overviewCallResponse,
   overviewCallResponseWithBaseline,
+  overviewCallResponseWithSimpleVerification,
   overviewDataWithNoBaselineData,
   pipelinesFetchCall,
   pipelinesSummaryFetchCall,
@@ -73,6 +78,12 @@ describe('Verify step', () => {
           {
             uuid: null,
             name: 'SRM_ENABLE_BASELINE_BASED_VERIFICATION',
+            enabled: true,
+            lastUpdatedAt: 0
+          },
+          {
+            uuid: null,
+            name: 'SRM_ENABLE_SIMPLE_VERIFICATION',
             enabled: true,
             lastUpdatedAt: 0
           }
@@ -612,6 +623,61 @@ describe('Verify step', () => {
       cy.findByTestId(/logs-data-row/).click()
 
       cy.findByText(/New events/).should('be.visible')
+    })
+  })
+
+  describe('Simple verification', () => {
+    it('should verify simple verification features', () => {
+      cy.intercept('GET', feedbackHistory, feedbackHistoryResponse).as('feedbackHistory')
+      cy.intercept('GET', healthSourceMetricsAPI, healthSourcesResponse).as('healthSource')
+      cy.intercept('GET', overviewCall, overviewCallResponseWithSimpleVerification).as('overviewCallForBaseline')
+      cy.intercept('GET', metricsCallSimpleVerification, metricsResponseWithSimpleVerification).as(
+        'overviewCallForBaseline'
+      )
+
+      cy.intercept('POST', updateBaselineCall, {}).as('updateBaselineCall')
+
+      cy.findByText('NG Docker Image').click()
+
+      cy.wait('@sourceCodeManagerCall')
+      cy.wait('@gitSyncCall')
+      cy.wait('@pipelinesYamlFetchCall')
+
+      cy.wait('@pipelineSummary')
+      cy.wait('@pipelineDetails')
+
+      cy.url().should('include', '/pipelines/NG_Docker_Image/pipeline-studio')
+
+      cy.findByRole('link', { name: /Execution History/i }).click()
+
+      cy.wait('@pipelineExecutionSumary')
+      cy.wait('@pipelineSummary')
+
+      cy.findByText(/(Execution Id: 5)/i)
+        .scrollIntoView()
+        .click()
+
+      cy.wait('@pipelineExecution')
+      cy.wait('@pipelineExecutionForNode')
+
+      cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
+
+      cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
+
+      cy.findByTestId(/Metrics/i).click()
+
+      cy.findByText(
+        /A simple verification analysis has been applied. Change the verification type if you wish to apply Harness machine learning to the analysis./
+      ).should('be.visible')
+
+      cy.findByTestId(/g1-m1-SumologicMetrics-panel/)
+        .should('be.visible')
+        .scrollIntoView()
+        .click()
+
+      cy.findByText(/Service: Current-test/).should('be.visible')
+
+      cy.get('input[name="data"]').should('have.value', 'Raw').should('be.disabled')
     })
   })
 })
