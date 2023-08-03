@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import {
   AllowedTypes,
   Container,
@@ -7,7 +7,7 @@ import {
   RUNTIME_INPUT_VALUE,
   SelectOption
 } from '@harness/uicore'
-import { useGetPrimaryManifestsRefQuery } from '@harnessio/react-ng-manager-client'
+import { getPrimaryManifestsRef } from '@harnessio/react-ng-manager-client'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
@@ -51,23 +51,37 @@ function PrimaryManifestRef({
   const { expressions } = useVariablesExpression()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
+  const [manifestSources, setManifestSources] = React.useState<SelectOption[]>([])
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [manfiestIdentifiers, setIdentifiers] = React.useState<string[]>([])
 
-  const { data: manifestSourceResponse, isLoading } = useGetPrimaryManifestsRefQuery({
-    pathParams: {
-      project: projectIdentifier,
-      org: orgIdentifier,
-      service: serviceIdentifier
-    }
-  })
-
-  const manifestSources = useMemo(
-    () =>
-      defaultTo(
-        manifestSourceResponse?.content?.identifiers?.map(source => ({ label: source, value: source })),
-        []
-      ),
-    [manifestSourceResponse?.content?.identifiers]
-  )
+  React.useEffect(() => {
+    setIsLoading(true)
+    getPrimaryManifestsRef({
+      pathParams: {
+        project: projectIdentifier,
+        org: orgIdentifier,
+        service: serviceIdentifier
+      }
+    })
+      .then(res => {
+        setIsLoading(false)
+        setIdentifiers(defaultTo(res?.content?.identifiers, []))
+        setManifestSources(
+          defaultTo(
+            res?.content?.identifiers?.map(source => ({ label: source, value: source })),
+            []
+          )
+        )
+      })
+      .catch(() => {
+        setIdentifiers([])
+        setManifestSources([])
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [serviceIdentifier])
 
   useEffect(() => {
     if (isLoading) {
@@ -84,7 +98,7 @@ function PrimaryManifestRef({
       const shouldSetDefaultManifestSource = isSingleManifestSource && stepViewType !== StepViewType.TemplateUsage
 
       const sourceIdentifierToSourceInputMap = get(
-        manifestSourceResponse?.content?.identifiers,
+        manfiestIdentifiers,
         shouldSetDefaultManifestSource
           ? manifestSources[0].value
           : `${initialValues?.manifestConfigurations?.primaryManifestRef}`
@@ -113,16 +127,21 @@ function PrimaryManifestRef({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [manifestSources, manifestSourceResponse?.content?.identifiers])
+  }, [manifestSources, manfiestIdentifiers])
 
   const onPrimaryManifestRefChange = (value: SelectOption): void => {
     if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED) {
-      updateStageFormTemplate(undefined, `${path}.manifestConfigurations.primaryManifestRef`)
       const isRuntime = isValueRuntimeInput(value) && stepViewType === StepViewType.TemplateUsage
 
       formik?.setValues(
         produce(formik?.values, (draft: StageElementWrapper<PipelineStageElementConfig>) => {
           set(draft, `${path}.manifestConfigurations.primaryManifestRef`, isRuntime ? RUNTIME_INPUT_VALUE : value)
+        })
+      )
+    } else {
+      formik?.setValues(
+        produce(formik?.values, (draft: StageElementWrapper<PipelineStageElementConfig>) => {
+          set(draft, `${path}.manifestConfigurations.primaryManifestRef`, value?.value)
         })
       )
     }

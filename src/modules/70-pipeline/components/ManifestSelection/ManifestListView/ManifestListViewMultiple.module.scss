@@ -52,7 +52,7 @@
   padding: 0px var(--spacing-small);
   border-radius: var(--spacing-small);
   padding-left: var(--spacing-medium);
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   height: 40px;
   .columnId {
@@ -60,6 +60,11 @@
     align-items: center;
     width: 33%;
   }
+}
+
+.repoItem {
+  display: flex;
+  align-items: center;
 }
 
 .manifestType {

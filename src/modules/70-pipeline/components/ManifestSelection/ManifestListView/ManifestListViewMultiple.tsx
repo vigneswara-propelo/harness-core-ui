@@ -73,7 +73,9 @@ import {
   TASManifestTypes,
   getManifestStoresByDeploymentType,
   allowedMultiManifestTypes,
-  MultiManifestsTypes
+  MultiManifestsTypes,
+  filterManifestByType,
+  enableMultipleManifest
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -637,7 +639,12 @@ function ManifestListViewMultiple({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            types={allowedMultiManifestTypes[deploymentType]?.[multiManifestType]}
+            types={filterManifestByType(
+              listOfManifests,
+              allowedMultiManifestTypes[deploymentType]?.[multiManifestType],
+              deploymentType,
+              multiManifestType
+            )}
             manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest, {
               CDS_SERVERLESS_V2
             })}
@@ -673,7 +680,8 @@ function ManifestListViewMultiple({
     lastSteps,
     CDS_SERVERLESS_V2,
     multiManifestType,
-    deploymentType
+    deploymentType,
+    listOfManifests
   ])
 
   const renderConnectorField = useCallback(
@@ -738,26 +746,7 @@ function ManifestListViewMultiple({
                             {id}
                           </Text>
                         </div>
-                        <div className={cx(cssMulti.manifestType, cssMulti.manifestItem)}>
-                          <Text
-                            margin={{ left: 'small' }}
-                            inline
-                            className={cssMulti.type}
-                            color={Color.GREY_400}
-                            lineClamp={1}
-                          >
-                            {getString('pipelineSteps.serviceTab.manifestList.manifestType')}
-                          </Text>
-                          <Text
-                            margin={{ left: 'small' }}
-                            inline
-                            className={cssMulti.type}
-                            color={Color.GREY_900}
-                            lineClamp={1}
-                          >
-                            {getString(manifestTypeLabels[manifest?.type as ManifestTypes])}
-                          </Text>
-                        </div>
+
                         <div className={cx(cssMulti.storeType, cssMulti.manifestItem)}>
                           <Text
                             margin={{ right: 'medium' }}
@@ -769,6 +758,18 @@ function ManifestListViewMultiple({
                             {getString('store')}
                           </Text>
                           {renderConnectorField(storeType, getConnectorPath(storeType, manifest), connectorName, color)}
+                          <div className={cssMulti.repoItem}>
+                            <Icon inline name={'repository'} size={14} margin={{ left: 'medium', right: 'small' }} />
+                            <Text
+                              margin={{ right: 'medium' }}
+                              inline
+                              className={cssMulti.type}
+                              color={Color.GREY_400}
+                              lineClamp={1}
+                            >
+                              {store?.spec?.repoName}
+                            </Text>
+                          </div>
                         </div>
                       </div>
                       {!isReadonly && (
@@ -782,7 +783,7 @@ function ManifestListViewMultiple({
                                   manifestType as ManifestTypes,
                                   storeType as ManifestStores,
                                   listOfManifests.findIndex(
-                                    (item: ManifestConfigWrapper) => item.manifest?.type === manifestType
+                                    (item: ManifestConfigWrapper) => item.manifest?.identifier === id
                                   )
                                 )
                               }}
@@ -791,7 +792,13 @@ function ManifestListViewMultiple({
                             <Button
                               iconProps={{ size: 18 }}
                               icon="main-trash"
-                              onClick={() => removeManifestConfig(index)}
+                              onClick={() =>
+                                removeManifestConfig(
+                                  listOfManifests.findIndex(
+                                    (item: ManifestConfigWrapper) => item.manifest?.identifier === id
+                                  )
+                                )
+                              }
                               minimal
                             />
                           </Layout.Horizontal>
@@ -845,6 +852,7 @@ function ManifestListViewMultiple({
         {showAddManifestBtn(isReadonly, allowOnlyOneManifest, listOfManifests, deploymentType) && (
           <Button
             className={css.addManifest}
+            disabled={enableMultipleManifest(listOfManifests, deploymentType, MultiManifestsTypes.MANIFESTS)}
             id="add-manifest"
             icon="plus"
             size={ButtonSize.SMALL}
@@ -962,7 +970,7 @@ function ManifestListViewMultiple({
                                   manifestType as ManifestTypes,
                                   storeType as ManifestStores,
                                   listOfManifests.findIndex(
-                                    (item: ManifestConfigWrapper) => item.manifest?.type === manifestType
+                                    (item: ManifestConfigWrapper) => item.manifest?.identifier === id
                                   )
                                 )
                               }}
@@ -971,7 +979,13 @@ function ManifestListViewMultiple({
                             <Button
                               iconProps={{ size: 18 }}
                               icon="main-trash"
-                              onClick={() => removeManifestConfig(index)}
+                              onClick={() =>
+                                removeManifestConfig(
+                                  listOfManifests.findIndex(
+                                    (item: ManifestConfigWrapper) => item.manifest?.identifier === id
+                                  )
+                                )
+                              }
                               minimal
                             />
                           </Layout.Horizontal>

@@ -322,6 +322,22 @@ export class GenericServiceSpec extends Step<KubernetesServiceSpec & ServiceSpec
     })
   }
 
+  validateManifestConfiguration({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
+    const currentManifestConfigurationTemplate = get(template, `manifestConfigurations.primaryManifestRef`, '')
+
+    if (
+      isEmpty(data?.manifestConfigurations?.primaryManifestRef) &&
+      isRequired &&
+      getMultiTypeFromValue(currentManifestConfigurationTemplate) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `manifestConfigurations.primaryManifestRef`,
+        getString?.('fieldRequired', { field: getString('cd.pipelineSteps.serviceTab.manifest.primaryManifest') })
+      )
+    }
+  }
+
   validateManifestInputSetFields({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
     data?.manifests?.forEach((manifest, index) => {
       const currentManifestTemplate = get(template, `manifests[${index}].manifest.spec.store.spec`, '')
@@ -744,6 +760,8 @@ export class GenericServiceSpec extends Step<KubernetesServiceSpec & ServiceSpec
       isRequired,
       errors
     })
+    //**Primary Manifest validation */
+    this.validateManifestConfiguration({ data, template, isRequired, getString, errors })
     /** Config Files Fields Validation */
     validateConfigFilesFields({ data, template, isRequired, errors, getString })
 

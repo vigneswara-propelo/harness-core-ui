@@ -9,7 +9,7 @@ import type { Schema } from 'yup'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { isBoolean } from 'lodash-es'
 import { Connectors } from '@platform/connectors/constants'
-import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition, ManifestConfigWrapper } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { FeatureFlag } from '@common/featureFlags'
@@ -631,4 +631,50 @@ export const getMultiManifestType = (allowedTypes: MultiManifest, manifestType: 
     return MultiManifestsTypes.PARAMS
   }
   return MultiManifestsTypes.MANIFESTS
+}
+
+export const getOnlyMainManifests = (
+  listOfManifests: ManifestConfigWrapper[],
+  deploymentType: ServiceDefinition['type'],
+  manifestType: MultiManifestsTypes
+): ManifestConfigWrapper[] => {
+  return listOfManifests.filter((item: ManifestConfigWrapper) =>
+    allowedMultiManifestTypes[deploymentType]?.[manifestType].includes(item?.manifest?.type as ManifestTypes)
+  )
+}
+
+export const isOnlyHelmChartManifests = (mainManifests: ManifestConfigWrapper[]): boolean => {
+  return (
+    mainManifests?.length > 1 &&
+    mainManifests.every((manifest: ManifestConfigWrapper) => manifest?.manifest?.type === ManifestDataType.HelmChart)
+  )
+}
+
+export const filterManifestByType = (
+  listOfManifests: ManifestConfigWrapper[],
+  listOfMainManifests: ManifestTypes[],
+  deploymentType: ServiceDefinition['type'],
+  manifestType: MultiManifestsTypes
+): ManifestTypes[] => {
+  const filteredMainManifests = getOnlyMainManifests(listOfManifests, deploymentType, manifestType)
+  if (manifestType === MultiManifestsTypes.PARAMS || filteredMainManifests.length < 1) {
+    return listOfMainManifests
+  }
+
+  return [filteredMainManifests[0]?.manifest?.type] as ManifestTypes[]
+}
+
+export const enableMultipleManifest = (
+  listOfManifests: ManifestConfigWrapper[],
+  deploymentType: ServiceDefinition['type'],
+  manifestType: MultiManifestsTypes
+): boolean => {
+  const filteredMainManifests = getOnlyMainManifests(listOfManifests, deploymentType, manifestType)
+
+  return (
+    filteredMainManifests?.length > 0 &&
+    !filteredMainManifests.every(
+      (manifest: ManifestConfigWrapper) => manifest?.manifest?.type === ManifestDataType.HelmChart
+    )
+  )
 }

@@ -26,7 +26,13 @@ import ManifestListViewMultiple from './ManifestListView/ManifestListViewMultipl
 
 import { getConnectorPath } from './ManifestWizardSteps/ManifestUtils'
 import ReleaseRepoListView from './GitOps/ReleaseRepoListView/ReleaseRepoListView'
-import { ManifestToPathKeyMap, ReleaseRepoPipeline } from './Manifesthelper'
+import {
+  ManifestToPathKeyMap,
+  ReleaseRepoPipeline,
+  getOnlyMainManifests,
+  isOnlyHelmChartManifests,
+  MultiManifestsTypes
+} from './Manifesthelper'
 import { isK8sOrNativeHelmDeploymentType } from './ManifestWizardSteps/CommonManifestDetails/utils'
 
 export default function ManifestSelection({
@@ -131,6 +137,7 @@ export default function ManifestSelection({
       }
     }
   }
+
   const updateStageData = useCallback((): void => {
     const path = isPropagating
       ? 'stage.spec.serviceConfig.stageOverrides.manifests'
@@ -143,10 +150,17 @@ export default function ManifestSelection({
       updateStage(
         produce(stage, draft => {
           set(draft, path, listOfManifests)
-          if (!get(draft, multiManifestPath) && CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm) {
-            set(draft, multiManifestPath, {
-              primaryManifestRef: RUNTIME_INPUT_VALUE
-            })
+          if (CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm) {
+            const mainManifests = getOnlyMainManifests(listOfManifests, deploymentType, MultiManifestsTypes.MANIFESTS)
+            const isOnlyHelm = isOnlyHelmChartManifests(mainManifests)
+            const manifestConfigurations = get(draft, multiManifestPath)
+            if (isOnlyHelm && !manifestConfigurations) {
+              set(draft, multiManifestPath, {
+                primaryManifestRef: RUNTIME_INPUT_VALUE
+              })
+            } else if (!isOnlyHelm || mainManifests?.length < 2) {
+              set(draft, multiManifestPath, undefined)
+            }
           }
         }).stage as StageElementConfig
       )
@@ -177,14 +191,23 @@ export default function ManifestSelection({
       } else {
         listOfManifests.splice(index, 1)
         if (stage) {
+          const multiManifestPath = isPropagating
+            ? 'stage.spec.serviceConfig.stageOverrides.manifestConfigurations'
+            : 'stage.spec.serviceConfig.serviceDefinition.spec.manifestConfigurations'
           const newStage = produce(stage, draft => {
             set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', listOfManifests)
-            if (
-              CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG &&
-              isKubernetesOrNativeHelm &&
-              (!listOfManifests || defaultTo(listOfManifests, [])?.length === 0)
-            ) {
-              set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifestConfigurations', undefined)
+            if (CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm) {
+              if (
+                isOnlyHelmChartManifests(
+                  getOnlyMainManifests(listOfManifests, deploymentType, MultiManifestsTypes.MANIFESTS)
+                )
+              ) {
+                set(draft, multiManifestPath, {
+                  primaryManifestRef: RUNTIME_INPUT_VALUE
+                })
+              } else {
+                set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifestConfigurations', undefined)
+              }
             }
           }).stage
           if (newStage) {
@@ -193,7 +216,7 @@ export default function ManifestSelection({
         }
       }
     },
-    [listOfManifests, stage, updateStage]
+    [listOfManifests, stage, updateStage, deploymentType]
   )
   const attachPathYaml = useCallback(
     (manifestPathData: any, manifestId: string, manifestType: PrimaryManifestType): void => {

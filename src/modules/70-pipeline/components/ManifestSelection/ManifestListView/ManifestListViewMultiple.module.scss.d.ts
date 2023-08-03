@@ -29,6 +29,7 @@ declare const styles: {
   readonly overrideHeader: string
   readonly overrideStoreType: string
   readonly pathLine: string
+  readonly repoItem: string
   readonly storeType: string
   readonly type: string
   readonly wrapper: string
