@@ -6,7 +6,7 @@
  */
 
 import React, { FC, useEffect, useRef, useState, ReactElement } from 'react'
-import { Button, Container, Heading, Layout, Text, Utils, Popover } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Heading, Layout, Text, Utils, Popover } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { Classes, Position, Switch, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -128,17 +128,17 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
 
   const switchTooltip = (
     <Container width={'350px'} padding="xxxlarge" className={css.switchTooltip}>
-      <Heading level={2} style={{ fontWeight: 600, fontSize: '24px', lineHeight: '32px', color: '#22222A' }}>
+      <Heading level={2} color={Color.GREY_800} font={{ variation: FontVariation.H3 }}>
         {getString(status ? 'cf.featureFlags.turnOffHeading' : 'cf.featureFlags.turnOnHeading')}
       </Heading>
-      <Text margin={{ top: 'medium', bottom: 'small' }} style={{ lineHeight: '22px', color: '#383946' }}>
+      <Text className={css.tooltipText} color={Color.GREY_700} margin={{ top: 'medium', bottom: 'small' }}>
         <String
           stringID={status ? 'cf.featureFlags.turnOffMessage' : 'cf.featureFlags.turnOnMessage'}
           vars={{ name: data.name, env: activeEnvironment || '' }}
           useRichText
         />
       </Text>
-      <Text margin={{ top: 'xsmall', bottom: 'xlarge' }} style={{ lineHeight: '22px', color: '#383946' }}>
+      <Text className={css.tooltipText} color={Color.GREY_700} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
         {(!featureFlagHasCustomRules(data) && (
           <String
             stringID={'cf.featureFlags.defaultWillBeServed'}
@@ -148,25 +148,29 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
         )) ||
           getString('cf.featureFlags.customRuleMessage')}
       </Text>
-      <Container flex>
-        <Layout.Horizontal spacing="small">
-          <Button
-            intent="primary"
-            text={getString('confirm')}
-            className={Classes.POPOVER_DISMISS}
-            disabled={toggleFeatureFlag.loading}
-            onClick={() => {
-              if (gitSync.isGitSyncEnabled && !gitSync.isAutoCommitEnabled) {
-                setIsSaveToggleModalOpen(true)
-              } else {
-                handleFlagToggle()
-              }
-            }}
-          />
-          <Button text={getString('cancel')} className={Classes.POPOVER_DISMISS} disabled={toggleFeatureFlag.loading} />
-        </Layout.Horizontal>
-        <span />
-      </Container>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
+        <Button
+          intent="primary"
+          variation={ButtonVariation.PRIMARY}
+          text={getString('confirm')}
+          className={Classes.POPOVER_DISMISS}
+          disabled={toggleFeatureFlag.loading}
+          onClick={() => {
+            if (gitSync.isGitSyncEnabled && !gitSync.isAutoCommitEnabled) {
+              setIsSaveToggleModalOpen(true)
+            } else {
+              handleFlagToggle()
+            }
+          }}
+        />
+        <Button
+          text={getString('cancel')}
+          className={Classes.POPOVER_DISMISS}
+          disabled={toggleFeatureFlag.loading}
+          variation={ButtonVariation.TERTIARY}
+        />
+      </Layout.Horizontal>
+      <span />
     </Container>
   )
 
@@ -204,6 +208,8 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
       return <FeatureWarningTooltip featureName={FeatureIdentifier.MAUS} />
     } else if (!numberOfEnvs) {
       return <NoEnvironmentWarningTooltip />
+    } else if (data.archived) {
+      return undefined
     } else {
       return switchTooltip
     }

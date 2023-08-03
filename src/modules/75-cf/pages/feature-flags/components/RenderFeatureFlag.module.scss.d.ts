@@ -11,5 +11,6 @@ declare const styles: {
   readonly switchTooltip: string
   readonly toggleFlagButton: string
   readonly tooltip: string
+  readonly tooltipText: string
 }
 export default styles

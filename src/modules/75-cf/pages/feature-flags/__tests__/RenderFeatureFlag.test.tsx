@@ -7,8 +7,9 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, RenderResult, screen } from '@testing-library/react'
+import { render, waitFor, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import mockGovernance from '@cf/utils/testData/data/mockGovernance'
@@ -19,6 +20,7 @@ describe('RenderFeatureFlag', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
+
   const toggleFeatureFlag = {
     on: jest.fn(),
     off: jest.fn(),
@@ -45,11 +47,11 @@ describe('RenderFeatureFlag', () => {
       </TestWrapper>
     )
 
-  test('disables FF switch tooltip when there are no environments', async () => {
+  test('it should disable the FF switch tooltip when there are no environments', async () => {
     renderFlagComponent({ numberOfEnvs: 0 })
     const switchToggle = screen.getByRole('checkbox')
 
-    fireEvent.mouseOver(switchToggle)
+    userEvent.hover(switchToggle)
     await waitFor(() => {
       const warningTooltip = screen.queryByText('cf.noEnvironment.title')
       expect(warningTooltip).toBeInTheDocument()
@@ -57,7 +59,7 @@ describe('RenderFeatureFlag', () => {
     })
   })
 
-  test('switch tooltip appear when there are environments', async () => {
+  test('it should switch the tooltip appearance when there are environments', async () => {
     renderFlagComponent({ numberOfEnvs: 2 })
     const switchToggle = screen.getByRole('checkbox')
     await userEvent.click(switchToggle)
@@ -77,5 +79,14 @@ describe('RenderFeatureFlag', () => {
     expect(screen.getByText(cellMock.row.original.name)).toBeInTheDocument()
     expect(screen.getByText(cellMock.row.original.description)).toBeInTheDocument()
     expect(screen.getByText(cellMock.row.original.identifier)).toBeInTheDocument()
+  })
+
+  test('it should not render a tooltip and the toggle is disabled if the flag is archived', async () => {
+    const archivedFeatureFlag = cloneDeep(cellMock)
+    archivedFeatureFlag.row.original.archived = true
+
+    renderFlagComponent({ numberOfEnvs: 1, cell: archivedFeatureFlag })
+
+    expect(screen.getByRole('checkbox')).toBeDisabled()
   })
 })
