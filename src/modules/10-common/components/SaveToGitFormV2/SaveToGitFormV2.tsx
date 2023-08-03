@@ -160,7 +160,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
         {getString('common.git.saveResourceLabel', { resource: props.resource.type })}
       </Text>
 
-      {PIE_GITX_OAUTH && !isOnPrem ? (
+      {PIE_GITX_OAUTH && !isOnPrem() ? (
         <AccessTokenCalloutForCommit connectorIdWithScope={resource?.storeMetadata?.connectorRef || ''} />
       ) : null}
 
