@@ -3880,6 +3880,7 @@ export interface StringsMap {
   'pipeline.artifacts.googleCloudSourceRepositories.title': string
   'pipeline.artifacts.googleCloudStorage.bucketPlaceholder': string
   'pipeline.artifacts.googleCloudStorage.title': string
+  'pipeline.artifacts.nexus3Artifact.noTags': string
   'pipeline.artifactsSelection.AmazonMachineImageTitle': string
   'pipeline.artifactsSelection.addArtifactSource': string
   'pipeline.artifactsSelection.addPrimaryArtifact': string

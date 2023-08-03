@@ -1873,6 +1873,8 @@ artifacts:
     commitIdPlaceholder: Enter Commit Id
     tagPlaceholder: Enter Tag
     fetchType: Fetch Type
+  nexus3Artifact:
+    noTags: No tags found for the Package Name
 templateAlreadyExists:
   title: Template Already Exists
   content: The template with given identifier already exists, if you want to create a new version of this template then use save as new version option from the given template or if you want to create a new Template then use a different identifier.

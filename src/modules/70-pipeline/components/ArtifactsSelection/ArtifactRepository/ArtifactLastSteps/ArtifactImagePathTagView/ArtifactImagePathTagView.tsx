@@ -92,7 +92,8 @@ function ArtifactImagePathTagView({
   isImagePath = true,
   isServerlessDeploymentTypeSelected,
   canFetchTags,
-  tooltipId
+  tooltipId,
+  defaultErrorText
 }: ArtifactImagePathTagViewProps): React.ReactElement {
   const tooltipProps = tooltipId
     ? {
@@ -258,6 +259,7 @@ function ArtifactImagePathTagView({
                   <NoTagResults
                     tagError={tagError}
                     isServerlessDeploymentTypeSelected={isServerlessDeploymentTypeSelected}
+                    defaultErrorText={defaultErrorText}
                   />
                 ),
                 items: tags,

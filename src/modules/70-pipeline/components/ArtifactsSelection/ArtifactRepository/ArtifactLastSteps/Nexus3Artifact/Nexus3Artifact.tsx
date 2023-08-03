@@ -1087,6 +1087,11 @@ export function Nexus3Artifact({
                 isArtifactPath={false}
                 isImagePath={false}
                 tooltipId="nexus3-tag"
+                defaultErrorText={
+                  formik.values?.repositoryFormat === RepositoryFormatTypes.NPM
+                    ? getString('pipeline.artifacts.nexus3Artifact.noTags')
+                    : undefined
+                }
               />
               {CD_NG_DOCKER_ARTIFACT_DIGEST && formik.values?.repositoryFormat === RepositoryFormatTypes.Docker && (
                 <Nexus3ArtifactDigestField
