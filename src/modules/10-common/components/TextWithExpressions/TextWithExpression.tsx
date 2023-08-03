@@ -161,15 +161,18 @@ const TextWithExpressions = (props: TextWithExpressionsProps): JSX.Element => {
 
   const [isHovered, setIsHovered] = React.useState<boolean>(false)
 
-  const replacedString = inputString.split(VAR_REGEX).map(word => {
-    if (VAR_REGEX.test(word)) {
-      // Word matches the regex, render the Popover component
-      return <ResolvedValueComponent metadataMap={metadataMap} word={word} fqnPath={fqnPath} />
-    } else {
-      // Word doesn't match the regex, render it as is
-      return `${word} `
-    }
-  })
+  const replacedString =
+    typeof inputString === 'string'
+      ? inputString.split(VAR_REGEX).map(word => {
+          if (VAR_REGEX.test(word)) {
+            // Word matches the regex, render the Popover component
+            return <ResolvedValueComponent metadataMap={metadataMap} word={word} fqnPath={fqnPath} />
+          } else {
+            // Word doesn't match the regex, render it as is
+            return `${word} `
+          }
+        })
+      : inputString
 
   function getReplacementWord(match: string): string {
     const valueObject = metadataMap?.[`${fqnPath}+${match}`]
@@ -179,7 +182,7 @@ const TextWithExpressions = (props: TextWithExpressionsProps): JSX.Element => {
   function getCopyContent(): string {
     const stringToCopy = inputString
 
-    return stringToCopy.replace(VAR_REGEX, getReplacementWord)
+    return typeof stringToCopy === 'string' ? stringToCopy.replace(VAR_REGEX, getReplacementWord) : stringToCopy
   }
 
   return (
