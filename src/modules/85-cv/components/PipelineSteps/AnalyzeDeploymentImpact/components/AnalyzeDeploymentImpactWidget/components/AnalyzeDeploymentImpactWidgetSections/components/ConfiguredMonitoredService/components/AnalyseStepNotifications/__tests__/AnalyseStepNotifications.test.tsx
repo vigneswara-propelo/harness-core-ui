@@ -1,9 +1,12 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter, useParams } from 'react-router-dom'
-import { useGetNotificationRulesForMonitoredService } from 'services/cv'
+import { NotificationRuleResponse, useGetNotificationRulesForMonitoredService } from 'services/cv'
 import * as cvService from 'services/cv'
 import AnalyseStepNotifications from '../AnalyseStepNotifications'
+import { AnalyseStepNotificationsData } from '../AnalyseStepNotifications.types'
+import { getValidNotifications } from '../AnalyseStepNotifications.utils'
+import { mockedNotifications } from './AnalyseStepNotifications.mock'
 
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
@@ -108,27 +111,8 @@ describe('AnalyseStepNotifications', () => {
   })
 
   test('renders notifications data and configure notification link', async () => {
-    const notificationsData = [
-      {
-        notificationRule: {
-          identifier: 'notification-1',
-          name: 'Notification 1',
-          notificationMethod: { type: 'Email' },
-          conditions: []
-        }
-      },
-      {
-        notificationRule: {
-          identifier: 'notification-2',
-          name: 'Notification 2',
-          notificationMethod: { type: 'Slack' },
-          conditions: []
-        }
-      }
-    ]
-
     jest.spyOn(cvService, 'useGetNotificationRulesForMonitoredService').mockReturnValue({
-      data: { data: { content: notificationsData } },
+      data: { data: { content: mockedNotifications } },
       loading: false,
       error: null,
       refetch: jest.fn()
@@ -162,5 +146,64 @@ describe('AnalyseStepNotifications', () => {
         lazy: true
       })
     )
+  })
+})
+
+describe('getValidNotifications', () => {
+  test('should return an empty array when notifications array is empty', () => {
+    const emptyNotifications: NotificationRuleResponse[] = []
+
+    const result: AnalyseStepNotificationsData[] = getValidNotifications(emptyNotifications)
+
+    expect(result).toEqual([])
+  })
+
+  test('should return an empty array when there are no valid notifications', () => {
+    const notifications: NotificationRuleResponse[] = [
+      {
+        notificationRule: {
+          conditions: [
+            { type: 'ErrorBudgetBurnRate', spec: {} },
+            { type: 'ErrorBudgetRemainingMinutes', spec: {} }
+          ],
+          identifier: 'notificationIdentifier1',
+          name: 'Notification 1',
+          notificationMethod: {
+            spec: {},
+            type: 'Email'
+          },
+          type: 'MonitoredService'
+        }
+      }
+    ]
+
+    const result: AnalyseStepNotificationsData[] = getValidNotifications(notifications)
+
+    expect(result).toEqual([])
+  })
+
+  test('should return an array of valid notifications', () => {
+    const result: AnalyseStepNotificationsData[] = getValidNotifications(mockedNotifications)
+
+    expect(result).toEqual([
+      {
+        conditions: [
+          { spec: {}, type: 'ErrorBudgetBurnRate' },
+          { spec: {}, type: 'HealthScore' }
+        ],
+        identifier: 'notificationIdentifier1',
+        name: 'Notification 1',
+        notificationMethod: { spec: {}, type: 'Email' }
+      },
+      {
+        conditions: [
+          { spec: {}, type: 'DeploymentImpactReport' },
+          { spec: {}, type: 'ErrorBudgetBurnRate' }
+        ],
+        identifier: 'notificationIdentifier2',
+        name: 'Notification 2',
+        notificationMethod: { spec: {}, type: 'Email' }
+      }
+    ])
   })
 })

@@ -18,6 +18,7 @@ import DetailNotPresent from '../DetailNotPresent/DetailNotPresent'
 import { AnalyseStepNotificationsData } from './AnalyseStepNotifications.types'
 import NotificationDetails from './components/NotificationDetails'
 import { INITIAL_PAGE_NUMBER } from './AnalyseStepNotifications.constants'
+import { getValidNotifications } from './AnalyseStepNotifications.utils'
 import css from './AnalyseStepNotifications.module.scss'
 
 interface AnalyseStepNotificationsProps {
@@ -63,15 +64,7 @@ export default function AnalyseStepNotifications(props: AnalyseStepNotifications
 
   const notificationsData = useMemo(() => {
     const notifications = data?.data?.content || []
-    return notifications.map(el => {
-      const { name, notificationMethod, conditions, identifier: notificationIdentifier } = el.notificationRule
-      return {
-        identifier: notificationIdentifier,
-        name,
-        notificationMethod,
-        conditions
-      }
-    })
+    return getValidNotifications(notifications)
   }, [data?.data?.content])
 
   const renderRowSubComponent = React.useCallback(
