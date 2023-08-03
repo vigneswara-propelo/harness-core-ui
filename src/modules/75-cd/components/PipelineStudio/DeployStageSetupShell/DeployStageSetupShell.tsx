@@ -206,7 +206,7 @@ export default function DeployStageSetupShell(): JSX.Element {
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
     if (sectionId?.length && (TabsOrder.includes(sectionId) || sectionId === DeployTabs.ENVIRONMENT)) {
-      setSelectedTabId(sectionId)
+      setSelectedTabId(isNewEnvDef && sectionId === DeployTabs.INFRASTRUCTURE ? DeployTabs.ENVIRONMENT : sectionId)
     } else {
       setSelectedSectionId(defaultExecTab() ? DeployTabs.EXECUTION : DeployTabs.SERVICE)
     }
