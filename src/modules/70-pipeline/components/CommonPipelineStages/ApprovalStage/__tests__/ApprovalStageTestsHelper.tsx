@@ -260,7 +260,8 @@ export const pipelineContextMock = {
   },
   contextType: 'Pipeline',
   stepsFactory: stepFactory,
-  stagesMap
+  stagesMap,
+  renderPipelineStage: jest.fn()
 }
 
 export const pipelineContextMockJiraApproval = {

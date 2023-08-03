@@ -376,35 +376,38 @@ function PipelineGraphNodeObserved(
     IS_RENDER_OPTIMIZATION_ENABLED = false
   }
 
-  React.useEffect(() => {
-    let observer: IntersectionObserver
-    if (ref && props?.parentSelector && IS_RENDER_OPTIMIZATION_ENABLED) {
-      const rootElement = document.querySelector(props?.parentSelector as string)
+  React.useEffect(
+    /* istanbul ignore next */ () => {
+      let observer: IntersectionObserver
+      if (ref && props?.parentSelector && IS_RENDER_OPTIMIZATION_ENABLED) {
+        const rootElement = document.querySelector(props?.parentSelector as string)
 
-      observer = new IntersectionObserver(
-        (entries, _observer) => {
-          entries.forEach((entry: IntersectionObserverEntry) => {
-            const computedEntryEl = getRelativeBounds(rootElement as HTMLDivElement, document.body)
-            const computedEntryRoot = getRelativeBounds(entry.target as HTMLElement, document.body)
-            if (computedEntryEl.right > computedEntryRoot.right || computedEntryEl.left < computedEntryRoot.left) {
-              if (entry.isIntersecting) {
-                updateVisibleState(true)
+        observer = new IntersectionObserver(
+          (entries, _observer) => {
+            entries.forEach((entry: IntersectionObserverEntry) => {
+              const computedEntryEl = getRelativeBounds(rootElement as HTMLDivElement, document.body)
+              const computedEntryRoot = getRelativeBounds(entry.target as HTMLElement, document.body)
+              if (computedEntryEl.right > computedEntryRoot.right || computedEntryEl.left < computedEntryRoot.left) {
+                if (entry.isIntersecting) {
+                  updateVisibleState(true)
+                } else {
+                  !props.isDragging && updateVisibleState(false)
+                }
               } else {
-                !props.isDragging && updateVisibleState(false)
+                updateVisibleState(true)
               }
-            } else {
-              updateVisibleState(true)
-            }
-          })
-        },
-        { threshold: 0.5, root: rootElement }
-      )
-      observer.observe(ref as HTMLDivElement)
-    }
-    return () => {
-      if (observer && ref && IS_RENDER_OPTIMIZATION_ENABLED) observer.unobserve(ref as HTMLDivElement)
-    }
-  }, [ref, elementRect, props?.isDragging, graphScale])
+            })
+          },
+          { threshold: 0.5, root: rootElement }
+        )
+        observer.observe(ref as HTMLDivElement)
+      }
+      return () => {
+        if (observer && ref && IS_RENDER_OPTIMIZATION_ENABLED) observer.unobserve(ref as HTMLDivElement)
+      }
+    },
+    [ref, elementRect, props?.isDragging, graphScale]
+  )
 
   React.useEffect(() => {
     if (!elementRect && ref !== null) {

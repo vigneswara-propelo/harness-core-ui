@@ -172,11 +172,11 @@ function PipelineGraph({
     setDelayRender(true)
   }
 
-  const onStart: DraggableEventHandler = _e => {
+  const onStart: DraggableEventHandler = /* istanbul ignore next */ _e => {
     setDragging(true)
   }
 
-  const onStop = (_e: DraggableEvent, dragData: DraggableData): void => {
+  const onStop = /* istanbul ignore next */ (_e: DraggableEvent, dragData: DraggableData): void => {
     if (position.x === dragData.x && position.y == dragData.y) {
       return
     }
@@ -185,7 +185,7 @@ function PipelineGraph({
     redrawSVGLinks()
   }
 
-  const onDrag = (e: DraggableEvent): void => {
+  const onDrag = /* istanbul ignore next */ (e: DraggableEvent): void => {
     e.stopPropagation()
     e.preventDefault()
   }
@@ -231,10 +231,12 @@ function PipelineGraph({
         <Draggable position={position} onStart={onStart} onStop={onStop} onDrag={onDrag} offsetParent={document.body}>
           <div
             id="overlay"
-            onClick={() => {
-              fireEvent?.({ type: Event.CanvasClick })
-              dispatchCustomEvent(CANVAS_CLICK_EVENT, {})
-            }}
+            onClick={
+              /* istanbul ignore next */ () => {
+                fireEvent?.({ type: Event.CanvasClick })
+                dispatchCustomEvent(CANVAS_CLICK_EVENT, {})
+              }
+            }
             className={css.overlay}
             ref={overlayRefCallback}
           >

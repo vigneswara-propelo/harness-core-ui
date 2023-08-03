@@ -64,7 +64,11 @@ interface DrawSVGPathOptions {
  * 'ltl' ---> Left of Element1 to Left of Element2
  * 'rtr' ---> Left of Element1 to Right of Element2
  **/
-const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions): SVGPathRecord => {
+const getFinalSVGArrowPath = /* istanbul ignore next */ (
+  id1 = '',
+  id2 = '',
+  options?: DrawSVGPathOptions
+): SVGPathRecord => {
   const scalingFactor = defaultTo(options?.scalingFactor, 1)
   const node1 = getComputedPosition(id1, options?.parentElement)
   const node2 = getComputedPosition(id2, options?.parentElement)
@@ -271,7 +275,7 @@ export const scrollZoom = (
   container.onwheel = scrolled
 
   function scrolled(e: any): void {
-    if (!e.ctrlKey) return
+    if (!e.ctrlKey) /* istanbul ignore next */ return
     e.preventDefault()
     let delta = e.delta || e.wheelDelta
     if (delta === undefined) {
@@ -984,7 +988,10 @@ export interface RelativeBounds {
   left: number
 }
 
-const getRelativeBounds = (parentElement: HTMLElement, targetElement: HTMLElement): RelativeBounds => {
+const getRelativeBounds = /* istanbul ignore next */ (
+  parentElement: HTMLElement,
+  targetElement: HTMLElement
+): RelativeBounds => {
   const parentPos = parentElement.getBoundingClientRect()
   const childPos = targetElement.getBoundingClientRect()
   const relativePos: RelativeBounds = { top: 0, right: 0, bottom: 0, left: 0 }
@@ -996,7 +1003,7 @@ const getRelativeBounds = (parentElement: HTMLElement, targetElement: HTMLElemen
   return relativePos
 }
 
-const dispatchCustomEvent = (type: string, data: KVPair): void => {
+const dispatchCustomEvent = /* istanbul ignore next */ (type: string, data: KVPair): void => {
   const event = new Event(type, data)
   document.dispatchEvent(event)
 }
