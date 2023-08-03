@@ -94,7 +94,7 @@ export interface FormMultiTypeKVTagInputProps extends Omit<IFormGroupProps, 'lab
   tooltipProps?: DataTooltipInterface
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'name' | 'type' | 'value' | 'onChange'>
-  onChange?: (value: string[]) => void
+  onChange?: (value: string[] | React.ReactNode[]) => void
   isArray?: boolean
   type?: string
 }

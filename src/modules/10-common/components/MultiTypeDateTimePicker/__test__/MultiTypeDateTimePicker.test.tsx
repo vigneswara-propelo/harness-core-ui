@@ -147,7 +147,7 @@ describe('MultiTypeDateTimePicker test', () => {
     await waitFor(() => expect(fixedValueText).toBeInTheDocument())
     userEvent.click(fixedValueText)
     await waitFor(() =>
-      expect(onChangeMock).toHaveBeenCalledWith(undefined, MultiTypeInputValue.STRING, MultiTypeInputType.FIXED)
+      expect(onChangeMock).toHaveBeenCalledWith('', MultiTypeInputValue.STRING, MultiTypeInputType.FIXED)
     )
   })
 })
