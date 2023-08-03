@@ -188,19 +188,21 @@ export function RetryStep(props: BaseStepProps): React.ReactElement {
           }}
         </FieldArray>
       </MultiTypeFieldSelector>
-      <StrategySelection
-        label={getString('pipeline.failureStrategies.fieldLabels.onRetryFailureLabel')}
-        name={`${name}.onRetryFailure.action`}
-        formik={formik}
-        disabled={disabled}
-        parentStrategy={type}
-        allowedStrategies={difference(allowedStrategies, [
-          Strategy.Retry,
-          Strategy.RetryStepGroup,
-          parentStrategy || Strategy.Retry,
-          Strategy.ProceedWithDefaultValues
-        ])}
-      />
+      {type === Strategy.Retry && (
+        <StrategySelection
+          label={getString('pipeline.failureStrategies.fieldLabels.onRetryFailureLabel')}
+          name={`${name}.onRetryFailure.action`}
+          formik={formik}
+          disabled={disabled}
+          parentStrategy={type}
+          allowedStrategies={difference(allowedStrategies, [
+            Strategy.Retry,
+            Strategy.RetryStepGroup,
+            parentStrategy || Strategy.Retry,
+            Strategy.ProceedWithDefaultValues
+          ])}
+        />
+      )}
     </div>
   )
 }

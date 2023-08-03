@@ -1,6 +1,13 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useLocalStorage, useUpdateQueryParams } from '@common/hooks'
 import {
   ExecutionNode,
@@ -79,19 +86,16 @@ export const useGetRetryStepGroupData = (props: RetryStepGroupProps): RetryStepG
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [executionNode?.data])
 
-  function goToRetryStepExecution(
-    id: string,
-    stepGroupData: ExecutionPipelineGroupInfo<ExecutionNode> | undefined
-  ): void {
+  function goToRetryStepExecution(id: string, stepGroupData: any): void {
     setRetryStepGroupParams(prevState => {
-      const newRetryParams = { ...prevState, [stepGroupData?.data?.baseFqn as string]: id }
+      const newRetryParams = { ...prevState, [defaultTo(stepGroupData?.data?.baseFqn, stepGroupData?.baseFqn)]: id }
       return newRetryParams
     })
   }
 
-  function goToCurrentExecution(stepGroupData: ExecutionPipelineGroupInfo<ExecutionNode> | undefined): void {
+  function goToCurrentExecution(stepGroupData: any): void {
     setRetryStepGroupParams(prevState => {
-      const newRetryParams = { ...prevState, [stepGroupData?.data?.baseFqn as string]: '' }
+      const newRetryParams = { ...prevState, [defaultTo(stepGroupData?.data?.baseFqn, stepGroupData?.baseFqn)]: '' }
       return newRetryParams
     })
     updateQueryParams({ step: [] as unknown as string /* this removes the param fro query */ })

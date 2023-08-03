@@ -81,9 +81,14 @@ export function StepGroupNode(props: any): JSX.Element {
   const isParentMatrix = defaultTo(props?.isParentMatrix, false)
   const { module, source = 'executions' } = useParams<PipelineType<ExecutionPathProps>>()
   const [currentStepGroupRetryId, setCurrentStepGroupRetryId] = React.useState<string>('')
+  // Matrix / Looping Strategies baseFqn is present at root level
+  const stepGroupBaseFqn = defaultTo(stepGroupData.data?.baseFqn, stepGroupData?.baseFqn)
   const interruptHistories = React.useMemo(() => {
-    return getInterruptHistoriesFromType(stepGroupData?.data?.interruptHistories, Interrupt.RETRY)
-  }, [stepGroupData?.data?.interruptHistories])
+    return getInterruptHistoriesFromType(
+      defaultTo(stepGroupData?.data?.interruptHistories, stepGroupData?.interruptHistories),
+      Interrupt.RETRY
+    )
+  }, [stepGroupData?.data?.interruptHistories, stepGroupData?.interruptHistories])
 
   const { executionNode, retryStepGroupParams, loading, goToCurrentExecution, goToRetryStepExecution } =
     useGetRetryStepGroupData({
@@ -91,7 +96,7 @@ export function StepGroupNode(props: any): JSX.Element {
     })
 
   React.useEffect(() => {
-    let currentStepGrpRetryId = retryStepGroupParams[`${stepGroupData.data?.baseFqn}`]
+    let currentStepGrpRetryId = retryStepGroupParams[`${stepGroupBaseFqn}`]
     const isRelated = interruptHistories?.some(
       ({ interruptConfig }) => currentStepGrpRetryId === interruptConfig?.retryInterruptConfig?.retryId
     )
