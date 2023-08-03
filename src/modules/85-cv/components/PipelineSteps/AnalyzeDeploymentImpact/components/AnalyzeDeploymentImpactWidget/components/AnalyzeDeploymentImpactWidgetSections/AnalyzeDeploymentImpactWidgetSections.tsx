@@ -15,7 +15,10 @@ import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { AnalyzeDeploymentImpactWidgetSectionsProps } from './types'
 import BaseAnalyzeDeploymentImpact from './components/BaseAnalyzeDeploymentImpact/BaseAnalyzeDeploymentImpact'
 import ConfiguredMonitoredService from './components/ConfiguredMonitoredService/ConfiguredMonitoredService'
-import { getStageServiceAndEnv } from './AnalyzeDeploymentImpactWidgetSections.utils'
+import {
+  getShouldRenderConfiguredMonitoredService,
+  getStageServiceAndEnv
+} from './AnalyzeDeploymentImpactWidgetSections.utils'
 
 export function AnalyzeDeploymentImpactWidgetSections({
   formik,
@@ -43,7 +46,6 @@ export function AnalyzeDeploymentImpactWidgetSections({
   } = usePipelineContext()
 
   const selectedStage = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId as string)?.stage
-
   const { mutate: getDeploymentStageMeta, loading: stageMetaLoading } = useGetCdDeployStageMetadata({})
 
   useEffect(() => {
@@ -78,14 +80,23 @@ export function AnalyzeDeploymentImpactWidgetSections({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pipeline, selectedStage, selectedStageId, isServiceEnvironmentFetched])
 
-  return (
-    <>
-      <BaseAnalyzeDeploymentImpact isNewStep={isNewStep} stepViewType={stepViewType} allowableTypes={allowableTypes} />
-      {stageMetaLoading || !isServiceEnvironmentFetched ? (
+  const renderMonitoredService = (): JSX.Element => {
+    const shouldRenderConfiguredMonitoredService = getShouldRenderConfiguredMonitoredService(
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType
+    )
+
+    if (stageMetaLoading || !isServiceEnvironmentFetched) {
+      return (
         <Card>
           <Icon name="spinner" />
         </Card>
-      ) : (
+      )
+    }
+
+    if (shouldRenderConfiguredMonitoredService) {
+      return (
         <ConfiguredMonitoredService
           formik={formik}
           stepViewType={stepViewType}
@@ -94,7 +105,16 @@ export function AnalyzeDeploymentImpactWidgetSections({
           environmentIdentifier={environmentIdentifier}
           hasMultiServiceOrEnv={Boolean(hasMultiServiceOrEnv)}
         />
-      )}
+      )
+    }
+
+    return <></>
+  }
+
+  return (
+    <>
+      <BaseAnalyzeDeploymentImpact isNewStep={isNewStep} stepViewType={stepViewType} allowableTypes={allowableTypes} />
+      {renderMonitoredService()}
     </>
   )
 }

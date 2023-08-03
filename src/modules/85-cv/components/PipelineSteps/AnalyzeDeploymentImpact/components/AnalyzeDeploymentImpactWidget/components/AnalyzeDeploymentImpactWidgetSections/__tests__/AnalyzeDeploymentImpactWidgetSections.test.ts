@@ -5,7 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getStageServiceAndEnv } from '../AnalyzeDeploymentImpactWidgetSections.utils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import {
+  getShouldRenderConfiguredMonitoredService,
+  getStageServiceAndEnv
+} from '../AnalyzeDeploymentImpactWidgetSections.utils'
 import { stageMetaMock, stageMetaWithMultipleEnvMock } from './AnalyzeDeploymentImpactWidgetSections.mock'
 
 describe('Validate Service Environment', () => {
@@ -96,5 +100,37 @@ describe('Validate Service Environment', () => {
       })
     })
     expect(withNoEnvData).toEqual({ ...defaultValue, serviceIdentifier: 'svc1' })
+  })
+})
+
+describe('getShouldRenderConfiguredMonitoredService', () => {
+  test('should return false when stepViewType is undefined', () => {
+    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', undefined)
+    expect(shouldRender).toBe(false)
+  })
+
+  test('should return false when stepViewType is not Edit, Template, or a templatized view', () => {
+    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.InputVariable)
+    expect(shouldRender).toBe(false)
+  })
+
+  test('should return false when stepViewType is Edit but serviceIdentifier and environmentIdentifier are missing', () => {
+    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.Edit)
+    expect(shouldRender).toBe(false)
+  })
+
+  test('should return true when stepViewType is Template', () => {
+    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.Template)
+    expect(shouldRender).toBe(true)
+  })
+
+  test('should return true when stepViewType is a templatized view', () => {
+    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.TemplateUsage)
+    expect(shouldRender).toBe(true)
+  })
+
+  test('should return true when stepViewType is Edit and serviceIdentifier and environmentIdentifier are provided', () => {
+    const shouldRender = getShouldRenderConfiguredMonitoredService('service-id', 'env-id', StepViewType.Edit)
+    expect(shouldRender).toBe(true)
   })
 })

@@ -7,6 +7,8 @@
 
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { GetStageServiceAndEnvArgs, GetStageServiceAndEnvReturn } from './AnalyzeDeploymentImpactWidgetSections.types'
 
 export async function getStageServiceAndEnv({
@@ -39,4 +41,16 @@ export async function getStageServiceAndEnv({
     }
   }
   return data
+}
+
+export function getShouldRenderConfiguredMonitoredService(
+  serviceIdentifier: string,
+  environmentIdentifier: string,
+  stepViewType?: StepViewType
+): boolean {
+  return Boolean(
+    isTemplatizedView(stepViewType) ||
+      stepViewType === StepViewType.Template ||
+      (stepViewType === StepViewType.Edit && serviceIdentifier && environmentIdentifier)
+  )
 }

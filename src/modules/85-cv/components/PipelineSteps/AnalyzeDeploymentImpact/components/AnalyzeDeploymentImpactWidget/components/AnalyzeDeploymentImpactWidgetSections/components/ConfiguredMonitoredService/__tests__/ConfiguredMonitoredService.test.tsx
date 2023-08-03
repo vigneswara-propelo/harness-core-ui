@@ -31,7 +31,7 @@ import {
   mockedMonitoredService,
   mockedMonitoredServiceForFetchingDetails
 } from './ConfiguredMonitoredService.mock'
-import { MONITORED_SERVICE_NOT_PRESENT_ERROR } from '../ConfiguredMonitoredService.constants'
+import { DEFAULT_VALUE, MONITORED_SERVICE_NOT_PRESENT_ERROR } from '../ConfiguredMonitoredService.constants'
 
 const serviceEnvironmentProps = {
   serviceIdentifier: 'service101',
@@ -505,27 +505,6 @@ describe('getIsMonitoredServiceDefaultInput', () => {
 
     expect(result).toBe(false)
   })
-
-  // Add more test cases as needed
-})
-
-describe('getMonitoredServiceIdentifier', () => {
-  test('returns the monitoredServiceRef when it is not "Default"', () => {
-    const monitoredServiceRef = 'example'
-    const serviceIdentifier = 'service1'
-    const environmentIdentifier = 'env1'
-    const result = getMonitoredServiceIdentifier(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
-    expect(result).toBe(monitoredServiceRef)
-  })
-
-  test('returns the concatenated string when monitoredServiceRef is "Default"', () => {
-    const monitoredServiceRef = 'Default'
-    const serviceIdentifier = 'service1'
-    const environmentIdentifier = 'env1'
-    const expectedResult = `${serviceIdentifier}_${environmentIdentifier}`
-    const result = getMonitoredServiceIdentifier(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
-    expect(result).toBe(expectedResult)
-  })
 })
 
 describe('getUpdatedSpecs', () => {
@@ -713,5 +692,25 @@ describe('getShouldRenderNotifications', () => {
     )
 
     expect(result).toBe(false)
+  })
+})
+
+describe('getMonitoredServiceIdentifier', () => {
+  test('should return the correct monitoredServiceIdentifier if monitoredServiceRef is not DEFAULT_VALUE', () => {
+    const monitoredServiceRef = 'otherService'
+    const serviceIdentifier = 'testService'
+    const environmentIdentifier = 'testEnv'
+
+    const result = getMonitoredServiceIdentifier(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+    expect(result).toBe('otherService')
+  })
+
+  test('should return the correct monitoredServiceIdentifier if monitoredServiceRef is DEFAULT_VALUE but not default input', () => {
+    const monitoredServiceRef = DEFAULT_VALUE
+    const serviceIdentifier = 'testService'
+    const environmentIdentifier = 'testEnv'
+
+    const result = getMonitoredServiceIdentifier(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
+    expect(result).toBe('testService_testEnv')
   })
 })

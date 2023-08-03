@@ -65,8 +65,13 @@ export function getMonitoredServiceIdentifier(
   environmentIdentifier: string
 ): string {
   let monitoredServiceIdentifier = monitoredServiceRef
-  if (monitoredServiceRef === 'Default') {
-    monitoredServiceIdentifier = `${serviceIdentifier}_${environmentIdentifier}`
+  const isDefaultMonitoredService = monitoredServiceRef === DEFAULT_VALUE
+  if (isDefaultMonitoredService) {
+    if (getIsMonitoredServiceDefaultInput(monitoredServiceRef, serviceIdentifier, environmentIdentifier)) {
+      monitoredServiceIdentifier = ''
+    } else {
+      monitoredServiceIdentifier = `${serviceIdentifier}_${environmentIdentifier}`
+    }
   }
   return monitoredServiceIdentifier
 }
