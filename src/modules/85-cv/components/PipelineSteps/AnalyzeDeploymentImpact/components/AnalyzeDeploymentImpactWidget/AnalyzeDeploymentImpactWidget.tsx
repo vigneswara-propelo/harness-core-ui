@@ -35,7 +35,7 @@ export function AnalyzeDeploymentImpactWidget(
 
   const defaultAnalyzeSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
-    timeout: Yup.string().required(getString('platform.connectors.cdng.validations.timeoutValidation')),
+    timeout: Yup.string().required(getString('cv.analyzeDeploymentImpact.validations.timeoutValidation')),
     spec: Yup.object().shape({
       duration: Yup.string().required(getString('platform.connectors.cdng.validations.durationRequired'))
     })

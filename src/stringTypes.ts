@@ -8958,6 +8958,7 @@ export interface StringsMap {
   'cv.analyzeDeploymentImpact.stopAnalysis': string
   'cv.analyzeDeploymentImpact.stopAnalysisTitle': string
   'cv.analyzeDeploymentImpact.stopAnalysisWarning': string
+  'cv.analyzeDeploymentImpact.validations.timeoutValidation': string
   'cv.analyzeStep.healthSources.healthSourceNotPresent': string
   'cv.analyzeStep.monitoredService.createMonitoredService': string
   'cv.analyzeStep.monitoredService.fetchingMonitoredService': string
