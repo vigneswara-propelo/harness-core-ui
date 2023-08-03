@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { isNil } from 'lodash-es'
 import debounce from 'p-debounce'
 
@@ -24,19 +24,23 @@ export function useValidationErrors(): { errorMap: Map<string, string[]> } {
   } = usePipelineContext()
 
   const [errorMap, setErrorMap] = useState<Map<string, string[]>>(new Map())
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const validateErrors = useCallback(
-    debounce(async (_originalPipeline: PipelineInfoConfig, _pipelineSchema: ResponseJsonNode | null): Promise<void> => {
-      if (!isNil(_pipelineSchema) && _pipelineSchema.data) {
-        const error = await validateJSONWithSchema({ pipeline: _originalPipeline }, _pipelineSchema.data)
-        // If you resolved all existing errors then clear the schema error flag
-        if (error.size === 0) {
-          setSchemaErrorView(false)
-        }
-        setErrorMap(error)
-      }
-    }, 300),
-    []
+
+  const validateErrors = useMemo(
+    () =>
+      debounce(
+        async (_originalPipeline: PipelineInfoConfig, _pipelineSchema: ResponseJsonNode | null): Promise<void> => {
+          if (!isNil(_pipelineSchema) && _pipelineSchema.data) {
+            const error = await validateJSONWithSchema({ pipeline: _originalPipeline }, _pipelineSchema.data)
+            // If you resolved all existing errors then clear the schema error flag
+            if (error.size === 0) {
+              setSchemaErrorView(false)
+            }
+            setErrorMap(error)
+          }
+        },
+        300
+      ),
+    [setSchemaErrorView]
   )
 
   useDeepCompareEffect(() => {
@@ -45,7 +49,6 @@ export function useValidationErrors(): { errorMap: Map<string, string[]> } {
     } else {
       setErrorMap(new Map())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [originalPipeline, pipelineSchema, schemaErrors])
 
   return { errorMap }

@@ -131,7 +131,7 @@ describe('Deployment Template creation and assertion', () => {
     cy.get('input[name="fetchInstancesScript.store.type"]').click({ force: true })
     cy.contains('p', 'Inline').isChildVisible()
     cy.contains('p', 'File Store').isChildVisible()
-    cy.get('div[class="view-lines"]')
+    cy.get('.view-lines')
       .should('be.visible')
       .within(() => {
         // Default Text present in fetch Instance Script
@@ -167,7 +167,7 @@ describe('Deployment Template creation and assertion', () => {
     //YAML view
     cy.contains('span', 'deploymentTemplate_cypress.yaml').should('be.visible')
     cy.contains('div', 'Unsaved changes').should('be.visible')
-    cy.get('div[class="view-lines"]').within(() => {
+    cy.get('.view-lines').within(() => {
       cy.contains('span', 'deploymentTemplate_cypress').should('be.visible')
       cy.contains('span', 'CustomDeployment').should('be.visible')
 

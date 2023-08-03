@@ -226,8 +226,21 @@ const config = {
       'process.env': '{}' // required for @blueprintjs/core
     }),
     new MonacoWebpackPlugin({
-      // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-      languages: ['json', 'yaml', 'shell', 'powershell', 'python']
+      // Available options: https://github.com/microsoft/monaco-editor/tree/main/webpack-plugin#options
+      languages: ['json', 'yaml', 'shell', 'powershell', 'python'],
+      // This will define a global monaco object that is used in editor components.
+      globalAPI: true,
+      filename: '[name].worker.[contenthash:6].js',
+      customLanguages: [
+        {
+          label: 'yaml',
+          entry: 'monaco-yaml',
+          worker: {
+            id: 'monaco-yaml/yamlWorker',
+            entry: 'monaco-yaml/yaml.worker'
+          }
+        }
+      ]
     }),
     new GenerateStringTypesPlugin(),
     new RetryChunkLoadPlugin({

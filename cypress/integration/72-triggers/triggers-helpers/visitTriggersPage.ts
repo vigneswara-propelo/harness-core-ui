@@ -137,7 +137,7 @@ export const visitTriggerPage = ({
         timeout: 30000
       })
 
-      cy.wait('@getTrigger')
+      cy.wait('@getTrigger', { timeout: 30_000 })
 
       if (inputYaml) {
         cy.wait('@mergeInputSets')

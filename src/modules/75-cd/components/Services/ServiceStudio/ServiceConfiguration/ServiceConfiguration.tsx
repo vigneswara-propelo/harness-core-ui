@@ -126,20 +126,11 @@ function ServiceConfiguration({
   )
 
   const onYamlChange = useCallback(
-    (yamlChanged: boolean, updatedYaml, schemaValidationErrorMap): void => {
+    (yamlChanged: boolean, updatedYaml): void => {
       if (yamlChanged) {
         try {
           const yaml = defaultTo(updatedYaml, '')
           const serviceSetYamlVisual = parse(yaml).service
-          if (
-            !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
-            !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
-          ) {
-            requestAnimationFrame(() => {
-              setHasYamlValidationErrors(!isEmpty(schemaValidationErrorMap))
-            })
-          }
-
           const newServiceData = getUpdatedPipelineYaml(serviceSetYamlVisual)
           const isYamlUpdated = !isEqual(service, newServiceData)
           newServiceData && isYamlUpdated && updatePipeline(newServiceData)
@@ -149,8 +140,12 @@ function ServiceConfiguration({
         }
       }
     },
-    [getUpdatedPipelineYaml, service, setHasYamlValidationErrors, updatePipeline, yamlHandler]
+    [getUpdatedPipelineYaml, service, updatePipeline]
   )
+
+  const onValidate: YamlBuilderProps['onValidate'] = errorMap => {
+    setHasYamlValidationErrors(!isEmpty(errorMap))
+  }
 
   const handleModeSwitch = useCallback(
     (view: SelectedView): void => {
@@ -262,6 +257,7 @@ function ServiceConfiguration({
               key={isYamlEditable.toString()}
               isReadOnlyMode={isReadonly || !isYamlEditable}
               onChange={onYamlChange}
+              onValidate={onValidate}
               onEnableEditMode={() => {
                 updatePipelineView({ ...pipelineView, isYamlEditable: true })
               }}

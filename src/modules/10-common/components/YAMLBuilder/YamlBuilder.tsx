@@ -5,14 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useMemo, memo } from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
-//@ts-ignore
-import ReactMonacoEditor from 'react-monaco-editor'
-import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
-import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
+import * as monaco from 'monaco-editor'
+import { IKeyboardEvent, IDisposable, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import {
   debounce,
@@ -31,10 +27,12 @@ import {
   isNull
 } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { setDiagnosticsOptions } from 'monaco-yaml'
 import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions, parse } from 'yaml'
 import { Icon, Layout, Tag, Container, useConfirmationDialog } from '@harness/uicore'
+import MonacoEditor, { MonacoCodeEditorRef } from '@common/components/MonacoEditor/MonacoEditor'
 import { useStrings } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
 import { useToaster } from '@common/exports'
@@ -45,15 +43,15 @@ import type {
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
 import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
-import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
+import { getDiagnosticsOptions } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { Status } from '@common/utils/Constants'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { countAllKeysInObject } from '@common/utils/utils'
+import { useTrackedRef } from '@common/hooks/useTrackedRef'
 import {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
-  verifyYAML,
   findPositionsForMatchingKeys,
   getStageYAMLPathForStageIndex,
   getStepYAMLPathForStepInsideAStage,
@@ -62,7 +60,8 @@ import {
   getArrayIndexClosestToCurrentCursor,
   getValidStepPositions,
   extractStepsFromStage,
-  getClosestStepIndexInCurrentStage
+  getClosestStepIndexInCurrentStage,
+  getValidationErrorMapFromMarkers
 } from './YAMLBuilderUtils'
 import {
   DEFAULT_EDITOR_HEIGHT,
@@ -101,10 +100,10 @@ import './resizer.scss'
 scalarOptions.str.fold.lineWidth = 100000
 defaultOptions.indent = 4
 
-const getTheme = (theme: Theme) => (theme === 'DARK' ? EDITOR_BASE_DARK_THEME : EDITOR_BASE_LIGHT_THEME)
+const getTheme = (theme: Theme): monaco.editor.BuiltinTheme =>
+  theme === 'DARK' ? EDITOR_BASE_DARK_THEME : EDITOR_BASE_LIGHT_THEME
 
 const setUpEditor = (theme: Theme): void => {
-  //@ts-ignore
   monaco.editor.defineTheme(getTheme(theme), {
     base: getTheme(theme),
     inherit: theme === 'DARK',
@@ -122,9 +121,32 @@ const setUpEditor = (theme: Theme): void => {
           }
         : { 'editor.background': `#${EDITOR_LIGHT_BG}` }
   })
-  //@ts-ignore
   monaco.editor.setTheme(getTheme(theme))
 }
+
+const ErrorSummary = memo(({ errorMap }: { errorMap?: Map<number, string> }): JSX.Element => {
+  const { getString } = useStrings()
+  const errors: JSX.Element[] = []
+
+  errorMap?.forEach((value, key) => {
+    const error = (
+      <li className={css.item} title={value} key={key}>
+        {getString('yamlBuilder.lineNumberLabel')}&nbsp;
+        {key},&nbsp;
+        {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
+      </li>
+    )
+    errors.push(error)
+  })
+
+  return (
+    <div className={css.errorSummary}>
+      <ol className={css.errorList}>{errors}</ol>
+    </div>
+  )
+})
+
+ErrorSummary.displayName = 'ErrorSummary'
 
 const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.Element => {
   const {
@@ -156,7 +178,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     onEditorResize,
     customCss,
     setPlugin,
-    setPluginOpnStatus
+    setPluginOpnStatus,
+    onValidate
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -167,11 +190,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
-  const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
+  const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string>>(new Map())
 
-  const editorRef = useRef<ReactMonacoEditor>(null)
-  const yamlValidationErrorsRef = useRef<Map<number, string>>()
-  yamlValidationErrorsRef.current = yamlValidationErrors
+  const editorRef = useRef<MonacoCodeEditorRef>(null)
+  const onValidateRef = useTrackedRef(onValidate)
+  const onChangeRef = useTrackedRef(onChange)
+  const yamlValidationErrorsRef = useTrackedRef(yamlValidationErrors)
   const editorVersionRef = useRef<number>()
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
@@ -200,7 +224,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         addUpdatePluginIntoExistingYAML: (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean) =>
           addUpdatePluginIntoExistingYAML(pluginMetadata, isPluginUpdate)
       } as YamlBuilderHandlerBinding),
-    []
+    [yamlValidationErrorsRef]
   )
 
   useEffect(() => {
@@ -212,28 +236,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [bind, handler])
 
   const getEditorCurrentVersion = (): number | undefined => {
-    return editorRef.current?.editor?.getModel()?.getAlternativeVersionId()
+    return editorRef.current?.getModel()?.getAlternativeVersionId()
   }
 
   const verifyIncomingJSON = (jsonObj?: Record<string, any>): void => {
     const sanitizedJSONObj = jsonObj ? sanitize(jsonObj, yamlSanityConfig) : null
     if (sanitizedJSONObj && Object.keys(sanitizedJSONObj).length > 0) {
       const yamlEqOfJSON = yamlStringify(sanitizedJSONObj)
-      let sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
+      const sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
 
       setCurrentYaml(sanitizedYAML)
       currentYamlRef.current = sanitizedYAML
-      verifyYAML({
-        updatedYaml: sanitizedYAML,
-        setYamlValidationErrors,
-        showError,
-        schema,
-        errorMessage: yamlError
-      })
     } else {
       setCurrentYaml('')
       currentYamlRef.current = ''
-      setYamlValidationErrors(undefined)
+      setYamlValidationErrors(new Map())
     }
   }
 
@@ -248,64 +265,70 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const sanitizedYAML = existingYaml.replace(': null\n', ': \n')
       setCurrentYaml(sanitizedYAML)
       currentYamlRef.current = sanitizedYAML
-      verifyYAML({
-        updatedYaml: sanitizedYAML,
-        setYamlValidationErrors,
-        showError,
-        schema,
-        errorMessage: yamlError
-      })
     }
-  }, [existingYaml, schema])
+  }, [existingYaml])
 
   useEffect(() => {
     if (schema) {
-      const languageSettings = getSchemaWithLanguageSettings(schema)
-      setUpYAMLBuilderWithLanguageSettings(languageSettings)
+      setDiagnosticsOptions(getDiagnosticsOptions(schema))
     }
   }, [schema])
-
-  const setUpYAMLBuilderWithLanguageSettings = (languageSettings: string | Record<string, any>): void => {
-    //@ts-ignore
-    const { yaml } = defaultTo(languages, {})
-    yaml?.yamlDefaults.setDiagnosticsOptions(languageSettings)
-  }
 
   /* #endregion */
 
   /* #region Handle various interactions with the editor */
 
-  const onYamlChange = useCallback(
-    debounce((updatedYaml: string): void => {
-      setCurrentYaml(updatedYaml)
-      currentYamlRef.current = updatedYaml
-      const schemaValidationErrorMap = verifyYAML({
-        updatedYaml,
-        setYamlValidationErrors,
-        showError,
-        schema,
-        errorMessage: yamlError
+  const onYamlChange = useMemo(
+    () =>
+      debounce((updatedYaml: string): void => {
+        setCurrentYaml(updatedYaml)
+        currentYamlRef.current = updatedYaml
+
+        onChangeRef.current?.(!(updatedYaml === ''), updatedYaml)
+      }, 500),
+    [onChangeRef]
+  )
+
+  const showNoPermissionError = useMemo(
+    () =>
+      throttle(() => {
+        showError(getString('noPermission'), 5000)
+      }, 5000),
+    [getString, showError]
+  )
+
+  const showHarnessManagedError = useMemo(
+    () =>
+      throttle(() => {
+        showError(getString('common.showHarnessManagedError'), 5000)
+      }, 5000),
+    [getString, showError]
+  )
+
+  const changeMarkersListener = useRef<IDisposable>()
+
+  useEffect(() => changeMarkersListener.current?.dispose, [])
+
+  // updates yamlValidationErrors when markers change and calls onValidate
+  const validate = useCallback(() => {
+    changeMarkersListener.current = monaco.editor.onDidChangeMarkers(uris => {
+      const editorUri = editorRef.current?.getModel()?.uri
+      if (!editorUri) return
+
+      const currentEditorHasMarkerChanges = uris.some(uri => uri.path === editorUri.path)
+      if (!currentEditorHasMarkerChanges) return
+
+      const markers = monaco.editor.getModelMarkers({
+        resource: editorUri
       })
-      onChange?.(!(updatedYaml === ''), updatedYaml, schemaValidationErrorMap)
-    }, 500),
-    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
-  )
+      const errorMap = getValidationErrorMapFromMarkers(markers)
 
-  const showNoPermissionError = useCallback(
-    throttle(() => {
-      showError(getString('noPermission'), 5000)
-    }, 5000),
-    []
-  )
+      setYamlValidationErrors(errorMap)
+      onValidateRef.current?.(errorMap)
+    })
+  }, [onValidateRef])
 
-  const showHarnessManagedError = useCallback(
-    throttle(() => {
-      showError(getString('common.showHarnessManagedError'), 5000)
-    }, 5000),
-    []
-  )
-
-  const editorDidMount = (editor: editor.IStandaloneCodeEditor): void => {
+  const editorDidMount = (editor: monaco.editor.IStandaloneCodeEditor): void => {
     // editor.addAction({
     //   id: 'Paste',
     //   label: getString('common.paste'),
@@ -332,9 +355,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       editor?.focus()
     }
     editor.onKeyDown((event: IKeyboardEvent) => handleEditorKeyDownEvent(event, editor))
-    editor.onDidChangeCursorPosition((event: editor.ICursorPositionChangedEvent) => {
+    editor.onDidChangeCursorPosition((event: monaco.editor.ICursorPositionChangedEvent) => {
       currentCursorPosition.current = event.position
     })
+
+    validate()
   }
 
   const disposePreviousSuggestions = (): void => {
@@ -354,14 +379,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   /* #region Custom invocations */
 
   /** Expressions support */
-  const getEditorContentInCurrentLine = (editor: editor.IStandaloneCodeEditor): string | undefined => {
+  const getEditorContentInCurrentLine = (editor: monaco.editor.IStandaloneCodeEditor): string | undefined => {
     const currentLineNum = editor.getPosition()?.lineNumber
     if (currentLineNum) {
       return editor.getModel()?.getLineContent(currentLineNum)
     }
   }
 
-  const getExpressionFromCurrentLine = (editor: editor.IStandaloneCodeEditor): string | undefined => {
+  const getExpressionFromCurrentLine = (editor: monaco.editor.IStandaloneCodeEditor): string | undefined => {
     const expression = getEditorContentInCurrentLine(editor)
       ?.split(':')
       .map((item: string) => item.trim())?.[1]
@@ -369,7 +394,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }
 
   function registerCompletionItemProviderForExpressions(
-    editor: editor.IStandaloneCodeEditor,
+    editor: monaco.editor.IStandaloneCodeEditor,
     triggerCharacters: string[],
     matchingPath: string | undefined,
     currentExpression: string | undefined = ''
@@ -378,31 +403,32 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const suggestionsPromise = onExpressionTrigger ? onExpressionTrigger(matchingPath, currentExpression) : null
       if (suggestionsPromise) {
         suggestionsPromise.then(suggestions => {
-          // @ts-ignore
-          const currentCursorPosition = editor.getPosition() as IPosition
-          const startRange = editor
-            .getModel()
-            ?.findPreviousMatch('+', currentCursorPosition, false, true, null, false)?.range
-          const endRange = editor.getModel()?.findNextMatch('>', currentCursorPosition, false, true, null, false)?.range
-          const range = new monaco.Range(
-            startRange?.startLineNumber,
-            startRange?.endColumn,
-            endRange?.endLineNumber,
-            endRange?.endColumn ? endRange?.endColumn + 1 : endRange?.endColumn
-          )
-          const shallUseRange =
-            startRange?.startLineNumber === currentCursorPosition.lineNumber &&
-            endRange?.startLineNumber === currentCursorPosition.lineNumber
-          const rangeSuggestions = suggestions.map(suggestion => {
-            return {
-              ...suggestion,
-              ...(shallUseRange && { range: range })
-            }
-          })
           expressionCompletionDisposer = monaco?.languages?.registerCompletionItemProvider('yaml', {
             triggerCharacters,
-            provideCompletionItems: () => {
-              return { suggestions: rangeSuggestions }
+            provideCompletionItems: (model, position) => {
+              const startRange = model.findPreviousMatch('+', position, false, true, null, false)?.range
+              const endRange = model.findNextMatch('>', position, false, true, null, false)?.range
+              const useRange =
+                startRange?.startLineNumber === position.lineNumber && endRange?.startLineNumber === position.lineNumber
+
+              if (!useRange) {
+                return { suggestions: suggestions as monaco.languages.CompletionItem[] }
+              }
+
+              const range: monaco.IRange = {
+                startLineNumber: startRange.startLineNumber,
+                endLineNumber: endRange.endLineNumber,
+                startColumn: startRange.endColumn,
+                endColumn: endRange.endColumn
+              }
+              return {
+                suggestions: suggestions.map(suggestion => {
+                  return {
+                    ...suggestion,
+                    range
+                  }
+                })
+              }
             }
           })
         })
@@ -412,17 +438,16 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /** Run-time Inputs support */
   function registerCompletionItemProviderForRTInputs(
-    editor: editor.IStandaloneCodeEditor,
+    editor: monaco.editor.IStandaloneCodeEditor,
     suggestionsPromise: Promise<CompletionItemInterface[]>
   ): void {
     if (editor) {
       suggestionsPromise.then(suggestions => {
-        // @ts-ignore
         disposePreviousSuggestions()
         runTimeCompletionDisposer = monaco?.languages?.registerCompletionItemProvider('yaml', {
           triggerCharacters: [' '],
           provideCompletionItems: () => {
-            return { suggestions }
+            return { suggestions: suggestions as monaco.languages.CompletionItem[] }
           }
         })
       })
@@ -430,16 +455,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }
 
   function isAllowedValues(input: string): boolean {
-    let regex = /<\+input>\.allowedValues\([^)]*\)/i
+    const regex = /<\+input>\.allowedValues\([^)]*\)/i
     return regex.test(input)
   }
 
-  const getAllowedValuesFromString = (inputValue: string): CompletionItemInterface[] => {
+  const getAllowedValuesFromString = (inputValue: string, range: monaco.IRange): CompletionItemInterface[] => {
     const parsedInput = parseInput(inputValue)
     const items: CompletionItemInterface[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
       label: item,
       insertText: item,
-      kind: CompletionItemKind.Field
+      kind: CompletionItemKind.Field,
+      range
     }))
 
     return items
@@ -447,16 +473,26 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /** Run-time Allowed values Inputs support */
   function registerCompletionItemProviderForAllowedValues(
-    editor: editor.IStandaloneCodeEditor,
+    editor: monaco.editor.IStandaloneCodeEditor,
     currentPathValue: string
   ): void {
     if (isAllowedValues(currentPathValue)) {
-      const suggestedValues = getAllowedValuesFromString(currentPathValue)
       if (editor) {
         disposePreviousSuggestions()
         allowedValuesCompletionDisposer = monaco?.languages?.registerCompletionItemProvider('yaml', {
           triggerCharacters: [' '],
-          provideCompletionItems: () => {
+          provideCompletionItems: (model, position) => {
+            const word = model.getWordUntilPosition(position)
+            const range: monaco.IRange = {
+              startLineNumber: position.lineNumber,
+              endLineNumber: position.lineNumber,
+              startColumn: word.startColumn,
+              endColumn: word.endColumn
+            }
+            const suggestedValues = getAllowedValuesFromString(
+              currentPathValue,
+              range
+            ) as monaco.languages.CompletionItem[]
             return { suggestions: suggestedValues }
           }
         })
@@ -465,7 +501,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }
 
   const invokeCallBackForMatchingYAMLPaths = (
-    editor: editor.IStandaloneCodeEditor,
+    editor: monaco.editor.IStandaloneCodeEditor,
     matchingPath: string | undefined
   ): void => {
     if (editor && matchingPath) {
@@ -480,7 +516,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }
 
   const shouldInvokeExpressions = (
-    editor: editor.IStandaloneCodeEditor,
+    editor: monaco.editor.IStandaloneCodeEditor,
     event: IKeyboardEvent,
     isWidgetClosed: boolean
   ): boolean => {
@@ -501,22 +537,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #endregion */
 
-  const { openDialog } = openDialogProp
-    ? { openDialog: openDialogProp }
-    : useConfirmationDialog({
-        contentText: getString('yamlBuilder.enableEditContext'),
-        titleText: getString('confirm'),
-        confirmButtonText: getString('enable'),
-        cancelButtonText: getString('cancel'),
-        intent: Intent.WARNING,
-        onCloseDialog: async didConfirm => {
-          if (didConfirm) {
-            onEnableEditMode?.()
-          }
-        }
-      })
+  const useConfirmationDialogReturn = useConfirmationDialog({
+    contentText: getString('yamlBuilder.enableEditContext'),
+    titleText: getString('confirm'),
+    confirmButtonText: getString('enable'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.WARNING,
+    onCloseDialog: async didConfirm => {
+      if (didConfirm) {
+        onEnableEditMode?.()
+      }
+    }
+  })
+  const openDialog = openDialogProp ?? useConfirmationDialogReturn.openDialog
 
-  const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: any): void => {
+  const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: monaco.editor.IStandaloneCodeEditor): void => {
     const { keyCode, code, ctrlKey, metaKey, shiftKey, browserEvent } = event
     const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
       keyCode
@@ -540,7 +575,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       }
     }
     try {
-      const { shiftKey, code, ctrlKey, metaKey } = event
       //TODO Need to check hotkey for cross browser/cross OS compatibility
 
       // this is to prevent reset of the editor to empty when there is no undo history
@@ -551,7 +585,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
 
-      const suggestWidgetState = editor.getContribution('editor.contrib.suggestController')?.model?.state
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const suggestWidgetState = (editor.getContribution('editor.contrib.suggestController') as any)?.model?.state
       const isSuggestWidgetClosed = suggestWidgetState === 0
 
       // dispose previous suggestions when opening suggest widget using ^space
@@ -635,24 +670,22 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
-  const getErrorSummary = (errorMap?: Map<number, string>): React.ReactElement => {
-    const errors: React.ReactElement[] = []
-    errorMap?.forEach((value, key) => {
-      const error = (
-        <li className={css.item} title={value} key={key}>
-          {getString('yamlBuilder.lineNumberLabel')}&nbsp;
-          {key + 1},&nbsp;
-          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
-        </li>
-      )
-      errors.push(error)
-    })
+  const editorControls = useMemo((): React.ReactElement => {
     return (
-      <div className={css.errorSummary}>
-        <ol className={css.errorList}>{errors}</ol>
-      </div>
+      <Layout.Horizontal spacing="small">
+        {showCopyIcon && <CopyToClipboard content={defaultTo(currentYamlRef.current, '')} showFeedback={true} />}
+        {shouldShowPluginsPanel ? (
+          <Icon
+            className={css.resizeIcon}
+            name="main-minimize"
+            onClick={() => {
+              setIsEditorExpanded(isExpanded => !isExpanded)
+            }}
+          />
+        ) : null}
+      </Layout.Horizontal>
     )
-  }
+  }, [currentYaml, showCopyIcon, shouldShowPluginsPanel])
 
   const renderHeader = useCallback((): JSX.Element => {
     const showEntityDetails = fileName && entityType
@@ -673,14 +706,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               <Tag className={css.entityTag}>{entityType}</Tag>
             </>
           ) : null}
-          <Container padding={{ left: 'small' }}>{renderEditorControls()}</Container>
+          <Container padding={{ left: 'small' }}>{editorControls}</Container>
         </Layout.Horizontal>
         {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
           <div className={cx(css.flexCenter, css.validationStatus)}>
             <Popover
               interactionKind={PopoverInteractionKind.HOVER}
               position={PopoverPosition.TOP}
-              content={getErrorSummary(yamlValidationErrors)}
+              content={<ErrorSummary errorMap={yamlValidationErrors} />}
               popoverClassName={css.summaryPopover}
             >
               <Layout.Horizontal flex spacing="xsmall">
@@ -692,47 +725,48 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         )}
       </Layout.Horizontal>
     )
-  }, [yamlValidationErrors, fileName, entityType, theme, isReadOnlyMode])
+  }, [yamlValidationErrors, fileName, entityType, theme, isReadOnlyMode, editorControls, getString])
 
   // used to remove initial selection that appears when yaml builder is loaded with an initial value
   useEffect(() => {
-    if (every([!initialSelectionRemoved, editorRef.current?.editor?.getValue()])) {
-      editorRef.current?.editor?.setSelection(new monaco.Range(0, 0, 0, 0))
+    if (every([!initialSelectionRemoved, editorRef.current?.getValue()])) {
+      editorRef.current?.setSelection(new monaco.Range(0, 0, 0, 0))
       setInitialSelectionRemoved(true)
     }
-  }, [currentYaml])
+  }, [initialSelectionRemoved])
 
-  const renderEditor = useCallback(
-    (): JSX.Element => (
-      <MonacoEditor
-        width={width}
-        height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
-        language="yaml"
-        value={currentYaml}
-        onChange={onYamlChange}
-        editorDidMount={editorDidMount}
-        options={
-          {
-            readOnly: defaultTo(isReadOnlyMode, !isEditModeSupported),
-            wordBasedSuggestions: false,
-            scrollBeyondLastLine: false,
-            fontFamily: "'Roboto Mono', monospace",
-            fontSize: 13,
-            minimap: {
-              enabled: false
-            },
-            codeLens: codeLensRegistrations.current.size > 0
-          } as MonacoEditorProps['options']
-        }
-        ref={editorRef}
-      />
-    ),
-    [width, height, currentYaml, onYamlChange, codeLensRegistrations.current, isReadOnlyMode, isEditModeSupported]
+  const renderEditor = (): JSX.Element => (
+    <MonacoEditor
+      width={width}
+      height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
+      language="yaml"
+      value={currentYaml}
+      onChange={onYamlChange}
+      editorDidMount={editorDidMount}
+      options={
+        {
+          readOnly: defaultTo(isReadOnlyMode, !isEditModeSupported),
+          wordBasedSuggestions: false,
+          scrollBeyondLastLine: false,
+          fontFamily: "'Roboto Mono', monospace",
+          fontSize: 13,
+          minimap: {
+            enabled: false
+          },
+          codeLens: codeLensRegistrations.current.size > 0
+        } as MonacoEditorProps['options']
+      }
+      ref={editorRef}
+    />
   )
 
-  const throttledOnResize = throttle(() => {
-    editorRef.current?.editor?.layout()
-  }, 500)
+  const throttledOnResize = useMemo(
+    () =>
+      throttle(() => {
+        editorRef.current?.layout()
+      }, 500),
+    []
+  )
 
   useEffect(() => {
     window.addEventListener('resize', throttledOnResize)
@@ -751,8 +785,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       fromLine: number
       toLineNum: number
       cursorPosition: Position
-    }): IDisposable => {
-      const commandId = editorRef.current?.editor?.addCommand(
+    }): IDisposable | undefined => {
+      const commandId = editorRef.current?.addCommand(
         0,
         () => {
           setPluginOpnStatus?.(Status.TO_DO)
@@ -768,6 +802,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         },
         ''
       )
+
+      if (!commandId) return
+
       const registrationId: IDisposable = monaco.languages.registerCodeLensProvider('yaml', {
         provideCodeLenses: function (_model: unknown, _token: unknown) {
           return {
@@ -798,7 +835,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       })
       return registrationId
     },
-    [editorRef.current?.editor, currentYaml]
+    [currentYaml]
   )
 
   const spotLightInsertedYAML = useCallback(
@@ -815,11 +852,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       closestStepIndex: number
       startStepIndex: number
     }): void => {
-      const editor = editorRef.current?.editor
+      const editor = editorRef.current
       if (editor) {
         let position: Position
-        if (isPluginUpdate && editorRef.current?.editor) {
-          const stepMatchingPositions = getValidStepPositions(editorRef.current.editor)
+        if (isPluginUpdate && editorRef.current) {
+          const stepMatchingPositions = getValidStepPositions(editorRef.current)
           const allMatchesInClosestStageIndex = stepMatchingPositions.slice(startStepIndex)
           position = allMatchesInClosestStageIndex[closestStepIndex]
           const { lineNumber: startingLineNum } = position
@@ -851,53 +888,50 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     },
-    [editorRef.current?.editor]
+    []
   )
 
-  const getSelectionRangeOnSettingsBtnClick = useCallback(
-    (cursorPosition: Position, latestYAML: string): number => {
-      if (cursorPosition && editorRef.current?.editor) {
-        try {
-          const currentYAMLAsJSON = parse(latestYAML)
-          const closestStageIndex = getArrayIndexClosestToCurrentCursor({
-            editor: editorRef.current.editor,
-            sourcePosition: cursorPosition,
-            searchToken: StageMatchRegex
-          })
-          const stageStepsForTheClosestIndex = extractStepsFromStage(
-            currentYAMLAsJSON,
-            getStageYAMLPathForStageIndex(closestStageIndex)
-          ) as unknown[]
-          const stageStepsForThePrecedingIndex =
-            closestStageIndex > 0
-              ? (extractStepsFromStage(
-                  currentYAMLAsJSON,
-                  getStageYAMLPathForStageIndex(closestStageIndex - 1)
-                ) as unknown[])
-              : []
-          const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
-          const closestStepIndex = getClosestStepIndexInCurrentStage({
-            editor: editorRef.current?.editor,
-            cursorPosition,
-            precedingStageStepsCount: stageStepsCountForThePrecedingIndex,
-            currentStageStepsCount: stageStepsForTheClosestIndex.length
-          })
-          const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
-          const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
-          setPlugin?.(pluginAsStep)
-          const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
-          return stepValueTokens
-        } catch (e) {
-          // ignore error
-        }
+  const getSelectionRangeOnSettingsBtnClick = useCallback((cursorPosition: Position, latestYAML: string): number => {
+    if (cursorPosition && editorRef.current) {
+      try {
+        const currentYAMLAsJSON = parse(latestYAML)
+        const closestStageIndex = getArrayIndexClosestToCurrentCursor({
+          editor: editorRef.current,
+          sourcePosition: cursorPosition,
+          searchToken: StageMatchRegex
+        })
+        const stageStepsForTheClosestIndex = extractStepsFromStage(
+          currentYAMLAsJSON,
+          getStageYAMLPathForStageIndex(closestStageIndex)
+        ) as unknown[]
+        const stageStepsForThePrecedingIndex =
+          closestStageIndex > 0
+            ? (extractStepsFromStage(
+                currentYAMLAsJSON,
+                getStageYAMLPathForStageIndex(closestStageIndex - 1)
+              ) as unknown[])
+            : []
+        const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
+        const closestStepIndex = getClosestStepIndexInCurrentStage({
+          editor: editorRef.current,
+          cursorPosition,
+          precedingStageStepsCount: stageStepsCountForThePrecedingIndex,
+          currentStageStepsCount: stageStepsForTheClosestIndex.length
+        })
+        const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
+        const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+        setPlugin?.(pluginAsStep)
+        const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
+        return stepValueTokens
+      } catch (e) {
+        // ignore error
       }
-      return 0
-    },
-    [editorRef.current?.editor]
-  )
+    }
+    return 0
+  }, [])
 
   useEffect(() => {
-    const editor = editorRef.current?.editor
+    const editor = editorRef.current
     if (shouldShowPluginsPanel && editor) {
       const stepMatchingPositions = getValidStepPositions(editor)
       if (stepMatchingPositions.length) {
@@ -919,34 +953,33 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             toLineNum: lineNumber,
             cursorPosition: matchingPosition
           })
-          codeLensRegistrations.current.set(lineNumber, registrationId)
+          if (registrationId) {
+            codeLensRegistrations.current.set(lineNumber, registrationId)
+          }
         })
       } else {
         codeLensRegistrations.current.clear()
       }
     }
-  }, [currentYaml, editorRef.current?.editor, shouldShowPluginsPanel, codeLensRegistrations.current])
+  }, [currentYaml, shouldShowPluginsPanel])
 
   useEffect(() => {
     onEditorResize?.(isEditorExpanded)
   }, [isEditorExpanded])
 
-  const highlightInsertedYAML = useCallback(
-    (fromLine: number, toLineNum: number): void => {
-      const pluginInputDecoration: editor.IModelDeltaDecoration = {
-        range: new monaco.Range(fromLine, 1, toLineNum, 1),
-        options: {
-          isWholeLine: false,
-          className: css.pluginDecorator
-        }
+  const highlightInsertedYAML = useCallback((fromLine: number, toLineNum: number): void => {
+    const pluginInputDecoration: monaco.editor.IModelDeltaDecoration = {
+      range: new monaco.Range(fromLine, 1, toLineNum, 1),
+      options: {
+        isWholeLine: false,
+        className: css.pluginDecorator
       }
-      const decorations = editorRef.current?.editor?.deltaDecorations([], [pluginInputDecoration])
-      if (decorations) {
-        setTimeout(() => editorRef.current?.editor?.deltaDecorations(decorations, []), 10000)
-      }
-    },
-    [editorRef.current?.editor]
-  )
+    }
+    const decorations = editorRef.current?.deltaDecorations([], [pluginInputDecoration])
+    if (decorations) {
+      setTimeout(() => editorRef.current?.deltaDecorations(decorations, []), 10000)
+    }
+  }, [])
 
   const wrapPlugInputInAStep = useCallback((pluginMetadata: PluginAddUpdateMetadata): Record<string, any> => {
     const { pluginData, pluginType, pluginName, pluginUses, pluginImage } = pluginMetadata
@@ -967,7 +1000,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const sanitizePluginValues = useCallback((unSanitizedObj: Record<string, any>): Record<string, any> => {
     try {
-      return JSON.parse(JSON.stringify(unSanitizedObj).replace(/\:null/gi, ':""'))
+      return JSON.parse(JSON.stringify(unSanitizedObj).replace(/:null/gi, ':""'))
     } catch (e) {
       return unSanitizedObj
     }
@@ -977,11 +1010,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
       const { shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
-      if (shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
+
+      if (shouldInsertYAML && cursorPosition && editorRef.current) {
         let updatedYAML = currentYamlRef.current
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({
-            editor: editorRef.current.editor,
+            editor: editorRef.current,
             sourcePosition: cursorPosition,
             searchToken: StageMatchRegex
           })
@@ -1005,10 +1039,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                 ) as unknown[])
               : []
           ).length
-          let closestStepIndexInCurrentStage: number = 0
+          let closestStepIndexInCurrentStage = 0
           if (isPluginUpdate) {
             const currentStageIndex = getArrayIndexClosestToCurrentCursor({
-              editor: editorRef.current.editor,
+              editor: editorRef.current,
               sourcePosition: cursorPosition,
               searchToken: StageMatchRegex
             })
@@ -1017,7 +1051,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               getStageYAMLPathForStageIndex(currentStageIndex)
             ) as unknown[]
             closestStepIndexInCurrentStage = getClosestStepIndexInCurrentStage({
-              editor: editorRef.current.editor,
+              editor: editorRef.current,
               cursorPosition,
               precedingStageStepsCount: stepCountInPrecedingStage,
               currentStageStepsCount: stepsInCurrentStage.length
@@ -1047,27 +1081,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     },
-    [currentCursorPosition, currentYamlRef.current, editorRef.current?.editor]
+    [currentCursorPosition]
   )
-
-  const renderEditorControls = useCallback((): React.ReactElement => {
-    return (
-      <Layout.Horizontal spacing="small">
-        {showCopyIcon && currentYamlRef.current ? (
-          <CopyToClipboard content={defaultTo(currentYamlRef.current, '')} showFeedback={true} />
-        ) : null}
-        {shouldShowPluginsPanel ? (
-          <Icon
-            className={css.resizeIcon}
-            name="main-minimize"
-            onClick={() => {
-              setIsEditorExpanded(isExpanded => !isExpanded)
-            }}
-          />
-        ) : null}
-      </Layout.Horizontal>
-    )
-  }, [currentYamlRef.current, showCopyIcon, isEditorExpanded, shouldShowPluginsPanel])
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>

@@ -47,7 +47,7 @@ describe('Infrastructure Details Drawer', () => {
 
     cy.get('.react-monaco-editor-container')
       .click()
-      .get('div[class="view-lines"]')
+      .get('.view-lines')
       .within(() => {
         cy.contains('<+input>').should('be.visible')
         cy.contains('span', 'infraNS').should('be.visible').type('{end}{backspace}')

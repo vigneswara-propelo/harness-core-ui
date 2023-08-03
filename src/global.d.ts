@@ -86,7 +86,6 @@ declare interface Window {
     async: boolean
   }
   noAuthHeader: boolean
-  MonacoEnvironment: any
   YT?: any
   onYouTubeIframeAPIReady?: () => void
   getIP?: (ipJson: { ip: string }) => void
@@ -107,8 +106,6 @@ declare interface Document {
     ready: Promise<void>
   }
 }
-
-declare const monaco: any
 
 declare module 'refiner-js'
 

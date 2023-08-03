@@ -4,14 +4,9 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import * as yamlLanguageService from '@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService'
 import { isEmpty } from 'lodash-es'
-import { TextDocument, Diagnostic } from 'vscode-languageserver-types'
-import { parse } from 'yaml'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import type { DiagnosticsOptions } from 'monaco-yaml'
+import { validate } from 'jsonschema'
 
 const DEFAULT_YAML_PATH = 'DEFAULT_YAML_PATH'
 
@@ -48,50 +43,6 @@ const findLeafToParentPath = (jsonObj: Record<string, any>, leafNode: string, de
 }
 
 /**
- * @description Validate yaml syntactically (syntax correctness)
- *
- * @param {yaml} yaml to validate
- * @returns Promise of list of syntax errors, if any
- *
- */
-const validateYAML = (yaml: string): Promise<Diagnostic[]> => {
-  /* istanbul ignore next */
-  if (!yaml) {
-    return Promise.reject('Invalid or empty yaml')
-  }
-  const textDocument = TextDocument.create('', 'yaml', 0, yaml)
-  return yamlLanguageService.getLanguageService()?.doValidation(textDocument, false)
-}
-
-/**
- * @description Validate yaml semantically (adherence to a schema)
- *
- * @param {yaml} yamlString to validate
- * @param {schema} schema to validate yaml against
- * @returns Promise of list of semantic errors, if any
- *
- */
-
-const validateYAMLWithSchema = (yamlString: string, schema: Record<string, any>): Promise<Diagnostic[]> => {
-  if (!yamlString) {
-    return Promise.reject('Invalid or empty yaml.')
-  }
-  if (isEmpty(schema)) {
-    return Promise.reject('Invalid or empty schema.')
-  }
-  const textDocument = TextDocument.create('', 'yaml', 0, yamlString)
-  const languageService = setUpLanguageService(schema)
-  return languageService?.doValidation(textDocument, false)
-}
-
-const getPartialYAML = (tokens: string[], endingIndex: number): string => {
-  if (isEmpty(tokens) || endingIndex + 1 > tokens.length) {
-    return ''
-  }
-  return tokens.slice(0, endingIndex + 1).join('\n')
-}
-
-/**
  * @description Validate a JSON against a schema
  *
  * @param jsonObj json to be validated
@@ -109,62 +60,41 @@ async function validateJSONWithSchema(
   }
 
   try {
-    const yamlEqOfJSON = yamlStringify(jsonObj)
-    const lineContents = yamlEqOfJSON.split(/\r?\n/)
-    const validationErrors = await validateYAMLWithSchema(yamlEqOfJSON, getSchemaWithLanguageSettings(schema))
-    validationErrors.map(error => {
-      const idx = error.range.end.line
-      if (idx <= lineContents.length) {
-        const key = lineContents[idx]?.split(':')?.[0]?.trim()
-        const partialYAML = getPartialYAML(lineContents, idx)
-        const partialJSONEqofYAML = parse(partialYAML)
-        if (key && !isEmpty(partialJSONEqofYAML)) {
-          const jsonPathOfKey = findLeafToParentPath(partialJSONEqofYAML, key)
-          if (jsonPathOfKey) {
-            if (errorMap.has(jsonPathOfKey)) {
-              const existingErrors = errorMap.get(jsonPathOfKey) || []
-              existingErrors.push(error.message)
-              errorMap.set(jsonPathOfKey, existingErrors)
-            } else {
-              errorMap.set(jsonPathOfKey, [error.message])
-            }
-          }
-        }
-      }
+    const result = validate(jsonObj, schema, {
+      nestedErrors: true,
+      allowUnknownAttributes: true,
+      required: false
     })
 
-    return errorMap
-  } catch (err) {
+    if (result.valid) return errorMap
+
+    return result.errors.reduce((acc, error) => {
+      const path = error.path.join('.')
+      const value = acc.get(path) ?? []
+      value.push(error.message)
+      return acc.set(path, value)
+    }, errorMap)
+  } catch (_) {
     return errorMap
   }
 }
 
-const setUpLanguageService = (schema: Record<string, any>) => {
-  const languageService = yamlLanguageService.getLanguageService()
-  languageService?.configure(schema)
-  return languageService
-}
-
-const getSchemaWithLanguageSettings = (schema: Record<string, any>): Record<string, any> => {
+const getDiagnosticsOptions = (schema: Record<string, any>): DiagnosticsOptions => {
   return {
     validate: true,
-    enableSchemaRequest: true,
+    enableSchemaRequest: false,
     hover: true,
     completion: true,
     schemas: [
       {
         fileMatch: ['*'],
-        schema
+        schema,
+        // uri should ideally be the source of the schema, but most of the consumers of YamlBuilder don't have URIs for their schemas.
+        // Hence a generic URI is used for now.
+        uri: 'https://github.com/harness/harness-schema'
       }
     ]
   }
 }
 
-export {
-  validateYAML,
-  validateYAMLWithSchema,
-  validateJSONWithSchema,
-  getSchemaWithLanguageSettings,
-  DEFAULT_YAML_PATH,
-  findLeafToParentPath
-}
+export { validateJSONWithSchema, getDiagnosticsOptions, DEFAULT_YAML_PATH, findLeafToParentPath }

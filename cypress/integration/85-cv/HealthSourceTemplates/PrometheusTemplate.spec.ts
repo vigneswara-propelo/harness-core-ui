@@ -76,7 +76,7 @@ describe('Health Source - Prometheus', () => {
     cy.contains('span', validations.groupName).should('not.exist')
 
     cy.findByRole('button', { name: /Fetch records/i }).should('be.disabled')
-    cy.get('div[class="view-lines"]').type(`classes	{}`)
+    cy.get('.view-lines').type(`classes	{}`)
     cy.contains('span', validations.query).should('not.exist')
 
     cy.contains('p', 'Submit query to see records from Prometheus').should('be.visible')
@@ -131,7 +131,7 @@ describe('Health Source - Prometheus', () => {
     cy.get('input[name="groupName"]').click()
     cy.contains('li', 'Group 1').click()
 
-    cy.get('div[class="view-lines"]').type(`classes	{}`)
+    cy.get('.view-lines').type(`classes	{}`)
 
     cy.contains('div', 'Assign').click()
     cy.get('input[name="sli"]').click({ force: true })

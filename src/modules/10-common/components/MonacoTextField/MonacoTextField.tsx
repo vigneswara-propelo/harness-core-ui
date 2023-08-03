@@ -6,20 +6,19 @@
  */
 
 import React from 'react'
+import * as monaco from 'monaco-editor'
 import type { MonacoEditorBaseProps, MonacoEditorProps } from 'react-monaco-editor'
 import { FormikProps, connect } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
 import { Dialog, Classes } from '@blueprintjs/core'
 import { Button, Container } from '@harness/uicore'
-import type { languages, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { useDeepCompareEffect } from '@common/hooks'
 
 import css from './MonacoTextField.module.scss'
-
-type Languages = typeof languages
 
 export interface MonacoTextFieldProps {
   name: string
@@ -70,24 +69,30 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
     let disposable: IDisposable | null = null
 
     if (Array.isArray(expressions) && expressions.length > 0) {
-      const suggestions: Array<Partial<languages.CompletionItem>> = expressions
-        .filter(label => label)
-        .map(label => ({
-          label,
-          insertText: label + '>',
-          kind: 13
-        }))
-
-      disposable = (monaco?.languages as Languages)?.registerCompletionItemProvider(LANG_ID, {
+      disposable = monaco?.languages?.registerCompletionItemProvider(LANG_ID, {
         triggerCharacters: ['+', '.'],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        provideCompletionItems(model, position): any {
+        provideCompletionItems(model, position) {
+          const word = model.getWordUntilPosition(position)
+          const range: monaco.IRange = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn
+          }
           const prevText = model.getValueInRange({
             startLineNumber: position.lineNumber,
             startColumn: 0,
             endLineNumber: position.lineNumber,
             endColumn: position.column
           })
+          const suggestions = expressions
+            .filter(label => label)
+            .map(label => ({
+              label,
+              insertText: label + '>',
+              kind: 13,
+              range
+            }))
 
           if (VAR_REGEX.test(prevText)) {
             return { suggestions }
@@ -111,7 +116,7 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
         language={LANG_ID}
         options={getDefaultMonacoConfig(!!disabled)}
         onChange={txt => formik.setFieldValue(name, txt)}
-        {...({ name: props.name, 'data-testid': props['data-testid'] } as any)} // this is required for test cases
+        {...{ name: props.name, 'data-testid': props['data-testid'] }} // this is required for test cases
       />
       {fullScreenAllowed && !isFullScreen ? (
         <Button
@@ -144,4 +149,4 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
   )
 }
 
-export const MonacoTextField = connect<MonacoTextFieldProps>(MonacoText as any)
+export const MonacoTextField = connect<MonacoTextFieldProps, unknown>(MonacoText)

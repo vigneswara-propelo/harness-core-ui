@@ -18,7 +18,7 @@ describe('Custom Artifact Trigger', () => {
     const artifactTypeCy = 'Artifact_Custom'
 
     const fillArtifactData = (): void => {
-      cy.get('.react-monaco-editor-container').click().focused().type(script)
+      cy.get('.react-monaco-editor-container').click().focused().type(script, { force: true })
       cy.get('input[name="artifactsArrayPath"]').clear().type(artifactsArrayPath)
       cy.get('input[name="versionPath"]').clear().type(versionPath)
       scriptInputVariables.forEach((scriptInputVariable, index) => {

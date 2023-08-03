@@ -84,7 +84,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.contains('span', 'Tags are required.').should('be.visible')
     cy.findByPlaceholderText('Type and press enter to create a tag').type('GCO')
 
-    cy.get('div[class="view-lines"]').type('{}')
+    cy.get('.view-lines').type('{}')
     cy.contains('span', 'Tags are required.').should('not.exist')
 
     cy.intercept('POST', sampleDataAPI, errorResponse)
@@ -226,7 +226,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.findByRole('button', { name: /Submit/i }).click()
 
     cy.contains('span', validations.query).should('be.visible')
-    cy.get('div[class="view-lines"]').type('{}')
+    cy.get('.view-lines').type('{}')
     cy.contains('span', validations.query).should('not.exist')
 
     cy.contains('p', 'Submit query to see records from Stackdriver Logs').should('be.visible')
@@ -255,7 +255,7 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.findByRole('button', { name: /Add Query/i }).click()
 
-    cy.get('div[class="view-lines"]').type('{}')
+    cy.get('.view-lines').type('{}')
     cy.intercept('POST', logSampleDataAPI, logSampleDataResponse)
     cy.findByRole('button', { name: /Fetch records/i }).click()
 

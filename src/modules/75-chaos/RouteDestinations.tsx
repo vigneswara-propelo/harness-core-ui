@@ -23,7 +23,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
-import { validateYAMLWithSchema } from '@common/utils/YamlUtils'
 import PipelineStudioFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
@@ -375,7 +374,6 @@ export default function ChaosRoutes(): React.ReactElement {
             UserGroupsInput,
             ScheduleFreezeForm
           }}
-          customFunctions={{ validateYAMLWithSchema }}
         />
       </RouteWithLayout>
     </>

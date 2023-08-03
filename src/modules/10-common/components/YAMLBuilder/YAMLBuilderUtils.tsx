@@ -11,10 +11,9 @@ import type { Diagnostic } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
 import { get, isEmpty } from 'lodash-es'
 import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
-import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { Module } from 'framework/types/ModuleName'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
+import { findLeafToParentPath } from '../../utils/YamlUtils'
 
 /**
  * Get YAML from editor with placeholder added at current position in editor
@@ -108,36 +107,6 @@ const getValidationErrorMessagesForToaster = (
     )
   })
   return React.createElement('ul', { id: 'ul-errors' }, errorRenderItemList)
-}
-
-const verifyYAML = (args: {
-  updatedYaml: string
-  setYamlValidationErrors: (yamlValidationErrors: Map<number, string> | undefined) => void
-  showError: ToasterProps['showError']
-  errorMessage: string
-  schema?: Record<string, any>
-}): Map<number, string> | undefined => {
-  const { updatedYaml, setYamlValidationErrors, showError, schema, errorMessage } = args
-  if (!schema) {
-    return
-  }
-  if (updatedYaml) {
-    try {
-      validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema))
-        .then((errors: Diagnostic[]) => {
-          const validationErrors = getYAMLValidationErrors(errors)
-          setYamlValidationErrors(validationErrors)
-          return validationErrors
-        })
-        .catch((error: string) => {
-          showError(error, 5000)
-        })
-    } catch (err) {
-      showError(errorMessage)
-    }
-    return
-  }
-  setYamlValidationErrors(undefined)
 }
 
 /*  Find all (x: lineNumber, y: colNumber) coordinates for matching keys in editor content */
@@ -319,12 +288,18 @@ const getClosestStepIndexInCurrentStage = ({
 export const StepMatchRegex = '-\\sname:'
 export const StageMatchRegex = 'steps:'
 
+const getValidationErrorMapFromMarkers = (markers: editor.IMarker[]): Map<number, string> => {
+  return markers.reduce((map, marker) => {
+    return map.set(marker.endLineNumber, marker.message)
+  }, new Map<number, string>())
+}
+
 export {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
   getYAMLValidationErrors,
+  getValidationErrorMapFromMarkers,
   getValidationErrorMessagesForToaster,
-  verifyYAML,
   findPositionsForMatchingKeys,
   getStageYAMLPathForStageIndex,
   getStepYAMLPathForStepInsideAStage,

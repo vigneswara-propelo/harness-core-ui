@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { CompletionItem } from 'vscode-languageserver-types'
+import type * as monaco from 'monaco-editor'
 import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 import type { PluginMetadataResponse } from 'services/ci'
 import type { Status } from '@common/utils/Constants'
@@ -48,7 +48,7 @@ export interface YamlBuilderProps {
   theme?: Theme
   yamlSanityConfig?: YamlSanityConfig
   /* Snippet section related props */
-  onChange?: (isEditorDirty: boolean, updatedYaml: string, schemaValidationErrorMap?: Map<number, string>) => void
+  onChange?: (isEditorDirty: boolean, updatedYaml: string) => void
   onErrorCallback?: (error: Record<string, any>) => void
   renderCustomHeader?: () => React.ReactElement | null
   openDialogProp?: () => void
@@ -60,9 +60,13 @@ export interface YamlBuilderProps {
   customCss?: React.HTMLAttributes<HTMLDivElement>['className']
   setPlugin?: (plugin: Record<string, any>) => void
   setPluginOpnStatus?: (status: Status) => void
+  /* onValidate gets called every time errors in the editor change */
+  onValidate?: (errorMap?: Map<number, string>) => void
 }
 
-export type CompletionItemInterface = CompletionItem
+// `range` in `monaco.languages.CompletionItem` is not optional in the latest version,
+// but existing functions don't return `range` for completion items (suggestions), so making it optional here
+export type CompletionItemInterface = Optional<monaco.languages.CompletionItem, 'range'>
 
 interface SchemaInterace {
   fileMatch: string[]

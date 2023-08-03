@@ -215,7 +215,7 @@ export const savePipeline = (
       })
         .then((response: unknown) => {
           if (typeof response === 'string') {
-            return JSON.parse(response as string) as Failure
+            return JSON.parse(response) as Failure
           } else {
             return response
           }
@@ -232,7 +232,7 @@ export const savePipeline = (
       })
         .then(async (response: unknown) => {
           if (typeof response === 'string') {
-            return JSON.parse(response as unknown as string) as Failure
+            return JSON.parse(response) as Failure
           } else {
             return response as unknown as Failure
           }

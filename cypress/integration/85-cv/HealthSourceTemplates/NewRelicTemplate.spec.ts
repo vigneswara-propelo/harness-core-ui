@@ -144,7 +144,7 @@ describe('Create empty monitored service', () => {
     cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
 
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
-    cy.get('div[class="view-lines"]').type(
+    cy.get('.view-lines').type(
       "SELECT average(`apm.service.transaction.duration`) FROM Metric WHERE appName = 'My Application' TIMESERIES"
     )
     cy.contains('span', 'Fetch records').click()
@@ -174,7 +174,7 @@ describe('Create empty monitored service', () => {
     cy.get('[data-testid="newRelicApplication"] input').should('have.value', 'My Application')
     cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
-    cy.get('div[class="view-lines"]').should(
+    cy.get('.view-lines').should(
       'have.text',
       "SELECT average(`apm.service.transaction.duration`) FROM Metric WHERE appName = 'My Application' TIMESERIES"
     )

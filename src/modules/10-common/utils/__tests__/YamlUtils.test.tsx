@@ -6,28 +6,15 @@
  */
 
 import { noop } from 'lodash-es'
-import yaml from './mocks/sample.yaml'
-import schema from './mocks/schema.json'
 import pipeline from './mocks/pipeline.json'
 import pipelineSchema from './mocks/pipeline-schema.json'
-
-import { validateYAMLWithSchema, validateYAML, validateJSONWithSchema, findLeafToParentPath } from '../YamlUtils'
-import { yamlStringify } from '../YamlHelperMethods'
+import { validateJSONWithSchema, findLeafToParentPath } from '../YamlUtils'
 
 jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
 }))
 
 describe('Test YamlUtils', () => {
-  test('Test validateYAMLWithSchema & validateYAML methods', () => {
-    validateYAMLWithSchema(yamlStringify(yaml), schema)?.then(res => {
-      expect(res).toHaveLength(0)
-    })
-    validateYAML(yamlStringify(yaml))?.then(res => {
-      expect(res).toHaveLength(0)
-    })
-  })
-
   test('Test validateJSONWithSchema', () => {
     validateJSONWithSchema({ pipeline }, pipelineSchema?.data)
       ?.then(res => expect(res.size).toBe(0))

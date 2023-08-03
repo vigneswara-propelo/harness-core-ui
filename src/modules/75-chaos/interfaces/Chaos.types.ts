@@ -6,7 +6,6 @@
  */
 
 import type React from 'react'
-import type { Diagnostic } from 'vscode-languageserver-types'
 import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { OverviewChartsWithToggleProps } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import type { SchedulePanelPropsInterface } from '@common/components/SchedulePanel/SchedulePanel'
@@ -24,9 +23,6 @@ export interface ChaosCustomMicroFrontendProps {
     SchedulePanel?: React.ComponentType<SchedulePanelPropsInterface>
     UserGroupsInput?: React.ComponentType<FormikUserGroupsInput>
     ScheduleFreezeForm?: React.ComponentType<ScheduleFreezeFormProps>
-  }
-  customFunctions?: {
-    validateYAMLWithSchema?: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
   }
 }
 

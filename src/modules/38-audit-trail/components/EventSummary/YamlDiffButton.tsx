@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { MonacoDiffEditorProps } from 'react-monaco-editor'
 import { Text, Layout, Icon, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import React, { ReactElement, useMemo, useState } from 'react'
@@ -20,7 +21,7 @@ interface YamlDiffButtonProps {
   accountIdentifier: string
 }
 
-const DIFF_VIEWER_OPTIONS = {
+const DIFF_VIEWER_OPTIONS: MonacoDiffEditorProps['options'] = {
   ignoreTrimWhitespace: true,
   minimap: { enabled: false },
   codeLens: false,
@@ -29,7 +30,9 @@ const DIFF_VIEWER_OPTIONS = {
   lineNumbers: 'off' as const,
   inDiffEditor: true,
   scrollBeyondLastLine: false,
-  smartSelect: false
+  smartSelect: {
+    selectLeadingAndTrailingWhitespace: false
+  }
 }
 
 const YamlDiffButton: React.FC<YamlDiffButtonProps> = ({ auditId, accountIdentifier }) => {

@@ -11,6 +11,7 @@ import { get } from 'lodash-es'
 import cx from 'classnames'
 import { Layout, Container, Text, Button, useToggle, Heading, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import type { MonacoDiffEditorProps } from 'react-monaco-editor'
 import {
   CF_LOCAL_STORAGE_ENV_KEY,
   DEFAULT_ENV,
@@ -43,7 +44,7 @@ const drawerStates: IDrawerProps = {
   className: css.container
 }
 
-const DIFF_VIEWER_OPTIONS = {
+const DIFF_VIEWER_OPTIONS: MonacoDiffEditorProps['options'] = {
   ignoreTrimWhitespace: true,
   minimap: { enabled: false },
   codeLens: false,
@@ -52,7 +53,9 @@ const DIFF_VIEWER_OPTIONS = {
   lineNumbers: 'off' as const,
   inDiffEditor: true,
   scrollBeyondLastLine: false,
-  smartSelect: false
+  smartSelect: {
+    selectLeadingAndTrailingWhitespace: false
+  }
 }
 
 export interface EventSummaryProps {

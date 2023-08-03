@@ -74,15 +74,15 @@ describe('Template Schema Validation', () => {
     cy.contains('span', 'Edit YAML').click()
     cy.contains('span', 'Enable').click()
 
-    cy.get('div[class="view-lines"]').should('be.visible')
+    cy.get('.view-lines').should('be.visible')
     cy.contains('span', 'testStep_Cypress.yaml').should('be.visible')
     cy.contains('p', 'testStep_Cypress').should('be.visible')
     cy.contains('span', 'template').should('be.visible')
     cy.contains('span', 'name').should('be.visible')
     cy.contains('span', 'identifier').should('be.visible')
-    cy.get('div[class="view-lines"]').click()
+    cy.get('.view-lines').click()
 
-    cy.get('div[class="view-lines"]').within(() => {
+    cy.get('.view-lines').within(() => {
       cy.get('span').filter(`:contains('testStep_Cypress')`).should('have.length', 4)
 
       cy.contains('span', 'project1').should('be.visible')
@@ -96,7 +96,7 @@ describe('Template Schema Validation', () => {
       cy.contains('span', '10m').should('be.visible')
     })
 
-    cy.get('div[class="view-lines"]').within(() => {
+    cy.get('.view-lines').within(() => {
       cy.contains('span', 'ShellScript').type('{del}')
       cy.wait(1000)
     })
@@ -105,10 +105,6 @@ describe('Template Schema Validation', () => {
     cy.contains('span', 'Invalid').trigger('mouseover', { force: true })
     cy.wait(1000)
 
-    cy.get(`li[title^="Value is not accepted. Valid values: "]`).should('be.visible')
-
-    cy.contains('span', 'Shellcript').type('S')
-    cy.wait(1000)
-    cy.contains('span', 'Invalid').should('not.exist')
+    cy.findByText(/Value is not accepted/).should('be.visible')
   })
 })

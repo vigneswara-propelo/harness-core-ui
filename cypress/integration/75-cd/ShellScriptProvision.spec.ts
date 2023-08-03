@@ -54,7 +54,7 @@ describe('Shell Script Provision', () => {
     // select Shell Script Provision step
     cy.contains('p', 'Shell Script Provision').should('be.visible')
     cy.get('input[placeholder="Enter Step Name"]').fillName('Step1')
-    cy.get('[class*="ShellScriptMonaco"] textarea[class="inputarea"]').type('echo "hello"')
+    cy.get('.monaco-editor .inputarea').type('echo "hello"', { force: true })
     cy.get('[data-testid="optional-config-summary"]').click()
     cy.get('[data-testid="add-environmentVar"]').click()
 

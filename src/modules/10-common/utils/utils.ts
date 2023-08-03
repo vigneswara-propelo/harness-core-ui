@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { ForwardedRef } from 'react'
 import { getMultiTypeFromValue, IconName, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { defaultTo, isUndefined } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -319,4 +320,15 @@ export const convertStringBooleanToBoolean = (value: string): boolean | string =
     return false
   }
   return value
+}
+
+export const setForwardedRef = <T>(ref: ForwardedRef<T>, value: T): void => {
+  if (!ref) return
+
+  if (typeof ref === 'function') {
+    ref(value)
+    return
+  }
+
+  ref.current = value
 }

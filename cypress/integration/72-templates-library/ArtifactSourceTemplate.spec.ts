@@ -100,7 +100,7 @@ describe('Artifact Source Template creation and assertion', () => {
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
 
     cy.contains('span', 'Unsaved changes').should('be.visible')
-    cy.get('div[class="view-lines"]').within(() => {
+    cy.get('.view-lines').within(() => {
       cy.contains('span', 'artifactSourceTemplate_cypress').should('be.visible')
       cy.contains('span', 'ArtifactSource').should('be.visible')
       cy.contains('span', '1122').should('be.visible')

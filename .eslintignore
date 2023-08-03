@@ -1,5 +1,3 @@
-src/modules/10-common/components/YAMLBuilder/*
-src/modules/10-common/components/MonacoEditor/*
 src/services
 jest.config.js
 scripts/

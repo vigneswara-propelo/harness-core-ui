@@ -5,33 +5,46 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject } from 'react'
+import type { editor } from 'monaco-editor'
+import React, { forwardRef } from 'react'
 import { MonacoDiffEditor as ReactMonacoDiffEditor } from 'react-monaco-editor'
-import type { MonacoDiffEditorProps, DiffEditorWillMount } from 'react-monaco-editor'
-import { setupMonacoEnvironment } from '@common/utils/MonacoEditorUtils'
+import type { MonacoDiffEditorProps, DiffEditorWillMount, DiffEditorDidMount } from 'react-monaco-editor'
+import { suppressHotJarRecording, setForwardedRef } from '@common/utils/utils'
 
-export type ReactMonacoEditorRef =
-  | ((instance: ReactMonacoDiffEditor | null) => void)
-  | MutableRefObject<ReactMonacoDiffEditor | null>
-  | null
+export type MonacoDiffEditorRef = editor.IStandaloneDiffEditor
 
 export interface ExtendedMonacoDiffEditorProps extends MonacoDiffEditorProps {
   name?: string
   'data-testid'?: string
 }
 
-export type Monaco = Parameters<DiffEditorWillMount>[0]
+const MonacoDiffEditor = forwardRef<MonacoDiffEditorRef, ExtendedMonacoDiffEditorProps>(
+  (props: ExtendedMonacoDiffEditorProps, ref): React.ReactElement => {
+    const editorWillMount: DiffEditorWillMount = monaco => {
+      monaco?.editor?.defineTheme('disable-theme', {
+        base: 'vs',
+        inherit: true,
+        rules: [
+          {
+            token: '',
+            background: 'f3f3fa'
+          }
+        ],
+        colors: {
+          'editor.background': '#f3f3fa'
+        }
+      })
 
-const MonacoDiffEditor = (props: ExtendedMonacoDiffEditorProps, ref: ReactMonacoEditorRef): React.ReactElement => {
-  const monacoRef = React.useRef<Monaco | null>(null)
+      // Don't allow HotJar to record content in Yaml/Code editor(s)
+      suppressHotJarRecording([...document.querySelectorAll('.react-monaco-editor-container')])
 
-  React.useEffect(() => {
-    try {
-      const remeasureFonts = (): void => {
-        monacoRef?.current?.editor?.remeasureFonts()
-      }
+      props.editorWillMount?.(monaco)
+    }
 
-      // TODO: font name should be a global (for all)
+    const editorDidMount: DiffEditorDidMount = (editor, monaco) => {
+      setForwardedRef(ref, editor)
+
+      const remeasureFonts = (): void => monaco?.editor?.remeasureFonts()
       const loaded = document.fonts.check('1em Roboto Mono')
 
       if (loaded) {
@@ -39,27 +52,23 @@ const MonacoDiffEditor = (props: ExtendedMonacoDiffEditorProps, ref: ReactMonaco
       } else {
         document.fonts.ready.then(remeasureFonts)
       }
-    } catch (_e) {
-      // do  nothing
+
+      props.editorDidMount?.(editor, monaco)
     }
-  }, [])
 
-  const editorWillMount: DiffEditorWillMount = monaco => {
-    monacoRef.current = monaco
-    monaco?.editor?.defineTheme('disable-theme', {
-      base: 'vs',
-      inherit: true,
-      rules: [],
-      colors: {
-        'editor.background': '#f3f3fa'
-      }
-    })
-    setupMonacoEnvironment()
+    const theme = props.options?.readOnly ? 'disable-theme' : 'vs'
+
+    return (
+      <ReactMonacoDiffEditor
+        {...props}
+        theme={theme}
+        editorWillMount={editorWillMount}
+        editorDidMount={editorDidMount}
+      />
+    )
   }
+)
 
-  const theme = props.options?.readOnly ? 'disable-theme' : 'vs'
+MonacoDiffEditor.displayName = 'MonacoDiffEditor'
 
-  return <ReactMonacoDiffEditor {...props} ref={ref} theme={theme} editorWillMount={editorWillMount} />
-}
-
-export default React.forwardRef(MonacoDiffEditor)
+export default MonacoDiffEditor

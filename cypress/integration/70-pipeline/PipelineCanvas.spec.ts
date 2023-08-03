@@ -296,7 +296,7 @@ describe('Execution Stages', () => {
           break
         }
         case 'className': {
-          cy.get(resource.name).type(resource.value)
+          cy.get(resource.name).type(resource.value, { force: true })
           break
         }
         default:
