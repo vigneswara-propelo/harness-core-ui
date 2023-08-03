@@ -41,7 +41,7 @@ export default function BaseAnalyzeDeploymentImpact(props: {
           <FormInput.MultiTypeInput
             name={'spec.duration'}
             data-testid="duration"
-            label={getString('duration')}
+            label={getString('cv.analyzeDeploymentImpact.duration')}
             selectItems={ANALYSIS_DURATION_OPTIONS}
             multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
             useValue
