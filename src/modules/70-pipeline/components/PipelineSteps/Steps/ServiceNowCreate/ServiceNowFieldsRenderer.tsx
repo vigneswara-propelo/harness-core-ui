@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import cx from 'classnames'
-import { isEmpty, isNull, isUndefined } from 'lodash-es'
+import { defaultTo, isEmpty, isNull, isUndefined } from 'lodash-es'
 import { Button, FormInput, Layout, AllowedTypes } from '@harness/uicore'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
@@ -30,8 +30,6 @@ interface MappedComponentInterface {
   expressions: string[]
   index: number
 }
-// TODO: Going forward this should be governed by metadata returned by BE API once it's available
-export const EXPANDABLE_INPUT_SUPPORTED_FIELDS = new Set(['work_notes', 'work_notes_list'])
 
 export const TEXT_INPUT_SUPPORTED_FIELD_TYPES = new Set(['string', 'glide_date_time', 'integer', 'boolean', 'unknown'])
 
@@ -54,7 +52,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
     return selectedField.allowedValues && selectedField.schema?.type === 'option'
   }, [selectedField])
 
-  const showExpandableTextField = () => EXPANDABLE_INPUT_SUPPORTED_FIELDS.has(selectedField.key)
+  const showExpandableTextField = () => defaultTo(selectedField?.schema?.multilineText, false)
 
   if (showMultiTypeField()) {
     return (

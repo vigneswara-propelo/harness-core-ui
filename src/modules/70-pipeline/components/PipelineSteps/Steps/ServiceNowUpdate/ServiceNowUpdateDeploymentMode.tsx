@@ -36,10 +36,7 @@ import {
   ServiceNowFieldNGWithValue,
   ServiceNowStaticFields
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
-import {
-  EXPANDABLE_INPUT_SUPPORTED_FIELDS,
-  TEXT_INPUT_SUPPORTED_FIELD_TYPES
-} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
+import { TEXT_INPUT_SUPPORTED_FIELD_TYPES } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
@@ -381,7 +378,7 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
                     useValue
                   />
                 )
-              } else if (EXPANDABLE_INPUT_SUPPORTED_FIELDS.has(customFields[fieldIndex]?.key)) {
+              } else if (defaultTo(customFields[fieldIndex]?.schema?.multilineText, false)) {
                 return (
                   <FormMultiTypeTextAreaField
                     label={customFields[fieldIndex].name}

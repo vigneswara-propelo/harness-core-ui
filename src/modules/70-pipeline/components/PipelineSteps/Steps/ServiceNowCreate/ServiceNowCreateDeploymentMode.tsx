@@ -27,10 +27,7 @@ import type {
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
-  EXPANDABLE_INPUT_SUPPORTED_FIELDS,
-  TEXT_INPUT_SUPPORTED_FIELD_TYPES
-} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
+import { TEXT_INPUT_SUPPORTED_FIELD_TYPES } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 import type {
   ServiceNowCreateDeploymentModeFormContentInterface,
   ServiceNowCreateDeploymentModeProps
@@ -357,7 +354,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
                     useValue
                   />
                 )
-              } else if (EXPANDABLE_INPUT_SUPPORTED_FIELDS.has(customFields[fieldIndex]?.key)) {
+              } else if (defaultTo(customFields[fieldIndex]?.schema?.multilineText, false)) {
                 return (
                   <FormMultiTypeTextAreaField
                     label={customFields[fieldIndex].name}
