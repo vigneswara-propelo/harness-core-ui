@@ -186,7 +186,7 @@ const RancherInfrastructureSpecEditable: React.FC<RancherInfrastructureSpecEdita
                     pathParams: {
                       org: orgIdentifier,
                       project: projectIdentifier,
-                      connector: connectorRef
+                      connector: formik?.values?.connectorRef?.value
                     }
                   })
                     .then(res => {
