@@ -45,7 +45,7 @@ export default function VerificationTypeDropdown({
 
   return (
     <Container>
-      <Text color={Color.GREY_600} margin={{ bottom: 'xsmall' }}>
+      <Text color={Color.GREY_600} margin={{ bottom: 'xsmall' }} tooltipProps={{ dataTooltipId: 'cvData_spec.type' }}>
         {getString('platform.connectors.cdng.continousVerificationType')}
       </Text>
       <Popover

@@ -1307,9 +1307,7 @@ verifyStep:
   controlNodeLabel: Control Node
   testNodeLabel: Test Node
   nodeFilteringTitle: Node Filtering
-  nodeFilteringDescription:
-    Node filtering helps to reduce the number of nodes analyzed in continuous verification by specifying criteria
-    for inclusion. It improves performance, reduces costs, and increases accuracy by focusing on relevant nodes.
+  nodeFilteringDescription: Optional filtering to have greater explicit filtering of new nodes. Filtering is on PodName.
   controlNodePlaceholder: Enter .* for all or specific regex like control-1|control-2
   testNodePlaceholder: Enter .* for all or specific regex like test-1|test-2
   shouldUseCDNodesLabel: Use node details from CD

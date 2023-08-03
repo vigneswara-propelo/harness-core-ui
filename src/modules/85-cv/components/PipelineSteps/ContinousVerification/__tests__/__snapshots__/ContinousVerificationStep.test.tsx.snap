@@ -1046,11 +1046,16 @@ exports[`Test ContinousVerificationStep Step should render editView when current
           <div
             class="StyledProps--font StyledProps--main"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="cvData_spec.type"
             >
-              platform.connectors.cdng.continousVerificationType
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
+              >
+                platform.connectors.cdng.continousVerificationType
+              </p>
+            </div>
             <div
               class="bp3-popover-wrapper bp3-fill"
             >
@@ -1891,11 +1896,16 @@ exports[`Test ContinousVerificationStep Step should render editView when current
           <div
             class="StyledProps--font StyledProps--main"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="cvData_spec.type"
             >
-              platform.connectors.cdng.continousVerificationType
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-xsmall"
+              >
+                platform.connectors.cdng.continousVerificationType
+              </p>
+            </div>
             <div
               class="bp3-popover-wrapper bp3-fill"
             >
