@@ -1599,6 +1599,7 @@ export interface ResourceDTO {
     | 'IP_ALLOWLIST_CONFIG'
     | 'NETWORK_MAP'
     | 'CET_AGENT_TOKEN'
+    | 'WORKSPACE'
     | 'CET_CRITICAL_EVENT'
 }
 

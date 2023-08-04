@@ -31,6 +31,8 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import type { ResourceDTO } from 'services/audit'
 import { IACMApp, IACMComponentMounter } from './components/IACMApp'
 
 const moduleParams: ModulePathParams = {
@@ -114,3 +116,20 @@ function IACMRoutes(): JSX.Element {
 }
 
 export default IACMRoutes
+
+AuditTrailFactory.registerResourceHandler('WORKSPACE', {
+  moduleIcon: {
+    name: 'iacm'
+  },
+  moduleLabel: 'common.iacm',
+  resourceLabel: 'pipelineSteps.workspace',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    return routes.toIACMWorkspace({
+      orgIdentifier,
+      accountId: accountIdentifier,
+      projectIdentifier,
+      workspaceIdentifier: resource.identifier
+    })
+  }
+})

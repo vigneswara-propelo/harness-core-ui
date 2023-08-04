@@ -2260,6 +2260,14 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/workspaces`
   ),
+  toIACMWorkspace: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      workspaceIdentifier
+    }: Partial<ProjectPathProps> & { workspaceIdentifier: string }) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/workspaces/${workspaceIdentifier}/resources`
+  ),
   toIACMSetup: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/`
