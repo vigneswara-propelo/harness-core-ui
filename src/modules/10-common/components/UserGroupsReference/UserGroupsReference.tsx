@@ -7,7 +7,7 @@
 
 import React, { ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Container, Layout, AvatarGroup } from '@harness/uicore'
+import { Text, Container, Layout, AvatarGroup, shouldShowError, getErrorInfoFromErrorObject } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import {
   UserGroupDTO,
@@ -122,8 +122,12 @@ const fetchRecords = async (
       done(response)
     }
   } catch (error) {
-    showError(error as string)
     done([])
+
+    const errorMessage = getErrorInfoFromErrorObject(error)
+    if (errorMessage && shouldShowError(error)) {
+      showError(errorMessage)
+    }
   }
 }
 
