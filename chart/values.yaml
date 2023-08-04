@@ -2,6 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 global:
+  kubeVersion: ""
   loadbalancerURL: ""
   imagePullSecrets: []
   ingress:
@@ -38,7 +39,7 @@ image:
   repository: harness/nextgenui-signed
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.312.15"
+  tag: "0.353.10"
   digest: ""
   imagePullSecrets: []
 
@@ -109,21 +110,42 @@ service:
 
 resources:
   limits:
-    cpu: 0.2
     memory: 200Mi
   requests:
     cpu: 0.2
     memory: 200Mi
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
   maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  targetCPU: ""
+  targetMemory: ""
 
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+additionalConfigs: {}
+
+# extraVolumes:
+# - name: volume-test
+#   configMap:
+#     name: test-config
+#     readOnly: true
+extraVolumes: []
+
+# extraVolumeMounts:
+#   - name: test-volume-mount
+#     mountPath: /opt/harness/config
+extraVolumeMounts: []
+
+# lifecycleHooks:
+#   postStart:
+#     exec:
+#       command:
+#   preStop:
+#     exec:
+#       command:

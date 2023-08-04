@@ -1,6 +1,6 @@
 # next-gen-ui
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.353.10](https://img.shields.io/badge/AppVersion-0.353.10-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -14,20 +14,33 @@ A Helm chart for Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| additionalConfigs | object | `{}` |  |
 | affinity | object | `{}` |  |
-| autoscaling.enabled | bool | `true` |  |
+| autoscaling.enabled | bool | `false` |  |
 | autoscaling.maxReplicas | int | `100` |  |
 | autoscaling.minReplicas | int | `1` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| autoscaling.targetCPU | string | `""` |  |
+| autoscaling.targetMemory | string | `""` |  |
+| extraVolumeMounts | list | `[]` |  |
+| extraVolumes | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | global.imagePullSecrets | list | `[]` |  |
+| global.ingress.className | string | `"harness"` | set ingress object classname |
+| global.ingress.enabled | bool | `false` | create ingress objects |
+| global.ingress.hosts | list | `["my-host.example.org"]` | set host of ingressObjects |
+| global.ingress.objects | object | `{"annotations":{}}` | add annotations to ingress objects |
+| global.ingress.tls | object | `{"enabled":true,"secretName":""}` | set tls for ingress objects |
+| global.istio.enabled | bool | `false` | create virtualServices objects |
+| global.istio.gateway | object | `{"create":false}` | create gateway and use in virtualservice |
+| global.istio.virtualService | object | `{"gateways":null,"hosts":null}` | if gateway not created, use specified gateway and host |
+| global.kubeVersion | string | `""` |  |
 | global.loadbalancerURL | string | `""` |  |
 | image.digest | string | `""` |  |
 | image.imagePullSecrets | list | `[]` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"harness/nextgenui-signed"` |  |
-| image.tag | string | `"0.312.15"` |  |
+| image.tag | string | `"0.353.10"` |  |
 | imagePullSecrets | object | `{}` |  |
 | maxSurge | int | `1` |  |
 | maxUnavailable | int | `0` |  |
@@ -48,7 +61,6 @@ A Helm chart for Kubernetes
 | probes.startupProbe.httpGet.port | string | `"ng-ui-port"` |  |
 | probes.startupProbe.periodSeconds | int | `10` |  |
 | replicaCount | int | `1` |  |
-| resources.limits.cpu | float | `0.2` |  |
 | resources.limits.memory | string | `"200Mi"` |  |
 | resources.requests.cpu | float | `0.2` |  |
 | resources.requests.memory | string | `"200Mi"` |  |
