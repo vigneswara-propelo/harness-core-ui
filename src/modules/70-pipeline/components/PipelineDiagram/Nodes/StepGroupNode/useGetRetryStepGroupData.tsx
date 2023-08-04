@@ -47,9 +47,14 @@ export const useGetRetryStepGroupData = (props: RetryStepGroupProps): RetryStepG
   const [retryStepGroupStepsData, setRetryStepGroupStepsData] = React.useState<ExecutionPipelineNode<ExecutionNode>[]>(
     []
   )
-  const { addNewNodeToMap } = useExecutionContext()
+  const { addNewNodeToMap, pipelineExecutionDetail } = useExecutionContext()
+
+  const planExecutionId = defaultTo(
+    pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata?.planExecutionId,
+    executionIdentifier
+  )
   const { data: executionNode, loading } = useGetExecutionSubGraphForNodeExecution({
-    planExecutionId: executionIdentifier,
+    planExecutionId: planExecutionId,
     nodeExecutionId: currentStepGroupRetryId,
     queryParams: {
       accountIdentifier: accountId,
@@ -57,7 +62,7 @@ export const useGetRetryStepGroupData = (props: RetryStepGroupProps): RetryStepG
       orgIdentifier
     },
     pathParams: {
-      planExecutionId: executionIdentifier,
+      planExecutionId: planExecutionId,
       nodeExecutionId: currentStepGroupRetryId
     },
     lazy: isEmpty(currentStepGroupRetryId)
