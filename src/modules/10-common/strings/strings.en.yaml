@@ -1576,3 +1576,11 @@ csBot:
 addNewCreditCard: Add a new card
 analyzing: analyzing
 expressionDefaultError: Expression not found in selected execution
+billingInfo:
+  formikErrors:
+    zipCodeValidator: Must be only digits
+    specialCharactersValidator: Special Characters are not allowed
+  lengthMessage:
+    addressLength: Cannot be more than 100 characters
+    cityLenght: Cannot be more than 20 characters
+    zipCode: Cannot be more than 10 characters

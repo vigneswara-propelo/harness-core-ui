@@ -132,6 +132,11 @@ export interface StringsMap {
   'common.billed': string
   'common.billing': string
   'common.billingAddress': string
+  'common.billingInfo.formikErrors.specialCharactersValidator': string
+  'common.billingInfo.formikErrors.zipCodeValidator': string
+  'common.billingInfo.lengthMessage.addressLength': string
+  'common.billingInfo.lengthMessage.cityLenght': string
+  'common.billingInfo.lengthMessage.zipCode': string
   'common.bitrise': string
   'common.blank': string
   'common.branchName': string

@@ -18,6 +18,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { getErrorMessage } from '@auth-settings/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { billingInfoAddressCityRegex, zipCodeRegex } from '@common/utils/StringUtils'
 import type { StateByCountryMap } from '@common/hooks/useRegionList'
 import type { Module } from 'framework/types/ModuleName'
 import BillingContact, { InitialBillingInfo } from './BillingContact'
@@ -216,11 +217,20 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
       initialValues={initValues}
       validationSchema={Yup.object().shape({
         country: Yup.string().required(getString('common.banners.trial.contactSalesForm.countryValidation')),
-        billingAddress: Yup.string().required(getString('platform.authSettings.billingInfo.formikErrors.address')),
-        city: Yup.string().required(getString('platform.authSettings.billingInfo.formikErrors.city')),
+        billingAddress: Yup.string()
+          .required(getString('platform.authSettings.billingInfo.formikErrors.address'))
+          .matches(billingInfoAddressCityRegex, getString('common.billingInfo.formikErrors.specialCharactersValidator'))
+          .max(100, getString('common.billingInfo.lengthMessage.addressLength')),
+        city: Yup.string()
+          .required(getString('platform.authSettings.billingInfo.formikErrors.city'))
+          .matches(billingInfoAddressCityRegex, getString('common.billingInfo.formikErrors.specialCharactersValidator'))
+          .max(20, getString('common.billingInfo.lengthMessage.cityLenght')),
         state: Yup.string().required(getString('platform.authSettings.billingInfo.formikErrors.state')),
-        zipCode: Yup.string().required(getString('platform.authSettings.billingInfo.formikErrors.zipCode')),
-        companyName: Yup.string().required(getString('platform.authSettings.billingInfo.formikErrors.company'))
+        zipCode: Yup.string()
+          .required(getString('platform.authSettings.billingInfo.formikErrors.zipCode'))
+          .matches(zipCodeRegex, getString('common.billingInfo.formikErrors.zipCodeValidator'))
+          .max(10, getString('common.billingInfo.lengthMessage.zipCode')),
+        companyName: Yup.string().required(getString('common.billingInfo.formikErrors.zipCodeValidator'))
       })}
       onSubmit={(values: InitialBillingInfo): void => {
         handleSubmitData(values)

@@ -69,6 +69,10 @@ export const k8sAnnotationRegex = /^[a-z0-9A-Z]([a-z0-9A-Z-_./])*[a-z0-9A-Z]$/
 
 export const regexVersionLabel = /^[0-9a-zA-Z][^\s/&]*$/
 
+export const billingInfoAddressCityRegex = /^[a-zA-Z0-9,/ ]+$/
+
+export const zipCodeRegex = /^\d+$/
+
 export const HarnessFolderName = /^[A-Za-z0-9_\-/][A-Za-z0-9 _\-/]*$/
 
 export const GitSuffixRegex = /.git(\/)*$/g
