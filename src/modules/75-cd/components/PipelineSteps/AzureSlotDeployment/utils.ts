@@ -1,5 +1,4 @@
-import { defaultTo } from 'lodash-es'
-import { RUNTIME_INPUT_VALUE, MultiTypeInputType } from '@harness/uicore'
+import { RUNTIME_INPUT_VALUE, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { StageElementConfig, StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import type { InfraStructureDefinitionYaml, DeploymentStageConfig, EnvironmentYamlV2 } from 'services/cd-ng'
@@ -56,10 +55,14 @@ export const getEnvId = (selectedStage: SelectedStageType): string => {
     return ''
   }
 
-  return defaultTo(selectedStage?.stage?.spec?.environment?.environmentRef, '')
+  return (
+    selectedStage?.stage?.spec?.environment?.environmentRef ||
+    selectedStage?.stage?.template?.templateInputs?.spec?.environment?.environmentRef ||
+    ''
+  )
 }
 
-export const getInfraId = (selectedStage: SelectedStageType): string => {
+export const getInfraId = (selectedStage: SelectedStageType, infraSourceField?: string): string => {
   const envId = getEnvId(selectedStage)
   if (!envId || isMultiEnv(selectedStage)) {
     return ''
@@ -67,24 +70,44 @@ export const getInfraId = (selectedStage: SelectedStageType): string => {
 
   if (!isRuntimeEnvId(selectedStage) && !isRuntimeInfraId(selectedStage)) {
     const [infra] = selectedStage?.stage?.spec?.environment?.infrastructureDefinitions as InfraStructureDefinitionYaml[]
+    if (infraSourceField) {
+      return infra?.inputs?.spec?.[infraSourceField]
+    }
     return infra.identifier
   }
-
   return ''
 }
+
 /* eslint-disable */
 export const getEnvIdRuntime = (stageId: string, values: any): string => {
   const stage = getStage(stageId, values) as SelectedStageType
-  const envId = stage?.stage?.spec?.environment?.environmentRef
+  const envId =
+    stage?.stage?.spec?.environment?.environmentRef ||
+    stage?.stage?.template?.templateInputs?.spec?.environment?.environmentRef
   return envId || ''
 }
 /* eslint-disable */
-export const getInfraIdRuntime = (stageId: string, values: any): string => {
+export const getInfraIdRuntime = (stageId: string, values: any, infraSourceField?: string): string => {
   const stage = getStage(stageId, values) as SelectedStageType
+  const isTemplateStageInfra = stage?.stage?.template?.templateInputs?.spec?.environment?.infrastructureDefinitions?.[0]
+  if (isTemplateStageInfra) {
+    const [{ inputs, identifier }] = stage?.stage?.template?.templateInputs?.spec?.environment
+      ?.infrastructureDefinitions as InfraStructureDefinitionYaml[]
+    if (infraSourceField && infraSourceField === 'infrasctructure') {
+      return identifier
+    }
+    if (infraSourceField && inputs?.spec) {
+      return inputs?.spec?.[infraSourceField]
+    }
+  }
 
   if (stage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]) {
-    const [{ identifier }] = stage?.stage?.spec?.environment
+    const [{ identifier, inputs }] = stage?.stage?.spec?.environment
       ?.infrastructureDefinitions as InfraStructureDefinitionYaml[]
+    if (infraSourceField && inputs?.spec && infraSourceField !== 'infrasctructure') {
+      return inputs?.spec?.[infraSourceField]
+    }
+
     return identifier
   }
   return ''
@@ -96,4 +119,19 @@ export const getAllowableTypes = (selectedStage: SelectedStageType): MultiTypeIn
   }
 
   return [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+}
+
+export const infrastructurePath = 'template.templateInputs.spec.environment.infrastructureDefinitions[0]'
+export const resourceGroupPath = `${infrastructurePath}.inputs.spec.resourceGroup`
+export const connectorPath = `${infrastructurePath}.inputs.spec.connectorRef`
+export const subscriptionPath = `${infrastructurePath}.inputs.spec.subscriptionId`
+
+export const getInfraParamsFixedValue = (values: string[]) => {
+  let fixedValue = ''
+  values?.forEach((value: string) => {
+    if (value && getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+      fixedValue = value
+    }
+  })
+  return fixedValue
 }

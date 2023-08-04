@@ -36,7 +36,11 @@ import {
   getInfraIdRuntime,
   getEnvIdRuntime,
   getAllowableTypes,
-  isMultiEnv
+  isMultiEnv,
+  resourceGroupPath,
+  connectorPath,
+  subscriptionPath,
+  getInfraParamsFixedValue
 } from '../AzureSlotDeployment/utils'
 
 import type { AzureWebAppSwapSlotProps } from './SwapSlot.types'
@@ -84,19 +88,43 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
   const [webAppName, setWebAppName] = useState('')
   const [slotName, setSlotName] = useState(defaultTo(getFieldValue(webAppSwapSlotPath), ''))
 
-  const infraIdRuntime = getInfraIdRuntime(stageIdentifier, formik?.values)
+  const infraIdRuntime = getInfraIdRuntime(stageIdentifier, formik?.values, 'infrastructure')
   const envIdRuntime = getEnvIdRuntime(stageIdentifier, formik?.values)
 
-  const infraDefinitionId = getInfraId(selectedStage) || infraIdRuntime
-  const envId = getEnvId(selectedStage) || envIdRuntime
+  const infraDefinitionId =
+    get(formik?.values, 'template.templateInputs.spec.environment.infrastructureDefinitions[0].identifier') ||
+    getInfraId(selectedStage) ||
+    infraIdRuntime
+
+  const envId =
+    get(formik?.values, 'template.templateInputs.spec.environment.environmentRef') ||
+    getEnvId(selectedStage) ||
+    envIdRuntime
+
+  const resourceGroupId = getInfraParamsFixedValue([
+    get(formik?.values, resourceGroupPath),
+    getInfraId(selectedStage, 'resourceGroup'),
+    getInfraIdRuntime(stageIdentifier, formik?.values, 'resourceGroup')
+  ])
+
+  const connectorRefId = getInfraParamsFixedValue([
+    get(formik?.values, connectorPath),
+    getInfraIdRuntime(stageIdentifier, formik?.values, 'connectorRef'),
+    getInfraId(selectedStage, 'connectorRef')
+  ])
+
+  const subscriptionId = getInfraParamsFixedValue([
+    get(formik?.values, subscriptionPath),
+    getInfraId(selectedStage, 'subscriptionId'),
+    getInfraIdRuntime(stageIdentifier, formik?.values, 'subscriptionId')
+  ])
 
   const itemRenderer = (item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={false} />
   )
 
   React.useEffect(() => {
-    if (isRuntime) {
-      setFieldValue(webAppNamePath, '')
+    if (isRuntime && !getFieldValue(webAppSwapSlotPath)) {
       setFieldValue(webAppSwapSlotPath, '')
       setDynamicWebNames([])
       setDynamicSwapSlots([])
@@ -114,7 +142,10 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
       projectIdentifier,
       orgIdentifier,
       envId,
-      infraDefinitionId
+      infraDefinitionId,
+      resourceGroup: resourceGroupId,
+      connectorRef: connectorRefId,
+      subscriptionId
     },
     lazy: true
   })
@@ -130,7 +161,10 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
       projectIdentifier,
       orgIdentifier,
       envId,
-      infraDefinitionId
+      infraDefinitionId,
+      resourceGroup: resourceGroupId,
+      connectorRef: connectorRefId,
+      subscriptionId
     },
     lazy: true,
     webAppName
@@ -294,7 +328,9 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
       formik?.values,
       slotName,
       setSlotName,
-      isRuntime
+      isRuntime,
+      refetchWebAppNames,
+      refetchWebAppSlots
     ]
   )
 

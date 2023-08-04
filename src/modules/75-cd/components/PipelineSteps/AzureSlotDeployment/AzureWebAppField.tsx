@@ -25,7 +25,18 @@ import { useGetAzureWebAppDeploymentSlotsV2, useGetAzureWebAppNamesV2 } from 'se
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import type { AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
-import { getEnvId, getInfraId, getInfraIdRuntime, getEnvIdRuntime, getAllowableTypes, isMultiEnv } from './utils'
+import {
+  getEnvId,
+  getInfraId,
+  getInfraIdRuntime,
+  getEnvIdRuntime,
+  getAllowableTypes,
+  isMultiEnv,
+  resourceGroupPath,
+  connectorPath,
+  subscriptionPath,
+  getInfraParamsFixedValue
+} from './utils'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -36,6 +47,7 @@ export interface AzureSlotDeploymentDynamic {
   stageIdentifier?: string
   isRuntime?: boolean
 }
+
 export type AzureSlotDeploymentDynamicProps = AzureSlotDeploymentProps & {
   /* eslint-disable */
   formik?: FormikContextType<any>
@@ -58,11 +70,37 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const [dynamicWebNames, setDynamicWebNames] = useState<SelectOption[]>([])
   const [dynamicSlots, setDynamicSlots] = useState<SelectOption[]>([])
-  const infraIdRuntime = getInfraIdRuntime(stageIdentifier, formik?.values)
+  const infraIdRuntime = getInfraIdRuntime(stageIdentifier, formik?.values, 'infrastructure')
   const envIdRuntime = getEnvIdRuntime(stageIdentifier, formik?.values)
 
-  const infraDefinitionId = getInfraId(selectedStage) || infraIdRuntime
-  const envId = getEnvId(selectedStage) || envIdRuntime
+  const infraDefinitionId = getInfraParamsFixedValue([
+    get(formik?.values, 'template.templateInputs.spec.environment.infrastructureDefinitions[0].identifier'),
+    getInfraId(selectedStage),
+    infraIdRuntime
+  ])
+
+  const envId = getInfraParamsFixedValue([
+    get(formik?.values, 'template.templateInputs.spec.environment.environmentRef'),
+    getEnvId(selectedStage),
+    envIdRuntime
+  ])
+  const resourceGroupId = getInfraParamsFixedValue([
+    get(formik?.values, resourceGroupPath),
+    getInfraId(selectedStage, 'resourceGroup'),
+    getInfraIdRuntime(stageIdentifier, formik?.values, 'resourceGroup')
+  ])
+
+  const connectorRefId = getInfraParamsFixedValue([
+    get(formik?.values, connectorPath),
+    getInfraIdRuntime(stageIdentifier, formik?.values, 'connectorRef'),
+    getInfraId(selectedStage, 'connectorRef')
+  ])
+
+  const subscriptionId = getInfraParamsFixedValue([
+    get(formik?.values, subscriptionPath),
+    getInfraId(selectedStage, 'subscriptionId'),
+    getInfraIdRuntime(stageIdentifier, formik?.values, 'subscriptionId')
+  ])
 
   const envFixedInfraFixed =
     !!envId &&
@@ -74,15 +112,6 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={false} />
   )
 
-  React.useEffect(() => {
-    if (isRuntime) {
-      setFieldValue(webAppNamePath, '')
-      setFieldValue(webAppSlotPath, '')
-      setDynamicWebNames([])
-      setDynamicSlots([])
-    }
-  }, [getEnvIdRuntime(stageIdentifier, formik?.values), getInfraIdRuntime(stageIdentifier, formik?.values), isRuntime])
-
   const getFieldValue = (name: string) => {
     return get(formik?.values, name)
   }
@@ -91,6 +120,9 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
     return formik?.setFieldValue(name, value)
   }
 
+  const environmentIdParam = envId || getEnvId(selectedStage) || getEnvIdRuntime(stageIdentifier, formik?.values)
+  const infrastructureIdParam =
+    infraDefinitionId || getInfraId(selectedStage) || getInfraIdRuntime(stageIdentifier, formik?.values)
   const {
     data: webAppNameData,
     loading: loadingWebApp,
@@ -101,8 +133,11 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      envId: getEnvId(selectedStage) || getEnvIdRuntime(stageIdentifier, formik?.values),
-      infraDefinitionId: getInfraId(selectedStage) || getInfraIdRuntime(stageIdentifier, formik?.values)
+      envId: environmentIdParam,
+      infraDefinitionId: infrastructureIdParam,
+      resourceGroup: resourceGroupId,
+      connectorRef: connectorRefId,
+      subscriptionId
     },
     lazy: true
   })
@@ -116,8 +151,11 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      envId: getEnvId(selectedStage) || getEnvIdRuntime(stageIdentifier, formik?.values),
-      infraDefinitionId: getInfraId(selectedStage) || getInfraIdRuntime(stageIdentifier, formik?.values)
+      envId: environmentIdParam,
+      infraDefinitionId: infrastructureIdParam,
+      resourceGroup: resourceGroupId,
+      connectorRef: connectorRefId,
+      subscriptionId
     },
     lazy: true,
     webAppName: getFieldValue(webAppNamePath) || get(allValues, 'spec.webApp')
@@ -188,7 +226,6 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
             onChange: e => {
               if (e === RUNTIME_INPUT_VALUE) {
                 setFieldValue(webAppNamePath, RUNTIME_INPUT_VALUE)
-                setFieldValue(webAppSlotPath, RUNTIME_INPUT_VALUE)
                 return
               }
             },
@@ -207,8 +244,6 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
           selectItems={dynamicSlots}
           useValue
           multiTypeInputProps={{
-            multitypeInputValue:
-              getFieldValue(webAppNamePath) === RUNTIME_INPUT_VALUE ? MultiTypeInputType.RUNTIME : undefined,
             expressions,
             allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
             selectProps: {
