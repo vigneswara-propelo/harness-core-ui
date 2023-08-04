@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { BaseSyntheticEvent, useMemo } from 'react'
 import {
   ExpandingSearchInput,
   Layout,
@@ -178,7 +178,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
         <Text font={{ weight: 'semi-bold', variation: FontVariation.BODY }}>
           {getString('triggers.triggerExplorer.pageSubHeading')}
         </Text>
-        <Button onClick={() => setShowHelpPanel(!showHelpPanel)} intent="none" minimal>
+        <Button onClick={() => setShowHelpPanel(!showHelpPanel)} intent="none" minimal data-testid="panel">
           {showHelpPanel
             ? getString('triggers.triggerExplorer.hidePanel')
             : getString('triggers.triggerExplorer.showPanel')}
@@ -187,7 +187,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
       <Container padding={{ top: 'medium', bottom: 'medium' }}>
         {showHelpPanel
           ? triggerType === 'Webhook' && (
-              <Card className={css.helpPanel}>
+              <Card className={css.helpPanel} data-testid="helpPanelCard">
                 <Layout.Horizontal>
                   <Icon name="info-message" size={24} className={css.infoMessage} padding={{ right: 'xsmall' }} />
                   <Text font={{ weight: 'semi-bold', variation: FontVariation.H5 }}>
@@ -212,7 +212,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
         <RadioGroup
           inline
           selectedValue={triggerType}
-          onChange={(e: any) => {
+          onChange={(e: BaseSyntheticEvent) => {
             setTriggerType(e.target.value)
           }}
           label={getString('triggers.triggerExplorer.selectTriggerType')}
