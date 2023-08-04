@@ -98,7 +98,12 @@ const TemplateVariables: React.FC = (): JSX.Element => {
       ) : (
         !isEmpty(variablesTemplate) && (
           <div className={css.content}>
-            <VariablesHeader enableSearch={false} applyChanges={applyChanges} discardChanges={discardChanges} />
+            <VariablesHeader
+              enableSearch={false}
+              applyChanges={applyChanges}
+              discardChanges={discardChanges}
+              isTemplateView
+            />
             <div className={css.variableList}>
               <GitSyncStoreProvider>
                 {originalTemplate.type === TemplateType.Pipeline && (

@@ -23,6 +23,7 @@ export interface VariablesHeaderProps {
   discardChanges(): void
   handleCompiledModeChange?: (checked: boolean) => void
   isCompiledMode?: boolean
+  isTemplateView?: boolean
 }
 
 export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
@@ -32,7 +33,8 @@ export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
     applyChanges,
     discardChanges,
     handleCompiledModeChange,
-    isCompiledMode
+    isCompiledMode,
+    isTemplateView = false
   } = props
   const {
     onSearchInputChange,
@@ -82,7 +84,7 @@ export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
           <Button minimal size={ButtonSize.SMALL} text={getString('pipeline.discard')} onClick={discardChanges} />
         </div>
       </div>
-      {PIE_EXPRESSION_PLAYGROUND && (
+      {PIE_EXPRESSION_PLAYGROUND && !isTemplateView && (
         <VariablesCompiledModeHeader
           handleCompiledModeChange={handleCompiledModeChange}
           isCompiledMode={isCompiledMode}
