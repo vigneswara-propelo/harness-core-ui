@@ -15,10 +15,12 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export default function STOSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { STO_ALL_ISSUES_PAGE } = useFeatureFlags()
   const { updateAppStore } = useAppStore()
   const history = useHistory()
 
@@ -48,6 +50,9 @@ export default function STOSideNav(): React.ReactElement {
         <React.Fragment>
           <>
             <SidebarLink label={getString('overview')} to={routes.toSTOProjectOverview(params)} />
+            {STO_ALL_ISSUES_PAGE && (
+              <SidebarLink label={getString('sto.issues')} to={routes.toSTOProjectIssues(params)} />
+            )}
             <SidebarLink label={getString('common.pipelineExecution')} to={routes.toDeployments(params)} />
             <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
             <SidebarLink label={getString('sto.targets.testTargets')} to={routes.toSTOProjectTargets(params)} />

@@ -2137,6 +2137,11 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/overview`
   ),
+  toSTOIssues: withAccountId(() => '/sto/issues'),
+  toSTOProjectIssues: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/issues`
+  ),
   toSTOTargets: withAccountId(() => '/sto/targets'),
   toSTOProjectTargets: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>

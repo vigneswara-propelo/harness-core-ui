@@ -55,6 +55,19 @@ describe('STO side nav tests', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('renders with all issues sublink', () => {
+    const { container } = render(
+      <TestWrapper
+        path={testPathProjectOverview}
+        pathParams={testParams}
+        defaultFeatureFlagValues={{ STO_ALL_ISSUES_PAGE: true }}
+      >
+        <STOSideNav />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
   test('switches to project overview when app store has project', async () => {
     const { container, getByTestId } = render(
       <TestWrapper

@@ -298,6 +298,18 @@ const RouteDestinations: React.FC = () => {
       </RouteWithLayout>
 
       <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+        path={[
+          routes.toSTOIssues({ ...accountPathProps }),
+          routes.toSTOProjectIssues({ ...accountPathProps, ...projectPathProps })
+        ]}
+      >
+        <ChildAppMounter ChildApp={RemoteSTOApp} />
+      </RouteWithLayout>
+
+      <RouteWithLayout
         layout={MinimalLayout}
         path={routes.toModuleTrialHome({ ...accountPathProps, module: 'sto' })}
         exact
