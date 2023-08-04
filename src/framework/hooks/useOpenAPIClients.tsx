@@ -11,6 +11,7 @@ import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
 import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
 import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
 import { SSCAServiceAPIClient } from '@harnessio/react-ssca-service-client'
+import { SSCAManagerAPIClient } from '@harnessio/react-ssca-manager-client'
 
 import SessionToken from 'framework/utils/SessionToken'
 
@@ -20,6 +21,7 @@ type UseOpenApiClientsReturn = {
   pipelineServiceClientRef: React.MutableRefObject<PipelineServiceAPIClient>
   ngManagerServiceClientRef: React.MutableRefObject<NGManagerServiceAPIClient>
   sscaServiceClientRef: React.MutableRefObject<SSCAServiceAPIClient>
+  sscaManagerClientRef: React.MutableRefObject<SSCAManagerAPIClient>
 }
 
 export const getOpenAPIClientInitiator = (
@@ -57,22 +59,21 @@ const useOpenApiClients = (
   accountId: string
 ): UseOpenApiClientsReturn => {
   const openAPIClientInitiator = getOpenAPIClientInitiator(globalResponseHandler, accountId)
-  const auditServiceClientRef = useRef<AuditServiceClient>(new AuditServiceClient(openAPIClientInitiator))
-  const idpServiceClientRef = useRef<IDPServiceAPIClient>(new IDPServiceAPIClient(openAPIClientInitiator))
-  const pipelineServiceClientRef = useRef<PipelineServiceAPIClient>(
-    new PipelineServiceAPIClient(openAPIClientInitiator)
-  )
-  const sscaServiceClientRef = useRef<SSCAServiceAPIClient>(new SSCAServiceAPIClient(openAPIClientInitiator))
-  const ngManagerServiceClientRef = useRef<NGManagerServiceAPIClient>(
-    new NGManagerServiceAPIClient(openAPIClientInitiator)
-  )
+
+  const auditServiceClientRef = useRef(new AuditServiceClient(openAPIClientInitiator))
+  const idpServiceClientRef = useRef(new IDPServiceAPIClient(openAPIClientInitiator))
+  const pipelineServiceClientRef = useRef(new PipelineServiceAPIClient(openAPIClientInitiator))
+  const sscaServiceClientRef = useRef(new SSCAServiceAPIClient(openAPIClientInitiator))
+  const sscaManagerClientRef = useRef(new SSCAManagerAPIClient(openAPIClientInitiator))
+  const ngManagerServiceClientRef = useRef(new NGManagerServiceAPIClient(openAPIClientInitiator))
 
   return {
     auditServiceClientRef,
     idpServiceClientRef,
     pipelineServiceClientRef,
     ngManagerServiceClientRef,
-    sscaServiceClientRef
+    sscaServiceClientRef,
+    sscaManagerClientRef
   }
 }
 

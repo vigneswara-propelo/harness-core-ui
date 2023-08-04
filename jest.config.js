@@ -107,6 +107,7 @@ module.exports = {
       p-debounce|
       @harnessio/react-ng-manager-client|
       @harnessio/react-ssca-service-client|
+      @harnessio/react-ssca-manager-client|
       @harnessio/react-pipeline-service-client)/)
     `
   ],
