@@ -230,7 +230,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     }
   })
 
-  const { CI_YAML_VERSIONING, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS, CDS_MERGED_RUN_AND_RETRY_PIPELINE_COMPONENT } =
+    useFeatureFlags()
 
   const { downloadLogsAction } = useDownloadLogs()
 
@@ -296,8 +297,14 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   const { openRetryPipelineModal } = useOpenRetryPipelineModal({ modules, params })
   const retryPipeline = (): void => {
     trackEvent(PipelineExecutionActions.RetryPipeline, { triggered_from: 'kebab-menu' })
-    openRetryPipelineModal()
+
+    if (CDS_MERGED_RUN_AND_RETRY_PIPELINE_COMPONENT) {
+      openRunPipelineModal({ isRetryFromStage: true })
+    } else {
+      openRetryPipelineModal()
+    }
   }
+
   const showRetryPipelineOption = isRetryPipelineAllowed(executionStatus) && canRetry && !hideRetryOption
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/

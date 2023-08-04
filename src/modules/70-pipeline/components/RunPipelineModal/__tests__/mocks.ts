@@ -5,6 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
+import { ResponsePlanExecutionResponseDto, ResponseRetryInfo } from 'services/pipeline-ng'
+
 export const getMockFor_useGetPipeline = (): any => ({
   data: {
     data: {
@@ -175,4 +178,174 @@ export const getMockFor_useGetMergeInputSetFromPipelineTemplateWithListInput = (
         'pipeline:\n  identifier: "First"\n  variables:\n  - name: "checkVariable1"\n    type: "String"\n    value: "valuefrominputsetsmerge"\n  - name: "checkVariable2"\n    type: "String"\n    value: "value2frominputsetsmerge"\n'
     }
   })
+})
+
+export const mockRetryStages: UseGetMockDataWithMutateAndRefetch<ResponseRetryInfo> = {
+  loading: false,
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  data: {
+    status: 'SUCCESS',
+    data: {
+      errorMessage: null as unknown as undefined,
+      groups: [
+        {
+          info: [
+            {
+              name: 'stage1',
+              identifier: 'stage1',
+              status: 'Success',
+              createdAt: 1637196823530,
+              parentId: '_erjqIYeSdyI32-Q3og1Vw',
+              nextId: 'FkJ2JI9ySIaz4dMiOWiHTA'
+            }
+          ]
+        },
+        {
+          info: [
+            {
+              name: 'stage2',
+              identifier: 'stage2',
+              status: 'Success',
+              createdAt: 1637196843381,
+              parentId: '_erjqIYeSdyI32-Q3og1Vw',
+              nextId: 'MR-2RZXuTiKQniQcka-aAQ'
+            }
+          ]
+        },
+        {
+          info: [
+            {
+              name: 'stage3',
+              identifier: 'stage3',
+              status: 'Failed',
+              createdAt: 1637196850227,
+              parentId: 'MR-2RZXuTiKQniQcka-aAQ',
+              nextId: null as unknown as undefined
+            },
+            {
+              name: 'stage4',
+              identifier: 'stage4',
+              status: 'Success',
+              createdAt: 1637196850248,
+              parentId: 'MR-2RZXuTiKQniQcka-aAQ',
+              nextId: null as unknown as undefined
+            }
+          ]
+        }
+      ],
+      resumable: true
+    },
+    metaData: null as unknown as undefined,
+    correlationId: '04b10adc-2516-4185-bc53-67c35d12ab01'
+  }
+}
+
+export const mockRetryStages_Serial: UseGetMockDataWithMutateAndRefetch<ResponseRetryInfo> = {
+  loading: false,
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  data: {
+    data: {
+      errorMessage: null as unknown as undefined,
+      groups: [
+        {
+          info: [
+            {
+              name: 'stage1',
+              identifier: 'stage1',
+              status: 'Success',
+              createdAt: 1637196823530,
+              parentId: '_erjqIYeSdyI32-Q3og1Vw',
+              nextId: 'FkJ2JI9ySIaz4dMiOWiHTA'
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+export const mockPostRetryPipeline: UseGetMockDataWithMutateAndRefetch<ResponsePlanExecutionResponseDto> = {
+  loading: false,
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  data: {
+    status: 'SUCCESS',
+    data: {
+      planExecution: {
+        uuid: 'puqa4ivwRzGDUrYJdrcPbg',
+        createdAt: 1642671599437,
+        planId: 'Jxslh-ffQEGkvqB_lrrjhQ',
+        setupAbstractions: {
+          accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+          orgIdentifier: 'default',
+          projectIdentifier: 'Bhavya'
+        },
+        validUntil: 1658309999431 as unknown as undefined,
+        status: 'RUNNING',
+        startTs: 1642671599431,
+        endTs: null as unknown as undefined,
+        metadata: {
+          runSequence: 3,
+          triggerInfo: {
+            triggerType: 'MANUAL',
+            triggeredBy: {
+              uuid: 'KrWK5MceTGyjLqLVRh3FCw',
+              identifier: 'bhavya.sinha@harness.io',
+              extraInfo: {
+                email: 'bhavya.sinha@harness.io'
+              }
+            },
+            isRerun: false
+          },
+          pipelineIdentifier: 'pipeline2',
+          executionUuid: 'puqa4ivwRzGDUrYJdrcPbg',
+          moduleType: 'cd',
+          retryInfo: {
+            isRetry: true,
+            rootExecutionId: '5E3H4VokRkWXLnpYV2_u2A',
+            parentRetryId: '5E3H4VokRkWXLnpYV2_u2A'
+          }
+        },
+        lastUpdatedAt: 1642671599437,
+        version: 0,
+
+        nodeType: 'PLAN'
+      }
+    },
+    metaData: null as unknown as undefined,
+    correlationId: '915c7b2f-8a53-483f-878d-3741408fe03e'
+  }
+}
+
+export const inputSetYAML = `pipeline:
+  identifier: "First"
+  variables:
+    - name: "checkVariable1"
+      type: "String"
+      value: "<+input>"
+    - name: "checkVariable2"
+      type: "String"
+      value: "<+input>"`
+
+export const getUseRetryPipelineRequest = ({ isAllowAll }: { isAllowAll: boolean }) => ({
+  identifier: 'pid',
+  queryParamStringifyOptions: {
+    arrayFormat: 'repeat'
+  },
+  queryParams: {
+    accountIdentifier: 'acid',
+    moduleType: 'ci',
+    orgIdentifier: 'orgId',
+    planExecutionId: '',
+    projectIdentifier: 'prjid',
+    retryStages: ['stage3', 'stage4'],
+    runAllStages: isAllowAll
+  },
+  requestOptions: {
+    headers: {
+      'content-type': 'application/yaml'
+    }
+  }
 })

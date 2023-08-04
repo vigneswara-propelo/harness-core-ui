@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, FormEvent, SetStateAction } from 'react'
+import React, { Dispatch, FormEvent, SetStateAction, useMemo } from 'react'
 import cx from 'classnames'
 import type { GetDataError } from 'restful-react'
 import { get, isEmpty } from 'lodash-es'
@@ -18,7 +18,8 @@ import type {
   Failure,
   PipelineInfoConfig,
   ResponseMessage,
-  ResponsePMSPipelineResponseDTO
+  ResponsePMSPipelineResponseDTO,
+  RetryInfo
 } from 'services/pipeline-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import SelectExistingInputsOrProvideNew from './SelectExistingOrProvide'
@@ -27,6 +28,7 @@ import type { InputSetValue } from '../InputSetSelector/utils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
+import SelectStageToRetryNew, { SelectStageToRetryState } from './SelectStageToRetryNew'
 import css from './RunPipelineForm.module.scss'
 
 export type ExistingProvide = 'existing' | 'provide'
@@ -57,6 +59,18 @@ export interface VisualViewProps {
   loadingInputSets: boolean
   onReconcile: (identifier: string) => void
   reRunInputSetYaml?: string
+  isRetryFromStage?: boolean
+  preSelectLastStage?: boolean
+  accountId: string
+  projectIdentifier: string
+  orgIdentifier: string
+  repoIdentifier?: string
+  branch?: string
+  connectorRef?: string
+  stageToRetryState: SelectStageToRetryState | null
+  onStageToRetryChange: (state: SelectStageToRetryState) => void
+  retryStagesResponseData?: RetryInfo
+  retryStagesLoading: boolean
 }
 
 export default function VisualView(props: VisualViewProps): React.ReactElement {
@@ -83,7 +97,13 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     invalidInputSetReferences,
     loadingInputSets,
     onReconcile,
-    reRunInputSetYaml
+    reRunInputSetYaml,
+    isRetryFromStage,
+    preSelectLastStage,
+    stageToRetryState,
+    onStageToRetryChange,
+    retryStagesResponseData,
+    retryStagesLoading
   } = props
   const { getString } = useStrings()
 
@@ -109,7 +129,13 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const showPipelineInputSetForm = (): boolean => {
-    return !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) && !loadingInputSets
+    const retryFromStageCondition =
+      !isRetryFromStage || (isRetryFromStage && (!!stageToRetryState || !!retryStagesResponseData?.errorMessage))
+    return (
+      !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) &&
+      !loadingInputSets &&
+      retryFromStageCondition
+    )
   }
 
   const showVoidPipelineInputSetForm = (): boolean => {
@@ -122,6 +148,27 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const noRuntimeInputs = checkIfRuntimeInputsNotPresent()
+
+  const SelectStageToRetryMemo = useMemo(
+    () =>
+      isRetryFromStage ? (
+        <SelectStageToRetryNew
+          preSelectLastStage={preSelectLastStage}
+          stageToRetryState={stageToRetryState}
+          onChange={onStageToRetryChange}
+          retryStagesResponseData={retryStagesResponseData}
+          retryStagesLoading={retryStagesLoading}
+        />
+      ) : null,
+    [
+      isRetryFromStage,
+      preSelectLastStage,
+      stageToRetryState,
+      onStageToRetryChange,
+      retryStagesResponseData,
+      retryStagesLoading
+    ]
+  )
 
   return (
     <div
@@ -139,6 +186,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
       }}
     >
       <FormikForm>
+        {SelectStageToRetryMemo}
         {noRuntimeInputs ? (
           <Layout.Horizontal padding="medium" margin="medium">
             <Text>{noRuntimeInputs}</Text>
@@ -146,7 +194,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
         ) : (
           <>
             {/* Do not show input set selector on rerun / execution input-set view */}
-            {!executionView && !reRunInputSetYaml && (
+            {!executionView && !reRunInputSetYaml && !isRetryFromStage && (
               <Layout.Vertical
                 className={css.pipelineHeader}
                 padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
@@ -184,6 +232,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 resolvedPipeline={resolvedPipeline}
                 selectedStageData={selectedStageData}
                 showDivider={!executionView && !reRunInputSetYaml}
+                listOfSelectedStages={isRetryFromStage ? stageToRetryState?.listOfSelectedStages : undefined}
+                isRetryFormStageSelected={isRetryFromStage ? stageToRetryState?.selectedStage !== null : undefined}
               />
             ) : null}
             {showVoidPipelineInputSetForm() ? <div className={css.noPipelineInputSetForm} /> : null}
@@ -206,6 +256,8 @@ export interface PipelineInputSetFormWrapperProps {
   selectedStageData: StageSelectionData
   maybeContainerClassOverride?: string
   showDivider?: boolean
+  listOfSelectedStages?: string[]
+  isRetryFormStageSelected?: boolean
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
@@ -217,7 +269,9 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     executionIdentifier,
     resolvedPipeline,
     selectedStageData,
-    showDivider
+    showDivider,
+    listOfSelectedStages,
+    isRetryFormStageSelected
   } = props
 
   if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
@@ -239,6 +293,8 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           maybeContainerClass={css.inputSetFormRunPipeline}
           selectedStageData={selectedStageData}
           disableRuntimeInputConfigureOptions
+          listOfSelectedStages={listOfSelectedStages}
+          isRetryFormStageSelected={isRetryFormStageSelected}
         />
       </>
     )

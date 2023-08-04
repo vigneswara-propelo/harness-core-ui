@@ -513,7 +513,7 @@ export const MenuCell: CellType = ({ row, column }) => {
           hasCI && CI_REMOTE_DEBUG
             ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
               ? () => openRunPipelineModalV1(true)
-              : () => openRunPipelineModal(true)
+              : () => openRunPipelineModal({ debugMode: true })
             : undefined
         }
         source={source}

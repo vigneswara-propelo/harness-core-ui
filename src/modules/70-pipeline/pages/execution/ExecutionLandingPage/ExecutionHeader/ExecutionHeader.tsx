@@ -96,7 +96,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
   } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
-  const { CI_REMOTE_DEBUG } = useFeatureFlags()
+  const { CI_REMOTE_DEBUG, CDS_MERGED_RUN_AND_RETRY_PIPELINE_COMPONENT } = useFeatureFlags()
   const { trackEvent } = useTelemetry()
 
   const [canView, canEdit, canExecute] = usePermission(
@@ -202,12 +202,17 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
 
-  const retryPipeline = (fromLastStage?: boolean): void => {
+  const retryPipeline = (fromLastFailedStage?: boolean): void => {
     trackEvent(PipelineExecutionActions.RetryPipeline, {
       triggered_from: 'button',
-      type: fromLastStage ? 'last_failed_stage' : 'selected_stage'
+      type: fromLastFailedStage ? 'last_failed_stage' : 'selected_stage'
     })
-    openRetryPipelineModal(fromLastStage)
+
+    if (CDS_MERGED_RUN_AND_RETRY_PIPELINE_COMPONENT) {
+      openRunPipelineModal({ isRetryFromStage: true, preSelectLastStage: fromLastFailedStage })
+    } else {
+      openRetryPipelineModal(fromLastFailedStage)
+    }
   }
 
   const commonReRunProps = {
@@ -251,7 +256,6 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             text={getString('pipeline.execution.actions.reRunLastFailedStage')}
             disabled={isPipelineInvalid}
           />
-
           <MenuItem
             data-test-id="retry-failed-pipeline-specific-stage"
             onClick={() => retryPipeline()}
@@ -373,7 +377,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
               hasCI && CI_REMOTE_DEBUG
                 ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
                   ? () => openRunPipelineModalV1(true)
-                  : () => openRunPipelineModal(true)
+                  : () => openRunPipelineModal({ debugMode: true })
                 : undefined
             }
             onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}

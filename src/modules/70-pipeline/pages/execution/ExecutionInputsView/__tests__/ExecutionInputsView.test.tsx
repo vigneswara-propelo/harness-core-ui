@@ -41,7 +41,9 @@ jest.mock('services/pipeline-ng', () => ({
   useCreateInputSetForPipeline: jest.fn(() => ({ data: null })),
   useGetInputsetYamlV2: jest.fn(() => ({ data: null })),
   useRunStagesWithRuntimeInputYaml: jest.fn(() => ({ data: null })),
-  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
+  useValidateTemplateInputs: jest.fn(() => ({ data: null })),
+  useRetryPipeline: jest.fn(() => ({ data: null })),
+  useGetRetryStages: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('services/cd-ng', () => ({

@@ -42,7 +42,9 @@ import {
   Failure,
   Error,
   GitErrorMetadataDTO,
-  ResponseMessage
+  ResponseMessage,
+  useRetryPipeline,
+  useGetRetryStages
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -112,6 +114,7 @@ import CheckBoxActions from './CheckBoxActions'
 import VisualView from './VisualView'
 import { useInputSets } from './useInputSets'
 import { ActiveFreezeWarning } from './ActiveFreezeWarning'
+import { SelectStageToRetryState } from './SelectStageToRetryNew'
 import css from './RunPipelineForm.module.scss'
 
 export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & GitQueryParams> {
@@ -127,6 +130,8 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   executionInputSetTemplateYamlError?: GetDataError<Failure | Error> | null
   storeMetadata?: StoreMetadata
   isDebugMode?: boolean
+  isRetryFromStage?: boolean
+  preSelectLastStage?: boolean
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -158,7 +163,9 @@ function RunPipelineFormBasic({
   executionInputSetTemplateYaml = '',
   executionInputSetTemplateYamlError,
   executionIdentifier,
-  isDebugMode
+  isDebugMode,
+  isRetryFromStage = false,
+  preSelectLastStage = false
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
@@ -192,7 +199,9 @@ function RunPipelineFormBasic({
   const [submitCount, setSubmitCount] = useState<number>(0)
   const [runPipelineError, setRunPipelineError] = useState<Error>({})
   const isErrorEnhancementFFEnabled = useFeatureFlag(FeatureFlag.PIE_ERROR_ENHANCEMENTS)
+  const loadFromCache = useFeatureFlag(FeatureFlag.CDS_ENABLE_LOAD_FROM_CACHE_FOR_RETRY_FORM).toString()
   const validateFormRef = useRef<(values?: PipelineInfoConfig) => Promise<FormikErrors<PipelineInfoConfig>>>()
+  const [stageToRetryState, setStageToRetryState] = useState<SelectStageToRetryState | null>(null)
 
   const [canSaveInputSet, canEditYaml] = usePermission(
     {
@@ -255,7 +264,7 @@ function RunPipelineFormBasic({
   } = useGetPipeline({
     pipelineIdentifier,
     queryParams: pipelineDefaultQueryParam,
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+    requestOptions: { headers: { 'Load-From-Cache': isRetryFromStage ? loadFromCache : 'true' } }
   })
 
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
@@ -350,6 +359,18 @@ function RunPipelineFormBasic({
   const isRerunPipeline = !isEmpty(pipelineExecutionId)
   const formTitleText = isDebugMode
     ? getString('pipeline.execution.actions.reRunInDebugMode')
+    : isRetryFromStage && preSelectLastStage
+    ? getString('pipeline.execution.actions.reRunLastFailedStageTitle')
+    : isRetryFromStage
+    ? getString('pipeline.execution.actions.reRunSpecificStageTitle')
+    : isRerunPipeline
+    ? getString('pipeline.execution.actions.rerunPipeline')
+    : getString('runPipeline')
+
+  const runButtonLabel = isDebugMode
+    ? getString('pipeline.execution.actions.reRunInDebugMode')
+    : isRetryFromStage
+    ? getString('pipeline.execution.actions.reRun')
     : isRerunPipeline
     ? getString('pipeline.execution.actions.rerunPipeline')
     : getString('runPipeline')
@@ -388,6 +409,40 @@ function RunPipelineFormBasic({
     originalExecutionId: defaultTo(pipelineExecutionId, '')
   })
 
+  const {
+    mutate: retryPipeline,
+    loading: retryPipelineLoading,
+    error: retryPipelineError
+  } = useRetryPipeline({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      moduleType: module || '',
+      planExecutionId: pipelineExecutionId ?? '',
+      retryStages: (!stageToRetryState?.isParallelStage
+        ? [stageToRetryState?.selectedStage?.value]
+        : (stageToRetryState?.selectedStage?.value as string)?.split(' | ')) as string[],
+      runAllStages: stageToRetryState?.isAllStage
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    },
+    identifier: pipelineIdentifier,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
+
+  useEffect(() => {
+    if (retryPipelineError) {
+      showError(getRBACErrorMessage(retryPipelineError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [retryPipelineError])
+
   const { mutate: runPipelineInDebugMode, loading: reRunDebugModeLoading } = useDebugPipelineExecuteWithInputSetYaml({
     queryParams: {
       accountIdentifier: accountId,
@@ -422,6 +477,36 @@ function RunPipelineFormBasic({
     lazy: executionView,
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
+
+  const {
+    data: retryStagesResponse,
+    loading: retryStagesLoading,
+    error: getRetryStagesError
+  } = useGetRetryStages({
+    planExecutionId: pipelineExecutionId ?? '',
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      repoIdentifier,
+      branch,
+      getDefaultFromOtherRepo: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
+    },
+    requestOptions: { headers: { 'Load-From-Cache': loadFromCache } },
+    lazy: !isRetryFromStage
+  })
+
+  const retryStagesResponseData = retryStagesResponse?.data
+
+  useEffect(() => {
+    if (getRetryStagesError) {
+      showError(getRBACErrorMessage(getRetryStagesError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getRetryStagesError])
 
   const executionStageList = useMemo((): SelectOption[] => {
     const executionStages: SelectOption[] =
@@ -535,7 +620,12 @@ function RunPipelineFormBasic({
   }, [notifyOnlyMe, selectedStageData, stageIdentifiers, formErrors])
 
   const isExecutingPipeline =
-    runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading || reRunDebugModeLoading
+    runPipelineLoading ||
+    reRunPipelineLoading ||
+    runStagesLoading ||
+    reRunStagesLoading ||
+    reRunDebugModeLoading ||
+    retryPipelineLoading
 
   const handleRunPipeline = useCallback(
     async (valuesPipeline?: PipelineInfoConfig, forceSkipFlightCheck = false) => {
@@ -564,6 +654,8 @@ function RunPipelineFormBasic({
 
         if (isDebugMode) {
           response = await runPipelineInDebugMode(finalYaml as any)
+        } else if (isRetryFromStage) {
+          response = await retryPipeline(finalYaml as any)
         } else if (isRerunPipeline) {
           response = selectedStageData.allStagesSelected
             ? await reRunPipeline(finalYaml as any)
@@ -586,9 +678,7 @@ function RunPipelineFormBasic({
 
         if (response.status === 'SUCCESS') {
           setRunPipelineError({})
-          if (onClose) {
-            onClose()
-          }
+          onClose?.()
           if (response.data) {
             showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
             history.push({
@@ -626,6 +716,7 @@ function RunPipelineFormBasic({
     [
       runPipeline,
       runStage,
+      retryPipeline,
       showWarning,
       showSuccess,
       pipelineIdentifier,
@@ -777,7 +868,7 @@ function RunPipelineFormBasic({
             ...pipelineDefaultQueryParam,
             branch: pipelineBranch
           },
-          requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+          requestOptions: { headers: { 'Load-From-Cache': isRetryFromStage ? loadFromCache : 'true' } }
         })
         getTemplateFromPipeline({ branch: pipelineBranch })
       }
@@ -824,6 +915,7 @@ function RunPipelineFormBasic({
 
   const getRunPipelineFormDisabledState = (): boolean => {
     return (
+      (isRetryFromStage && !stageToRetryState?.selectedStage) ||
       blockedStagesSelected ||
       (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
       loadingShouldDisableDeployment ||
@@ -874,6 +966,7 @@ function RunPipelineFormBasic({
               refetchPipeline={refetchPipeline}
               refetchTemplate={getTemplateFromPipeline}
               remoteFetchError={pipelineError}
+              isRerunPipeline={isRerunPipeline}
             />
           </>
         ) : null}
@@ -938,6 +1031,8 @@ function RunPipelineFormBasic({
                     onGitBranchChange={onGitBranchChange}
                     refetchPipeline={refetchPipeline}
                     refetchTemplate={getTemplateFromPipeline}
+                    isRetryFromStage={isRetryFromStage}
+                    isRerunPipeline={isRerunPipeline}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}
@@ -975,6 +1070,18 @@ function RunPipelineFormBasic({
                       loadingInputSets={loadingInputSets}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={inputSetYAML}
+                      isRetryFromStage={isRetryFromStage}
+                      preSelectLastStage={preSelectLastStage}
+                      accountId={accountId}
+                      projectIdentifier={projectIdentifier}
+                      orgIdentifier={orgIdentifier}
+                      repoIdentifier={repoIdentifier}
+                      branch={branch}
+                      connectorRef={connectorRef}
+                      onStageToRetryChange={state => setStageToRetryState({ ...state })}
+                      stageToRetryState={stageToRetryState}
+                      retryStagesResponseData={retryStagesResponseData}
+                      retryStagesLoading={retryStagesLoading}
                     />
                   ) : (
                     <div className={css.editor}>
@@ -1014,7 +1121,7 @@ function RunPipelineFormBasic({
                           variation={ButtonVariation.PRIMARY}
                           intent="success"
                           type="submit"
-                          text={formTitleText}
+                          text={runButtonLabel}
                           onClick={event => {
                             event.stopPropagation()
                             setRunClicked(true)

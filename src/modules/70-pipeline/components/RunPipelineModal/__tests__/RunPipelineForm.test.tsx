@@ -25,16 +25,22 @@ import {
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
+import { InputTypes, fillAtForm } from '@common/utils/JestFormHelper'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import * as pipelinengServices from 'services/pipeline-ng'
+import * as pipelineNgServices from 'services/pipeline-ng'
 import { RunPipelineForm } from '../RunPipelineForm'
 import {
   getMockFor_Generic_useMutate,
   getMockFor_useGetInputSetsListForPipeline,
   getMockFor_useGetMergeInputSetFromPipelineTemplateWithListInput,
   getMockFor_useGetPipeline,
-  getMockFor_useGetTemplateFromPipeline
+  getMockFor_useGetTemplateFromPipeline,
+  getUseRetryPipelineRequest,
+  inputSetYAML,
+  mockPostRetryPipeline,
+  mockRetryStages,
+  mockRetryStages_Serial
 } from './mocks'
 
 const commonProps: PipelineType<PipelinePathProps & GitQueryParams> = {
@@ -128,15 +134,18 @@ const connectorMock = {
 const mockRePostPipelineExecuteYaml = jest.fn()
 const mockMergeInputSet = jest.fn()
 const mockCreateInputSet = jest.fn().mockResolvedValue({})
+const mockPostPipelineMutate = jest.fn().mockResolvedValue({})
 
 jest.mock('services/pipeline-ng', () => ({
   // used in RunPipelineForm
   useGetPipeline: jest.fn(() => getMockFor_useGetPipeline()),
-  usePostPipelineExecuteWithInputSetYaml: jest.fn(() => getMockFor_Generic_useMutate()),
+  usePostPipelineExecuteWithInputSetYaml: jest.fn(() => getMockFor_Generic_useMutate(mockPostPipelineMutate)),
   useRePostPipelineExecuteWithInputSetYaml: jest.fn(() => getMockFor_Generic_useMutate(mockRePostPipelineExecuteYaml)),
   useRunStagesWithRuntimeInputYaml: jest.fn(() => getMockFor_Generic_useMutate()),
   useRerunStagesWithRuntimeInputYaml: jest.fn(() => getMockFor_Generic_useMutate()),
   useGetStagesExecutionList: jest.fn(() => ({})),
+  useRetryPipeline: jest.fn(() => mockPostRetryPipeline),
+  useGetRetryStages: jest.fn(() => mockRetryStages),
 
   // used within SaveAsInputSets
   useCreateInputSetForPipeline: jest.fn(() => getMockFor_Generic_useMutate(mockCreateInputSet)),
@@ -264,7 +273,7 @@ describe('STUDIO MODE', () => {
       fireEvent.click(runButton!)
     })
 
-    // await waitFor(() => expect(mockPostPipelineExecuteYaml.mutate).toBeCalled())
+    await waitFor(() => expect(mockPostPipelineMutate).toBeCalled())
   })
 
   test('if SAVE_AS_INPUT_SET works', async () => {
@@ -552,7 +561,7 @@ describe('STUDIO MODE', () => {
   })
 
   test('Stage selection error icon should be visible if we have stageExecutionListError', async () => {
-    jest.spyOn(pipelinengServices, 'useGetStagesExecutionList').mockReturnValue({
+    jest.spyOn(pipelineNgServices, 'useGetStagesExecutionList').mockReturnValue({
       data: null,
       refetch: jest.fn(),
       loading: false,
@@ -573,7 +582,7 @@ describe('STUDIO MODE', () => {
   })
 
   test('Stage selection error icon should not be visible if no stageExecutionListError', async () => {
-    jest.spyOn(pipelinengServices, 'useGetStagesExecutionList').mockReturnValue({
+    jest.spyOn(pipelineNgServices, 'useGetStagesExecutionList').mockReturnValue({
       data: [],
       refetch: jest.fn(),
       loading: false,
@@ -702,7 +711,7 @@ describe('RERUN MODE', () => {
         }
       })
     )
-    const { queryByText, queryAllByText } = render(
+    const { queryByText, getAllByText } = render(
       <TestWrapper>
         <RunPipelineForm
           {...commonProps}
@@ -718,7 +727,7 @@ describe('RERUN MODE', () => {
     expect(screen.queryByTestId('inputSetFormDivider')).not.toBeInTheDocument()
 
     // Expect header and the submit button to show rerun pipeline
-    expect(queryAllByText('pipeline.execution.actions.rerunPipeline')).toHaveLength(2)
+    expect(getAllByText('pipeline.execution.actions.rerunPipeline')).toHaveLength(2)
   })
 })
 
@@ -754,5 +763,254 @@ describe('EXECUTION VIEW', () => {
     expect(screen.queryByTestId('inputSetFormDivider')).not.toBeInTheDocument()
 
     expect(container).toMatchSnapshot('disabled view in execution inputs')
+  })
+})
+
+describe('Retry Pipeline tests', () => {
+  beforeEach(() => {
+    jest.spyOn(pipelineNgServices, 'useGetRetryStages').mockReturnValue(mockRetryStages as any)
+  })
+
+  test('Retry Failed Pipeline title and button to be defined', () => {
+    const { getAllByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} />
+      </TestWrapper>
+    )
+    expect(getAllByText('pipeline.execution.actions.reRun')[0]).not.toBeNull()
+    expect(getAllByText('pipeline.execution.actions.reRunSpecificStageTitle').length).toEqual(1)
+    expect(getAllByText('pipeline.execution.actions.reRun').length).toEqual(1)
+  })
+
+  test('toggle between visual and yaml mode', async () => {
+    const { getByText, getAllByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} />
+      </TestWrapper>
+    )
+    fireEvent.click(getByText('YAML'))
+
+    const noExecutionText = getByText('runPipelineForm.noRuntimeInput')
+    expect(noExecutionText).toBeDefined()
+
+    fireEvent.click(getByText('VISUAL'))
+    await waitFor(() => expect(getAllByText('pipeline.execution.actions.reRun')[0]).toBeInTheDocument())
+  })
+
+  test('retry button should be disabled initially', () => {
+    const { getByRole } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} />
+      </TestWrapper>
+    )
+    const reRunButton = getByRole('button', { name: 'pipeline.execution.actions.reRun' })
+    expect(reRunButton).toBeDisabled()
+  })
+
+  test('retry modal closes on click of cancel', async () => {
+    const onClose = jest.fn()
+    const { findByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} onClose={onClose} />
+      </TestWrapper>
+    )
+    await findByText('runPipelineForm.noRuntimeInput')
+    const cancelBtn = await findByText('cancel')
+    fireEvent.click(cancelBtn)
+    expect(onClose).toBeCalled()
+  })
+
+  test('retry button should be disabled if no stage is selected', async () => {
+    const { getByRole, findByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} />
+      </TestWrapper>
+    )
+    const retryStageInfo = await findByText('pipeline.stagetoRetryFrom')
+    expect(retryStageInfo).toBeDefined()
+    expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeDisabled()
+  })
+
+  test('retry button should be enabled on stage selection', async () => {
+    const { container, getByRole, findByText, findByRole } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} inputSetYAML={inputSetYAML} />
+      </TestWrapper>
+    )
+    const retryStageInfo = await findByText('pipeline.stagetoRetryFrom')
+    expect(retryStageInfo).toBeDefined()
+    expect(await findByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeDisabled()
+
+    await waitFor(() => expect(container.querySelector('.bp3-popover-target')).toBeTruthy())
+    await fillAtForm([
+      {
+        container,
+        type: InputTypes.SELECT,
+        fieldId: 'selectRetryStage',
+        value: 'stage1'
+      }
+    ])
+    fireEvent.click(await findByText('stage1'))
+    const reRun = getByRole('button', { name: 'pipeline.execution.actions.reRun' })
+    await waitFor(() => expect(reRun).not.toBeDisabled())
+  })
+
+  test('parallel stage select option should be present', async () => {
+    const { container, getByRole, getByText, findByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} inputSetYAML={inputSetYAML} />
+      </TestWrapper>
+    )
+    const retryStageInfo = await findByText('pipeline.stagetoRetryFrom')
+    expect(retryStageInfo).toBeDefined()
+    expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeDisabled()
+
+    await fillAtForm([
+      {
+        container,
+        type: InputTypes.SELECT,
+        fieldId: 'selectRetryStage',
+        value: 'stage3 | stage4'
+      }
+    ])
+    const selectedStage = getByText('stage3 | stage4')
+
+    await waitFor(() => expect(selectedStage).toBeTruthy())
+    fireEvent.click(selectedStage)
+
+    expect(getByText('pipeline.runAllParallelstages')).toBeTruthy()
+    expect(getByText('pipeline.runFailedStages')).toBeTruthy()
+    await waitFor(() => expect(getByRole('button', { name: 'pipeline.execution.actions.reRun' })).toBeEnabled())
+  })
+
+  test('should preselect last failed stage - serial stage', async () => {
+    const spy = jest.spyOn(pipelineNgServices, 'useGetRetryStages').mockReturnValue(mockRetryStages_Serial as any)
+
+    const { getByDisplayValue } = render(
+      <TestWrapper>
+        <RunPipelineForm
+          {...commonProps}
+          source="executions"
+          isRetryFromStage={true}
+          preSelectLastStage={true}
+          inputSetYAML={inputSetYAML}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => {
+      expect(getByDisplayValue('stage1')).toBeDefined()
+    })
+
+    spy.mockRestore()
+  })
+
+  test('should preselect last failed stage - parallel use case', async () => {
+    const { getByDisplayValue } = render(
+      <TestWrapper>
+        <RunPipelineForm
+          {...commonProps}
+          source="executions"
+          isRetryFromStage={true}
+          preSelectLastStage={true}
+          inputSetYAML={inputSetYAML}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => {
+      expect(getByDisplayValue('stage3 | stage4')).toBeDefined()
+    })
+  })
+
+  test('should not allow submit if form is incomplete', async () => {
+    const { container, getByText, findByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" isRetryFromStage={true} />
+      </TestWrapper>
+    )
+    const retryStageInfo = await findByText('pipeline.stagetoRetryFrom')
+    expect(retryStageInfo).toBeDefined()
+
+    await waitFor(() => expect(container.querySelector('.bp3-popover-target')).toBeTruthy())
+    await fillAtForm([
+      {
+        container,
+        type: InputTypes.SELECT,
+        fieldId: 'selectRetryStage',
+        value: 'stage1'
+      }
+    ])
+
+    await waitFor(() => expect(getByText('stage1')).toBeTruthy())
+    fireEvent.click(getByText('stage1'))
+
+    // Submit the incomplete form
+    const runButton = container.querySelector('button[type="submit"]')
+    act(() => {
+      fireEvent.click(runButton!)
+    })
+
+    const buttonShouldBeDisabled = container.querySelector('.bp3-disabled')
+    expect(buttonShouldBeDisabled).toBeTruthy()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should send isAllStage:true when we chose all parallel stages', async () => {
+    const useRetryPipelineHook = jest.fn(() => mockPostRetryPipeline as any)
+    jest.spyOn(pipelineNgServices, 'useRetryPipeline').mockImplementation(useRetryPipelineHook)
+
+    const { findByDisplayValue, getByText, container, getByRole } = render(
+      <TestWrapper>
+        <RunPipelineForm
+          {...commonProps}
+          source="executions"
+          isRetryFromStage={true}
+          preSelectLastStage={true}
+          inputSetYAML={inputSetYAML}
+        />
+      </TestWrapper>
+    )
+    await findByDisplayValue('stage3 | stage4')
+
+    fireEvent.click(getByText('pipeline.runAllParallelstages'))
+
+    // Enter a value for required fields
+    const variableInputElement = container.querySelector('input[name="variables[0].value"]')
+    fireEvent.change(variableInputElement!, { target: { value: 'enteredvalue' } })
+
+    const reRunButton = getByRole('button', { name: 'pipeline.execution.actions.reRun' })
+    reRunButton.click()
+
+    expect(useRetryPipelineHook).toHaveBeenLastCalledWith(getUseRetryPipelineRequest({ isAllowAll: true }))
+  })
+
+  test('should send isAllStage:false when we chose only failed stages', async () => {
+    const useRetryPipelineHook = jest.fn(() => mockPostRetryPipeline as any)
+    jest.spyOn(pipelineNgServices, 'useRetryPipeline').mockImplementation(useRetryPipelineHook)
+
+    const { findByDisplayValue, getByText, container, getByRole } = render(
+      <TestWrapper>
+        <RunPipelineForm
+          {...commonProps}
+          source="executions"
+          isRetryFromStage={true}
+          preSelectLastStage={true}
+          inputSetYAML={inputSetYAML}
+        />
+      </TestWrapper>
+    )
+    await findByDisplayValue('stage3 | stage4')
+
+    fireEvent.click(getByText('pipeline.runFailedStages'))
+
+    // Enter a value for required fields
+    const variableInputElement = container.querySelector('input[name="variables[0].value"]')
+    fireEvent.change(variableInputElement!, { target: { value: 'enteredvalue' } })
+
+    const reRunButton = getByRole('button', { name: 'pipeline.execution.actions.reRun' })
+    reRunButton.click()
+
+    expect(useRetryPipelineHook).toHaveBeenLastCalledWith(getUseRetryPipelineRequest({ isAllowAll: false }))
   })
 })

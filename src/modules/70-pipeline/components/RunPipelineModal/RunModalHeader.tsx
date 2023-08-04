@@ -78,6 +78,8 @@ export interface RunModalHeaderProps {
   selectedBranch?: string
   onGitBranchChange(selectedFilter: GitFilterScope, defaultSelected?: boolean): void
   remoteFetchError?: GetDataError<Failure | Error> | null
+  isRetryFromStage?: boolean
+  isRerunPipeline?: boolean
 }
 
 export default function RunModalHeader(props: RunModalHeaderProps): React.ReactElement | null {
@@ -103,7 +105,9 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     refetchTemplate,
     selectedBranch,
     remoteFetchError,
-    onGitBranchChange
+    onGitBranchChange,
+    isRerunPipeline,
+    isRetryFromStage
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -201,46 +205,48 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
 
         {remoteFetchError ? null : (
           <>
-            <Layout.Horizontal
-              data-tooltip-id={stageExecutionDisabledTooltip}
-              spacing="small"
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-            >
-              <MultiSelectDropDown
-                popoverClassName={css.disabledStageDropdown}
-                hideItemCount={localSelectedStagesData.allStagesSelected}
-                disabled={isStageExecutionDisabled()}
-                buttonTestId={'stage-select'}
-                onChange={onStageSelect}
-                onPopoverClose={() => setSelectedStageData(localSelectedStagesData)}
-                value={localSelectedStagesData.selectedStageItems}
-                items={executionStageList}
-                minWidth={150}
-                usePortal={true}
-                placeholder={
-                  localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')
-                }
-                className={css.stagesDropdown}
-              />
-              <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} />
-              {!isEmpty(stageExecutionError) ? (
-                <Utils.WrapOptionalTooltip
-                  tooltip={
-                    <Text
-                      padding="medium"
-                      font={{ variation: FontVariation.BODY }}
-                      width={380}
-                      className={css.stageExecutionErrorTooltip}
-                    >
-                      {getRBACErrorMessage(stageExecutionError as RBACError, true)}
-                    </Text>
+            {!isRetryFromStage && (
+              <Layout.Horizontal
+                data-tooltip-id={stageExecutionDisabledTooltip}
+                spacing="small"
+                flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+              >
+                <MultiSelectDropDown
+                  popoverClassName={css.disabledStageDropdown}
+                  hideItemCount={localSelectedStagesData.allStagesSelected}
+                  disabled={isStageExecutionDisabled()}
+                  buttonTestId={'stage-select'}
+                  onChange={onStageSelect}
+                  onPopoverClose={() => setSelectedStageData(localSelectedStagesData)}
+                  value={localSelectedStagesData.selectedStageItems}
+                  items={executionStageList}
+                  minWidth={150}
+                  usePortal={true}
+                  placeholder={
+                    localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')
                   }
-                  tooltipProps={{ usePortal: true, position: Position.RIGHT, isDark: true }}
-                >
-                  <Icon name="warning-sign" color={Color.RED_700} data-testid="stageExecutionErrorIcon" />
-                </Utils.WrapOptionalTooltip>
-              ) : null}
-            </Layout.Horizontal>
+                  className={css.stagesDropdown}
+                />
+                <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} />
+                {!isEmpty(stageExecutionError) ? (
+                  <Utils.WrapOptionalTooltip
+                    tooltip={
+                      <Text
+                        padding="medium"
+                        font={{ variation: FontVariation.BODY }}
+                        width={380}
+                        className={css.stageExecutionErrorTooltip}
+                      >
+                        {getRBACErrorMessage(stageExecutionError as RBACError, true)}
+                      </Text>
+                    }
+                    tooltipProps={{ usePortal: true, position: Position.RIGHT, isDark: true }}
+                  >
+                    <Icon name="warning-sign" color={Color.RED_700} data-testid="stageExecutionErrorIcon" />
+                  </Utils.WrapOptionalTooltip>
+                ) : null}
+              </Layout.Horizontal>
+            )}
             <div className={css.optionBtns}>
               <VisualYamlToggle
                 selectedView={selectedView}
@@ -260,6 +266,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
             filePath={pipelineResponse?.data?.gitDetails?.filePath}
             fileUrl={pipelineResponse?.data?.gitDetails?.fileUrl}
             onBranchChange={onGitBranchChange}
+            flags={{ readOnly: isRerunPipeline || isRetryFromStage }}
           />
           {!isEmpty(pipelineResponse?.data?.cacheResponse) && (
             <EntityCachedCopy

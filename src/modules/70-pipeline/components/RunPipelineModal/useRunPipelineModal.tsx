@@ -25,8 +25,14 @@ export interface RunPipelineModalParams {
   stagesExecuted?: string[]
 }
 
+export interface OpenRunPipelineModalProps {
+  debugMode?: boolean
+  isRetryFromStage?: boolean
+  preSelectLastStage?: boolean
+}
+
 export interface UseRunPipelineModalReturn {
-  openRunPipelineModal: (debugMode?: boolean) => void
+  openRunPipelineModal: (props?: OpenRunPipelineModalProps) => void
   closeRunPipelineModal: () => void
 }
 
@@ -58,7 +64,7 @@ export const useRunPipelineModal = (
     branch
   }
 
-  const [isDebugMode, setIsDebugMode] = useState(false)
+  const [openParams, setOpenParams] = useState<OpenRunPipelineModalProps>({})
 
   const planExecutionId: string | undefined = executionIdentifier ?? executionId
 
@@ -146,7 +152,9 @@ export const useRunPipelineModal = (
               stagesExecuted={stagesExecuted}
               executionIdentifier={planExecutionId}
               storeMetadata={storeMetadata}
-              isDebugMode={isDebugMode}
+              isDebugMode={openParams.debugMode}
+              isRetryFromStage={openParams.isRetryFromStage}
+              preSelectLastStage={openParams.preSelectLastStage}
             />
             <Button
               aria-label="close modal"
@@ -171,18 +179,18 @@ export const useRunPipelineModal = (
   )
 
   const open = useCallback(
-    (debugMode?: boolean) => {
+    (params: OpenRunPipelineModalProps) => {
       if (planExecutionId) {
         fetchExecutionData()
       }
-      setIsDebugMode(!!debugMode)
+      setOpenParams(params)
       showRunPipelineModal()
     },
     [showRunPipelineModal, planExecutionId, fetchExecutionData]
   )
 
   return {
-    openRunPipelineModal: (debugMode?: boolean) => open(debugMode),
+    openRunPipelineModal: (parms: OpenRunPipelineModalProps = {}) => open(parms),
     closeRunPipelineModal: hideRunPipelineModal
   }
 }
