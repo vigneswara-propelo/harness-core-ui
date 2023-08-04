@@ -374,14 +374,20 @@ exports[`ServicesList render 1`] = `
                 class="Layout--vertical StyledProps--main"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main serviceHorizontalItems"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey700 StyledProps--margin-bottom-xsmall"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    class="renderServiceName"
+                    href="/account/dummy/home/orgs/dummy/projects/dummy/services/asdfasdf"
+                    target="_blank"
                   >
-                    asdfasdf
-                  </p>
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main serviceMaxWidth StyledProps--font-variation-lead StyledProps--color StyledProps--color-primary7 StyledProps--margin-bottom-xsmall"
+                      style="--text-line-clamp: 1;"
+                    >
+                      asdfasdf
+                    </p>
+                  </a>
                 </div>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
@@ -675,14 +681,20 @@ exports[`ServicesList render 1`] = `
                 class="Layout--vertical StyledProps--main"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main serviceHorizontalItems"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey700 StyledProps--margin-bottom-xsmall"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    class="renderServiceName"
+                    href="/account/dummy/home/orgs/dummy/projects/dummy/services/service_one"
+                    target="_blank"
                   >
-                    service one
-                  </p>
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main serviceMaxWidth StyledProps--font-variation-lead StyledProps--color StyledProps--color-primary7 StyledProps--margin-bottom-xsmall"
+                      style="--text-line-clamp: 1;"
+                    >
+                      service one
+                    </p>
+                  </a>
                   <span
                     class="bp3-popover-wrapper"
                   >

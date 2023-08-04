@@ -9,9 +9,13 @@
 declare const styles: {
   readonly lastDeployment: string
   readonly lastDeploymentText: string
+  readonly openNewTabFromList: string
   readonly openNewTabStyle: string
   readonly pieChartLabelContainerStyles: string
   readonly pieChartLabelStyles: string
+  readonly renderServiceName: string
+  readonly serviceHorizontalItems: string
+  readonly serviceMaxWidth: string
   readonly statusText: string
   readonly tickerContainer: string
   readonly tickerContainerStyles: string

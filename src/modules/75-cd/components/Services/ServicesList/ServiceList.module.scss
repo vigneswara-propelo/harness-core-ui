@@ -36,6 +36,24 @@
   align-items: center;
 }
 
+.renderServiceName {
+  display: flex;
+  &:hover {
+    background: transparent;
+  }
+}
+
+.openNewTabFromList {
+  margin-top: 4px !important;
+  margin-left: 4px !important;
+}
+.serviceMaxWidth {
+  max-width: 200px;
+}
+.serviceHorizontalItems {
+  display: flex;
+  align-items: center;
+}
 .lastDeployment {
   display: grid !important;
   grid-template-columns: 60% 40%;

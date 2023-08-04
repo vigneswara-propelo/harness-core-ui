@@ -150,12 +150,38 @@ const RenderServiceName: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
   const { name, identifier, tags } = row.original
   const { getString } = useStrings()
   const idLabel = getString('idLabel', { id: identifier })
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const [isHover, setIsHover] = React.useState<boolean>()
   return (
     <Layout.Vertical>
-      <Layout.Horizontal spacing="small">
-        <Text font={{ weight: 'semi-bold' }} color={Color.GREY_700} margin={{ bottom: 'xsmall' }} lineClamp={1}>
-          {name}
-        </Text>
+      <Layout.Horizontal spacing="small" className={css.serviceHorizontalItems}>
+        {
+          <Link
+            className={css.renderServiceName}
+            target="_blank"
+            to={routes.toServiceStudio({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              serviceId: row.original.identifier,
+              module
+            })}
+            onClick={e => e.stopPropagation()}
+          >
+            <Text
+              font={{ variation: FontVariation.LEAD }}
+              color={Color.PRIMARY_7}
+              margin={{ bottom: 'xsmall' }}
+              className={css.serviceMaxWidth}
+              lineClamp={1}
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
+            >
+              {name}
+            </Text>
+            {isHover && <Icon className={css.openNewTabFromList} color={Color.PRIMARY_7} size={15} name="launch" />}
+          </Link>
+        }
         {tags && Object.keys(tags).length ? <TagsPopover tags={tags} /> : null}
       </Layout.Horizontal>
 
