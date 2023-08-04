@@ -53,13 +53,24 @@ export const useGetRetryStepGroupData = (props: RetryStepGroupProps): RetryStepG
     pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata?.planExecutionId,
     executionIdentifier
   )
+
+  const organisationIdentifier = defaultTo(
+    pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata?.orgIdentifier,
+    orgIdentifier
+  )
+
+  const prjctIdentifier = defaultTo(
+    pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata?.projectIdentifier,
+    projectIdentifier
+  )
+
   const { data: executionNode, loading } = useGetExecutionSubGraphForNodeExecution({
     planExecutionId: planExecutionId,
     nodeExecutionId: currentStepGroupRetryId,
     queryParams: {
       accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier
+      projectIdentifier: prjctIdentifier,
+      orgIdentifier: organisationIdentifier
     },
     pathParams: {
       planExecutionId: planExecutionId,
