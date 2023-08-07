@@ -37,7 +37,7 @@ import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { updateStepWithinStageViaPath } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
 import { getParentPath } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { processExecutionDataV1 } from '@pipeline/utils/execUtils'
+import { processGroupItem } from '@pipeline/utils/execUtils'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
@@ -109,7 +109,18 @@ export function StepGroupNode(props: any): JSX.Element {
 
   React.useEffect(() => {
     if (executionNode?.data?.executionGraph) {
-      setRetryStepGroupStepsData(processExecutionDataV1(executionNode.data.executionGraph))
+      const items: Array<PipelineGraphState> = []
+      const { rootNodeId, nodeAdjacencyListMap, nodeMap } = executionNode.data.executionGraph
+      processGroupItem({
+        items,
+        id: rootNodeId as string,
+        isRollbackNext: false,
+        nodeAdjacencyListMap,
+        nodeMap,
+        rootNodes: [],
+        isNestedGroup: true
+      })
+      setRetryStepGroupStepsData(items[0].data?.stepGroup?.steps)
       const newNodeMap = executionNode?.data?.executionGraph?.nodeMap
       for (const nodeId in newNodeMap) {
         Object.assign(newNodeMap[nodeId], { __isInterruptNode: true })

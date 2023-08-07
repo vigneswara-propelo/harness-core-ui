@@ -471,7 +471,7 @@ interface ProcessGroupItemArgs {
   isRollbackNext?: boolean
   isNestedGroup?: boolean
 }
-const processGroupItem = ({
+export const processGroupItem = ({
   items,
   id,
   nodeMap,
