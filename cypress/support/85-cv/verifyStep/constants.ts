@@ -489,6 +489,18 @@ export const pipelineStepsResponse = {
             name: 'Continuous Verification',
             stepsData: [{ name: 'Verify', type: 'Verify', disabled: false, featureRestrictionName: null }],
             stepCategories: []
+          },
+          {
+            name: 'Service Reliability',
+            stepsData: [
+              {
+                name: 'Analyze Deployment Impact',
+                type: 'AnalyzeDeploymentImpact',
+                disabled: false,
+                featureRestrictionName: 'ANALYZE_DEPLOYMENT_STEP'
+              }
+            ],
+            stepCategories: []
           }
         ]
       }
