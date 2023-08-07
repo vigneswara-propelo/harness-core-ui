@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { UseGetProps, UseGetReturn, RestfulProvider } from 'restful-react'
-import { act, fireEvent, getByText, queryByAttribute, waitFor } from '@testing-library/react'
+import { act, findAllByText, findByText, fireEvent, getByText, queryByAttribute, waitFor } from '@testing-library/react'
 import { compile } from 'path-to-regexp'
 import { createMemoryHistory } from 'history'
 import { Router, Route, Switch, useLocation, useHistory } from 'react-router-dom'
@@ -289,4 +289,36 @@ export const doConfigureOptionsTesting = async (
   const cogSubmit = getByText(cogModal, 'submit')
   await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
+}
+
+export const testConnectorRefChange = async (
+  connectorRef1: string,
+  connectorRef2: string,
+  selected: string
+): Promise<void> => {
+  const dialogs = document.getElementsByClassName('bp3-dialog')
+  await waitFor(() => expect(dialogs).toHaveLength(1))
+  const connectorSelectorDialog = dialogs[0] as HTMLElement
+
+  let connectorToSelect = connectorRef1
+  if (selected === connectorRef1) {
+    const connector1 = await findAllByText(connectorSelectorDialog, connectorRef1)
+    expect(connector1).toHaveLength(2)
+    connectorToSelect = connectorRef2
+  } else if (selected === connectorRef2) {
+    const connector2 = await findAllByText(connectorSelectorDialog, connectorRef2)
+    expect(connector2).toHaveLength(2)
+    connectorToSelect = connectorRef1
+  } else {
+    const connector2 = await findByText(connectorSelectorDialog, connectorRef2)
+    expect(connector2).toBeInTheDocument()
+    connectorToSelect = connectorRef1
+  }
+
+  const connectorToSelectElementItem = getByText(connectorSelectorDialog, connectorToSelect)
+  expect(connectorToSelectElementItem).toBeInTheDocument()
+  userEvent.click(connectorToSelectElementItem)
+  const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
+  userEvent.click(applySelected)
+  await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 }

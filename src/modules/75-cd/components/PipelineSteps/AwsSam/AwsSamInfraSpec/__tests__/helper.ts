@@ -5,9 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { findAllByText, findByText, getByText, waitFor } from '@testing-library/dom'
-import userEvent from '@testing-library/user-event'
-
 export const awsRegions = {
   resource: [
     {
@@ -78,35 +75,3 @@ pipeline:
               serviceConfig:
 
 `
-
-export const testConnectorRefChange = async (
-  connectorRef1: string,
-  connectorRef2: string,
-  selected: string
-): Promise<void> => {
-  const dialogs = document.getElementsByClassName('bp3-dialog')
-  await waitFor(() => expect(dialogs).toHaveLength(1))
-  const connectorSelectorDialog = dialogs[0] as HTMLElement
-
-  let connectorToSelect = connectorRef1
-  if (selected === connectorRef1) {
-    const connector1 = await findAllByText(connectorSelectorDialog, connectorRef1)
-    expect(connector1).toHaveLength(2)
-    connectorToSelect = connectorRef2
-  } else if (selected === connectorRef2) {
-    const connector2 = await findAllByText(connectorSelectorDialog, connectorRef2)
-    expect(connector2).toHaveLength(2)
-    connectorToSelect = connectorRef1
-  } else {
-    const connector2 = await findByText(connectorSelectorDialog, connectorRef2)
-    expect(connector2).toBeInTheDocument()
-    connectorToSelect = connectorRef1
-  }
-
-  const connectorToSelectElementItem = getByText(connectorSelectorDialog, connectorToSelect)
-  expect(connectorToSelectElementItem).toBeInTheDocument()
-  userEvent.click(connectorToSelectElementItem)
-  const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-  userEvent.click(applySelected)
-  await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
-}

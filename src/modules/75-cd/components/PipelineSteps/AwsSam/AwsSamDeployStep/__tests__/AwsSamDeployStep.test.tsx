@@ -20,7 +20,7 @@ import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { StringsMap } from 'stringTypes'
-import { queryByNameAttribute } from '@common/utils/testUtils'
+import { queryByNameAttribute, testConnectorRefChange } from '@common/utils/testUtils'
 import { kubernetesConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -28,7 +28,6 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { AwsSamDeployStep } from '../AwsSamDeployStep'
 import { AwsSamDeployStepFormikValues } from '../AwsSamDeployStepEdit'
-import { testConnectorRefChange } from '../../AwsSamInfraSpec/__tests__/helper'
 
 const fetchConnector = jest.fn().mockReturnValue({ data: kubernetesConnectorListResponse?.data?.content?.[0] })
 jest.mock('services/cd-ng', () => ({

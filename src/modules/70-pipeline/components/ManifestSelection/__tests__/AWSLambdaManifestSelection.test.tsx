@@ -78,7 +78,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   await userEvent.click(secondStepContinueButton)
 }
 
-const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
+const testAwsLambdaManifestLastStep = async (portal: HTMLElement): Promise<void> => {
   await waitFor(() => expect(getByText(portal, 'pipeline.manifestType.manifestIdentifier')).toBeInTheDocument())
 
   const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', portal, name)
@@ -123,7 +123,7 @@ describe('ManifestSelection tests for AWSLambda', () => {
     await testManifestStoreStep(portal)
 
     // Fill in required field and submit manifest
-    await testEcsManifestLastStep(portal)
+    await testAwsLambdaManifestLastStep(portal)
 
     await waitFor(() => {
       expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgAwsLambdaFunctionDefinition, 0)
@@ -159,7 +159,7 @@ describe('ManifestSelection tests for AWSLambda', () => {
     await testManifestStoreStep(portal)
 
     // Fill in required field and submit manifest
-    await testEcsManifestLastStep(portal)
+    await testAwsLambdaManifestLastStep(portal)
 
     await waitFor(() => {
       expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgAwsLambdaFunctionAliasDefinition, 0)

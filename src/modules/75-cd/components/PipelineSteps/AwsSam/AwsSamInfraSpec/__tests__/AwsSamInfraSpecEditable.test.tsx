@@ -12,13 +12,13 @@ import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from
 
 import type { AwsSamInfrastructure } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
-import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
+import { queryByNameAttribute, testConnectorRefChange, TestWrapper } from '@common/utils/testUtils'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { awsConnectorListResponse } from '@platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import { testConnectorRefChange, awsRegions } from './helper'
+import { awsRegions } from './helper'
 import { AwsSamInfraSpec } from '../AwsSamInfraSpec'
 import { AwsSamInfraSpecEditable } from '../AwsSamInfraSpecEditable'
 

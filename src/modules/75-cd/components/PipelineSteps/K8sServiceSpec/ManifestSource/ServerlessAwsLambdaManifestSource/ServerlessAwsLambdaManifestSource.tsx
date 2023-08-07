@@ -11,7 +11,6 @@ import cx from 'classnames'
 import { FormInput, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import List from '@common/components/List/List'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
@@ -19,10 +18,22 @@ import { S3ManifestStoreRuntimeView } from '@cd/components/PipelineSteps/ECSServ
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
+import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const ServerlessLambdaGitStoreRuntimeView = (props: ManifestSourceRenderProps): React.ReactElement => {
-  const { template, path, manifestPath, manifest, fromTrigger, readonly, formik, stageIdentifier } = props
+  const {
+    template,
+    path,
+    manifestPath,
+    manifest,
+    fromTrigger,
+    readonly,
+    formik,
+    stageIdentifier,
+    allowableTypes,
+    stepViewType
+  } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -50,14 +61,14 @@ const ServerlessLambdaGitStoreRuntimeView = (props: ManifestSourceRenderProps): 
 
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
-          <List
-            labelClassName={css.listLabel}
+          <MultiTypeListOrFileSelectList
             label={getString('common.git.folderPath')}
             name={`${path}.${manifestPath}.spec.store.spec.paths`}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
             disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            expressions={expressions}
+            allowableTypes={allowableTypes}
+            stepViewType={stepViewType}
+            formik={formik}
             isNameOfArrayType
             allowOnlyOne
           />

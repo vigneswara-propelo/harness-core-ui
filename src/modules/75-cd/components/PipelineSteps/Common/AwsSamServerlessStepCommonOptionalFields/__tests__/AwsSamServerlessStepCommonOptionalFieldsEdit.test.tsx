@@ -21,12 +21,11 @@ import userEvent from '@testing-library/user-event'
 import { Button, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import routes from '@common/RouteDefinitions'
-import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
+import { TestWrapper, queryByNameAttribute, testConnectorRefChange } from '@common/utils/testUtils'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { kubernetesConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { StepFormikFowardRef, StepFormikRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { testConnectorRefChange } from '@cd/components/PipelineSteps/AwsSam/AwsSamInfraSpec/__tests__/helper'
 import {
   AwsSamServerlessCommonStepFormikVaues,
   AwsSamServerlessStepCommonOptionalFieldsEdit
