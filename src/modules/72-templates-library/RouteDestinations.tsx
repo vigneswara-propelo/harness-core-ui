@@ -26,8 +26,10 @@ import type {
   Module,
   ModulePathParams,
   TemplateStudioPathProps,
+  TemplateStudioQueryParams,
   TemplateType
 } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import TemplateResourceModal from './components/RbacResourceModals/TemplateResourceModal'
 import TemplateResourceRenderer from './components/RbacResourceModals/TemplateResourceRenderer'
@@ -87,6 +89,7 @@ const RedirectToAccountTemplateStudio = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, templateType } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
+  const queryParams = useQueryParams<TemplateStudioQueryParams>()
   return (
     <Redirect
       to={routes.toTemplateStudioNew({
@@ -94,7 +97,8 @@ const RedirectToAccountTemplateStudio = (): React.ReactElement => {
         orgIdentifier,
         projectIdentifier,
         templateIdentifier,
-        templateType
+        templateType,
+        ...queryParams
       })}
     />
   )
@@ -104,6 +108,7 @@ const RedirectToOrgTemplateStudio = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, templateType } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
+  const queryParams = useQueryParams<TemplateStudioQueryParams>()
   return (
     <Redirect
       to={routes.toTemplateStudioNew({
@@ -111,7 +116,8 @@ const RedirectToOrgTemplateStudio = (): React.ReactElement => {
         projectIdentifier,
         orgIdentifier,
         templateIdentifier,
-        templateType
+        templateType,
+        ...queryParams
       })}
     />
   )
@@ -121,6 +127,7 @@ const RedirectToModuleTemplateStudio = (): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, templateIdentifier, templateType, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
+  const queryParams = useQueryParams<TemplateStudioQueryParams>()
   return (
     <Redirect
       to={routes.toTemplateStudioNew({
@@ -129,7 +136,8 @@ const RedirectToModuleTemplateStudio = (): React.ReactElement => {
         projectIdentifier,
         templateIdentifier,
         templateType,
-        module
+        module,
+        ...queryParams
       })}
     />
   )
