@@ -8,12 +8,11 @@
 
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
 import cx from 'classnames'
 import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import { useStrings } from 'framework/strings'
-import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { StoreConfigWrapper } from 'services/cd-ng'
 import { Connectors } from '@platform/connectors/constants'
@@ -23,13 +22,14 @@ import {
   ApplicationConfigProps,
   ApplicationConfigType
 } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import { fileTypes } from '../StartupScriptSelection/StartupScriptInterface.types'
 import css from './RuntimeApplicationConfig.module.scss'
 
 function AzureWebAppConfigInputField(props: ApplicationConfigProps): React.ReactElement | null {
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
-    PipelineType<InputSetPathProps> & { accountId: string }
-  >()
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } = useGetChildPipelineMetadata(
+    props.childPipelineMetadata
+  )
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const runtimeMode = isTemplatizedView(props.stepViewType)
 

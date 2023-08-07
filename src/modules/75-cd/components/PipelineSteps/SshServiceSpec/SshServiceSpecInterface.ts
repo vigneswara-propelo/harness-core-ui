@@ -10,6 +10,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServiceDefinition, ServiceSpec, ConfigFileWrapper, ConfigFile } from 'services/cd-ng'
 import type { ConfigFileSourceBaseFactory } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 
 export interface SshWinRmDirectServiceStep extends ServiceSpec {
   stageIndex?: number
@@ -34,6 +35,7 @@ export interface SshWinRmConfigFilesProps {
   allowableTypes: AllowedTypes
   configFile?: ConfigFile
   configFilePath?: string
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 export interface SshWinRmServiceInputFormProps {
   initialValues: SshWinRmDirectServiceStep

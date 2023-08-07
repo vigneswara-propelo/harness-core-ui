@@ -10,7 +10,6 @@ import { defaultTo, get, isArray, memoize } from 'lodash-es'
 import cx from 'classnames'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { FieldArray } from 'formik'
-import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import MultiTypeFieldScriptSelector, {
@@ -22,7 +21,6 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { scriptInputType } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { BuildDetails, SidecarArtifact, useGetJobDetailsForCustom } from 'services/cd-ng'
-import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -33,6 +31,7 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import {
   getFqnPath,
   getValidInitialValuePath,
@@ -68,13 +67,15 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     initialValues,
     stepViewType,
     artifacts,
+    childPipelineMetadata,
     shouldUtilizeFullWidth = false
   } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(template, `artifacts.${artifactPath}.spec.source.spec.script`) || 'Bash'
-  const { projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
+  const { orgIdentifier, projectIdentifier } = useGetChildPipelineMetadata(childPipelineMetadata)
+
   const isFieldDisabled = (fieldName: string): boolean => {
     /* instanbul ignore else */
     if (

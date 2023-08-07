@@ -9,7 +9,6 @@ import {
 } from '@harness/uicore'
 import { getPrimaryManifestsRef } from '@harnessio/react-ng-manager-client'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
 import produce from 'immer'
 import { KubernetesServiceSpec } from 'services/cd-ng'
@@ -18,10 +17,11 @@ import { useStrings } from 'framework/strings'
 import type { PipelineStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import ExperimentalInput from '../K8sServiceSpecForms/ExperimentalInput'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
 
@@ -35,6 +35,7 @@ interface PrimaryManifestRefProps {
   primaryManifest?: string
   formik?: FormikContextType<unknown>
   path?: string
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 function PrimaryManifestRef({
@@ -45,11 +46,12 @@ function PrimaryManifestRef({
   readonly,
   formik,
   serviceIdentifier = '',
-  stepViewType
+  stepViewType,
+  childPipelineMetadata
 }: PrimaryManifestRefProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { orgIdentifier, projectIdentifier } = useGetChildPipelineMetadata(childPipelineMetadata)
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
   const [manifestSources, setManifestSources] = React.useState<SelectOption[]>([])
   const [isLoading, setIsLoading] = React.useState<boolean>(false)

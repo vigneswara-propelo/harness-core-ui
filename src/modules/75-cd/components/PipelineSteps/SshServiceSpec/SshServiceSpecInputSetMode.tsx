@@ -70,7 +70,8 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
     initialValues,
     readonly,
     allowableTypes,
-    serviceIdentifier
+    serviceIdentifier,
+    childPipelineMetadata
   }
 
   return (
@@ -90,7 +91,6 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
-          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

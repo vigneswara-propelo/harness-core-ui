@@ -7,12 +7,11 @@
 
 import React, { useEffect } from 'react'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ServiceHook, ServiceHookWrapper } from 'services/cd-ng'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
@@ -21,6 +20,7 @@ import serviceHookSourceBaseFactory from '@cd/factory/ServiceHookSourceFactory/S
 import { fromPipelineInputTriggerTab } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 import { getManifestTriggerSetValues } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import { ServiceHooksMap } from '@pipeline/components/ServiceHooks/ServiceHooksHelper'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.module.scss'
 
 interface ServiceHookInputFieldProps extends KubernetesServiceHooksProps {
@@ -28,10 +28,9 @@ interface ServiceHookInputFieldProps extends KubernetesServiceHooksProps {
 }
 
 const ServiceHookInputField = (props: ServiceHookInputFieldProps): React.ReactElement | null => {
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
-    PipelineType<InputSetPathProps> & { accountId: string }
-  >()
-
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } = useGetChildPipelineMetadata(
+    props.childPipelineMetadata
+  )
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const runtimeMode = isTemplatizedView(props.stepViewType)

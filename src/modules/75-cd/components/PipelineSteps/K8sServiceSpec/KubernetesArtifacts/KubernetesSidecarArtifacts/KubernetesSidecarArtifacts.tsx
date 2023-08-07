@@ -7,7 +7,6 @@
 
 import React, { useEffect } from 'react'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import produce from 'immer'
 
@@ -16,31 +15,21 @@ import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
-import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { useQueryParams } from '@common/hooks'
 import type { SidecarArtifact } from 'services/cd-ng'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
 import { fromPipelineInputTriggerTab, getSidecarInitialValues } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement | null => {
-  const {
-    projectIdentifier: _projectIdentifier,
-    orgIdentifier: _orgIdentifier,
-    accountId,
-    pipelineIdentifier: _pipelineIdentifier
-  } = useParams<PipelineType<InputSetPathProps> & { accountId: string }>()
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } = useGetChildPipelineMetadata(
+    props.childPipelineMetadata
+  )
   const { repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
-  const {
-    state: {
-      selectionState: { selectedStageId = '' }
-    },
-    getStageFromPipeline
-  } = usePipelineContext()
   const { supportingGitSimplification } = useAppStore()
   const artifactSource = props.artifact ? artifactSourceBaseFactory.getArtifactSource(props.artifact.type) : null
   const runtimeMode = isTemplatizedView(props.stepViewType)
@@ -51,19 +40,6 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
   const artifactDefaultValue = defaultTo(props.artifacts, props.template.artifacts)?.sidecars?.find(
     artifactData => artifactData.sidecar?.identifier === (props.artifact as SidecarArtifact).identifier
   )?.sidecar
-  const selectedStage = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId).stage
-  const pipelineIdentifier =
-    (props.childPipelineMetadata
-      ? props.childPipelineMetadata.pipelineIdentifier
-      : get(selectedStage?.stage as PipelineStageElementConfig, 'spec.pipeline')) ?? _pipelineIdentifier
-  const projectIdentifier =
-    (props.childPipelineMetadata
-      ? props.childPipelineMetadata.projectIdentifier
-      : get(selectedStage?.stage as PipelineStageElementConfig, 'spec.project')) ?? _projectIdentifier
-  const orgIdentifier =
-    (props.childPipelineMetadata
-      ? props.childPipelineMetadata.orgIdentifier
-      : get(selectedStage?.stage as PipelineStageElementConfig, 'spec.org')) ?? _orgIdentifier
 
   useEffect(() => {
     /* instanbul ignore else */

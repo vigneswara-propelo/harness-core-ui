@@ -53,7 +53,8 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
     initialValues,
     readonly,
     allowableTypes,
-    serviceIdentifier
+    serviceIdentifier,
+    childPipelineMetadata
   }
 
   return (
@@ -73,7 +74,6 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
-          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

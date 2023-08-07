@@ -7,16 +7,16 @@
 
 import React, { useEffect } from 'react'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
-import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ManifestConfig } from 'services/cd-ng'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import type { KubernetesManifestsProps } from '../K8sServiceSpecInterface'
 import { fromPipelineInputTriggerTab, getManifestTriggerSetValues } from '../ManifestSource/ManifestSourceUtils'
 import css from './KubernetesManifests.module.scss'
@@ -25,9 +25,9 @@ interface ManifestInputFieldProps extends KubernetesManifestsProps {
   manifest: ManifestConfig
 }
 const ManifestInputField = (props: ManifestInputFieldProps): React.ReactElement | null => {
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
-    PipelineType<InputSetPathProps> & { accountId: string }
-  >()
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } = useGetChildPipelineMetadata(
+    props.childPipelineMetadata
+  )
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const runtimeMode = isTemplatizedView(props.stepViewType)

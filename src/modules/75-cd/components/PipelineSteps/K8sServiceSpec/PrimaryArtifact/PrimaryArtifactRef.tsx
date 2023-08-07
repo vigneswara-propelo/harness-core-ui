@@ -15,18 +15,18 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
 import produce from 'immer'
 import { PrimaryArtifact, ServiceSpec, useGetArtifactSourceInputs } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import ExperimentalInput from '../K8sServiceSpecForms/ExperimentalInput'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
 
@@ -40,6 +40,7 @@ interface PrimaryArtifactRefProps {
   primaryArtifact?: PrimaryArtifact
   formik?: FormikContextType<unknown>
   path?: string
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 function PrimaryArtifactRef({
@@ -50,11 +51,12 @@ function PrimaryArtifactRef({
   readonly,
   formik,
   serviceIdentifier = '',
-  stepViewType
+  stepViewType,
+  childPipelineMetadata
 }: PrimaryArtifactRefProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useGetChildPipelineMetadata(childPipelineMetadata)
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
 
   const { data: artifactSourceResponse, loading: loadingArtifactSourceResponse } = useGetArtifactSourceInputs({

@@ -36,6 +36,7 @@ export default function MultiServiceInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes,
+  childPipelineMetadata,
   viewTypeMetadata
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement | null {
   const { getString } = useStrings()
@@ -74,7 +75,8 @@ export default function MultiServiceInputSetForm({
               gitOpsEnabled: deploymentStage?.gitOpsEnabled,
               deploymentMetadata: deploymentStage?.deploymentMetadata,
               allValues: pick(deploymentStage, ['services']),
-              customDeploymentData: deploymentStage?.customDeploymentRef
+              customDeploymentData: deploymentStage?.customDeploymentRef,
+              childPipelineMetadata
             }}
             onUpdate={data => formik?.setFieldValue(`${path}.services`, get(data, 'services'))}
             viewTypeMetadata={viewTypeMetadata}
@@ -110,7 +112,8 @@ export default function MultiServiceInputSetForm({
                       customStepProps={{
                         stageIdentifier,
                         serviceIdentifier: defaultTo(service.serviceRef, ''),
-                        allValues: service.serviceInputs?.serviceDefinition?.spec
+                        allValues: service.serviceInputs?.serviceDefinition?.spec,
+                        childPipelineMetadata
                       }}
                       viewTypeMetadata={viewTypeMetadata}
                     />

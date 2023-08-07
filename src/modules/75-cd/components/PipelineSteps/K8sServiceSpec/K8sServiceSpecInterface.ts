@@ -94,6 +94,7 @@ export interface KubernetesManifestsProps {
   allowableTypes: AllowedTypes
   manifest?: ManifestConfig
   manifestPath?: string
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 export interface KubernetesServiceHooksProps {
@@ -112,6 +113,7 @@ export interface KubernetesServiceHooksProps {
   formik?: any
   fromTrigger?: boolean
   allowableTypes: AllowedTypes
+  childPipelineMetadata?: ChildPipelineMetadataType
   hookData?: ServiceHook
   hookPath?: string
 }

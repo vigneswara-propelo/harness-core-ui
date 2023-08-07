@@ -65,6 +65,7 @@ export interface ApplicationConfigProps {
   applicationConfigPath?: string
   type?: ApplicationConfigType
   pathLabel?: string
+  childPipelineMetadata?: ChildPipelineMetadataType
 }
 
 export interface AzureWebAppServiceSpecVariablesFormProps {

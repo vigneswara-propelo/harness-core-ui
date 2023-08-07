@@ -70,7 +70,8 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
     initialValues,
     readonly,
     allowableTypes,
-    serviceIdentifier
+    serviceIdentifier,
+    childPipelineMetadata
   }
   return (
     <Layout.Vertical spacing="medium">
@@ -89,7 +90,6 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template as ServiceSpec}
-          childPipelineMetadata={childPipelineMetadata}
           {...commonProps}
         />
       )}

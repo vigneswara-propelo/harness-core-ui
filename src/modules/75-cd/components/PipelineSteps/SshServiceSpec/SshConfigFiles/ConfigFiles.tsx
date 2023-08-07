@@ -7,12 +7,11 @@
 
 import React, { useEffect } from 'react'
 import { get, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConfigFile } from 'services/cd-ng'
 import type { SshWinRmConfigFilesProps } from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecInterface'
@@ -21,6 +20,7 @@ import {
   fromPipelineInputTriggerTab,
   getManifestTriggerSetValues
 } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceUtils'
+import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import ConfigFileSource from '../ConfigFileSource/ConfigFileSourceRuntimeFields/ConfigFileSource'
 import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.module.scss'
 
@@ -28,9 +28,9 @@ interface ConfigFileInputFieldProps extends SshWinRmConfigFilesProps {
   configFile: ConfigFile
 }
 const ConfigFileInputField = (props: ConfigFileInputFieldProps): React.ReactElement | null => {
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
-    PipelineType<InputSetPathProps> & { accountId: string }
-  >()
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } = useGetChildPipelineMetadata(
+    props.childPipelineMetadata
+  )
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 

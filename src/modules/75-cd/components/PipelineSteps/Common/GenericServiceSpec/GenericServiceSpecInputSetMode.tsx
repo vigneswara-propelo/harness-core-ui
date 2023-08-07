@@ -100,7 +100,8 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     initialValues,
     readonly,
     allowableTypes,
-    serviceIdentifier
+    serviceIdentifier,
+    childPipelineMetadata
   }
 
   return (
@@ -126,7 +127,6 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template as ServiceSpec}
-          childPipelineMetadata={childPipelineMetadata}
           viewTypeMetadata={viewTypeMetadata}
           {...commonProps}
         />
