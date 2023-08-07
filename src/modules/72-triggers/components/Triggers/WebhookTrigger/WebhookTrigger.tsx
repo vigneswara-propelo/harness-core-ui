@@ -8,7 +8,7 @@
 import React from 'react'
 
 import WebhookConditionsPanel from '@triggers/components/steps/WebhookConditionsPanel/WebhookConditionsPanel'
-import WebhookPipelineInputPanel from '@triggers/components/steps/WebhookPipelineInputPanel/WebhookPipelineInputPanel'
+import PipelineInputPanel from '@triggers/components/steps/PipelineInputPanel/PipelineInputPanel'
 import WebhookTriggerConfigPanel from '@triggers/components/steps/WebhookTriggerConfigPanel/WebhookTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
 import { Trigger, TriggerProps } from '../Trigger'
@@ -27,7 +27,7 @@ export abstract class WebhookTrigger<T> extends Trigger<T> {
   }
 
   renderStepThree(isSimplifiedYAML?: boolean): JSX.Element {
-    return isSimplifiedYAML ? <WebhookPipelineInputPanelV1 /> : <WebhookPipelineInputPanel />
+    return isSimplifiedYAML ? <WebhookPipelineInputPanelV1 /> : <PipelineInputPanel />
   }
 
   renderTrigger(props: TriggerProps<T>): JSX.Element {

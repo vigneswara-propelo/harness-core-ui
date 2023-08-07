@@ -15,10 +15,12 @@ import {
   Text,
   NestedAccordionProvider,
   HarnessDocTooltip,
-  PageSpinner
+  PageSpinner,
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
+import { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import {
   PipelineInfoConfig,
@@ -43,41 +45,39 @@ import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
-  TriggerTypes,
   getTriggerInputSetsBranchQueryParameter,
   getErrorMessage,
   TriggerGitEventTypes,
   TriggerGitEvent,
-  ciCodebaseBuildIssueComment
-} from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
-import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
+  ciCodebaseBuildIssueComment,
+  isNewTrigger
+} from '@triggers/components/Triggers/utils'
 import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import {
   PipelineVariablesContextProvider,
   usePipelineVariables
 } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import css from '@triggers/pages/triggers/views/WebhookPipelineInputPanel.module.scss'
+import { TriggerTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import css from './PipelineInputPanel.module.scss'
 
-interface ArtifactTriggerInputPanelFormProps {
-  formikProps?: any
+interface PipelineInputPanelPropsInterface {
+  formikProps?: FormikProps<any>
   isEdit?: boolean
 }
 
-function ArtifactTriggerInputPanelForm({
-  formikProps,
-  isEdit
-}: ArtifactTriggerInputPanelFormProps): React.ReactElement {
+function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelPropsInterface): React.ReactElement {
   const {
-    values: { inputSetSelected, pipeline, resolvedPipeline },
+    values: { inputSetSelected, pipeline, resolvedPipeline, triggerType },
     values
-  } = formikProps
+  } = formikProps ?? { values: {} }
 
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const { getString } = useStrings()
-  const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
+  const ciCodebaseBuildValue = values?.pipeline?.properties?.ci?.codebase?.build
   const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(inputSetSelected)
   const [hasEverRendered, setHasEverRendered] = useState(
@@ -93,10 +93,10 @@ function ArtifactTriggerInputPanelForm({
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
       gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
-      pipelineBranchName: formikProps?.values?.pipelineBranchName,
+      pipelineBranchName: values?.pipelineBranchName,
       branch
     })
-  }, [isNewGitSyncRemotePipeline, branch, formikProps?.values?.pipelineBranchName])
+  }, [isNewGitSyncRemotePipeline, branch, values?.pipelineBranchName])
 
   const commonQueryParams = useMemo(
     () => ({
@@ -126,7 +126,7 @@ function ArtifactTriggerInputPanelForm({
   const { data: template, loading } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: commonQueryParams,
     body: {
-      stageIdentifiers: formikProps.values?.stagesToExecute ?? []
+      stageIdentifiers: []
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -144,14 +144,8 @@ function ArtifactTriggerInputPanelForm({
   useEffect(() => {
     const shouldInjectCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
 
-    if (
-      !isNewGitSyncRemotePipeline &&
-      !hasEverRendered &&
-      shouldInjectCloneCodebase &&
-      !isEdit &&
-      formikProps?.values?.triggerType !== TriggerTypes.SCHEDULE
-    ) {
-      const formikValues = cloneDeep(formikProps.values)
+    if (!isNewGitSyncRemotePipeline && !hasEverRendered && shouldInjectCloneCodebase && !isEdit) {
+      const formikValues = cloneDeep(values)
       const isPipelineFromTemplate = !!formikValues?.pipeline?.template
       const newPipelineObject = getPipelineWithInjectedWithCloneCodebase({
         event: formikValues.event,
@@ -163,9 +157,9 @@ function ArtifactTriggerInputPanelForm({
         inputSetPortion: { pipeline: newPipelineObject },
         templatePipeline: { pipeline: newPipelineObject },
         allValues: { pipeline: resolvedPipeline },
-        shouldUseDefaultValues: triggerIdentifier === 'new'
+        shouldUseDefaultValues: isNewTrigger(triggerIdentifier)
       })
-      formikProps.setValues({
+      formikProps?.setValues({
         ...formikValues,
         pipeline: mergedPipeline.pipeline
       })
@@ -199,8 +193,8 @@ function ArtifactTriggerInputPanelForm({
       async function fetchInputSets(): Promise<void> {
         setInputSetError('')
 
-        const inputSetRefs = formikProps?.values?.inputSetRefs
-        const inputSetRefsLength = formikProps?.values?.inputSetRefs?.length
+        const inputSetRefs = values?.inputSetRefs
+        const inputSetRefsLength = values?.inputSetRefs?.length
         const selectedInputSetsLength = selectedInputSets?.length
 
         if (
@@ -212,6 +206,7 @@ function ArtifactTriggerInputPanelForm({
           // No need to fetch input sets if they are fetched already
           return
         }
+
         Promise.all(
           inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
             const data = await getInputSetForPipelinePromise({
@@ -226,8 +221,8 @@ function ArtifactTriggerInputPanelForm({
             const error = (results || []).find(result => get(result, 'status') === 'ERROR')
             if (error) {
               if (!inputSetSelected) {
-                formikProps.setValues({
-                  ...formikProps.values,
+                formikProps?.setValues({
+                  ...values,
                   inputSetSelected: []
                 })
               }
@@ -253,13 +248,13 @@ function ArtifactTriggerInputPanelForm({
           })
       }
 
-      if (!fetchInputSetsInProgress && !inputSetSelected && formikProps?.values?.inputSetRefs?.length) {
+      if (!fetchInputSetsInProgress && !inputSetSelected && values?.inputSetRefs?.length) {
         setFetchInputSetsInProgress(true)
         fetchInputSets()
       }
     },
     [
-      formikProps?.values?.inputSetRefs,
+      values?.inputSetRefs,
       inputSetSelected,
       commonQueryParams,
       fetchInputSetsInProgress,
@@ -275,7 +270,7 @@ function ArtifactTriggerInputPanelForm({
         const data = await mergeInputSet({
           inputSetReferences: selectedInputSets.map(item => item.value as string)
         })
-        if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
+        if (data?.data?.pipelineYaml) {
           const parsedInputSets = memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline
 
           const mergedPipeline = mergeTemplateWithInputSetData({
@@ -285,7 +280,7 @@ function ArtifactTriggerInputPanelForm({
             shouldUseDefaultValues: triggerIdentifier === 'new'
           })
 
-          formikProps.setValues({
+          formikProps?.setValues({
             ...values,
             inputSetSelected: selectedInputSets,
             pipeline: mergedPipeline.pipeline
@@ -315,12 +310,13 @@ function ArtifactTriggerInputPanelForm({
     pipelineIdentifier,
     resolvedPipeline
   ])
+
   const pipelineReferenceBranchPlaceHolder = useMemo(() => {
-    if (formikProps?.values?.triggerType === TriggerTypes.WEBHOOK) {
+    if (triggerType === TriggerTypes.WEBHOOK) {
       return ciCodebaseBuild.spec.branch
     }
     return getString('common.branchName')
-  }, [formikProps?.values?.triggerType, getString])
+  }, [triggerType, getString])
 
   const showPipelineInputSetSelector = useMemo(
     () => !isEmpty(pipeline) && !!template?.data?.inputSetTemplateYaml,
@@ -347,7 +343,7 @@ function ArtifactTriggerInputPanelForm({
   )
   const [showNewInputSetModal, setShowNewInputSetModal] = useState(false)
   const inputSetInitialValue = useMemo(() => {
-    const event = formikProps?.values?.event
+    const event = values?.event
     return TriggerGitEventTypes.includes(event) && !!pipeline?.properties?.ci?.codebase
       ? ({
           pipeline: {
@@ -379,8 +375,8 @@ function ArtifactTriggerInputPanelForm({
       setInputSetError('')
       setSelectedInputSets(_inputSetSelected)
 
-      formikProps.setValues({
-        ...formikProps.values,
+      formikProps?.setValues({
+        ...values,
         inputSetSelected: _inputSetSelected,
         inputSetRefs: _inputSetSelected.map(_inputSet => _inputSet.value)
       })
@@ -389,8 +385,8 @@ function ArtifactTriggerInputPanelForm({
   )
 
   useEffect(() => {
-    setInputSetError(formikProps?.errors?.inputSetRefs)
-  }, [setInputSetError, formikProps?.errors?.inputSetRefs])
+    setInputSetError(formikProps?.errors?.inputSetRefs as string)
+  }, [formikProps?.errors?.inputSetRefs])
 
   useDeepCompareEffect(() => {
     if (resolvedPipeline) {
@@ -407,7 +403,19 @@ function ArtifactTriggerInputPanelForm({
 
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
-      {loading && !isPipelineBranchNameInFocus() ? (
+      <Layout.Horizontal className={css.infoBar}>
+        <Icon name="info-message" size={14} color={Color.GREEN_500} />
+        <Text color={Color.WHITE}>
+          <Text color={Color.WHITE}>{getString('triggers.toast.payloadInfoBar')}</Text>
+          <a
+            href={'https://developer.harness.io/docs/platform/pipelines/w_pipeline-steps-reference/triggers-reference/'}
+            style={{ color: Color.WHITE }}
+          >
+            {getString('learnMore')}
+          </a>
+        </Text>
+      </Layout.Horizontal>
+      {(loading || mergingInputSets) && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
@@ -426,8 +434,8 @@ function ArtifactTriggerInputPanelForm({
                     onChange={value => {
                       setInputSetError('')
                       setSelectedInputSets(value)
-                      formikProps.setValues({
-                        ...formikProps.values,
+                      formikProps?.setValues({
+                        ...values,
                         inputSetRefs: (value || []).map(v => v.value),
                         inputSetSelected: value
                       })
@@ -443,7 +451,7 @@ function ArtifactTriggerInputPanelForm({
                     onReconcile={onReconcile}
                   />
                 </GitSyncStoreProvider>
-                {inputSetError && <Text intent="danger">{inputSetError}</Text>}
+                {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
                 <div className={css.divider} />
                 {showNewInputSetModal && (
                   <NewInputSetModal
@@ -478,26 +486,23 @@ function ArtifactTriggerInputPanelForm({
                 <div className={css.divider} />
               </Container>
             )}
-            {showPipelineInputSetForm &&
-              template?.data?.inputSetTemplateYaml &&
-              !mergingInputSets &&
-              isEmpty(invalidInputSetIds) && (
-                <PipelineInputSetForm
-                  originalPipeline={resolvedPipeline}
-                  template={defaultTo(
-                    memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                    {} as PipelineInfoConfig
-                  )}
-                  path="pipeline"
-                  viewType={StepViewType.InputSet}
-                  maybeContainerClass={css.pipelineInputSetForm}
-                  viewTypeMetadata={{ isTrigger: true }}
-                  readonly={isNewGitSyncRemotePipeline || !isEmpty(selectedInputSets)}
-                  gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
-                  disableRuntimeInputConfigureOptions
-                  stageTooltip={{ [StageType.BUILD]: 'pipelineInputStage' }}
-                />
-              )}
+            {showPipelineInputSetForm && template?.data?.inputSetTemplateYaml && (
+              <PipelineInputSetForm
+                originalPipeline={resolvedPipeline}
+                template={defaultTo(
+                  memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                  {} as PipelineInfoConfig
+                )}
+                path="pipeline"
+                viewType={StepViewType.InputSet}
+                maybeContainerClass={css.pipelineInputSetForm}
+                viewTypeMetadata={{ isTrigger: true }}
+                readonly={isNewGitSyncRemotePipeline || !isEmpty(selectedInputSets)}
+                gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+                disableRuntimeInputConfigureOptions
+                stageTooltip={{ [StageType.BUILD]: 'pipelineInputStage' }}
+              />
+            )}
           </div>
         </div>
       ) : (
@@ -514,7 +519,7 @@ function ArtifactTriggerInputPanelForm({
   )
 }
 
-const ArtifactTriggerInputPanel: React.FC<ArtifactTriggerInputPanelFormProps> = props => {
+const PipelineInputPanel: React.FC<PipelineInputPanelPropsInterface> = props => {
   const {
     state: { storeMetadata }
   } = usePipelineContext()
@@ -522,9 +527,9 @@ const ArtifactTriggerInputPanel: React.FC<ArtifactTriggerInputPanelFormProps> = 
   return (
     <NestedAccordionProvider>
       <PipelineVariablesContextProvider enablePipelineTemplatesResolution={true} storeMetadata={storeMetadata}>
-        <ArtifactTriggerInputPanelForm {...props} />
+        <PipelineInputPanelForm {...props} />
       </PipelineVariablesContextProvider>
     </NestedAccordionProvider>
   )
 }
-export default ArtifactTriggerInputPanel
+export default PipelineInputPanel

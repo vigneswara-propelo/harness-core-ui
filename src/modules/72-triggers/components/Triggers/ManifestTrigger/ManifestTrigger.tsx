@@ -7,9 +7,9 @@
 
 import React from 'react'
 import ManifestConditionsPanel from '@triggers/components/steps/ManifestConditionsPanel/ManifestConditionsPanel'
-import ManifestPipelineInputPanel from '@triggers/components/steps/ManifestPipelineInputPanel/ManifestPipelineInputPanel'
 import ManifestTriggerConfigPanel from '@triggers/components/steps/ManifestTriggerConfigPanel/ManifestTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
+import PipelineInputPanel from '@triggers/components/steps/PipelineInputPanel/PipelineInputPanel'
 import { Trigger, TriggerProps } from '../Trigger'
 import type { TriggerBaseType } from '../TriggerInterface'
 import ManifestTriggerWizard from './ManifestTriggerWizard'
@@ -26,7 +26,7 @@ export abstract class ManifestTrigger<T> extends Trigger<T> {
   }
 
   renderStepThree(isSimplifiedYAML?: boolean): JSX.Element {
-    return isSimplifiedYAML ? <WebhookPipelineInputPanelV1 /> : <ManifestPipelineInputPanel />
+    return isSimplifiedYAML ? <WebhookPipelineInputPanelV1 /> : <PipelineInputPanel />
   }
 
   renderTrigger(props: TriggerProps<T>): JSX.Element {
