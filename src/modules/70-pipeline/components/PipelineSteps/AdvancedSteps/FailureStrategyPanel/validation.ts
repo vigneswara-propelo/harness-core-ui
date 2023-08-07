@@ -124,7 +124,7 @@ export function getFailureStrategiesValidationSchema(
                 .required(getString('pipeline.failureStrategies.validation.actionRequired')),
               spec: Yup.mixed()
                 .when('type', {
-                  is: Strategy.Retry,
+                  is: val => val === Strategy.Retry || val === Strategy.RetryStepGroup,
                   then: Yup.object()
                     .shape({
                       ...getRetryActionBaseFields(getString),
