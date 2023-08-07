@@ -167,7 +167,6 @@ function PipelineYamlView(): React.ReactElement {
       <>
         {!isDrawerOpened && (
           <YamlBuilderMemo
-            key={isYamlEditable.toString()}
             fileName={isPipelineRemote ? remoteFileName : defaultTo(yamlFileName, defaultFileName)}
             entityType="Pipelines"
             isReadOnlyMode={isReadonly || !isYamlEditable}

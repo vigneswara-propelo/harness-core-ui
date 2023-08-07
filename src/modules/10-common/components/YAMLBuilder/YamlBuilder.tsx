@@ -199,6 +199,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
+  const readonlyRef = useTrackedRef(isReadOnlyMode)
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { module } = useParams<{
     module: Module
@@ -328,6 +329,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     })
   }, [onValidateRef])
 
+  // focus editor when it is not readonly
+  useEffect(() => {
+    if (isReadOnlyMode) return
+
+    editorRef.current?.focus()
+  }, [isReadOnlyMode])
+
   const editorDidMount = (editor: monaco.editor.IStandaloneCodeEditor): void => {
     // editor.addAction({
     //   id: 'Paste',
@@ -351,9 +359,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     // })
     editorVersionRef.current = editor.getModel()?.getAlternativeVersionId()
     currentCursorPosition.current = new Position(0, 0)
-    if (!props.isReadOnlyMode) {
-      editor?.focus()
-    }
     editor.onKeyDown((event: IKeyboardEvent) => handleEditorKeyDownEvent(event, editor))
     editor.onDidChangeCursorPosition((event: monaco.editor.ICursorPositionChangedEvent) => {
       currentCursorPosition.current = event.position
@@ -559,14 +564,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const navigationKeysPressed = navigationKeysMap.includes(code)
     if (isHarnessManaged) {
       showHarnessManagedError()
-    } else if (props.isReadOnlyMode && isEditModeSupported) {
+    } else if (readonlyRef.current && isEditModeSupported) {
       const isMetaOrControlKeyPressedForCopyPaste =
         (ctrlKey || metaKey || shiftKey) && allowedKeysInEditModeMap.includes(code)
       if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopyPaste || navigationKeysPressed)) {
         // this is to avoid showing warning dialog if user just wants to copy paste
         openDialog()
       }
-    } else if (props.isReadOnlyMode && !isEditModeSupported && !hideErrorMesageOnReadOnlyMode) {
+    } else if (readonlyRef.current && !isEditModeSupported && !hideErrorMesageOnReadOnlyMode) {
       const isMetaOrControlKeyPressedForCopy =
         (ctrlKey || metaKey || shiftKey) && allowedKeysInReadOnlyModeMap.includes(code)
       if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopy || navigationKeysPressed)) {
@@ -753,7 +758,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           minimap: {
             enabled: false
           },
-          codeLens: codeLensRegistrations.current.size > 0
+          codeLens: codeLensRegistrations.current.size > 0,
+          tabSize: 2
         } as MonacoEditorProps['options']
       }
       ref={editorRef}
