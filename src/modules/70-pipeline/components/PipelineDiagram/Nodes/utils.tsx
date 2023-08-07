@@ -9,6 +9,7 @@ import { isNumber } from 'lodash-es'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { dragPlaceholderImageBase64 } from './assets/dragImageBase64'
 import { dragStagePlaceholderImageBase64 } from './assets/dragStageImageBase64'
+import defaultCss from './DefaultNode/DefaultNode.module.scss'
 
 interface DotNotationPathProps {
   identifier: string
@@ -92,4 +93,8 @@ export const getEntityIdentifierBasedDotNotationPath = ({
 export const getBaseDotNotationWithoutEntityIdentifier = (dotNotation = ''): string => {
   const lastDotIndex = dotNotation.lastIndexOf('.')
   return lastDotIndex !== -1 ? dotNotation.substring(0, lastDotIndex) : dotNotation
+}
+
+export const getConditionalClassName = (isDisabled: boolean, className?: string): { className?: string } => {
+  return isDisabled ? { className: defaultCss.disabledIcon } : { className }
 }

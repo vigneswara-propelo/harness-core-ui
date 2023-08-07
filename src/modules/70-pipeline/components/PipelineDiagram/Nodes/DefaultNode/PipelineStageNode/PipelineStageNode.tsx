@@ -27,7 +27,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
-import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity } from '../../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity, getConditionalClassName } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 import css from './PipelineStageNode.module.scss'
@@ -63,7 +63,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getStageFromPipeline, updateStage } = usePipelineContext()
   const { stage: pipelineStage } = getStageFromPipeline(props?.identifier)
-  const whenCondition = pipelineStage?.stage?.when?.condition === 'false'
+  const whenCondition = IS_NODE_TOGGLE_DISABLED && pipelineStage?.stage?.when?.condition === 'false'
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const onDropEvent = (event: React.DragEvent): void => {
@@ -97,6 +97,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
   const isTemplateNode = props?.data?.isTemplateNode
   const isToggleAllowed = props?.data?.isInComplete || stageStatus || isTemplateNode || !IS_NODE_TOGGLE_DISABLED
+
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
@@ -172,7 +173,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             [defaultCss.runningNode]: stageStatus === ExecutionStatusEnum.Running,
             [defaultCss.skipped]: stageStatus === ExecutionStatusEnum.Skipped,
             [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted,
-            [defaultCss.disabled]: whenCondition && IS_NODE_TOGGLE_DISABLED
+            [defaultCss.disabled]: whenCondition
           })}
           style={{
             width: 90,
@@ -237,7 +238,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                 size={28}
                 name={props.icon as IconName}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
+                {...getConditionalClassName(whenCondition)}
               />
             )
           )}
@@ -247,14 +248,14 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               style={secondaryIconStyle}
               size={13}
               {...secondaryIconProps}
-              {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.secondaryIcon })}
+              {...getConditionalClassName(whenCondition, defaultCss.secondaryIcon)}
             />
           )}
           {props?.data?.tertiaryIcon && (
             <Icon
               name={props?.data?.tertiaryIcon}
               size={13}
-              {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.tertiaryIcon })}
+              {...getConditionalClassName(whenCondition, defaultCss.tertiaryIcon)}
             />
           )}
           {isTemplateNode && (
@@ -356,11 +357,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               isDark: true
             }}
           >
-            <Icon
-              size={26}
-              name={'conditional-skip-new'}
-              {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
-            />
+            <Icon size={26} name={'conditional-skip-new'} {...getConditionalClassName(whenCondition)} />
           </Text>
         </div>
       )}
@@ -377,7 +374,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               name={'looping'}
               background={Color.PURPLE_300}
               {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-              {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
+              {...getConditionalClassName(whenCondition)}
             />
           </Text>
         </div>

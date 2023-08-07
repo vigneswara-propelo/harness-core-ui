@@ -41,7 +41,7 @@ import { processGroupItem } from '@pipeline/utils/execUtils'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
-import { getBaseDotNotationWithoutEntityIdentifier, getPositionOfAddIcon } from '../utils'
+import { getBaseDotNotationWithoutEntityIdentifier, getConditionalClassName, getPositionOfAddIcon } from '../utils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { DiagramDrag, DiagramType, Event, IS_NODE_TOGGLE_DISABLED } from '../../Constants'
@@ -71,7 +71,7 @@ export function StepGroupNode(props: any): JSX.Element {
     getStageFromPipeline
   } = usePipelineContext()
 
-  const whenCondition = props?.data?.stepGroup?.when?.condition === 'false'
+  const whenCondition = IS_NODE_TOGGLE_DISABLED && props?.data?.stepGroup?.when?.condition === 'false'
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageIdentifier, ''))
   const { showPrimary } = useToaster()
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -339,7 +339,7 @@ export function StepGroupNode(props: any): JSX.Element {
               parentMatrix: isParentMatrix,
               [css.templateStepGroup]: !!props?.data?.isTemplateNode,
               [css.rollbackGroup]: StageType.PIPELINE_ROLLBACK === props?.type,
-              [defaultCss.disabled]: whenCondition && IS_NODE_TOGGLE_DISABLED
+              [defaultCss.disabled]: whenCondition
             })}
           >
             <div
@@ -382,11 +382,7 @@ export function StepGroupNode(props: any): JSX.Element {
                     isDark: true
                   }}
                 >
-                  <Icon
-                    size={26}
-                    name={'conditional-skip-new'}
-                    {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
-                  />
+                  <Icon size={26} name={'conditional-skip-new'} {...getConditionalClassName(whenCondition)} />
                 </Text>
               </div>
             )}
@@ -403,11 +399,7 @@ export function StepGroupNode(props: any): JSX.Element {
                     isDark: true
                   }}
                 >
-                  <Icon
-                    size={26}
-                    name={'conditional-skip-new'}
-                    {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
-                  />
+                  <Icon size={26} name={'conditional-skip-new'} {...getConditionalClassName(whenCondition)} />
                 </Text>
               </div>
             )}

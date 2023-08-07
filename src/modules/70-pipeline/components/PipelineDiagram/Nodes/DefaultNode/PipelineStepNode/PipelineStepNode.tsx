@@ -36,7 +36,8 @@ import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import {
   getPositionOfAddIcon,
   attachDragImageToEventHandler,
-  getBaseDotNotationWithoutEntityIdentifier
+  getBaseDotNotationWithoutEntityIdentifier,
+  getConditionalClassName
 } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
@@ -65,7 +66,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
     getStageFromPipeline
   } = usePipelineContext()
 
-  const whenCondition = props?.data?.step?.when?.condition === 'false'
+  const whenCondition = IS_NODE_TOGGLE_DISABLED && props?.data?.step?.when?.condition === 'false'
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
 
   const stepType = props.type || props?.data?.step?.stepType || props?.data?.step?.template?.templateInputs?.type || ''
@@ -196,7 +197,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           [defaultCss.runningNode]: stepStatus === ExecutionStatusEnum.Running,
           [defaultCss.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
           [defaultCss.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted,
-          [defaultCss.disabled]: whenCondition && IS_NODE_TOGGLE_DISABLED
+          [defaultCss.disabled]: whenCondition
         })}
         style={{
           width: 64,
@@ -254,7 +255,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 size={40}
                 {...isSelectedCss()}
                 name={defaultTo(stepIcon, 'cross') as IconName}
-                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
+                {...getConditionalClassName(whenCondition)}
               />
             </>
           )
@@ -311,7 +312,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             style={secondaryIconStyle}
             size={13}
             {...secondaryIconProps}
-            {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.secondaryIcon })}
+            {...getConditionalClassName(whenCondition, defaultCss.secondaryIcon)}
           />
         )}
         {props.data?.skipCondition && (
@@ -322,11 +323,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon
-                size={26}
-                name={'conditional-skip-new'}
-                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
-              />
+              <Icon size={26} name={'conditional-skip-new'} {...getConditionalClassName(whenCondition)} />
             </Text>
           </div>
         )}
@@ -338,11 +335,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon
-                size={26}
-                name={'conditional-skip-new'}
-                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
-              />
+              <Icon size={26} name={'conditional-skip-new'} {...getConditionalClassName(whenCondition)} />
             </Text>
           </div>
         )}
@@ -359,7 +352,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 name={'looping'}
                 background={Color.PURPLE_300}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
+                {...getConditionalClassName(whenCondition)}
               />
             </Text>
           </div>
@@ -378,7 +371,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             color={isSelectedNode() ? Color.WHITE : undefined}
             size={8}
             name={CODE_ICON}
-            {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.codeIcon })}
+            {...getConditionalClassName(whenCondition, defaultCss.codeIcon)}
           />
         )}
         {!isStepNonDeletable && (
