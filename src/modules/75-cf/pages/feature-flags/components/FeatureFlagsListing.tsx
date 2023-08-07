@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
+import React, { FC, FormEvent, useCallback, useMemo } from 'react'
 import type { Cell, CellProps, Column, Renderer } from 'react-table'
-import { Container, Layout, TableV2, Text, Utils } from '@harness/uicore'
+import { Checkbox, Container, Layout, TableV2, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import type { DeleteFeatureFlagQueryParams, Feature, FeatureMetric, Features } from 'services/cf'
@@ -17,6 +17,7 @@ import {
   isFeatureFlagOn,
   useFeatureFlagTypeToStringMapping
 } from '@cf/utils/CFUtils'
+import type { FilterProps } from '@cf/components/TableFilters/TableFilters'
 import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUtils'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { useStrings } from 'framework/strings'
@@ -25,9 +26,12 @@ import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOpti
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
 import type { UseToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import type { UseGovernancePayload } from '@cf/hooks/useGovernance'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlagStatus, FlagStatus } from '../FlagStatus'
 import { FlagResult } from '../FlagResult'
 import { RenderFeatureFlag } from './RenderFeatureFlag'
+import css from './FeatureFlagListing.module.scss'
 
 export interface FeatureFlagsListingProps {
   features?: Features | null
@@ -59,6 +63,18 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
 }) => {
   const gitSync = useFFGitSyncContext()
   const { getString } = useStrings()
+
+  const [flagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
+
+  const onCheckboxSelect = useCallback((event: FormEvent<HTMLInputElement>) => {
+    if (event.currentTarget.checked) {
+      //TODO: Handle checked
+    } else {
+      //TODO: Handle unchecked
+    }
+  }, [])
+
+  const { FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
 
   const RenderColumnDetails: Renderer<CellProps<Feature>> = ({ row }) => {
     const data = row.original
@@ -102,6 +118,29 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
 
   const columns: Column<Feature>[] = useMemo(
     () => [
+      {
+        id: 'staleCheckbox',
+        Header: (
+          <div>
+            <Checkbox
+              aria-label="cf.staleFlagAction.selectAllPotentiallyStaleFlags"
+              onClick={() => {
+                //TOD: Handle Select all
+              }}
+            />
+          </div>
+        ),
+        accessor: row => row,
+        width: '4%',
+        Cell: () => {
+          return (
+            <div onClick={e => e.stopPropagation()} className={css.staleCheckbox}>
+              <Checkbox onClick={onCheckboxSelect} />
+            </div>
+          )
+        },
+        onCheckboxSelect
+      },
       {
         Header: getString('featureFlagsText').toUpperCase(),
         accessor: row => row.name,
@@ -184,14 +223,22 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
       features,
       featureMetrics,
       featureMetricsLoading,
-      queryParams
+      queryParams,
+      onCheckboxSelect
     ]
   )
 
+  const filteredColumns = useMemo(() => {
+    if (FFM_8344_FLAG_CLEANUP && flagFilter?.queryProps?.value === FeatureFlagStatus.POTENTIALLY_STALE) {
+      return columns
+    }
+    return columns.filter(column => column.id !== 'staleCheckbox')
+  }, [columns, flagFilter?.queryProps?.value])
+
   return (
     <TableV2<Feature>
-      columns={columns}
-      data={features?.features || []}
+      columns={filteredColumns}
+      data={features?.features ?? []}
       onRowClick={feature => onRowClick(feature.identifier)}
     />
   )

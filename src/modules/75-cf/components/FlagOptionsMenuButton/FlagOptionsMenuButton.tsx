@@ -10,7 +10,9 @@ import { useHistory, useParams } from 'react-router-dom'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
-import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import RbacOptionsMenuButton, {
+  RbacOptionsMenuButtonProps
+} from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -20,9 +22,13 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { FeatureFlagStatus } from '@cf/pages/feature-flags/FlagStatus'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 import useArchiveFlagDialog from '../FlagArchiving/useArchiveFlagDialog'
 import useRestoreFlagDialog from '../FlagArchiving/useRestoreFlagDialog'
+import { FilterProps } from '../TableFilters/TableFilters'
+import css from './FlagOptionsMenuButton.module.scss'
 
 export interface FlagOptionsMenuButtonProps {
   environment?: string
@@ -50,10 +56,11 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
 }) => {
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
+  const [flagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
   const { withActiveEnvironment } = useActiveEnvironment()
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
-  const { FFM_7921_ARCHIVING_FEATURE_FLAGS } = useFeatureFlags()
+  const { FFM_7921_ARCHIVING_FEATURE_FLAGS, FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
   const [openedArchivedDialog, setOpenedArchivedDialog] = useState<boolean>(false)
 
   const planEnforcementProps = isPlanEnforcementEnabled
@@ -109,6 +116,14 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     openArchiveDialog()
   }
 
+  const handleNotStaleClick = (): void => {
+    //TODO: Implement on click
+  }
+
+  const handleCleanupClick = (): void => {
+    //TODO: Implement on click
+  }
+
   const options: Record<string, RbacMenuItemProps> = {
     archive: {
       icon: 'archive',
@@ -149,6 +164,18 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
         permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
       },
       ...planEnforcementProps
+    },
+    cleanup: {
+      className: css.staleFlagItem,
+      icon: 'blank',
+      text: getString('cf.staleFlagAction.readyForCleanup'),
+      onClick: handleCleanupClick
+    },
+    notStale: {
+      className: css.staleFlagItem,
+      icon: 'blank',
+      text: getString('cf.staleFlagAction.notStale'),
+      onClick: handleNotStaleClick
     }
   }
 
@@ -156,8 +183,10 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     archivingFlags: boolean,
     flag: Feature,
     menuOptions: Record<string, RbacMenuItemProps>
-  ): RbacMenuItemProps[] => {
-    if (archivingFlags) {
+  ): RbacOptionsMenuButtonProps['items'] => {
+    if (FFM_8344_FLAG_CLEANUP && flagFilter.queryProps?.value === FeatureFlagStatus.POTENTIALLY_STALE) {
+      return [menuOptions.edit, menuOptions.archive, '-', menuOptions.cleanup, menuOptions.notStale]
+    } else if (archivingFlags) {
       if (flag.archived) {
         return [menuOptions.restore, menuOptions.delete]
       } else {

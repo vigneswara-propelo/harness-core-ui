@@ -280,6 +280,10 @@ flagFilters:
   recentlyAccessed: Recently Changed Flags
   permanent: Permanent Flags
   potentiallyStale: Potentially Stale Flags
+staleFlagAction:
+  notStale: Mark as Not Stale
+  readyForCleanup: Mark as Ready for Cleanup
+  selectAllPotentiallyStaleFlags: Select all potentially stale flags
 targets:
   createdDate: Created Date
   create: New Target
