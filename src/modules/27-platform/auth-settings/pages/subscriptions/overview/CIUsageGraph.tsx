@@ -8,9 +8,11 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { Text, Layout, Card, PageSpinner, SelectOption } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
 import { useMutateAsGet } from '@common/hooks'
+
 import type { ModuleLicenseDTO, CIModuleLicenseDTO } from 'services/cd-ng'
 import { useGetLicenseHistoryUsage } from 'services/ci'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
@@ -55,6 +57,7 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
   const subscriptions = licenseDataInfo?.numberOfCommitters || 0
   const valuesArray = Object.values(data?.data?.licenseUsage || [])
   const maxValue = valuesArray.length > 0 ? Math.max(...valuesArray) : 0
+  const formattedSubscriptions = subscriptions.toLocaleString('en-US')
   const summaryCardsData: SummaryCardData[] = useMemo(() => {
     return [
       {
@@ -64,12 +67,12 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
       },
       {
         title: getString('common.plans.subscription'),
-        count: subscriptions,
-        className: pageCss.subClass
+        count: subscriptions === -1 ? getString('common.unlimited') : formattedSubscriptions,
+        className: classNames({ [pageCss.subClass]: subscriptions !== -1 })
       },
       {
         title: getString('common.OverUse'),
-        count: subscriptions - maxValue < 0 ? Math.abs(subscriptions - maxValue) : 0,
+        count: subscriptions === -1 ? 0 : subscriptions - maxValue < 0 ? Math.abs(subscriptions - maxValue) : 0,
         className: pageCss.overUseClass
       }
     ]

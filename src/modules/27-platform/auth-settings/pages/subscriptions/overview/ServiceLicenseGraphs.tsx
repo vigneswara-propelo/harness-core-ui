@@ -10,6 +10,7 @@ import { Text, Layout, Card, Heading, PageSpinner, Select, SelectOption, Contain
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import type { YAxisOptions } from 'highcharts'
+import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
 import { useMutateAsGet } from '@common/hooks'
@@ -228,6 +229,7 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
   const subscriptions = licenseDataInfo?.workloads || 0
   const valuesArray = Object.values(data?.data?.licenseUsage || {})
   const maxValue = valuesArray.length > 0 ? Math.max(...valuesArray) : 0
+  const formattedSubscriptions = subscriptions.toLocaleString('en-US')
   const summaryCardsData: SummaryCardData[] = useMemo(() => {
     return [
       {
@@ -237,12 +239,12 @@ export const ServiceLicenseGraphs: React.FC<ServiceLicenseGraphsProps> = (props:
       },
       {
         title: getString('common.plans.subscription'),
-        count: subscriptions,
-        className: pageCss.subClass
+        count: subscriptions === -1 ? getString('common.unlimited') : formattedSubscriptions,
+        className: classNames({ [pageCss.subClass]: subscriptions !== -1 })
       },
       {
         title: getString('common.OverUse'),
-        count: subscriptions - maxValue < 0 ? Math.abs(subscriptions - maxValue) : 0,
+        count: subscriptions === -1 ? 0 : subscriptions - maxValue < 0 ? Math.abs(subscriptions - maxValue) : 0,
         className: pageCss.overUseClass
       }
     ]
