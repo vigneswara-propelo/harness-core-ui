@@ -206,7 +206,11 @@ export default function CreatePipelines({
             {supportingGitSimplification ? (
               <>
                 <Divider />
-                <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
+                <Text
+                  font={{ variation: FontVariation.H6 }}
+                  className={css.choosePipelineSetupHeader}
+                  data-tooltip-id="pipeline-InlineRemoteSelect-label"
+                >
                   {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
                 </Text>
                 <InlineRemoteSelect
