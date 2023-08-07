@@ -11,7 +11,7 @@ import { Layout, Select, SelectOption, Text } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { RetryGroup, RetryInfo } from 'services/pipeline-ng'
+import type { RetryGroup, RetryInfo } from 'services/pipeline-ng'
 import css from './RunPipelineForm.module.scss'
 
 export interface ParallelStageOption extends SelectOption {

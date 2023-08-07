@@ -252,7 +252,7 @@ export const validateSteps = ({
     if (stepObj.step) {
       const errorResponse = validateStep({
         step: stepObj.step,
-        template: template?.[index].step,
+        template: template?.[index]?.step,
         originalStep: getStepFromStage(stepObj.step.identifier, originalSteps, NodeWrapperEntity.step),
         getString,
         viewType
@@ -535,7 +535,7 @@ export const validateStage = ({
             const variablesStep = factory.getStep(StepType.CustomVariable)
             const variablesErrorResponse = variablesStep?.validateInputSet({
               data: serviceInput.serviceInputs?.serviceDefinition?.spec,
-              template: templateStageConfig?.services?.values?.[index].serviceInputs?.serviceDefinition.spec,
+              template: templateStageConfig?.services?.values?.[index]?.serviceInputs?.serviceDefinition?.spec,
               getString,
               viewType,
               allValues: get(originalStage, `spec.services.values[${index}].serviceInputs.serviceDefinition.spec`)
