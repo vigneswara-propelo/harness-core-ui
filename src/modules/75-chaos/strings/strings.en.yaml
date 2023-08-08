@@ -12,6 +12,7 @@ chaosHub: ChaosHub
 chaosExperiment: Chaos Experiment
 chaosInfrastructure: Chaos Infrastructure
 chaosGameday: Chaos Gameday
+chaosGuardRule: ChaosGuard Rule
 chaosTrialHomePage:
   description: Start 14 day Chaos Enterprise trial
 navLabels:
@@ -20,7 +21,7 @@ navLabels:
   gamedays: GameDays
   probes: Resilience Probes
   dashboards: Chaos Dashboards
-  security: Security Governance
+  chaosGuard: ChaosGuard
   imageRegistry: Image Registry
 environments:
   pageTitle: '[{{projectName}}] Environments'

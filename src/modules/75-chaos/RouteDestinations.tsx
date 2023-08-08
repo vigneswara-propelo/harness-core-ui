@@ -73,7 +73,7 @@ ExecFactory.registerStepDetails(StepType.ChaosExperiment, {
 })
 
 // AuditTrail registrations
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_HUB, {
+AuditTrailFactory.registerResourceHandler('CHAOS_HUB', {
   moduleIcon: {
     name: 'chaos-main'
   },
@@ -91,7 +91,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_HUB, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_EXPERIMENT, {
+AuditTrailFactory.registerResourceHandler('CHAOS_EXPERIMENT', {
   moduleIcon: {
     name: 'chaos-main'
   },
@@ -109,7 +109,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_EXPERIMENT, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
+AuditTrailFactory.registerResourceHandler('CHAOS_INFRASTRUCTURE', {
   moduleIcon: {
     name: 'chaos-main'
   },
@@ -126,7 +126,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GAMEDAY, {
+AuditTrailFactory.registerResourceHandler('CHAOS_GAMEDAY', {
   moduleIcon: {
     name: 'chaos-main'
   },
@@ -136,6 +136,24 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GAMEDAY, {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
     return routes.toChaosGameDay({
+      accountId: accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      identifier: resource.identifier
+    })
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('CHAOS_SECURITY_GOVERNANCE', {
+  moduleIcon: {
+    name: 'chaos-main'
+  },
+  moduleLabel: 'chaos.chaosGuardRule',
+  resourceLabel: 'chaos.chaosGuardRule',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+
+    return routes.toSecurityGovernanceRuleDetails({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
@@ -247,7 +265,7 @@ export default function ChaosRoutes(): React.ReactElement {
   if (CHAOS_SECURITY_GOVERNANCE)
     RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SECURITY_GOVERNANCE, {
       icon: 'chaos-main',
-      label: 'chaos.navLabels.security',
+      label: 'chaos.chaosGuardRule',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
         [PermissionIdentifier.VIEW_CHAOS_SECURITY_GOVERNANCE]: <LocaleString stringID="rbac.permissionLabels.view" />,

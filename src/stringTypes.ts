@@ -8639,6 +8639,7 @@ export interface StringsMap {
   'cf.targets.uploadYourFile': string
   'chaos.chaosExperiment': string
   'chaos.chaosGameday': string
+  'chaos.chaosGuardRule': string
   'chaos.chaosHub': string
   'chaos.chaosInfrastructure': string
   'chaos.chaosTrialHomePage.description': string
@@ -8659,12 +8660,12 @@ export interface StringsMap {
   'chaos.homepage.modal.welcomeTrial': string
   'chaos.homepage.slogan': string
   'chaos.navLabels.chaosExperiments': string
+  'chaos.navLabels.chaosGuard': string
   'chaos.navLabels.chaosHubs': string
   'chaos.navLabels.dashboards': string
   'chaos.navLabels.gamedays': string
   'chaos.navLabels.imageRegistry': string
   'chaos.navLabels.probes': string
-  'chaos.navLabels.security': string
   'chaos.noEnvironment.message': string
   'chaos.noEnvironment.title': string
   'chaos.pipelineStep.description': string

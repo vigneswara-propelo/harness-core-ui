@@ -2239,7 +2239,11 @@ const routes = {
   ),
   toChaosSecurityGovernance: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/security-governance`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-guard`
+  ),
+  toSecurityGovernanceRuleDetails: withAccountId(
+    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-guard/rules/${identifier}`
   ),
   toChaosEnvironments: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>

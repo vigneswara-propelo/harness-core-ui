@@ -122,4 +122,21 @@ describe('Chaos Sidenav Render', () => {
     )
     expect(screen.getByRole('link', { name: 'chaos.navLabels.dashboards' })).toBeInTheDocument()
   })
+
+  test('show nav labels behind feature flags - chaosGuard', () => {
+    render(
+      <TestWrapper
+        path={routes.toChaosMicroFrontend({
+          accountId: ':accountId',
+          orgIdentifier: ':orgIdentifier',
+          projectIdentifier: ':projectIdentifier'
+        })}
+        pathParams={{ accountId: 'dummyAccID', orgIdentifier: 'dummyOrgID', projectIdentifier: 'dummyProjID' }}
+        defaultFeatureFlagValues={{ CHAOS_SECURITY_GOVERNANCE: true }}
+      >
+        <ChaosSideNav />
+      </TestWrapper>
+    )
+    expect(screen.getByRole('link', { name: 'chaos.navLabels.chaosGuard' })).toBeInTheDocument()
+  })
 })

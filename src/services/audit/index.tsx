@@ -383,6 +383,9 @@ export interface AccessControlCheckError {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -528,6 +531,9 @@ export interface AuditFilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+  labels?: {
+    [key: string]: string
+  }
   modules?: (
     | 'CD'
     | 'CI'
@@ -567,6 +573,15 @@ export interface AuthenticationInfoDTO {
   principal: Principal
 }
 
+export interface BotQuestion {
+  model?: string
+  question?: string
+}
+
+export interface BotResponse {
+  response?: string
+}
+
 export type ChaosAuditEventData = AuditEventData & {
   eventModule?: string
 }
@@ -592,6 +607,7 @@ export interface EmailDTO {
   body: string
   ccRecipients: string[]
   notificationId: string
+  sendToNonHarnessRecipients?: boolean
   subject: string
   toRecipients: string[]
 }
@@ -974,6 +990,9 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1357,6 +1376,9 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1392,6 +1414,9 @@ export interface FilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+  labels?: {
+    [key: string]: string
+  }
   tags?: {
     [key: string]: string
   }
@@ -1422,11 +1447,11 @@ export type NodeExecutionEventData = AuditEventData & {
 
 export interface NotificationDTO {
   accountIdentifier?: string
-  channelType?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+  channelType?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS' | 'WEBHOOK'
   id?: string
   processingResponses?: boolean[]
   retries?: number
-  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
 }
 
 export interface NotificationProcessingResponse {
@@ -1438,7 +1463,7 @@ export interface NotificationSettingDTO {
   accountId: string
   notificationId: string
   recipient: string
-  type?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+  type?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS' | 'WEBHOOK'
 }
 
 export interface NotificationTaskResponse {
@@ -1601,6 +1626,7 @@ export interface ResourceDTO {
     | 'CET_AGENT_TOKEN'
     | 'WORKSPACE'
     | 'CET_CRITICAL_EVENT'
+    | 'CHAOS_SECURITY_GOVERNANCE'
 }
 
 export interface ResourceFilter {
@@ -1740,6 +1766,13 @@ export interface ResponseAuditSettingsDTO {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseBotResponse {
+  correlationId?: string
+  data?: BotResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2136,6 +2169,9 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2275,6 +2311,7 @@ export interface ScopeSelector {
 export type SlackSettingDTO = NotificationSettingDTO & {}
 
 export interface SmtpConfig {
+  delegateSelectors?: string[]
   encryptedPassword?: string
   fromAddress?: string
   host?: string
@@ -2311,7 +2348,7 @@ export interface TemplateDTO {
   file?: string[]
   identifier?: string
   lastModifiedAt?: number
-  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
 }
 
 export type TemplateEventData = AuditEventData & {
@@ -2352,6 +2389,8 @@ export interface ValidationError {
   fieldId?: string
 }
 
+export type WebhookSettingDTO = NotificationSettingDTO & {}
+
 export interface YamlDiffRecordDTO {
   newYaml?: string
   oldYaml?: string
@@ -2370,7 +2409,7 @@ export type ResourceGroupRequestRequestBody = ResourceGroupRequest
 
 export type ResourceGroupV2RequestRequestBody = ResourceGroupV2Request
 
-export type PutTemplateRequestBody = void
+export type InsertOrUpdateTemplateRequestBody = void
 
 export interface GetAuditFilterListQueryParams {
   pageIndex?: number
@@ -2911,7 +2950,7 @@ export const testNotificationSettingPromise = (
   )
 
 export interface ListNotificationsQueryParams {
-  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -2958,6 +2997,52 @@ export const listNotificationsPromise = (
   getUsingFetch<ResponsePageNotificationDTO, Failure | Error, ListNotificationsQueryParams, void>(
     getConfig('audit/api'),
     `/notifications`,
+    props,
+    signal
+  )
+
+export type HarnessSupportBotProps = Omit<
+  MutateProps<ResponseBotResponse, Failure | Error, void, BotQuestion, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get response from Harness Support Bot
+ */
+export const HarnessSupportBot = (props: HarnessSupportBotProps) => (
+  <Mutate<ResponseBotResponse, Failure | Error, void, BotQuestion, void>
+    verb="POST"
+    path={`/notifications/harness-bot`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseHarnessSupportBotProps = Omit<
+  UseMutateProps<ResponseBotResponse, Failure | Error, void, BotQuestion, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Get response from Harness Support Bot
+ */
+export const useHarnessSupportBot = (props: UseHarnessSupportBotProps) =>
+  useMutate<ResponseBotResponse, Failure | Error, void, BotQuestion, void>('POST', `/notifications/harness-bot`, {
+    base: getConfig('audit/api'),
+    ...props
+  })
+
+/**
+ * Get response from Harness Support Bot
+ */
+export const harnessSupportBotPromise = (
+  props: MutateUsingFetchProps<ResponseBotResponse, Failure | Error, void, BotQuestion, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBotResponse, Failure | Error, void, BotQuestion, void>(
+    'POST',
+    getConfig('audit/api'),
+    `/notifications/harness-bot`,
     props,
     signal
   )
@@ -3676,7 +3761,7 @@ export const postSendNotificationViaDelegatePromise = (
   >('PUT', getConfig('audit/api'), `/settings`, props, signal)
 
 export interface GetTemplatesQueryParams {
-  team: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
 }
 
 export type GetTemplatesProps = Omit<
@@ -3770,13 +3855,19 @@ export const postTemplatePromise = (
   )
 
 export interface InsertOrUpdateTemplateQueryParams {
-  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
   identifier?: string
   harnessManaged?: boolean
 }
 
 export type InsertOrUpdateTemplateProps = Omit<
-  MutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
+  MutateProps<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3784,7 +3875,13 @@ export type InsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
-  <Mutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>
+  <Mutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >
     verb="PUT"
     path={`/templates/insertOrUpdate`}
     base={getConfig('audit/api')}
@@ -3793,7 +3890,13 @@ export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
 )
 
 export type UseInsertOrUpdateTemplateProps = Omit<
-  UseMutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
+  UseMutateProps<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3801,11 +3904,13 @@ export type UseInsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const useInsertOrUpdateTemplate = (props: UseInsertOrUpdateTemplateProps) =>
-  useMutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>(
-    'PUT',
-    `/templates/insertOrUpdate`,
-    { base: getConfig('audit/api'), ...props }
-  )
+  useMutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >('PUT', `/templates/insertOrUpdate`, { base: getConfig('audit/api'), ...props })
 
 /**
  * Update a template if exists else create
@@ -3815,7 +3920,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -3824,12 +3929,12 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     void
   >('PUT', getConfig('audit/api'), `/templates/insertOrUpdate`, props, signal)
 
 export interface DeleteTemplateQueryParams {
-  team: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
 }
 
 export type DeleteTemplateProps = Omit<
@@ -3879,7 +3984,7 @@ export const deleteTemplatePromise = (
   )
 
 export interface GetTemplateQueryParams {
-  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
 }
 
 export interface GetTemplatePathParams {
@@ -3938,7 +4043,7 @@ export const getTemplatePromise = (
   )
 
 export interface PutTemplateQueryParams {
-  team: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  team: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'IDP' | 'UNRECOGNIZED'
 }
 
 export interface PutTemplatePathParams {
@@ -3950,7 +4055,7 @@ export type PutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3961,7 +4066,13 @@ export type PutTemplateProps = Omit<
  * Update a template
  */
 export const PutTemplate = ({ identifier, ...props }: PutTemplateProps) => (
-  <Mutate<ResponseTemplateDTO, Failure | Error, PutTemplateQueryParams, PutTemplateRequestBody, PutTemplatePathParams>
+  <Mutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    PutTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    PutTemplatePathParams
+  >
     verb="PUT"
     path={`/templates/${identifier}`}
     base={getConfig('audit/api')}
@@ -3974,7 +4085,7 @@ export type UsePutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3989,7 +4100,7 @@ export const usePutTemplate = ({ identifier, ...props }: UsePutTemplateProps) =>
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', (paramsInPath: PutTemplatePathParams) => `/templates/${paramsInPath.identifier}`, {
     base: getConfig('audit/api'),
@@ -4008,7 +4119,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -4017,7 +4128,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', getConfig('audit/api'), `/templates/${identifier}`, props, signal)
 

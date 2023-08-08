@@ -62,7 +62,7 @@ export default function ChaosSideNav(): React.ReactElement {
           <SidebarLink label={getString('environments')} to={routes.toChaosEnvironments({ ...params })} />
           {CHAOS_SECURITY_GOVERNANCE && (
             <SidebarLink
-              label={getString('chaos.navLabels.security')}
+              label={getString('chaos.navLabels.chaosGuard')}
               to={routes.toChaosSecurityGovernance({ ...params })}
             />
           )}
