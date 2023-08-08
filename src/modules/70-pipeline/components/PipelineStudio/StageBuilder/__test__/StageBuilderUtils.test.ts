@@ -65,7 +65,19 @@ describe('StageBuilderUtils tests', () => {
   describe('mayBeStripCIProps tests', () => {
     test('Does not do anything if any stage has a CI prop', () => {
       const initialPipelineMock = cloneDeep(pipelineMock as any)
-      expect(mayBeStripCIProps(initialPipelineMock)).toEqual(false)
+      expect(mayBeStripCIProps(initialPipelineMock, initialPipelineMock, {})).toEqual(false)
+      expect(initialPipelineMock).toEqual(initialPipelineMock)
+    })
+    test('Does not do anything if any stage is a CI template', () => {
+      const initialPipelineMock = cloneDeep(pipelineMock as any)
+      initialPipelineMock.stages[1] = {
+        stage: {
+          template: {
+            templateRef: 'foo'
+          }
+        }
+      }
+      expect(mayBeStripCIProps(initialPipelineMock, initialPipelineMock, { foo: 'CI' })).toEqual(false)
       expect(initialPipelineMock).toEqual(initialPipelineMock)
     })
     test('Removes only ci prop if there are other props from properties', () => {
@@ -73,12 +85,19 @@ describe('StageBuilderUtils tests', () => {
       initialPipelineMock.stages = initialPipelineMock.stages.filter(
         (stage: { stage: { type: string } }) => stage.stage.type !== 'CI'
       )
+      initialPipelineMock.stages[1] = {
+        stage: {
+          template: {
+            templateRef: 'foo'
+          }
+        }
+      }
       initialPipelineMock.properties.cd = {
         'some-prop': true
       }
       const finalPipelineMock = cloneDeep(initialPipelineMock as any)
       delete finalPipelineMock.properties.ci
-      expect(mayBeStripCIProps(initialPipelineMock)).toEqual(true)
+      expect(mayBeStripCIProps(initialPipelineMock, initialPipelineMock, { foo: 'CD' })).toEqual(true)
       expect(initialPipelineMock).toEqual(finalPipelineMock)
     })
     test('Removes properties altogether if no CI stages exist', () => {
@@ -86,7 +105,7 @@ describe('StageBuilderUtils tests', () => {
       initialPipelineMock.stages = initialPipelineMock.stages.filter(stage => stage.stage.type !== 'CI')
       const finalPipelineMock = cloneDeep(initialPipelineMock as any)
       delete finalPipelineMock.properties
-      expect(mayBeStripCIProps(initialPipelineMock as any)).toEqual(true)
+      expect(mayBeStripCIProps(initialPipelineMock as any, initialPipelineMock as any, {})).toEqual(true)
       expect(initialPipelineMock).toEqual(finalPipelineMock)
     })
   })

@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Expander } from '@blueprintjs/core'
 import { cloneDeep, isEmpty, isEqual, set } from 'lodash-es'
@@ -13,6 +14,9 @@ import produce from 'immer'
 import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { HarnessIconName } from '@harness/icons'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import {
   PipelineContextType,
   usePipelineContext
@@ -29,6 +33,7 @@ import {
   STATIC_SERVICE_GROUP_NAME,
   StepType
 } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType as StepsStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -43,7 +48,8 @@ import type {
   VmInfraYaml,
   VmPoolYaml
 } from 'services/ci'
-import { useQueryParams } from '@common/hooks'
+import type { PipelineConfig } from 'services/pipeline-ng'
+import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
@@ -114,6 +120,29 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.poolName ||
     ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.identifier
 
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+  const params = useParams<PipelinePathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  const { data: resolvedPipelineResponse } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      pipelineIdentifier: originalPipeline.identifier,
+      projectIdentifier,
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
+    body: {
+      originalEntityYaml: yamlStringify({ pipeline: originalPipeline })
+    },
+    lazy: isEmpty(originalPipeline)
+  })
+
   React.useEffect(() => {
     if (selectedStepId) {
       setSelectedTabId(BuildTabs.EXECUTION)
@@ -182,12 +211,17 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
 
   React.useEffect(() => {
     // if clone codebase is not enabled at least one stage, then remove properties from pipeline
-    if (!isCloneCodebaseEnabledAtLeastOneStage(pipeline)) {
+    if (
+      resolvedPipelineResponse?.data?.mergedPipelineYaml &&
+      !isCloneCodebaseEnabledAtLeastOneStage(
+        yamlParse<PipelineConfig>(resolvedPipelineResponse?.data?.mergedPipelineYaml).pipeline
+      )
+    ) {
       const newPipeline = pipeline
       delete newPipeline.properties
       updatePipeline(newPipeline)
     }
-  }, [stageData?.spec?.cloneCodebase])
+  }, [stageData?.spec?.cloneCodebase, resolvedPipelineResponse])
 
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
 

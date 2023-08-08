@@ -238,12 +238,26 @@ export const getFlattenedStages = (
   return { stages }
 }
 
-export const mayBeStripCIProps = (pipeline: PipelineInfoConfig): boolean => {
+export const areCIStagesAbsent = (pipeline: PipelineInfoConfig, templateTypes: { [key: string]: string }): boolean => {
   // no CI stages exist
-  const areCIStagesAbsent = pipeline?.stages?.every(stage => {
-    return stage.stage?.type !== 'CI'
+  return !pipeline?.stages?.some(stage => {
+    const templateRef = stage.stage?.template?.templateRef
+    return stage.stage?.type === 'CI' || (templateRef && templateTypes[templateRef] === 'CI')
   })
-  if (areCIStagesAbsent) {
+}
+
+export const mayBeStripCIProps = (
+  pipeline: PipelineInfoConfig,
+  resolvedPipeline: PipelineInfoConfig,
+  templateTypes: { [key: string]: string }
+): boolean => {
+  const hasNoCIStage = areCIStagesAbsent(resolvedPipeline, templateTypes)
+  const isCloneCodebaseEnabled = !!resolvedPipeline?.stages?.some(
+    stage =>
+      get(stage, 'stage.spec.cloneCodebase') ||
+      stage.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
+  )
+  if (hasNoCIStage || (!hasNoCIStage && !isCloneCodebaseEnabled)) {
     const props = Object.keys(pipeline.properties || {})
     // figure out if only properties that are left is related to ci
     const isCIOnly = props.length === 1 && props[0] === 'ci'

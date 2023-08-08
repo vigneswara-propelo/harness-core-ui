@@ -16,19 +16,23 @@ import { useParams } from 'react-router-dom'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
+import { useQueryParams, useGlobalEventListener } from '@common/hooks'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type {
   EntityGitDetails,
+  PipelineConfig,
   PipelineInfoConfig,
   StageElementConfig,
   StageElementWrapperConfig
 } from 'services/pipeline-ng'
+import { getYamlWithTemplateRefsResolvedPromise } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import ConditionalExecutionTooltip from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltip'
-import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
@@ -40,7 +44,7 @@ import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNo
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { EmptyStageName, MinimumSplitPaneSize, DefaultSplitPaneSize, MaximumSplitPaneSize } from '../PipelineConstants'
@@ -58,7 +62,8 @@ import {
   MoveStageDetailsType,
   moveStage,
   getPropagatingStagesFromStage,
-  Listeners
+  Listeners,
+  areCIStagesAbsent
 } from './StageBuilderUtil'
 import { StageList } from './views/StageList'
 import { SplitViewTypes } from '../PipelineContext/PipelineActions'
@@ -252,6 +257,14 @@ function StageBuilder(): JSX.Element {
       })
   }
 
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+  const params = useParams<PipelinePathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
   const { openDialog: confirmDeleteStage } = useConfirmationDialog({
     contentText: deletionContentText,
     titleText: getString('deletePipelineStage'),
@@ -264,7 +277,27 @@ function StageBuilder(): JSX.Element {
         const cloned = cloneDeep(pipeline)
         const stageToDelete = getStageFromPipeline(deleteId, cloned)
         const isRemove = removeNodeFromPipeline(stageToDelete, cloned, stageMap)
-        const isStripped = mayBeStripCIProps(cloned)
+        const hasCIStage = !areCIStagesAbsent(pipeline, templateTypes)
+        let isStripped = false
+        if (hasCIStage) {
+          const resolvedPipelineResponse = await getYamlWithTemplateRefsResolvedPromise({
+            queryParams: {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier,
+              ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
+            },
+            requestOptions: { headers: { 'Load-From-Cache': 'true' } },
+            body: {
+              originalEntityYaml: yamlStringify({ pipeline: pipeline })
+            }
+          })
+          const resolvedPipeline =
+            yamlParse<PipelineConfig>(resolvedPipelineResponse?.data?.mergedPipelineYaml ?? '')?.pipeline ?? pipeline
+          isStripped = mayBeStripCIProps(cloned, resolvedPipeline, templateTypes)
+        } else {
+          isStripped = mayBeStripCIProps(cloned, cloned, templateTypes)
+        }
         if (isRemove || isStripped) {
           updatePipeline(cloned)
           showSuccess(getString('deleteStageSuccess'))
