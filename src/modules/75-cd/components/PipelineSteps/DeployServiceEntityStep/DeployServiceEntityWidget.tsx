@@ -21,6 +21,7 @@ import type { ServiceDefinition, ServiceYamlV2, TemplateLinkConfig } from 'servi
 import { useStrings } from 'framework/strings'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -99,6 +100,9 @@ export default function DeployServiceEntityWidget({
 
   const { getString } = useStrings()
   const { showWarning } = useToaster()
+
+  const { CDS_SUPPORT_SERVICE_INPUTS_AS_EXECUTION_INPUTS: areServiceInputsSupportedAsExecutionInputs } =
+    useFeatureFlags()
 
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<FormState>()
   const formikRef = React.useRef<FormikProps<FormState> | null>(null)
@@ -186,7 +190,9 @@ export default function DeployServiceEntityWidget({
       } else if (isMultiTypeRuntime(typeOfService)) {
         serviceInputs = RUNTIME_INPUT_VALUE
       } else if (isMultiTypeExpression(typeOfService)) {
-        serviceInputs = EXECUTION_TIME_INPUT_VALUE
+        serviceInputs = areServiceInputsSupportedAsExecutionInputs
+          ? EXECUTION_TIME_INPUT_VALUE
+          : get(values.serviceInputs, 'service.expression')
       }
 
       onUpdate?.({

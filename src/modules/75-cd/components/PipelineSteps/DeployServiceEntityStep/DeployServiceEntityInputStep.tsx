@@ -76,7 +76,10 @@ export function DeployServiceEntityInputStep({
   const serviceTemplate = inputSetData?.template?.service?.serviceRef
   const servicesTemplate = inputSetData?.template?.services?.values
   const deployParallelTemplate = inputSetData?.template?.services?.metadata?.parallel
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const {
+    CDS_OrgAccountLevelServiceEnvEnvGroup,
+    CDS_SUPPORT_SERVICE_INPUTS_AS_EXECUTION_INPUTS: areServiceInputsSupportedAsExecutionInputs
+  } = useFeatureFlags()
 
   // This is required only for single service
   const [serviceInputType, setServiceInputType] = useState<MultiTypeInputType>(getMultiTypeFromValue(serviceValue))
@@ -292,10 +295,13 @@ export function DeployServiceEntityInputStep({
 
   const onServiceInputTypeChange = (type: MultiTypeInputType): void => {
     setServiceInputType(type)
-    // setting serviceInputs as execution input upon changing type to expression
     if (type === MultiTypeInputType.EXPRESSION) {
-      updateStageFormTemplate(EXECUTION_TIME_INPUT_VALUE, `${fullPathPrefix}serviceInputs`)
-      formik.setFieldValue(`${localPathPrefix}serviceInputs`, EXECUTION_TIME_INPUT_VALUE)
+      const serviceInputsValueToBeUpdated = areServiceInputsSupportedAsExecutionInputs
+        ? EXECUTION_TIME_INPUT_VALUE
+        : undefined
+
+      updateStageFormTemplate(serviceInputsValueToBeUpdated, `${fullPathPrefix}serviceInputs`)
+      formik.setFieldValue(`${localPathPrefix}serviceInputs`, serviceInputsValueToBeUpdated)
     }
   }
 

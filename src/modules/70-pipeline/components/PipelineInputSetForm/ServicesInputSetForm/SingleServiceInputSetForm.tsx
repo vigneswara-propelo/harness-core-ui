@@ -33,6 +33,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import PropagateFromServiceV2 from '@cd/components/PipelineStudio/DeployServiceSpecifications/PropagateWidget/PropagateFromServiceV2'
 // eslint-disable-next-line no-restricted-imports
 import { setupMode } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { StageInputSetFormProps } from '../StageInputSetForm'
 import type { DeployServiceEntityData } from './ServicesInputSetForm'
@@ -61,6 +62,8 @@ export default function SingleServiceInputSetForm({
 
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
+  const { CDS_SUPPORT_SERVICE_INPUTS_AS_EXECUTION_INPUTS: areServiceInputsSupportedAsExecutionInputs } =
+    useFeatureFlags()
 
   const areServiceInputsExecutionTimeInputs =
     (deploymentStageTemplate.service?.serviceInputs as unknown as string) === EXECUTION_TIME_INPUT_VALUE &&
@@ -175,7 +178,7 @@ export default function SingleServiceInputSetForm({
           />
         </Container>
       )}
-      {areServiceInputsExecutionTimeInputs && (
+      {areServiceInputsExecutionTimeInputs && areServiceInputsSupportedAsExecutionInputs && (
         <Text padding={{ bottom: 'medium' }}>{getString('pipeline.noRuntimeServiceInputsAreRequired')}</Text>
       )}
 

@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { stringify } from '@common/utils/YamlHelperMethods'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 // eslint-disable-next-line no-restricted-imports
 import { ShellScriptStep } from '@cd/components/PipelineSteps/ShellScriptStep/ShellScriptStep'
@@ -18,6 +19,22 @@ import { useSubmitExecutionInput, useGetExecutionInputTemplate, useHandleInterru
 
 import executionMetadata from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/__mocks__/executionMetadata.json'
 import { ExecutionInputs } from '../ExecutionInputs'
+
+const mockServiceResponseData = {
+  data: {
+    serviceV2YamlMetadataList: [
+      {
+        serviceIdentifier: 'tag_as_execution',
+        serviceYaml:
+          'service:\n  name: tag as execution\n  identifier: tag_as_execution\n  orgIdentifier: default\n  projectIdentifier: KanikaTest\n  serviceDefinition:\n    spec:\n      artifacts:\n        primary:\n          primaryArtifactRef: <+input>\n          sources:\n            - spec:\n                connectorRef: Ajfrog\n                artifactPath: docker-local\n                tag: <+input>.executionInput()\n                repository: docker-local\n                repositoryFormat: docker\n                digest: ""\n              identifier: check\n              type: ArtifactoryRegistry\n    type: Kubernetes\n',
+        inputSetTemplateYaml:
+          'serviceInputs:\n  serviceDefinition:\n    type: Kubernetes\n    spec:\n      artifacts:\n        primary:\n          primaryArtifactRef: <+input>\n          sources: <+input>\n',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest'
+      }
+    ]
+  }
+}
 
 jest.mock('services/pipeline-ng', () => ({
   useGetExecutionInputTemplate: jest.fn().mockReturnValue({
@@ -27,7 +44,7 @@ jest.mock('services/pipeline-ng', () => ({
   useSubmitExecutionInput: jest.fn().mockReturnValue({})
 }))
 jest.mock('services/cd-ng-rq', () => ({
-  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: {} } }))
+  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: mockServiceResponseData }))
 }))
 
 factory.registerStep(new ShellScriptStep())
@@ -77,6 +94,142 @@ describe('<ExecutionInputs /> tests', () => {
             }
           })
         )
+      })
+    })
+
+    test('submit throws error', async () => {
+      const onErrorMock = jest.fn()
+      const mutate = jest.fn().mockImplementation(() => {
+        throw new Error('Submit Failed')
+      })
+      ;(useSubmitExecutionInput as jest.Mock).mockReturnValue({
+        mutate
+      })
+      ;(useGetExecutionInputTemplate as jest.Mock).mockReturnValue({
+        data: {
+          data: {
+            inputTemplate:
+              'stage:\n  identifier: "app"\n  type: "Approval"\n  variables:\n  - name: "test"\n    type: "String"\n    value: "<+input>.executionInput()"\n',
+            fieldYaml:
+              'stage:\n  identifier: s1\n  type: Approval\n  name: s1\n  description: ""\n  spec:\n    execution:\n      steps:\n        - step:\n            identifier: some_step\n            type: HarnessApproval\n            name: some step\n            timeout: 1d\n            spec:\n              approvalMessage: |-\n                Please review the following information\n                and approve the pipeline progression\n              includePipelineExecutionHistory: true\n              approvers:\n                minimumCount: 1\n                disallowPipelineExecutor: false\n                userGroups:\n                  - account.UG_Tst_Prat_02\n              isAutoRejectEnabled: false\n              approverInputs: []\n  tags: {}\n  variables:\n    - name: basicVar\n      type: String\n      description: ""\n      required: false\n      value: <+input>.executionInput()\n'
+          }
+        }
+      })
+      const { container, findByTestId } = render(
+        <TestWrapper>
+          <ExecutionInputs
+            step={{ stepType: 'APPROVAL_STAGE' }}
+            factory={factory}
+            executionMetadata={executionMetadata}
+            onError={onErrorMock}
+          />
+        </TestWrapper>
+      )
+
+      const input = await waitFor(() => queryByAttribute('name', container, 'stage.variables[0].value')!)
+      await userEvent.type(input, 'Hello')
+
+      const submit = await findByTestId('submit')
+
+      await userEvent.click(submit)
+
+      await waitFor(() => {
+        expect(mutate).toHaveBeenCalledWith(
+          stringify({
+            stage: {
+              identifier: 'app',
+              type: 'Approval',
+              variables: [{ name: 'test', type: 'String', value: 'Hello' }]
+            }
+          })
+        )
+      })
+
+      await waitFor(() => {
+        expect(onErrorMock).toHaveBeenCalled()
+      })
+    })
+
+    test('abort throws error', async () => {
+      const onErrorMock = jest.fn()
+      const mutate = jest.fn().mockImplementation(() => {
+        throw new Error('Abort Failed')
+      })
+      ;(useHandleInterrupt as jest.Mock).mockReturnValue({
+        mutate
+      })
+      ;(useGetExecutionInputTemplate as jest.Mock).mockReturnValue({
+        data: {
+          data: {
+            inputTemplate:
+              'stage:\n  identifier: "app"\n  type: "Approval"\n  variables:\n  - name: "test"\n    type: "String"\n    value: "<+input>.executionInput()"\n',
+            fieldYaml:
+              'stage:\n  identifier: s1\n  type: Approval\n  name: s1\n  description: ""\n  spec:\n    execution:\n      steps:\n        - step:\n            identifier: some_step\n            type: HarnessApproval\n            name: some step\n            timeout: 1d\n            spec:\n              approvalMessage: |-\n                Please review the following information\n                and approve the pipeline progression\n              includePipelineExecutionHistory: true\n              approvers:\n                minimumCount: 1\n                disallowPipelineExecutor: false\n                userGroups:\n                  - account.UG_Tst_Prat_02\n              isAutoRejectEnabled: false\n              approverInputs: []\n  tags: {}\n  variables:\n    - name: basicVar\n      type: String\n      description: ""\n      required: false\n      value: <+input>.executionInput()\n'
+          }
+        }
+      })
+      const { container, findByTestId, findByText } = render(
+        <TestWrapper>
+          <ExecutionInputs
+            step={{ stepType: 'APPROVAL_STAGE' }}
+            factory={factory}
+            executionMetadata={executionMetadata}
+            onError={onErrorMock}
+          />
+        </TestWrapper>
+      )
+
+      const input = await waitFor(() => queryByAttribute('name', container, 'stage.variables[0].value')!)
+      await userEvent.type(input, 'Hello')
+
+      const abortBtn = await findByTestId('abort')
+
+      await userEvent.click(abortBtn)
+
+      const confirm = await findByText('confirm')
+
+      await userEvent.click(confirm)
+
+      await waitFor(() => {
+        expect(mutate).toHaveBeenCalledWith({})
+      })
+
+      await waitFor(() => {
+        expect(onErrorMock).toHaveBeenCalled()
+      })
+    })
+
+    test('fields should be rendered properly when service inputs are supported as execution inputs ', async () => {
+      jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+        CDS_SUPPORT_SERVICE_INPUTS_AS_EXECUTION_INPUTS: true
+      })
+      const mutate = jest.fn()
+      ;(useSubmitExecutionInput as jest.Mock).mockReturnValue({
+        mutate
+      })
+      ;(useGetExecutionInputTemplate as jest.Mock).mockReturnValue({
+        data: {
+          data: {
+            inputTemplate:
+              'stage:\n  identifier: s1\n  type: Deployment\n  spec:\n    service:\n      serviceInputs: <+input>.executionInput()\n',
+            fieldYaml:
+              'stage:\n  identifier: s1\n  type: Deployment\n  name: s1\n  description: ""\n  spec:\n    deploymentType: Kubernetes\n    service:\n      serviceRef: tag_as_execution\n      serviceInputs: <+input>.executionInput()\n    environment:\n      environmentRef: EnvironmentTest\n      deployToAll: false\n      infrastructureDefinitions:\n        - identifier: IntraTest\n    execution:\n      steps:\n        - step:\n            identifier: rolloutDeployment\n            type: K8sRollingDeploy\n            name: Rollout Deployment\n            timeout: 10m\n            spec:\n              skipDryRun: false\n              pruningEnabled: false\n      rollbackSteps:\n        - step:\n            identifier: rollbackRolloutDeployment\n            type: K8sRollingRollback\n            name: Rollback Rollout Deployment\n            timeout: 10m\n            spec:\n              pruningEnabled: false\n  tags: {}\n  failureStrategies:\n    - onFailure:\n        errors:\n          - AllErrors\n        action:\n          type: StageRollback\n'
+          }
+        }
+      })
+      const { findByTestId, findByText } = render(
+        <TestWrapper>
+          <ExecutionInputs
+            step={{ stepType: 'DEPLOYMENT_STAGE_STEP' }}
+            factory={factory}
+            executionMetadata={executionMetadata}
+          />
+        </TestWrapper>
+      )
+      await waitFor(() => {
+        expect(findByText('Stage:')).toBeDefined()
+        expect(findByTestId('submit')).toBeDefined()
+        expect(findByTestId('abort')).toBeDefined()
       })
     })
 

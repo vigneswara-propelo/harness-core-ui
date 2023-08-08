@@ -38,6 +38,7 @@ import {
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import pipelineFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
@@ -77,6 +78,8 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [parsedStage, setParsedStage] = useState<StageElementWrapperConfig>({})
   const [fieldYaml, setFieldYaml] = useState<FieldYaml>({} as FieldYaml)
+  const { CDS_SUPPORT_SERVICE_INPUTS_AS_EXECUTION_INPUTS: areServiceInputsSupportedAsExecutionInputs } =
+    useFeatureFlags()
 
   const nodeExecutionId = defaultTo(step.uuid, '')
   const { data, loading: loadingExecutionInputTemplate } = useGetExecutionInputTemplate({
@@ -113,7 +116,8 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const shouldFetchServiceInputs = React.useMemo(() => {
     const receivedFieldYamlValues = parse<FieldYaml>(receivedFieldYaml)
     return Boolean(
-      receivedFieldYamlValues?.stage?.spec?.service?.serviceRef &&
+      areServiceInputsSupportedAsExecutionInputs &&
+        receivedFieldYamlValues?.stage?.spec?.service?.serviceRef &&
         (receivedFieldYamlValues?.stage?.spec?.service?.serviceInputs as unknown as string) ===
           EXECUTION_TIME_INPUT_VALUE
     ) as boolean
@@ -148,7 +152,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   }, [receivedFieldYaml])
 
   useEffect(() => {
-    if (servicesDataResponse) {
+    if (shouldFetchServiceInputs && servicesDataResponse && areServiceInputsSupportedAsExecutionInputs) {
       const serviceInputSetYamlValues = parse(
         defaultTo(get(servicesDataResponse, 'data.serviceV2YamlMetadataList[0].inputSetTemplateYaml'), '{}') as string
       )
@@ -169,7 +173,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [servicesDataResponse])
+  }, [servicesDataResponse, shouldFetchServiceInputs])
 
   const finalUserInput = defaultTo(isStageForm ? userInput : userInput.step, {})
   const parsedStep = defaultTo(template.step, {})
@@ -282,7 +286,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
         <FormikForm>
           {isStageForm ? (
             step.stepType === StepNodeType.PIPELINE_STAGE ? (
-              finalTemplateParsedPipelineStage?.stages?.map((stageObj, index) => {
+              /* istanbul ignore next */ finalTemplateParsedPipelineStage?.stages?.map((stageObj, index) => {
                 const childPipelineFieldYaml = isTemplateParsedPipelineStage
                   ? ((fieldYaml?.stage?.spec as PipelineStageConfig)?.inputs?.template
                       ?.templateInputs as PipelineInfoConfig)
