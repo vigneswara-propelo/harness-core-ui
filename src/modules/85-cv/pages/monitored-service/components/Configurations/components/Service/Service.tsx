@@ -201,7 +201,7 @@ function Service(
               config={config}
               identifier={identifier}
               hideDrawer={hideDrawer}
-              showDrawer={hideDrawer}
+              showDrawer={showDrawer}
               openChangeSourceDrawer={openChangeSourceDrawer}
               onSuccessChangeSource={onSuccessChangeSource}
               isTemplate={isTemplate}
