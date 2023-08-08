@@ -5,12 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
+import { clone, defaultTo, set } from 'lodash-es'
+import cx from 'classnames'
 
-import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
+import { AllowedTypes, ConfirmationDialog, ModalDialog, SelectOption, useToggleOpen } from '@harness/uicore'
 
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import { useFormikContext } from 'formik'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
@@ -23,9 +27,14 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import type { DeployEnvironmentEntityCustomStepProps, InfrastructureData } from '../types'
+import type {
+  DeployEnvironmentEntityCustomStepProps,
+  DeployEnvironmentEntityFormState,
+  InfrastructureData
+} from '../types'
 import { InfrastructureEntityCard } from './InfrastructureEntityCard'
 
+import { getAllFixedInfrastructures } from '../utils/utils'
 import css from './InfrastructureEntitiesList.module.scss'
 
 export interface InfrastructureEntitiesListProps
@@ -38,6 +47,7 @@ export interface InfrastructureEntitiesListProps
   onInfrastructureEntityUpdate: () => void
   onRemoveInfrastructureFromList: (id: string) => void
   environmentPermission?: ButtonProps['permission']
+  setSelectedInfrastructures?: Dispatch<SetStateAction<string[]>>
 }
 
 export default function InfrastructureEntitiesList({
@@ -49,10 +59,12 @@ export default function InfrastructureEntitiesList({
   onRemoveInfrastructureFromList,
   environmentIdentifier,
   customDeploymentRef,
-  environmentPermission
+  environmentPermission,
+  setSelectedInfrastructures
 }: InfrastructureEntitiesListProps): React.ReactElement {
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
+  const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
 
   const {
     state: {
@@ -109,29 +121,66 @@ export default function InfrastructureEntitiesList({
     onInfrastructureEntityUpdate()
   }
 
+  function onDragEnd(result: DropResult): void {
+    if (!result.destination) return
+
+    const sourceIndex = result.source.index
+    const destinationIndex = result.destination.index
+    if (sourceIndex === destinationIndex) return
+
+    const infraList = clone(values.infrastructures?.[environmentIdentifier]) as SelectOption[]
+    const itemToMove = infraList.splice(sourceIndex, 1)
+    infraList.splice(destinationIndex, 0, itemToMove[0])
+
+    setFieldValue(`infrastructures.${environmentIdentifier}`, infraList)
+    setSelectedInfrastructures &&
+      setSelectedInfrastructures(
+        getAllFixedInfrastructures(
+          produce(values, draft => {
+            set(draft, `infrastructures.${environmentIdentifier}`, infraList)
+          }),
+          environmentIdentifier
+        )
+      )
+  }
+
   if (loading) {
     return <Spinner />
   }
 
   return (
     <>
-      <Layout.Vertical spacing={'medium'} margin={{ top: 'medium' }}>
-        {infrastructuresData.map(row => {
-          return (
-            <InfrastructureEntityCard
-              key={row.infrastructureDefinition.identifier}
-              infrastructureDefinition={row.infrastructureDefinition}
-              infrastructureInputs={row.infrastructureInputs}
-              onDeleteClick={setInfrastructureToDelete}
-              onEditClick={setInfrastructureToEdit}
-              allowableTypes={allowableTypes}
-              readonly={readonly}
-              environmentIdentifier={environmentIdentifier}
-              environmentPermission={environmentPermission}
-            />
-          )
-        })}
-      </Layout.Vertical>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId={'infraDropper'}>
+          {(provided, snapshot) => {
+            return (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={cx(css.cardsContainer, { [css.draggingOver]: snapshot.isDraggingOver })}
+              >
+                {infrastructuresData.map((row, index: number) => {
+                  return (
+                    <InfrastructureEntityCard
+                      key={row.infrastructureDefinition.identifier}
+                      infrastructureDefinition={row.infrastructureDefinition}
+                      infrastructureInputs={row.infrastructureInputs}
+                      onDeleteClick={setInfrastructureToDelete}
+                      onEditClick={setInfrastructureToEdit}
+                      allowableTypes={allowableTypes}
+                      readonly={readonly}
+                      environmentIdentifier={environmentIdentifier}
+                      environmentPermission={environmentPermission}
+                      infrastructureIndex={index}
+                    />
+                  )
+                })}
+                {provided.placeholder}
+              </div>
+            )
+          }}
+        </Droppable>
+      </DragDropContext>
 
       <ModalDialog
         isOpen={!!infrastructureToEdit}

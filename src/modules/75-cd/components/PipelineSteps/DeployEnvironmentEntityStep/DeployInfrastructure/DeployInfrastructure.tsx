@@ -32,7 +32,6 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { ButtonProps } from '@rbac/components/Button/Button'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { PropagateSelectOption } from '@pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm/utils'
@@ -47,6 +46,7 @@ import type {
 import { useGetInfrastructuresData } from './useGetInfrastructuresData'
 
 import InfrastructureSelection from './InfrastructureSelection'
+import { getAllFixedInfrastructures, getSelectedInfrastructuresWhenPropagating } from '../utils/utils'
 
 interface DeployInfrastructureProps
   extends Required<
@@ -61,41 +61,6 @@ interface DeployInfrastructureProps
   environmentPermission?: ButtonProps['permission']
   previousStages?: StageElementWrapperConfig[]
   selectedPropagatedState?: PropagateSelectOption | string
-}
-
-function getSelectedInfrastructuresWhenPropagating(
-  value?: string,
-  previousStages?: StageElementWrapperConfig[]
-): string[] {
-  const infrastructureDefinitions = (
-    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
-      ?.stage as DeploymentStageElementConfig
-  )?.spec?.environment?.infrastructureDefinitions
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (isValueRuntimeInput(infrastructureDefinitions as any)) return []
-
-  const prevInfraId = infrastructureDefinitions?.[0].identifier
-  return prevInfraId ? [prevInfraId] : []
-}
-
-export function getAllFixedInfrastructures(
-  data: DeployEnvironmentEntityFormState,
-  environmentIdentifier: string,
-  previousStages?: StageElementWrapperConfig[]
-): string[] {
-  if (data.propagateFrom?.value) {
-    return getSelectedInfrastructuresWhenPropagating(data.propagateFrom?.value as string, previousStages)
-  } else if (data.infrastructure && getMultiTypeFromValue(data.infrastructure) === MultiTypeInputType.FIXED) {
-    return [data.infrastructure as string]
-  } else if (
-    data.infrastructures?.[environmentIdentifier] &&
-    Array.isArray(data.infrastructures[environmentIdentifier])
-  ) {
-    return data.infrastructures[environmentIdentifier].map(infrastructure => infrastructure.value as string)
-  }
-
-  return []
 }
 
 export default function DeployInfrastructure({
@@ -357,6 +322,7 @@ export default function DeployInfrastructure({
           environmentIdentifier={environmentIdentifier}
           customDeploymentRef={customDeploymentRef}
           environmentPermission={environmentPermission}
+          setSelectedInfrastructures={setSelectedInfrastructures}
         />
       )}
     </>

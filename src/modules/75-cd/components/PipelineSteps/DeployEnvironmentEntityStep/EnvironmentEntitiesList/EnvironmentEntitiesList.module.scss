@@ -9,6 +9,12 @@
   width: 100%;
 }
 
+.drag-handle {
+  position: relative;
+  width: 20px;
+  margin: -14px auto 0 auto;
+}
+
 .dialogStyles {
   :global {
     .ModalDialog--body {
@@ -26,4 +32,12 @@
   }
 
   overflow: hidden;
+}
+
+.cardsContainer {
+  width: 1000px;
+}
+
+.dragging-over {
+  background-color: var(--grey-200);
 }

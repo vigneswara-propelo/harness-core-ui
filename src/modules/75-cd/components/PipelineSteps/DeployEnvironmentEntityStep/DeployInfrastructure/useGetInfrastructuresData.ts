@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 
@@ -90,6 +90,11 @@ export function useGetInfrastructuresData({
     lazy: lazyInfrastructure
   })
 
+  const sortedInfrastructureIdentifiers = useMemo(
+    () => [...infrastructureIdentifiers].sort(),
+    [infrastructureIdentifiers]
+  )
+
   const {
     data: infrastructuresDataResponse,
     error: infrastructuresDataError,
@@ -103,14 +108,17 @@ export function useGetInfrastructuresData({
       projectIdentifier,
       environmentIdentifier
     },
-    body: { infrastructureIdentifiers },
-    lazy: infrastructureIdentifiers.length === 0
+    body: { infrastructureIdentifiers: sortedInfrastructureIdentifiers },
+    lazy: sortedInfrastructureIdentifiers.length === 0
   })
 
   const loading = loadingInfrastructuresList || loadingInfrastructuresData
 
   useEffect(() => {
-    if (!loading) {
+    if (
+      !loading &&
+      (sortedInfrastructureIdentifiers?.length > 0 || infrastructuresListResponse?.data?.content?.length)
+    ) {
       let _infrastructuresList: InfrastructureYaml[] = []
       let _infrastructuresData: InfrastructureData[] = []
 
@@ -159,6 +167,23 @@ export function useGetInfrastructuresData({
       setInfrastructuresList(_infrastructuresList)
       setInfrastructuresData(_infrastructuresData)
 
+      if (!isEqual(_infrastructuresList, infrastructuresList)) {
+        setInfrastructuresList(_infrastructuresList)
+      }
+
+      _infrastructuresData.sort((infrastructureData1, infrastructureData2) => {
+        const id1 = infrastructureData1.infrastructureDefinition?.identifier
+        const id2 = infrastructureData2.infrastructureDefinition?.identifier
+
+        const index1 = infrastructureIdentifiers.indexOf(id1)
+        const index2 = infrastructureIdentifiers.indexOf(id2)
+
+        return index1 - index2
+      })
+      if (!isEqual(_infrastructuresData, infrastructuresData)) {
+        setInfrastructuresData(_infrastructuresData)
+      }
+
       const infrastructureListIdentifiers = _infrastructuresList.map(infraInList => infraInList.identifier)
       const _nonExistingInfrastructureIdentifiers = infrastructureIdentifiers.filter(
         infraInList => infraInList && infrastructureListIdentifiers.indexOf(infraInList) === -1
@@ -168,7 +193,12 @@ export function useGetInfrastructuresData({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, infrastructuresListResponse?.data, infrastructuresDataResponse?.data?.infrastructureYamlMetadataList])
+  }, [
+    loading,
+    infrastructuresListResponse?.data,
+    infrastructuresDataResponse?.data?.infrastructureYamlMetadataList,
+    sortedInfrastructureIdentifiers
+  ])
 
   useEffect(() => {
     /* istanbul ignore else */

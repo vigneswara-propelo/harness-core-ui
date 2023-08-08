@@ -8,6 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly card: string
+  readonly cardsContainer: string
   readonly dialogStyles: string
+  readonly dragHandle: string
+  readonly draggingOver: string
 }
 export default styles

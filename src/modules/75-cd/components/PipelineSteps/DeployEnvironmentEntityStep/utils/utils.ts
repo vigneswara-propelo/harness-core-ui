@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { isEmpty, isEqual, isNil } from 'lodash-es'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
+import { StageElementWrapperConfig } from 'services/pipeline-ng'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type {
   DeployEnvironmentEntityConfig,
   DeployEnvironmentEntityCustomStepProps,
@@ -183,4 +185,65 @@ export function getValidationSchema(getString: UseStringsReturn['getString'], gi
         return true
       }
     })
+}
+
+export function getSelectedInfrastructuresWhenPropagating(
+  value?: string,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  const infrastructureDefinitions = (
+    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
+      ?.stage as DeploymentStageElementConfig
+  )?.spec?.environment?.infrastructureDefinitions
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (isValueRuntimeInput(infrastructureDefinitions as any)) return []
+
+  const prevInfraId = infrastructureDefinitions?.[0].identifier
+  return prevInfraId ? [prevInfraId] : []
+}
+
+export function getAllFixedInfrastructures(
+  data: DeployEnvironmentEntityFormState,
+  environmentIdentifier: string,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  if (data.propagateFrom?.value) {
+    return getSelectedInfrastructuresWhenPropagating(data.propagateFrom?.value as string, previousStages)
+  } else if (data.infrastructure && getMultiTypeFromValue(data.infrastructure) === MultiTypeInputType.FIXED) {
+    return [data.infrastructure as string]
+  } else if (
+    data.infrastructures?.[environmentIdentifier] &&
+    Array.isArray(data.infrastructures[environmentIdentifier])
+  ) {
+    return data.infrastructures[environmentIdentifier].map(infrastructure => infrastructure.value as string)
+  }
+
+  return []
+}
+
+export function getSelectedEnvironmentsWhenPropagating(
+  value?: string,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  const prevEnvId = (
+    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
+      ?.stage as DeploymentStageElementConfig
+  )?.spec?.environment?.environmentRef
+  return prevEnvId && isValueFixed(prevEnvId) ? [prevEnvId] : []
+}
+
+export function getAllFixedEnvironments(
+  data: DeployEnvironmentEntityFormState,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  if (data.propagateFrom?.value) {
+    return getSelectedEnvironmentsWhenPropagating(data.propagateFrom?.value as string, previousStages)
+  } else if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
+    return [data.environment as string]
+  } else if (data.environments && Array.isArray(data.environments)) {
+    return data.environments.map(environment => environment.value as string)
+  }
+
+  return []
 }

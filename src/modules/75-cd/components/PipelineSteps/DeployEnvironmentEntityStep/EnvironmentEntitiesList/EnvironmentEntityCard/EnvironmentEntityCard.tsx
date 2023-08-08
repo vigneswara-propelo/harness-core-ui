@@ -20,9 +20,11 @@ import {
   TagsPopover,
   Button,
   ButtonSize,
-  SelectOption
+  SelectOption,
+  Icon
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import { Draggable } from 'react-beautiful-dnd'
 import { useStrings } from 'framework/strings'
 import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
 
@@ -60,6 +62,8 @@ export interface EnvironmentEntityCardProps extends EnvironmentData, Required<De
   onEditClick: (environment: EnvironmentData) => void
   onDeleteClick: (environment: EnvironmentData) => void
   initialValues: DeployEnvironmentEntityFormState
+  envIndex?: number
+  totalLength: number
 }
 
 const getScopedRefUsingIdentifier = (
@@ -90,7 +94,9 @@ export function EnvironmentEntityCard({
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
-  gitOpsEnabled
+  gitOpsEnabled,
+  envIndex,
+  totalLength
 }: EnvironmentEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -137,131 +143,144 @@ export function EnvironmentEntityCard({
   }, [values.propagateFrom])
 
   return (
-    <Card className={css.card}>
-      <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Layout.Vertical width={'90%'}>
-          <Layout.Horizontal
-            flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
-            spacing="small"
-            margin={{ bottom: 'xsmall' }}
-          >
-            <Text color={Color.PRIMARY_7} lineClamp={1}>
-              {name}
-            </Text>
-            {!isEmpty(tags) && (
-              <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
-            )}
-          </Layout.Horizontal>
+    <Draggable draggableId={environment.identifier} index={defaultTo(envIndex, 0)} isDragDisabled={readonly}>
+      {provided => {
+        return (
+          <div {...provided.draggableProps} ref={provided.innerRef} style={{ ...provided.draggableProps.style }}>
+            <Card className={css.card}>
+              {!readonly && totalLength > 1 && (
+                <Layout.Horizontal className={css.dragHandle} flex={{ justifyContent: 'center' }}>
+                  <Icon name="drag-handle-horizontal" {...provided.dragHandleProps} />
+                </Layout.Horizontal>
+              )}
+              <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                <Layout.Vertical width={'90%'}>
+                  <Layout.Horizontal
+                    flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
+                    spacing="small"
+                    margin={{ bottom: 'xsmall' }}
+                  >
+                    <Text color={Color.PRIMARY_7} lineClamp={1}>
+                      {name}
+                    </Text>
+                    {!isEmpty(tags) && (
+                      <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
+                    )}
+                  </Layout.Horizontal>
 
-          <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
-            {getString('common.ID')}: {identifier}
-          </Text>
-        </Layout.Vertical>
+                  <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
+                    {getString('common.ID')}: {identifier}
+                  </Text>
+                </Layout.Vertical>
 
-        <Container>
-          {!isPropagating && (
-            <React.Fragment>
-              <RbacButton
-                variation={ButtonVariation.ICON}
-                icon="edit"
-                data-testid={`edit-environment-${identifier}`}
-                disabled={readonly}
-                onClick={() => onEditClick({ environment, environmentInputs })}
-                permission={environmentPermission}
-              />
-              <Button
-                variation={ButtonVariation.ICON}
-                icon="remove-minus"
-                data-testid={`delete-environment-${identifier}`}
-                disabled={readonly}
-                onClick={() => onDeleteClick({ environment, environmentInputs })}
-              />
-            </React.Fragment>
-          )}
-        </Container>
-      </Layout.Horizontal>
-
-      {showEnvironmentInputs || showServiceOverrideInputs ? (
-        <>
-          <Container flex={{ justifyContent: 'center' }}>
-            <Button
-              icon={showInputs ? 'chevron-up' : 'chevron-down'}
-              data-testid="toggle-environment-inputs"
-              text={toggleText}
-              variation={ButtonVariation.LINK}
-              size={ButtonSize.SMALL}
-              onClick={toggle}
-            />
-          </Container>
-          <Collapse keepChildrenMounted={false} isOpen={showInputs}>
-            <EnvironmentInputs
-              environmentRef={scopedEnvRef}
-              environmentInputs={environmentInputs}
-              allowableTypes={allowableTypes}
-              deploymentType={deploymentType}
-              stageIdentifier={stageIdentifier}
-              readonly={readonly || isPropagating}
-            />
-
-            <ServiceOverrideInputs
-              environmentRef={scopedEnvRef}
-              serviceIdentifiers={serviceIdentifiers}
-              serviceOverrideInputs={serviceOverrideInputs}
-              allowableTypes={allowableTypes}
-              deploymentType={deploymentType}
-              stageIdentifier={stageIdentifier}
-              readonly={readonly || isPropagating}
-            />
-          </Collapse>
-        </>
-      ) : null}
-
-      {!values.environment && Array.isArray(values.environments) && scopedEnvRef && (
-        <>
-          <Container margin={{ top: 'medium', bottom: 'medium' }}>
-            <Divider />
-          </Container>
-          <StepWidget<InlineEntityFiltersProps>
-            type={StepType.InlineEntityFilters}
-            factory={factory}
-            stepViewType={StepViewType.Edit}
-            readonly={readonly}
-            allowableTypes={allowableTypes}
-            initialValues={{
-              filterPrefix,
-              entityStringKey: gitOpsEnabled ? 'common.clusters' : 'common.infrastructures',
-              onRadioValueChange: handleFilterRadio,
-              baseComponent: (
-                <>
-                  {gitOpsEnabled ? (
-                    <DeployCluster
-                      initialValues={initialValues}
-                      readonly={readonly}
-                      allowableTypes={allowableTypes}
-                      environmentIdentifier={scopedEnvRef}
-                      isMultiCluster
-                    />
-                  ) : (
-                    <DeployInfrastructure
-                      initialValues={initialValues}
-                      readonly={readonly}
-                      allowableTypes={allowableTypes}
-                      environmentIdentifier={scopedEnvRef}
-                      isMultiInfrastructure
-                      deploymentType={deploymentType}
-                      customDeploymentRef={customDeploymentRef}
-                      environmentPermission={environmentPermission}
-                    />
+                <Container>
+                  {!isPropagating && (
+                    <React.Fragment>
+                      <RbacButton
+                        variation={ButtonVariation.ICON}
+                        icon="edit"
+                        data-testid={`edit-environment-${identifier}`}
+                        disabled={readonly}
+                        onClick={() => onEditClick({ environment, environmentInputs })}
+                        permission={environmentPermission}
+                      />
+                      <Button
+                        variation={ButtonVariation.ICON}
+                        icon="remove-minus"
+                        data-testid={`delete-environment-${identifier}`}
+                        disabled={readonly}
+                        onClick={() => onDeleteClick({ environment, environmentInputs })}
+                      />
+                    </React.Fragment>
                   )}
+                </Container>
+              </Layout.Horizontal>
+
+              {showEnvironmentInputs || showServiceOverrideInputs ? (
+                <>
+                  <Container flex={{ justifyContent: 'center' }}>
+                    <Button
+                      icon={showInputs ? 'chevron-up' : 'chevron-down'}
+                      data-testid="toggle-environment-inputs"
+                      text={toggleText}
+                      variation={ButtonVariation.LINK}
+                      size={ButtonSize.SMALL}
+                      onClick={toggle}
+                    />
+                  </Container>
+                  <Collapse keepChildrenMounted={false} isOpen={showInputs}>
+                    <EnvironmentInputs
+                      environmentRef={scopedEnvRef}
+                      environmentInputs={environmentInputs}
+                      allowableTypes={allowableTypes}
+                      deploymentType={deploymentType}
+                      stageIdentifier={stageIdentifier}
+                      readonly={readonly || isPropagating}
+                    />
+
+                    <ServiceOverrideInputs
+                      environmentRef={scopedEnvRef}
+                      serviceIdentifiers={serviceIdentifiers}
+                      serviceOverrideInputs={serviceOverrideInputs}
+                      allowableTypes={allowableTypes}
+                      deploymentType={deploymentType}
+                      stageIdentifier={stageIdentifier}
+                      readonly={readonly || isPropagating}
+                    />
+                  </Collapse>
                 </>
-              ),
-              entityFilterProps: {
-                entities: [gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
-              }
-            }}
-          />
-        </>
-      )}
-    </Card>
+              ) : null}
+
+              {!values.environment && Array.isArray(values.environments) && scopedEnvRef && (
+                <>
+                  <Container margin={{ top: 'medium', bottom: 'medium' }}>
+                    <Divider />
+                  </Container>
+                  <StepWidget<InlineEntityFiltersProps>
+                    type={StepType.InlineEntityFilters}
+                    factory={factory}
+                    stepViewType={StepViewType.Edit}
+                    readonly={readonly}
+                    allowableTypes={allowableTypes}
+                    initialValues={{
+                      filterPrefix,
+                      entityStringKey: gitOpsEnabled ? 'common.clusters' : 'common.infrastructures',
+                      onRadioValueChange: handleFilterRadio,
+                      baseComponent: (
+                        <>
+                          {gitOpsEnabled ? (
+                            <DeployCluster
+                              initialValues={initialValues}
+                              readonly={readonly}
+                              allowableTypes={allowableTypes}
+                              environmentIdentifier={scopedEnvRef}
+                              isMultiCluster
+                            />
+                          ) : (
+                            <DeployInfrastructure
+                              initialValues={initialValues}
+                              readonly={readonly}
+                              allowableTypes={allowableTypes}
+                              environmentIdentifier={scopedEnvRef}
+                              isMultiInfrastructure
+                              deploymentType={deploymentType}
+                              customDeploymentRef={customDeploymentRef}
+                              environmentPermission={environmentPermission}
+                            />
+                          )}
+                        </>
+                      ),
+                      entityFilterProps: {
+                        entities: [gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
+                      }
+                    }}
+                  />
+                </>
+              )}
+            </Card>
+          </div>
+        )
+      }}
+    </Draggable>
   )
 }

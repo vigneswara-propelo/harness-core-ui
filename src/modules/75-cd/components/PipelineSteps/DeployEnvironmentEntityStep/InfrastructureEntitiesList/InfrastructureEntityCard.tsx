@@ -19,9 +19,11 @@ import {
   Layout,
   TagsPopover,
   Button,
-  ButtonSize
+  ButtonSize,
+  Icon
 } from '@harness/uicore'
 
+import { Draggable } from 'react-beautiful-dnd'
 import { useStrings } from 'framework/strings'
 import type { Infrastructure } from 'services/cd-ng'
 
@@ -44,6 +46,7 @@ export interface InfrastructureEntityCardProps extends InfrastructureData {
   onDeleteClick: (infrastructure: InfrastructureData) => void
   environmentIdentifier: string
   environmentPermission?: ButtonProps['permission']
+  infrastructureIndex: number
 }
 
 export function InfrastructureEntityCard({
@@ -54,7 +57,8 @@ export function InfrastructureEntityCard({
   onEditClick,
   onDeleteClick,
   environmentIdentifier,
-  environmentPermission
+  environmentPermission,
+  infrastructureIndex
 }: InfrastructureEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -76,102 +80,119 @@ export function InfrastructureEntityCard({
   }, [values.propagateFrom])
 
   return (
-    <Card className={css.card}>
-      <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Layout.Vertical>
-          <Layout.Horizontal
-            flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
-            spacing="small"
-            margin={{ bottom: 'xsmall' }}
-          >
-            <Text color={Color.PRIMARY_7}>{name}</Text>
-            {!isEmpty(tags) && (
-              <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
-            )}
-          </Layout.Horizontal>
-
-          <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
-            {getString('common.ID')}: {identifier}
-          </Text>
-        </Layout.Vertical>
-
-        <Container>
-          {!isPropagating && (
-            <React.Fragment>
-              <RbacButton
-                variation={ButtonVariation.ICON}
-                icon="edit"
-                data-testid={`edit-infrastructure-${identifier}`}
-                disabled={readonly}
-                onClick={() => onEditClick({ infrastructureDefinition, infrastructureInputs })}
-                permission={environmentPermission}
-              />
-              <Button
-                variation={ButtonVariation.ICON}
-                icon="remove-minus"
-                data-testid={`delete-infrastructure-${identifier}`}
-                disabled={readonly}
-                onClick={() => onDeleteClick({ infrastructureDefinition, infrastructureInputs })}
-              />
-            </React.Fragment>
-          )}
-        </Container>
-      </Layout.Horizontal>
-      {!onlyProvisionerInput &&
-      infrastructureInputs &&
-      values.infrastructureInputs?.[environmentIdentifier]?.[identifier] ? (
-        <>
-          <Container flex={{ justifyContent: 'center' }}>
-            <Button
-              icon={showInputs ? 'chevron-up' : 'chevron-down'}
-              data-testid="toggle-infrastructure-inputs"
-              text={getString(
-                showInputs
-                  ? 'cd.pipelineSteps.environmentTab.hideInfrastructureInputs'
-                  : 'cd.pipelineSteps.environmentTab.viewInfrastructureInputs'
+    <Draggable draggableId={identifier} index={infrastructureIndex} isDragDisabled={readonly}>
+      {provided => {
+        return (
+          <div {...provided.draggableProps} ref={provided.innerRef} style={{ ...provided.draggableProps.style }}>
+            <Card className={css.card}>
+              {!readonly && (
+                <Layout.Horizontal className={css.dragHandle} flex={{ justifyContent: 'center' }}>
+                  <Icon name="drag-handle-horizontal" {...provided.dragHandleProps} />
+                </Layout.Horizontal>
               )}
-              variation={ButtonVariation.LINK}
-              size={ButtonSize.SMALL}
-              onClick={toggle}
-            />
-          </Container>
-          <Collapse keepChildrenMounted={false} isOpen={showInputs}>
-            <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
-              <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
-                {getString('common.infrastructureInputs')}
-              </Text>
-              <StepWidget<Infrastructure>
-                key={`${environmentIdentifier}_${identifier}`}
-                factory={factory}
-                template={infrastructureInputs.spec}
-                initialValues={{
-                  ...(values.infrastructureInputs?.[environmentIdentifier]?.[identifier]?.spec || {}),
-                  environmentRef: environmentIdentifier,
-                  infrastructureRef: identifier
-                }}
-                allowableTypes={allowableTypes}
-                allValues={{
-                  environmentRef: environmentIdentifier,
-                  infrastructureRef: identifier
-                }}
-                type={
-                  (infraDefinitionTypeMapping[infrastructureInputs.type as StepType] ||
-                    infrastructureInputs?.type) as StepType
-                }
-                path={`infrastructureInputs.['${environmentIdentifier}'].${identifier}.spec`}
-                readonly={readonly || isPropagating}
-                stepViewType={StepViewType.TemplateUsage}
-                customStepProps={{
-                  // serviceRef: deploymentStage?.service?.serviceRef,
-                  ...getCustomStepProps(infrastructureInputs.type, getString),
-                  environmentRef: environmentIdentifier,
-                  infrastructureRef: identifier
-                }}
-              />
-            </Container>
-          </Collapse>
-        </>
-      ) : null}
-    </Card>
+              <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                <Layout.Vertical>
+                  <Layout.Horizontal
+                    flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
+                    spacing="small"
+                    margin={{ bottom: 'xsmall' }}
+                  >
+                    <Text color={Color.PRIMARY_7}>{name}</Text>
+                    {!isEmpty(tags) && (
+                      <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
+                    )}
+                  </Layout.Horizontal>
+
+                  <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
+                    {getString('common.ID')}: {identifier}
+                  </Text>
+                </Layout.Vertical>
+
+                <Container>
+                  {!isPropagating && (
+                    <React.Fragment>
+                      <RbacButton
+                        variation={ButtonVariation.ICON}
+                        icon="edit"
+                        data-testid={`edit-infrastructure-${identifier}`}
+                        disabled={readonly}
+                        onClick={() => onEditClick({ infrastructureDefinition, infrastructureInputs })}
+                        permission={environmentPermission}
+                      />
+                      <Button
+                        variation={ButtonVariation.ICON}
+                        icon="remove-minus"
+                        data-testid={`delete-infrastructure-${identifier}`}
+                        disabled={readonly}
+                        onClick={() => onDeleteClick({ infrastructureDefinition, infrastructureInputs })}
+                      />
+                    </React.Fragment>
+                  )}
+                </Container>
+              </Layout.Horizontal>
+              {!onlyProvisionerInput &&
+              infrastructureInputs &&
+              values.infrastructureInputs?.[environmentIdentifier]?.[identifier] ? (
+                <>
+                  <Container flex={{ justifyContent: 'center' }}>
+                    <Button
+                      icon={showInputs ? 'chevron-up' : 'chevron-down'}
+                      data-testid="toggle-infrastructure-inputs"
+                      text={getString(
+                        showInputs
+                          ? 'cd.pipelineSteps.environmentTab.hideInfrastructureInputs'
+                          : 'cd.pipelineSteps.environmentTab.viewInfrastructureInputs'
+                      )}
+                      variation={ButtonVariation.LINK}
+                      size={ButtonSize.SMALL}
+                      onClick={toggle}
+                    />
+                  </Container>
+                  <Collapse keepChildrenMounted={false} isOpen={showInputs}>
+                    <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
+                      <Text
+                        color={Color.GREY_800}
+                        font={{ size: 'normal', weight: 'bold' }}
+                        margin={{ bottom: 'medium' }}
+                      >
+                        {getString('common.infrastructureInputs')}
+                      </Text>
+                      <StepWidget<Infrastructure>
+                        key={`${environmentIdentifier}_${identifier}`}
+                        factory={factory}
+                        template={infrastructureInputs.spec}
+                        initialValues={{
+                          ...(values.infrastructureInputs?.[environmentIdentifier]?.[identifier]?.spec || {}),
+                          environmentRef: environmentIdentifier,
+                          infrastructureRef: identifier
+                        }}
+                        allowableTypes={allowableTypes}
+                        allValues={{
+                          environmentRef: environmentIdentifier,
+                          infrastructureRef: identifier
+                        }}
+                        type={
+                          (infraDefinitionTypeMapping[infrastructureInputs.type as StepType] ||
+                            infrastructureInputs?.type) as StepType
+                        }
+                        path={`infrastructureInputs.['${environmentIdentifier}'].${identifier}.spec`}
+                        readonly={readonly || isPropagating}
+                        stepViewType={StepViewType.TemplateUsage}
+                        customStepProps={{
+                          // serviceRef: deploymentStage?.service?.serviceRef,
+                          ...getCustomStepProps(infrastructureInputs.type, getString),
+                          environmentRef: environmentIdentifier,
+                          infrastructureRef: identifier
+                        }}
+                      />
+                    </Container>
+                  </Collapse>
+                </>
+              ) : null}
+            </Card>
+          </div>
+        )
+      }}
+    </Draggable>
   )
 }

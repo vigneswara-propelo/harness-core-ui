@@ -146,7 +146,6 @@ export default function DeployInfrastructureEntityInputStep({
     }),
     lazyInfrastructure
   })
-
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
     if (!isNil(infrastructuresList)) {

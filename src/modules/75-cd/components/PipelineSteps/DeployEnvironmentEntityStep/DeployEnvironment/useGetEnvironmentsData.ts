@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEqual, isNil } from 'lodash-es'
 
@@ -69,6 +69,9 @@ export function useGetEnvironmentsData({
   if (envGroupScope !== Scope.PROJECT) {
     envIdentifiers = envIdentifiers.map(envId => `${envGroupScope}.${envId}`)
   }
+
+  const sortedEnvIdentifiers = useMemo(() => [...envIdentifiers].sort(), [envIdentifiers])
+
   const {
     data: environmentsListResponse,
     error: environmentsListError,
@@ -96,10 +99,12 @@ export function useGetEnvironmentsData({
       projectIdentifier
     },
     body: {
-      ...(envIdentifiers ? { envIdentifiers } : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
+      ...(envIdentifiers
+        ? { envIdentifiers: sortedEnvIdentifiers }
+        : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
       serviceIdentifiers
     },
-    lazy: !(envGroupIdentifier || envIdentifiers.length)
+    lazy: !(envGroupIdentifier || sortedEnvIdentifiers.length)
   })
 
   const loading = loadingEnvironmentsList || loadingEnvironmentsData
@@ -179,8 +184,80 @@ export function useGetEnvironmentsData({
           }
         })
       }
-      setEnvironmentsList(_environmentsList)
-      setEnvironmentsData(_environmentsData)
+
+      if (!isEqual(_environmentsList, environmentsList)) {
+        setEnvironmentsList(_environmentsList)
+      }
+
+      _environmentsData.sort((envData1, envData2) => {
+        const id1 = envData1.environment.identifier
+        const id2 = envData2.environment.identifier
+
+        const index1 = envIdentifiers.indexOf(id1)
+        const index2 = envIdentifiers.indexOf(id2)
+
+        return index1 - index2
+      })
+      if (!isEqual(_environmentsData, environmentsData)) {
+        setEnvironmentsData(_environmentsData)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    loading,
+    environmentsListResponse?.data,
+    environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
+    sortedEnvIdentifiers
+  ])
+
+  useEffect(() => {
+    if (!loading) {
+      let _environmentsData: EnvironmentData[] = []
+      const environmentsAndServiceOverridesInResponse = defaultTo(
+        environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
+        []
+      )
+
+      const yamlMetadataList = environmentsAndServiceOverridesInResponse.map(environmentInResponse => {
+        return {
+          environmentIdentifier: environmentInResponse.envRef,
+          environmentYaml: environmentInResponse.envYaml,
+          environmentRuntimeTemplateYaml: environmentInResponse.envRuntimeInputYaml,
+          serviceOverrideList: environmentInResponse.servicesOverrides
+        }
+      })
+
+      if (yamlMetadataList?.length) {
+        _environmentsData = yamlMetadataList.map(row => {
+          const environmentYaml = defaultTo(row.environmentYaml, '{}')
+          const environment = yamlParse<Pick<EnvironmentData, 'environment'>>(environmentYaml).environment
+          environment.yaml = environmentYaml
+          const environmentInputs = yamlParse<Pick<EnvironmentData, 'environmentInputs'>>(
+            defaultTo(row.environmentRuntimeTemplateYaml, '{}')
+          ).environmentInputs
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const serviceOverrideInputs: Record<string, any> = {}
+
+          row.serviceOverrideList?.forEach(serviceOverrideInList => {
+            const serviceOverridesYamlValue = yamlParse<Pick<EnvironmentData, 'serviceOverrideInputs'>>(
+              defaultTo(serviceOverrideInList.serviceOverridesYaml, '{}')
+            ).serviceOverrideInputs
+
+            if (!isNil(serviceOverridesYamlValue)) {
+              serviceOverrideInputs[serviceOverrideInList.serviceRef as string] = serviceOverridesYamlValue
+            }
+          })
+
+          return {
+            environment,
+            environmentInputs,
+            serviceOverrideInputs: {
+              [getScopedValueFromDTO(environment)]: serviceOverrideInputs
+            }
+          }
+        })
+      }
 
       const environmentListIdentifiers = _environmentsData.map(envInList =>
         getScopedValueFromDTO(envInList.environment)
@@ -188,11 +265,13 @@ export function useGetEnvironmentsData({
       const _nonExistingEnvironmentIdentifiers = envIdentifiers.filter(
         envInList => environmentListIdentifiers.indexOf(envInList) === -1
       )
-      if (!isEqual(_nonExistingEnvironmentIdentifiers, nonExistingEnvironmentIdentifiers)) {
+      if (
+        !isEqual(_nonExistingEnvironmentIdentifiers, nonExistingEnvironmentIdentifiers) &&
+        _environmentsData.length > 0
+      ) {
         setNonExistingEnvironmentIdentifiers(_nonExistingEnvironmentIdentifiers)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     loading,
     environmentsListResponse?.data,

@@ -33,7 +33,6 @@ import {
   isMultiTypeFixed,
   isMultiTypeRuntime,
   isValueExpression,
-  isValueFixed,
   isValueRuntimeInput
 } from '@common/utils/utils'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -42,7 +41,6 @@ import { getScopedValueFromDTO } from '@common/components/EntityReference/Entity
 
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { isDynamicProvisioningRestricted } from '@pipeline/utils/stageHelpers'
-import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 
@@ -66,6 +64,7 @@ import {
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 import { DeployProvisioner } from '../DeployProvisioner/DeployProvisioner'
 import EnvironmentSelection from './EnvironmentSelection'
+import { getAllFixedEnvironments, getSelectedEnvironmentsWhenPropagating } from '../utils/utils'
 import css from './DeployEnvironment.module.scss'
 
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -80,32 +79,6 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   canPropagateFromStage?: boolean
   previousStages?: StageElementWrapperConfig[]
   selectedPropagatedState?: SelectOption | string
-}
-
-function getSelectedEnvironmentsWhenPropagating(
-  value?: string,
-  previousStages?: StageElementWrapperConfig[]
-): string[] {
-  const prevEnvId = (
-    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
-      ?.stage as DeploymentStageElementConfig
-  )?.spec?.environment?.environmentRef
-  return prevEnvId && isValueFixed(prevEnvId) ? [prevEnvId] : []
-}
-
-export function getAllFixedEnvironments(
-  data: DeployEnvironmentEntityFormState,
-  previousStages?: StageElementWrapperConfig[]
-): string[] {
-  if (data.propagateFrom?.value) {
-    return getSelectedEnvironmentsWhenPropagating(data.propagateFrom?.value as string, previousStages)
-  } else if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
-    return [data.environment as string]
-  } else if (data.environments && Array.isArray(data.environments)) {
-    return data.environments.map(environment => environment.value as string)
-  }
-
-  return []
 }
 
 export default function DeployEnvironment({
@@ -464,6 +437,7 @@ export default function DeployEnvironment({
             deploymentType={deploymentType}
             customDeploymentRef={customDeploymentRef}
             gitOpsEnabled={gitOpsEnabled}
+            setSelectedEnvironments={setSelectedEnvironments}
           />
         )}
         {shouldShowDynamicProvisioning && (

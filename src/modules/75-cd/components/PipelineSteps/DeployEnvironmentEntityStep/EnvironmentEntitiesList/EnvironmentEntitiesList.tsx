@@ -5,13 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
 import { parse } from 'yaml'
-import { defaultTo } from 'lodash-es'
+import cx from 'classnames'
+import { clone, defaultTo, set } from 'lodash-es'
 
-import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
+import { AllowedTypes, ConfirmationDialog, ModalDialog, SelectOption, useToggleOpen } from '@harness/uicore'
 
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import { useFormikContext } from 'formik'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
@@ -23,6 +27,7 @@ import type {
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { EnvironmentEntityCard } from './EnvironmentEntityCard/EnvironmentEntityCard'
 
+import { getAllFixedEnvironments } from '../utils/utils'
 import css from './EnvironmentEntitiesList.module.scss'
 
 export interface EnvironmentEntitiesListProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -33,6 +38,7 @@ export interface EnvironmentEntitiesListProps extends Required<DeployEnvironment
   onEnvironmentEntityUpdate: () => void
   onRemoveEnvironmentFromList: (id: string) => void
   initialValues: DeployEnvironmentEntityFormState
+  setSelectedEnvironments?: Dispatch<SetStateAction<string[]>>
 }
 
 export default function EnvironmentEntitiesList({
@@ -47,9 +53,11 @@ export default function EnvironmentEntitiesList({
   deploymentType,
   customDeploymentRef,
   gitOpsEnabled,
-  initialValues
+  initialValues,
+  setSelectedEnvironments
 }: EnvironmentEntitiesListProps): React.ReactElement {
   const { getString } = useStrings()
+  const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
 
   const [environmentToEdit, setEnvironmentToEdit] = React.useState<EnvironmentData | null>(null)
   const [environmentToDelete, setEnvironmentToDelete] = React.useState<EnvironmentData | null>(null)
@@ -84,34 +92,72 @@ export default function EnvironmentEntitiesList({
     onEnvironmentEntityUpdate()
   }
 
+  function onDragEnd(result: DropResult): void {
+    if (!result.destination) return
+
+    const sourceIndex = result.source.index
+    const destinationIndex = result.destination.index
+    if (sourceIndex === destinationIndex) return
+
+    const environmentsList = clone(values.environments) as SelectOption[]
+    const itemToMove = environmentsList.splice(sourceIndex, 1)
+    environmentsList.splice(destinationIndex, 0, itemToMove[0])
+
+    setFieldValue('environments', environmentsList)
+
+    setSelectedEnvironments &&
+      setSelectedEnvironments(
+        getAllFixedEnvironments(
+          produce(values, draft => {
+            set(draft, `environments`, environmentsList)
+          })
+        )
+      )
+  }
+
   if (loading) {
     return <Spinner />
   }
 
   return (
     <>
-      <Layout.Vertical spacing={'medium'} margin={{ top: 'medium' }}>
-        {environmentsData.map(row => {
-          return (
-            <EnvironmentEntityCard
-              key={row.environment.identifier}
-              environment={row.environment}
-              environmentInputs={row.environmentInputs}
-              serviceOverrideInputs={row.serviceOverrideInputs}
-              onDeleteClick={setEnvironmentToDelete}
-              onEditClick={setEnvironmentToEdit}
-              allowableTypes={allowableTypes}
-              readonly={readonly}
-              stageIdentifier={stageIdentifier}
-              gitOpsEnabled={gitOpsEnabled}
-              deploymentType={deploymentType}
-              customDeploymentRef={customDeploymentRef}
-              initialValues={initialValues}
-              serviceIdentifiers={serviceIdentifiers}
-            />
-          )
-        })}
-      </Layout.Vertical>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId={'environmentDropper'}>
+          {(provided, snapshot) => {
+            return (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={cx(css.cardsContainer, { [css.draggingOver]: snapshot.isDraggingOver })}
+              >
+                {environmentsData.map((row, index: number) => {
+                  return (
+                    <EnvironmentEntityCard
+                      key={row.environment.identifier}
+                      environment={row.environment}
+                      environmentInputs={row.environmentInputs}
+                      serviceOverrideInputs={row.serviceOverrideInputs}
+                      onDeleteClick={setEnvironmentToDelete}
+                      onEditClick={setEnvironmentToEdit}
+                      allowableTypes={allowableTypes}
+                      readonly={readonly}
+                      stageIdentifier={stageIdentifier}
+                      gitOpsEnabled={gitOpsEnabled}
+                      deploymentType={deploymentType}
+                      customDeploymentRef={customDeploymentRef}
+                      initialValues={initialValues}
+                      serviceIdentifiers={serviceIdentifiers}
+                      envIndex={index}
+                      totalLength={environmentsData?.length}
+                    />
+                  )
+                })}
+                {provided.placeholder}
+              </div>
+            )
+          }}
+        </Droppable>
+      </DragDropContext>
 
       <ModalDialog
         isOpen={!!environmentToEdit}
