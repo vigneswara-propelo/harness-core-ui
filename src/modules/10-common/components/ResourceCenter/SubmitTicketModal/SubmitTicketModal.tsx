@@ -23,14 +23,7 @@ export const SubmitTicketModal = ({ isOpen, close }: SubmitTicketModalProps): JS
   const { getString } = useStrings()
 
   return (
-    <ModalDialog
-      isOpen={isOpen}
-      enforceFocus={false}
-      onClose={close}
-      className={css.submitTicketWizard}
-      height={830}
-      width={1200}
-    >
+    <ModalDialog isOpen={isOpen} enforceFocus={false} onClose={close} className={css.submitTicketWizard} width={1200}>
       <StepWizard
         initialStep={1}
         icon="pipeline-deploy"
