@@ -20,7 +20,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const runtimeValues = {
   identifier: 'Ssca_Enforcement_Step',
-  name: 'Ssca Enforcement Step',
+  name: 'SSCA Enforcement Step',
   timeout: RUNTIME_INPUT_VALUE,
   spec: {
     source: {
@@ -55,7 +55,7 @@ const runtimeValues = {
 
 const fixedValues = {
   identifier: 'Ssca_Enforcement_Step',
-  name: 'Ssca Enforcement Step',
+  name: 'SSCA Enforcement Step',
   timeout: '10s',
   spec: {
     source: {
@@ -88,7 +88,7 @@ const fixedValues = {
   }
 }
 
-describe('CI Ssca Enforcement Step', () => {
+describe('CI SSCA Enforcement Step', () => {
   beforeAll(() => {
     factory.registerStep(new CiSscaEnforcementStep())
   })

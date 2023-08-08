@@ -95,7 +95,7 @@ const fixedValues = {
   }
 }
 
-describe('CD Ssca Orchestration Step', () => {
+describe('CD SSCA Orchestration Step', () => {
   beforeAll(() => {
     factory.registerStep(new CdSscaOrchestrationStep())
   })

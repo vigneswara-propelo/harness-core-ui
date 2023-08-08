@@ -26,6 +26,7 @@ import { SecretRouteDestinations } from '@platform/secrets/RouteDestinations'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { DelegateRouteDestinations } from '@platform/delegates/RouteDestinations'
 import { VariableRouteDestinations } from '@platform/variables/RouteDestinations'
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { SSCACustomMicroFrontendProps } from './interfaces/SSCACustomMicroFrontendProps.types'
 import SSCASideNav from './components/SSCASideNav'
 
@@ -80,7 +81,7 @@ export default (
     >
       <ChildAppMounter<SSCACustomMicroFrontendProps>
         ChildApp={RemoteSSCAApp}
-        customHooks={{ useQueryParams, useUpdateQueryParams }}
+        customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
         customComponents={{ Duration }}
       />
     </RouteWithLayout>
