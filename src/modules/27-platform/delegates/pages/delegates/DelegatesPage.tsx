@@ -93,9 +93,8 @@ const DelegatesPage: React.FC = ({ children }) => {
         <Callout className={css.callout} intent="warning" icon={null}>
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
             <Text color={Color.BLACK}>
-              Harness will be deprecating the Helm 2 Binary by July 30th. Please reach out to our support team -&nbsp;
-              <a href="mailto:support.harness.io">support.harness.io</a>
-              &nbsp;for any questions or concerns. For the formal notice, please see our&nbsp;
+              Harness will be removing the Kustomize binary 3.5.4 from the delegate on September 30, 2023. We will be
+              leveraging the kubectl client to handle Kustomize deployments. For more details please see the&nbsp;
               <a href="https://developer.harness.io" target="_blank" rel="noreferrer">
                 docs
               </a>
