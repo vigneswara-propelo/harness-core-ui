@@ -240,6 +240,15 @@ module.exports = {
       base: `{getConfig("ccm/public-pricing/api/v1")}`
     }
   },
+  code: {
+    output: 'src/services/code/index.tsx',
+    file: 'src/services/code/swagger.yaml',
+    transformer: 'scripts/swagger-transform.js',
+    customImport: `import { getConfig } from "../config";`,
+    customProps: {
+      base: `{getConfig("code/api/v1")}`
+    }
+  },
   pm: {
     output: 'src/services/pm/index.tsx',
     file: 'src/services/pm/swagger.json',
