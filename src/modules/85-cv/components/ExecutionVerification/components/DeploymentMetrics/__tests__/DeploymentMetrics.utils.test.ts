@@ -5,8 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { transformMetricsExpectedResult } from './DeploymentMetrics.mock'
-import { transformMetricData } from '../DeploymentMetrics.utils'
+import {
+  dateDetailsMock,
+  expetedPointsData,
+  metricDataMock,
+  selectedDateFormatMock,
+  transformMetricsExpectedResult
+} from './DeploymentMetrics.mock'
+import { getIsDataOccursWithinGivenDuration, transformMetricData } from '../DeploymentMetrics.utils'
 import {
   InputData,
   startTimestampDataMock
@@ -14,12 +20,22 @@ import {
 
 describe('Unit tests for DeploymentMetrics utils', () => {
   test('Ensure transformMetricData works correctly', async () => {
-    const selectedDataFormat = { label: 'Raw', value: 'raw' }
     const metricData = {
       content: InputData
     }
-    expect(transformMetricData(selectedDataFormat, startTimestampDataMock, metricData)).toEqual(
+    expect(transformMetricData(selectedDateFormatMock, startTimestampDataMock, metricData)).toEqual(
       transformMetricsExpectedResult
     )
+  })
+
+  test('Should check only points within the given duration alone must be included for the metrics chart', async () => {
+    expect(transformMetricData(selectedDateFormatMock, dateDetailsMock, metricDataMock)).toEqual(expetedPointsData)
+  })
+
+  test('should check getIsDataOccursWithinGivenDuration return true when the timestamp value of the point occured within the given duration', () => {
+    expect(getIsDataOccursWithinGivenDuration(1, 30000)).toBe(true)
+  })
+  test('should check getIsDataOccursWithinGivenDuration return false when the timestamp value of the point occured beyond the given duration', () => {
+    expect(getIsDataOccursWithinGivenDuration(1, 120000)).toBe(false)
   })
 })

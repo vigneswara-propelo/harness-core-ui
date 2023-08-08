@@ -5,7 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { RestResponseTransactionMetricInfoSummaryPageDTO, VerificationOverview } from 'services/cv'
+import type {
+  PageMetricsAnalysis,
+  RestResponseTransactionMetricInfoSummaryPageDTO,
+  VerificationOverview
+} from 'services/cv'
 
 export const transactionMetricInfoSummary: RestResponseTransactionMetricInfoSummaryPageDTO = {
   metaData: {},
@@ -339,3 +343,493 @@ export const overviewDataMock: VerificationOverview = {
   controlDataStartTimestamp: 1687172100000,
   testDataStartTimestamp: 1687172820000
 }
+
+export const metricDataMock: PageMetricsAnalysis = {
+  totalPages: 1,
+  totalItems: 1,
+  pageItemCount: 1,
+  pageSize: 10,
+  content: [
+    {
+      metricIdentifier: 'q1',
+      metricName: 'q1',
+      transactionGroup: 'g1',
+      metricType: 'PERFORMANCE_THROUGHPUT',
+      healthSource: {
+        identifier: 'abc_azure_metrics/azure_metrics_verify_step',
+        name: 'azure metrics verify step',
+        type: 'AzureMetrics',
+        providerType: 'METRICS'
+      },
+      thresholds: [
+        {
+          id: 'aaa',
+          thresholdType: 'IGNORE',
+          isUserDefined: false,
+          action: 'Ignore',
+          criteria: {
+            measurementType: 'ratio',
+            lessThanThreshold: 10
+          }
+        }
+      ],
+      analysisResult: 'NO_ANALYSIS',
+      testDataNodes: [
+        {
+          nodeIdentifier: 'bbb',
+          analysisResult: 'NO_ANALYSIS',
+          analysisReason: 'NO_CONTROL_DATA',
+          controlNodeIdentifier: 'bbb',
+          appliedThresholds: ['aaa'],
+          controlData: [
+            {
+              timestampInMillis: 1691065800000,
+              value: 11.786666666666667
+            },
+            {
+              timestampInMillis: 1691066040000,
+              value: 11.856666666666667
+            },
+            {
+              timestampInMillis: 1691065860000,
+              value: 11.853333333333333
+            },
+            {
+              timestampInMillis: 1691065920000,
+              value: 11.75
+            },
+            {
+              timestampInMillis: 1691065980000,
+              value: 12.133333333333333
+            },
+            {
+              timestampInMillis: 1691066280000,
+              value: 12.3
+            },
+            {
+              timestampInMillis: 1691066100000,
+              value: 12.116666666666667
+            },
+            {
+              timestampInMillis: 1691066340000,
+              value: 12.093333333333332
+            },
+            {
+              timestampInMillis: 1691066160000,
+              value: 12.043333333333333
+            },
+            {
+              timestampInMillis: 1691066220000,
+              value: 12.04
+            }
+          ],
+          testData: [
+            {
+              timestampInMillis: 1691066700000,
+              value: 12.26
+            },
+            {
+              timestampInMillis: 1691066940000,
+              value: 12.173333333333334
+            },
+            {
+              timestampInMillis: 1691067000000,
+              value: 12.103333333333333
+            }
+          ],
+          normalisedControlData: [
+            {
+              timestampInMillis: 1691066400000,
+              value: 12.093333333333332
+            }
+          ],
+          normalisedTestData: [
+            {
+              timestampInMillis: 1691067060000,
+              value: 12.103333333333333
+            }
+          ]
+        },
+        {
+          nodeIdentifier: 'ccc',
+          analysisResult: 'NO_ANALYSIS',
+          analysisReason: 'NO_CONTROL_DATA',
+          controlNodeIdentifier: 'ccc',
+          appliedThresholds: ['aaa'],
+          controlData: [
+            {
+              timestampInMillis: 1691065800000,
+              value: 14.683333333333334
+            },
+            {
+              timestampInMillis: 1691066040000,
+              value: 15.823333333333336
+            },
+            {
+              timestampInMillis: 1691065860000,
+              value: 15.083333333333334
+            },
+            {
+              timestampInMillis: 1691065920000,
+              value: 15.126666666666663
+            },
+            {
+              timestampInMillis: 1691065980000,
+              value: 15.01
+            },
+            {
+              timestampInMillis: 1691066280000,
+              value: 15.186666666666664
+            },
+            {
+              timestampInMillis: 1691066100000,
+              value: 14.843333333333334
+            },
+            {
+              timestampInMillis: 1691066340000,
+              value: 15.336666666666664
+            },
+            {
+              timestampInMillis: 1691066160000,
+              value: 14.923333333333336
+            },
+            {
+              timestampInMillis: 1691066220000,
+              value: 14.666666666666666
+            }
+          ],
+          testData: [
+            {
+              timestampInMillis: 1691066520000,
+              value: 15.396666666666667
+            },
+            {
+              timestampInMillis: 1691066580000,
+              value: 14.780000000000001
+            },
+            {
+              timestampInMillis: 1691066640000,
+              value: 14.99
+            },
+            {
+              timestampInMillis: 1691066460000,
+              value: 14.719999999999999
+            },
+            {
+              timestampInMillis: 1691066760000,
+              value: 14.393333333333334
+            },
+            {
+              timestampInMillis: 1691066820000,
+              value: 14.730000000000002
+            },
+            {
+              timestampInMillis: 1691066880000,
+              value: 14.806666666666667
+            },
+            {
+              timestampInMillis: 1691066700000,
+              value: 14.806666666666667
+            },
+            {
+              timestampInMillis: 1691066940000,
+              value: 15.246666666666666
+            },
+            {
+              timestampInMillis: 1691067000000,
+              value: 14.646666666666667
+            }
+          ],
+          normalisedControlData: [
+            {
+              timestampInMillis: 1691065890000,
+              value: 14.964444444444444
+            },
+            {
+              timestampInMillis: 1691066070000,
+              value: 15.225555555555557
+            },
+            {
+              timestampInMillis: 1691066250000,
+              value: 14.925555555555556
+            },
+            {
+              timestampInMillis: 1691066400000,
+              value: 15.336666666666664
+            }
+          ],
+          normalisedTestData: [
+            {
+              timestampInMillis: 1691066550000,
+              value: 14.965555555555556
+            },
+            {
+              timestampInMillis: 1691066730000,
+              value: 14.729999999999999
+            },
+            {
+              timestampInMillis: 1691066910000,
+              value: 14.927777777777777
+            },
+            {
+              timestampInMillis: 1691067060000,
+              value: 14.646666666666667
+            }
+          ]
+        },
+        {
+          nodeIdentifier: 'ddd',
+          analysisResult: 'NO_ANALYSIS',
+          analysisReason: 'NO_CONTROL_DATA',
+          controlNodeIdentifier: 'ccc',
+          appliedThresholds: ['aaa'],
+          controlData: [
+            {
+              timestampInMillis: 1691065800000,
+              value: 14.683333333333334
+            },
+            {
+              timestampInMillis: 1691066040000,
+              value: 15.823333333333336
+            },
+            {
+              timestampInMillis: 1691065860000,
+              value: 15.083333333333334
+            },
+            {
+              timestampInMillis: 1691065920000,
+              value: 15.126666666666663
+            },
+            {
+              timestampInMillis: 1691065980000,
+              value: 15.01
+            },
+            {
+              timestampInMillis: 1691066280000,
+              value: 15.186666666666664
+            },
+            {
+              timestampInMillis: 1691066100000,
+              value: 14.843333333333334
+            },
+            {
+              timestampInMillis: 1691066340000,
+              value: 15.336666666666664
+            },
+            {
+              timestampInMillis: 1691066160000,
+              value: 14.923333333333336
+            },
+            {
+              timestampInMillis: 1691066220000,
+              value: 14.666666666666666
+            }
+          ],
+          testData: [
+            {
+              timestampInMillis: 1691066520000,
+              value: 14.563333333333336
+            },
+            {
+              timestampInMillis: 1691066580000,
+              value: 14.066666666666666
+            },
+            {
+              timestampInMillis: 1691066640000,
+              value: 13.716666666666667
+            },
+            {
+              timestampInMillis: 1691066460000,
+              value: 10.986666666666668
+            },
+            {
+              timestampInMillis: 1691066760000,
+              value: 13.81
+            },
+            {
+              timestampInMillis: 1691066820000,
+              value: 13.873333333333337
+            },
+            {
+              timestampInMillis: 1691066880000,
+              value: 14.116666666666665
+            },
+            {
+              timestampInMillis: 1691066700000,
+              value: 13.75
+            },
+            {
+              timestampInMillis: 1691066940000,
+              value: 13.783333333333333
+            },
+            {
+              timestampInMillis: 1691067000000,
+              value: 14.31
+            }
+          ],
+          normalisedControlData: [
+            {
+              timestampInMillis: 1691065890000,
+              value: 14.964444444444444
+            },
+            {
+              timestampInMillis: 1691066070000,
+              value: 15.225555555555557
+            },
+            {
+              timestampInMillis: 1691066250000,
+              value: 14.925555555555556
+            },
+            {
+              timestampInMillis: 1691066400000,
+              value: 15.336666666666664
+            }
+          ],
+          normalisedTestData: [
+            {
+              timestampInMillis: 1691066550000,
+              value: 13.205555555555557
+            },
+            {
+              timestampInMillis: 1691066730000,
+              value: 13.75888888888889
+            },
+            {
+              timestampInMillis: 1691066910000,
+              value: 13.924444444444445
+            },
+            {
+              timestampInMillis: 1691067060000,
+              value: 14.31
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  pageIndex: 0,
+  empty: false
+}
+
+export const dateDetailsMock = {
+  controlDataStartTimestamp: 0,
+  testDataStartTimestamp: 1691066460000,
+  durationInMinutes: 10
+}
+
+export const selectedDateFormatMock = {
+  label: 'Raw',
+  value: 'raw'
+}
+
+export const expetedPointsData = [
+  {
+    controlData: [
+      {
+        analysisReason: 'NO_CONTROL_DATA',
+        appliedThresholds: undefined,
+        initialXvalue: 1691065800000,
+        name: 'bbb',
+        points: [],
+        risk: 'NO_ANALYSIS'
+      },
+      {
+        analysisReason: 'NO_CONTROL_DATA',
+        appliedThresholds: undefined,
+        initialXvalue: 1691065800000,
+        name: 'ccc',
+        points: [],
+        risk: 'NO_ANALYSIS'
+      },
+      {
+        analysisReason: 'NO_CONTROL_DATA',
+        appliedThresholds: undefined,
+        initialXvalue: 1691065800000,
+        name: 'ccc',
+        points: [],
+        risk: 'NO_ANALYSIS'
+      }
+    ],
+    deeplinkURL: undefined,
+    healthSource: {
+      identifier: 'abc_azure_metrics/azure_metrics_verify_step',
+      name: 'azure metrics verify step',
+      providerType: 'METRICS',
+      type: 'AzureMetrics'
+    },
+    metricName: 'q1',
+    nodeRiskCount: {
+      anomalousNodeCount: 0,
+      nodeRiskCounts: [
+        { count: 0, displayName: 'Unhealthy', risk: 'UNHEALTHY' },
+        { count: 0, displayName: 'Warning', risk: 'WARNING' },
+        { count: 0, displayName: 'Healthy', risk: 'HEALTHY' }
+      ],
+      totalNodeCount: 3
+    },
+    risk: 'NO_ANALYSIS',
+    selectedDataFormat: { label: 'Raw', value: 'raw' },
+    testData: [
+      {
+        analysisReason: 'NO_CONTROL_DATA',
+        appliedThresholds: ['aaa'],
+        initialXvalue: 1691066700000,
+        name: 'bbb',
+        points: [
+          { x: 240000, y: 12.26 },
+          { x: 480000, y: 12.173333333333334 },
+          { x: 540000, y: 12.103333333333333 }
+        ],
+        risk: 'NO_ANALYSIS'
+      },
+      {
+        analysisReason: 'NO_CONTROL_DATA',
+        appliedThresholds: ['aaa'],
+        initialXvalue: 1691066460000,
+        name: 'ccc',
+        points: [
+          { x: 0, y: 14.719999999999999 },
+          { x: 60000, y: 15.396666666666667 },
+          { x: 120000, y: 14.780000000000001 },
+          { x: 180000, y: 14.99 },
+          { x: 240000, y: 14.806666666666667 },
+          { x: 300000, y: 14.393333333333334 },
+          { x: 360000, y: 14.730000000000002 },
+          { x: 420000, y: 14.806666666666667 },
+          { x: 480000, y: 15.246666666666666 },
+          { x: 540000, y: 14.646666666666667 }
+        ],
+        risk: 'NO_ANALYSIS'
+      },
+      {
+        analysisReason: 'NO_CONTROL_DATA',
+        appliedThresholds: ['aaa'],
+        initialXvalue: 1691066460000,
+        name: 'ddd',
+        points: [
+          { x: 0, y: 10.986666666666668 },
+          { x: 60000, y: 14.563333333333336 },
+          { x: 120000, y: 14.066666666666666 },
+          { x: 180000, y: 13.716666666666667 },
+          { x: 240000, y: 13.75 },
+          { x: 300000, y: 13.81 },
+          { x: 360000, y: 13.873333333333337 },
+          { x: 420000, y: 14.116666666666665 },
+          { x: 480000, y: 13.783333333333333 },
+          { x: 540000, y: 14.31 }
+        ],
+        risk: 'NO_ANALYSIS'
+      }
+    ],
+    thresholds: [
+      {
+        action: 'Ignore',
+        criteria: { lessThanThreshold: 10, measurementType: 'ratio' },
+        id: 'aaa',
+        isUserDefined: false,
+        thresholdType: 'IGNORE'
+      }
+    ],
+    transactionName: 'g1'
+  }
+]

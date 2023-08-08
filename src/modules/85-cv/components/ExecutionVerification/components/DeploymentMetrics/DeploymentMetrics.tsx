@@ -94,13 +94,16 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const { getString } = useStrings()
   const pageParams = useQueryParams<ExecutionQueryParams>()
 
-  const isSimpleVerification = overviewData?.spec?.analysisType === VerificationJobType.SIMPLE
+  const { controlDataStartTimestamp = 0, testDataStartTimestamp = 0, spec: overviewSpec = {} } = overviewData || {}
+
+  const isSimpleVerification = overviewSpec?.analysisType === VerificationJobType.SIMPLE
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const startTimestampData: StartTimestampDataType = {
-    controlDataStartTimestamp: overviewData?.controlDataStartTimestamp || 0,
-    testDataStartTimestamp: overviewData?.testDataStartTimestamp || 0
+    controlDataStartTimestamp,
+    testDataStartTimestamp,
+    durationInMinutes: overviewSpec.durationInMinutes || 0
   }
 
   const [anomalousMetricsFilterChecked, setAnomalousMetricsFilterChecked] = useState(

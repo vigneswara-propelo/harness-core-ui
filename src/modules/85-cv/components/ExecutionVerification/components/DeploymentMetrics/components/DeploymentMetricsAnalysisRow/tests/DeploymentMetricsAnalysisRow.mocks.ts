@@ -352,5 +352,6 @@ export const expectedChartConfigData = {
 
 export const startTimestampDataMock = {
   controlDataStartTimestamp: 1642941960000,
-  testDataStartTimestamp: 1642942080000
+  testDataStartTimestamp: 1642942080000,
+  durationInMinutes: 10
 }
