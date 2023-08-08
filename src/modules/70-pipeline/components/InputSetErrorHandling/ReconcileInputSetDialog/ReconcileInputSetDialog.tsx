@@ -32,6 +32,7 @@ interface ReconcileInputSetDialogProps {
   refetchYamlDiff: () => void
   updateLoading: boolean
   onClose: () => void
+  hideReconcileDialog: () => void
   isOverlayInputSet?: boolean
   handleSubmit: (inputSetObjWithGitInfo: InputSetDTO, storeMetadata?: StoreMetadata) => Promise<void>
   yamlDiffGitDetails?: EntityGitDetails
@@ -46,6 +47,7 @@ export function ReconcileInputSetDialog({
   refetchYamlDiff,
   updateLoading,
   onClose,
+  hideReconcileDialog,
   isOverlayInputSet,
   handleSubmit,
   yamlDiffGitDetails
@@ -81,7 +83,7 @@ export function ReconcileInputSetDialog({
     handleSubmit(isOverlayInputSet ? get(updatedObj, 'overlayInputSet', {}) : get(updatedObj, 'inputSet', {}), {
       ...storeMetadata
     })
-    if (isGitSyncEnabled || storeMetadata.storeType === StoreType.REMOTE) onClose()
+    if (isGitSyncEnabled || storeMetadata.storeType === StoreType.REMOTE) hideReconcileDialog()
   }
 
   return (

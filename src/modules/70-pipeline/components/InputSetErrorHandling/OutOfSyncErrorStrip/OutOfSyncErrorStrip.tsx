@@ -189,7 +189,8 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     hideForm,
     inpSetGitDetails: get(yamlDiffResponse, 'data.gitDetails', ''),
     onReconcile,
-    refetchInputSets
+    refetchInputSets,
+    closeReconcileMenu
   })
 
   const { openDialog: openDeleteInputSetModal, closeDialog: closeDeleteInputSetModal } = useConfirmationDialog({
@@ -326,6 +327,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           refetchYamlDiff={refetchYamlDiff}
           updateLoading={updateInputSetLoading || updateOverlayInputSetLoading}
           onClose={onClose}
+          hideReconcileDialog={hideReconcileDialog}
           isOverlayInputSet={isOverlayInputSet}
           handleSubmit={handleSubmit}
           yamlDiffGitDetails={get(yamlDiffResponse, 'data.gitDetails', '')}

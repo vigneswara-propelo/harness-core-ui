@@ -66,6 +66,7 @@ interface InputSetInfo {
   inpSetGitDetails?: EntityGitDetails
   onReconcile?: (identifier: string) => void
   refetchInputSets?: () => void
+  closeReconcileMenu?: () => void
 }
 
 export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseSaveInputSetOrOverlayInpSetReturnType {
@@ -79,7 +80,8 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
     hideForm,
     inpSetGitDetails,
     onReconcile,
-    refetchInputSets
+    refetchInputSets,
+    closeReconcileMenu
   } = inputSetInfo
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -109,6 +111,7 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
     }
     refetch?.()
     hideForm?.()
+    closeReconcileMenu?.()
     refetchInputSets?.()
   }
 
