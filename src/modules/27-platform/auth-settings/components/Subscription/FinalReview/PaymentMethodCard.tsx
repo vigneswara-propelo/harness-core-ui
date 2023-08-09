@@ -17,9 +17,15 @@ interface PaymentMethodCardProps {
   paymentMethodInfo: PaymentMethodProps
   setView?: (view: SubscribeViews) => void
   module: Module
+  fromPaymentMethodPage?: boolean
 }
 
-const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo, setView, module }) => {
+const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
+  paymentMethodInfo,
+  setView,
+  module,
+  fromPaymentMethodPage
+}) => {
   const { getString } = useStrings()
   const { last4digits, cardType, expireDate } = paymentMethodInfo
   const paymentDescr = `${cardType} ending in ${last4digits}`
@@ -32,18 +38,20 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo
           <Text font={{ variation: FontVariation.H5 }}>
             {getString('platform.authSettings.billingInfo.paymentMethod')}
           </Text>
-          <Button
-            variation={ButtonVariation.LINK}
-            onClick={() => {
-              trackEvent(CreditCard.CalculatorReviewStepEditPayment, {
-                category: Category.CREDIT_CARD,
-                module
-              })
-              setView?.(SubscribeViews.PAYMENT_METHOD)
-            }}
-          >
-            {getString('edit')}
-          </Button>
+          {!fromPaymentMethodPage ? (
+            <Button
+              variation={ButtonVariation.LINK}
+              onClick={() => {
+                trackEvent(CreditCard.CalculatorReviewStepEditPayment, {
+                  category: Category.CREDIT_CARD,
+                  module
+                })
+                setView?.(SubscribeViews.PAYMENT_METHOD)
+              }}
+            >
+              {getString('edit')}
+            </Button>
+          ) : null}
         </Layout.Horizontal>
         <Layout.Vertical spacing="xsmall">
           <Text>{paymentDescr}</Text>
