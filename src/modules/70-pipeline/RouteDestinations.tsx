@@ -449,7 +449,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps })}
         pageName={pipelineStudioPageName}
@@ -477,7 +476,6 @@ export function PipelineRouteDestinations({
       <RouteWithLayout
         exact
         layout={EmptyLayout}
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toPipelineLogs({
           ...accountPathProps,
@@ -536,7 +534,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toInputSetList({ ...accountPathProps, ...pipelinePathProps })}
         pageName={PAGE_NAME.InputSetList}
@@ -556,7 +553,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toInputSetForm({ ...accountPathProps, ...inputSetFormPathProps })}
         pageName={PAGE_NAME.EnhancedInputSetForm}
@@ -574,7 +570,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toInputSetFormV1({ ...accountPathProps, ...inputSetFormPathProps })}
         pageName={PAGE_NAME.InputSetFormV1}
@@ -611,7 +606,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionPipelineView({ ...accountPathProps, ...executionPathProps })}
@@ -639,7 +633,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionPolicyEvaluationsView({
@@ -670,7 +663,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionSecurityView({
@@ -699,7 +691,6 @@ export function PipelineRouteDestinations({
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionErrorTrackingView({
@@ -726,7 +717,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionInputsView({ ...accountPathProps, ...executionPathProps })}
@@ -754,7 +744,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionArtifactsView({
@@ -785,7 +774,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionTestsView({
@@ -800,7 +788,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toExecutionCommitsView({
@@ -847,7 +834,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}
         path={routes.toResilienceView({
@@ -877,7 +863,6 @@ export function PipelineRouteDestinations({
       </RouteWithLayout>
       <RouteWithLayout
         exact
-        licenseRedirectData={licenseRedirectData}
         sidebarProps={ProjectDetailsSideNavProps}
         path={routes.toPipelineDeploymentList({
           ...accountPathProps,

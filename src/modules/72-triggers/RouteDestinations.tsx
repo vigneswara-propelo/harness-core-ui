@@ -44,7 +44,6 @@ export const TriggersRouteDestinations: React.FC<{
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTriggersPage({ ...accountPathProps, ...pipelinePathProps })}
       pageName={PAGE_NAME.TriggersPage}
@@ -66,7 +65,6 @@ export const TriggersRouteDestinations: React.FC<{
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps })}
       pageName={PAGE_NAME.TriggerDetailPage}
@@ -77,7 +75,6 @@ export const TriggersRouteDestinations: React.FC<{
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTriggersActivityHistoryPage({ ...accountPathProps, ...triggerPathProps })}
       pageName={PAGE_NAME.TriggerActivityHistoryPage}
@@ -108,7 +105,6 @@ export const TriggersRouteDestinations: React.FC<{
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTriggersWizardPage({ ...accountPathProps, ...triggerPathProps })}
       pageName={PAGE_NAME.TriggersWizardPage}

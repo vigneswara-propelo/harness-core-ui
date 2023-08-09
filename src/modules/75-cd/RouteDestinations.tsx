@@ -354,7 +354,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toServices({ ...projectPathProps })}
       pageName={PAGE_NAME.Services}
@@ -363,7 +362,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toServices({ ...orgPathProps })}
       pageName={PAGE_NAME.Services}
@@ -372,7 +370,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toServices({ ...accountPathProps, accountRoutePlacement: 'settings' })}
       pageName={PAGE_NAME.Services}
@@ -381,7 +378,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={MainDashboardSideNavProps}
       path={routes.toServices({ ...accountPathProps, accountRoutePlacement: 'dashboard' })}
       pageName={PAGE_NAME.Services}
@@ -403,7 +399,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toServiceStudio({ ...projectPathProps, ...environmentPathProps, ...servicePathProps })}
       pageName={PAGE_NAME.ServiceDetails}
@@ -412,7 +407,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toServiceStudio({ ...orgPathProps, ...environmentPathProps, ...servicePathProps })}
       pageName={PAGE_NAME.ServiceDetails}
@@ -421,7 +415,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toServiceStudio({
         ...accountPathProps,
@@ -435,7 +428,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={MainDashboardSideNavProps}
       path={routes.toServiceStudio({
         ...accountPathProps,
@@ -460,7 +452,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toEnvironment({ ...projectPathProps })}
       pageName={PAGE_NAME.Environments}
@@ -469,7 +460,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironment({ ...orgPathProps })}
       pageName={PAGE_NAME.Environments}
@@ -478,7 +468,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironment({ ...accountPathProps, accountRoutePlacement: 'settings' })}
       pageName={PAGE_NAME.Environments}
@@ -487,7 +476,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={MainDashboardSideNavProps}
       path={routes.toEnvironment({ ...accountPathProps, accountRoutePlacement: 'dashboard' })}
       pageName={PAGE_NAME.Environments}
@@ -507,7 +495,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toEnvironmentDetails({ ...projectPathProps, ...environmentPathProps })}
       pageName={PAGE_NAME.EnvironmentDetails}
@@ -516,7 +503,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironmentDetails({ ...orgPathProps, ...environmentPathProps })}
       pageName={PAGE_NAME.EnvironmentDetails}
@@ -525,7 +511,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironmentDetails({
         ...accountPathProps,
@@ -538,7 +523,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={MainDashboardSideNavProps}
       path={routes.toEnvironmentDetails({
         ...accountPathProps,
@@ -562,7 +546,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toEnvironmentGroups({ ...projectPathProps })}
       pageName={PAGE_NAME.EnvironmentGroups}
@@ -571,7 +554,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironmentGroups({ ...orgPathProps })}
       pageName={PAGE_NAME.EnvironmentGroups}
@@ -580,7 +562,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironmentGroups({ ...accountPathProps, accountRoutePlacement: 'settings' })}
       pageName={PAGE_NAME.EnvironmentGroups}
@@ -589,7 +570,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={MainDashboardSideNavProps}
       path={routes.toEnvironmentGroups({ ...accountPathProps, accountRoutePlacement: 'dashboard' })}
       pageName={PAGE_NAME.EnvironmentGroups}
@@ -609,7 +589,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toEnvironmentGroupDetails({ ...projectPathProps, ...environmentGroupPathProps })}
       pageName={PAGE_NAME.EnvironmentGroupDetails}
@@ -618,7 +597,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironmentGroupDetails({ ...orgPathProps, ...environmentGroupPathProps })}
       pageName={PAGE_NAME.EnvironmentGroupDetails}
@@ -627,7 +605,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toEnvironmentGroupDetails({
         ...accountPathProps,
@@ -640,7 +617,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={MainDashboardSideNavProps}
       path={routes.toEnvironmentGroupDetails({
         ...accountPathProps,
@@ -664,7 +640,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={[routes.toServiceOverrides({ ...projectPathProps })]}
       pageName={PAGE_NAME.ServiceOverrides}
@@ -673,7 +648,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toServiceOverrides({ ...orgPathProps })}
       pageName={PAGE_NAME.ServiceOverrides}
@@ -682,7 +656,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={AccountSideNavProps}
       path={routes.toServiceOverrides({ ...accountPathProps, accountRoutePlacement: 'settings' })}
       pageName={PAGE_NAME.ServiceOverrides}
@@ -691,7 +664,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
-      licenseRedirectData={licenseRedirectData}
       sidebarProps={MainDashboardSideNavProps}
       path={routes.toServiceOverrides({ ...accountPathProps, accountRoutePlacement: 'dashboard' })}
       pageName={PAGE_NAME.ServiceOverrides}
