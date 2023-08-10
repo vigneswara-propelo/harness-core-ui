@@ -296,3 +296,25 @@ export const ETNavItem = () => {
     </li>
   )
 }
+
+export const SEINavItem = (): JSX.Element => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toSEI(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="sei-main" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            <String stringID="common.purpose.sei.continuous" />
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}

@@ -26,7 +26,8 @@ export enum ModuleName {
   ET = 'ET',
   DASHBOARDS = 'DASHBOARDS',
   IDPAdmin = 'IDPAdmin',
-  CET = 'CET'
+  CET = 'CET',
+  SEI = 'SEI'
 }
 
 export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
@@ -43,7 +44,8 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
   idp: ModuleName.IDP,
   dashboards: ModuleName.DASHBOARDS,
   'idp-admin': ModuleName.IDPAdmin,
-  cet: ModuleName.CET
+  cet: ModuleName.CET,
+  sei: ModuleName.SEI
 }
 
 export type Module =
@@ -62,3 +64,4 @@ export type Module =
   | 'dashboards'
   | 'idp-admin'
   | 'cet'
+  | 'sei'

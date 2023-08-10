@@ -230,6 +230,7 @@ export type ModuleNameMatch =
   | ':module(idp-admin)'
   | ':module(dashboards)'
   | ':module(cet)'
+  | ':module(sei)'
 
 export type Module = ModuleName | ModuleNameMatch
 

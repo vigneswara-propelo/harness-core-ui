@@ -114,6 +114,14 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     hasLicense: false,
     homePageUrl: '',
     color: 'green'
+  },
+  SEI: {
+    shouldVisible: true,
+    icon: 'sei-main',
+    label: 'common.purpose.sei.continuous',
+    hasLicense: false,
+    homePageUrl: '',
+    color: 'green'
   }
 }
 

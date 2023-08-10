@@ -11264,6 +11264,7 @@ export interface ModuleLicenseDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -53414,6 +53415,7 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export interface GetLicensesAndSummaryPathParams {

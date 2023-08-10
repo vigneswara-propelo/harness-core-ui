@@ -357,6 +357,12 @@ purpose:
     criticalEvent: Critical Event
     agentToken: Agent Token
     moduleSelectionSubHeading: Identify and fix errors faster with complete visibility into code level data using Harness Continuous Error Tracking.
+  sei:
+    collections: Collections
+    shortName: '{{ $$.common.module.sei }}'
+    continuous: Insights
+    fullName: Software Engineering Insights
+    descriptionOnly: 'Improve software quality, developer experience, and time to value by gaining actionable insights into software delivery, workflows, and systems.'
 trialCommingSoon: Trial - Coming soon
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
@@ -844,6 +850,7 @@ module:
   governance: POLICY ENGINE
   code: CODE
   cet: CET
+  sei: SEI
 templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
@@ -1584,3 +1591,4 @@ billingInfo:
     addressLength: Cannot be more than 100 characters
     cityLenght: Cannot be more than 20 characters
     zipCode: Cannot be more than 10 characters
+workflow: Workflow

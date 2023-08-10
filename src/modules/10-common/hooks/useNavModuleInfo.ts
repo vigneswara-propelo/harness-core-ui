@@ -30,6 +30,7 @@ export type NavModuleName =
   | ModuleName.SSCA
   | ModuleName.IDP
   | ModuleName.CET
+  | ModuleName.SEI
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -161,6 +162,13 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCET({ accountId }),
     featureFlagName: FeatureFlag.CET_ENABLED,
     color: '--cet-border'
+  },
+  [ModuleName.SEI]: {
+    icon: 'sei-main',
+    label: 'common.purpose.sei.fullName',
+    getHomePageUrl: (accountId: string) => routes.toSEI({ accountId }),
+    featureFlagName: FeatureFlag.SEI_ENABLED,
+    color: '--default-module-border'
   }
 }
 
@@ -181,7 +189,7 @@ export const moduleGroupConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA]
+    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCA, ModuleName.SEI]
   },
   {
     label: 'common.moduleList.optimizeProcesses',

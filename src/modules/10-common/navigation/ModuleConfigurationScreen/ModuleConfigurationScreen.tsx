@@ -10,10 +10,13 @@ import { Layout, Container, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Icon } from '@harness/icons'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { PageSpinner } from '@common/components'
 import { DEFAULT_MODULES_ORDER, NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { String } from 'framework/strings'
+import { ModuleName } from 'framework/types/ModuleName'
+import { FeatureFlag } from '@common/featureFlags'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
 import ModuleCarousel from './ModuleDetailsSection/ModuleCarousel'
 import useGetContentfulModules from './useGetContentfulModules'
@@ -79,15 +82,20 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
     }
   }, [activeModuleIndexFromProps])
 
+  const isSEIEnabled = useFeatureFlag(FeatureFlag.SEI_ENABLED)
   useEffect(() => {
     // Handle case when new module is added
     if (!orderedModules || orderedModules.length === 0) {
+      const modules = DEFAULT_MODULES_ORDER
+      if (isSEIEnabled) {
+        modules.push(ModuleName.SEI)
+      }
       setModuleConfigPreference({
         selectedModules,
-        orderedModules: DEFAULT_MODULES_ORDER
+        orderedModules: modules
       })
     }
-  }, [orderedModules])
+  }, [orderedModules, isSEIEnabled])
 
   const activeModule = orderedModules[activeModuleIndex]
   return (

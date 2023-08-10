@@ -166,6 +166,11 @@ declare module 'ffui/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'sei/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'errortracking/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp

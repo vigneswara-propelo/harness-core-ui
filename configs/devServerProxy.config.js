@@ -202,5 +202,9 @@ module.exports = {
     target: targetLocalHost
       ? process.env.SERVICE_DISCOVERY_URL || 'http://localhost:8888'
       : `${baseUrl}/servicediscovery`
+  },
+  '/sei': {
+    pathRewrite: { '^/sei': '' },
+    target: process.env.SEI_UI_URL || 'http://localhost:3000/'
   }
 }

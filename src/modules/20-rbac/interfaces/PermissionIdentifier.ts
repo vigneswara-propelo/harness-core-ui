@@ -170,6 +170,25 @@ export enum PermissionIdentifier {
   EDIT_CHAOS_SECURITY_GOVERNANCE = 'chaos_chaossecuritygovernance_edit',
   DELETE_CHAOS_SECURITY_GOVERNANCE = 'chaos_chaossecuritygovernance_delete',
 
+  // SEI Configuration Settings permissions
+  VIEW_SEI_CONFIGURATIONSETTINGS = 'sei_seiconfigurationsettings_view',
+  CREATE_SEI_CONFIGURATIONSETTINGS = 'sei_seiconfigurationsettings_create',
+  EDIT_SEI_CONFIGURATIONSETTINGS = 'sei_seiconfigurationsettings_edit',
+  DELETE_SEI_CONFIGURATIONSETTINGS = 'sei_seiconfigurationsettings_delete',
+  // SEI Pivot Point permissions
+  VIEW_SEI_COLLECTIONS = 'sei_seicollections_view',
+  CREATE_SEI_COLLECTIONS = 'sei_seicollections_create',
+  EDIT_SEI_COLLECTIONS = 'sei_seicollections_edit',
+  DELETE_SEI_COLLECTIONS = 'sei_seicollections_delete',
+  // SEI Insights permissions
+  VIEW_SEI_INSIGHTS = 'sei_seiinsights_view',
+  CREATE_SEI_INSIGHTS = 'sei_seiinsights_create',
+  EDIT_SEI_INSIGHTS = 'sei_seiinsights_edit',
+  DELETE_SEI_INSIGHTS = 'sei_seiinsights_delete',
+  // SEI Trellis Score permissions
+  VIEW_SEI_TRELLISSCORE = 'sei_seitrellisscore_view',
+  EDIT_SEI_TRELLISSCORE = 'sei_seitrellisscore_edit',
+
   // STO Permissions
   VIEW_STO_ISSUE = 'sto_issue_view',
   VIEW_STO_SCAN = 'sto_scan_view',

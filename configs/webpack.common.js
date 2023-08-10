@@ -40,6 +40,7 @@ const enableIACM = process.env.ENABLE_IACM !== 'false'
 const enableSSCA = process.env.ENABLE_SSCA === 'true'
 const enableIDP = process.env.ENABLE_IDP === 'true'
 const enableSRMUI = process.env.ENABLE_SRM_UI === 'true'
+const enableSEI = process.env.ENABLE_SEI === 'true'
 
 console.log('Common build flags')
 console.table({
@@ -56,7 +57,8 @@ console.table({
   enableIACM,
   enableSSCA,
   enableIDP,
-  enableSRMUI
+  enableSRMUI,
+  enableSEI
 })
 
 const config = {
@@ -218,7 +220,8 @@ const config = {
         enableIACM,
         enableSSCA,
         enableIDP,
-        enableSRMUI
+        enableSRMUI,
+        enableSEI
       })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
@@ -323,6 +326,10 @@ if (!enableSSCA) {
 if (!enableIDP) {
   config.resolve.alias['idp/MicroFrontendApp'] = ChildAppError
   config.resolve.alias['idpadmin/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableSEI) {
+  config.resolve.alias['sei/MicroFrontendApp'] = ChildAppError
 }
 
 module.exports = config

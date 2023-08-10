@@ -1804,7 +1804,7 @@ prTitle: PR Title
 ServiceDetail:
   envCardEmptyStateMsg: 'There are no environments with instances in this service.'
 iacm:
-  workflow: Workflow
+  workflow: '{{ $.common.workflow}}'
   resourceStack: Resource Stack
 banner:
   bannerText: Harness has significantly updated services and environments in CD. Please review our

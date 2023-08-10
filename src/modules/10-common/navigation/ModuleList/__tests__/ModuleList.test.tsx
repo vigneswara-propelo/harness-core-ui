@@ -17,6 +17,12 @@ jest.mock('../../ModuleConfigurationScreen/ModuleConfigurationScreen', () => {
   }
 })
 
+// eslint-disable-next-line jest-no-mock
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: jest.fn().mockReturnValue({ accountId: 'accountId' })
+}))
+
 describe('ModuleList', () => {
   test('should render correctly without modules', () => {
     const { container, getByText, getByTestId } = render(

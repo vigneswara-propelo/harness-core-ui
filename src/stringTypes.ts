@@ -629,6 +629,7 @@ export interface StringsMap {
   'common.module.cv': string
   'common.module.governance': string
   'common.module.pms': string
+  'common.module.sei': string
   'common.module.sto': string
   'common.module.templateService': string
   'common.moduleConfig.autoSaved': string
@@ -895,6 +896,11 @@ export interface StringsMap {
   'common.purpose.idp.name': string
   'common.purpose.idp.shortName': string
   'common.purpose.moduleSuccess': string
+  'common.purpose.sei.collections': string
+  'common.purpose.sei.continuous': string
+  'common.purpose.sei.descriptionOnly': string
+  'common.purpose.sei.fullName': string
+  'common.purpose.sei.shortName': string
   'common.purpose.selectAModule': string
   'common.purpose.service': string
   'common.purpose.setup': string
@@ -1420,6 +1426,7 @@ export interface StringsMap {
   'common.whose': string
   'common.with': string
   'common.without': string
+  'common.workflow': string
   'common.yamlDiffView.originalYamlLabel': string
   'common.yamlDiffView.refreshedYamlLabel': string
   'common.yearly': string
@@ -8867,6 +8874,26 @@ export interface StringsMap {
   'idp.layout': string
   'idp.oAuthConfig': string
   'idp.urlAllowList': string
+  'sei.accountSettings.advancedFeature.label': string
+  'sei.accountSettings.advancedFeature.propels': string
+  'sei.accountSettings.advancedFeature.tables': string
+  'sei.accountSettings.dataSettings.contributors': string
+  'sei.accountSettings.dataSettings.integrations': string
+  'sei.accountSettings.dataSettings.label': string
+  'sei.accountSettings.profile.investment': string
+  'sei.accountSettings.profile.label': string
+  'sei.accountSettings.profile.trellis': string
+  'sei.accountSettings.profile.workflow': string
+  'sei.accountSettings.seiSettings.activityLogs': string
+  'sei.accountSettings.seiSettings.apiKeys': string
+  'sei.accountSettings.seiSettings.customize': string
+  'sei.accountSettings.seiSettings.label': string
+  'sei.configurationSettings': string
+  'sei.insights': string
+  'sei.learnMore': string
+  'sei.sei': string
+  'sei.softwareEngineering': string
+  'sei.trellisScore': string
   'ssca.allowDenyList': string
   'ssca.components': string
   'ssca.enforcementStep.attestedImage': string

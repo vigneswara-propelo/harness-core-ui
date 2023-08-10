@@ -1,0 +1,25 @@
+sei: '{{ $$.common.module.sei }}'
+softwareEngineering: Software Engineering
+configurationSettings: Configuration Settings
+insights: '{{ $.common.purpose.sei.continuous}}'
+trellisScore: Trellis Score
+learnMore: Learn more about Software Engineering Insights
+accountSettings:
+  dataSettings:
+    label: Data settings
+    integrations: Integrations
+    contributors: Contributors
+  profile:
+    label: Profiles
+    workflow: '{{ $.common.workflow}}'
+    investment: Investment
+    trellis: Trellis
+  advancedFeature:
+    label: Advanced fetures
+    tables: Tables
+    propels: Propels
+  seiSettings:
+    label: SEI Settings
+    customize: Customize
+    activityLogs: Activity Logs
+    apiKeys: '{{ $.common.apiKeys }}'

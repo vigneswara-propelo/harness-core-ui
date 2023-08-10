@@ -37,7 +37,8 @@ module.exports = ({
   enableIACM,
   enableSSCA,
   enableIDP,
-  enableSRMUI
+  enableSRMUI,
+  enableSEI
 }) => {
   const remotes = {}
 
@@ -95,6 +96,9 @@ module.exports = ({
 
   if (enableCDBUI) {
     remotes.cdbui = "cdbui@[window.getApiBaseUrl('cdbui/remoteEntry.js')]"
+  }
+  if (enableSEI) {
+    remotes.sei = "sei@[window.getApiBaseUrl('sei/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {

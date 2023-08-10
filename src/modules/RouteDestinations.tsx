@@ -36,6 +36,7 @@ import GovernanceRoutes from '@governance/RouteDestinations'
 import IACMRoutes from '@iacm/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
 import { CdbMfeRoutes, CdbNonMfeRoutes } from '@dashboards/RouteDestinations'
+import SEIRoutes from '@sei/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
@@ -61,7 +62,8 @@ export default function RouteDestinations(): React.ReactElement {
     IDP_ENABLED,
     CET_ENABLED,
     CDB_MFE_ENABLED,
-    PL_DISCOVERY_ENABLE
+    PL_DISCOVERY_ENABLE,
+    SEI_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -90,6 +92,7 @@ export default function RouteDestinations(): React.ReactElement {
       {userProfileRoutes.props.children}
       {ChaosRoutes().props.children}
       {CIRoutes.props.children}
+      {SEI_ENABLED ? SEIRoutes().props.children : null}
       {CDRoutes.props.children}
       {isCVModuleEnabled ? SRMRoutes.props.children : null}
       {isCVModuleEnabled ? (
