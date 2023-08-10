@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useContext, useMemo, useState, useCallback, useRef } from 'react'
-import { Container, Tab, Tabs, PageError, Views } from '@harness/uicore'
+import { Container, PageError, Views } from '@harness/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
 import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'
@@ -38,20 +38,10 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
-import { ModuleName } from 'framework/types/ModuleName'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import Service, { ServiceWithRef } from './components/Service/Service'
-import Dependency from './components/Dependency/Dependency'
 import { getInitFormData } from './components/Service/Service.utils'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
-import {
-  determineUnSaveState,
-  onTabChange,
-  onSubmit,
-  getImperativeHandleRef,
-  showDependencies
-} from './Configurations.utils'
+import { determineUnSaveState, onSubmit, getImperativeHandleRef } from './Configurations.utils'
 import { useMonitoredServiceContext } from '../../MonitoredServiceContext'
 import css from './Configurations.module.scss'
 
@@ -101,8 +91,6 @@ export default function Configurations(
   const [overrideBlockNavigation, setOverrideBlockNavigation] = useState<boolean>(false)
   const [defaultMonitoredService, setDefaultMonitoredService] = useState<MonitoredServiceDTO>()
   const projectRef = useRef(projectIdentifier)
-  const { licenseInformation } = useLicenseStore()
-  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
   const { module } = config || {}
 
   const {
@@ -412,70 +400,33 @@ export default function Configurations(
       {(loadingGetMonitoredService || loadingFetchMonitoredServiceYAML || loadingUpdateMonitoredService) && (
         <PageSpinner />
       )}
-      <Tabs
-        id="configurationTabs"
-        selectedTabId={selectedTabID}
-        onChange={async nextTab =>
-          onTabChange({
-            nextTab,
-            getString,
-            selectedTabID,
-            dbInstance,
-            serviceTabformRef,
-            dependencyTabformRef,
-            setselectedTabID,
-            setCachedInitialValue
-          })
-        }
-      >
-        <Tab
-          id={getString('service')}
-          title={getString('service')}
-          panel={
-            <ServiceComponent
-              value={initialValues}
-              {...ServiceProps}
-              onSuccess={async payload => onSuccess(payload, getString('service'))}
-              serviceTabformRef={serviceTabformRef}
-              cachedInitialValues={!isTemplate ? cachedInitialValues : undefined}
-              setDBData={setDBData}
-              onDiscard={onDiscard}
-              isTemplate={isTemplate}
-              expressions={expressions}
-              updateTemplate={updateTemplate}
-              onChangeMonitoredServiceType={updatedDTO => {
-                setDefaultMonitoredService(omit(updatedDTO, ['isEdit']) as MonitoredServiceDTO)
-                setCachedInitialValue(updatedDTO)
-                fetchMonitoredServiceYAML({
-                  queryParams: {
-                    orgIdentifier,
-                    projectIdentifier,
-                    accountId,
-                    type: updatedDTO.type
-                  }
-                })
-              }}
-              config={config}
-            />
-          }
-        />
-        {showDependencies(isTemplate, config, isSRMLicensePresentAndActive) && (
-          <Tab
-            id={getString('pipelines-studio.dependenciesGroupTitle')}
-            title={getString('pipelines-studio.dependenciesGroupTitle')}
-            panel={
-              <Dependency
-                value={initialValues}
-                dependencyTabformRef={dependencyTabformRef}
-                onSuccess={async payload => onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))}
-                cachedInitialValues={cachedInitialValues}
-                setDBData={setDBData}
-                onDiscard={onDiscard}
-              />
+      <ServiceComponent
+        value={initialValues}
+        {...ServiceProps}
+        onSuccess={async payload => onSuccess(payload, getString('service'))}
+        onDependencySuccess={async payload => onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))}
+        serviceTabformRef={serviceTabformRef}
+        cachedInitialValues={!isTemplate ? cachedInitialValues : undefined}
+        setDBData={setDBData}
+        onDiscard={onDiscard}
+        isTemplate={isTemplate}
+        expressions={expressions}
+        updateTemplate={updateTemplate}
+        onChangeMonitoredServiceType={updatedDTO => {
+          setDefaultMonitoredService(omit(updatedDTO, ['isEdit']) as MonitoredServiceDTO)
+          setCachedInitialValue(updatedDTO)
+          fetchMonitoredServiceYAML({
+            queryParams: {
+              orgIdentifier,
+              projectIdentifier,
+              accountId,
+              type: updatedDTO.type
             }
-          />
-        )}
-      </Tabs>
+          })
+        }}
+        config={config}
+        dependencyTabformRef={dependencyTabformRef}
+      />
       {!isTemplate && (
         <NavigationCheck
           when={true}

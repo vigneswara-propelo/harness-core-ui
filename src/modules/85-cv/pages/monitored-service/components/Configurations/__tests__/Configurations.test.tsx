@@ -281,14 +281,7 @@ describe('Unit tests for Configuration', () => {
         <Configurations />
       </TestWrapper>
     )
-    act(() => {
-      fireEvent.click(getByText('pipelines-studio.dependenciesGroupTitle'))
-    })
-    await waitFor(() => expect(getByText('cv.Dependency.serviceList')).toBeInTheDocument())
-    act(() => {
-      fireEvent.click(getByText('service'))
-    })
-    await waitFor(() => expect(getByText('cv.healthSource.defineYourSource')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('platform.connectors.cdng.healthSources.label')).toBeInTheDocument())
     await waitFor(() => expect(getByText('unsavedChanges')).toBeInTheDocument())
     act(() => {
       fireEvent.click(getByText('common.discard'))

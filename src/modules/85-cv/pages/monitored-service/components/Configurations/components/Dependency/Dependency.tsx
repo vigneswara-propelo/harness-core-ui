@@ -37,7 +37,7 @@ export default function Dependency({
   cachedInitialValues?: MonitoredServiceForm | null
   setDBData?: (val: MonitoredServiceForm) => void
   onDiscard?: () => void
-  dependencyTabformRef?: any
+  dependencyTabformRef?: unknown
 }): JSX.Element {
   const { getString } = useStrings()
   const [dependencyMap, setDependencyMap] = useState<Map<string, DependencyMetaData>>(new Map())

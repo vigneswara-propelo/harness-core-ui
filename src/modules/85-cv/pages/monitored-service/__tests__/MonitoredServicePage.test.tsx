@@ -436,7 +436,7 @@ describe('Unit tests for createting monitored source', () => {
       </TestWrapper>
     )
 
-    expect(getAllByRole('tab').length).toEqual(5)
+    expect(getAllByRole('tab').length).toEqual(3)
 
     expect(container.querySelectorAll('div[role="tab"][aria-disabled="true"]')).toHaveLength(2)
   })

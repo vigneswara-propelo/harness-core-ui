@@ -92,6 +92,7 @@ describe('CommonMonitoredServiceConfigurations', () => {
   const mockOnSuccessChangeSource = jest.fn()
   const mockOpenChangeSourceDrawer = jest.fn()
   const mockOnSuccess = jest.fn()
+  const mockonDependencySuccess = jest.fn()
 
   const mockInitialValues = {
     sources: {
@@ -112,6 +113,7 @@ describe('CommonMonitoredServiceConfigurations', () => {
     openChangeSourceDrawer: mockOpenChangeSourceDrawer,
     initialValues: mockInitialValues,
     onSuccess: mockOnSuccess,
+    onDependencySuccess: mockonDependencySuccess,
     config: PROJECT_MONITORED_SERVICE_CONFIG,
     isEdit: false,
     onChangeMonitoredServiceType: jest.fn(),

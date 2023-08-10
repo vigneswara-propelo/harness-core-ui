@@ -15,7 +15,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import SaveAndDiscardButton from '@cv/components/SaveAndDiscardButton/SaveAndDiscardButton'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { isUpdated } from '@cv/pages/monitored-service/components/Configurations/Configurations.utils'
+import { isUpdated, showDependencies } from '@cv/pages/monitored-service/components/Configurations/Configurations.utils'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -36,6 +36,7 @@ import HealthSourceTableContainer from '../HealthSourceTableContainer/HealthSour
 import type { MonitoredServiceForm } from '../../Service.types'
 import MonitoredServiceOverview from '../MonitoredServiceOverview/MonitoredServiceOverview'
 import MonitoredServiceNotificationsContainer from '../MonitoredServiceNotificationsContainer/MonitoredServiceNotificationsContainer'
+import Dependency from '../../../Dependency/Dependency'
 import css from './CommonMonitoredServiceConfigurations.module.scss'
 
 export interface CommonMonitoredServiceConfigurationsProps {
@@ -47,6 +48,7 @@ export interface CommonMonitoredServiceConfigurationsProps {
   expressions?: string[]
   initialValues: MonitoredServiceForm
   onSuccess: (val: MonitoredServiceForm) => Promise<void>
+  onDependencySuccess: (val: MonitoredServiceForm) => Promise<void>
   onSuccessChangeSource: (data: ChangeSourceDTO[]) => void
   openChangeSourceDrawer: ({
     formik,
@@ -59,6 +61,8 @@ export interface CommonMonitoredServiceConfigurationsProps {
   onChangeMonitoredServiceType: (updatedValues: MonitoredServiceForm) => void
   cachedInitialValues?: MonitoredServiceForm | null
   onDiscard?: () => void
+  setDBData?: (val: MonitoredServiceForm) => void
+  dependencyTabformRef?: unknown
 }
 export default function CommonMonitoredServiceConfigurations(
   props: CommonMonitoredServiceConfigurationsProps
@@ -77,7 +81,10 @@ export default function CommonMonitoredServiceConfigurations(
     isEdit,
     onChangeMonitoredServiceType,
     cachedInitialValues,
-    onDiscard
+    onDiscard,
+    setDBData,
+    dependencyTabformRef,
+    onDependencySuccess
   } = props
   const formik = useFormikContext<MonitoredServiceForm>()
   const { licenseInformation } = useLicenseStore()
@@ -94,6 +101,7 @@ export default function CommonMonitoredServiceConfigurations(
   const { projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
   const { getString } = useStrings()
   const isNotificationsSectionHidden = getIsNotifcationsSectionHidden(isTemplate, config, identifier)
+  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
 
   const handleMonitoredServiceTypeChange = (type: MonitoredServiceDTO['type']): void => {
     if (type === formik.values.type) {
@@ -196,6 +204,22 @@ export default function CommonMonitoredServiceConfigurations(
             title={getString('cet.monitoredservice.agentconfig')}
             panel={
               <CETAgentConfig serviceRef={formik.values?.serviceRef} environmentRef={formik.values?.environmentRef} />
+            }
+          />
+        )}
+        {showDependencies(isTemplate as boolean, config, isSRMLicensePresentAndActive) && (
+          <Tab
+            id={getString('pipelines-studio.dependenciesGroupTitle')}
+            title={getString('pipelines-studio.dependenciesGroupTitle')}
+            panel={
+              <Dependency
+                value={initialValues}
+                dependencyTabformRef={dependencyTabformRef}
+                onSuccess={onDependencySuccess}
+                cachedInitialValues={cachedInitialValues}
+                setDBData={setDBData}
+                onDiscard={onDiscard}
+              />
             }
           />
         )}

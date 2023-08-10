@@ -80,6 +80,7 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
 const fetchMonitoredServiceYAML = jest.fn(() => Promise.resolve({ data: {} }))
 const updateMonitoredService = jest.fn()
 const onSuccess = jest.fn()
+const onDependencySuccess = jest.fn()
 
 jest.mock('services/cv', () => ({
   useSaveMonitoredService: jest
@@ -120,6 +121,7 @@ describe('Verify ChangeSource', () => {
           isTemplate
           value={saveChangeSource}
           onSuccess={onSuccess}
+          onDependencySuccess={onDependencySuccess}
           serviceTabformRef={{ current: {} }}
           onChangeMonitoredServiceType={jest.fn()}
         />
@@ -157,6 +159,7 @@ describe('Verify ChangeSource', () => {
         <Service
           value={saveChangeSource}
           onSuccess={onSuccess}
+          onDependencySuccess={onDependencySuccess}
           serviceTabformRef={{ current: {} }}
           onChangeMonitoredServiceType={jest.fn()}
         />

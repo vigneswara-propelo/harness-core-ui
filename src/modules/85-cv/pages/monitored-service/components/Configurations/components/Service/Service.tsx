@@ -44,6 +44,7 @@ function Service(
   {
     value: initialValues,
     onSuccess,
+    onDependencySuccess,
     cachedInitialValues,
     setDBData,
     onDiscard,
@@ -52,10 +53,12 @@ function Service(
     isTemplate,
     expressions,
     updateTemplate,
-    config
+    config,
+    dependencyTabformRef
   }: {
     value: MonitoredServiceForm
-    onSuccess: (val: any) => Promise<void>
+    onSuccess: (val: MonitoredServiceForm) => Promise<void>
+    onDependencySuccess: (val: MonitoredServiceForm) => Promise<void>
     cachedInitialValues?: MonitoredServiceForm | null
     setDBData?: (val: MonitoredServiceForm) => void
     onDiscard?: () => void
@@ -65,6 +68,7 @@ function Service(
     updateTemplate?: (template: MonitoredServiceForm) => void
     expressions?: string[]
     config?: MonitoredServiceConfig
+    dependencyTabformRef?: unknown
   },
   formikRef?: TemplateFormRef
 ): JSX.Element {
@@ -212,6 +216,9 @@ function Service(
               onChangeMonitoredServiceType={onChangeMonitoredServiceType}
               onDiscard={onDiscard}
               cachedInitialValues={cachedInitialValues}
+              setDBData={setDBData}
+              dependencyTabformRef={dependencyTabformRef}
+              onDependencySuccess={onDependencySuccess}
             />
           )
         } else {
