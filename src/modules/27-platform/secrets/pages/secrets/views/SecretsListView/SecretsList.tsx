@@ -25,6 +25,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { SecretResponseWrapper, useDeleteSecretV2, useGetSettingValue } from 'services/cd-ng'
 import type { PageSecretResponseWrapper, SecretTextSpecDTO, SecretDTOV2 } from 'services/cd-ng'
 import { getStringForType } from '@secrets/utils/SSHAuthUtils'
@@ -35,6 +36,8 @@ import { useVerifyModal as useVerifyModalWinRM } from '@secrets/modals/CreateWin
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { Scope, scopeStringKey } from '@common/interfaces/SecretsInterface'
+import { getScopeFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -87,13 +90,54 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
 
 const RenderColumnDetails: Renderer<CellProps<SecretResponseWrapper>> = ({ row }) => {
   const data = row.original.secret
+  const { getString } = useStrings()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const {
+    selectedProject,
+    selectedOrg,
+    currentUserInfo: { accounts = [] }
+  } = useAppStore()
+  const selectedAccount = accounts.find(account => account.uuid === accountId)
+  const scopeFromSMIdentifier = getScopeFromValue((data.spec as SecretTextSpecDTO).secretManagerIdentifier)
+  const getScopeName = (): string => {
+    switch (scopeFromSMIdentifier) {
+      case Scope.ACCOUNT: {
+        return `${getString('account')}: ${selectedAccount?.accountName}`
+      }
+      case Scope.ORG: {
+        return `${getString('orgLabel')}: ${selectedOrg?.name}`
+      }
+
+      case Scope.PROJECT:
+      default: {
+        // Special case for stale (or pre-existing data)
+        // if scopeFromSMIdentifier is Scope.PROJECT, then use the 'currentScope' from which API is hit
+        const currentScope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+        const name =
+          currentScope === Scope.ACCOUNT
+            ? selectedAccount?.accountName
+            : currentScope === Scope.ORG
+            ? selectedOrg?.name
+            : selectedProject?.name
+        return `${getString(scopeStringKey[currentScope])}: ${name}`
+      }
+    }
+  }
   return (
     <>
       {data.type === 'SecretText' || data.type === 'SecretFile' ? (
-        <Text color={Color.BLACK} lineClamp={1} width={230}>
-          {(data.spec as SecretTextSpecDTO).secretManagerIdentifier}
-        </Text>
+        <>
+          <Text color={Color.BLACK} lineClamp={1} width={230}>
+            {`${getString('platform.connectors.title.secretManager')}: ${
+              (data.spec as SecretTextSpecDTO).secretManagerIdentifier
+            }`}
+          </Text>
+          <Text color={Color.GREY_600} lineClamp={1} font={{ size: 'small' }} width={230}>
+            {getScopeName()}
+          </Text>
+        </>
       ) : null}
+
       {/* TODO {Abhinav} display SM name */}
       <Text color={Color.GREY_600} font={{ size: 'small' }}>
         {getStringForType(data.type)}

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import {
   Formik,
   FormikForm,
@@ -43,6 +43,14 @@ import {
   JsonNode
 } from 'services/cd-ng'
 import type { SecretTextSpecDTO, SecretFileSpecDTO } from 'services/cd-ng'
+import { Connectors } from '@connectors/constants'
+import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
+import {
+  getIdentifierFromValue,
+  getScopedValueFromDTO,
+  getScopeFromValue,
+  getScopeBasedProjectPathParams
+} from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
 import { IdentifierSchema, NameSchema, VariableSchemaWithoutHook } from '@common/utils/Validation'
 import type { UseGetMockData } from '@common/utils/testUtils'
@@ -57,7 +65,13 @@ import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
 import CustomFormFields from './views/CustomFormFields/CustomFormFields'
 import css from './CreateUpdateSecret.module.scss'
+
+const ConnectorReferenceField = React.lazy(
+  () => import('@connectors/components/ConnectorReferenceField/ConnectorReferenceField')
+)
+
 export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO & TemplateInputInterface
+
 interface TemplateInputInterface {
   templateInputs?: JsonNode
 }
@@ -92,17 +106,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const secretTypeFromProps = props.type
   const [type, setType] = useState<SecretResponseWrapper['secret']['type']>(secretTypeFromProps || 'SecretText')
   const [secret, setSecret] = useState<SecretDTOV2>()
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [searchTerm] = useState<string>('')
   const [initialSecretManagerAPICallInProgress, setInitialSecretManagerAPICallInProgress] = useState(true)
-  const [initialSecretManagerChangedOrSearchStared, setInitialSecretManagerChangedOrSearchStared] =
-    useState<boolean>(false)
+
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
     considerWarningAsError: false,
     errorHeaderMsg: 'platform.secrets.policyEvaluations.failedToSave',
     warningHeaderMsg: 'platform.secrets.policyEvaluations.warning'
   })
   const [defaultSecretManagerId, setDefaultSecretManagerId] = useState<string>()
-  const [secretManagersOptions, setSecretManagerOptions] = useState<SelectOption[]>([])
+  const [, /*secretManagersOptions*/ setSecretManagerOptions] = useState<SelectOption[]>([])
 
   const {
     loading: loadingSecret,
@@ -165,29 +178,31 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(secretManagerError))
     }
   }, [secretManagerError])
+
   useEffect(() => {
     if (secretManagersApiResponse) {
       if (initialSecretManagerAPICallInProgress) {
         setInitialSecretManagerAPICallInProgress(false)
         const defaultSecretManagerIdLocal = secretManagersApiResponse?.data?.content?.find(
           item => item.connector?.spec?.default
-        )?.connector?.identifier
+        )
         if (defaultSecretManagerIdLocal) {
-          setDefaultSecretManagerId(defaultSecretManagerIdLocal)
+          setDefaultSecretManagerId(defaultSecretManagerIdLocal.connector?.identifier)
         }
       }
     }
   }, [secretManagersApiResponse])
 
+  const smIdentifier =
+    (secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier ||
+    (secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier
   const {
     data: connectorDetails,
     loading: loadingConnectorDetails,
     error: connectorFetchError,
     refetch: getConnectorDetails
   } = useGetConnector({
-    identifier:
-      (secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier ||
-      (secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier,
+    identifier: getIdentifierFromValue(smIdentifier),
     lazy: true
   })
 
@@ -236,13 +251,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   useEffect(() => {
     if (secretResponse?.data?.secret && !loadingSecret) {
       setSecret(secretResponse?.data?.secret)
-
-      getConnectorDetails({
+      const scopeFromSMIdentifier = getScopeFromValue(smIdentifier)
+      const payload = {
         queryParams: {
-          accountIdentifier,
-          ...pick(secretResponse?.data.secret, ['orgIdentifier', 'projectIdentifier'])
+          ...getScopeBasedProjectPathParams(
+            { accountId: accountIdentifier, projectIdentifier, orgIdentifier },
+            scopeFromSMIdentifier
+          )
         }
-      })
+      }
+      getConnectorDetails(payload)
       if ((secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.valueType === 'CustomSecretManagerValues') {
         setTemplateInputSets(JSON.parse((secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.value as string))
       }
@@ -411,25 +429,25 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     selectedSecretManager?.type === 'GcpSecretManager' &&
     editing &&
     (secret?.type === 'SecretText' && (secret?.spec as SecretTextSpecDTO)?.valueType) === 'Inline'
+
   // update selectedSecretManager and readOnly flag in state when we get new data
   useEffect(() => {
-    if (!initialSecretManagerChangedOrSearchStared) {
-      const selectedSM = editing
-        ? // when editing, use connector from api response directly, since user cannot change SM
-          connectorDetails?.data?.connector
-        : // when creating, iterate over all secret managers to find default SM
-          secretManagersApiResponse?.data?.content?.find(
-            itemValue => itemValue.connector?.identifier === defaultSecretManagerId
-          )?.connector
+    const selectedSM = editing
+      ? // when editing, use connector from api response directly, since user cannot change SM
+        connectorDetails?.data?.connector
+      : // when creating, iterate over all secret managers to find default SM
+        secretManagersApiResponse?.data?.content?.find(
+          itemValue => itemValue.connector?.identifier === defaultSecretManagerId
+        )?.connector
 
-      setSelectedSecretManager(selectedSM)
-      setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
-    }
+    setSelectedSecretManager(selectedSM)
+    setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
   }, [defaultSecretManagerId, connectorDetails, secretManagersApiResponse])
+
   return (
     <>
       <ModalErrorHandler bind={setModalErrorHandler} />
-      {initialSecretManagerAPICallInProgress ? (
+      {initialSecretManagerAPICallInProgress && selectedSecretManager ? (
         <PageSpinner />
       ) : (
         <Formik<SecretFormData>
@@ -446,10 +464,9 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                 ? 'Reference'
                 : 'Inline',
             type,
-            secretManagerIdentifier:
-              selectedSecretManager?.identifier ||
-              (!initialSecretManagerChangedOrSearchStared && defaultSecretManagerId) ||
-              '',
+            secretManagerIdentifier: selectedSecretManager
+              ? getScopedValueFromDTO(selectedSecretManager as any)
+              : undefined,
             orgIdentifier: editing ? secret?.orgIdentifier : orgIdentifier,
             projectIdentifier: editing ? secret?.projectIdentifier : projectIdentifier,
             templateInputs: templateInputSets,
@@ -528,42 +545,51 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
             const typeOfSelectedSecretManager = selectedSecretManager?.type
             return (
               <FormikForm>
-                <FormInput.Select
-                  onQueryChange={(query: string) => {
-                    if (!initialSecretManagerChangedOrSearchStared) {
-                      setInitialSecretManagerChangedOrSearchStared(true)
-                    }
-                    setSearchTerm(query)
-                  }}
-                  name="secretManagerIdentifier"
-                  label={getString('platform.secrets.labelSecretsManager')}
-                  items={secretManagersOptions}
-                  disabled={editing || loadingSecretsManagers || loadingConnectorDetails}
-                  onChange={item => {
-                    if (!initialSecretManagerChangedOrSearchStared) {
-                      setInitialSecretManagerChangedOrSearchStared(true)
-                    }
-                    const secretManagerData = secretManagersApiResponse?.data?.content?.find(
-                      itemValue => itemValue.connector?.identifier === item.value
-                    )?.connector
-                    const readOnlyTemp =
-                      secretManagerData?.type === 'Vault'
-                        ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
-                        : false
-                    setReadOnlySecretManager(readOnlyTemp)
-                    formikProps.setFieldValue(
-                      'valueType',
-                      secretManagerData?.type === 'CustomSecretManager'
-                        ? 'CustomSecretManagerValues'
-                        : readOnlyTemp
-                        ? 'Reference'
-                        : 'Inline'
-                    )
+                <Suspense fallback={getString('loading')}>
+                  <ConnectorReferenceField
+                    label={getString('platform.secrets.labelSecretsManager')}
+                    name={'secretManagerIdentifier'}
+                    componentName={getString('platform.connectors.title.secretManager')}
+                    disabled={editing}
+                    width={'100%'}
+                    type={[
+                      Connectors.GCP_KMS,
+                      Connectors.VAULT,
+                      Connectors.AWS_SECRET_MANAGER,
+                      Connectors.CUSTOM_SECRET_MANAGER,
+                      Connectors.AZURE_KEY_VAULT,
+                      Connectors.GcpSecretManager
+                    ]}
+                    selected={formikProps.values['secretManagerIdentifier']}
+                    placeholder={`- ${getString('select')} -`}
+                    accountIdentifier={accountIdentifier}
+                    {...(orgIdentifier ? { orgIdentifier } : {})}
+                    {...(projectIdentifier ? { projectIdentifier } : {})}
+                    onChange={(value, scope) => {
+                      const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
+                      const secretManagerData = { ...value, identifier: value?.identifier }
+                      const readOnlyTemp =
+                        secretManagerData?.type === 'Vault'
+                          ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
+                          : false
+                      setReadOnlySecretManager(readOnlyTemp)
+                      formikProps.setFieldValue(
+                        'valueType',
+                        secretManagerData?.type === 'CustomSecretManager'
+                          ? 'CustomSecretManagerValues'
+                          : readOnlyTemp
+                          ? 'Reference'
+                          : 'Inline'
+                      )
 
-                    initializeTemplateInputs(secretManagerData)
-                    setSelectedSecretManager(secretManagerData)
-                  }}
-                />
+                      initializeTemplateInputs(secretManagerData)
+                      setSelectedSecretManager(secretManagerData)
+
+                      formikProps?.setFieldValue('secretManagerIdentifier', connectorRefWithScope)
+                    }}
+                  />
+                </Suspense>
+
                 {!secretTypeFromProps ? (
                   <FormInput.RadioGroup
                     name="type"
