@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import type { FormikProps } from 'formik'
+import { FormikProps, useFormikContext } from 'formik'
 import { FormInput, SelectOption, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import { get, isEmpty, isNil, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { FilterProperties } from 'services/pipeline-ng'
 import {
@@ -33,6 +34,42 @@ interface ExecutionListFilterFormProps<T> {
 
 const NO_SELECTION = { label: '', value: '' }
 
+/*
+Examples - 
+  :v  ->  key: "", value: "v"
+  v:  ->  key: "v", value: ""
+  a:b ->  key: "a", value: "b"
+  a   ->  key: "a", value: null
+*/
+
+type KVAccumulator = { [key: string]: string | undefined | null }
+
+const convertToKVAccumulator = (values: string[]): KVAccumulator => {
+  const filteredValues = values.filter(val => !isNil(val))
+  const tagValues =
+    filteredValues?.reduce((acc, tag) => {
+      const parts = tag.split(':')
+      acc[parts[0]] = !isUndefined(parts[1]) ? parts[1]?.trim() || '' : null
+      return acc
+    }, {} as KVAccumulator) || {}
+  return tagValues
+}
+
+const convertToKeyValueString = (tagValues: KVAccumulator): string[] => {
+  return Object.keys(tagValues || {}).map(key => {
+    const value = tagValues[key]
+    if (!isNil(value)) {
+      if (isEmpty(value)) {
+        return `${key}:`
+      } else {
+        return `${key}:${value}`
+      }
+    } else {
+      return key
+    }
+  })
+}
+
 export function ExecutionListFilterForm<
   T extends {
     buildType?: BuildTypeContext['buildType']
@@ -43,6 +80,7 @@ export function ExecutionListFilterForm<
   const { getString } = useStrings()
   const { module } = useParams<ModulePathParams>()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
+  const formikFromContext = useFormikContext<T>()
 
   const getBuildTypeOptions = (): React.ReactElement => {
     let buildTypeField: JSX.Element = <></>
@@ -241,7 +279,19 @@ export function ExecutionListFilterForm<
             key={'description'}
           />
         ) : null}
-        <FormInput.KVTagInput name="pipelineTags" label={getString('tagsLabel')} key="pipelineTags" />
+        <FormInput.KVTagInput
+          name="pipelineTags"
+          label={getString('tagsLabel')}
+          key="pipelineTags"
+          onChange={changed => {
+            const values: string[] = changed as string[]
+            formikFromContext?.setFieldTouched('pipelineTags', true, false)
+            formikFromContext?.setFieldValue('pipelineTags', convertToKVAccumulator(values))
+          }}
+          tagsProps={{
+            values: convertToKeyValueString(get(formikFromContext?.values, 'pipelineTags') as KVAccumulator)
+          }}
+        />
 
         {type === 'PipelineExecution' ? (
           <FormInput.MultiSelect
