@@ -5,36 +5,62 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const template = {
-  manifests: [
-    {
-      manifest: {
-        identifier: 'test_manifest',
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { PrimaryArtifact } from 'services/cd-ng'
+
+export const template: DeploymentStageElementConfig = {
+  identifier: 'Stage_1',
+  name: 'Stage 1',
+  spec: {
+    serviceConfig: {
+      serviceDefinition: {
         type: 'ServerlessAwsLambda',
         spec: {
-          store: {
-            type: 'Github',
-            spec: {
-              connectorRef: '<+input>',
-              paths: '<+input>',
-              repoName: '<+input>',
-              branch: '<+input>'
+          manifests: [
+            {
+              manifest: {
+                identifier: 'test_manifest',
+                type: 'ServerlessAwsLambda',
+                spec: {
+                  store: {
+                    type: 'Github',
+                    spec: {
+                      connectorRef: '<+input>',
+                      paths: '<+input>',
+                      repoName: '<+input>',
+                      branch: '<+input>'
+                    }
+                  },
+                  configOverridePath: '<+input>'
+                }
+              }
             }
-          },
-          configOverridePath: '<+input>'
+          ],
+          artifacts: {
+            primary: {
+              type: 'ArtifactoryRegistry' as PrimaryArtifact['type'],
+              spec: {
+                connectorRef: '<+input>',
+                artifactDirectory: '<+input>',
+                artifactPath: '<+input>',
+                repository: '<+input>'
+              }
+            }
+          }
         }
       }
-    }
-  ],
-  artifacts: {
-    primary: {
-      type: 'ArtifactoryRegistry',
-      spec: {
-        connectorRef: '<+input>',
-        artifactDirectory: '<+input>',
-        artifactPath: '<+input>',
-        repository: '<+input>'
-      }
+    },
+    execution: {
+      steps: [
+        {
+          step: {
+            identifier: 'Step_1',
+            name: 'Step 1',
+            type: StepType.ServerlessAwsLambdaDeployV2
+          }
+        }
+      ]
     }
   }
 }
@@ -61,36 +87,58 @@ export const manifests = [
   }
 ]
 
-export const initialValues = {
-  manifests: [
-    {
-      manifest: {
-        identifier: 'test_manifest',
+export const initialValues: DeploymentStageElementConfig = {
+  identifier: 'Stage_1',
+  name: 'Stage 1',
+  spec: {
+    serviceConfig: {
+      serviceDefinition: {
         type: 'ServerlessAwsLambda',
         spec: {
-          store: {
-            type: 'Github',
-            spec: {
-              connectorRef: '',
-              paths: '',
-              repoName: '',
-              branch: ''
+          manifests: [
+            {
+              manifest: {
+                identifier: 'test_manifest',
+                type: 'ServerlessAwsLambda',
+                spec: {
+                  store: {
+                    type: 'Github',
+                    spec: {
+                      connectorRef: '',
+                      paths: '',
+                      repoName: '',
+                      branch: ''
+                    }
+                  },
+                  configOverridePath: ''
+                }
+              }
             }
-          },
-          configOverridePath: ''
+          ],
+          artifacts: {
+            primary: {
+              type: 'ArtifactoryRegistry' as PrimaryArtifact['type'],
+              spec: {
+                connectorRef: '<+input>',
+                artifactDirectory: '<+input>',
+                artifactPath: '<+input>',
+                repository: '<+input>'
+              }
+            }
+          }
         }
       }
-    }
-  ],
-  artifacts: {
-    primary: {
-      type: 'ArtifactoryRegistry',
-      spec: {
-        connectorRef: '',
-        artifactDirectory: '',
-        artifactPath: '',
-        repository: ''
-      }
+    },
+    execution: {
+      steps: [
+        {
+          step: {
+            identifier: 'Step_1',
+            name: 'Step 1',
+            type: StepType.ServerlessAwsLambdaDeployV2
+          }
+        }
+      ]
     }
   }
 }

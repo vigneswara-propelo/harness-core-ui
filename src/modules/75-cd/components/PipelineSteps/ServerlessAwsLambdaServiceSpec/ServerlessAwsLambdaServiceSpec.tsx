@@ -220,7 +220,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.connectorRef`,
-          getString?.('fieldRequired', { field: getString('connector') })
+          getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
         )
       }
 
@@ -232,7 +232,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.folderPath`,
-          getString?.('fieldRequired', { field: 'folderPath' })
+          getString?.('common.validation.fieldIsRequired', { name: 'folderPath' })
         )
       }
 
@@ -244,7 +244,9 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.branch`,
-          getString?.('fieldRequired', { field: getString?.('pipelineSteps.deploy.inputSet.branch') })
+          getString?.('common.validation.fieldIsRequired', {
+            name: getString?.('pipelineSteps.deploy.inputSet.branch')
+          })
         )
       }
       if (
@@ -255,7 +257,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.commitId`,
-          getString?.('fieldRequired', { field: getString?.('common.commitId') })
+          getString?.('common.validation.fieldIsRequired', { name: getString?.('common.commitId') })
         )
       }
       if (
@@ -266,7 +268,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.paths`,
-          getString?.('fieldRequired', { field: getString?.('common.fileOrFolderPath') })
+          getString?.('common.validation.fieldIsRequired', { name: getString?.('common.fileOrFolderPath') })
         )
       }
 
@@ -279,7 +281,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.region`,
-          getString?.('fieldRequired', { field: getString?.('regionLabel') })
+          getString?.('common.validation.fieldIsRequired', { name: getString?.('regionLabel') })
         )
       }
       if (
@@ -290,7 +292,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.bucketName`,
-          getString?.('fieldRequired', { field: getString?.('common.bucketName') })
+          getString?.('common.validation.fieldIsRequired', { name: getString?.('common.bucketName') })
         )
       }
     })
@@ -373,7 +375,11 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
       isRequired &&
       getMultiTypeFromValue(template?.artifacts?.primary?.primaryArtifactRef) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, 'artifacts.primary.primaryArtifactRef', getString?.('fieldRequired', { field: 'Primary Artifact' }))
+      set(
+        errors,
+        'artifacts.primary.primaryArtifactRef',
+        getString?.('common.validation.fieldIsRequired', { name: 'Primary Artifact' })
+      )
     }
     if (isArray(data?.artifacts?.primary?.sources)) {
       data?.artifacts?.primary?.sources?.forEach((_artifactSource, index) => {
@@ -417,7 +423,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `configFiles[${index}].configFile.spec.store.spec.files[0]`,
-          getString?.('fieldRequired', { field: 'File' })
+          getString?.('common.validation.fieldIsRequired', { name: 'File' })
         )
       }
       if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.files)) {
@@ -426,7 +432,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
             set(
               errors,
               `configFiles[${index}].configFile.spec.store.spec.files[${fileIndex}]`,
-              getString?.('fieldRequired', { field: 'File' })
+              getString?.('common.validation.fieldIsRequired', { name: 'File' })
             )
           }
         })
@@ -439,7 +445,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `configFiles[${index}].configFile.spec.store.spec.secretFiles[0]`,
-          getString?.('fieldRequired', { field: 'File' })
+          getString?.('common.validation.fieldIsRequired', { name: 'File' })
         )
       }
       if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles)) {
@@ -448,7 +454,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
             set(
               errors,
               `configFiles[${index}].configFile.spec.store.spec.secretFiles[${secretFileIndex}]`,
-              getString?.('fieldRequired', { field: 'File' })
+              getString?.('common.validation.fieldIsRequired', { name: 'File' })
             )
           }
         })
