@@ -11,10 +11,14 @@ import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
+  Icon,
   IconName,
+  Layout,
   MultiTypeInputType,
-  SelectOption
+  SelectOption,
+  Text
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { FormikProps, yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -36,7 +40,7 @@ import {
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
@@ -65,8 +69,10 @@ import {
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
+import { barrierDocLink } from '../StepsHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+import css from './Barrier.module.scss'
 
 type BarrierData = StepElementConfig
 
@@ -170,6 +176,22 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
           setFormikRef(formikRef, formik)
           return (
             <>
+              <Layout.Horizontal
+                spacing={'small'}
+                background={Color.PRIMARY_5}
+                border={{ radius: 2, color: Color.GREY_200 }}
+                margin={{ bottom: 'xlarge' }}
+                padding={'medium'}
+              >
+                <Icon name={'info'} color={Color.WHITE} className={css.infoIcon} />
+                <Text color={Color.WHITE} font={{ variation: FontVariation.H6 }} className={css.infoText}>
+                  <String stringID="pipeline.barrierStep.helpText" />
+                  <a rel="noreferrer" target="_blank" href={barrierDocLink}>
+                    {`[${getString('common.forMoreInfo')}]`}
+                  </a>
+                </Text>
+              </Layout.Horizontal>
+
               {stepViewType !== StepViewType.Template && (
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />

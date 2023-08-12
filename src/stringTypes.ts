@@ -397,6 +397,7 @@ export interface StringsMap {
   'common.findOutMore': string
   'common.firstGeneration': string
   'common.for': string
+  'common.forMoreInfo': string
   'common.forcedDeleteLabel': string
   'common.forcedDeleteWarning': string
   'common.freezeActiveBannerTextPrefix': string
@@ -4008,6 +4009,7 @@ export interface StringsMap {
   'pipeline.barrierStep.barrierReference': string
   'pipeline.barrierStep.barrierReferencePlaceholder': string
   'pipeline.barrierStep.barrierReferenceRequired': string
+  'pipeline.barrierStep.helpText': string
   'pipeline.barriers.addBarrier': string
   'pipeline.barriers.flowControl': string
   'pipeline.barriers.syncBarriers': string
