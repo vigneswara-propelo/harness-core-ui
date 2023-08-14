@@ -15,6 +15,7 @@ import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
+import { MonitoredServiceConfigurationsTabsEnum } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations.constants'
 import ConfigureMonitoredServiceDetails from '../ConfigureMonitoredServiceDetails/ConfigureMonitoredServiceDetails'
 import DetailNotPresent from '../DetailNotPresent/DetailNotPresent'
 import css from './AnalyseStepHealthSourceList.module.scss'
@@ -98,7 +99,10 @@ export default function AnalyseStepHealthSourcesList(props: AnalyseStepHealthSou
           projectIdentifier,
           identifier,
           module: 'cv'
-        })}${getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })}`}
+        })}${getCVMonitoringServicesSearchParam({
+          tab: MonitoredServiceEnum.Configurations,
+          subTab: MonitoredServiceConfigurationsTabsEnum.HEALTH_SOURCE
+        })}`}
         detailToConfigureText={'Configure Health Source'}
         refetchDetails={fetchMonitoredServiceData}
       />

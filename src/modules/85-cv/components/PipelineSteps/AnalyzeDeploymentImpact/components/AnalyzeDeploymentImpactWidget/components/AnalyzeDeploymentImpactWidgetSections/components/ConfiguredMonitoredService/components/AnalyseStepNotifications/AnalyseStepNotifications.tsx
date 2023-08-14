@@ -13,6 +13,7 @@ import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/C
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { killEvent } from '@common/utils/eventUtils'
 import { useStrings } from 'framework/strings'
+import { MonitoredServiceConfigurationsTabsEnum } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations.constants'
 import ConfigureMonitoredServiceDetails from '../ConfigureMonitoredServiceDetails/ConfigureMonitoredServiceDetails'
 import DetailNotPresent from '../DetailNotPresent/DetailNotPresent'
 import { AnalyseStepNotificationsData } from './AnalyseStepNotifications.types'
@@ -142,7 +143,10 @@ export default function AnalyseStepNotifications(props: AnalyseStepNotifications
               projectIdentifier,
               identifier,
               module: 'cv'
-            })}${getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })}`}
+            })}${getCVMonitoringServicesSearchParam({
+              tab: MonitoredServiceEnum.Configurations,
+              subTab: MonitoredServiceConfigurationsTabsEnum.NOTIFICATIONS
+            })}`}
             detailToConfigureText={getString('cv.analyzeStep.notifications.configureNotification')}
             refetchDetails={getNotifications}
           />

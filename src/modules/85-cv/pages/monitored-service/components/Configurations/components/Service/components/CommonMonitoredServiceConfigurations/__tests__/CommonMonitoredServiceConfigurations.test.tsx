@@ -9,6 +9,8 @@ import React from 'react'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Button, Container, Formik, FormikForm } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
+import { createMemoryHistory } from 'history'
+import { Router } from 'react-router-dom'
 import { PROJECT_MONITORED_SERVICE_CONFIG } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
 import CommonMonitoredServiceConfigurations, {
   CommonMonitoredServiceConfigurationsProps
@@ -30,6 +32,12 @@ jest.mock('react-router-dom', () => ({
     projectIdentifier: 'projectIdentifier',
     identifier: 'identifier'
   })
+}))
+
+jest.mock('@common/hooks', () => ({
+  useQueryParams: () => jest.fn(),
+  useDeepCompareEffect: () => jest.fn(),
+  useLocalStorage: jest.fn().mockImplementation(() => [5, jest.fn()])
 }))
 
 jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
@@ -70,6 +78,7 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
 }))
 
 function WrapperComponent(props: CommonMonitoredServiceConfigurationsProps): JSX.Element {
+  const history = createMemoryHistory()
   const initialValues = {
     sources: {
       changeSources: [
@@ -78,11 +87,13 @@ function WrapperComponent(props: CommonMonitoredServiceConfigurationsProps): JSX
     }
   }
   return (
-    <Formik initialValues={initialValues} onSubmit={jest.fn()} formName="wrapperComponent">
-      <FormikForm>
-        <CommonMonitoredServiceConfigurations {...props} />
-      </FormikForm>
-    </Formik>
+    <Router history={history}>
+      <Formik initialValues={initialValues} onSubmit={jest.fn()} formName="wrapperComponent">
+        <FormikForm>
+          <CommonMonitoredServiceConfigurations {...props} />
+        </FormikForm>
+      </Formik>
+    </Router>
   )
 }
 
