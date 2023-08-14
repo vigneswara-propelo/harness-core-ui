@@ -62,6 +62,7 @@ import { ConnectorConfigureOptions } from '@platform/connectors/components/Conne
 import { Connectors } from '@platform/connectors/constants'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
+import { isRetryIntervalGreaterThanTimeout } from '../StepsHelper'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -312,6 +313,15 @@ function FormContent({
             />
           )}
         </div>
+        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <FormMultiTypeDurationField
+            name="spec.retryInterval"
+            label={getString('pipeline.customApprovalStep.retryInterval')}
+            multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+            className={stepCss.duration}
+            disabled={readonly}
+          />
+        </div>
         <ServiceNowApprovalRejectionCriteria
           fieldList={fieldList}
           title={getString('pipeline.approvalCriteria.approvalCriteria')}
@@ -395,7 +405,18 @@ function ServiceNowApprovalStepMode(
   })
   return (
     <Formik<ServiceNowApprovalData>
-      onSubmit={values => onUpdate?.(values)}
+      onSubmit={values => {
+        if (
+          isRetryIntervalGreaterThanTimeout(
+            (formikRef as React.MutableRefObject<FormikProps<ServiceNowApprovalData>>)?.current?.values
+          )
+        )
+          (formikRef as React.MutableRefObject<FormikProps<ServiceNowApprovalData>>)?.current?.setFieldError(
+            'spec.retryInterval',
+            getString('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+          )
+        onUpdate?.(values)
+      }}
       formName="serviceNowApproval"
       initialValues={props.initialValues}
       validate={data => {
@@ -408,6 +429,9 @@ function ServiceNowApprovalStepMode(
           connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
+          retryInterval: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')
+          ),
           ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType')),
           ticketNumber: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.issueNumber')),
           approvalCriteria: Yup.object().shape({

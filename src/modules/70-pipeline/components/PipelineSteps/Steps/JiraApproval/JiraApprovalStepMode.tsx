@@ -60,6 +60,7 @@ import type {
 import { getApprovalRejectionCriteriaForInitialValues, getGenuineValue, resetForm, setIssueTypeOptions } from './helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { ApprovalRejectionCriteria } from '../Common/ApprovalRejectionCriteria'
+import { isRetryIntervalGreaterThanTimeout } from '../StepsHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './JiraApproval.module.scss'
 
@@ -418,7 +419,15 @@ function FormContent({
           />
         )}
       </div>
-
+      <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <FormMultiTypeDurationField
+          name="spec.retryInterval"
+          label={getString('pipeline.customApprovalStep.retryInterval')}
+          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+          className={stepCss.duration}
+          disabled={readonly}
+        />
+      </div>
       <ApprovalRejectionCriteria
         statusList={statusList}
         fieldList={fieldList}
@@ -524,6 +533,15 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
   return (
     <Formik<JiraApprovalData>
       onSubmit={values => {
+        if (
+          isRetryIntervalGreaterThanTimeout(
+            (formikRef as React.MutableRefObject<FormikProps<JiraApprovalData>>)?.current?.values
+          )
+        )
+          (formikRef as React.MutableRefObject<FormikProps<JiraApprovalData>>)?.current?.setFieldError(
+            'spec.retryInterval',
+            getString('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+          )
         onUpdate?.(values)
       }}
       formName="jiraApproval"
@@ -535,6 +553,9 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
+          retryInterval: getDurationValidationSchema({
+            minimum: '10s'
+          }).required(getString('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')),
           connectorRef: Yup.string().required(getString('pipeline.jiraApprovalStep.validations.connectorRef')),
           issueKey: Yup.string().trim().required(getString('pipeline.jiraApprovalStep.validations.issueKey')),
           approvalCriteria: Yup.object().shape({
@@ -560,6 +581,7 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     >
       {(formik: FormikProps<JiraApprovalData>) => {
         setFormikRef(formikRef, formik)
+
         return (
           <FormikForm>
             <FormContent

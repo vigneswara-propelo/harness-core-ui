@@ -225,6 +225,7 @@ describe('ServiceNow Approval tests', () => {
         connectorRef: 'c1d1',
         ticketNumber: 'itd1',
         ticketType: 'INCIDENT',
+        retryInterval: '1m',
         approvalCriteria: {
           type: 'KeyValues',
           spec: {
@@ -270,7 +271,8 @@ describe('ServiceNow Approval tests', () => {
           ticketType: '',
           ticketNumber: '',
           approvalCriteria: getDefaultCriterias(),
-          rejectionCriteria: getDefaultCriterias()
+          rejectionCriteria: getDefaultCriterias(),
+          retryInterval: '1m'
         }
       },
       template: {
@@ -283,7 +285,8 @@ describe('ServiceNow Approval tests', () => {
           ticketType: '',
           ticketNumber: '',
           approvalCriteria: getDefaultCriterias(),
-          rejectionCriteria: getDefaultCriterias()
+          rejectionCriteria: getDefaultCriterias(),
+          retryInterval: '1m'
         }
       },
       viewType: StepViewType.TriggerForm
