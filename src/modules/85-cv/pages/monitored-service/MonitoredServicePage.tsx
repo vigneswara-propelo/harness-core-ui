@@ -171,7 +171,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
               id: MonitoredServiceEnum.ServiceHealth,
               title: (
                 <MonitoredServiceTabTitle
-                  title={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
+                  title={getString('cv.monitoredServices.monitoredServiceTabs.changeImpact')}
                   isTabDisabled={isMonitoredServiceDisabled}
                 />
               ),

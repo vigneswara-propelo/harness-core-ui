@@ -142,7 +142,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getSLORiskCountWithCVNGProd, getSLORiskCountResponse)
     cy.get('.bp3-card').contains('p', 'Monitored Service').next().click()
 
-    cy.contains('div', 'Service Health').should('be.visible')
+    cy.contains('div', 'Change Impact').should('be.visible')
   })
 
   it('should handle the time range filters and ensure the timeline slider functionality', () => {

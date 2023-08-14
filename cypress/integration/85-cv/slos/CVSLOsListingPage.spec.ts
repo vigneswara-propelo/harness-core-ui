@@ -15,8 +15,6 @@ import {
   listSLOsCallWithCVNGDev,
   listSLOsCallWithCalender,
   listSLOsCallWithRolling,
-  listSLOsCallWithAvailability,
-  listSLOsCallWithLatency,
   listSLOsCallWithUnhealthy,
   listSLOsCallWithHealthy,
   errorResponse,
@@ -56,7 +54,7 @@ describe('CVSLOsListingPage', () => {
 
     cy.contains('p', 'prod').click({ force: true })
 
-    cy.contains('div', 'Service Health').should('be.visible')
+    cy.contains('div', 'Change Impact').should('be.visible')
     cy.contains('p', 'SLOs').click()
     cy.contains('p', 'SLO-1').should('be.visible')
 

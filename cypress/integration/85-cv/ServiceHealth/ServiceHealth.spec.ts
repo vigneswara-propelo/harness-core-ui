@@ -34,7 +34,7 @@ describe('Load service health dashboard', () => {
     cy.contains('p', 'Monitored Services').click({ force: true })
     cy.contains('p', 'appd').click()
     cy.wait('@monitoredServiceCall')
-    cy.contains('div', 'Service Health').click()
+    cy.contains('div', 'Change Impact').click()
     cy.wait('@heatlhScoreCall')
     cy.wait('@heatlhScoreTimeLineCall')
     cy.wait('@overAllHeatlhScoreCall')
