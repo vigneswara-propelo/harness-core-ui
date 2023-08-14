@@ -1574,10 +1574,15 @@ category: Category
 favorite:
   add: Add to Favorites
   remove: Remove from Favorites
+clickHere: Click Here
 csBot:
+  aida: AIDA
   askAIDA: Ask AIDA
-  title: Harness AIDA Chat
-  feedback: Was this answer helpful?
+  title: Harness AIDA Chatbot
+  beta: BETA
+  placeholder: How do I install a delegate?
+  subtitle: I can help searching anything on
+  hdh: Harness Developer Hub
   errorMessage: Something went wrong. Click here to submit a ticket instead.
   ticketOnError: Would you like to create a support ticket?
 addNewCreditCard: Add a new card

@@ -7,8 +7,10 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { Avatar, Button, ButtonVariation, Icon, Layout, Popover, Text, useToggleOpen } from '@harness/uicore'
-import { Menu, MenuItem } from '@blueprintjs/core'
+import { Avatar, Icon, Layout, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { Intent, Menu, MenuItem } from '@blueprintjs/core'
+import ReactMarkdown from 'react-markdown'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
@@ -52,36 +54,36 @@ function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps)
 
   return (
     <>
-      <Layout.Horizontal spacing={'small'} flex={{ align: 'center-center' }}>
+      <Layout.Horizontal flex={{ align: 'center-center' }}>
         <Text>
-          <String stringID="common.csBot.feedback" />
+          <String stringID="common.isHelpful" />
         </Text>
-        <Button
-          icon="main-thumbsup"
+        <button
           disabled={voted !== Vote.None}
-          variation={ButtonVariation.ICON}
-          className={cx({ [css.votedUp]: voted === Vote.Up })}
+          className={cx({ [css.votedUp]: voted === Vote.Up }, css.voteButton)}
           onClick={() => {
             trackEvent(AIChatActions.BotHelpful, { query, answer })
             setVoted(Vote.Up)
           }}
-        />
-        <Button
-          icon="main-thumbsdown"
+        >
+          <String stringID="yes" />
+        </button>
+        <button
           disabled={voted !== Vote.None}
-          variation={ButtonVariation.ICON}
-          className={cx({ [css.votedDown]: voted === Vote.Down })}
+          className={cx({ [css.votedDown]: voted === Vote.Down }, css.voteButton)}
           onClick={() => {
             trackEvent(AIChatActions.BotNotHelpful, { query, answer })
             setVoted(Vote.Down)
           }}
-        />
+        >
+          <String stringID="no" />
+        </button>
       </Layout.Horizontal>
       {voted === Vote.Down ? (
-        <Layout.Horizontal spacing="small">
+        <Layout.Horizontal spacing="small" flex={{ align: 'center-center' }}>
           <String stringID="common.csBot.ticketOnError" />
           <a href="javascript:;" onClick={openSubmitTicketModal}>
-            Click Here
+            <String stringID="common.clickHere" />
           </a>
         </Layout.Horizontal>
       ) : null}
@@ -165,7 +167,7 @@ function DocsChat(): JSX.Element {
 
   useLayoutEffect(() => {
     // scroll to bottom on every message
-    messageList.current?.scrollTo(0, messageList.current?.scrollHeight)
+    messageList.current?.scrollTo?.(0, messageList.current?.scrollHeight)
   }, [messages])
 
   useDeepCompareEffect(() => {
@@ -178,8 +180,9 @@ function DocsChat(): JSX.Element {
   }
 
   const loadingMessage = (
-    <div className={cx(css.messageContainer, css.left)}>
-      <div className={cx(css.message, css.harness, css.loader)}>
+    <div className={cx(css.messageContainer, css.harness)}>
+      <Icon name="harness-copilot" size={30} className={css.aidaIcon} />
+      <div className={cx(css.message, css.loader)}>
         <div className={css.dotflashing}></div>
       </div>
     </div>
@@ -187,42 +190,44 @@ function DocsChat(): JSX.Element {
 
   return (
     <div className={css.container}>
-      <Layout.Horizontal className={css.header} flex>
-        <String stringID="common.csBot.title" />
-        <Popover minimal position="bottom-left">
-          <Button icon="menu" variation={ButtonVariation.ICON} />
-          <Menu>
-            <MenuItem text="Clear History" onClick={clearHistory} />
-          </Menu>
-        </Popover>
-      </Layout.Horizontal>
+      <Layout.Vertical spacing={'small'} className={css.header}>
+        <Layout.Horizontal spacing={'small'} style={{ alignItems: 'center' }}>
+          <Icon name="harness-copilot" size={32} />
+          <Text font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
+            <String stringID="common.csBot.title" />
+          </Text>
+          <Tag intent={Intent.PRIMARY}>
+            <String stringID="common.csBot.beta" />
+          </Tag>
+        </Layout.Horizontal>
+        <Layout.Horizontal spacing={'xsmall'} style={{ alignItems: 'center' }}>
+          <String stringID="common.csBot.subtitle" />
+          <a href="https://developer.harness.io" rel="noreferrer nofollow" target="_blank">
+            <String stringID="common.csBot.hdh" />
+          </a>
+          <Icon name="main-share" size={12} />
+        </Layout.Horizontal>
+      </Layout.Vertical>
       <div className={css.messagesContainer} ref={messageList}>
         {messages.map((message, index) => {
           return (
             <div key={message.text + index}>
               <div
                 className={cx(css.messageContainer, {
-                  [css.left]: message.author === 'harness',
-                  [css.right]: message.author === 'user'
+                  [css.harness]: message.author === 'harness',
+                  [css.user]: message.author === 'user'
                 })}
               >
                 {message.author === 'harness' ? (
                   <Icon name="harness-copilot" size={30} className={css.aidaIcon} />
                 ) : null}
-                <div
-                  className={cx(css.message, {
-                    [css.harness]: message.author === 'harness',
-                    [css.user]: message.author === 'user'
-                  })}
-                >
+                <div className={css.message}>
                   {message.text === 'error' ? (
-                    <p>
-                      <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
-                        {getString('common.csBot.errorMessage')}
-                      </a>
-                    </p>
+                    <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
+                      {getString('common.csBot.errorMessage')}
+                    </a>
                   ) : (
-                    <p>{message.text}</p>
+                    <ReactMarkdown>{message.text}</ReactMarkdown>
                   )}
                 </div>
                 {message.author === 'user' ? (
@@ -242,20 +247,28 @@ function DocsChat(): JSX.Element {
         {loading ? loadingMessage : null}
       </div>
       <div className={css.inputContainer}>
-        <Layout.Horizontal spacing="small">
-          <input
-            type="text"
-            name="user-input"
-            className={css.input}
-            value={userInput}
-            onChange={handleUserInput}
-            onKeyDown={handleKeyDown}
-            autoComplete="off"
-          />
-          <button onClick={handleSubmitClick} className={css.submitButton}>
-            <Icon name="key-enter" />
+        <Popover minimal>
+          <button className={css.chatMenuButton}>
+            <Icon name="menu" size={12} />
           </button>
-        </Layout.Horizontal>
+          <Menu>
+            <MenuItem text="Clear History" onClick={clearHistory} />
+          </Menu>
+        </Popover>
+        <input
+          type="text"
+          autoFocus
+          name="user-input"
+          className={css.input}
+          value={userInput}
+          onChange={handleUserInput}
+          onKeyDown={handleKeyDown}
+          autoComplete="off"
+          placeholder={getString('common.csBot.placeholder')}
+        />
+        <button onClick={handleSubmitClick} className={css.submitButton}>
+          <Icon name="pipeline-deploy" size={24} />
+        </button>
       </div>
       <SubmitTicketModal isOpen={isOpen} close={closeSubmitTicketModal} />
     </div>
