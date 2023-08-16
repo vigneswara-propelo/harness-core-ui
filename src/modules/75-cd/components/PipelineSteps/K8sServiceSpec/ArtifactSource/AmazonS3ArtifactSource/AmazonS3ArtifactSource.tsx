@@ -38,6 +38,7 @@ import { isArtifactInMultiService, resetFieldValue } from '@pipeline/components/
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
   getValidInitialValuePath,
@@ -80,21 +81,21 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
-  const fixedConnectorValue: string | undefined = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef)
+  const fixedConnectorValue: string = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`)
   )
-  const fixedRegionValue: string | undefined = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.region`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region)
+  const fixedRegionValue: string | undefined = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
+    get(initialValues?.artifacts, `${artifactPath}.spec.region`)
   )
-  const fixedBucketValue: string | undefined = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.bucketName`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.bucketName`, ''), artifact?.spec?.bucketName)
+  const fixedBucketValue: string | undefined = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.bucketName`, ''), artifact?.spec?.bucketName),
+    get(initialValues?.artifacts, `${artifactPath}.spec.bucketName`)
   )
-  const fixedFilePathRegexValue: string | undefined = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filePathRegex`, ''), artifact?.spec?.filePathRegex)
+  const fixedFilePathRegexValue: string | undefined = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filePathRegex`, ''), artifact?.spec?.filePathRegex),
+    get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`)
   )
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
