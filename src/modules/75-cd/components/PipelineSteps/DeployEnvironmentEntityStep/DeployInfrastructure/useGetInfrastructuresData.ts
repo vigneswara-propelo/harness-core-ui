@@ -11,7 +11,7 @@ import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
-import { useMutateAsGet } from '@common/hooks'
+import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 
@@ -114,11 +114,8 @@ export function useGetInfrastructuresData({
 
   const loading = loadingInfrastructuresList || loadingInfrastructuresData
 
-  useEffect(() => {
-    if (
-      !loading &&
-      (sortedInfrastructureIdentifiers?.length > 0 || infrastructuresListResponse?.data?.content?.length)
-    ) {
+  useDeepCompareEffect(() => {
+    if (!loading) {
       let _infrastructuresList: InfrastructureYaml[] = []
       let _infrastructuresData: InfrastructureData[] = []
 
@@ -197,7 +194,7 @@ export function useGetInfrastructuresData({
     loading,
     infrastructuresListResponse?.data,
     infrastructuresDataResponse?.data?.infrastructureYamlMetadataList,
-    sortedInfrastructureIdentifiers
+    infrastructureIdentifiers
   ])
 
   useEffect(() => {
