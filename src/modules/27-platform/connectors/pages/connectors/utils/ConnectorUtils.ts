@@ -38,7 +38,7 @@ import type { CategoryInterface, ItemInterface } from '@common/components/AddDra
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { setSecretField } from '@secrets/utils/SecretField'
-import { Connectors, ElkAuthType, EntityTypes } from '@platform/connectors/constants'
+import { Connectors, EntityTypes } from '@platform/connectors/constants'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@platform/connectors/interfaces/ConnectorInterface'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@platform/connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@platform/connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
@@ -2164,11 +2164,13 @@ export const buildELKPayload = (formData: FormData): Connector => {
     }
   }
 
-  if (formData.authType === ElkAuthType.USERNAME_PASSWORD) {
+  if (formData.authType === AuthTypes.USER_PASSWORD) {
     payload.connector!.spec.username = formData.username
     payload.connector!.spec.passwordRef = formData.password.referenceString
-  } else if (formData.authType === ElkAuthType.API_CLIENT_TOKEN) {
+  } else if (formData.authType === AuthTypes.API_CLIENT_TOKEN) {
     payload.connector!.spec.apiKeyId = formData.apiKeyId
+    payload.connector!.spec.apiKeyRef = formData.apiKeyRef.referenceString
+  } else if (formData.authType === AuthTypes.BEARER_TOKEN) {
     payload.connector!.spec.apiKeyRef = formData.apiKeyRef.referenceString
   }
 

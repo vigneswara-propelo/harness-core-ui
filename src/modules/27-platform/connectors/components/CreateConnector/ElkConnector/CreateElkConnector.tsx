@@ -16,15 +16,16 @@ import { buildELKPayload } from '@platform/connectors/pages/connectors/utils/Con
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import { AuthTypes } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
 import type { ConnectionConfigProps } from '../CommonCVConnector/constants'
 import { cvConnectorHOC } from '../CommonCVConnector/CVConnectorHOC'
 import {
   ConnectorSecretField,
   ConnectorSecretFieldProps
 } from '../CommonCVConnector/components/ConnectorSecretField/ConnectorSecretField'
-import { initializeElkConnector } from './utils'
+import { getAuthFields, getELKAuthType, initializeElkConnector } from './utils'
 import { StepDetailsHeader } from '../CommonCVConnector/components/CredentialsStepHeader/CredentialsStepHeader'
-import { Connectors, ElkAuthType, ELKConnectorFields, getELKAuthType } from '../../../constants'
+import { Connectors } from '../../../constants'
 import commonStyles from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import styles from './CreateElkConnector.module.scss'
 
@@ -46,26 +47,7 @@ function UsernamePasswordAndApiKeyOption(props: UsernamePasswordAndApiKeyOptionP
   const { getString } = useStrings()
   const authOptions = useMemo(() => getELKAuthType(getString), [getString])
 
-  const fieldProps =
-    authTypeValue === ElkAuthType.API_CLIENT_TOKEN
-      ? [
-          {
-            name: 'apiKeyId',
-            label: getString('platform.connectors.elk.apiId'),
-            key: 'apiKeyId'
-          },
-          {
-            name: 'apiKeyRef',
-            label: getString('common.apikey'),
-            key: 'apiKeyRef'
-          }
-        ]
-      : authTypeValue === ElkAuthType.USERNAME_PASSWORD
-      ? [
-          { name: ELKConnectorFields.USERNAME, label: getString('username'), key: 'username' },
-          { name: ELKConnectorFields.PASSWORD, label: getString('password'), key: 'password' }
-        ]
-      : null
+  const fieldProps = getAuthFields(getString, authTypeValue)
 
   return (
     <Container>
@@ -82,9 +64,9 @@ function UsernamePasswordAndApiKeyOption(props: UsernamePasswordAndApiKeyOptionP
       </Container>
       {fieldProps && (
         <>
-          <FormInput.Text {...fieldProps[0]} />
+          {authTypeValue !== AuthTypes.BEARER_TOKEN && <FormInput.Text {...fieldProps[0]} />}
           <ConnectorSecretField
-            secretInputProps={fieldProps[1]}
+            secretInputProps={authTypeValue !== AuthTypes.BEARER_TOKEN ? fieldProps[1] : fieldProps[0]}
             accountIdentifier={accountIdentifier}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
@@ -117,9 +99,9 @@ function ElkConfigStep(props: ConnectionConfigProps): JSX.Element {
   const { spec, ...prevData } = props.prevStepData || {}
 
   let secretFieldValue: undefined | string
-  if (initialValues.authType === ElkAuthType.USERNAME_PASSWORD) {
+  if (initialValues.authType === AuthTypes.USER_PASSWORD) {
     secretFieldValue = prevData?.password?.referenceString || spec?.passwordRef
-  } else if (initialValues.authType === ElkAuthType.API_CLIENT_TOKEN) {
+  } else if (initialValues.authType === AuthTypes.API_CLIENT_TOKEN) {
     secretFieldValue = prevData?.apiKeyRef?.referenceString || spec?.apiKeyRef
   }
 
@@ -131,14 +113,14 @@ function ElkConfigStep(props: ConnectionConfigProps): JSX.Element {
   })
 
   const onAuthTypeChange = (updatedAuth: string, formikProps: FormikProps<any>): void => {
-    if (updatedAuth === ElkAuthType.API_CLIENT_TOKEN) {
+    if (updatedAuth === AuthTypes.API_CLIENT_TOKEN) {
       formikProps.setValues({
         ...formikProps.values,
         authType: updatedAuth,
         username: null,
         password: null
       })
-    } else if (updatedAuth === ElkAuthType.USERNAME_PASSWORD) {
+    } else if (updatedAuth === AuthTypes.USER_PASSWORD) {
       formikProps.setValues({
         ...formikProps.values,
         authType: updatedAuth,
@@ -162,27 +144,28 @@ function ElkConfigStep(props: ConnectionConfigProps): JSX.Element {
           username: Yup.string()
             .nullable()
             .when('authType', {
-              is: ElkAuthType.USERNAME_PASSWORD,
+              is: AuthTypes.USER_PASSWORD,
               then: Yup.string().required(getString('validation.username'))
             }),
           password: Yup.string()
             .nullable()
             .when('authType', {
-              is: ElkAuthType.USERNAME_PASSWORD,
+              is: AuthTypes.USER_PASSWORD,
               then: Yup.string().required(getString('validation.password'))
             }),
           apiKeyId: Yup.string()
             .nullable()
             .when('authType', {
-              is: ElkAuthType.API_CLIENT_TOKEN,
+              is: AuthTypes.API_CLIENT_TOKEN,
               then: Yup.string().required(getString('platform.connectors.elk.validation.apiKeyId'))
             }),
-          apiKeyRef: Yup.string()
-            .nullable()
-            .when('authType', {
-              is: ElkAuthType.API_CLIENT_TOKEN,
-              then: Yup.string().required(getString('platform.connectors.elk.validation.apiKeyRef'))
-            })
+          apiKeyRef: Yup.string().when('authType', {
+            is: authTypeValue => {
+              return authTypeValue === AuthTypes.API_CLIENT_TOKEN || authTypeValue === AuthTypes.BEARER_TOKEN
+            },
+            then: Yup.string().required(getString('platform.connectors.elk.validation.apiKeyRef')),
+            otherwise: Yup.string().nullable()
+          })
         })}
         onSubmit={handleSubmit}
       >
@@ -196,9 +179,9 @@ function ElkConfigStep(props: ConnectionConfigProps): JSX.Element {
                 orgIdentifier={props.orgIdentifier}
                 secretFieldValue={secretFieldValue}
                 onSuccessfulFetch={result => {
-                  if (initialValues.authType === ElkAuthType.API_CLIENT_TOKEN) {
+                  if (initialValues.authType === AuthTypes.API_CLIENT_TOKEN) {
                     formikProps.setFieldValue('apiKeyRef', result)
-                  } else if (initialValues.authType === ElkAuthType.USERNAME_PASSWORD) {
+                  } else if (initialValues.authType === AuthTypes.USER_PASSWORD) {
                     formikProps.setFieldValue('password', result)
                   }
                 }}

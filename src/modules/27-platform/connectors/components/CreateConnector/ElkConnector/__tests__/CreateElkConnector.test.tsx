@@ -7,13 +7,15 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, screen } from '@testing-library/react'
 import { Button, Container, FormInput } from '@harness/uicore'
 import { act } from 'react-test-renderer'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import { ElkAuthType } from '@platform/connectors/constants'
+import { AuthTypes } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
+import { ElkAuthType } from '../CreateElkConnector.constants'
 import { onNextMock } from '../../CommonCVConnector/__mocks__/CommonCVConnectorMocks'
 
 // tells jest we intent to mock CVConnectorHOC and use mock in __mocks__
@@ -33,7 +35,7 @@ async function updateApiClientAuthType(authType: string) {
   await waitFor(() => expect(document.body.querySelector('.bp3-menu [class*="menuItem"]')).not.toBeNull())
 
   const { index, value } =
-    authType === ElkAuthType.API_CLIENT_TOKEN
+    authType === AuthTypes.API_CLIENT_TOKEN
       ? { index: 1, value: 'API Client' }
       : { index: 0, value: 'Username and Password' }
   fireEvent.click(document.body.querySelectorAll('.bp3-menu li')[index])
@@ -87,7 +89,7 @@ describe('Unit tests for createElkConnector', () => {
     expect(getAllByText('UrlLabel')).not.toBeNull()
 
     // switch auth type
-    await updateApiClientAuthType(ElkAuthType.API_CLIENT_TOKEN)
+    await updateApiClientAuthType(AuthTypes.API_CLIENT_TOKEN)
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     expect(getByText('platform.connectors.elk.validation.apiKeyId')).not.toBeNull()
     expect(getByText('platform.connectors.elk.validation.apiKeyRef')).not.toBeNull()
@@ -139,7 +141,7 @@ describe('Unit tests for createElkConnector', () => {
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
-        authType: ElkAuthType.USERNAME_PASSWORD,
+        authType: AuthTypes.USER_PASSWORD,
         orgIdentifier: 'dummyOrgId',
         password: 'some-password',
         projectIdentifier: 'dummyProjectId',
@@ -166,7 +168,7 @@ describe('Unit tests for createElkConnector', () => {
     )
 
     await waitFor(() => expect(getByText('authentication')).not.toBeNull())
-    await updateApiClientAuthType(ElkAuthType.API_CLIENT_TOKEN)
+    await updateApiClientAuthType(AuthTypes.API_CLIENT_TOKEN)
 
     // fill out fields and compare payload
     await setFieldValue({
@@ -195,7 +197,7 @@ describe('Unit tests for createElkConnector', () => {
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
-        authType: ElkAuthType.API_CLIENT_TOKEN,
+        authType: AuthTypes.API_CLIENT_TOKEN,
         orgIdentifier: 'dummyOrgId',
         apiKeyRef: 'elk_apiKeyRef',
         projectIdentifier: 'dummyProjectId',
@@ -203,6 +205,66 @@ describe('Unit tests for createElkConnector', () => {
         apiKeyId: 'elk_apiKeyId',
         username: null,
         password: null
+      })
+    )
+  })
+
+  test('Ensure create flow works for Barer token', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateElkConnector
+          accountId="dummyAccountId"
+          orgIdentifier="dummyOrgId"
+          projectIdentifier="dummyProjectId"
+          onClose={noop}
+          onSuccess={noop}
+          isEditMode={false}
+          setIsEditMode={noop}
+          connectorInfo={undefined}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getByText('authentication')).not.toBeNull())
+
+    const caret = document.body
+      .querySelector(`[name="authType"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+
+    fireEvent.click(caret!)
+    await waitFor(() => expect(document.body.querySelector('.bp3-menu [class*="menuItem"]')).not.toBeNull())
+
+    screen.debug()
+
+    await userEvent.click(screen.getByText(/platform.connectors.bearerToken/))
+
+    // fill out fields and compare payload
+    await setFieldValue({
+      container: document.body,
+      type: InputTypes.TEXTFIELD,
+      fieldId: 'url',
+      value: 'https://sdfs.com'
+    })
+
+    await setFieldValue({
+      container: document.body,
+      type: InputTypes.TEXTFIELD,
+      fieldId: 'apiKeyRef',
+      value: 'elk_apiKeyRef_token'
+    })
+
+    // click submit and verify submitted data
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    await waitFor(() =>
+      expect(onNextMock).toHaveBeenCalledWith({
+        accountId: 'dummyAccountId',
+        apiKeyRef: 'elk_apiKeyRef_token',
+        authType: 'Bearer Token(HTTP Header)',
+        orgIdentifier: 'dummyOrgId',
+        password: undefined,
+        projectIdentifier: 'dummyProjectId',
+        url: 'https://sdfs.com',
+        username: ''
       })
     )
   })
@@ -231,7 +293,7 @@ describe('Unit tests for createElkConnector', () => {
                 controllerUrl: elkURL,
                 username: 'username',
                 password: 'password',
-                authType: ElkAuthType.USERNAME_PASSWORD,
+                authType: AuthTypes.USER_PASSWORD,
                 delegateSelectors: [],
                 passwordRef: 'passwordRef'
               }
@@ -244,7 +306,7 @@ describe('Unit tests for createElkConnector', () => {
     await waitFor(() => expect(getByText('authentication')).not.toBeNull())
 
     // switch auth type to username password
-    await updateApiClientAuthType(ElkAuthType.API_CLIENT_TOKEN)
+    await updateApiClientAuthType(AuthTypes.API_CLIENT_TOKEN)
 
     // expect recieved value to be there
     expect(container.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
@@ -328,7 +390,7 @@ describe('Unit tests for createElkConnector', () => {
               apiKeyRef: {
                 referenceString: 'referenceString'
               },
-              authType: ElkAuthType.API_CLIENT_TOKEN,
+              authType: AuthTypes.API_CLIENT_TOKEN,
               delegateSelectors: []
             } as unknown as ConnectorInfoDTO
           }
@@ -341,7 +403,7 @@ describe('Unit tests for createElkConnector', () => {
     // expect recieved value to be there
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
     // switch auth type to username password
-    await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)
+    await updateApiClientAuthType(AuthTypes.USER_PASSWORD)
 
     // update it with new value
     await setFieldValue({
@@ -372,7 +434,7 @@ describe('Unit tests for createElkConnector', () => {
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
-        authType: ElkAuthType.USERNAME_PASSWORD,
+        authType: AuthTypes.USER_PASSWORD,
         apiKeyId: 'appdclientid',
         apiKeyRef: {
           referenceString: 'referenceString'
@@ -418,7 +480,7 @@ describe('Unit tests for createElkConnector', () => {
               spec: {
                 apiKeyRef: 'apiKeyRef'
               },
-              authType: ElkAuthType.API_CLIENT_TOKEN,
+              authType: AuthTypes.API_CLIENT_TOKEN,
               delegateSelectors: []
             } as unknown as ConnectorInfoDTO
           }
@@ -432,7 +494,7 @@ describe('Unit tests for createElkConnector', () => {
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
 
     // switch auth type to username password
-    await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)
+    await updateApiClientAuthType(AuthTypes.USER_PASSWORD)
 
     // update it with new value
     await setFieldValue({
@@ -466,7 +528,7 @@ describe('Unit tests for createElkConnector', () => {
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
-        authType: ElkAuthType.USERNAME_PASSWORD,
+        authType: AuthTypes.USER_PASSWORD,
         apiKeyId: 'appdclientid',
         spec: {
           apiKeyRef: 'apiKeyRef'
@@ -526,7 +588,7 @@ describe('Unit tests for createElkConnector', () => {
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
 
     // switch auth type to username password
-    await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)
+    await updateApiClientAuthType(AuthTypes.USER_PASSWORD)
 
     // update it with new value
     await setFieldValue({
@@ -557,7 +619,7 @@ describe('Unit tests for createElkConnector', () => {
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
-        authType: ElkAuthType.USERNAME_PASSWORD,
+        authType: AuthTypes.USER_PASSWORD,
         apiKeyId: 'appdclientid',
         apiKeyRef: 'appdsecretf',
         clientId: null,
@@ -599,7 +661,7 @@ describe('Unit tests for createElkConnector', () => {
               url: elkURL,
               apiKeyId: 'appdclientid',
               apiKeyRef: 'appdsecretf',
-              authType: ElkAuthType.USERNAME_PASSWORD,
+              authType: AuthTypes.USER_PASSWORD,
               password: {
                 referenceString: 'referenceString'
               },
@@ -616,7 +678,7 @@ describe('Unit tests for createElkConnector', () => {
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
 
     // switch auth type to username password
-    await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)
+    await updateApiClientAuthType(AuthTypes.USER_PASSWORD)
 
     // update it with new value
     await setFieldValue({
@@ -650,7 +712,7 @@ describe('Unit tests for createElkConnector', () => {
     await waitFor(() =>
       expect(onNextMock).toHaveBeenCalledWith({
         accountId: 'dummyAccountId',
-        authType: ElkAuthType.USERNAME_PASSWORD,
+        authType: AuthTypes.USER_PASSWORD,
         apiKeyId: 'appdclientid',
         apiKeyRef: 'appdsecretf',
         clientId: null,
