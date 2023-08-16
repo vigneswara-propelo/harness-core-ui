@@ -416,21 +416,24 @@ function SavePipelinePopover(
     ]
   )
 
-  const saveAndPublish = React.useCallback(async () => {
+  const saveAndPublish = async (): Promise<void> => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))
 
     let latestPipeline: PipelineInfoConfig = pipeline
 
     if (isYaml && yamlHandler) {
-      if (!parse(yamlHandler.getLatestYaml())) {
+      try {
+        latestPipeline = parse<Pipeline>(yamlHandler.getLatestYaml())?.pipeline
+
+        if (!latestPipeline) {
+          clear()
+          showError(getString('invalidYamlText'))
+          return
+        }
+      } /* istanbul ignore next */ catch {
         clear()
         showError(getString('invalidYamlText'))
         return
-      }
-      try {
-        latestPipeline = parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig
-      } /* istanbul ignore next */ catch (err) {
-        showError(err.message || err, undefined, 'pipeline.save.pipeline.error')
       }
     }
 
@@ -442,22 +445,7 @@ function SavePipelinePopover(
     }
 
     await initPipelinePublish(latestPipeline)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    deletePipelineCache,
-    accountId,
-    history,
-    toPipelineStudio,
-    projectIdentifier,
-    orgIdentifier,
-    pipeline,
-    fetchPipeline,
-    showError,
-    pipelineIdentifier,
-    isYaml,
-    yamlHandler,
-    initPipelinePublish
-  ])
+  }
 
   const [canExecute] = usePermission(
     {
