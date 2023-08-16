@@ -16,7 +16,6 @@ import { useQueryParams } from '@common/hooks'
 import { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import TriggerStatusErrorModal from './TriggerStatusErrorModal/TriggerStatusErrorModal'
-import { isTriggerActivityHistoryDisabled } from '../../utils/TriggersListUtils'
 import css from '../TriggersListSection.module.scss'
 export interface TriggerStatusProps {
   triggerStatus: TriggerStatus
@@ -63,30 +62,26 @@ export default function TriggerStatusCell({
   const renderTooltip = useCallback(() => {
     const isArtifactOrManifestTrigger =
       triggerType === 'Artifact' || triggerType === 'MultiRegionArtifact' || triggerType === 'Manifest'
-    const triggersActivityHistoryPageLink =
-      triggerIdentifier &&
-      (isTriggerActivityHistoryDisabled(triggerType) ? (
-        <Button text={getString('activityHistoryLabel')} variation={ButtonVariation.LINK} disabled />
-      ) : (
-        <Link
-          to={routes.toTriggersActivityHistoryPage({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            pipelineIdentifier,
-            triggerIdentifier,
-            module,
-            repoIdentifier,
-            branch,
-            connectorRef,
-            repoName,
-            storeType
-          })}
-          style={{ textAlign: 'center' }}
-        >
-          {getString('activityHistoryLabel')}
-        </Link>
-      ))
+    const triggersActivityHistoryPageLink = triggerIdentifier && (
+      <Link
+        to={routes.toTriggersActivityHistoryPage({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          pipelineIdentifier,
+          triggerIdentifier,
+          module,
+          repoIdentifier,
+          branch,
+          connectorRef,
+          repoName,
+          storeType
+        })}
+        style={{ textAlign: 'center' }}
+      >
+        {getString('activityHistoryLabel')}
+      </Link>
+    )
 
     if (status === 'SUCCESS' && isArtifactOrManifestTrigger) {
       return (

@@ -387,6 +387,3 @@ export const getTriggerCategoryDrawerMapFromTriggerCatalogItem = (
 
 export const getTriggerBaseType = (triggerType?: TriggerType): TriggerBaseType | undefined =>
   triggerType === 'MultiRegionArtifact' ? 'Artifact' : triggerType
-
-export const isTriggerActivityHistoryDisabled = (triggerType: TriggerType): boolean =>
-  triggerType !== 'Scheduled' && triggerType !== 'Webhook'

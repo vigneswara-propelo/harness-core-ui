@@ -5604,6 +5604,7 @@ export interface StringsMap {
   'triggers.aboutTriggers': string
   'triggers.activityActivation': string
   'triggers.activityDays': string
+  'triggers.activityHistory.artifactVersion': string
   'triggers.activityHistory.emptyStateMessage': string
   'triggers.activityHistory.eventCorrelationId': string
   'triggers.activityHistory.executionDetails': string

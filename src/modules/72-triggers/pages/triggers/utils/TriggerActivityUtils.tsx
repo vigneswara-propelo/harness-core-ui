@@ -20,6 +20,7 @@ import css from '../TriggerLandingPage/TriggerActivityHistoryPage/TriggerActivit
 interface PayloadDrawerInterface {
   onClose: () => void
   selectedPayloadRow?: string
+  selectedTriggerType?: string
 }
 
 export type CellType = Renderer<CellProps<NGTriggerEventHistoryResponse>>
@@ -49,7 +50,11 @@ export const RenderColumnPayload: CellType = ({ row, column }) => {
   )
 }
 
-export const PayloadDrawer = ({ onClose, selectedPayloadRow }: PayloadDrawerInterface): React.ReactElement => {
+export const PayloadDrawer = ({
+  onClose,
+  selectedPayloadRow,
+  selectedTriggerType
+}: PayloadDrawerInterface): React.ReactElement => {
   const { getString } = useStrings()
   const payloadValue = (): string => {
     try {
@@ -78,7 +83,13 @@ export const PayloadDrawer = ({ onClose, selectedPayloadRow }: PayloadDrawerInte
     >
       <MonacoEditor
         language="yaml"
-        value={payloadValue()}
+        value={
+          selectedTriggerType === 'Artifact' ||
+          selectedTriggerType === 'MultiRegionArtifact' ||
+          selectedTriggerType === 'Manifest'
+            ? selectedPayloadRow
+            : payloadValue()
+        }
         data-testid="monaco-editor"
         alwaysShowDarkTheme={true}
         options={

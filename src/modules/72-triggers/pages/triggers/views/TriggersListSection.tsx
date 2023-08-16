@@ -114,7 +114,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
       targetIdentifier: column.pipelineIdentifier
     }
   })
-  const disableActivityHistory = data.type !== TriggerTypes.SCHEDULE && data.type !== TriggerTypes.WEBHOOK
+
   const { openDialog: confirmDelete } = useConfirmationDialog({
     contentText: `${column.getString('triggers.confirmDelete')} ${data.name || /* istanbul ignore next */ ''}`,
     titleText: column.getString('common.triggerLabel'),
@@ -193,8 +193,6 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
               <Menu.Item
                 icon="history"
                 text={column.getString('activityHistoryLabel')}
-                className={disableActivityHistory ? css.disabledOption : ''}
-                textClassName={disableActivityHistory ? css.disabledOption : ''}
                 onClick={(e: React.MouseEvent) => {
                   e.stopPropagation()
                   if (data?.identifier && data.type) {

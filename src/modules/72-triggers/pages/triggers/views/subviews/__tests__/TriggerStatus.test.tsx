@@ -155,14 +155,10 @@ describe('Test case for trigger status rendering and behavior', () => {
 
     expect(getByText('triggers.lastCollectedTag')).toBeInTheDocument()
     expect(getByText(lastPolled)).toBeInTheDocument()
-
-    // TODO: Uncomment this once we allow activity history page for Artifact & Manifest
-    /*  expect(getByText('activityHistoryLabel')).toHaveAttribute(
+    expect(getByText('activityHistoryLabel')).toHaveAttribute(
       'href',
       '/account/default/home/orgs/default/projects/test/pipelines/test-pipeline/triggers/test-trigger/activity-history'
-      ) */
-    // TODO: Remove this once we allow activity history page for Artifact & Manifest
-    expect(getByText('activityHistoryLabel').parentElement).toBeDisabled()
+    )
   })
 
   test('Should show last collected tags and time for SUCCESS manifest', async () => {
@@ -185,13 +181,11 @@ describe('Test case for trigger status rendering and behavior', () => {
 
     expect(getByText('triggers.lastCollectedVersion')).toBeInTheDocument()
     expect(getByText(lastPolled)).toBeInTheDocument()
-    // TODO: Uncomment this once we allow activity history page for Artifact & Manifest
-    /* expect(getByText('activityHistoryLabel')).toHaveAttribute(
+    expect(getByText('activityHistoryLabel')).toHaveAttribute(
       'href',
       '/account/default/home/orgs/default/projects/test/pipelines/test-pipeline/triggers/test-trigger/activity-history'
-    ) */
-    // TODO: Remove this once we allow activity history page for Artifact & Manifest
-    expect(getByText('activityHistoryLabel').parentElement).toBeDisabled()
+    )
+    expect(getByText('activityHistoryLabel').parentElement).toBeEnabled()
   })
   test('Should show pending message for PENDING artifact', async () => {
     const triggerStatusMock: TriggerStatus = {
@@ -205,13 +199,10 @@ describe('Test case for trigger status rendering and behavior', () => {
 
     await findByText('triggers.waitingForTag')
 
-    // TODO: Uncomment this once we allow activity history page for Artifact & Manifest
-    /* expect(getByText('activityHistoryLabel')).toHaveAttribute(
+    expect(getByText('activityHistoryLabel')).toHaveAttribute(
       'href',
       '/account/default/home/orgs/default/projects/test/pipelines/test-pipeline/triggers/test-trigger/activity-history'
-    ) */
-    // TODO: Remove this once we allow activity history page for Artifact & Manifest
-    expect(getByText('activityHistoryLabel').parentElement).toBeDisabled()
+    )
   })
 
   test('Should show pending message for PENDING  manifest', async () => {
@@ -225,13 +216,11 @@ describe('Test case for trigger status rendering and behavior', () => {
     userEvent.hover(getByText('triggers.pending'))
 
     await findByText('triggers.waitingForVersion')
-
-    // TODO: Uncomment this once we allow activity history page for Artifact & Manifest
-    /* expect(getByText('activityHistoryLabel')).toHaveAttribute(
+    expect(getByText('activityHistoryLabel')).toHaveAttribute(
       'href',
       '/account/default/home/orgs/default/projects/test/pipelines/test-pipeline/triggers/test-trigger/activity-history'
-    ) */
-    // TODO: Remove this once we allow activity history page for Artifact & Manifest
-    expect(getByText('activityHistoryLabel').parentElement).toBeDisabled()
+    )
+
+    expect(getByText('activityHistoryLabel').parentElement).toBeEnabled()
   })
 })

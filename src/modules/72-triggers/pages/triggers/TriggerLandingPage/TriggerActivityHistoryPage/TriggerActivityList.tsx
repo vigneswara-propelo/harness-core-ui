@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import type { Column } from 'react-table'
@@ -113,15 +113,28 @@ const RenderColumnExecutionId: CellType = ({ row }) => {
   )
 }
 
+const RenderColumnArtifactVersions: CellType = ({ row }) => {
+  const data = row.original
+
+  return (
+    <Layout.Vertical>
+      <Layout.Horizontal spacing="small" width={230}>
+        <Text color={Color.BLACK} lineClamp={1} font={{ variation: FontVariation.BODY2 }}>
+          {data.ngTriggerEventInfo?.build}
+        </Text>
+      </Layout.Horizontal>
+    </Layout.Vertical>
+  )
+}
+
 const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListResponse }) => {
   const { getString } = useStrings()
   const [showPayload, setShowPayload] = React.useState<boolean>(true)
   const [selectedPayloadRow, setSelectedPayloadRow] = React.useState<string | undefined>()
-  const { content, totalElements, size, totalPages, pageable } = defaultTo(triggersListResponse, {})
-  const data: NGTriggerEventHistoryResponse[] = useMemo(() => defaultTo(content, []), [content])
-
-  const columns: Column<NGTriggerEventHistoryResponse>[] = useMemo(
-    () => [
+  const { content = [], totalElements, size, totalPages, pageable } = defaultTo(triggersListResponse, {})
+  const selectedTriggerType = content?.[0]?.type
+  const columns: Column<NGTriggerEventHistoryResponse>[] = React.useMemo(() => {
+    const cols = [
       {
         Header: getString('timeLabel'),
         id: 'time',
@@ -142,7 +155,7 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
       },
       {
         Header: getString('triggers.activityHistory.executionDetails'),
-        accessor: row => row?.targetExecutionSummary?.planExecutionId,
+        accessor: (row: NGTriggerEventHistoryResponse) => row?.targetExecutionSummary?.planExecutionId,
         width: '30%',
         Cell: RenderColumnExecutionId
       },
@@ -153,9 +166,22 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
         setShowPayload,
         setSelectedPayloadRow
       }
-    ],
-    []
-  )
+    ] as unknown as Column<NGTriggerEventHistoryResponse>[]
+
+    if (
+      selectedTriggerType === 'Artifact' ||
+      selectedTriggerType === 'MultiRegionArtifact' ||
+      selectedTriggerType === 'Manifest'
+    ) {
+      cols.splice(1, 1, {
+        Header: getString('triggers.activityHistory.artifactVersion'),
+        accessor: row => row?.ngTriggerEventInfo?.build,
+        width: '25%',
+        Cell: RenderColumnArtifactVersions
+      })
+    }
+    return cols
+  }, [getString, selectedTriggerType])
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: defaultTo(totalElements, 0),
@@ -169,12 +195,16 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
       <TableV2<NGTriggerEventHistoryResponse>
         className={css.table}
         columns={columns}
-        data={data}
+        data={content}
         name="TriggerListView"
         pagination={paginationProps}
       />
       {showPayload && selectedPayloadRow && (
-        <PayloadDrawer onClose={() => setShowPayload(false)} selectedPayloadRow={selectedPayloadRow} />
+        <PayloadDrawer
+          onClose={() => setShowPayload(false)}
+          selectedPayloadRow={selectedPayloadRow}
+          selectedTriggerType={selectedTriggerType}
+        />
       )}
     </>
   )

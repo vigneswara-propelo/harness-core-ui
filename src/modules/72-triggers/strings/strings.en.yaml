@@ -162,6 +162,7 @@ activityHistory:
   triggerStatus: 'Trigger Status'
   executionDetails: 'Execution Details'
   emptyStateMessage: 'No trigger activity history'
+  artifactVersion: 'Artifact Version Collected'
 triggerExplorer:
   tabName: Trigger Explorer
   pageHeading: 'Trigger Matching Activity'

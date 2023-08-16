@@ -23,11 +23,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import { TriggerBreadcrumbs } from '@triggers/pages/trigger-details/TriggerDetails'
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
-import {
-  getEnabledStatusTriggerValues,
-  getTriggerIcon,
-  isTriggerActivityHistoryDisabled
-} from '../utils/TriggersListUtils'
+import { getEnabledStatusTriggerValues, getTriggerIcon } from '../utils/TriggersListUtils'
 import { clearNullUndefined, ResponseStatus } from '../utils/TriggersWizardPageUtils'
 import css from './TriggerLandingPage.module.scss'
 
@@ -122,8 +118,6 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     storeType
   }
 
-  const triggerType = triggerResponse?.data?.type
-
   const triggerLinks = [
     {
       label: getString('details'),
@@ -131,8 +125,7 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     },
     {
       label: getString('activityHistoryLabel'),
-      to: routes.toTriggersActivityHistoryPage(routeParams),
-      disabled: isTriggerActivityHistoryDisabled(triggerType)
+      to: routes.toTriggersActivityHistoryPage(routeParams)
     }
   ]
 
