@@ -538,6 +538,7 @@ failureStrategies:
     ProceedWithDefaultValues: Proceed with Default Values
     StepGroupRollback: Rollback Step Group
     MarkAsFailure: Mark As Failure
+    MarkFailDisabled: Mark Stage As Failed (Disabled)
     UserMarkedFailure: Mark Stage As Failed
   errorTypeLabels:
     Authentication: Authentication Errors

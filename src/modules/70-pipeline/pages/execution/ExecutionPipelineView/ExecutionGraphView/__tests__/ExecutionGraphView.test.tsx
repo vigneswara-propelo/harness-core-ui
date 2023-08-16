@@ -38,6 +38,11 @@ jest.mock('services/pipeline-ng', () => ({
   useGetResourceConstraintsExecutionInfo: jest.fn(() => ({ refetch: () => ({}), data: null })),
   useGetExecutionNode: jest.fn(() => ({ data: {}, loading: false }))
 }))
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
 
 window.ResizeObserver =
   window.ResizeObserver ||

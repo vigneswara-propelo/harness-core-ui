@@ -87,6 +87,11 @@ jest.mock('services/ti-service', () => ({
     data: 'some-token'
   })
 }))
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
 
 const getDeprecatedConfigPromise = jest.fn().mockImplementation(() => {
   return Promise.resolve({

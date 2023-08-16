@@ -54,6 +54,11 @@ jest.mock('@common/exports', () => ({
     await onCloseDialog(true)
   })
 }))
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
 
 const TEST_PATH = routes.toExecutionPipelineView({
   ...accountPathProps,

@@ -49,6 +49,8 @@ import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
+import { useGetSettingValue } from 'services/cd-ng'
+import { SettingType } from '@common/constants/Utils'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
@@ -292,6 +294,16 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     await executeAction('UserMarkedFailure')
   }
 
+  const { data: enableMarkAsFailedSettings } = useGetSettingValue({
+    identifier: SettingType.ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: false
+  })
+
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
   const { openRetryPipelineModal } = useOpenRetryPipelineModal({ modules, params })
   const retryPipeline = (): void => {
@@ -354,10 +366,14 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               size={ButtonSize.SMALL}
               icon="mark-as-failed"
               iconProps={{ size: 15 }}
-              tooltip={getString(UserMarkedFailure)}
+              tooltip={
+                enableMarkAsFailedSettings?.data?.value === 'false'
+                  ? getString('pipeline.failureStrategies.strategiesLabel.MarkFailDisabled')
+                  : getString(UserMarkedFailure)
+              }
               onClick={openMarkAsFailedDialog}
               {...commonButtonProps}
-              disabled={!canExecute}
+              disabled={!canExecute || enableMarkAsFailedSettings?.data?.value === 'false'}
             />
           )}
         </>

@@ -59,6 +59,9 @@ jest.mock('services/cd-ng', () => ({
       loading: false,
       error: false
     }
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
   })
 }))
 

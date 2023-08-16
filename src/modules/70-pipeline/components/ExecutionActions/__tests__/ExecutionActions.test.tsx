@@ -9,6 +9,7 @@ import React from 'react'
 import { render, fireEvent, findByText, act, RenderResult, waitFor, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as cdNgServices from 'services/cd-ng'
 import * as useFeaturesLib from '@common/hooks/useFeatures'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -29,6 +30,11 @@ jest.mock('services/pipeline-ng', () => ({
   useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetInputsetYaml: jest.fn(() => ({ data: null }))
 }))
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'true' } } }
+  })
+}))
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/exports', () => ({
@@ -41,6 +47,7 @@ jest.mock('@common/exports', () => ({
     await onCloseDialog(true)
   })
 }))
+
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
 const TEST_PATH = routes.toExecutionPipelineView({
@@ -342,6 +349,28 @@ describe('<ExecutionActions /> tests', () => {
     )
 
     expect(screen.queryByText('pipeline.viewExecution')).not.toBeInTheDocument()
+  })
+
+  test('Mark as failed disabled button is visible when "ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY" is false', async () => {
+    jest.spyOn(cdNgServices, 'useGetSettingValue').mockReturnValue({
+      data: { data: { value: 'false' } }
+    } as any)
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={pathParams} queryParams={{ stageId: 'selectedStageId' }}>
+        <ExecutionActions
+          source="executions"
+          params={pathParams as any}
+          executionStatus={'Running'}
+          refetch={jest.fn()}
+          stageId={'selectedStageId'}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => {
+      const disabledButton = container.querySelector(`[data-icon="mark-as-failed"]`)?.closest('a')
+      expect(disabledButton).toHaveAttribute('disabled')
+    })
   })
 
   const routeToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
