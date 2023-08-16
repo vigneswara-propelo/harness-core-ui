@@ -48,4 +48,32 @@ const sanitize = (obj: Record<string, any>, sanityConfig?: YamlSanityConfig): Re
   return obj
 }
 
-export { sanitize }
+/**
+ * @description Downloads JSON response as a file
+ *
+ * @param jsonData JSON object
+ * @param fileName Name of the file to be downlaoded
+ * @returns Promise resolving to an object with status as boolean
+ */
+const downloadJSONAsFile = async (jsonData: any, fileName: string): Promise<{ status: boolean }> => {
+  try {
+    const blob = JSON.stringify(jsonData)
+    const file = new Blob([blob], { type: 'application/json;charset=utf-8' })
+    const data = URL.createObjectURL(file)
+    const anchor = document.createElement('a')
+    anchor.style.display = 'none'
+    anchor.href = data
+    anchor.download = fileName
+    anchor.click()
+    // For Firefox
+    setTimeout(() => {
+      anchor.remove()
+      // Release resource on disk after triggering the download
+      window.URL.revokeObjectURL(data)
+    }, 100)
+    return { status: true }
+  } catch (e) {
+    return { status: false }
+  }
+}
+export { sanitize, downloadJSONAsFile }

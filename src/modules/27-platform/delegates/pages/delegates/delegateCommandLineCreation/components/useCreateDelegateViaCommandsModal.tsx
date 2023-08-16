@@ -17,7 +17,6 @@ import css from '@delegates/pages/delegates/DelegatesPage.module.scss'
 export interface useCreateDelegateViaCommandsModalProps {
   oldDelegateCreation?: () => void
   onClose?: (delegateName?: string) => void
-  hideDocker?: boolean
   onDelegateNameChange?: (name: string) => void
 }
 
@@ -50,7 +49,6 @@ const useCreateDelegateViaCommandsModal = (
 
         <DelegateCommandLineCreation
           onDone={onClose}
-          hideDocker={useCreateDelegateViaCommandsModalProps?.hideDocker}
           oldDelegateCreation={useCreateDelegateViaCommandsModalProps?.oldDelegateCreation}
         />
       </Drawer>

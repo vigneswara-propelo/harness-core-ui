@@ -22,6 +22,7 @@ export interface CDPipelineProps {
   onDelegateFail: () => void
   onDelegateSuccess: () => void
   onVerificationStart?: () => void
+  delegateTypes?: string[]
 }
 export default function CDPipeline({
   state,
@@ -30,9 +31,11 @@ export default function CDPipeline({
   openDelagateDialog,
   onDelegateFail,
   onDelegateSuccess,
-  onVerificationStart
+  onVerificationStart,
+  delegateTypes
 }: CDPipelineProps): JSX.Element {
   const { getString } = useStrings()
+
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
@@ -52,11 +55,15 @@ export default function CDPipeline({
       <Layout.Vertical margin={{ bottom: 'large' }}>
         <DelegateModal
           delegateName={state.delegateName}
-          delegateProblemType={state?.delegateProblemType as string}
           onClose={closeDelegateDialog}
-          hideDocker
+          enabledDelegateTypes={delegateTypes}
           isOpen={isDrawerOpen}
           checkAndSuggestDelegateName
+          customImageName={
+            state.delegateType === DelegateCommonProblemTypes.DOCKER
+              ? 'harnesscommunity/serverless-delegate:latest'
+              : undefined
+          }
         />
       </Layout.Vertical>
 

@@ -48,8 +48,29 @@ export interface PipelineSetupState {
   githubPat?: string
   strategyId?: string
   pipelineVerified?: boolean
+  infraInfo?: {
+    svcKeyOrSecretKey?: string
+    region?: string
+    projectName?: string
+    awsArn?: string
+    bucketName?: string
+    functionPath?: string
+    accessKey?: string
+  }
 }
 
 export interface ApiKeySetupProps {
   onKeyGenerate: (data: PipelineSetupState) => void
+}
+
+export enum CLOUD_FUNCTION_TYPES {
+  GCPGen1 = 'GCPGen1',
+  GCPGen2 = 'GCPGen2',
+  ServerLessLambda = 'ServerLessLambda',
+  NativeAWSLambda = 'NativeAWSLambda'
+}
+
+export enum SERVERLESS_FUNCTIONS {
+  AWS_LAMBDA_FUNCTION = 'AwsLambdaFunction',
+  GOOGLE_CLOUD_FUNCTION = 'GCPFunction'
 }

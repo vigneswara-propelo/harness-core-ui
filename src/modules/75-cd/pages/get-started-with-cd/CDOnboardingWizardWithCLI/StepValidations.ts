@@ -5,7 +5,7 @@ import { INFRA_SUB_TYPES, SWIMLANE_DOCS_LINK } from './Constants'
 function validateWhatToDeployStep(data: WhatToDeployType): boolean {
   let isValidStep = !isEmpty(data?.svcType?.id)
   const isArtifactDisabled = SWIMLANE_DOCS_LINK[data?.artifactType?.id as string]?.isInComplete === true
-  if (isEmpty(data?.artifactType?.id) && isArtifactDisabled) {
+  if (isEmpty(data?.artifactType?.id) || isArtifactDisabled) {
     isValidStep = false
   }
   const hasArtifactSubtype = INFRA_SUB_TYPES[data?.artifactType?.id as string]

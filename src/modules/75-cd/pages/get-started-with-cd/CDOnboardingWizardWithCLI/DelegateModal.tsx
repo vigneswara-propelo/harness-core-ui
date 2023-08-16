@@ -13,16 +13,16 @@ import css from './CDOnboardingWizardWithCLI.module.scss'
 export interface DelgateDetails {
   delegateName?: DelegateDefaultName
   delegateType?: DelegateCommandLineTypes
-  delegateProblemType?: string
 }
 export interface useCreateDelegateViaCommandsModalProps {
   oldDelegateCreation?: () => void
   hideDocker?: boolean
   onClose: (data: DelgateDetails) => void
   isOpen?: boolean
-  delegateProblemType?: string
   delegateName?: string
   checkAndSuggestDelegateName?: boolean
+  enabledDelegateTypes?: string[]
+  customImageName?: string
 }
 
 export default function DelegateModal(props: useCreateDelegateViaCommandsModalProps): JSX.Element {
@@ -54,11 +54,12 @@ export default function DelegateModal(props: useCreateDelegateViaCommandsModalPr
         <DelegateCommandLineCreation
           delegateName={props?.delegateName}
           onDone={onClose}
-          hideDocker={props?.hideDocker}
           oldDelegateCreation={props?.oldDelegateCreation}
           onDelegateConfigChange={onDelegateConfigChange}
           checkAndSuggestDelegateName={props?.checkAndSuggestDelegateName}
           onVerificationStart={onVerificationStart}
+          enabledDelegateTypes={props.enabledDelegateTypes}
+          customImageName={props.customImageName}
         />
       </Drawer>
     </Dialog>

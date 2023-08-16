@@ -9,6 +9,8 @@ setup: Setup
 HelmChartLabel: Helm Chart
 agent: Agent
 agents: Agents
+rolling: Rolling Update
+basic: Basic Deployment
 gitopsAgents: Gitops Agents
 reloadFromGit: 'Reload from Git'
 perModule: Per Module

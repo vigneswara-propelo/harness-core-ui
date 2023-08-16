@@ -13,6 +13,7 @@ import {
 import { FontVariation, Intent, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash-es'
 import type { HideModal } from '@harness/use-modal'
 import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
 import { useStrings } from 'framework/strings'
@@ -40,13 +41,13 @@ import TerraFormCommands from './components/TerraFormCommands'
 import KubernetesManifestCommands from './components/KubernetesManifestCommands'
 import HelmChartCommands from './components/HelmChartCommands'
 import KuberntesManifestSizingTable from './components/KuberntesManifestSizingTable'
+import { getYamlWithCustomImage } from '../utils/DelegateHelper'
 import css from './DelegateCommandLineCreation.module.scss'
 
 interface DelegateCommandLineCreationProps {
   delegateName?: string
   oldDelegateCreation?: () => void
   onDone: HideModal
-  hideDocker?: boolean
   checkAndSuggestDelegateName?: boolean
   onDelegateConfigChange?: (data: {
     delegateName?: DelegateDefaultName
@@ -54,6 +55,8 @@ interface DelegateCommandLineCreationProps {
     delegateProblemType?: DelegateCommonProblemTypes
   }) => void
   onVerificationStart?: () => void
+  enabledDelegateTypes?: string[]
+  customImageName?: string
 }
 interface CommonStatesforAllClicksProps {
   commandTypeLocal: CommandType | undefined
@@ -70,27 +73,45 @@ const intsallDelegateLinkTutorial =
 const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({
   onDone,
   oldDelegateCreation,
-  hideDocker,
+  enabledDelegateTypes,
   onDelegateConfigChange,
   onVerificationStart,
-  delegateName: defaultDelegateName
+  delegateName: defaultDelegateName,
+  customImageName = ''
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const [delegateType, setDelegateType] = useState<DelegateCommandLineTypes>(DelegateCommandLineTypes.KUBERNETES)
-  const [kubernetesType, setkubernetesType] = useState<KubernetesType | undefined>(KubernetesType.HELM_CHART)
-  const [commandType, setCommandType] = useState<CommandType | undefined>(CommandType.HELM)
+  const [delegateType, setDelegateType] = useState<DelegateCommandLineTypes>((): DelegateCommandLineTypes => {
+    return (enabledDelegateTypes?.[0] as DelegateCommandLineTypes) || DelegateCommandLineTypes.KUBERNETES
+  })
+  const [kubernetesType, setkubernetesType] = useState<KubernetesType | undefined>(() => {
+    return isEmpty(enabledDelegateTypes) || enabledDelegateTypes?.includes(DelegateCommandLineTypes.KUBERNETES)
+      ? KubernetesType.HELM_CHART
+      : undefined
+  })
+  const [commandType, setCommandType] = useState<CommandType | undefined>((): CommandType => {
+    const isDockerDelegate = enabledDelegateTypes?.[0] === DelegateCommandLineTypes.DOCKER
+    return isDockerDelegate ? CommandType.DOCKER : CommandType.HELM
+  })
   const [command, setCommand] = useState<string>('')
   const [errorDelegateName, setErrorDelegateName] = useState<boolean>(false)
   const [errorDelegateNameLength, setErrorDelegateNameLength] = useState<boolean>(false)
-  const [delegateDefaultName, setDelegateDefaultName] = useState<string>(DelegateDefaultName.HELM)
+  const [delegateDefaultName, setDelegateDefaultName] = useState<string>((): string => {
+    const isDockerDelegate = enabledDelegateTypes?.[0] === DelegateCommandLineTypes.DOCKER
+
+    return isDockerDelegate ? DelegateDefaultName.DOCKER : DelegateDefaultName.HELM
+  })
   const [originalCommand, setOriginalCommand] = useState<string>('')
   const [commonProblemsDelegateType, setCommonProblemsDelegateType] = useState<DelegateCommonProblemTypes | undefined>(
-    DelegateCommonProblemTypes.HELM_CHART
+    (): DelegateCommonProblemTypes => {
+      return enabledDelegateTypes?.[0] === DelegateCommonProblemTypes.DOCKER
+        ? DelegateCommonProblemTypes.DOCKER
+        : DelegateCommonProblemTypes.HELM_CHART
+    }
   )
   const { showError } = useToaster()
   const [verifyButtonClicked, setVerifyButtonClicked] = useState<boolean>(false)
-  const [delegateName, setDelegateName] = useState<string>(defaultDelegateName || DelegateDefaultName.HELM)
+  const [delegateName, setDelegateName] = useState<string>(delegateDefaultName || DelegateDefaultName.HELM)
   const [kubenetesYamlOriginal, setKubernetesYamlOriginal] = useState<string>('')
 
   const [kubenetesYamlUpdatedValue, setKubernetesYamlUpdatedValue] = useState<string>('')
@@ -194,8 +215,9 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   }, [commandType])
   useEffect(() => {
     if (commandData && commandData?.resource && commandData?.resource['command']) {
-      setCommand(commandData?.resource['command'])
-      setOriginalCommand(commandData?.resource['command'])
+      const commandUpdated = getYamlWithCustomImage(commandData?.resource['command'], customImageName)
+      setCommand(commandUpdated)
+      setOriginalCommand(commandUpdated)
     }
   }, [commandData])
   const commonCommandsForAllDelegateTypes = (): void => {
@@ -225,6 +247,10 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       setShowVerifyButton(true)
     }
     setVerifyButtonClicked(false)
+  }
+
+  const shouldShowDelegateType = (delType: string): boolean => {
+    return Boolean(isEmpty(enabledDelegateTypes) || (enabledDelegateTypes && enabledDelegateTypes?.includes(delType)))
   }
   const kubernetesDelegateButtons = (
     <Layout.Horizontal spacing="none" margin={{ bottom: 'xlarge', top: 'none' }}>
@@ -455,30 +481,32 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
             </Text>
 
             <Layout.Horizontal spacing="margin-form-field" margin={{ bottom: 'xxxlarge' }}>
-              <Button
-                icon="service-kubernetes"
-                className={css.kubernetesButtons}
-                onClick={() => {
-                  commonStatesforAllClicks({
-                    commandTypeLocal: CommandType.HELM,
-                    delegateNameLocal: DelegateDefaultName.HELM,
-                    delegateDefaultNameLocal: DelegateDefaultName.HELM,
-                    commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.HELM_CHART
-                  })
-                  setDelegateType(DelegateCommandLineTypes.KUBERNETES)
-                  setkubernetesType(KubernetesType.HELM_CHART)
-                  trackEvent(DelegateActions.DelegateCommandLineKubernetes, {
-                    category: Category.DELEGATE
-                  })
-                  trackEvent(DelegateActions.DelegateCommandLineHelm, {
-                    category: Category.DELEGATE
-                  })
-                }}
-                text={getString('kubernetesText')}
-                round
-                intent={delegateType === DelegateCommandLineTypes.KUBERNETES ? 'primary' : 'none'}
-              ></Button>
-              {!hideDocker && (
+              {shouldShowDelegateType(DelegateCommandLineTypes.KUBERNETES) && (
+                <Button
+                  icon="service-kubernetes"
+                  className={css.kubernetesButtons}
+                  onClick={() => {
+                    commonStatesforAllClicks({
+                      commandTypeLocal: CommandType.HELM,
+                      delegateNameLocal: DelegateDefaultName.HELM,
+                      delegateDefaultNameLocal: DelegateDefaultName.HELM,
+                      commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.HELM_CHART
+                    })
+                    setDelegateType(DelegateCommandLineTypes.KUBERNETES)
+                    setkubernetesType(KubernetesType.HELM_CHART)
+                    trackEvent(DelegateActions.DelegateCommandLineKubernetes, {
+                      category: Category.DELEGATE
+                    })
+                    trackEvent(DelegateActions.DelegateCommandLineHelm, {
+                      category: Category.DELEGATE
+                    })
+                  }}
+                  text={getString('kubernetesText')}
+                  round
+                  intent={delegateType === DelegateCommandLineTypes.KUBERNETES ? 'primary' : 'none'}
+                ></Button>
+              )}
+              {shouldShowDelegateType(DelegateCommandLineTypes.DOCKER) && (
                 <Button
                   intent={delegateType === DelegateCommandLineTypes.DOCKER ? 'primary' : 'none'}
                   onClick={() => {

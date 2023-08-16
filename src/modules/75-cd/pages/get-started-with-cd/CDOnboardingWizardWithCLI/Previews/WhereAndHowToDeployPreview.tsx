@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { capitalize } from 'lodash-es'
 import { Color } from '@harness/design-system'
+import { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'
 import { useOnboardingStore } from '../Store/OnboardingStore'
 import { CDOnboardingSteps, WhereAndHowToDeployType } from '../types'
@@ -62,7 +63,7 @@ const DelegateLoadingLabel = ({ data }: { data: WhereAndHowToDeployType }): JSX.
           {getString('deploymentTypeText')}:
         </Text>
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
-          {data.type?.label}
+          {getString(data.type?.label as keyof StringsMap)}
         </Text>
       </Layout.Horizontal>
       <Layout.Horizontal margin={{ bottom: 'small' }}>
@@ -97,7 +98,7 @@ const DelegateSuccessLabel = ({
           {getString('deploymentTypeText')}:
         </Text>
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
-          {data.type?.label}
+          {getString(data.type?.label as keyof StringsMap)}
         </Text>
       </Layout.Horizontal>
       <Layout.Horizontal margin={{ bottom: 'small' }}>
@@ -136,7 +137,7 @@ const DelegateFailedLabel = ({
           {getString('deploymentTypeText')}
         </Text>
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
-          {data.type?.label}
+          {getString(data.type?.label as keyof StringsMap)}
         </Text>
       </Layout.Horizontal>
       <Layout.Horizontal margin={{ bottom: 'small' }}>

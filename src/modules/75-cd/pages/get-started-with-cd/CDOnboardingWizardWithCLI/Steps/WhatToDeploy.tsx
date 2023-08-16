@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
+import { StringsMap } from 'stringTypes'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import {
@@ -118,7 +119,7 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
               }}
               color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
             >
-              {item.label}
+              {getString(item.label as keyof StringsMap)}
             </Text>
           </Layout.Vertical>
         )}
@@ -150,7 +151,7 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
                   }}
                   color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
                 >
-                  {item.label}
+                  {getString(item.label as keyof StringsMap)}
                 </Text>
               </Layout.Vertical>
             )}
@@ -182,7 +183,7 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
                   }}
                   color={state.artifactSubType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
                 >
-                  {item.label}
+                  {getString(item.label as keyof StringsMap)}
                 </Text>
               </Layout.Vertical>
             )}

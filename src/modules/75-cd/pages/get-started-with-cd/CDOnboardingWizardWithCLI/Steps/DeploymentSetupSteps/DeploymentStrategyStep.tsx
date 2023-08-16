@@ -12,14 +12,9 @@ import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
 import { StringsMap } from 'stringTypes'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 import { String, useStrings } from 'framework/strings'
-import {
-  DEPLOYMENT_STRATEGY_TYPES,
-  DEPLOYMENT_TYPE_MAP,
-  DEPLOYMENT_TYPE_TO_DIR_MAP,
-  DEPLOYMENT_TYPE_TO_FILE_MAPS,
-  StrategyVideoByType
-} from '../../Constants'
+import { DEPLOYMENT_STRATEGY_TYPES, DEPLOYMENT_TYPE_MAP, StrategyVideoByType } from '../../Constants'
 import { CDOnboardingSteps, DeploymentStrategyTypes, WhatToDeployType } from '../../types'
+import { getPipelineCommands } from '../../utils'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import VerifyPipeline from '../VerificationComponents/VerifyPipeline'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
@@ -62,6 +57,7 @@ export default function DeploymentStrategySelection({
       } else if (artifactType && !artifactSubType && !DEPLOYMENT_TYPE_MAP[artifactType].includes(data.id)) {
         isSupportedStrategy = false
       }
+
       return isSupportedStrategy
     })
   }, [])
@@ -111,7 +107,7 @@ export default function DeploymentStrategySelection({
               }}
               color={state?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
             >
-              {item.label}
+              {getString(item.label as keyof StringsMap)}
             </Text>
             <Text
               margin={{ top: 'small' }}
@@ -143,7 +139,7 @@ export default function DeploymentStrategySelection({
                 return (
                   <Layout.Vertical key={index} className={css.deploymentStrategyStep}>
                     <Text color={Color.BLACK} className={css.bold}>
-                      {stepText.title}:
+                      {getString(stepText.title as keyof StringsMap)}
                     </Text>
                     <Text color={Color.BLACK}>{getString(stepText.description as keyof StringsMap)}</Text>
                   </Layout.Vertical>
@@ -167,18 +163,12 @@ function PipelineCommandStep({ strategy }: { strategy: DeploymentStrategyTypes }
     return stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
   }, [stepsProgress])
 
-  const dirPath = DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData.artifactType?.id as string]
-  const pipelineFileName = DEPLOYMENT_TYPE_TO_FILE_MAPS[deploymentData.artifactSubType?.id as string]?.[strategy.id]
-
   return (
     <Layout.Vertical margin={{ bottom: 'xlarge', top: 'large' }}>
       <CommandBlock
         darkmode
         allowCopy={true}
-        commandSnippet={getString(strategy.pipelineCommand, {
-          type: dirPath,
-          pipeline: pipelineFileName || strategy.pipelineName
-        })}
+        commandSnippet={getPipelineCommands({ getString, strategy, deploymentData })}
         ignoreWhiteSpaces={false}
         downloadFileProps={{ downloadFileName: 'harness-cli-setup', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}

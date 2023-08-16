@@ -129,6 +129,7 @@ export interface StringsMap {
   'common.banners.trial.provideFeedback': string
   'common.banners.trial.success': string
   'common.bash': string
+  'common.basic': string
   'common.billed': string
   'common.billing': string
   'common.billingAddress': string
@@ -995,6 +996,7 @@ export interface StringsMap {
   'common.results': string
   'common.role': string
   'common.roleAssignmentLabel': string
+  'common.rolling': string
   'common.saveAndClose': string
   'common.saveAsTemplate': string
   'common.savedSuccessfully': string
@@ -4364,6 +4366,7 @@ export interface StringsMap {
   'pipeline.executionStrategy.strategies.blueGreen.steps.step1.description': string
   'pipeline.executionStrategy.strategies.blueGreen.steps.step2.description': string
   'pipeline.executionStrategy.strategies.blueGreen.steps.step3.description': string
+  'pipeline.executionStrategy.strategies.blueGreen.title': string
   'pipeline.executionStrategy.strategies.canary.description': string
   'pipeline.executionStrategy.strategies.canary.learnMoreLink': string
   'pipeline.executionStrategy.strategies.canary.steps.step1.description': string
@@ -6120,6 +6123,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.artifactStorage': string
   'cd.getStartedWithCD.artifactToDeploy': string
   'cd.getStartedWithCD.awsElasticK8s': string
+  'cd.getStartedWithCD.awsLambda': string
   'cd.getStartedWithCD.awsRegionHelperText': string
   'cd.getStartedWithCD.azureAKSHelperText': string
   'cd.getStartedWithCD.azureK8s': string
@@ -6192,14 +6196,17 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.createEntities': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.preparation': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.verifyPipeline': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsARN': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsBucketName': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsProjectName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsFunctionPath': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsRegion': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsSVCKey': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsdownload': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.commitFunction': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.createBucket': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.downloadArtifact': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.getPermissions': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.inputAWSInfo': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.uploadSVCKey': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.createBucket': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.downloadArtifact': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.gcpBucketName': string
@@ -6207,8 +6214,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.gcpRegion': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.getPermissions': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.inputGCPInfo': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.accessKeyPlaceholderAws': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.bucketName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.linkPlaceholderAws': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.pathPlaceholdergcp': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.projectName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.svckeyPlaceholderAws': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.uploadSVCKey': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.description': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.pipelinenotfound': string
@@ -6227,7 +6238,11 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cdDir': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cloneRepo': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createAWSSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createAWScon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createEnv': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPcon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitIcon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createInfra': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createK8scon': string
@@ -6250,11 +6265,18 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createk8scon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createsvccmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createGithubcon': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createenvcmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createinfracmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createk8scon': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createsvccmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createAwsSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createGithubcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createawscon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createenvcmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createinfracmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createsvccmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createGcpSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createGithubcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createenvcmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.creategcpcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createinfracmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createsvccmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.description1': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.description2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.title': string
@@ -6287,6 +6309,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.title': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.description': string
+  'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.heading': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.title': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateDescription': string
@@ -6325,6 +6348,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.what.svcrep': string
   'cd.getStartedWithCD.flowByQuestions.what.title': string
   'cd.getStartedWithCD.frequency': string
+  'cd.getStartedWithCD.gcpGen1': string
+  'cd.getStartedWithCD.gcpGen2': string
   'cd.getStartedWithCD.getStartedBtn': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitURL': string
@@ -6337,6 +6362,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.giveSample': string
+  'cd.getStartedWithCD.googleFunction': string
   'cd.getStartedWithCD.googleGKEHelperText': string
   'cd.getStartedWithCD.googleK8s': string
   'cd.getStartedWithCD.harnessFileStore': string
@@ -6370,6 +6396,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.installationInstructions': string
   'cd.getStartedWithCD.ipWhitelist1': string
   'cd.getStartedWithCD.ipWhitelist2': string
+  'cd.getStartedWithCD.k8sHelm': string
+  'cd.getStartedWithCD.k8sService': string
   'cd.getStartedWithCD.main': string
   'cd.getStartedWithCD.managedCluster': string
   'cd.getStartedWithCD.manifestDescription': string
@@ -6380,6 +6408,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.mappedHarnessProjects': string
   'cd.getStartedWithCD.master': string
   'cd.getStartedWithCD.nameYourCluster': string
+  'cd.getStartedWithCD.nativeAWSLambda': string
   'cd.getStartedWithCD.nopath': string
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
@@ -6438,6 +6467,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
   'cd.getStartedWithCD.title': string
+  'cd.getStartedWithCD.traditionalAWS': string
+  'cd.getStartedWithCD.traditionalApp': string
   'cd.getStartedWithCD.tryAnotherCreds': string
   'cd.getStartedWithCD.tryCICTA': string
   'cd.getStartedWithCD.useOwnManifest': string

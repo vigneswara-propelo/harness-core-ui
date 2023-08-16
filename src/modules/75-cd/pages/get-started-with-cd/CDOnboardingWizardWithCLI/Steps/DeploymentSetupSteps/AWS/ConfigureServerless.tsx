@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Button, ButtonVariation, Label, Layout, Text, TextInput } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
-import { downloadJSONAsFile } from '@common/utils/JSONUtils'
 import { CDOnboardingSteps, PipelineSetupState } from '../../../types'
 import { useOnboardingStore } from '../../../Store/OnboardingStore'
 
@@ -16,12 +15,7 @@ export default function ConfigureServerless({
   const pipelineState = React.useMemo((): PipelineSetupState => {
     return stepsProgress[CDOnboardingSteps.DEPLOYMENT_STEPS].stepData as PipelineSetupState
   }, [stepsProgress])
-  const [funcJSON, setFuncJSON] = useState<Record<string, string>>({
-    functionName: 'helloworld',
-    runtime: 'python3.10',
-    handler: 'handler.hello',
-    role: ''
-  })
+
   const [state, setState] = useState<PipelineSetupState['infraInfo']>(() => {
     const prevState = pipelineState?.infraInfo
     return prevState
@@ -31,13 +25,7 @@ export default function ConfigureServerless({
   }
   useEffect(() => {
     onUpdate({ ...pipelineState, infraInfo: state })
-    if (funcJSON.role !== state?.awsArn) {
-      setFuncJSON((prevFuncState: Record<string, string>) => ({ ...prevFuncState, role: state?.awsArn || '' }))
-    }
   }, [state])
-  const downloadFunctionJSON = (): void => {
-    downloadJSONAsFile(funcJSON, 'function.json')
-  }
   return (
     <Layout.Vertical margin={{ top: 'large', bottom: 'xlarge' }}>
       <Text color={Color.BLACK} margin={{ bottom: 'large' }} font={{ variation: FontVariation.FORM_TITLE }}>
@@ -99,16 +87,12 @@ export default function ConfigureServerless({
         />
       </Layout.Vertical>
       <Layout.Vertical width={400} margin={{ left: 'xlarge' }}>
-        <Label>
-          {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsSVCKey')}
-        </Label>
+        <Label>{getString('platform.connectors.aws.awsAccessKey')}</Label>
         <TextInput
           id="awsSvcKey"
           name="awsSvcKey"
           defaultValue={state?.svcKeyOrSecretKey || ''}
-          placeholder={getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.svckeyPlaceholderAws'
-          )}
+          placeholder={getString('platform.connectors.aws.awsAccessKey')}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value
             updateState('svcKeyOrSecretKey', value)
@@ -144,35 +128,6 @@ export default function ConfigureServerless({
             updateState('region', value)
           }}
         />
-      </Layout.Vertical>
-
-      <Layout.Vertical width={400} margin={{ left: 'xlarge' }}>
-        <Label>
-          {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsBucketName')}
-        </Label>
-        <TextInput
-          id="bucketName"
-          name="bucketName"
-          defaultValue={state?.bucketName || ''}
-          placeholder={getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsBucketName'
-          )}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            const value = e.target.value
-            updateState('bucketName', value)
-          }}
-        />
-      </Layout.Vertical>
-      <Layout.Vertical margin={{ left: 'xlarge' }}>
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          icon="arrow-down"
-          margin={{ bottom: 'medium' }}
-          width={280}
-          onClick={downloadFunctionJSON}
-          text={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsdownload')}
-        />
-        <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.commitFunction" />
       </Layout.Vertical>
     </Layout.Vertical>
   )

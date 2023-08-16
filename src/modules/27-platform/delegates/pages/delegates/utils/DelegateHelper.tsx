@@ -8,7 +8,7 @@
 import type { SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
-import { isUndefined } from 'lodash-es'
+import { isEmpty, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { UseStringsReturn } from 'framework/strings'
 import { DelegateTypes } from '@delegates/constants'
@@ -60,4 +60,9 @@ export const getAutoUpgradeTextColor = (autoUpgradeCondition: string | undefined
     default:
       return [Color.GREY_300, 'AUTO UPGRADE: OFF']
   }
+}
+
+export const getYamlWithCustomImage = (yaml: string, imageName: string): string => {
+  const delegateImageNamePattern = /harness\/delegate:\d+\.\d+\.\d+/g
+  return isEmpty(imageName) ? yaml : yaml.replace(delegateImageNamePattern, imageName)
 }

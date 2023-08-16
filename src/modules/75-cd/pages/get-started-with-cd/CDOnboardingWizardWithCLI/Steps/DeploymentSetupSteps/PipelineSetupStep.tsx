@@ -14,16 +14,27 @@ import { String, useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 import { getCommandsByDeploymentType } from '../../utils'
-import { CDOnboardingSteps, PipelineSetupState, WhatToDeployType, WhereAndHowToDeployType } from '../../types'
+import {
+  CDOnboardingSteps,
+  CLOUD_FUNCTION_TYPES,
+  PipelineSetupState,
+  WhatToDeployType,
+  WhereAndHowToDeployType
+} from '../../types'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import ConfigureGCP from './GCP/ConfigureGCP'
 import ConfigureAWS from './AWS/ConfigureAWS'
-import { DEPLOYMENT_TYPE_TO_DIR_MAP, SERVERLESS_FUNCTIONS } from '../../Constants'
+import { DEPLOYMENT_TYPE_TO_DIR_MAP } from '../../Constants'
+import ConfigureServerless from './AWS/ConfigureServerless'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
 
-const INFRATYPE_TO_COMPONENT_MAP: { [key: string]: FunctionComponent } = {
-  [SERVERLESS_FUNCTIONS.GOOGLE_CLOUD_FUNCTION]: ConfigureGCP,
-  [SERVERLESS_FUNCTIONS.AWS_LAMBDA_FUNCTION]: ConfigureAWS
+const INFRATYPE_TO_COMPONENT_MAP: {
+  [key: string]: FunctionComponent<{ onUpdate: (data: PipelineSetupState) => void }>
+} = {
+  [CLOUD_FUNCTION_TYPES.GCPGen1]: ConfigureGCP,
+  [CLOUD_FUNCTION_TYPES.GCPGen2]: ConfigureGCP,
+  [CLOUD_FUNCTION_TYPES.ServerLessLambda]: ConfigureServerless,
+  [CLOUD_FUNCTION_TYPES.NativeAWSLambda]: ConfigureAWS
 }
 
 export default function PipelineSetupStep({
@@ -104,7 +115,12 @@ export default function PipelineSetupStep({
         </Layout.Vertical>
       </Layout.Vertical>
       <InfraDetailsComponent
-        infraType={(stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType)?.artifactType?.id}
+        infraType={
+          deploymentData?.artifactSubType?.id
+            ? deploymentData?.artifactSubType?.id
+            : (deploymentData?.artifactType?.id as string)
+        }
+        onUpdate={onUpdate}
       />
       <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }} margin={{ bottom: 'large' }}>
         <String
@@ -124,6 +140,7 @@ export default function PipelineSetupStep({
         state={state}
         artifactType={deploymentData?.artifactType?.id as string}
         artifactSubtype={deploymentData?.artifactSubType?.id as string}
+        serviceType={deploymentData.svcType?.id as string}
         delegateName={
           (stepsProgress[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY].stepData as WhereAndHowToDeployType)?.delegateName
         }
@@ -137,26 +154,31 @@ function CLISteps({
   state,
   delegateName,
   artifactType,
-  artifactSubtype
+  artifactSubtype,
+  serviceType
 }: {
   getString: UseStringsReturn['getString']
   state: PipelineSetupState
   artifactType: string
   artifactSubtype?: string
   delegateName?: string
+  serviceType: string
 }): JSX.Element {
   const { accountId } = useParams<AccountPathProps>()
   const commandSnippet = React.useMemo((): string => {
-    const dirPath = DEPLOYMENT_TYPE_TO_DIR_MAP[artifactType]
+    const dirPath = artifactSubtype
+      ? DEPLOYMENT_TYPE_TO_DIR_MAP[artifactSubtype]
+      : DEPLOYMENT_TYPE_TO_DIR_MAP[artifactType]
+
     return getCommandsByDeploymentType({
       getString,
       dirPath,
       delegateName,
-      githubPat: state?.githubPat,
-      githubUsername: state?.githubUsername,
-      apiKey: state?.apiKey,
+      state,
       accountId,
-      artifactSubtype
+      artifactSubtype,
+      artifactType,
+      serviceType
     })
   }, [state])
 
@@ -183,7 +205,13 @@ function CLISteps({
   )
 }
 
-export function InfraDetailsComponent({ infraType = '' }): JSX.Element | null {
+export function InfraDetailsComponent({
+  infraType = '',
+  onUpdate
+}: {
+  infraType: string
+  onUpdate: (data: PipelineSetupState) => void
+}): JSX.Element | null {
   const InfraTypeComponent = INFRATYPE_TO_COMPONENT_MAP[infraType] ?? null
-  return InfraTypeComponent ? <InfraTypeComponent /> : null
+  return InfraTypeComponent ? <InfraTypeComponent onUpdate={onUpdate} /> : null
 }

@@ -1374,6 +1374,7 @@ executionStrategy:
         step3:
           description: Replace new version.
     blueGreen:
+      title: Blue Green
       description: 'Two identical environments for staging and production traffic run simultaneously with different versions of the service. Deployment of a new service version is first done to the staging environment. Once the new version is verified, network traffic is switched between the two environments. The staging environment is now the production environment.'
       learnMoreLink: https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-concepts/#bluegreen-deployment
       steps:

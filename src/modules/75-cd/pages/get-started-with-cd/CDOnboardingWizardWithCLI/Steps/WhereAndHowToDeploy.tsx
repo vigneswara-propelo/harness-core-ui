@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Layout, Text, CardSelect, Icon, IconName } from '@harness/uicore'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'
 import {
   CDOnboardingSteps,
@@ -20,7 +21,7 @@ import {
 } from '../types'
 import GitopsFlow from './DeploymentFlowTypes/GitopsFlow'
 import { useOnboardingStore } from '../Store/OnboardingStore'
-import { DEPLOYMENT_FLOW_ENUMS, DEPLOYMENT_FLOW_TYPES } from '../Constants'
+import { DELEGATE_TYPE_BY_ARTIFACT_MAP, DEPLOYMENT_FLOW_ENUMS, DEPLOYMENT_FLOW_TYPES } from '../Constants'
 import type { DelgateDetails } from '../DelegateModal'
 import CDPipeline from './DeploymentFlowTypes/CDPipeline'
 import { getBranchingProps } from '../utils'
@@ -64,12 +65,11 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
     setDrawerOpen(true)
   }
   const closeDelegateDialog = (data: DelgateDetails): void => {
-    if (data?.delegateName && data?.delegateType && data.delegateProblemType) {
+    if (data?.delegateName && data?.delegateType) {
       setState(prevState => ({
         ...prevState,
         delegateName: data.delegateName as string,
-        delegateType: data.delegateType as any,
-        delegateProblemType: data.delegateProblemType
+        delegateType: data.delegateType as any
       }))
     }
     setDrawerOpen(false)
@@ -136,10 +136,10 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
                   font={{ variation: FontVariation.BODY }}
                   color={state?.type?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
                 >
-                  {item.label}
+                  {getString(item.label as keyof StringsMap)}
                 </Text>
                 <Text font={{ variation: FontVariation.BODY2_SEMI }} color={Color.GREY_500}>
-                  {item.subtitle}
+                  {getString(item.subtitle as keyof StringsMap)}
                 </Text>
               </Layout.Vertical>
             </Layout.Vertical>
@@ -156,6 +156,11 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
             closeDelegateDialog={closeDelegateDialog}
             onDelegateFail={onDelegateFail}
             onVerificationStart={onVerificationStart}
+            delegateTypes={
+              deploymentTypeDetails.artifactSubType
+                ? DELEGATE_TYPE_BY_ARTIFACT_MAP[deploymentTypeDetails.artifactSubType?.id]
+                : DELEGATE_TYPE_BY_ARTIFACT_MAP[deploymentTypeDetails?.artifactType?.id as string]
+            }
           />
         )}
         {state.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops && <GitopsFlow />}

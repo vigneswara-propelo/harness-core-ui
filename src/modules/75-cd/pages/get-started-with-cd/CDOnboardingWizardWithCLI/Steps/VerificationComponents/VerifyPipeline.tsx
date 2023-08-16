@@ -14,7 +14,7 @@ import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useGetPipeline } from 'services/pipeline-ng'
 import { CDOnboardingSteps, PipelineSetupState, WhatToDeployType } from '../../types'
-import { PIPELINE_TO_STRATEGY_MAP } from '../../Constants'
+import { PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP, PIPELINE_TO_STRATEGY_MAP } from '../../Constants'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import { getBranchingProps } from '../../utils'
 import { ONBOARDING_INTERACTIONS } from '../../TrackingConstants'
@@ -31,8 +31,18 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
   const pipelineStepsdata = React.useMemo((): PipelineSetupState => {
     return stepsProgress[CDOnboardingSteps.DEPLOYMENT_STEPS]?.stepData
   }, [stepsProgress])
+  const pipelineIdentifier = React.useMemo((): string => {
+    const servicedata = stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType
+    const artifactType = servicedata?.artifactSubType
+      ? servicedata?.artifactSubType?.id
+      : (servicedata?.artifactType?.id as string)
+    const pipelineId =
+      PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP?.[artifactType]?.[pipelineStepsdata?.strategyId as string] || ''
+    return pipelineId
+  }, [stepsProgress])
+
   const { data, refetch, error } = useGetPipeline({
-    pipelineIdentifier: PIPELINE_TO_STRATEGY_MAP[pipelineStepsdata?.strategyId as string] || '',
+    pipelineIdentifier,
     lazy: true,
     queryParams: {
       accountIdentifier: accountId,
@@ -40,6 +50,7 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
       projectIdentifier
     }
   })
+
   useEffect(() => {
     const pipelineName = PIPELINE_TO_STRATEGY_MAP[pipelineStepsdata?.strategyId as string] || ''
     if (data?.data && !pipelineStepsdata?.pipelineVerified) {
@@ -63,8 +74,10 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
 
   const refetchPipeline = async (): Promise<void> => {
     await refetch()
-    const pipelineName = PIPELINE_TO_STRATEGY_MAP[pipelineStepsdata?.strategyId as string] || ''
-    trackEvent(ONBOARDING_INTERACTIONS.CONFIG_VERIFICATION_START, { ...getBranchingProps(stepsProgress), pipelineName })
+    trackEvent(ONBOARDING_INTERACTIONS.CONFIG_VERIFICATION_START, {
+      ...getBranchingProps(stepsProgress),
+      pipelineName: pipelineIdentifier
+    })
   }
   return (
     <Layout.Vertical className={css.verifyPipeline} margin={{ top: 'xlarge', bottom: 'xlarge' }}>

@@ -29,7 +29,7 @@ export default function WhatToDeployPreview(): JSX.Element {
           {getString('common.serviceType')}:
         </Text>
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
-          {svcType}
+          {getString(svcType)}
         </Text>
       </Layout.Horizontal>
       <Layout.Horizontal>
@@ -37,7 +37,7 @@ export default function WhatToDeployPreview(): JSX.Element {
           {getString('cd.getStartedWithCD.flowByQuestions.what.svcrep')}:
         </Text>
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
-          {artfiactType}
+          {getString(artfiactType)}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
