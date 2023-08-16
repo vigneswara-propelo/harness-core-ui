@@ -15,7 +15,7 @@ import {
   EXECUTION_TIME_INPUT_VALUE,
   useToaster
 } from '@harness/uicore'
-import { defaultTo, get, isNil, noop } from 'lodash-es'
+import { defaultTo, get, isNil, noop, isBoolean } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { ServiceDefinition, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -25,7 +25,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import { useDeepCompareEffect } from '@common/hooks'
 import {
   DeployServiceEntityData,
@@ -49,6 +49,10 @@ export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCusto
 }
 
 function getInitialValues(data: DeployServiceEntityData): FormState {
+  const parallelValue = get(data, 'services.metadata.parallel')
+  const parallelValueToBeUpdated =
+    isValueRuntimeInput(parallelValue as string) || isBoolean(parallelValue) ? parallelValue : true
+
   if (data.service && data.service.serviceRef) {
     return {
       service: data.service.serviceRef,
@@ -70,18 +74,18 @@ function getInitialValues(data: DeployServiceEntityData): FormState {
           (p, c) => ({ ...p, [defaultTo(c.serviceRef, '')]: c.serviceInputs }),
           {}
         ),
-        parallel: !!get(data, 'services.metadata.parallel', true)
+        parallel: parallelValueToBeUpdated as boolean
       }
     }
 
     return {
       services: data.services.values,
       serviceInputs: {},
-      parallel: !!get(data, 'services.metadata.parallel', true)
+      parallel: parallelValueToBeUpdated as boolean
     }
   }
 
-  return { parallel: !!get(data, 'services.metadata.parallel', true) }
+  return { parallel: parallelValueToBeUpdated as boolean }
 }
 
 export default function DeployServiceEntityWidget({
@@ -177,7 +181,7 @@ export default function DeployServiceEntityWidget({
               )
             : values.services,
           metadata: {
-            parallel: !!values.parallel
+            parallel: isValueRuntimeInput(values.parallel) ? values.parallel : !!values.parallel
           }
         }
       })
