@@ -482,7 +482,8 @@ export const GetInputSetYamlDiffInline: UseGetReturnData<ResponseInputSetYamlDif
       newYAML:
         'inputSet:\n  identifier: "testInp1"\n  name: "testInp1"\n  tags: {}\n  orgIdentifier: "default"\n  projectIdentifier: "Eric"\n  pipeline:\n    identifier: "testpip"\n    stages:\n    - stage:\n        identifier: "stg1"\n        type: "Custom"\n        spec:\n          execution:\n            steps:\n            - step:\n                identifier: "stp1"\n                type: "Http"\n                spec:\n                  url: "https://test.com"\n                  method: "GET"\n',
       noUpdatePossible: false,
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '2a9de950-6094-4022-9596-a7697071c15f'
   }
@@ -508,7 +509,8 @@ export const GetInputSetYamlDiffRemote: UseGetReturnData<ResponseInputSetYamlDif
         commitId: 'bbdf6031a2ee5c83de808e615906825bd83dca5f',
         fileUrl: 'https://github.com/Eric761/git-sync-harness/blob/master/.harness/testRemInp1.yaml'
       },
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '7bca5cee-dea1-4bf6-a0cd-317d4f3da880'
   }
@@ -533,7 +535,8 @@ export const GetInputSetYamlDiffOldGitSync: UseGetReturnData<ResponseInputSetYam
         rootFolder: '/.harness/',
         filePath: 'inpG1.yaml'
       },
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
 
     correlationId: 'd5c945af-609f-4f05-af2a-997d360327bd'
@@ -553,7 +556,8 @@ export const GetOverlayISYamlDiffInline: UseGetReturnData<ResponseInputSetYamlDi
         'overlayInputSet:\n  name: "overlayInp1"\n  identifier: "overlayInp1"\n  orgIdentifier: "default"\n  projectIdentifier: "Eric"\n  pipelineIdentifier: "testpip"\n  inputSetReferences:\n  - "testInp2"\n  tags: {}\n',
       noUpdatePossible: false,
       invalidReferences: ['testInp1'],
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '4ead5c76-39e9-4a00-b1b8-4f68baf5bf15'
   }
@@ -580,7 +584,8 @@ export const GetOverlayISYamlDiffRemote: UseGetReturnData<ResponseInputSetYamlDi
         commitId: 'df273fa323cf8224e33a2cccacc652c4d260c20d',
         fileUrl: 'https://github.com/Eric761/git-sync-harness/blob/master/.harness/testRemOverlayInp1.yaml'
       },
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: 'abba98fb-9852-4918-ad91-066cadd27093'
   }
@@ -606,7 +611,8 @@ export const GetOverlayISYamlDiffOldGitSync: UseGetReturnData<ResponseInputSetYa
         rootFolder: '/.harness/',
         filePath: 'overlayInpG1.yaml'
       },
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '4a4c9866-2bd3-44a2-8bee-8ed96481f38a'
   }
@@ -620,7 +626,8 @@ export const GetYamlDiffDelResponse: UseGetReturnData<ResponseInputSetYamlDiff> 
     status: 'SUCCESS',
     data: {
       noUpdatePossible: false,
-      inputSetEmpty: true
+      inputSetEmpty: true,
+      yamlDiffPresent: false
     },
     correlationId: '569e8c24-154a-4550-87e0-30151412b889'
   }
@@ -697,7 +704,8 @@ export const GetInputSetYamlDiffInpSelector: UseGetReturnData<ResponseInputSetYa
       newYAML:
         'inputSet:\n  identifier: "inputset1"\n  name: "is1"\n  tags: {}\n  orgIdentifier: "default"\n  projectIdentifier: "Eric"\n  pipeline:\n    identifier: "PipelineId"\n    stages:\n    - stage:\n        identifier: "stg1"\n        type: "Custom"\n        spec:\n          execution:\n            steps:\n            - step:\n                identifier: "stp1"\n                type: "Http"\n                spec:\n                  url: "https://test.com"\n                  method: "GET"\n',
       noUpdatePossible: false,
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '2a9de950-6094-4022-9596-a7697071c15f'
   }
@@ -716,7 +724,8 @@ export const GetOverlayISYamlDiffInpSelector: UseGetReturnData<ResponseInputSetY
         'overlayInputSet:\n  name: "ol1"\n  identifier: "overlay1"\n  orgIdentifier: "default"\n  projectIdentifier: "Eric"\n  pipelineIdentifier: "PipelineId"\n  inputSetReferences:\n  - "inputset2"\n  tags: {}\n',
       noUpdatePossible: false,
       invalidReferences: ['inputset1'],
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '4ead5c76-39e9-4a00-b1b8-4f68baf5bf15'
   }

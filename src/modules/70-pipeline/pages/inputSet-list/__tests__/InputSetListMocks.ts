@@ -211,7 +211,8 @@ export const GetInputSetYamlDiff: UseGetReturnData<ResponseInputSetYamlDiff> = {
       newYAML:
         'inputSet:\n  identifier: "asd"\n  name: "asd"\n  tags: {}\n  orgIdentifier: "Harness11"\n  projectIdentifier: "Uhat_Project"\n  pipeline:\n    identifier: "testqqq"\n    stages:\n     - stage:\n        identifier: "stg1"\n        type: "Custom"\n        spec:\n          execution:\n            steps:\n            - step:\n                identifier: "stp1"\n                type: "Http"\n                spec:\n                  url: "https://test.com"\n                  method: "GET"\n',
       noUpdatePossible: false,
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '2a9de950-6094-4022-9596-a7697071c15f'
   }
@@ -230,7 +231,8 @@ export const GetOverlayISYamlDiff: UseGetReturnData<ResponseInputSetYamlDiff> = 
         'overlayInputSet:\n  name: "OverLayInput"\n  identifier: "OverLayInput"\n  orgIdentifier: "Harness11"\n  projectIdentifier: "Uhat_Project"\n  pipelineIdentifier: "testpip"\n  inputSetReferences:\n  - "testInp2"\n  tags: {}\n',
       noUpdatePossible: false,
       invalidReferences: ['testInp1'],
-      inputSetEmpty: false
+      inputSetEmpty: false,
+      yamlDiffPresent: true
     },
     correlationId: '4ead5c76-39e9-4a00-b1b8-4f68baf5bf15'
   }

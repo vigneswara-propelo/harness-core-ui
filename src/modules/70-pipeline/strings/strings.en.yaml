@@ -945,6 +945,7 @@ inputSets:
   overlayISUpdated: Overlay Input Set "{{name}}" updated
   inputSetApplied: Input Set(s) applied successfully
   lastApplied: 'Last Applied: '
+  noReconcileOccured: Input set is valid and currently in sync with the Pipeline. No YAML reconciliation occured for the input set.
 provisionerSteps: Provisioner Steps
 addStage:
   title: Select Stage Type

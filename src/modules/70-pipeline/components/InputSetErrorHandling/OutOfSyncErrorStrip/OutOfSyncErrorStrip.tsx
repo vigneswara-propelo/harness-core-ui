@@ -82,7 +82,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     closeReconcileMenu
   } = props
   const { getString } = useStrings()
-  const { showSuccess, showError } = useToaster()
+  const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
 
@@ -353,13 +353,18 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     } else if (
       (!get(yamlDiffResponse, 'data.inputSetEmpty') &&
         get(yamlDiffResponse, 'data.oldYAML') &&
-        get(yamlDiffResponse, 'data.newYAML')) ||
+        get(yamlDiffResponse, 'data.newYAML') &&
+        get(yamlDiffResponse, 'data.yamlDiffPresent')) ||
       error
     ) {
       showReconcileDialog()
     } else if (get(yamlDiffResponse, 'data.inputSetEmpty')) {
       hideReconcileDialog() // If the error object becomes empty after clicking the retry button, the reconcile dialogue should be closed
       openDeleteInputSetModal()
+    } else if (get(yamlDiffResponse, 'data.yamlDiffPresent') === false) {
+      clear()
+      showSuccess(getString('pipeline.inputSets.noReconcileOccured'))
+      closeReconcileMenu?.()
     }
   }, [yamlDiffResponse, error])
 
