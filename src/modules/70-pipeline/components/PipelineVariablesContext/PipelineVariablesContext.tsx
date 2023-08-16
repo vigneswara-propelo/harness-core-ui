@@ -60,7 +60,7 @@ export interface PipelineVariablesData {
   storeMetadata?: StoreMetadata
   setPipeline: (pipeline: PipelineInfoConfig) => void
   setResolvedPipeline: (pipeline: PipelineInfoConfig) => void
-  setSelectedInputSetsContext?: (inputSets?: InputSetValue[]) => void
+  setSelectedInputSetsContext?: React.Dispatch<React.SetStateAction<InputSetValue[] | undefined>>
   selectedInputSetsContext?: InputSetValue[]
 }
 export interface SearchMeta {

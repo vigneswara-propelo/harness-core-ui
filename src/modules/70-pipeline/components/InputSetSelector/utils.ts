@@ -6,6 +6,7 @@
  */
 
 import { IconName, SelectOption, MultiTypeInputType } from '@harness/uicore'
+import { clone, remove } from 'lodash-es'
 import type { EntityGitDetails, InputSetSummaryResponse } from 'services/pipeline-ng'
 import css from './InputSetSelector.module.scss'
 
@@ -19,6 +20,11 @@ export interface ChildPipelineStageProps {
   childOrgIdentifier: string
   childProjectIdentifier: string
   inputSetReferences?: string[]
+}
+export interface InputSetErrorMetaData {
+  isLoading: boolean
+  containsError: boolean
+  branch?: string
 }
 
 export const getIconByType = (type: InputSetSummaryResponse['inputSetType']): IconName => {
@@ -60,6 +66,12 @@ export const getInputSetExpressionValue = (expressionVal: string): InputSetValue
     value: expressionVal,
     idType: MultiTypeInputType.EXPRESSION
   }
+}
+
+export const removeInvalidInputSet = (selectedInputSets: InputSetValue[], inputSetId: string): InputSetValue[] => {
+  const clonedInputSets = clone(selectedInputSets)
+  remove(clonedInputSets, set => set.value === inputSetId)
+  return clonedInputSets
 }
 
 export const INPUT_SET_SELECTOR_PAGE_SIZE = 100

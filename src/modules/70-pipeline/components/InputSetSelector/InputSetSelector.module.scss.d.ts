@@ -17,6 +17,9 @@ declare const styles: {
   readonly dragging: string
   readonly inputSetButton: string
   readonly inputSetDots: string
+  readonly inputSetErrorContainer: string
+  readonly inputSetErrorText: string
+  readonly inputSetErrorWrapper: string
   readonly inputSetGitDetails: string
   readonly inputSetGitDetailsWrapper: string
   readonly inputSetName: string

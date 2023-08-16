@@ -15,6 +15,7 @@ import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { useStrings } from 'framework/strings'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import type { EntityGitDetails, InputSetErrorWrapper, InputSetSummaryResponse } from 'services/pipeline-ng'
+import { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { getIconByType } from './utils'
 import { InputSetGitDetails } from './InputSetGitDetails'
 import css from './InputSetSelector.module.scss'
@@ -28,15 +29,19 @@ interface MultipleInputSetListProps {
     type: InputSetSummaryResponse['inputSetType'],
     inputSetGitDetails: EntityGitDetails | null,
     inputSetErrorDetails?: InputSetErrorWrapper,
-    overlaySetErrorDetails?: { [key: string]: string }
+    overlaySetErrorDetails?: { [key: string]: string },
+    storeType?: StoreMetadata['storeType']
   ) => void
   checked: boolean
-  pipelineGitDetails?: EntityGitDetails
+  isInputSetLoading: boolean
+  showInputSetError: boolean
   refetch: () => Promise<void>
-  hideInputSetButton?: boolean
   showReconcile: boolean
+  pipelineGitDetails?: EntityGitDetails
+  hideInputSetButton?: boolean
   onReconcile?: (identifier: string) => void
   reRunInputSetYaml?: string
+  inputSetBranch?: string
 }
 
 export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Element {
@@ -49,12 +54,16 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
     hideInputSetButton,
     showReconcile,
     onReconcile,
-    reRunInputSetYaml
+    reRunInputSetYaml,
+    isInputSetLoading,
+    showInputSetError,
+    inputSetBranch
   } = props
   const { getString } = useStrings()
 
+  const getInputSetIconTextColor = (color: Color): Color => (showInputSetError ? Color.GREY_400 : color)
   const handleInputSetClick = (ticked: boolean): void => {
-    if (isInputSetInvalid(inputSet) || showReconcile) {
+    if (showInputSetError || isInputSetInvalid(inputSet) || showReconcile) {
       return
     }
     onCheckBoxHandler(
@@ -64,7 +73,8 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
       defaultTo(inputSet.inputSetType, 'INPUT_SET'),
       defaultTo(inputSet.gitDetails, null),
       inputSet.inputSetErrorDetails,
-      inputSet.overlaySetErrorDetails
+      inputSet.overlaySetErrorDetails,
+      defaultTo(inputSet.storeType, 'INLINE')
     )
   }
 
@@ -74,20 +84,28 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
           <Checkbox
             className={css.checkbox}
-            disabled={isInputSetInvalid(inputSet) || showReconcile}
+            disabled={showInputSetError || isInputSetInvalid(inputSet) || showReconcile}
             labelElement={
               <Layout.Horizontal flex={{ alignItems: 'center' }} padding={{ left: true }} style={{ maxWidth: '85%' }}>
-                <Icon name={getIconByType(inputSet.inputSetType)}></Icon>
+                <Icon
+                  name={getIconByType(inputSet.inputSetType)}
+                  color={getInputSetIconTextColor(Color.GREY_500)}
+                ></Icon>
                 <Container margin={{ left: true }} className={css.nameIdContainer}>
                   <Text
                     data-testid={`checkbox-${inputSet.name}`}
                     lineClamp={1}
                     font={{ weight: 'bold' }}
-                    color={Color.GREY_800}
+                    color={getInputSetIconTextColor(Color.GREY_800)}
                   >
                     {inputSet.name}
                   </Text>
-                  <Text font="small" lineClamp={1} margin={{ top: 'xsmall' }} color={Color.GREY_450}>
+                  <Text
+                    font="small"
+                    lineClamp={1}
+                    margin={{ top: 'xsmall' }}
+                    color={getInputSetIconTextColor(Color.GREY_450)}
+                  >
                     {getString('idLabel', { id: inputSet.identifier })}
                   </Text>
                 </Container>
@@ -119,6 +137,24 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
             </Container>
           )}
         </Layout.Horizontal>
+        {isInputSetLoading && (
+          <Container padding={'medium'} width={'12%'}>
+            <Icon name="steps-spinner" size={20} color={Color.GREY_300} />
+          </Container>
+        )}
+        {showInputSetError && (
+          <div className={css.inputSetErrorWrapper}>
+            <Container
+              background={Color.RED_100}
+              padding={{ top: 'small', bottom: 'small', left: 'medium', right: 'medium' }}
+              className={css.inputSetErrorContainer}
+            >
+              <Text font={{ weight: 'bold' }} color={Color.RED_700} className={css.inputSetErrorText} lineClamp={2}>
+                {getString('pipeline.inputSets.inputSetNotFoundInBranch', { branch: inputSetBranch })}
+              </Text>
+            </Container>
+          </div>
+        )}
         {inputSet.gitDetails?.repoIdentifier ? (
           <div onClick={() => handleInputSetClick(!checked)} className={css.inputSetGitDetailsWrapper}>
             <InputSetGitDetails gitDetails={inputSet.gitDetails} />

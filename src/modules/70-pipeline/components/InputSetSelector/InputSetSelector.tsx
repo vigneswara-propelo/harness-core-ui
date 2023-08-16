@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Layout,
   Popover,
@@ -18,7 +18,7 @@ import {
   Pagination
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
+import { clone, defaultTo, isEmpty, includes, isNil, get } from 'lodash-es'
 import cx from 'classnames'
 import { Classes, PopoverPosition } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
@@ -26,6 +26,7 @@ import {
   EntityGitDetails,
   InputSetErrorWrapper,
   InputSetSummaryResponse,
+  getInputSetForPipelinePromise,
   useGetInputSetsListForPipeline
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -34,12 +35,15 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { isValueExpression } from '@common/utils/utils'
+import { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { usePipelineVariables } from '../PipelineVariablesContext/PipelineVariablesContext'
 import {
   ChildPipelineStageProps,
   INPUT_SET_SELECTOR_PAGE_SIZE,
   getInputSetExpressionValue,
-  InputSetValue
+  InputSetValue,
+  InputSetErrorMetaData,
+  removeInvalidInputSet
 } from './utils'
 import { MultipleInputSetList } from './MultipleInputSetList'
 import { RenderValue } from './RenderValue'
@@ -101,7 +105,10 @@ export function InputSetSelector({
     orgIdentifier: string
     accountId: string
   }>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
+  const [inputSetErrorMap, setInputSetErrorMap] = useState<Map<string, InputSetErrorMetaData>>(
+    new Map<string, InputSetErrorMetaData>()
+  )
 
   useEffect(() => setSelectedInputSets(defaultTo(value, [])), [value])
   const { setSelectedInputSetsContext } = usePipelineVariables()
@@ -149,7 +156,7 @@ export function InputSetSelector({
       inputSetResponse?.data?.content &&
       inputSetResponse?.data?.content?.length > 0 &&
       childPipelineProps?.inputSetReferences &&
-      childPipelineProps?.inputSetReferences?.length > 0 &&
+      childPipelineProps.inputSetReferences?.length > 0 &&
       isEmpty(value)
     ) {
       // Check when switching from Yaml to Visual view, to show the selected input sets in chained pipeline inputs tab
@@ -176,11 +183,11 @@ export function InputSetSelector({
     }
   }, [inputSetResponse?.data?.content, childPipelineProps?.inputSetReferences])
 
-  React.useEffect(() => {
+  useEffect(() => {
     refetch()
   }, [repoIdentifier, branch, selectedRepo, selectedBranch, refetch, pageIndex, searchTerm])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if ((isEmpty(invalidInputSetReferences) || isNil(invalidInputSetReferences)) && openInputSetsList) {
       setOpenInputSetsList(false)
       showSuccess(getString('pipeline.inputSets.inputSetApplied'))
@@ -189,6 +196,57 @@ export function InputSetSelector({
     }
   }, [invalidInputSetReferences])
 
+  const anyInputSetInLoadingState = useMemo(
+    () => [...inputSetErrorMap.values()].some(inputSetErrorMetaData => inputSetErrorMetaData.isLoading),
+    [inputSetErrorMap]
+  )
+
+  const validateInputSet = async (inputSetId: string, inputSetRepoName?: string): Promise<void> => {
+    let inputSetContainsError = false
+    let inputSetBranch = ''
+    try {
+      const response = await getInputSetForPipelinePromise({
+        inputSetIdentifier: inputSetId,
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: childPipelineProps?.childOrgIdentifier ?? orgIdentifier,
+          projectIdentifier: childPipelineProps?.childProjectIdentifier ?? projectIdentifier,
+          pipelineIdentifier,
+          repoIdentifier: inputSetRepoName ?? repoName,
+          ...(inputSetRepoName === repoName && { branch: selectedBranch ?? branch })
+        },
+        requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+      })
+      if (response?.status === 'ERROR') {
+        inputSetContainsError = true
+        inputSetBranch = get(response, 'metadata.branch', '')
+      }
+    } catch (err) {
+      inputSetContainsError = true
+    } finally {
+      setSelectedInputSets((prevSelectedInputSets: InputSetValue[]) => {
+        if (!inputSetContainsError) return prevSelectedInputSets
+        return removeInvalidInputSet(prevSelectedInputSets, inputSetId)
+      })
+      setSelectedInputSetsContext?.((prevSelectedInputSets?: InputSetValue[]) => {
+        if (prevSelectedInputSets) {
+          if (!inputSetContainsError) return prevSelectedInputSets
+          return removeInvalidInputSet(prevSelectedInputSets, inputSetId)
+        }
+      })
+      setInputSetErrorMap(
+        map =>
+          new Map(
+            map.set(inputSetId, {
+              isLoading: false,
+              containsError: inputSetContainsError,
+              branch: inputSetBranch
+            })
+          )
+      )
+    }
+  }
+
   const onCheckBoxHandler = (
     checked: boolean,
     label: string,
@@ -196,7 +254,8 @@ export function InputSetSelector({
     type: InputSetSummaryResponse['inputSetType'],
     inputSetGitDetails: EntityGitDetails | null,
     inputSetErrorDetails?: InputSetErrorWrapper,
-    overlaySetErrorDetails?: { [key: string]: string }
+    overlaySetErrorDetails?: { [key: string]: string },
+    storeType?: StoreMetadata['storeType']
   ): void => {
     const selected = clone(selectedInputSets)
     const removedItem = selected.filter(set => set.value === val)[0]
@@ -209,11 +268,26 @@ export function InputSetSelector({
         inputSetErrorDetails,
         overlaySetErrorDetails
       })
+      setSelectedInputSets(selected)
+      setSelectedInputSetsContext?.(selected)
+
+      if (storeType === 'REMOTE') {
+        setInputSetErrorMap(
+          map =>
+            new Map(
+              map.set(val, {
+                isLoading: true,
+                containsError: false
+              })
+            )
+        )
+        validateInputSet(val, inputSetGitDetails?.repoName)
+      }
     } else if (removedItem) {
       selected.splice(selected.indexOf(removedItem), 1)
+      setSelectedInputSets(selected)
+      setSelectedInputSetsContext?.(selected)
     }
-    setSelectedInputSets(selected)
-    setSelectedInputSetsContext?.(selected)
   }
 
   if (error) {
@@ -250,6 +324,9 @@ export function InputSetSelector({
           }
           onReconcile={onReconcile}
           reRunInputSetYaml={reRunInputSetYaml}
+          isInputSetLoading={!!inputSetErrorMap.get(inputSet.identifier as string)?.isLoading}
+          showInputSetError={!!inputSetErrorMap.get(inputSet.identifier as string)?.containsError}
+          inputSetBranch={inputSetErrorMap.get(inputSet.identifier as string)?.branch}
         />
       )
     })
@@ -334,7 +411,7 @@ export function InputSetSelector({
                         : getString('pipeline.inputSets.applyInputSet')
                     }
                     variation={ButtonVariation.PRIMARY}
-                    disabled={!selectedInputSets?.length}
+                    disabled={!selectedInputSets?.length || anyInputSetInLoadingState}
                     onClick={() => {
                       onChange?.(selectedInputSets)
                       if (reRunInputSetYaml || isSimplifiedYAML) setOpenInputSetsList(false)

@@ -946,6 +946,7 @@ inputSets:
   inputSetApplied: Input Set(s) applied successfully
   lastApplied: 'Last Applied: '
   noReconcileOccured: Input set is valid and currently in sync with the Pipeline. No YAML reconciliation occured for the input set.
+  inputSetNotFoundInBranch: Input Set not found in branch [{{branch}}]
 provisionerSteps: Provisioner Steps
 addStage:
   title: Select Stage Type
@@ -1906,7 +1907,7 @@ pipelineExecutionEventData:
 retried: retried
 required: Required
 requiredFieldDuringRuntime: This is a required field during runtime
-setVariableRequiredDuringRuntime: Set Variable as required during runtime
+setVariableRequiredDuringRuntime: Set variable as required during runtime
 stageExecutedBefore: This stage has been re-executed.
 enableContainerBasedExecution: Enable container based execution
 policyViolationDetails: Policy violation details

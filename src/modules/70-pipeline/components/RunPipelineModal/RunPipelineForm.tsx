@@ -1070,6 +1070,7 @@ function RunPipelineFormBasic({
                       loadingInputSets={loadingInputSets}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={inputSetYAML}
+                      selectedBranch={selectedBranch}
                       isRetryFromStage={isRetryFromStage}
                       preSelectLastStage={preSelectLastStage}
                       accountId={accountId}

@@ -59,6 +59,7 @@ export interface VisualViewProps {
   loadingInputSets: boolean
   onReconcile: (identifier: string) => void
   reRunInputSetYaml?: string
+  selectedBranch?: string
   isRetryFromStage?: boolean
   preSelectLastStage?: boolean
   accountId: string
@@ -98,6 +99,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     loadingInputSets,
     onReconcile,
     reRunInputSetYaml,
+    selectedBranch,
     isRetryFromStage,
     preSelectLastStage,
     stageToRetryState,
@@ -217,6 +219,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                       loadingMergeInputSets={loadingInputSets}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={reRunInputSetYaml}
+                      selectedBranch={selectedBranch}
                     />
                   </GitSyncStoreProvider>
                 ) : null}
