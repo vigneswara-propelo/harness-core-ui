@@ -439,6 +439,10 @@ export interface AuditEventDTO {
     | 'RESUME'
     | 'ABORT'
     | 'TIMEOUT'
+    | 'SIGNED_EULA'
+    | 'ROLE_ASSIGNMENT_CREATED'
+    | 'ROLE_ASSIGNMENT_UPDATED'
+    | 'ROLE_ASSIGNMENT_DELETED'
   auditEventData?: AuditEventData
   auditId?: string
   authenticationInfo: AuthenticationInfoDTO
@@ -513,6 +517,10 @@ export interface AuditFilterProperties {
     | 'RESUME'
     | 'ABORT'
     | 'TIMEOUT'
+    | 'SIGNED_EULA'
+    | 'ROLE_ASSIGNMENT_CREATED'
+    | 'ROLE_ASSIGNMENT_UPDATED'
+    | 'ROLE_ASSIGNMENT_DELETED'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -1624,9 +1632,10 @@ export interface ResourceDTO {
     | 'IP_ALLOWLIST_CONFIG'
     | 'NETWORK_MAP'
     | 'CET_AGENT_TOKEN'
-    | 'WORKSPACE'
     | 'CET_CRITICAL_EVENT'
     | 'CHAOS_SECURITY_GOVERNANCE'
+    | 'END_LEVEL_USER_AGREEMENT'
+    | 'WORKSPACE'
 }
 
 export interface ResourceFilter {

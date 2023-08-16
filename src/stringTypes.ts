@@ -3412,6 +3412,10 @@ export interface StringsMap {
   'auditTrail.actions.restored': string
   'auditTrail.actions.resume': string
   'auditTrail.actions.revoke_token': string
+  'auditTrail.actions.roleAssignmentCreated': string
+  'auditTrail.actions.roleAssignmentDeleted': string
+  'auditTrail.actions.roleAssignmentUpdated': string
+  'auditTrail.actions.signedEula': string
   'auditTrail.actions.stageEnd': string
   'auditTrail.actions.stageStart': string
   'auditTrail.actions.unsuccessfullLogin': string

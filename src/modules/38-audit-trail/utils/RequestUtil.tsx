@@ -54,7 +54,11 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   ABORT: 'abort',
   TIMEOUT: 'pipelineSteps.timeoutLabel',
   STAGE_START: 'auditTrail.actions.stageStart',
-  STAGE_END: 'auditTrail.actions.stageEnd'
+  STAGE_END: 'auditTrail.actions.stageEnd',
+  SIGNED_EULA: 'auditTrail.actions.signedEula',
+  ROLE_ASSIGNMENT_CREATED: 'auditTrail.actions.roleAssignmentCreated',
+  ROLE_ASSIGNMENT_UPDATED: 'auditTrail.actions.roleAssignmentUpdated',
+  ROLE_ASSIGNMENT_DELETED: 'auditTrail.actions.roleAssignmentDeleted'
 }
 
 export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {

@@ -22,6 +22,10 @@ actions:
   resume: Resume
   stageStart: Stage Start
   stageEnd: Stage End
+  signedEula: EULA Signed
+  roleAssignmentCreated: Role Assignment Created
+  roleAssignmentUpdated: Role Assignment Updated
+  roleAssignmentDeleted: Role Assignment Deleted
 resourceLabel:
   pipelineExecution: Pipeline Execution
 emptyStateMessageTitle: No records were found to match your search
