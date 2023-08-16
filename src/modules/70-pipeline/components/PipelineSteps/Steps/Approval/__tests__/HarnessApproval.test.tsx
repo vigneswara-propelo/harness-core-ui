@@ -326,11 +326,6 @@ describe('Harness Approval tests', () => {
           minimumCount: 1,
           userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6']
         },
-        autoApproval: {
-          action: 'REJECT',
-          comments: 'Auto approved by Harness via Harness Approval step',
-          scheduledDeadline: { time: '2020-10-25 05:12 PM', timeZone: 'UTC' }
-        },
         includePipelineExecutionHistory: true,
         isAutoRejectEnabled: false
       },

@@ -8,6 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, parseStringToTime, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import * as Yup from 'yup'
 import moment from 'moment'
+import { set } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -35,6 +36,12 @@ const getInitialValueForMinCount = (valueFromData: string | number): string | nu
 
 export const processFormData = (data: HarnessApprovalData): HarnessApprovalData => {
   const toReturn: HarnessApprovalData = { ...data }
+
+  // remove autoApproval spec if unchecked
+  if (data.spec?.autoApproval?.action === ApproveAction.Reject) {
+    set(toReturn, 'spec.autoApproval', undefined)
+  }
+
   if (data.spec.approverInputs) {
     if (getMultiTypeFromValue(data.spec.approverInputs as string) === MultiTypeInputType.RUNTIME) {
       toReturn.spec.approverInputs = data.spec.approverInputs

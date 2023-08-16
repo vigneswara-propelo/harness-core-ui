@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, compact, isArray, has, defaultTo, set, get } from 'lodash-es'
+import { isEmpty, compact, isArray, has, defaultTo, get } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -384,11 +384,6 @@ function HarnessApprovalStepMode(
   const { getString } = useStrings()
 
   const handleOnSubmit = (values: HarnessApprovalData) => {
-    //remove autoApproval spec if unchecked
-    if (values.spec?.autoApproval?.action === ApproveAction.Reject) {
-      set(values, 'spec.autoApproval', undefined)
-    }
-
     onUpdate?.(
       produce(values, draft => {
         const userGroupValues = draft.spec.approvers?.userGroups
