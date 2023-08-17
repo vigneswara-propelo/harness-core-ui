@@ -18,17 +18,18 @@ interface TestProps {
   readonly?: boolean
 }
 
-const TestComponent = ({ initialValues, readonly }: TestProps): React.ReactElement => (
-  <TestWrapper>
-    {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
-    <Formik initialValues={initialValues} onSubmit={() => {}} formName="TestWrapper">
-      <FormikForm>
-        <List name="test" disabled={!!readonly} />
-      </FormikForm>
-    </Formik>
-  </TestWrapper>
-)
-
+function TestComponent({ initialValues, readonly }: TestProps): React.ReactElement {
+  return (
+    <TestWrapper>
+      {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
+      <Formik initialValues={initialValues} onSubmit={jest.fn()} formName="TestWrapper">
+        <FormikForm>
+          <List name="test" disabled={!!readonly} />
+        </FormikForm>
+      </Formik>
+    </TestWrapper>
+  )
+}
 // TODO: Need to extend test suit with error cases:
 // 1. field errors
 // 2. entities errors

@@ -14,7 +14,7 @@ import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text }
 import { useStrings } from 'framework/strings'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
 import { useGetV2BucketListForS3 } from 'services/cd-ng'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'

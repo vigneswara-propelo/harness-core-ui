@@ -8,13 +8,14 @@
 import React from 'react'
 import { get } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, Layout } from '@harness/uicore'
+import { Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { S3ManifestStoreRuntimeView } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/S3ManifestStoreRuntimeView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -62,6 +63,8 @@ const ServerlessLambdaGitStoreRuntimeView = (props: ManifestSourceRenderProps): 
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeListOrFileSelectList
+            template={template}
+            fieldPath={`${manifestPath}.spec.store.spec.paths`}
             label={getString('common.git.folderPath')}
             name={`${path}.${manifestPath}.spec.store.spec.paths`}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
@@ -77,7 +80,9 @@ const ServerlessLambdaGitStoreRuntimeView = (props: ManifestSourceRenderProps): 
 
       {isFieldRuntime(`${manifestPath}.spec.configOverridePath`, template) && (
         <div className={css.verticalSpacingInput}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
+            template={template}
+            fieldPath={`${manifestPath}.spec.configOverridePath`}
             disabled={isFieldDisabled(`${manifestPath}.spec.configOverridePath`)}
             multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
             label={getString('pipeline.manifestType.serverlessConfigFilePath')}

@@ -13,7 +13,7 @@ import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/Manifes
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
@@ -88,6 +88,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               />
             ) : (
               <List
+                template={template}
+                fieldPath={`${manifestPath}.spec.store.spec.paths`}
                 labelClassName={css.listLabel}
                 label={getString('fileFolderPathText')}
                 name={`${path}.${manifestPath}.spec.store.spec.paths`}

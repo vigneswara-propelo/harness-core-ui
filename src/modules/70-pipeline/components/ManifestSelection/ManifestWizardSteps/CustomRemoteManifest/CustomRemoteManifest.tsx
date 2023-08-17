@@ -374,7 +374,7 @@ function CustomRemoteManifest({
                         variableName="extractionScript"
                         showRequiredField={false}
                         showDefaultField={false}
-                        onChange={/* istanbul ignore next */ value => formik.setFieldValue('filePath', value)}
+                        onChange={/* istanbul ignore next */ value => formik.setFieldValue('extractionScript', value)}
                         isReadonly={isReadonly}
                       />
                     )}

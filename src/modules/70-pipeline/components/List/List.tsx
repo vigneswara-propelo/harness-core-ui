@@ -8,10 +8,12 @@
 import React from 'react'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { Text, TextInput, Card, Button, MultiTypeInputType, MultiTextInput } from '@harness/uicore'
+import { Text, TextInput, Card, Button, MultiTypeInputType } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'
 import { connect, FormikContextType } from 'formik'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { ServiceSpec } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import css from './List.module.scss'
 
@@ -30,6 +32,8 @@ export interface ListProps {
   isNameOfArrayType?: boolean
   labelClassName?: string
   allowOnlyOne?: boolean
+  template?: ServiceSpec
+  fieldPath?: string
 }
 
 const generateNewValue: () => { id: string; value: string } = () => ({
@@ -41,7 +45,7 @@ const showAddTrashButtons = (disabled = false, allowOnlyOne = false): boolean =>
   return !disabled && !allowOnlyOne
 }
 
-const List = (props: ListProps): React.ReactElement => {
+export function List(props: ListProps): React.ReactElement {
   const {
     name,
     label,
@@ -52,7 +56,9 @@ const List = (props: ListProps): React.ReactElement => {
     expressions,
     isNameOfArrayType,
     labelClassName = '',
-    allowOnlyOne = false
+    allowOnlyOne = false,
+    template,
+    fieldPath
   } = props
   const { getString } = useStrings()
   const [value, setValue] = React.useState<ListUIType>(() => {
@@ -157,7 +163,6 @@ const List = (props: ListProps): React.ReactElement => {
       setValue(initialValueInCorrectFormat)
     }
   }, [initialValue, name])
-
   return (
     <div style={style}>
       <div className={cx(css.label, labelClassName)}>{label}</div>
@@ -179,13 +184,16 @@ const List = (props: ListProps): React.ReactElement => {
                   />
                 )}
                 {expressions && (
-                  <MultiTextInput
-                    textProps={{ name: isNameOfArrayType ? `${name}[${index}]` : `${name}-${index}` }}
+                  <TextFieldInputSetView
+                    template={template}
                     placeholder={placeholder}
+                    fieldPath={fieldPath!}
                     name={isNameOfArrayType ? `${name}[${index}]` : `${name}-${index}`}
-                    expressions={expressions}
-                    allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                    value={valueValue}
+                    multiTextInputProps={{
+                      expressions: expressions,
+                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                    }}
+                    label={undefined}
                     onChange={val => {
                       changeValue(id, (val as string)?.trim())
                     }}

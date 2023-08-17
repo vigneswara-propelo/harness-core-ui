@@ -12,9 +12,10 @@ import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifes
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
+import { ServiceSpec } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import css from '../KubernetesManifests/KubernetesManifests.module.scss'
@@ -31,6 +32,8 @@ interface MultiTypeListOrFileSelectListProps {
   formik?: any
   isNameOfArrayType?: boolean
   allowOnlyOne?: boolean
+  template?: ServiceSpec
+  fieldPath?: string
 }
 
 export default function MultiTypeListOrFileSelectList(props: MultiTypeListOrFileSelectListProps): React.ReactElement {
@@ -45,7 +48,9 @@ export default function MultiTypeListOrFileSelectList(props: MultiTypeListOrFile
     manifestStoreType,
     isNameOfArrayType,
     fileUsage = FileUsage.MANIFEST_FILE,
-    allowOnlyOne = false
+    allowOnlyOne = false,
+    template,
+    fieldPath
   } = props
   const { expressions } = useVariablesExpression()
 
@@ -84,8 +89,10 @@ export default function MultiTypeListOrFileSelectList(props: MultiTypeListOrFile
         />
       ) : (
         <List
+          template={template}
           labelClassName={css.listLabel}
           name={name}
+          fieldPath={fieldPath}
           placeholder={placeholder}
           disabled={disabled}
           style={{ marginBottom: 'var(--spacing-small)' }}

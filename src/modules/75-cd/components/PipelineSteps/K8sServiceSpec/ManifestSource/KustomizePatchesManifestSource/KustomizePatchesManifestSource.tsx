@@ -59,6 +59,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeListOrFileSelectList
+            template={template}
+            fieldPath={`${manifestPath}.spec.store.spec.paths`}
             allowableTypes={allowableTypes}
             label={getString('common.git.filePath')}
             name={`${path}.${manifestPath}.spec.store.spec.paths`}

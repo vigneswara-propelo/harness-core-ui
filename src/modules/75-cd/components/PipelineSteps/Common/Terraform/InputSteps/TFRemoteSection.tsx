@@ -20,7 +20,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { Connectors } from '@platform/connectors/constants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

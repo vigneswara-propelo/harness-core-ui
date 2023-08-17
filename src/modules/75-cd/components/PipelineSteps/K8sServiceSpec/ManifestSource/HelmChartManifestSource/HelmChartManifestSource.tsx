@@ -337,7 +337,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   }
 
   // this OR condition is for OCI helm connector
-
   return (
     <Layout.Vertical
       data-name="manifest"
@@ -377,7 +376,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.repoName`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              template={template}
+              fieldPath={`${manifestPath}.spec.store.spec.repoName`}
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
               name={`${path}.${manifestPath}.spec.store.spec.repoName`}
               multiTextInputProps={{
@@ -387,23 +388,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               label={getString('common.repositoryName')}
             />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.repoName`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.repoName`)}
-            type="String"
-            variableName="repoName"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.repoName`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
-          />
         )}
       </div>
 
@@ -425,7 +409,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.commitId`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              template={template}
+              fieldPath={`${manifestPath}.spec.store.spec.commitId`}
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.commitId`)}
               name={`${path}.${manifestPath}.spec.store.spec.commitId`}
               multiTextInputProps={{
@@ -435,23 +421,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               label={getString('pipelineSteps.commitIdValue')}
             />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.commitId`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.commitId`)}
-            type="String"
-            variableName="commitId"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.commitId`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.commitId`)}
-          />
         )}
       </div>
       <div className={css.inputFieldLayout}>
@@ -565,7 +534,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.chartName`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              template={template}
+              fieldPath={`${manifestPath}.spec.chartName`}
               disabled={isFieldDisabled(`${manifestPath}.spec.chartName`)}
               name={`${path}.${manifestPath}.spec.chartName`}
               multiTextInputProps={{
@@ -576,28 +547,13 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             />
           </div>
         )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.chartName`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.chartName`)}
-            type="String"
-            variableName="chartName"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.chartName`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.chartName`)}
-          />
-        )}
       </div>
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.folderPath`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              template={template}
+              fieldPath={`${manifestPath}.spec.store.spec.folderPath`}
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.folderPath`)}
               name={`${path}.${manifestPath}.spec.store.spec.folderPath`}
               multiTextInputProps={{
@@ -607,23 +563,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               label={getString('chartPath')}
             />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.folderPath`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.folderPath`)}
-            type="String"
-            variableName="folderPath"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.folderPath`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.folderPath`)}
-          />
         )}
       </div>
       <div className={css.inputFieldLayout}>
@@ -735,6 +674,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeListOrFileSelectList
+            template={template}
+            fieldPath={`${manifestPath}.spec.valuesPaths`}
             allowableTypes={allowableTypes}
             disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
             name={`${path}.${manifestPath}.spec.valuesPaths`}

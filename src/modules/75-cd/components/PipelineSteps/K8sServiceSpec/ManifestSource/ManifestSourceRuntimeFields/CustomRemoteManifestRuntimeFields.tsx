@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { get } from 'lodash-es'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
@@ -16,6 +16,7 @@ import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextFi
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
@@ -55,7 +56,9 @@ const CustomRemoteManifestRuntimeFields = ({
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.filePath`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              template={template}
+              fieldPath={`${manifestPath}.spec.store.spec.filePath`}
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.filePath`)}
               name={`${path}.${manifestPath}.spec.store.spec.filePath`}
               multiTextInputProps={{
@@ -65,23 +68,6 @@ const CustomRemoteManifestRuntimeFields = ({
               label={getString('pipeline.manifestType.customRemoteExtractedFileLocation')}
             />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.filePath`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.filePath`)}
-            type="String"
-            variableName="filePath"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.filePath`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.filePath`)}
-          />
         )}
       </div>
       {isFieldRuntime(`${manifestPath}.spec.store.spec.extractionScript`, template) && (

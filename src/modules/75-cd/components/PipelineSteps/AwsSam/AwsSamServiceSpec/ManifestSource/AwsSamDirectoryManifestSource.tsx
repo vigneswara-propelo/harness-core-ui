@@ -7,8 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormInput, Layout } from '@harness/uicore'
-
+import { Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -16,6 +15,7 @@ import type { ManifestTypes } from '@pipeline/components/ManifestSelection/Manif
 import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import MultiTypeListOrFileSelectList from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/MultiTypeListOrFileSelectList'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isFieldRuntime } from '../../../K8sServiceSpec/K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../../../K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../../../K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -51,6 +51,8 @@ const AwsSamDirectoryGitStoreRuntimeView = (props: ManifestSourceRenderProps): R
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeListOrFileSelectList
+            template={template}
+            fieldPath={`${manifestPath}.spec.store.spec.paths`}
             allowableTypes={allowableTypes}
             name={`${path}.${manifestPath}.spec.store.spec.paths`}
             label={getString('fileFolderPathText')}
@@ -65,7 +67,9 @@ const AwsSamDirectoryGitStoreRuntimeView = (props: ManifestSourceRenderProps): R
 
       {isFieldRuntime(`${manifestPath}.spec.samTemplateFile`, template) && (
         <div className={css.verticalSpacingInput}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
+            template={template}
+            fieldPath={`${manifestPath}.spec.samTemplateFile`}
             disabled={isFieldDisabled(`${manifestPath}.spec.samTemplateFile`)}
             multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
             label={getString('optionalField', {

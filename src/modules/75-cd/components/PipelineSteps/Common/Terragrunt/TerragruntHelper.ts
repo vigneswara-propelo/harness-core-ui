@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { unset } from 'lodash-es'
 import type { IDialogProps } from '@blueprintjs/core'
-import type { ListType } from '@common/components/List/List'
+import type { ListType } from '@pipeline/components/List/List'
 import type {
   StringNGVariable,
   TerragruntConfigFilesWrapper,

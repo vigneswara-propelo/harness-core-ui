@@ -10,12 +10,12 @@ import { defaultTo, get, isNil } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikValues } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 
 import { StringKeys, useStrings } from 'framework/strings'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
 import { useGetBucketsInManifests } from 'services/cd-ng'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useMutateAsGet } from '@common/hooks'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
@@ -30,6 +30,7 @@ import type { ManifestTypes } from '@pipeline/components/ManifestSelection/Manif
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import {
   getManifestFieldFqnPath,
   isFieldfromTriggerTabDisabled
@@ -326,6 +327,8 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <List
+            template={template}
+            fieldPath={`${manifestPath}.spec.store.spec.paths`}
             labelClassName={css.listLabel}
             label={getString(pathFieldlabel)}
             name={`${path}.${manifestPath}.spec.store.spec.paths`}
@@ -341,7 +344,9 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
 
       {isFieldRuntime(`${manifestPath}.spec.configOverridePath`, template) && (
         <div className={css.verticalSpacingInput}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
+            template={template}
+            fieldPath={`${manifestPath}.spec.configOverridePath`}
             disabled={isFieldDisabled(`${manifestPath}.spec.configOverridePath`)}
             multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
             label={getString('pipeline.manifestType.serverlessConfigFilePath')}

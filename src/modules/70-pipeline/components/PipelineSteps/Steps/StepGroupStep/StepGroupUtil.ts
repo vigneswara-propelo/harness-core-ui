@@ -16,7 +16,7 @@ import type {
   StepGroupElementConfig
 } from 'services/cd-ng'
 import type { SecurityContext, Toleration } from 'services/ci'
-import type { ListUIType } from '@common/components/List/List'
+import type { ListUIType } from '@pipeline/components/List/List'
 import type { MultiTypeListUIType } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import type { MapUIType } from '@common/components/Map/Map'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'

@@ -72,6 +72,8 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeListOrFileSelectList
+            template={template}
+            fieldPath={`${manifestPath}.spec.store.spec.paths`}
             allowableTypes={allowableTypes}
             name={`${path}.${manifestPath}.spec.store.spec.paths`}
             label={getString(pathFieldlabel)}
@@ -87,6 +89,8 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeListOrFileSelectList
+            template={template}
+            fieldPath={`${manifestPath}.spec.valuesPaths`}
             allowableTypes={allowableTypes}
             name={`${path}.${manifestPath}.spec.valuesPaths`}
             label={getString('pipeline.manifestType.valuesYamlPath')}

@@ -29,7 +29,7 @@ import type {
   TerraformVarFileWrapper
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

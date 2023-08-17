@@ -13,7 +13,7 @@ import type { FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'

@@ -10,7 +10,7 @@ import { Container, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text }
 import React from 'react'
 import { get } from 'lodash-es'
 import type { ManifestConfigWrapper } from 'services/cd-ng'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

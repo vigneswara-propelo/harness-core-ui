@@ -20,7 +20,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { Connectors } from '@platform/connectors/constants'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'

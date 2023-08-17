@@ -18,7 +18,7 @@ import {
   WorkspaceDTO
 } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
-import List from '@common/components/List/List'
+import List from '@pipeline/components/List/List'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
