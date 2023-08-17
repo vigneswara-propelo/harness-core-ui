@@ -440,98 +440,6 @@ exports[`ModuleList should render correctly without modules 1`] = `
                   </span>
                 </div>
               </a>
-              <a
-                class="link"
-                href="/account/accountId/iacm"
-              >
-                <div
-                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main container iacm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
-                  >
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-xsmall"
-                        data-icon="iacm"
-                      >
-                        <svg
-                          fill="none"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          width="24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <lineargradient
-                            gradientUnits="userSpaceOnUse"
-                            id="iacm_svg__a"
-                            x1="7.176"
-                            x2="18.794"
-                            y1="2"
-                            y2="19.899"
-                          >
-                            <stop
-                              offset="0"
-                              stop-color="#62f91f"
-                            />
-                            <stop
-                              offset="1"
-                              stop-color="#45bd35"
-                            />
-                          </lineargradient>
-                          <path
-                            clip-rule="evenodd"
-                            d="M5.188 18.045L5 6.735c-.01-.505.342-.97.86-1.142l12.435-3.525c.776-.257 1.561.245 1.567 1.002l.132 17.731c.005.784-.823 1.374-1.616 1.151l-12.38-2.896c-.478-.135-.802-.538-.81-1.011zm2.858-8.005a.47.47 0 00-.47.47v2.936c0 .26.21.47.47.47h.998v3.201c0 .26.21.47.47.47h3.935v.998c0 .26.21.47.47.47h2.937c.26 0 .47-.21.47-.47V15.65a.47.47 0 00-.47-.47h-2.937a.47.47 0 00-.47.47v.998H9.984v-2.731h.998c.26 0 .47-.21.47-.47v-.852h1.997v.852c0 .26.21.47.47.47h2.937c.26 0 .47-.21.47-.47V10.51a.47.47 0 00-.47-.47h-2.937a.47.47 0 00-.47.47v1.146h-1.997V10.51a.47.47 0 00-.47-.47h-.998V7.308h3.465v.999c0 .26.21.47.47.47h2.937c.26 0 .47-.21.47-.47V5.37a.47.47 0 00-.47-.47h-2.937a.47.47 0 00-.47.47v.999H9.514a.47.47 0 00-.47.47v3.2zm.47 2.936V10.98h1.996v1.997zm5.873-7.136v1.997h1.997V5.84zm0 7.136V10.98h1.997v1.997zm0 3.142v1.997h1.997v-1.997z"
-                            fill="url(#iacm_svg__a)"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
-                      >
-                        <span>
-                          iacm.navTitle
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <div
-                        class="StyledProps--font StyledProps--main"
-                        tabindex="0"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main clickable tooltipIcon StyledProps--padding-small"
-                          data-icon="tooltip-icon"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 12 12"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M6.02 11a5 5 0 100-10 5 5 0 000 10zm0 1a6 6 0 100-12 6 6 0 000 12zM6 5.5a.5.5 0 01.5.5v2.5a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm0-1.029a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </span>
-                  </span>
-                </div>
-              </a>
             </div>
           </div>
           <div
@@ -698,6 +606,98 @@ exports[`ModuleList should render correctly without modules 1`] = `
                       >
                         <span>
                           common.purpose.cf.continuous
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                        tabindex="0"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main clickable tooltipIcon StyledProps--padding-small"
+                          data-icon="tooltip-icon"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 12 12"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M6.02 11a5 5 0 100-10 5 5 0 000 10zm0 1a6 6 0 100-12 6 6 0 000 12zM6 5.5a.5.5 0 01.5.5v2.5a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm0-1.029a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </span>
+                  </span>
+                </div>
+              </a>
+              <a
+                class="link"
+                href="/account/accountId/iacm"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main container iacm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
+                    style="width: 278px;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--margin-right-xsmall"
+                        data-icon="iacm"
+                      >
+                        <svg
+                          fill="none"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <lineargradient
+                            gradientUnits="userSpaceOnUse"
+                            id="iacm_svg__a"
+                            x1="7.176"
+                            x2="18.794"
+                            y1="2"
+                            y2="19.899"
+                          >
+                            <stop
+                              offset="0"
+                              stop-color="#62f91f"
+                            />
+                            <stop
+                              offset="1"
+                              stop-color="#45bd35"
+                            />
+                          </lineargradient>
+                          <path
+                            clip-rule="evenodd"
+                            d="M5.188 18.045L5 6.735c-.01-.505.342-.97.86-1.142l12.435-3.525c.776-.257 1.561.245 1.567 1.002l.132 17.731c.005.784-.823 1.374-1.616 1.151l-12.38-2.896c-.478-.135-.802-.538-.81-1.011zm2.858-8.005a.47.47 0 00-.47.47v2.936c0 .26.21.47.47.47h.998v3.201c0 .26.21.47.47.47h3.935v.998c0 .26.21.47.47.47h2.937c.26 0 .47-.21.47-.47V15.65a.47.47 0 00-.47-.47h-2.937a.47.47 0 00-.47.47v.998H9.984v-2.731h.998c.26 0 .47-.21.47-.47v-.852h1.997v.852c0 .26.21.47.47.47h2.937c.26 0 .47-.21.47-.47V10.51a.47.47 0 00-.47-.47h-2.937a.47.47 0 00-.47.47v1.146h-1.997V10.51a.47.47 0 00-.47-.47h-.998V7.308h3.465v.999c0 .26.21.47.47.47h2.937c.26 0 .47-.21.47-.47V5.37a.47.47 0 00-.47-.47h-2.937a.47.47 0 00-.47.47v.999H9.514a.47.47 0 00-.47.47v3.2zm.47 2.936V10.98h1.996v1.997zm5.873-7.136v1.997h1.997V5.84zm0 7.136V10.98h1.997v1.997zm0 3.142v1.997h1.997v-1.997z"
+                            fill="url(#iacm_svg__a)"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+                      >
+                        <span>
+                          iacm.navTitle
                         </span>
                       </p>
                     </div>
