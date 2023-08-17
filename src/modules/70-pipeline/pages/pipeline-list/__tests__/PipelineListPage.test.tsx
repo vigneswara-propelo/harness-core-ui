@@ -82,6 +82,7 @@ jest.mock('services/pipeline-ng', () => {
 })
 
 jest.mock('services/cd-ng', () => ({
+  getServiceListPromise: jest.fn().mockImplementation(() => Promise.resolve([])),
   useGetOrganizationList: jest.fn().mockReturnValue({ data: null, loading: false }),
   useGetProjectAggregateDTOList: jest.fn().mockReturnValue({ data: null, loading: false }),
   useGetServiceDefinitionTypes: jest.fn(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),

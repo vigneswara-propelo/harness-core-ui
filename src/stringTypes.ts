@@ -4469,6 +4469,7 @@ export interface StringsMap {
   'pipeline.featureRestriction.subscriptionExceededLimit': string
   'pipeline.featureRestriction.unlimitedBuildsRequiredPlan': string
   'pipeline.feedsText': string
+  'pipeline.fetchNextServices': string
   'pipeline.fieldLabels.commandType': string
   'pipeline.fieldPlaceholders.commandType': string
   'pipeline.fileDetails': string
@@ -4815,6 +4816,7 @@ export interface StringsMap {
   'pipeline.noRunsSimpleText': string
   'pipeline.noRunsText': string
   'pipeline.noRuntimeServiceInputsAreRequired': string
+  'pipeline.noServiceAvailable': string
   'pipeline.noServicesFound': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string

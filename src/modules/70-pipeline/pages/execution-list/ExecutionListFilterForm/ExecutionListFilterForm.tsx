@@ -5,22 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FormikProps, useFormikContext } from 'formik'
-import { FormInput, SelectOption, Text } from '@harness/uicore'
+import { Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { get, isEmpty, isNil, isUndefined } from 'lodash-es'
+import { IItemRendererProps, ItemListRenderer } from '@blueprintjs/select'
+import { defaultTo, get, isEmpty, isNil, isUndefined } from 'lodash-es'
+import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { FilterProperties } from 'services/pipeline-ng'
 import {
   getExecutionStatusOptions,
   BUILD_TYPE,
   DeploymentTypeContext,
-  BuildTypeContext
+  BuildTypeContext,
+  getMultiSelectFormOptions
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import InputDatePicker from '@common/components/InputDatePicker/InputDatePicker'
+import { getServiceListPromise } from 'services/cd-ng'
+import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 import css from './ExecutionListFilterForm.module.scss'
 
 export type FormView = 'PIPELINE-META'
@@ -79,8 +84,49 @@ export function ExecutionListFilterForm<
 >(props: ExecutionListFilterFormProps<T>): React.ReactElement {
   const { getString } = useStrings()
   const { module } = useParams<ModulePathParams>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps>>()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const loadMoreRef = useRef(null)
   const formikFromContext = useFormikContext<T>()
+  const pageSize = useRef(20)
+  const queryParams = useMemo(
+    () => ({
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      size: pageSize.current,
+      searchTerm
+    }),
+    [accountId, orgIdentifier, projectIdentifier, searchTerm]
+  )
+
+  const [isFetchingServiceNextTime, setIsFetchingServiceNextTime] = useState(true)
+
+  const {
+    items: servicesResponse,
+    error: fetchServicesError,
+    fetching: fetchingServices,
+    attachRefToLastElement,
+    offsetToFetch
+  } = useInfiniteScroll({
+    getItems: options => {
+      return getServiceListPromise({
+        queryParams: { ...queryParams, size: options.limit, page: options.offset }
+      })
+    },
+    limit: pageSize.current,
+    loadMoreRef,
+    searchTerm
+  })
+
+  useEffect(() => {
+    setIsFetchingServiceNextTime(fetchingServices && offsetToFetch.current > 0)
+  }, [fetchingServices, offsetToFetch.current])
+
+  const isEmptyContent = useMemo(() => {
+    return !fetchingServices && !fetchServicesError && isEmpty(servicesResponse)
+  }, [fetchingServices, fetchServicesError, servicesResponse])
 
   const getBuildTypeOptions = (): React.ReactElement => {
     let buildTypeField: JSX.Element = <></>
@@ -172,11 +218,45 @@ export function ExecutionListFilterForm<
   const getDeploymentTypeOptions = (): React.ReactElement => {
     const {
       environments,
-      services,
       gitOpsAppIdentifiers,
       deploymentType: deploymentTypeSelectOptions
     } = initialValues as DeploymentTypeContext
+    const services = getMultiSelectFormOptions(servicesResponse, 'service')
     const deploymentTypeValue = formikProps?.values?.deploymentType
+    const serviceItemRenderer = (item: SelectOption, itemProps: IItemRendererProps) => {
+      const { handleClick, index } = itemProps
+      return (
+        <div ref={attachRefToLastElement(defaultTo(index, 0)) ? loadMoreRef : undefined} key={item.label.toString()}>
+          <Menu.Item
+            text={
+              <Layout.Horizontal spacing="small">
+                <Text>{item.label}</Text>
+              </Layout.Horizontal>
+            }
+            onClick={handleClick}
+          />
+        </div>
+      )
+    }
+
+    const itemListRenderer: ItemListRenderer<SelectOption> = itemListProps => (
+      <Menu>
+        {isEmptyContent ? (
+          <Layout.Vertical flex={{ align: 'center-center' }} width={'100%'} height={'100%'}>
+            {getString('pipeline.noServiceAvailable')}
+          </Layout.Vertical>
+        ) : (
+          itemListProps.items.map((item, i) => itemListProps.renderItem(item, i))
+        )}
+        {isFetchingServiceNextTime && (
+          <Container padding={'large'}>
+            <Text icon="loading" iconProps={{ size: 20 }} font={{ align: 'center' }}>
+              {getString('pipeline.fetchNextServices')}
+            </Text>
+          </Container>
+        )}
+      </Menu>
+    )
 
     // const infrastructureTypeLabel = { label: getString('kubernetesDirectText'), value: 'Kubernetes Direct' }
     return (
@@ -218,7 +298,10 @@ export function ExecutionListFilterForm<
           key="services"
           placeholder={getString('pipeline.filters.servicePlaceholder')}
           multiSelectProps={{
-            allowCreatingNewItems: false
+            allowCreatingNewItems: false,
+            itemListRenderer,
+            itemRender: serviceItemRenderer,
+            onQueryChange: query => setSearchTerm(query)
           }}
         />
 

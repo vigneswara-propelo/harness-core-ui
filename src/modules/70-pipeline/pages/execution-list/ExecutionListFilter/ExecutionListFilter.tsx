@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
 import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/pipeline-ng'
-import { useGetEnvironmentListV2, useGetServiceDefinitionTypes, useGetServiceList } from 'services/cd-ng'
+import { useGetEnvironmentListV2, useGetServiceDefinitionTypes } from 'services/cd-ng'
 import { Servicev1Application, useApplicationServiceListApps } from 'services/gitops'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
@@ -74,16 +74,6 @@ export function ExecutionListFilter(): React.ReactElement {
 
   const { data: deploymentTypeResponse, loading: isDeploymentTypesLoading } = useGetServiceDefinitionTypes({
     queryParams: { accountId },
-    lazy: !filterDrawerOpenedRef.current
-  })
-
-  const { data: servicesResponse, loading: isServicesLoading } = useGetServiceList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
-    },
     lazy: !filterDrawerOpenedRef.current
   })
 
@@ -171,7 +161,7 @@ export function ExecutionListFilter(): React.ReactElement {
   }, [deploymentTypeResponse?.data])
 
   const filterList = filterListData?.data?.content
-  const isMetaDataLoading = isDeploymentTypesLoading || isEnvironmentsLoading || isServicesLoading
+  const isMetaDataLoading = isDeploymentTypesLoading || isEnvironmentsLoading
   const isFilterCrudLoading =
     isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading
   const appliedFilter =
@@ -326,7 +316,6 @@ export function ExecutionListFilter(): React.ReactElement {
             isCIEnabled={isCIEnabled}
             initialValues={{
               environments: getMultiSelectFormOptions(environmentsResponse?.data?.content, 'environment'),
-              services: getMultiSelectFormOptions(servicesResponse?.data?.content, 'service'),
               deploymentType: deploymentTypeSelectOptions,
               gitOpsAppIdentifiers: gitOpsAppNameOptions
             }}

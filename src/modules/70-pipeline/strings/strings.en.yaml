@@ -21,6 +21,8 @@ stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the ch
 clickHere: Click here
 stepDetails: Step details
 stageVariables: Stage Variables
+fetchNextServices: Fetching more services
+noServiceAvailable: No service available
 stepGroupVariables: StepGroup Variables
 scriptInputVariables: Script Input Variables
 scriptOutputVariables: Script Output Variables

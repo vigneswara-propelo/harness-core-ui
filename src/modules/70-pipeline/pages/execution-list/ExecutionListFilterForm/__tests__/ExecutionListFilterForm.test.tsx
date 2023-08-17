@@ -33,6 +33,10 @@ const params = {
 
 const TEST_PATH = routes.toPipelines({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
 
+jest.mock('services/cd-ng', () => ({
+  getServiceListPromise: jest.fn().mockImplementation(() => Promise.resolve([]))
+}))
+
 function WrapperComponent(): JSX.Element {
   return (
     <TestWrapper path={TEST_PATH} pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>

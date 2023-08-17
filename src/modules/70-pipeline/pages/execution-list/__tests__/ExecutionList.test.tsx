@@ -117,6 +117,7 @@ const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMo
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 
 jest.mock('services/cd-ng', () => ({
+  getServiceListPromise: jest.fn().mockImplementation(() => Promise.resolve([])),
   useGetServiceDefinitionTypes: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
@@ -429,7 +430,6 @@ describe('Execution List', () => {
       return element
     })
     await userEvent.click(filtersButton!)
-
     const newFilterButton = await screen.findByLabelText('filters.newFilter')
     await userEvent.click(newFilterButton)
 
