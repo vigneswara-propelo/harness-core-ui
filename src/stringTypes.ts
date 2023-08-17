@@ -8671,6 +8671,10 @@ export interface StringsMap {
   'cf.shared.targets': string
   'cf.shared.variation': string
   'cf.shared.variations': string
+  'cf.staleFlagAction.checkAllStaleFlags': string
+  'cf.staleFlagAction.checkStaleFlag': string
+  'cf.staleFlagAction.flagsSelected': string
+  'cf.staleFlagAction.learnMore': string
   'cf.staleFlagAction.notStale': string
   'cf.staleFlagAction.readyForCleanup': string
   'cf.staleFlagAction.selectAllPotentiallyStaleFlags': string

@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode, useMemo } from 'react'
-import { Breadcrumb, Page, Text } from '@harness/uicore'
+import React, { FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import { Breadcrumb, Container, Page, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { getErrorMessage } from '@cf/utils/CFUtils'
@@ -29,12 +29,13 @@ export interface ListingPageTemplateProps {
   videoHelp?: { trackingConst: string; label?: string }
   toolbar?: ReactNode
   pagination?: ReactNode
+  footer?: ReactNode
   loading?: boolean
   error?: unknown
   retryOnError?: () => void
 }
 
-const ListingPageTemplate: React.FC<ListingPageTemplateProps> = ({
+const ListingPageTemplate: FC<PropsWithChildren<ListingPageTemplateProps>> = ({
   breadcrumbs,
   title,
   titleTooltipId,
@@ -43,6 +44,7 @@ const ListingPageTemplate: React.FC<ListingPageTemplateProps> = ({
   videoHelp,
   toolbar,
   pagination,
+  footer,
   error,
   retryOnError,
   loading,
@@ -129,7 +131,12 @@ const ListingPageTemplate: React.FC<ListingPageTemplateProps> = ({
         {state === STATUS.ok && children}
       </div>
 
-      {state === STATUS.ok && pagination && <footer className={css.footer}>{pagination}</footer>}
+      {state === STATUS.ok && (pagination || footer) && (
+        <footer className={css.footer}>
+          {pagination && <Container margin={{ left: 'xlarge', right: 'xlarge' }}>{pagination}</Container>}
+          {footer}
+        </footer>
+      )}
 
       {state === STATUS.loading && !error && (
         <div className={css.loading}>

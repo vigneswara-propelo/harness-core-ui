@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, FormEvent, useCallback, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import type { Cell, CellProps, Column, Renderer } from 'react-table'
-import { Checkbox, Container, Layout, TableV2, Text, Utils } from '@harness/uicore'
+import { Container, FormInput, Layout, TableV2, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import type { DeleteFeatureFlagQueryParams, Feature, FeatureMetric, Features } from 'services/cf'
@@ -17,7 +17,6 @@ import {
   isFeatureFlagOn,
   useFeatureFlagTypeToStringMapping
 } from '@cf/utils/CFUtils'
-import type { FilterProps } from '@cf/components/TableFilters/TableFilters'
 import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUtils'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { useStrings } from 'framework/strings'
@@ -26,11 +25,13 @@ import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOpti
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
 import type { UseToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import type { UseGovernancePayload } from '@cf/hooks/useGovernance'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { FeatureFlagStatus, FlagStatus } from '../FlagStatus'
 import { FlagResult } from '../FlagResult'
 import { RenderFeatureFlag } from './RenderFeatureFlag'
+import { useIsStaleFlagsView } from '../hooks/useIsStaleFlagsView'
+import StaleFlagsSelectAll from './StaleFlagActions/StaleFlagsSelectAll'
 import css from './FeatureFlagListing.module.scss'
 
 export interface FeatureFlagsListingProps {
@@ -64,17 +65,8 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
   const gitSync = useFFGitSyncContext()
   const { getString } = useStrings()
 
-  const [flagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
-
-  const onCheckboxSelect = useCallback((event: FormEvent<HTMLInputElement>) => {
-    if (event.currentTarget.checked) {
-      //TODO: Handle checked
-    } else {
-      //TODO: Handle unchecked
-    }
-  }, [])
-
-  const { FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
+  const flagCleanupEnabled = useFeatureFlag(FeatureFlag.FFM_8344_FLAG_CLEANUP)
+  const isStaleFlagsView = useIsStaleFlagsView()
 
   const RenderColumnDetails: Renderer<CellProps<Feature>> = ({ row }) => {
     const data = row.original
@@ -120,26 +112,18 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
     () => [
       {
         id: 'staleCheckbox',
-        Header: (
-          <div>
-            <Checkbox
-              aria-label="cf.staleFlagAction.selectAllPotentiallyStaleFlags"
-              onClick={() => {
-                //TOD: Handle Select all
-              }}
-            />
-          </div>
-        ),
+        Header: <div>{isStaleFlagsView && flagCleanupEnabled && <StaleFlagsSelectAll />}</div>,
         accessor: row => row,
         width: '4%',
-        Cell: () => {
-          return (
-            <div onClick={e => e.stopPropagation()} className={css.staleCheckbox}>
-              <Checkbox onClick={onCheckboxSelect} />
-            </div>
-          )
-        },
-        onCheckboxSelect
+        Cell: (cell: Cell<Feature>) => (
+          <div onClick={e => e.stopPropagation()} className={css.staleCheckbox}>
+            <FormInput.CheckBox
+              name={`staleFlags.${cell.row.original.identifier}`}
+              label=""
+              aria-label={getString('cf.staleFlagAction.checkStaleFlag')}
+            />
+          </div>
+        )
       },
       {
         Header: getString('featureFlagsText').toUpperCase(),
@@ -224,16 +208,17 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
       featureMetrics,
       featureMetricsLoading,
       queryParams,
-      onCheckboxSelect
+      isStaleFlagsView
     ]
   )
 
   const filteredColumns = useMemo(() => {
-    if (FFM_8344_FLAG_CLEANUP && flagFilter?.queryProps?.value === FeatureFlagStatus.POTENTIALLY_STALE) {
+    if (isStaleFlagsView && flagCleanupEnabled) {
       return columns
     }
+
     return columns.filter(column => column.id !== 'staleCheckbox')
-  }, [columns, flagFilter?.queryProps?.value])
+  }, [columns, isStaleFlagsView, flagCleanupEnabled])
 
   return (
     <TableV2<Feature>

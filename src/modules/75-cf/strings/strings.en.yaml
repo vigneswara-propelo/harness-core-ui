@@ -284,6 +284,10 @@ staleFlagAction:
   notStale: Mark as Not Stale
   readyForCleanup: Mark as Ready for Cleanup
   selectAllPotentiallyStaleFlags: Select all potentially stale flags
+  learnMore: Learn more about flag lifecycle
+  flagsSelected: '{{ count }} Flags Selected'
+  checkStaleFlag: Check potentially stale flag
+  checkAllStaleFlags: Check all potentially stale flags
 targets:
   createdDate: Created Date
   create: New Target

@@ -27,9 +27,8 @@ import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import FlagDialog from '@cf/components/CreateFlagDialog/FlagDialog'
 import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
 import { useGovernance } from '@cf/hooks/useGovernance'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
-import { FeatureFlag } from '@common/featureFlags'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import type { FilterProps } from '@cf/components/TableFilters/TableFilters'
 import routes from '@common/RouteDefinitions'
@@ -38,6 +37,9 @@ import { FlagTableFilters } from './components/FlagTableFilters'
 import { NoFeatureFlags } from './components/NoFeatureFlags'
 import AllEnvironmentsFlagsListing from './components/AllEnvironmentsFlagsListing'
 import FeatureFlagsListing from './components/FeatureFlagsListing'
+import { StaleFlagActions } from './components/StaleFlagActions/StaleFlagActions'
+import { useIsStaleFlagsView } from './hooks/useIsStaleFlagsView'
+import StaleFlagsForm from './components/StaleFlagActions/StaleFlagsForm'
 import css from './FeatureFlagsPage.module.scss'
 
 const FeatureFlagsPage: FC = () => {
@@ -147,7 +149,7 @@ const FeatureFlagsPage: FC = () => {
     !!features?.featureCounts?.totalFeatures || !emptyFeatureFlags || !!features?.featureCounts?.totalArchived
 
   const title = getString('featureFlagsText')
-  const FILTER_FEATURE_FLAGS = useFeatureFlag(FeatureFlag.STALE_FLAGS_FFM_1510)
+  const { STALE_FLAGS_FFM_1510: FILTER_FEATURE_FLAGS, FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
   const showFilterCards = FILTER_FEATURE_FLAGS && hasFeatureFlags && environmentIdentifier
 
   const onClearFilter = (): void => {
@@ -171,103 +173,108 @@ const FeatureFlagsPage: FC = () => {
     [withActiveEnvironment, orgIdentifier, projectIdentifier, accountIdentifier, history]
   )
 
+  const isStaleFlagsView = useIsStaleFlagsView()
+
   return (
-    <ListingPageTemplate
-      title={title}
-      titleTooltipId="ff_ffListing_heading"
-      headerContent={!!environments?.length && <CFEnvironmentSelect component={<EnvironmentSelect />} />}
-      docsURL="https://developer.harness.io/docs/feature-flags/ff-onboarding/cf-feature-flag-overview"
-      videoHelp={{ trackingConst: FeatureActions.FlagsVideoHelp, label: getString('cf.featureFlags.flagVideoLabel') }}
-      toolbar={
-        hasFeatureFlags && (
-          <>
-            <div className={css.leftToolbar}>
-              <FlagDialog environment={environmentIdentifier} />
-              <GitSyncActions isLoading={gitSync.isGitSyncActionsEnabled && (gitSync.gitSyncLoading || gitSyncing)} />
-            </div>
-            <ExpandingSearchInput
-              ref={searchRef}
-              alwaysExpanded
-              name="findFlag"
-              placeholder={getString('search')}
-              onChange={onSearchInputChanged}
-              defaultValue={searchTerm}
+    <StaleFlagsForm flags={features?.features}>
+      <ListingPageTemplate
+        title={title}
+        titleTooltipId="ff_ffListing_heading"
+        headerContent={!!environments?.length && <CFEnvironmentSelect component={<EnvironmentSelect />} />}
+        docsURL="https://developer.harness.io/docs/feature-flags/ff-onboarding/cf-feature-flag-overview"
+        videoHelp={{ trackingConst: FeatureActions.FlagsVideoHelp, label: getString('cf.featureFlags.flagVideoLabel') }}
+        toolbar={
+          hasFeatureFlags && (
+            <>
+              <div className={css.leftToolbar}>
+                <FlagDialog environment={environmentIdentifier} />
+                <GitSyncActions isLoading={gitSync.isGitSyncActionsEnabled && (gitSync.gitSyncLoading || gitSyncing)} />
+              </div>
+              <ExpandingSearchInput
+                ref={searchRef}
+                alwaysExpanded
+                name="findFlag"
+                placeholder={getString('search')}
+                onChange={onSearchInputChanged}
+                defaultValue={searchTerm}
+              />
+            </>
+          )
+        }
+        pagination={
+          !emptyFeatureFlags && (
+            <Pagination
+              itemCount={projectFlags ? projectFlags.itemCount : features?.itemCount || 0}
+              pageSize={CF_DEFAULT_PAGE_SIZE}
+              pageCount={projectFlags ? projectFlags.pageCount : features?.pageCount || 0}
+              pageIndex={pageNumber}
+              gotoPage={setPageNumber}
+              showPagination
+              hidePageNumbers={projectFlags ? projectFlags.pageCount > 1000 : (features?.pageCount || 0) > 1000}
             />
-          </>
-        )
-      }
-      pagination={
-        !emptyFeatureFlags && (
-          <Pagination
-            itemCount={projectFlags ? projectFlags.itemCount : features?.itemCount || 0}
-            pageSize={CF_DEFAULT_PAGE_SIZE}
-            pageCount={projectFlags ? projectFlags.pageCount : features?.pageCount || 0}
-            pageIndex={pageNumber}
-            gotoPage={setPageNumber}
-            showPagination
-            hidePageNumbers={projectFlags ? projectFlags.pageCount > 1000 : (features?.pageCount || 0) > 1000}
-          />
-        )
-      }
-      loading={loading}
-      error={error}
-      retryOnError={() => {
-        setPageNumber(0)
-        refetchEnvironments()
-        refetchFlags()
-      }}
-    >
-      {showFilterCards && !projectFlags && (
-        <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-          <FlagTableFilters
-            features={features}
-            currentFilter={flagFilter}
-            updateTableFilter={currentFilter => {
-              defer(() => setPageNumber(0))
-              defer(() => setFlagFilter(currentFilter))
-            }}
-          />
-        </Container>
-      )}
-      {!emptyFeatureFlags || !!projectFlags?.flags?.length ? (
-        <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-          {projectFlags && !!environments?.length ? (
-            <AllEnvironmentsFlagsListing
-              environments={environments}
-              projectFlags={projectFlags}
-              refetchFlags={refetchProjectFlags}
-              deleteFlag={deleteFlag.mutate}
-              queryParams={queryParams}
-            />
-          ) : (
-            <FeatureFlagsListing
-              deleteFlag={deleteFlag.mutate}
-              featureMetrics={featureMetrics as FeatureMetric[]}
-              featureMetricsLoading={featureMetricsLoading}
+          )
+        }
+        footer={FFM_8344_FLAG_CLEANUP && isStaleFlagsView && <StaleFlagActions />}
+        loading={loading}
+        error={error}
+        retryOnError={() => {
+          setPageNumber(0)
+          refetchEnvironments()
+          refetchFlags()
+        }}
+      >
+        {showFilterCards && !projectFlags && (
+          <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
+            <FlagTableFilters
               features={features}
-              governance={governance}
-              numberOfEnvs={environments?.length}
-              onRowClick={onRowClick}
-              queryParams={queryParams}
-              refetchFlags={refetchFlags}
-              toggleFeatureFlag={toggleFeatureFlag}
+              currentFilter={flagFilter}
+              updateTableFilter={currentFilter => {
+                defer(() => setPageNumber(0))
+                defer(() => setFlagFilter(currentFilter))
+              }}
             />
-          )}
-        </Container>
-      ) : (
-        <NoFeatureFlags
-          hasFeatureFlags={hasFeatureFlags}
-          hasSearchTerm={searchTerm.length > 0}
-          hasFlagFilter={
-            (flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0) ||
-            !!features?.featureCounts?.totalArchived
-          }
-          environmentIdentifier={environmentIdentifier}
-          clearFilter={onClearFilter}
-          clearSearch={onClearSearch}
-        />
-      )}
-    </ListingPageTemplate>
+          </Container>
+        )}
+        {!emptyFeatureFlags || !!projectFlags?.flags?.length ? (
+          <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
+            {projectFlags && !!environments?.length ? (
+              <AllEnvironmentsFlagsListing
+                environments={environments}
+                projectFlags={projectFlags}
+                refetchFlags={refetchProjectFlags}
+                deleteFlag={deleteFlag.mutate}
+                queryParams={queryParams}
+              />
+            ) : (
+              <FeatureFlagsListing
+                deleteFlag={deleteFlag.mutate}
+                featureMetrics={featureMetrics as FeatureMetric[]}
+                featureMetricsLoading={featureMetricsLoading}
+                features={features}
+                governance={governance}
+                numberOfEnvs={environments?.length}
+                onRowClick={onRowClick}
+                queryParams={queryParams}
+                refetchFlags={refetchFlags}
+                toggleFeatureFlag={toggleFeatureFlag}
+              />
+            )}
+          </Container>
+        ) : (
+          <NoFeatureFlags
+            hasFeatureFlags={hasFeatureFlags}
+            hasSearchTerm={searchTerm.length > 0}
+            hasFlagFilter={
+              (flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0) ||
+              !!features?.featureCounts?.totalArchived
+            }
+            environmentIdentifier={environmentIdentifier}
+            clearFilter={onClearFilter}
+            clearSearch={onClearSearch}
+          />
+        )}
+      </ListingPageTemplate>
+    </StaleFlagsForm>
   )
 }
 

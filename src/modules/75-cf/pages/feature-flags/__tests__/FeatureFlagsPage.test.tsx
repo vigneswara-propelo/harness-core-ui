@@ -41,7 +41,8 @@ const renderComponent = (isArchivingFFOn = false): RenderResult =>
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
         FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
         FFM_7921_ARCHIVING_FEATURE_FLAGS: isArchivingFFOn,
-        FFM_7258_INTERCOM_VIDEO_LINKS: true
+        FFM_7258_INTERCOM_VIDEO_LINKS: true,
+        FFM_8344_FLAG_CLEANUP: true
       }}
     >
       <FeatureFlagsPage />
@@ -320,6 +321,51 @@ describe('FeatureFlagsPage', () => {
 
       renderComponent(isArchivingFFOn)
       expect(screen.getAllByTestId('filter-card')).toHaveLength(7)
+    })
+  })
+
+  describe('StaleFlagCleanup', () => {
+    test('it should render checkboxes in all rows when flag cleanup is on and potentially stale flags filtered', async () => {
+      renderComponent()
+
+      await userEvent.click(screen.getByText('cf.flagFilters.potentiallyStale'))
+
+      await waitFor(() => {
+        expect(screen.getByTestId('selectAllStale')).toBeInTheDocument()
+        expect(screen.getAllByRole('checkbox', { name: 'cf.staleFlagAction.checkStaleFlag' }).length).toEqual(
+          mockFeatureFlags.itemCount
+        )
+      })
+    })
+
+    test('it should select all flags when the select all checkbox is checked', async () => {
+      renderComponent()
+
+      await userEvent.click(screen.getByText('cf.flagFilters.potentiallyStale'))
+
+      const selectAll = screen.getByTestId('selectAllStale')
+      const allCheckboxes = screen.getAllByRole('checkbox', { name: 'cf.staleFlagAction.checkStaleFlag' })
+
+      await userEvent.click(selectAll)
+
+      await waitFor(() => {
+        expect(selectAll).toBeChecked()
+      })
+
+      await waitFor(() => {
+        allCheckboxes.forEach(checkbox => {
+          expect(checkbox).toBeChecked()
+        })
+      })
+
+      //deselect all
+      await userEvent.click(selectAll)
+
+      await waitFor(() => {
+        allCheckboxes.forEach(checkbox => {
+          expect(checkbox).not.toBeChecked()
+        })
+      })
     })
   })
 })
