@@ -49,6 +49,9 @@ import { useQueryParams } from '@common/hooks'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import type { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import {
   getTriggerIcon,
   GitSourceProviders,
@@ -340,7 +343,7 @@ const RenderWebhookIcon = ({
     orgIdentifier: string
     projectIdentifier: string
     getString: UseStringsReturn['getString']
-    isTriggerRbacDisabled: boolean
+    isWebhookDisabled: boolean
   }
   identifier?: string
   curlCommand?: string
@@ -362,14 +365,14 @@ const RenderWebhookIcon = ({
       >
         <Button
           minimal
-          className={cx(css.webhookUrl, column.isTriggerRbacDisabled ? css.disabledOption : '')}
+          className={cx(css.webhookUrl, column.isWebhookDisabled ? css.disabledOption : '')}
           icon="webhook"
           iconProps={{
             size: 20
           }}
           onClick={e => {
             e.stopPropagation()
-            if (column.isTriggerRbacDisabled) {
+            if (column.isWebhookDisabled) {
               return
             }
             setOptionsOpen(true)
@@ -436,7 +439,7 @@ const RenderColumnWebhook: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
     orgIdentifier: string
     projectIdentifier: string
     getString: UseStringsReturn['getString']
-    isTriggerRbacDisabled: boolean
+    isWebhookDisabled: boolean
   }
 }) => {
   const data = row.original
@@ -583,6 +586,19 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
 
   const isTriggerRbacDisabled = !isTriggerCreatePermission || isPipelineInvalid
 
+  const [isExecutePipeline] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.PIPELINE,
+        resourceIdentifier: pipelineIdentifier
+      },
+      permissions: [PermissionIdentifier.EXECUTE_PIPELINE]
+    },
+    [pipelineIdentifier]
+  )
+
+  const isWebhookDisabled = !isExecutePipeline || isPipelineInvalid
+
   const columns: any = React.useMemo(
     // const columns: CustomColumn<NGTriggerDetailsResponse>[] = React.useMemo( // wait for backend to support condition
     () => [
@@ -648,7 +664,7 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
         projectIdentifier,
         accountId,
         getString,
-        isTriggerRbacDisabled
+        isWebhookDisabled
       },
       {
         Header: RenderCenteredColumnHeader(getString('enabledLabel').toUpperCase()),
