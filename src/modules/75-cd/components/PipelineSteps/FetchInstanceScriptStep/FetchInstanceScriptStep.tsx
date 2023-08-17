@@ -10,7 +10,6 @@ import cx from 'classnames'
 
 import { AllowedTypes, Formik, FormInput, IconName } from '@harness/uicore'
 import * as Yup from 'yup'
-import { Color } from '@harness/design-system'
 
 import { defaultTo, get } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
@@ -186,7 +185,6 @@ export class FetchInstanceScript extends PipelineStep<StepElementConfig> {
 
   protected type = StepType.FetchInstanceScript
   protected stepName = 'Fetch Instances'
-  protected stepIconColor = Color.GREY_700
   protected stepIcon: IconName = 'rolling'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.fetchInstanceScript'
   protected stepPaletteVisible = false
