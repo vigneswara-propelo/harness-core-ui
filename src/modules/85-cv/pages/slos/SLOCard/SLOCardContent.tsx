@@ -149,7 +149,10 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
             <Layout.Horizontal spacing="medium" margin={{ top: 'small' }}>
               <Layout.Vertical spacing="medium" margin={{ top: 'small' }}>
                 <Container background={Color.GREY_100} className={stylesSLOAndSLICard}>
-                  <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'SLO' }}>
+                  <Text
+                    font={{ variation: FontVariation.FORM_LABEL }}
+                    tooltipProps={{ dataTooltipId: 'SLOStatusPercentage' }}
+                  >
                     {getString('cv.SLO')}
                   </Text>
                   <Heading
@@ -162,7 +165,10 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   </Heading>
                 </Container>
                 <Container background={Color.GREY_100} className={stylesSLOAndSLICard}>
-                  <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'SLI' }}>
+                  <Text
+                    font={{ variation: FontVariation.FORM_LABEL }}
+                    tooltipProps={{ dataTooltipId: 'SLIStatusPercentage' }}
+                  >
                     {getString('cv.slos.sli')}
                   </Text>
                   <Heading
