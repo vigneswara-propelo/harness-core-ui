@@ -301,7 +301,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       orgIdentifier,
       projectIdentifier
     },
-    lazy: false
+    lazy: isExecutionListView
   })
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
