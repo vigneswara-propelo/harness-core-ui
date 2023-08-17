@@ -197,7 +197,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      planExecutionId: executionIdentifier
+      planExecutionId: executionIdentifier,
+      resolveExpressions: true
     } as GetMergeInputForExecutionQueryParams,
     requestOptions: {
       headers: {

@@ -17,16 +17,18 @@ import {
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import produce from 'immer'
+import { useParams } from 'react-router-dom'
 import { PrimaryArtifact, ServiceSpec, useGetArtifactSourceInputs } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
+import { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import ExperimentalInput from '../K8sServiceSpecForms/ExperimentalInput'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
 
@@ -57,20 +59,33 @@ function PrimaryArtifactRef({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, orgIdentifier, projectIdentifier } = useGetChildPipelineMetadata(childPipelineMetadata)
+  const { executionIdentifier } = useParams<PipelineType<ExecutionPathProps>>()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
+  const primaryRefFormikValue = get(formik?.values, `${path}.artifacts.primary.primaryArtifactRef`)
+  const isExecutionView = !!executionIdentifier
 
   const { data: artifactSourceResponse, loading: loadingArtifactSourceResponse } = useGetArtifactSourceInputs({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
     serviceIdentifier
   })
-  const artifactSources = useMemo(
-    () =>
-      defaultTo(
-        artifactSourceResponse?.data?.sourceIdentifiers?.map(source => ({ label: source, value: source })),
-        []
-      ),
-    [artifactSourceResponse?.data?.sourceIdentifiers]
-  )
+
+  const artifactSources = useMemo(() => {
+    let primaryRefFormikValuePresentInSourceIdentifiers =
+      isEmpty(primaryRefFormikValue) || isMultiTypeRuntime(getMultiTypeFromValue(primaryRefFormikValue))
+    const artifactSourcesFromResponse = defaultTo(
+      artifactSourceResponse?.data?.sourceIdentifiers?.map(source => {
+        if (!isEmpty(primaryRefFormikValue) && source === primaryRefFormikValue)
+          primaryRefFormikValuePresentInSourceIdentifiers = true
+        return { label: source, value: source }
+      }),
+      []
+    )
+
+    if (isExecutionView && !isEmpty(artifactSourcesFromResponse) && !primaryRefFormikValuePresentInSourceIdentifiers)
+      return [...artifactSourcesFromResponse, { label: primaryRefFormikValue, value: primaryRefFormikValue }]
+
+    return artifactSourcesFromResponse
+  }, [artifactSourceResponse?.data?.sourceIdentifiers])
 
   useEffect(() => {
     // if the API is in loading state then just return this ends up showing unsaved changes in the pipeline
@@ -79,7 +94,10 @@ function PrimaryArtifactRef({
     }
     const artifactSourceTemplate = getStageFormTemplate(`${path}.artifacts.primary.sources`)
     const serviceInputsFormikValue = get(formik?.values, `${path}.artifacts.primary.sources`)
-    const isSingleArtifactSource = artifactSources.length === 1
+    const isSingleArtifactSource =
+      artifactSources.length === 1 ||
+      (isExecutionView && artifactSources.length === 2 && artifactSourceResponse?.data?.sourceIdentifiers?.length === 1)
+
     if (
       typeof artifactSourceTemplate === 'string' &&
       getMultiTypeFromValue(artifactSourceTemplate) === MultiTypeInputType.RUNTIME &&
@@ -101,7 +119,8 @@ function PrimaryArtifactRef({
           if (shouldSetDefaultArtifactSource) {
             formik?.setValues(
               produce(formik?.values, (draft: any) => {
-                set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
+                if (!isExecutionView || primaryRefFormikValue === artifactSources[0].value)
+                  set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
                 isEmpty(serviceInputsFormikValue) &&
                   set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
               })
@@ -111,7 +130,6 @@ function PrimaryArtifactRef({
         }
       } else {
         // This is to select single artifact source by default even when there is no runtime inputs in Artifact source
-        const primaryRefFormikValue = get(formik?.values, `${path}.artifacts.primary.primaryArtifactRef`)
         if (isEmpty(primaryRefFormikValue) && shouldSetDefaultArtifactSource) {
           formik?.setValues(
             produce(formik?.values, (draft: any) => {
