@@ -41,7 +41,7 @@ function PipelineResourceRenderer({
       accountIdentifier,
       projectIdentifier,
       orgIdentifier,
-      size: 10,
+      size: identifiers.length,
       ...(isGitSyncEnabled ? { getDistinctFromBranches: true } : {})
     }
   })
@@ -60,7 +60,7 @@ function PipelineResourceRenderer({
     cancel()
     fetchPipelines()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountIdentifier, projectIdentifier, orgIdentifier, module])
+  }, [accountIdentifier, projectIdentifier, orgIdentifier, module, identifiers])
 
   const pipelineContentData: PMSPipelineSummaryResponse[] = pipelineData?.content || []
 
