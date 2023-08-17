@@ -57,7 +57,7 @@ export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): Rea
 
     return [
       {
-        Header: getString('pipeline.artifactsSelection.packageName'),
+        Header: getString('common.resourceCenter.ticketmenu.component'),
         accessor: 'name',
         Cell: PackageNameCell,
         serverSortProps: getServerSortProps('name')

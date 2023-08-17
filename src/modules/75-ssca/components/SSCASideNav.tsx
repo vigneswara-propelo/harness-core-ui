@@ -8,6 +8,7 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
+import { useFeatureFlag } from '@harnessio/ff-react-client-sdk'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
@@ -15,6 +16,7 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
+import { FeatureFlag } from '@common/featureFlags'
 
 const module = 'ssca'
 
@@ -23,6 +25,7 @@ export default function SSCASideNav(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { updateAppStore } = useAppStore()
   const history = useHistory()
+  const SSCA_ARTIFACTS_ENABLED = useFeatureFlag(FeatureFlag.SSCA_ARTIFACTS_ENABLED)
 
   const showLinks = projectIdentifier && orgIdentifier
   const params: ProjectPathProps & ModulePathParams = {
@@ -50,8 +53,10 @@ export default function SSCASideNav(): React.ReactElement {
       {showLinks && (
         <>
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
-          <SidebarLink label={getString('artifacts')} to={routes.toSSCAArtifacts(params)} />
-          <SidebarLink label={getString('ssca.components')} to={routes.toSSCAComponents(params)} />
+          {SSCA_ARTIFACTS_ENABLED && <SidebarLink label={getString('artifacts')} to={routes.toSSCAArtifacts(params)} />}
+
+          {/* TODO: will be added later */}
+          {/* <SidebarLink label={getString('ssca.components')} to={routes.toSSCAComponents(params)} /> */}
           <ProjectSetupMenu module={module} />
         </>
       )}
