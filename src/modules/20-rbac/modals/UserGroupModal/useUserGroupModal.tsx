@@ -9,7 +9,7 @@ import React, { useCallback, useState } from 'react'
 import { Dialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
-import type { UserGroupDTO } from 'services/cd-ng'
+import type { UserGroupAggregateDTO } from 'services/cd-ng'
 import UserGroupForm from '@rbac/modals/UserGroupModal/views/UserGroupForm'
 import { useStrings } from 'framework/strings'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
@@ -20,16 +20,16 @@ export interface UseUserGroupModalProps {
 }
 
 export interface UseUserGroupModalReturn {
-  openUserGroupModal: (userGroup?: UserGroupDTO, _isAddMember?: boolean) => void
+  openUserGroupModal: (userGroupAggregate?: UserGroupAggregateDTO, _isAddMember?: boolean) => void
   closeUserGroupModal: () => void
 }
 
 export const useUserGroupModal = ({ onSuccess }: UseUserGroupModalProps): UseUserGroupModalReturn => {
-  const [userGroupData, setUserGroupData] = useState<UserGroupDTO>()
+  const [userGroupAggregateData, setUserGroupAggregateData] = useState<UserGroupAggregateDTO>()
   const [isAddMember, setIsAddMember] = useState<boolean>(false)
   const { getString } = useStrings()
   const getTitle = (): string => {
-    if (!!userGroupData && !isAddMember) {
+    if (!!userGroupAggregateData && !isAddMember) {
       return getString('rbac.userGroupPage.editUserGroup')
     }
     if (isAddMember) {
@@ -42,8 +42,8 @@ export const useUserGroupModal = ({ onSuccess }: UseUserGroupModalProps): UseUse
     () => (
       <Dialog isOpen={true} enforceFocus={false} title={getTitle()} onClose={hideModal}>
         <UserGroupForm
-          data={userGroupData}
-          isEdit={!!userGroupData && !isAddMember}
+          data={userGroupAggregateData}
+          isEdit={!!userGroupAggregateData && !isAddMember}
           isAddMember={isAddMember}
           onSubmit={data => {
             onSuccess(data)
@@ -53,11 +53,11 @@ export const useUserGroupModal = ({ onSuccess }: UseUserGroupModalProps): UseUse
         />
       </Dialog>
     ),
-    [userGroupData, isAddMember, onSuccess]
+    [userGroupAggregateData, isAddMember, onSuccess]
   )
   const open = useCallback(
-    (_userGroup?: UserGroupDTO, _isAddMember?: boolean) => {
-      setUserGroupData(_userGroup)
+    (_userGroupAggregate?: UserGroupAggregateDTO, _isAddMember?: boolean) => {
+      setUserGroupAggregateData(_userGroupAggregate)
       setIsAddMember(_isAddMember || false)
       showModal()
     },
@@ -65,7 +65,8 @@ export const useUserGroupModal = ({ onSuccess }: UseUserGroupModalProps): UseUse
   )
 
   return {
-    openUserGroupModal: (userGroup?: UserGroupDTO, _isAddMember?: boolean) => open(userGroup, _isAddMember),
+    openUserGroupModal: (userGroupAggregate?: UserGroupAggregateDTO, _isAddMember?: boolean) =>
+      open(userGroupAggregate, _isAddMember),
     closeUserGroupModal: hideModal
   }
 }

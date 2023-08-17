@@ -23,7 +23,7 @@ import { useParams } from 'react-router-dom'
 import { pick, cloneDeep } from 'lodash-es'
 import { NameIdDescriptionTags, useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { UserGroupDTO, usePostUserGroup, usePutUserGroup, useGetUsers } from 'services/cd-ng'
+import { UserGroupAggregateDTO, UserGroupDTO, usePostUserGroupV2, usePutUserGroupV2, useGetUsers } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -35,7 +35,7 @@ import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityRefer
 import css from '@rbac/modals/UserGroupModal/useUserGroupModal.module.scss'
 
 interface UserGroupModalData {
-  data?: UserGroupDTO
+  data?: UserGroupAggregateDTO
   isEdit?: boolean
   isAddMember?: boolean
   onSubmit?: (data?: ScopeAndIdentifier) => void
@@ -47,14 +47,17 @@ interface UserGroupFormDTO extends UserGroupDTO {
 }
 
 const UserGroupForm: React.FC<UserGroupModalData> = props => {
-  const { data: userGroupData, onSubmit, isEdit, isAddMember, onCancel } = props
+  const { data: userGroupAggregateData, onSubmit, isEdit, isAddMember, onCancel } = props
+  const userGroupData = userGroupAggregateData?.userGroupDTO
+
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
   const [search, setSearch] = useState<string>()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
-  const { mutate: createUserGroup, loading: saving } = usePostUserGroup({
+
+  const { mutate: createUserGroup, loading: saving } = usePostUserGroupV2({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -62,7 +65,7 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
     }
   })
 
-  const { mutate: editUserGroup, loading: updating } = usePutUserGroup({
+  const { mutate: editUserGroup, loading: updating } = usePutUserGroupV2({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -83,8 +86,8 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
     userList?.data?.content?.map(value => {
       return {
         label: value.name || '',
-        value: value.uuid,
-        email: value.email
+        value: value.email,
+        uuid: value.uuid
       }
     }) || []
 
@@ -128,14 +131,17 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))
     }
   }
+
+  const usersWithEmail = userGroupAggregateData?.users?.map(item => item.email)
+
   return (
     <Formik<UserGroupFormDTO>
       initialValues={{
-        identifier: '',
-        name: '',
-        description: '',
-        tags: {},
-        ...userGroupData
+        identifier: userGroupData?.identifier || '',
+        name: userGroupData?.name || '',
+        description: userGroupData?.description || '',
+        tags: userGroupData?.tags || {},
+        users: usersWithEmail
       }}
       formName="userGroupForm"
       validationSchema={Yup.object().shape({

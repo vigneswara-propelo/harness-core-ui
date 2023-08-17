@@ -222,7 +222,7 @@ const UserGroupDetails: React.FC = () => {
                   text={getString('common.plusNumber', { number: getString('members') })}
                   variation={ButtonVariation.LINK}
                   onClick={() => {
-                    openUserGroupModal(userGroup, true)
+                    openUserGroupModal(userGroupAggregateResponse, true)
                   }}
                   resourceType={ResourceType.USERGROUP}
                   resourceIdentifier={userGroupIdentifier}

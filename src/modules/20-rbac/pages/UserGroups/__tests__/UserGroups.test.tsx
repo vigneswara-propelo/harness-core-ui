@@ -67,8 +67,8 @@ jest.mock('services/cd-ng', () => ({
     return { data: userGroupsAggregate, refetch: jest.fn(), error: null, loading: false }
   }),
   useDeleteUserGroup: jest.fn().mockImplementation(() => ({ mutate: deleteUserGroupMock })),
-  usePostUserGroup: jest.fn().mockImplementation(() => ({ mutate: createUserGroupMock })),
-  usePutUserGroup: jest.fn().mockImplementation(() => ({ mutate: editUserGroupMock }))
+  usePostUserGroupV2: jest.fn().mockImplementation(() => ({ mutate: createUserGroupMock })),
+  usePutUserGroupV2: jest.fn().mockImplementation(() => ({ mutate: editUserGroupMock }))
 }))
 
 jest.mock('@common/hooks/useMutateAsGet', () => ({

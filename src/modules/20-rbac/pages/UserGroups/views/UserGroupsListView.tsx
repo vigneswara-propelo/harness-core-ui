@@ -65,7 +65,7 @@ interface UserGroupsListViewProps {
     principalInfo?: UserGroupDTO | UserMetadataDTO,
     roleBindings?: RoleAssignmentMetadataDTO[]
   ) => void
-  openUserGroupModal: (userGroup?: UserGroupDTO, _isAddMember?: boolean) => void
+  openUserGroupModal: (userGroupAggregate?: UserGroupAggregateDTO, _isAddMember?: boolean) => void
 }
 
 const getSsoTypeLabel = (data: UserGroupDTO): StringKeys => {
@@ -137,6 +137,7 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
     projectIdentifier: childProjectIdentifier
   } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+
   const avatars =
     data.users?.map(user => {
       return { email: user.email, name: getUserName(user) }
@@ -144,8 +145,9 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
 
   const handleAddMember = (e: React.MouseEvent<HTMLElement | Element, MouseEvent>): void => {
     e.stopPropagation()
-    ;(column as any).openUserGroupModal(data.userGroupDTO, true)
+    ;(column as any).openUserGroupModal(data, true)
   }
+
   const userGroupInherited = isUserGroupInherited(
     accountIdentifier,
     childOrgIdentifier,
@@ -239,7 +241,8 @@ const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = 
 }
 
 const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, column }) => {
-  const data = row.original.userGroupDTO
+  const userGroupAggregate = row.original
+  const data = userGroupAggregate.userGroupDTO
   const { orgIdentifier, projectIdentifier, identifier } = data
   const {
     accountId: accountIdentifier,
@@ -302,7 +305,7 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    ;(column as any).openUserGroupModal(data)
+    ;(column as any).openUserGroupModal(userGroupAggregate)
   }
 
   const userGroupInherited = isUserGroupInherited(accountIdentifier, childOrgIdentifier, childProjectIdentifier, data)
