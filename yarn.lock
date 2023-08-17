@@ -2100,6 +2100,11 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
+"@harnessio/react-srm-service-client@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-srm-service-client/-/react-srm-service-client-1.0.0.tgz#7b083a8e6dded6ffc549b279a034ed95faa88636"
+  integrity sha512-77lYIWKP+uLkK0DMkiBxui3QQpDbuwK+hrpsgLx6nwrtkCouO9tEaNCFqKYt6Odes2aIl+4awZjqKMG5fn3H/A==
+
 "@harnessio/react-ssca-manager-client@^0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-manager-client/-/react-ssca-manager-client-0.0.3.tgz#d5ff9afad390b006c5755461b2d2667b0b3a9c97"

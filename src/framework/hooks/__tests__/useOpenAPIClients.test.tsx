@@ -13,6 +13,7 @@ import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-au
 import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
 import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
 import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
+import { SRMServiceAPIClient } from '@harnessio/react-srm-service-client'
 
 import useOpenApiClients, { getOpenAPIClientInitiator } from 'framework/hooks/useOpenAPIClients'
 import SecureStorage from 'framework/utils/SecureStorage'
@@ -22,10 +23,12 @@ jest.mock('@harnessio/react-audit-service-client')
 jest.mock('@harnessio/react-idp-service-client')
 jest.mock('@harnessio/react-pipeline-service-client')
 jest.mock('@harnessio/react-ng-manager-client')
+jest.mock('@harnessio/react-srm-service-client')
 ;(AuditServiceClient as jest.Mock).mockImplementation()
 ;(IDPServiceAPIClient as jest.Mock).mockImplementation()
 ;(PipelineServiceAPIClient as jest.Mock).mockImplementation()
 ;(NGManagerServiceAPIClient as jest.Mock).mockImplementation()
+;(SRMServiceAPIClient as jest.Mock).mockImplementation()
 fetchMock.enableMocks() // needed to mock Request constructor
 
 describe('useOpenAPIClients tests', () => {
@@ -38,10 +41,12 @@ describe('useOpenAPIClients tests', () => {
     expect(IDPServiceAPIClient).toHaveBeenCalled()
     expect(PipelineServiceAPIClient).toHaveBeenCalled()
     expect(NGManagerServiceAPIClient).toHaveBeenCalled()
+    expect(SRMServiceAPIClient).toHaveBeenCalled()
     expect(Object.keys(result.current).indexOf('auditServiceClientRef')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('idpServiceClientRef')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('pipelineServiceClientRef')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('ngManagerServiceClientRef')).not.toBe(-1)
+    expect(Object.keys(result.current).indexOf('srmManagerClientRef')).not.toBe(-1)
   })
 
   test('builds initiator object', () => {
