@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect } from 'react'
+import React, { PropsWithChildren, ReactElement, useEffect } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 
 import { defaultTo, fromPairs } from 'lodash-es'
-import { withFeatureFlags } from '@harnessio/ff-react-client-sdk'
+import { useFeatureFlags, useFeatureFlagsLoading } from '@harnessio/ff-react-client-sdk'
 
 // useToaster not imported from '@common/exports' to prevent circular dependency
 import { PageSpinner, useToaster } from '@harness/uicore'
@@ -29,7 +29,7 @@ import {
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { FeatureFlag } from '@common/featureFlags'
+import { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import type { Module } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -105,11 +105,9 @@ const getRedirectionUrl = (accountId: string, source: string | undefined): strin
   return source === 'signup' ? onboardingUrl : dashboardUrl
 }
 
-export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown>>(function AppStoreProvider({
-  children,
-  flags: featureFlags,
-  loading: loadingFeatureFlags
-}): ReactElement {
+export function AppStoreProvider({ children }: PropsWithChildren<unknown>): ReactElement {
+  const featureFlags = useFeatureFlags(Object.values(FeatureFlag))
+  const loadingFeatureFlags = useFeatureFlagsLoading()
   const { showError } = useToaster()
   const history = useHistory()
 
@@ -451,4 +449,4 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
       {loadingFeatureFlags || legacyFeatureFlagsLoading || userInfoLoading ? <PageSpinner /> : children}
     </AppStoreContext.Provider>
   )
-})
+}
