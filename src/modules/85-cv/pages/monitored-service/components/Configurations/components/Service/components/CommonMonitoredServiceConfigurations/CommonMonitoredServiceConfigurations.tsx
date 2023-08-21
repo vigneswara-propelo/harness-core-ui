@@ -20,9 +20,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { CETAgentConfig } from '@cet/pages/CETAgentConfig'
-import { Module, ModuleName } from 'framework/types/ModuleName'
-import { getSearchString } from '@cv/utils/CommonUtils'
-import routes from '@common/RouteDefinitions'
+import { ModuleName } from 'framework/types/ModuleName'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -42,6 +40,7 @@ import MonitoredServiceOverview from '../MonitoredServiceOverview/MonitoredServi
 import MonitoredServiceNotificationsContainer from '../MonitoredServiceNotificationsContainer/MonitoredServiceNotificationsContainer'
 import Dependency from '../../../Dependency/Dependency'
 import { MonitoredServiceConfigurationsTabsEnum } from './CommonMonitoredServiceConfigurations.constants'
+import { handleTabChange } from './CommonMonitoredServiceConfigurations.utils'
 import css from './CommonMonitoredServiceConfigurations.module.scss'
 
 export interface CommonMonitoredServiceConfigurationsProps {
@@ -134,31 +133,19 @@ export default function CommonMonitoredServiceConfigurations(
   }
 
   const onTabChange = (nextTab: MonitoredServiceEnum): void => {
-    if (nextTab !== tab) {
-      if (config) {
-        history.push({
-          pathname: routes.toMonitoredServicesConfigurations({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            identifier,
-            ...(config?.module && { module: config.module as Module })
-          }),
-          search: getSearchString({ view, tab, subTab: nextTab, notificationTime })
-        })
-      } else {
-        history.push({
-          pathname: routes.toCVAddMonitoringServicesEdit({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            identifier,
-            module: 'cv'
-          }),
-          search: getSearchString({ view, tab, subTab: nextTab, notificationTime })
-        })
-      }
-    }
+    handleTabChange({
+      nextTab,
+      tab,
+      config,
+      history,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      identifier,
+      view,
+      notificationTime,
+      isTemplate
+    })
   }
 
   return (
@@ -173,11 +160,13 @@ export default function CommonMonitoredServiceConfigurations(
                 {shouldShowSaveAndDiscard(isTemplate) ? (
                   <SaveAndDiscardButton
                     isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
-                    onSave={() => onSave({ formik, onSuccess })}
-                    onDiscard={() => {
-                      formik.resetForm()
-                      onDiscard?.()
-                    }}
+                    onSave={/* istanbul ignore next */ () => onSave({ formik, onSuccess })}
+                    onDiscard={
+                      /* istanbul ignore next */ () => {
+                        formik.resetForm()
+                        onDiscard?.()
+                      }
+                    }
                     RbacPermission={{
                       permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
                       resource: {
@@ -202,26 +191,49 @@ export default function CommonMonitoredServiceConfigurations(
             id={MonitoredServiceConfigurationsTabsEnum.HEALTH_SOURCE}
             title={getString('platform.connectors.cdng.healthSources.label')}
             panel={
-              <HealthSourceTableContainer
-                healthSourceListFromAPI={initialValues.sources?.healthSources}
-                serviceFormFormik={formik}
-                isTemplate={isTemplate}
-                expressions={expressions}
-                onSave={
-                  /* istanbul ignore next */ data => {
-                    onSave({
-                      formik: {
-                        ...formik,
-                        values: {
-                          ...(formik?.values || {}),
-                          sources: { ...formik.values?.sources, healthSources: data }
+              <>
+                <Container className={css.saveDiscardButton}>
+                  {shouldShowSaveAndDiscard(isTemplate) ? (
+                    <SaveAndDiscardButton
+                      isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
+                      onSave={/* istanbul ignore next */ () => onSave({ formik, onSuccess })}
+                      onDiscard={
+                        /* istanbul ignore next */ () => {
+                          formik.resetForm()
+                          onDiscard?.()
                         }
-                      },
-                      onSuccess
-                    })
+                      }
+                      RbacPermission={{
+                        permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                        resource: {
+                          resourceType: ResourceType.MONITOREDSERVICE,
+                          resourceIdentifier: projectIdentifier
+                        }
+                      }}
+                    />
+                  ) : null}
+                </Container>
+                <HealthSourceTableContainer
+                  healthSourceListFromAPI={initialValues.sources?.healthSources}
+                  serviceFormFormik={formik}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
+                  onSave={
+                    /* istanbul ignore next */ data => {
+                      onSave({
+                        formik: {
+                          ...formik,
+                          values: {
+                            ...(formik?.values || {}),
+                            sources: { ...formik.values?.sources, healthSources: data }
+                          }
+                        },
+                        onSuccess
+                      })
+                    }
                   }
-                }
-              />
+                />
+              </>
             }
           />
         )}
@@ -230,18 +242,41 @@ export default function CommonMonitoredServiceConfigurations(
             id={MonitoredServiceConfigurationsTabsEnum.CHANGE_SOURCE}
             title={getString('cv.navLinks.adminSideNavLinks.activitySources')}
             panel={
-              <ChangeSourceTableContainer
-                onEdit={values => {
-                  showDrawer({ ...values, hideDrawer })
-                }}
-                onAddNewChangeSource={
-                  /* istanbul ignore next */ () => {
-                    openChangeSourceDrawer({ formik, onSuccessChangeSource })
+              <>
+                <Container className={css.saveDiscardButton}>
+                  {shouldShowSaveAndDiscard(isTemplate) ? (
+                    <SaveAndDiscardButton
+                      isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
+                      onSave={/* istanbul ignore next */ () => onSave({ formik, onSuccess })}
+                      onDiscard={
+                        /* istanbul ignore next */ () => {
+                          formik.resetForm()
+                          onDiscard?.()
+                        }
+                      }
+                      RbacPermission={{
+                        permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                        resource: {
+                          resourceType: ResourceType.MONITOREDSERVICE,
+                          resourceIdentifier: projectIdentifier
+                        }
+                      }}
+                    />
+                  ) : null}
+                </Container>
+                <ChangeSourceTableContainer
+                  onEdit={values => {
+                    showDrawer({ ...values, hideDrawer })
+                  }}
+                  onAddNewChangeSource={
+                    /* istanbul ignore next */ () => {
+                      openChangeSourceDrawer({ formik, onSuccessChangeSource })
+                    }
                   }
-                }
-                value={formik.values?.sources?.changeSources}
-                onSuccess={onSuccessChangeSource}
-              />
+                  value={formik.values?.sources?.changeSources}
+                  onSuccess={onSuccessChangeSource}
+                />
+              </>
             }
           />
         )}
@@ -279,11 +314,13 @@ export default function CommonMonitoredServiceConfigurations(
                 <Container className={css.saveDiscardButton}>
                   <SaveAndDiscardButton
                     isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
-                    onSave={() => onSave({ formik, onSuccess })}
-                    onDiscard={() => {
-                      formik.resetForm()
-                      onDiscard?.()
-                    }}
+                    onSave={/* istanbul ignore next */ () => onSave({ formik, onSuccess })}
+                    onDiscard={
+                      /* istanbul ignore next */ () => {
+                        formik.resetForm()
+                        onDiscard?.()
+                      }
+                    }
                     RbacPermission={{
                       permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
                       resource: {
@@ -294,8 +331,8 @@ export default function CommonMonitoredServiceConfigurations(
                   />
                 </Container>
                 <MonitoredServiceNotificationsContainer
-                  setFieldValue={formik?.setFieldValue}
-                  notificationRuleRefs={formik?.values?.notificationRuleRefs}
+                  setFieldValue={formik.setFieldValue}
+                  notificationRuleRefs={formik.values?.notificationRuleRefs}
                   identifier={identifier}
                 />
               </>

@@ -7,15 +7,23 @@
 
 import React from 'react'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { Button, Container, Formik, FormikForm } from '@harness/uicore'
+import { Button, Container, Formik, FormikForm, Views } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { PROJECT_MONITORED_SERVICE_CONFIG } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
+import {
+  CD_MONITORED_SERVICE_CONFIG,
+  PROJECT_MONITORED_SERVICE_CONFIG
+} from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
+import routes from '@common/RouteDefinitions'
+import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
+import * as licenseStoreContextMock from 'framework/LicenseStore/LicenseStoreContext'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import CommonMonitoredServiceConfigurations, {
   CommonMonitoredServiceConfigurationsProps
 } from '../CommonMonitoredServiceConfigurations'
 import type { MonitoredServiceForm } from '../../../Service.types'
+import { handleTabChange } from '../CommonMonitoredServiceConfigurations.utils'
 
 jest.mock('framework/strings', () => ({
   useStrings: () => ({
@@ -132,12 +140,50 @@ describe('CommonMonitoredServiceConfigurations', () => {
     onDiscard: jest.fn()
   }
 
-  test('renders tabs correctly', () => {
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  test('renders tabs correctly when project level monitored service config is passed', () => {
     render(<WrapperComponent {...props} />)
     const overViewTab = screen.getByRole('tab', { name: 'overview' })
     const healthSourceTab = screen.getByRole('tab', { name: 'platform.connectors.cdng.healthSources.label' })
     const changeSourceTab = screen.getByRole('tab', { name: 'cv.navLinks.adminSideNavLinks.activitySources' })
 
+    expect(overViewTab).toBeInTheDocument()
+    expect(healthSourceTab).toBeInTheDocument()
+    expect(changeSourceTab).toBeInTheDocument()
+  })
+
+  test('renders tabs correctly in Templates mode also', () => {
+    const updatedProps = { ...props, isTemplate: true }
+    render(<WrapperComponent {...updatedProps} />)
+    const overViewTab = screen.getByRole('tab', { name: 'overview' })
+    const healthSourceTab = screen.getByRole('tab', { name: 'platform.connectors.cdng.healthSources.label' })
+    const changeSourceTab = screen.getByRole('tab', { name: 'cv.navLinks.adminSideNavLinks.activitySources' })
+
+    expect(overViewTab).toBeInTheDocument()
+    expect(healthSourceTab).toBeInTheDocument()
+    expect(changeSourceTab).toBeInTheDocument()
+  })
+
+  test('renders tabs correctly when Deployments level level monitored service config is passed', () => {
+    const updatedProps = { ...props, config: CD_MONITORED_SERVICE_CONFIG }
+    const { queryByText } = render(<WrapperComponent {...updatedProps} />)
+    const overViewTab = screen.getByRole('tab', { name: 'overview' })
+    const healthSourceTab = queryByText('platform.connectors.cdng.healthSources.label')
+    const changeSourceTab = queryByText('cv.navLinks.adminSideNavLinks.activitySources')
+    expect(overViewTab).toBeInTheDocument()
+    expect(healthSourceTab).toBeInTheDocument()
+    expect(changeSourceTab).not.toBeInTheDocument()
+  })
+
+  test('renders tabs correctly when config is undefined', () => {
+    const updatedProps = { ...props, config: undefined }
+    const { queryByText } = render(<WrapperComponent {...updatedProps} />)
+    const overViewTab = screen.getByRole('tab', { name: 'overview' })
+    const healthSourceTab = queryByText('platform.connectors.cdng.healthSources.label')
+    const changeSourceTab = queryByText('cv.navLinks.adminSideNavLinks.activitySources')
     expect(overViewTab).toBeInTheDocument()
     expect(healthSourceTab).toBeInTheDocument()
     expect(changeSourceTab).toBeInTheDocument()
@@ -151,6 +197,31 @@ describe('CommonMonitoredServiceConfigurations', () => {
 
     expect(healthSourceTab).not.toBeInTheDocument()
     expect(changeSourceTab).not.toBeInTheDocument()
+  })
+
+  test('should show the tabs of agent configurations and dependencies when feature flags of Agent configurations and Dependencies are enabled', () => {
+    jest.spyOn(licenseStoreContextMock, 'useLicenseStore').mockReturnValue({
+      licenseInformation: {
+        CET: { status: 'ACTIVE' },
+        CV: { status: 'ACTIVE' }
+      }
+    } as any)
+
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CET_PLATFORM_MONITORED_SERVICE: true
+    })
+
+    const updatedProps = { ...props }
+    const { queryByText } = render(<WrapperComponent {...updatedProps} />)
+    const healthSourceTab = queryByText('platform.connectors.cdng.healthSources.label')
+    const changeSourceTab = queryByText('cv.navLinks.adminSideNavLinks.activitySources')
+    const dependenciesTab = queryByText('pipelines-studio.dependenciesGroupTitle')
+    const agentConfigurationsTab = queryByText('cet.monitoredservice.agentconfig')
+
+    expect(healthSourceTab).toBeInTheDocument()
+    expect(changeSourceTab).toBeInTheDocument()
+    expect(dependenciesTab).toBeInTheDocument()
+    expect(agentConfigurationsTab).toBeInTheDocument()
   })
 
   test('should render', async () => {
@@ -189,5 +260,80 @@ describe('CommonMonitoredServiceConfigurations', () => {
         ]
       })
     )
+  })
+})
+
+describe('handleTabChange', () => {
+  const mockHistory = {
+    push: jest.fn()
+  } as any
+
+  const mockParams = {
+    nextTab: 'your-next-tab' as MonitoredServiceEnum,
+    tab: 'your-current-tab' as MonitoredServiceEnum,
+    history: mockHistory,
+    accountId: 'your-account-id',
+    orgIdentifier: 'your-org-identifier',
+    projectIdentifier: 'your-project-identifier',
+    identifier: 'your-identifier',
+    view: 'your-view' as Views,
+    notificationTime: 12345,
+    config: PROJECT_MONITORED_SERVICE_CONFIG
+  }
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  test('should push the correct route to history when config is defined for Project level', () => {
+    handleTabChange(mockParams)
+
+    expect(mockHistory.push).toHaveBeenCalledWith({
+      pathname: routes.toMonitoredServicesConfigurations({
+        accountId: 'your-account-id',
+        orgIdentifier: 'your-org-identifier',
+        projectIdentifier: 'your-project-identifier',
+        identifier: 'your-identifier'
+      }),
+      search: '?view=your-view&tab=your-current-tab&subTab=your-next-tab&notificationTime=12345'
+    })
+  })
+
+  test('should push the correct route to history when config is defined for CD level', () => {
+    const paramsWithCDConfig = { ...mockParams, config: CD_MONITORED_SERVICE_CONFIG }
+    handleTabChange(paramsWithCDConfig)
+
+    expect(mockHistory.push).toHaveBeenCalledWith({
+      pathname: routes.toMonitoredServicesConfigurations({
+        accountId: 'your-account-id',
+        orgIdentifier: 'your-org-identifier',
+        projectIdentifier: 'your-project-identifier',
+        identifier: 'your-identifier',
+        module: 'cd'
+      }),
+      search: '?view=your-view&tab=your-current-tab&subTab=your-next-tab&notificationTime=12345'
+    })
+  })
+
+  test('should push the correct route to history when config is undefined', () => {
+    const paramsWithoutConfig = { ...mockParams, config: undefined }
+    handleTabChange(paramsWithoutConfig)
+
+    expect(mockHistory.push).toHaveBeenCalledWith({
+      pathname: routes.toCVAddMonitoringServicesEdit({
+        accountId: 'your-account-id',
+        orgIdentifier: 'your-org-identifier',
+        projectIdentifier: 'your-project-identifier',
+        identifier: 'your-identifier',
+        module: 'cv' // Check that the module is set to 'cv'
+      }),
+      search: '?view=your-view&tab=your-current-tab&subTab=your-next-tab&notificationTime=12345'
+    })
+  })
+
+  test('should not push any routes when tabs are in templates mode', () => {
+    const paramsWithoutConfig = { ...mockParams, isTemplate: true }
+    handleTabChange(paramsWithoutConfig)
+    expect(mockHistory.push).not.toHaveBeenCalled()
   })
 })
