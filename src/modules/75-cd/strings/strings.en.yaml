@@ -736,10 +736,10 @@ getStartedWithCD:
             winpathsetup1: '$currentPath = Get-Location'
             winpathsetup2: '[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$currentPath", [EnvironmentVariableTarget]::Machine)'
         configureGCPStep:
-          getPermissions: '2.1 Get GCP function storage permissions. <a rel="noreferrer nofollow" href="#" target="_blank">Where do I locate this?</a>'
-          createBucket: '2.2 Create GCP bucket. <a rel="noreferrer nofollow" href="#" target="_blank">How do I make this?</a>'
-          downloadArtifact: '2.3 Download zip file and add to GCP.  <a rel="noreferrer nofollow" href="#" target="_blank">Where do I put this?</a>'
-          inputGCPInfo: '2.4 Input GCP information. <a rel="noreferrer nofollow" href="#" target="_blank">Where do I find this?</a>'
+          getPermissions: '2.1 Get GCP function storage permissions. <a rel="noreferrer nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/serverless/gcp-cloud-func" target="_blank">Where do I locate this?</a>'
+          createBucket: '2.2 Create GCP bucket. <a rel="noreferrer nofollow" href="https://cloud.google.com/storage/docs/creating-buckets" target="_blank">How do I make this?</a>'
+          downloadArtifact: '2.3 Download zip file and add to GCP.  <a rel="noreferrer nofollow" href="https://cloud.google.com/storage/docs/uploading-objects" target="_blank">Where do I put this?</a>'
+          inputGCPInfo: '2.4 Input GCP information. <a rel="noreferrer nofollow" href="https://cloud.google.com/iam/docs/keys-create-delete" target="_blank">Where do I find this?</a>'
           uploadSVCKey: Local path to GCP Service Key
           gcpProjectName: GCP project name
           gcpRegion: GCP region
@@ -748,14 +748,14 @@ getStartedWithCD:
             projectName: Your project name
             bucketName: Bucket name
             pathPlaceholdergcp: '/path/to/key.json'
-            accessKeyPlaceholderAws: Your AWS Service Key
+            accessKeyPlaceholderAws: Your AWS Access Key
             svckeyPlaceholderAws: Your AWS Secret Key
             linkPlaceholderAws: 'https://my-bucket.s3.region.amazonaws.com/function.json'
         configureAWSStep:
-          getPermissions: '2.1 Get AWS function storage permissions. <a rel="noreferrer nofollow" href="#" target="_blank">Where do I locate this?</a>'
-          createBucket: '2.2 Create S3 bucket. <a rel="noreferrer nofollow" href="#" target="_blank">How do I make this?</a>'
-          downloadArtifact: '2.3 Download zip file and add to AWS S3 bucket.  <a rel="noreferrer nofollow" href="#" target="_blank">Where do I put this?</a>'
-          inputAWSInfo: '2.4 Input AWS information. <a rel="noreferrer nofollow" href="#" target="_blank">Where do I find this?</a>'
+          getPermissions: '2.1 Get AWS function storage permissions. <a rel="noreferrer nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/serverless/aws-lambda/#before-you-begin" target="_blank">Where do I locate this?</a>'
+          createBucket: '2.2 Create S3 bucket. <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html" target="_blank">How do I make this?</a>'
+          downloadArtifact: '2.3 Download zip file and add to AWS S3 bucket.  <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/uploading-an-object-bucket.html" target="_blank">Where do I put this?</a>'
+          inputAWSInfo: '2.4 Input AWS information. <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html" target="_blank">Where do I find this?</a>'
           awsSVCKey: AWS Secret Key
           awsARN: AWS Account Role ARN
           awsRegion: AWS region
@@ -793,16 +793,16 @@ getStartedWithCD:
                 createGcpSecret: 'harness secret --file {{{secret}}} apply --secret-type {{cloudType}}'
                 createGithubcon: 'harness connector --file {{{type}}}/github-connector.yml apply --git-user {{gitUser}} '
                 creategcpcon: 'harness connector --file {{{type}}}/gcp-connector.yml apply'
-                createsvccmd: 'harness service --file {{{type}}}/service.yml apply --gcp-project {{project}} --gcp-bucket {{bucket}}'
+                createsvccmd: 'harness service --file {{{type}}}/service.yml apply --cloud-project {{project}} --cloud-bucket {{bucket}}'
                 createenvcmd: harness environment --file {{{type}}}/environment.yml apply
-                createinfracmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --gcp-project {{{project}}} --region {{{region}}}'
+                createinfracmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-project {{{project}}} --cloud-region {{{region}}}'
               aws:
                 createAwsSecret: 'harness secret --token {{{secret}}} apply --secret-type {{cloudType}}'
                 createGithubcon: 'harness connector --file {{{type}}}/github-connector.yml apply --git-user {{gitUser}} '
-                createawscon: 'harness connector --file {{{type}}}/aws-connector.yml apply --delegate-name {{delegateName}} --aws-cross-account-role-arn {{{rolearn}}} --aws-access-key {{accessKey}} --region {{{region}}}'
-                createsvccmd: 'harness service --file {{{type}}}/service.yml apply --bucket {{bucket}} --region {{{region}}}'
+                createawscon: 'harness connector --file {{{type}}}/aws-connector.yml apply --delegate-name {{delegateName}} --aws-cross-account-role-arn {{{rolearn}}} --aws-access-key {{accessKey}} --cloud-region {{{region}}}'
+                createsvccmd: 'harness service --file {{{type}}}/service.yml apply --cloud-bucket {{bucket}} --cloud-region {{{region}}}'
                 createenvcmd: harness environment --file {{{type}}}/environment.yml apply
-                createinfracmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --region {{{region}}}'
+                createinfracmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-region {{{region}}}'
             comments:
               cloneRepo: '# Clone the repository'
               cdDir: '# Change the directory'

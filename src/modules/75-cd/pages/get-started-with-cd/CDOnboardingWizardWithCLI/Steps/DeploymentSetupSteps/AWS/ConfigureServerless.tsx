@@ -87,12 +87,16 @@ export default function ConfigureServerless({
         />
       </Layout.Vertical>
       <Layout.Vertical width={400} margin={{ left: 'xlarge' }}>
-        <Label>{getString('platform.connectors.aws.awsAccessKey')}</Label>
+        <Label>
+          {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsSVCKey')}
+        </Label>
         <TextInput
           id="awsSvcKey"
           name="awsSvcKey"
           defaultValue={state?.svcKeyOrSecretKey || ''}
-          placeholder={getString('platform.connectors.aws.awsAccessKey')}
+          placeholder={getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.svckeyPlaceholderAws'
+          )}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value
             updateState('svcKeyOrSecretKey', value)
