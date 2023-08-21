@@ -748,6 +748,16 @@ exports[`testing notification method selecting slack as notification method from
                           Microsoft Teams
                         </p>
                       </li>
+                      <li
+                        class="Select--menuItem"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main Select--menuItemLabel"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Webhook
+                        </p>
+                      </li>
                     </ul>
                   </div>
                 </div>
