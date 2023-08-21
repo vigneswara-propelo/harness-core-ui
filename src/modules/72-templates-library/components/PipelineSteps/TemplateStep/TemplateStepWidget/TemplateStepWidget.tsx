@@ -38,6 +38,8 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
 import { ExecutionWrapperInputSetForm } from '@pipeline/components/PipelineInputSetForm/ExecutionWrapperInputSetForm'
 import type { StageType } from '@pipeline/utils/stageHelpers'
+import { ConditionalExecutionForm } from '@pipeline/components/PipelineInputSetForm/StageAdvancedInputSetForm/ConditionalExecutionForm'
+import { StepMode } from '@pipeline/utils/stepUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -274,8 +276,8 @@ function TemplateStepWidget(
                   </Container>
                 )}
                 {!isLoading && !error && templateInputs && allValues && (
-                  <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'}>
-                    <Heading level={5} color={Color.BLACK}>
+                  <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'small'}>
+                    <Heading level={5} color={Color.BLACK} margin={{ bottom: 'small' }}>
                       {getString('pipeline.templateInputs')}
                     </Heading>
                     {!isEmpty((templateInputs as StepGroupElementConfig)?.delegateSelectors) ? (
@@ -285,8 +287,20 @@ function TemplateStepWidget(
                         allowableTypes={allowableTypes}
                       />
                     ) : null}
-                    {!isEmpty((templateInputs as StepGroupElementConfig)?.steps) ? (
+                    {!isEmpty((allValues as StepGroupElementConfig)?.steps) ? (
                       <>
+                        {templateInputs?.when && (
+                          <div className={cx(stepCss.formGroup)}>
+                            <ConditionalExecutionForm
+                              isReadonly={!!readonly}
+                              path={`${TEMPLATE_INPUT_PATH}.when`}
+                              allowableTypes={allowableTypes}
+                              mode={StepMode.STEP_GROUP}
+                              viewType={StepViewType.TemplateUsage}
+                              template={templateInputs?.when}
+                            />
+                          </div>
+                        )}
                         <ExecutionWrapperInputSetForm
                           stepsTemplate={(templateInputs as StepGroupElementConfig)?.steps as ExecutionWrapperConfig[]}
                           formik={formik}

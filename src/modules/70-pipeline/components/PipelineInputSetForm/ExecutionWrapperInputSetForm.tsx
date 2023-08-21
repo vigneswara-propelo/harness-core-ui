@@ -31,6 +31,7 @@ import type { StageInputSetFormProps } from './StageInputSetForm'
 import { StepForm } from './StepInputSetForm'
 import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
 import { NodeWrapperEntity } from '../PipelineDiagram/Nodes/utils'
+import { ConditionalExecutionForm } from './StageAdvancedInputSetForm/ConditionalExecutionForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export function getStepFromStage(
@@ -217,6 +218,9 @@ export function ExecutionWrapperInputSetForm(props: {
               const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
                 ? isValueRuntimeInput(nodep.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
                 : isValueRuntimeInput(nodep.stepGroup?.failureStrategies as unknown as string)
+              const isStepGroupConditionalExecutionRuntime = isTemplateStepGroup
+                ? !isEmpty(nodep.stepGroup?.template?.templateInputs?.when as unknown as string)
+                : !isEmpty(nodep.stepGroup?.when as unknown as string)
 
               const iconElement = (
                 <>
@@ -292,6 +296,24 @@ export function ExecutionWrapperInputSetForm(props: {
                       }
                     />
 
+                    {isStepGroupConditionalExecutionRuntime && (
+                      <div className={cx(stepCss.formGroup)}>
+                        <ConditionalExecutionForm
+                          isReadonly={!!readonly}
+                          path={
+                            isTemplateStepGroup
+                              ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.when`
+                              : `${path}[${index}].parallel[${indexp}].stepGroup.when`
+                          }
+                          allowableTypes={allowableTypes}
+                          viewType={viewType}
+                          template={
+                            isTemplateStepGroup ? nodep.stepGroup?.template?.templateInputs?.when : nodep.stepGroup.when
+                          }
+                          mode={StepMode.STEP_GROUP}
+                        />
+                      </div>
+                    )}
                     {isStepGroupFailureStrategyRuntime && (
                       <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
                         <FailureStrategiesInputSetForm
@@ -348,6 +370,9 @@ export function ExecutionWrapperInputSetForm(props: {
           const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
             ? isValueRuntimeInput(item?.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
             : isValueRuntimeInput(item?.stepGroup?.failureStrategies as unknown as string)
+          const isStepGroupConditionalExecutionRuntime = isTemplateStepGroup
+            ? !isEmpty(item?.stepGroup?.template?.templateInputs?.when as unknown as string)
+            : !isEmpty(item?.stepGroup?.when as unknown as string)
 
           const iconElement = (
             <>
@@ -417,6 +442,24 @@ export function ExecutionWrapperInputSetForm(props: {
                   }
                 />
 
+                {isStepGroupConditionalExecutionRuntime && (
+                  <div className={cx(stepCss.formGroup)}>
+                    <ConditionalExecutionForm
+                      isReadonly={!!readonly}
+                      path={
+                        isTemplateStepGroup
+                          ? `${path}[${index}].stepGroup.template.templateInputs.when`
+                          : `${path}[${index}].stepGroup.when`
+                      }
+                      allowableTypes={allowableTypes}
+                      viewType={viewType}
+                      template={
+                        isTemplateStepGroup ? item.stepGroup?.template?.templateInputs?.when : item.stepGroup.when
+                      }
+                      mode={StepMode.STEP_GROUP}
+                    />
+                  </div>
+                )}
                 {isStepGroupFailureStrategyRuntime && (
                   <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
                     <FailureStrategiesInputSetForm

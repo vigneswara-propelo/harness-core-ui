@@ -13,9 +13,11 @@ import type { DeploymentStageConfig, StepGroupElementConfig } from 'services/cd-
 import { useStrings } from 'framework/strings'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { StageType } from '@pipeline/utils/stageHelpers'
+import { StepMode } from '@pipeline/utils/stepUtils'
 import type { StepViewType } from '../AbstractSteps/Step'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
+import { ConditionalExecutionForm } from './StageAdvancedInputSetForm/ConditionalExecutionForm'
 
 export function StepGroupFormSetInternal(props: {
   template: StepGroupElementConfig
@@ -45,6 +47,16 @@ export function StepGroupFormSetInternal(props: {
           label={getString('delegate.DelegateSelector')}
           name={`${path}.delegateSelectors`}
           disabled={readonly}
+        />
+      )}
+      {template?.when && (
+        <ConditionalExecutionForm
+          isReadonly={!!readonly}
+          path={`${path}.when`}
+          allowableTypes={allowableTypes}
+          mode={StepMode.STEP_GROUP}
+          viewType={viewType}
+          template={template?.when}
         />
       )}
       <ExecutionWrapperInputSetForm
