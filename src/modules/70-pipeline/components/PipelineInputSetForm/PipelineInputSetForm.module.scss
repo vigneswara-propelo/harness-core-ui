@@ -109,6 +109,13 @@
   padding: var(--spacing-small) var(--spacing-xlarge);
 }
 
+.chainedPipelineStageWrapper {
+  background-color: var(--white);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-2);
+  margin: var(--spacing-large) !important;
+}
+
 .conditionalExecutionTitle,
 .failureStrategiesTitle,
 .strategyTitle {
@@ -134,7 +141,7 @@
 
 .pipelineStageForm {
   padding-top: 0px !important;
-  margin-left: calc(var(--spacing-huge) - 20px) !important;
+  margin-left: 0px !important;
 }
 
 .runTimeWidth {
@@ -165,12 +172,20 @@
   left: calc(-1 * (var(--spacing-3)));
 }
 
-.childPipelineStageIcon {
+.childPipelineStageIconName {
   position: relative;
   left: calc(-1 * (var(--spacing-5)));
 }
 
-.childPipelineStageName {
+.childPipelineVariablesName {
   position: relative;
   left: calc(-1 * (var(--spacing-6)));
+}
+
+.childPipelineStageWrapper {
+  margin-left: calc(var(--spacing-huge) - 5px) !important;
+}
+
+.childPipelineVariablesWrapper {
+  margin-left: calc(var(--spacing-xlarge) - 1px) !important;
 }

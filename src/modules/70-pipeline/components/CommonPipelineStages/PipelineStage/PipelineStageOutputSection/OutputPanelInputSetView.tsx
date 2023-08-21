@@ -25,7 +25,7 @@ function OutputPanelInputSetBasic(props: ConectedOutputPanelInputSetProps): Reac
 
   return (
     <>
-      <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'huge', right: 0, bottom: 'medium' }}>
+      <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'xlarge', right: 0, bottom: 'medium' }}>
         <Text
           color={Color.BLACK_100}
           font={{ weight: 'semi-bold' }}

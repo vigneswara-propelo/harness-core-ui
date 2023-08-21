@@ -8,9 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly accordionSummary: string
+  readonly chainedPipelineStageWrapper: string
   readonly childPipelineLink: string
-  readonly childPipelineStageIcon: string
-  readonly childPipelineStageName: string
+  readonly childPipelineStageIconName: string
+  readonly childPipelineStageWrapper: string
+  readonly childPipelineVariablesName: string
+  readonly childPipelineVariablesWrapper: string
   readonly conditionalExecutionTitle: string
   readonly container: string
   readonly editor: string

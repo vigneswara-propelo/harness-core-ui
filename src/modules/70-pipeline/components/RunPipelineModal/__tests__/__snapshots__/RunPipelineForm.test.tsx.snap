@@ -61,106 +61,110 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                     </p>
                   </div>
                   <div
-                    class="customVariablesInputSets customVariables"
+                    class=""
                   >
-                    <section
-                      class="subHeader"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        name
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        description
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        valueLabel
-                      </p>
-                    </section>
                     <div
-                      class="variableListTable"
+                      class="customVariablesInputSets customVariables"
                     >
+                      <section
+                        class="subHeader"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          name
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          description
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          valueLabel
+                        </p>
+                      </section>
                       <div
-                        class="Layout--vertical StyledProps--main nameTypeColumn"
+                        class="variableListTable"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                          style="display: flex; align-items: baseline;"
+                          class="Layout--vertical StyledProps--main nameTypeColumn"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
-                            style="--text-line-clamp: 2;"
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                            style="display: flex; align-items: baseline;"
                           >
-                            checkVariable1
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                              style="--text-line-clamp: 2;"
+                            >
+                              checkVariable1
+                            </p>
+                          </div>
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          >
+                            String
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
                         >
-                          String
+                          -
                         </p>
-                      </div>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
-                      >
-                        -
-                      </p>
-                      <div
-                        class="inputSetValueRow"
-                      >
                         <div
-                          class="fieldAndOptions variableInput"
+                          class="inputSetValueRow"
                         >
                           <div
-                            class="bp3-form-group bp3-disabled"
-                            data-id="variables[0].value-0"
+                            class="fieldAndOptions variableInput"
                           >
-                            
                             <div
-                              class="bp3-form-content"
+                              class="bp3-form-group bp3-disabled"
+                              data-id="variables[0].value-0"
                             >
+                              
                               <div
-                                class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                                class="bp3-form-content"
                               >
                                 <div
-                                  class="bp3-input-group bp3-disabled MultiTypeInput--input"
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                                 >
-                                  <input
-                                    autocomplete="off"
-                                    class="bp3-input"
-                                    disabled=""
-                                    name="variables[0].value"
-                                    type="text"
-                                    value="variablevalue"
-                                  />
-                                </div>
-                                <button
-                                  class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                  data-testid="multi-type-button"
-                                  disabled=""
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main"
-                                    data-icon="fixed-input"
+                                  <div
+                                    class="bp3-input-group bp3-disabled MultiTypeInput--input"
                                   >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 9 9"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      disabled=""
+                                      name="variables[0].value"
+                                      type="text"
+                                      value="variablevalue"
+                                    />
+                                  </div>
+                                  <button
+                                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
+                                    disabled=""
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main"
+                                      data-icon="fixed-input"
                                     >
-                                      <path
-                                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
-                                  </span>
-                                </button>
+                                      <svg
+                                        height="12"
+                                        viewBox="0 0 9 9"
+                                        width="12"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                          fill="currentColor"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -825,208 +829,212 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                     </p>
                   </div>
                   <div
-                    class="customVariablesInputSets customVariables"
+                    class=""
                   >
-                    <section
-                      class="subHeader"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        name
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        description
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        valueLabel
-                      </p>
-                    </section>
                     <div
-                      class="variableListTable"
+                      class="customVariablesInputSets customVariables"
                     >
+                      <section
+                        class="subHeader"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          name
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          description
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          valueLabel
+                        </p>
+                      </section>
                       <div
-                        class="Layout--vertical StyledProps--main nameTypeColumn"
+                        class="variableListTable"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                          style="display: flex; align-items: baseline;"
+                          class="Layout--vertical StyledProps--main nameTypeColumn"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
-                            style="--text-line-clamp: 2;"
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                            style="display: flex; align-items: baseline;"
                           >
-                            checkVariable1
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                              style="--text-line-clamp: 2;"
+                            >
+                              checkVariable1
+                            </p>
+                          </div>
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          >
+                            String
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
                         >
-                          String
+                          -
                         </p>
-                      </div>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
-                      >
-                        -
-                      </p>
-                      <div
-                        class="inputSetValueRow"
-                      >
                         <div
-                          class="fieldAndOptions variableInput"
+                          class="inputSetValueRow"
                         >
                           <div
-                            class="bp3-form-group"
-                            data-id="variables[0].value-0"
+                            class="fieldAndOptions variableInput"
                           >
-                            
                             <div
-                              class="bp3-form-content"
+                              class="bp3-form-group"
+                              data-id="variables[0].value-0"
                             >
+                              
                               <div
-                                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                class="bp3-form-content"
                               >
                                 <div
-                                  class="bp3-input-group MultiTypeInput--input"
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                 >
-                                  <input
-                                    autocomplete="off"
-                                    class="bp3-input"
-                                    name="variables[0].value"
-                                    type="text"
-                                    value="valuefrominputsetsmerge"
-                                  />
-                                </div>
-                                <span
-                                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
+                                  <div
+                                    class="bp3-input-group MultiTypeInput--input"
                                   >
-                                    <button
-                                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                      data-testid="multi-type-button"
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      name="variables[0].value"
+                                      type="text"
+                                      value="valuefrominputsetsmerge"
+                                    />
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                  >
+                                    <span
+                                      class="bp3-popover-target"
                                     >
-                                      <span
-                                        class="bp3-icon StyledProps--main"
-                                        data-icon="fixed-input"
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
-                                        <svg
-                                          height="12"
-                                          viewBox="0 0 9 9"
-                                          width="12"
-                                          xmlns="http://www.w3.org/2000/svg"
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
                                         >
-                                          <path
-                                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                            fill="currentColor"
-                                          />
-                                        </svg>
-                                      </span>
-                                    </button>
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
+                                    </span>
                                   </span>
-                                </span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="variableListTable"
-                    >
                       <div
-                        class="Layout--vertical StyledProps--main nameTypeColumn"
+                        class="variableListTable"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                          style="display: flex; align-items: baseline;"
+                          class="Layout--vertical StyledProps--main nameTypeColumn"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
-                            style="--text-line-clamp: 2;"
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                            style="display: flex; align-items: baseline;"
                           >
-                            checkVariable2
-                          </p>
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                              style="--text-line-clamp: 2;"
+                            >
+                              checkVariable2
+                            </p>
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                            >
+                              common.optionalLabel
+                            </p>
+                          </div>
                           <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                           >
-                            common.optionalLabel
+                            String
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
                         >
-                          String
+                          -
                         </p>
-                      </div>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
-                      >
-                        -
-                      </p>
-                      <div
-                        class="inputSetValueRow"
-                      >
                         <div
-                          class="fieldAndOptions variableInput"
+                          class="inputSetValueRow"
                         >
                           <div
-                            class="bp3-form-group"
-                            data-id="variables[1].value-1"
+                            class="fieldAndOptions variableInput"
                           >
-                            
                             <div
-                              class="bp3-form-content"
+                              class="bp3-form-group"
+                              data-id="variables[1].value-1"
                             >
+                              
                               <div
-                                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                class="bp3-form-content"
                               >
                                 <div
-                                  class="bp3-input-group MultiTypeInput--input"
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                 >
-                                  <input
-                                    autocomplete="off"
-                                    class="bp3-input"
-                                    name="variables[1].value"
-                                    type="text"
-                                    value="value2frominputsetsmerge"
-                                  />
-                                </div>
-                                <span
-                                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
+                                  <div
+                                    class="bp3-input-group MultiTypeInput--input"
                                   >
-                                    <button
-                                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                      data-testid="multi-type-button"
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      name="variables[1].value"
+                                      type="text"
+                                      value="value2frominputsetsmerge"
+                                    />
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                  >
+                                    <span
+                                      class="bp3-popover-target"
                                     >
-                                      <span
-                                        class="bp3-icon StyledProps--main"
-                                        data-icon="fixed-input"
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
-                                        <svg
-                                          height="12"
-                                          viewBox="0 0 9 9"
-                                          width="12"
-                                          xmlns="http://www.w3.org/2000/svg"
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
                                         >
-                                          <path
-                                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                            fill="currentColor"
-                                          />
-                                        </svg>
-                                      </span>
-                                    </button>
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
+                                    </span>
                                   </span>
-                                </span>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1609,208 +1617,212 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                     </p>
                   </div>
                   <div
-                    class="customVariablesInputSets customVariables"
+                    class=""
                   >
-                    <section
-                      class="subHeader"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        name
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        description
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
-                      >
-                        valueLabel
-                      </p>
-                    </section>
                     <div
-                      class="variableListTable"
+                      class="customVariablesInputSets customVariables"
                     >
+                      <section
+                        class="subHeader"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          name
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          description
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-grey500"
+                        >
+                          valueLabel
+                        </p>
+                      </section>
                       <div
-                        class="Layout--vertical StyledProps--main nameTypeColumn"
+                        class="variableListTable"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                          style="display: flex; align-items: baseline;"
+                          class="Layout--vertical StyledProps--main nameTypeColumn"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
-                            style="--text-line-clamp: 2;"
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                            style="display: flex; align-items: baseline;"
                           >
-                            checkVariable1
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                              style="--text-line-clamp: 2;"
+                            >
+                              checkVariable1
+                            </p>
+                          </div>
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          >
+                            String
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
                         >
-                          String
+                          -
                         </p>
-                      </div>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
-                      >
-                        -
-                      </p>
-                      <div
-                        class="inputSetValueRow"
-                      >
                         <div
-                          class="fieldAndOptions variableInput"
+                          class="inputSetValueRow"
                         >
                           <div
-                            class="bp3-form-group"
-                            data-id="variables[0].value-0"
+                            class="fieldAndOptions variableInput"
                           >
-                            
                             <div
-                              class="bp3-form-content"
+                              class="bp3-form-group"
+                              data-id="variables[0].value-0"
                             >
+                              
                               <div
-                                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                class="bp3-form-content"
                               >
                                 <div
-                                  class="bp3-input-group MultiTypeInput--input"
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                 >
-                                  <input
-                                    autocomplete="off"
-                                    class="bp3-input"
-                                    name="variables[0].value"
-                                    type="text"
-                                    value="valuefrominputsetsmerge"
-                                  />
-                                </div>
-                                <span
-                                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
+                                  <div
+                                    class="bp3-input-group MultiTypeInput--input"
                                   >
-                                    <button
-                                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                      data-testid="multi-type-button"
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      name="variables[0].value"
+                                      type="text"
+                                      value="valuefrominputsetsmerge"
+                                    />
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                  >
+                                    <span
+                                      class="bp3-popover-target"
                                     >
-                                      <span
-                                        class="bp3-icon StyledProps--main"
-                                        data-icon="fixed-input"
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
-                                        <svg
-                                          height="12"
-                                          viewBox="0 0 9 9"
-                                          width="12"
-                                          xmlns="http://www.w3.org/2000/svg"
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
                                         >
-                                          <path
-                                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                            fill="currentColor"
-                                          />
-                                        </svg>
-                                      </span>
-                                    </button>
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
+                                    </span>
                                   </span>
-                                </span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="variableListTable"
-                    >
                       <div
-                        class="Layout--vertical StyledProps--main nameTypeColumn"
+                        class="variableListTable"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                          style="display: flex; align-items: baseline;"
+                          class="Layout--vertical StyledProps--main nameTypeColumn"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
-                            style="--text-line-clamp: 2;"
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                            style="display: flex; align-items: baseline;"
                           >
-                            checkVariable2
-                          </p>
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                              style="--text-line-clamp: 2;"
+                            >
+                              checkVariable2
+                            </p>
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                            >
+                              common.optionalLabel
+                            </p>
+                          </div>
                           <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                           >
-                            common.optionalLabel
+                            String
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
                         >
-                          String
+                          -
                         </p>
-                      </div>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
-                      >
-                        -
-                      </p>
-                      <div
-                        class="inputSetValueRow"
-                      >
                         <div
-                          class="fieldAndOptions variableInput"
+                          class="inputSetValueRow"
                         >
                           <div
-                            class="bp3-form-group"
-                            data-id="variables[1].value-1"
+                            class="fieldAndOptions variableInput"
                           >
-                            
                             <div
-                              class="bp3-form-content"
+                              class="bp3-form-group"
+                              data-id="variables[1].value-1"
                             >
+                              
                               <div
-                                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                class="bp3-form-content"
                               >
                                 <div
-                                  class="bp3-input-group MultiTypeInput--input"
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                 >
-                                  <input
-                                    autocomplete="off"
-                                    class="bp3-input"
-                                    name="variables[1].value"
-                                    type="text"
-                                    value="value2frominputsetsmerge"
-                                  />
-                                </div>
-                                <span
-                                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
+                                  <div
+                                    class="bp3-input-group MultiTypeInput--input"
                                   >
-                                    <button
-                                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                      data-testid="multi-type-button"
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      name="variables[1].value"
+                                      type="text"
+                                      value="value2frominputsetsmerge"
+                                    />
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                  >
+                                    <span
+                                      class="bp3-popover-target"
                                     >
-                                      <span
-                                        class="bp3-icon StyledProps--main"
-                                        data-icon="fixed-input"
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
-                                        <svg
-                                          height="12"
-                                          viewBox="0 0 9 9"
-                                          width="12"
-                                          xmlns="http://www.w3.org/2000/svg"
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
                                         >
-                                          <path
-                                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                            fill="currentColor"
-                                          />
-                                        </svg>
-                                      </span>
-                                    </button>
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
+                                    </span>
                                   </span>
-                                </span>
+                                </div>
                               </div>
                             </div>
                           </div>
