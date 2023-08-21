@@ -41,7 +41,7 @@ const moduleParams: ModulePathParams = {
 
 RbacFactory.registerResourceCategory(ResourceCategory.IACM, {
   icon: 'iacm',
-  label: 'iacm.navTitle'
+  label: 'common.iacmText'
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.IAC_STACK, {

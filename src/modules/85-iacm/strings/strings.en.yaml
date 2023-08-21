@@ -1,6 +1,4 @@
 workspaces: Workspaces
-navTitle: Infra as Code Management
-stageTitle: Infastructure as Code Management
 stageDescription: Use Infrastructure as-code to manage lifecycle of cloud resources
 terragrunt: Terragrunt
 pulumi: Pulumi

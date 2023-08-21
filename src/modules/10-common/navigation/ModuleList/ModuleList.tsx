@@ -138,7 +138,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
           setActiveModuleCarousel(undefined)
         }}
         position={Position.LEFT}
-        size={Drawer.SIZE_SMALL}
+        size={392}
         className={css.modulesList}
         backdropClassName={css.backdrop}
         usePortal={usePortal}
@@ -185,7 +185,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
             className={css.groupListContainer}
             flex={{ justifyContent: 'flex-start' }}
             spacing="xxxlarge"
-            data-testId="grouplistContainer"
+            data-testid="grouplistContainer"
           >
             {moduleGroupConfig.map(item => (
               <Group

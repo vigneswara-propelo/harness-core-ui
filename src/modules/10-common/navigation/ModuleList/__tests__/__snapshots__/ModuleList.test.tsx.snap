@@ -11,7 +11,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
     />
     <div
       class="bp3-drawer bp3-position-left modulesList bp3-overlay-content bp3-overlay-appear bp3-overlay-appear-active"
-      style="width: 360px;"
+      style="width: 392px;"
       tabindex="0"
     >
       <div
@@ -172,7 +172,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container ci StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -264,7 +264,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container chaos StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -357,7 +357,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container sto StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -464,7 +464,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container cd StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -556,7 +556,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container ff StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -652,7 +652,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container iacm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -697,7 +697,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
                       >
                         <span>
-                          iacm.navTitle
+                          common.iacmText
                         </span>
                       </p>
                     </div>
@@ -759,7 +759,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container ccm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -849,7 +849,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container ssca StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -972,7 +972,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container sei StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -1079,7 +1079,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main container default StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-                    style="width: 278px;"
+                    style="width: 310px;"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"

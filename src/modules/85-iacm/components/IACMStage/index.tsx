@@ -30,7 +30,7 @@ const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStrings
   <IACMStage
     name={_getString('infrastructureText')}
     type={StageType.IACM}
-    title={_getString('iacm.stageTitle')}
+    title={_getString('common.iacmText')}
     description={_getString('iacm.stageDescription')}
     icon="iacm"
     hoverIcon="iacm"

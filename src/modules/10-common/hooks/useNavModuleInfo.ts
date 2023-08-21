@@ -137,7 +137,7 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.IACM]: {
     icon: 'iacm',
-    label: 'iacm.navTitle',
+    label: 'common.iacmText',
     getHomePageUrl: (accountId: string) => routes.toIACM({ accountId }),
     featureFlagName: FeatureFlag.IACM_ENABLED,
     color: '--iacm-border'

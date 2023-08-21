@@ -10175,7 +10175,6 @@ export interface StringsMap {
   'iacm.betaMaxTimeoutMessage': string
   'iacm.cdk': string
   'iacm.cloudformation': string
-  'iacm.navTitle': string
   'iacm.permissions.iacmWorkspace': string
   'iacm.permissions.iacmWorkspaces': string
   'iacm.pipelineSteps.approvalDescription': string
@@ -10183,7 +10182,6 @@ export interface StringsMap {
   'iacm.pipelineSteps.required': string
   'iacm.pulumi': string
   'iacm.stageDescription': string
-  'iacm.stageTitle': string
   'iacm.terragrunt': string
   'iacm.workspaces': string
   'sto.Critical': string

@@ -87,7 +87,7 @@ const moduleLabelMap: Record<NavModuleName, IModuleOverviewMap> = {
     Component: () => null
   },
   [ModuleName.IACM]: {
-    label: 'iacm.stageTitle',
+    label: 'common.iacmText',
     Component: () => null
   },
   [ModuleName.SSCA]: {
