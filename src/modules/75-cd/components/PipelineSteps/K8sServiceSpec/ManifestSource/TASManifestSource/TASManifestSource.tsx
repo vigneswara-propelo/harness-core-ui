@@ -7,28 +7,32 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { Layout } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import List from '@pipeline/components/List/List'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
-import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
 import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
-import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
+import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
-  const { template, path, manifestPath, manifest, fromTrigger, readonly, formik, stageIdentifier } = props
+  const {
+    template,
+    path,
+    manifestPath,
+    manifest,
+    fromTrigger,
+    readonly,
+    formik,
+    stageIdentifier,
+    allowableTypes,
+    stepViewType
+  } = props
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
   const isFieldDisabled = (fieldName: string): boolean => {
     // /* instanbul ignore else */
@@ -55,170 +59,79 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.files`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FileSelectList
-              labelClassName={css.listLabel}
+            <MultiTypeListOrFileSelectList
+              template={template}
               label={getString('fileFolderPathText')}
               name={`${path}.${manifestPath}.spec.store.spec.files`}
               placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.files`)}
-              style={{ marginBottom: 'var(--spacing-small)' }}
-              expressions={expressions}
+              allowableTypes={allowableTypes}
+              stepViewType={stepViewType}
               isNameOfArrayType
-              type={SELECT_FILES_TYPE.FILE_STORE}
               formik={formik}
+              manifestStoreType={ManifestStoreMap.Harness}
               allowOnlyOne
             />
           </div>
         )}
         {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
           <div className={css.verticalSpacingInput}>
-            {manifestStoreType === ManifestStoreMap.Harness ? (
-              <FileSelectList
-                labelClassName={css.listLabel}
-                label={getString('fileFolderPathText')}
-                name={`${path}.${manifestPath}.spec.store.spec.paths`}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-                style={{ marginBottom: 'var(--spacing-small)' }}
-                expressions={expressions}
-                isNameOfArrayType
-                type={SELECT_FILES_TYPE.FILE_STORE}
-                formik={formik}
-                allowOnlyOne
-              />
-            ) : (
-              <List
-                template={template}
-                fieldPath={`${manifestPath}.spec.store.spec.paths`}
-                labelClassName={css.listLabel}
-                label={getString('fileFolderPathText')}
-                name={`${path}.${manifestPath}.spec.store.spec.paths`}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-                style={{ marginBottom: 'var(--spacing-small)' }}
-                expressions={expressions}
-                isNameOfArrayType
-                allowOnlyOne
-              />
-            )}
+            <MultiTypeListOrFileSelectList
+              template={template}
+              fieldPath={`${manifestPath}.spec.store.spec.paths`}
+              label={getString('fileFolderPathText')}
+              name={`${path}.${manifestPath}.spec.store.spec.paths`}
+              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
+              allowableTypes={allowableTypes}
+              stepViewType={stepViewType}
+              formik={formik}
+              manifestStoreType={manifestStoreType}
+              isNameOfArrayType
+              allowOnlyOne
+            />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.paths`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.paths`)}
-            type="String"
-            variableName="paths"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.paths`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-          />
         )}
       </div>
 
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.autoScalerPath`, template) && (
           <div className={css.verticalSpacingInput}>
-            {manifestStoreType === ManifestStoreMap.Harness ? (
-              <FileSelectList
-                labelClassName={css.listLabel}
-                label={getString('pipeline.manifestType.autoScalerYAMLPath')}
-                name={`${path}.${manifestPath}.spec.autoScalerPath`}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                disabled={isFieldDisabled(`${manifestPath}.spec.autoScalerPath`)}
-                style={{ marginBottom: 'var(--spacing-small)' }}
-                expressions={expressions}
-                isNameOfArrayType
-                type={SELECT_FILES_TYPE.FILE_STORE}
-                formik={formik}
-                allowOnlyOne
-              />
-            ) : (
-              <List
-                labelClassName={css.listLabel}
-                label={getString('pipeline.manifestType.autoScalerYAMLPath')}
-                name={`${path}.${manifestPath}.spec.autoScalerPath`}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                disabled={isFieldDisabled(`${manifestPath}.spec.autoScalerPath`)}
-                style={{ marginBottom: 'var(--spacing-small)' }}
-                expressions={expressions}
-                isNameOfArrayType
-                allowOnlyOne
-              />
-            )}
+            <MultiTypeListOrFileSelectList
+              template={template}
+              fieldPath={`${manifestPath}.spec.store.spec.paths`}
+              label={getString('pipeline.manifestType.autoScalerYAMLPath')}
+              name={`${path}.${manifestPath}.spec.autoScalerPath`}
+              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              disabled={isFieldDisabled(`${manifestPath}.spec.autoScalerPath`)}
+              allowableTypes={allowableTypes}
+              stepViewType={stepViewType}
+              formik={formik}
+              manifestStoreType={manifestStoreType}
+              isNameOfArrayType
+              allowOnlyOne
+            />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.autoScalerPath`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.autoScalerPath`)}
-            type="String"
-            variableName="autoScalerPath"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.autoScalerPath`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.autoScalerPath`)}
-          />
         )}
       </div>
 
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.varsPaths`, template) && (
           <div className={css.verticalSpacingInput}>
-            {manifestStoreType === ManifestStoreMap.Harness ? (
-              <FileSelectList
-                labelClassName={css.listLabel}
-                label={getString('pipeline.manifestType.varsYAMLPath')}
-                name={`${path}.${manifestPath}.spec.varsPaths`}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                disabled={isFieldDisabled(`${manifestPath}.spec.varsPaths`)}
-                style={{ marginBottom: 'var(--spacing-small)' }}
-                expressions={expressions}
-                isNameOfArrayType
-                type={SELECT_FILES_TYPE.FILE_STORE}
-                formik={formik}
-              />
-            ) : (
-              <List
-                labelClassName={css.listLabel}
-                label={getString('pipeline.manifestType.varsYAMLPath')}
-                name={`${path}.${manifestPath}.spec.varsPaths`}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                disabled={isFieldDisabled(`${manifestPath}.spec.varsPaths`)}
-                style={{ marginBottom: 'var(--spacing-small)' }}
-                expressions={expressions}
-                isNameOfArrayType
-              />
-            )}
+            <MultiTypeListOrFileSelectList
+              template={template}
+              fieldPath={`${manifestPath}.spec.store.spec.paths`}
+              label={getString('pipeline.manifestType.varsYAMLPath')}
+              name={`${path}.${manifestPath}.spec.varsPaths`}
+              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              disabled={isFieldDisabled(`${manifestPath}.spec.varsPaths`)}
+              allowableTypes={allowableTypes}
+              stepViewType={stepViewType}
+              formik={formik}
+              manifestStoreType={manifestStoreType}
+              isNameOfArrayType
+            />
           </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.varsPaths`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.varsPaths`)}
-            type="String"
-            variableName="varsPaths"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.varsPaths`, value)
-            }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.varsPaths`)}
-          />
         )}
       </div>
     </Layout.Vertical>
