@@ -8990,10 +8990,14 @@ export interface StringsMap {
   'ssca.enforcementStep.policyConfiguration': string
   'ssca.enforcementStep.verifyAttestation': string
   'ssca.orchestrationStep.artifactSource': string
+  'ssca.orchestrationStep.ingestion.file': string
   'ssca.orchestrationStep.sbomAttestation': string
   'ssca.orchestrationStep.sbomFormat': string
   'ssca.orchestrationStep.sbomGeneration': string
+  'ssca.orchestrationStep.sbomIngestion': string
+  'ssca.orchestrationStep.sbomMethod': string
   'ssca.orchestrationStep.sbomTool': string
+  'ssca.orchestrationStep.stepMode': string
   'ssca.publicKey': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
@@ -10197,6 +10201,7 @@ export interface StringsMap {
   'sto.noSecurityResults': string
   'sto.processingSecurityResults': string
   'sto.sbom.fieldsHeading': string
+  'sto.sbom.generateSbom': string
   'sto.scans': string
   'sto.securityStage.description': string
   'sto.stepDescription.AWSECR': string

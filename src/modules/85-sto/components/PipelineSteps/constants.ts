@@ -1039,7 +1039,7 @@ export const sbomFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpe
         {
           name: 'spec.sbom.generate',
           type: TransformValuesTypes.Boolean,
-          label: 'ssca.orchestrationStep.sbomGeneration'
+          label: 'sto.sbom.generateSbom'
         },
         {
           name: 'spec.sbom.format',
@@ -1053,7 +1053,7 @@ export const sbomFieldValidationConfig = (): InputSetViewValidateFieldsConfig[] 
   {
     name: 'spec.sbom.generate',
     type: ValidationFieldTypes.Boolean,
-    label: 'ssca.orchestrationStep.sbomGeneration'
+    label: 'sto.sbom.generateSbom'
   },
   {
     name: 'spec.sbom.format',
@@ -1071,7 +1071,7 @@ export const inputSetSbomFields = (
         // Instance fields
         ...(shouldRenderRunTimeInputView(template?.spec.sbom?.generate) && {
           [getInputSetFieldName(prefix, 'spec.sbom.generate')]: {
-            label: 'ssca.orchestrationStep.sbomGeneration',
+            label: 'sto.sbom.generateSbom',
             fieldType: 'checkbox'
           }
         }),

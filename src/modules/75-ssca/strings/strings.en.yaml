@@ -1,10 +1,15 @@
 allowDenyList: 'DenyList/AllowList'
 orchestrationStep:
   sbomGeneration: SBOM Generation
+  sbomIngestion: SBOM Ingestion
+  sbomMethod: SBOM Method
+  stepMode: Step Mode
   sbomTool: SBOM Tool
   sbomFormat: SBOM Format
   artifactSource: Artifact Source
   sbomAttestation: SBOM Attestation
+  ingestion:
+    file: SBOM File Path
 
 enforcementStep:
   verifyAttestation: Verify Attestation

@@ -75,6 +75,14 @@ export const transformValuesFieldsConfig = (stepType?: StepType) => [
       ]
     : [
         {
+          name: 'spec.mode',
+          type: TransformValuesTypes.List
+        },
+        {
+          name: 'spec.ingestion.file',
+          type: TransformValuesTypes.Text
+        },
+        {
           name: 'spec.resources.limits.memory',
           type: TransformValuesTypes.Text
         },
@@ -180,6 +188,17 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
       ]
     : [
         {
+          name: 'spec.mode',
+          type: ValidationFieldTypes.List,
+          label: 'ssca.orchestrationStep.stepMode',
+          isRequired: true
+        },
+        {
+          name: 'spec.ingestion.file',
+          type: ValidationFieldTypes.Text,
+          label: 'pipelineSteps.limitMemoryLabel'
+        },
+        {
           name: 'spec.resources.limits.memory',
           type: ValidationFieldTypes.LimitMemory,
           label: 'pipelineSteps.limitMemoryLabel'
@@ -251,6 +270,17 @@ export const getInputSetViewValidateFieldsConfig =
             }
           ]
         : [
+            {
+              name: 'spec.mode',
+              type: ValidationFieldTypes.List,
+              label: 'ssca.orchestrationStep.stepMode',
+              isRequired
+            },
+            {
+              name: 'spec.ingestion.file',
+              type: ValidationFieldTypes.Text,
+              label: 'ssca.orchestrationStep.ingestion.file'
+            },
             {
               name: 'spec.resources.limits.memory',
               type: ValidationFieldTypes.LimitMemory,

@@ -25,6 +25,7 @@ export const AllMultiTypeInputTypesForInputSet: AllowedTypesWithExecutionTime[] 
 ]
 
 export const commonDefaultOrchestrationSpecValues: CommonSscaOrchestrationStepSpec = {
+  mode: 'generation',
   tool: {
     type: 'Syft',
     spec: {

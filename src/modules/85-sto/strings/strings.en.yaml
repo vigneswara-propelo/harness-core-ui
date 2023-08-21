@@ -101,3 +101,4 @@ trial:
   comingSoon: '{{$.common.trialCommingSoon}}'
 sbom:
   fieldsHeading: Software Bill of Materials
+  generateSbom: Generate SBOM

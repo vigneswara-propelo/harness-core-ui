@@ -54,6 +54,7 @@ export interface SscaCommonStepData {
 }
 
 export interface CommonSscaOrchestrationStepSpec {
+  mode: string
   tool: {
     type: SbomOrchestrationTool['type']
     spec: SyftSbomOrchestration

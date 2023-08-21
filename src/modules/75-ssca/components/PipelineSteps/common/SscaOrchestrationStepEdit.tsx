@@ -47,6 +47,10 @@ const getTypedOptions = <T extends string>(input: T[]): SelectOption[] => {
   return input.map(item => ({ label: item, value: item }))
 }
 
+const SbomStepModes: { label: string; value: string }[] = [
+  { label: 'Generation', value: 'generation' },
+  { label: 'Ingestion', value: 'ingestion' }
+]
 const artifactTypeOptions = getTypedOptions<SbomSource['type']>(['image'])
 const sbomGenerationToolOptions = getTypedOptions<SbomOrchestrationTool['type']>(['Syft'])
 const syftSbomFormats: { label: string; value: SyftSbomOrchestration['format'] }[] = [
@@ -124,25 +128,68 @@ const SscaOrchestrationStepEdit = <T,>(
                 />
               )}
 
-              <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
-                {getString('ssca.orchestrationStep.sbomGeneration')}
-              </Text>
+              {stepType !== StepType.CdSscaOrchestration && (
+                <>
+                  <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
+                    {getString('ssca.orchestrationStep.sbomMethod')}
+                  </Text>
 
-              <FormInput.Select
-                items={sbomGenerationToolOptions}
-                name="spec.tool.type"
-                label={getString('ssca.orchestrationStep.sbomTool')}
-                placeholder={getString('select')}
-                disabled={readonly}
-              />
+                  <FormInput.RadioGroup
+                    items={SbomStepModes}
+                    name="spec.mode"
+                    label={getString('ssca.orchestrationStep.stepMode')}
+                    disabled={readonly}
+                    radioGroup={{ inline: true }}
+                  />
+                </>
+              )}
 
-              <FormInput.RadioGroup
-                items={syftSbomFormats}
-                name="spec.tool.spec.format"
-                label={getString('ssca.orchestrationStep.sbomFormat')}
-                disabled={readonly}
-                radioGroup={{ inline: true }}
-              />
+              {get(formik.values, 'spec.mode') !== 'ingestion' && (
+                <>
+                  <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
+                    {getString('ssca.orchestrationStep.sbomGeneration')}
+                  </Text>
+
+                  <FormInput.Select
+                    items={sbomGenerationToolOptions}
+                    name="spec.tool.type"
+                    label={getString('ssca.orchestrationStep.sbomTool')}
+                    placeholder={getString('select')}
+                    disabled={readonly}
+                  />
+
+                  <FormInput.RadioGroup
+                    items={syftSbomFormats}
+                    name="spec.tool.spec.format"
+                    label={getString('ssca.orchestrationStep.sbomFormat')}
+                    disabled={readonly}
+                    radioGroup={{ inline: true }}
+                  />
+                </>
+              )}
+
+              {get(formik.values, 'spec.mode') == 'ingestion' && (
+                <>
+                  <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
+                    {getString('ssca.orchestrationStep.sbomIngestion')}
+                  </Text>
+
+                  <MultiTypeTextField
+                    name="spec.ingestion.file"
+                    label={<Text className={css.formLabel}>{getString('ssca.orchestrationStep.ingestion.file')}</Text>}
+                    multiTextInputProps={{
+                      disabled: readonly,
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes: AllMultiTypeInputTypesForStep
+                      }
+                    }}
+                    configureOptionsProps={{
+                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                    }}
+                  />
+                </>
+              )}
 
               <Text
                 font={{ variation: FontVariation.FORM_SUB_SECTION }}

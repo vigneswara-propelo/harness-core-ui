@@ -150,6 +150,24 @@ export default function SscaOrchestrationStepInputSet(
         </>
       ) : (
         <>
+          {isValueRuntimeInput(get(template, 'spec.ingestion.file')) && (
+            <TextFieldInputSetView
+              name={`${path}spec.ingestion.file`}
+              label={getString('ssca.orchestrationStep.ingestion.file')}
+              disabled={readonly}
+              fieldPath={'spec.ingestion.file'}
+              template={template}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
+              className={cx(stepCss.formGroup, stepCss.md)}
+            />
+          )}
+
           {isValueRuntimeInput(get(template, 'spec.resources.limits.cpu')) && (
             <TextFieldInputSetView
               name={`${path}spec.resources.limits.cpu`}

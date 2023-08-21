@@ -640,7 +640,7 @@ export const SbomFields = (props: SbomFieldsProps) => {
             label: 'sto.sbom.fieldsHeading'
           },
           'spec.sbom.generate': {
-            label: 'ssca.orchestrationStep.sbomGeneration',
+            label: 'sto.sbom.generateSbom',
             fieldType: 'checkbox',
             optional: true
           },
