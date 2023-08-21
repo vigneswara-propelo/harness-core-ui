@@ -718,7 +718,7 @@ executionStatus:
   NotStarted: NOT STARTED
   Started: STARTED
   ApprovalRejected: REJECTED
-  QueuedLicenseLimitReached: QUEUED LICENSE LIMIT REACHED
+  QueuedLicenseLimitReached: QUEUED EXECUTION
   QueuedExecutionConcurrencyReached: QUEUED EXECUTION CONCURRENCY REACHED
   Unknown: UNKNOWN
 executionFilters:
