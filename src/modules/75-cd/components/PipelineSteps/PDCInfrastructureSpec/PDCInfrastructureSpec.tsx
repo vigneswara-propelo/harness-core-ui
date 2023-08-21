@@ -829,6 +829,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                                 accountId={accountId}
                                 projectIdentifier={projectIdentifier}
                                 orgIdentifier={orgIdentifier}
+                                selectedItems={formik.values?.delegateSelectors}
                                 onTagInputChange={delegateSelectors => {
                                   formikRef.current?.setFieldValue('delegateSelectors', delegateSelectors)
                                 }}
