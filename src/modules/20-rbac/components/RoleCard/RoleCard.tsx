@@ -142,7 +142,7 @@ const RoleCard: React.FC<RoleCardProps> = ({ data, reloadRoles, editRoleModal })
 
       <Layout.Vertical flex={{ align: 'center-center' }} spacing="large" height="100%">
         <Icon name={getRoleIcon(role.identifier)} size={40} />
-        <Text className={css.name} lineClamp={1} color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
+        <Text className={css.name} lineClamp={3} color={Color.BLACK} font={{ size: 'normal', weight: 'semi-bold' }}>
           {role.name}
         </Text>
       </Layout.Vertical>
