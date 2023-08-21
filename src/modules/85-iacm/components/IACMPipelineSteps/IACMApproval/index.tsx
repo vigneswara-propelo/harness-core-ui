@@ -16,6 +16,7 @@ import type { IACMApprovalData } from './types'
 
 export class IACMApprovalStep extends PipelineStep<IACMApprovalData> {
   protected defaultValues = {
+    type: StepType.IACMApproval,
     identifier: '',
     name: '',
     timeout: '1h'

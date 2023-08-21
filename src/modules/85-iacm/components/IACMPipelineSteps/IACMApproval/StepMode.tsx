@@ -7,7 +7,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useStrings } from 'framework/strings'
@@ -21,11 +21,17 @@ const IACMApprovalStepMode = (
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const { initialValues, allowableTypes, stepViewType, readonly, isNewStep, onUpdate } = props
+  const { initialValues, allowableTypes, stepViewType, readonly, isNewStep, onUpdate, onChange } = props
 
   const handleSubmit = (value: IACMApprovalData): void => {
     if (onUpdate) {
       onUpdate(value)
+    }
+  }
+
+  const handleValidate = (values: IACMApprovalData): void => {
+    if (onChange) {
+      onChange(values)
     }
   }
 
@@ -44,18 +50,21 @@ const IACMApprovalStepMode = (
       initialValues={initialValues}
       formName="iacmApproval"
       validationSchema={validationSchema}
+      validate={handleValidate}
     >
       {(formik: FormikProps<IACMApprovalData>) => {
         setFormikRef(ref, formik)
         return (
           <FormikForm>
-            <FormInput.InputWithIdentifier
-              isIdentifierEditable={isNewStep}
-              inputGroupProps={{
-                placeholder: getString('pipeline.stepNamePlaceholder'),
-                disabled: readonly
-              }}
-            />
+            {stepViewType !== StepViewType.Template && (
+              <FormInput.InputWithIdentifier
+                isIdentifierEditable={isNewStep}
+                inputGroupProps={{
+                  placeholder: getString('pipeline.stepNamePlaceholder'),
+                  disabled: readonly
+                }}
+              />
+            )}
             <FormMultiTypeDurationField
               label={getString('pipelineSteps.timeoutLabel')}
               name="timeout"

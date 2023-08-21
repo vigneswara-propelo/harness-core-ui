@@ -14,6 +14,7 @@ export interface IACMApprovalStepProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
   onUpdate?: (value: IACMApprovalData) => void
+  onChange?: (value: IACMApprovalData) => void
 }
 
 export interface IACMApprovalTemplatizedProps {

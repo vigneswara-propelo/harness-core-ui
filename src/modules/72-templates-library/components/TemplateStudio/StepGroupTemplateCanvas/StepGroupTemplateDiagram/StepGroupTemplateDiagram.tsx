@@ -85,6 +85,10 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
     )
     tempStages.push(stagesCollection.getStage(StageType.APPROVAL, true, getString)?.props as PipelineStageProps)
 
+    tempStages.push(
+      stagesCollection.getStage(StageType.IACM, !!licenseInformation['IACM'], getString)?.props as PipelineStageProps
+    )
+
     tempStages.push(stagesCollection.getStage(StageType.CUSTOM, true, getString)?.props as PipelineStageProps)
 
     setStages(tempStages)

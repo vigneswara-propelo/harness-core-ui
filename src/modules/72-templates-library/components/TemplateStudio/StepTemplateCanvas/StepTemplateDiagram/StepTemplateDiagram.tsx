@@ -25,6 +25,7 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import { getAllStepPaletteModuleInfos, getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
@@ -42,6 +43,7 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
   const { FF_LICENSE_STATE } = useLicenseStore()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
+  const { IACM_ENABLED } = useFeatureFlags()
 
   const openStepSelector = React.useCallback(() => {
     setIsStepSelectorOpen(true)
@@ -75,21 +77,32 @@ export const StepTemplateDiagram = (): JSX.Element => {
   }, [closeDrawer])
 
   React.useEffect(() => {
+    let stepPaletteModules: StepPalleteModuleInfo[] = []
     if (module === 'cd') {
-      setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
+      stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.DEPLOY)
     } else if (module === 'ci') {
-      setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.BUILD))
+      stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.BUILD)
     } else if (module === 'cf') {
-      setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
+      stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.FEATURE)
     } else {
       if (shouldVisible && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
-        setStepPaletteModuleInfos(getAllStepPaletteModuleInfos())
+        stepPaletteModules = getAllStepPaletteModuleInfos()
       } else if (shouldVisible) {
-        setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
+        stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.DEPLOY)
       } else if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
-        setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
+        stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.FEATURE)
       }
     }
+    if (IACM_ENABLED) {
+      stepPaletteModules = [
+        ...stepPaletteModules,
+        {
+          module: 'iacm',
+          shouldShowCommonSteps: false
+        }
+      ]
+    }
+    setStepPaletteModuleInfos(stepPaletteModules)
   }, [module])
 
   React.useEffect(() => {
