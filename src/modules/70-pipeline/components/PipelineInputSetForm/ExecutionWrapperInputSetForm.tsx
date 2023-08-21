@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { identity, pickBy, set, isEmpty, defaultTo } from 'lodash-es'
+import { identity, pickBy, set, isEmpty, defaultTo, isUndefined } from 'lodash-es'
 import { AllowedTypes, Icon, Label, Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -23,6 +23,7 @@ import { useStrings } from 'framework/strings'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepMode } from '@pipeline/utils/stepUtils'
+import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '../AbstractSteps/Step'
 import { StepWidget } from '../AbstractSteps/StepWidget'
@@ -32,6 +33,7 @@ import { StepForm } from './StepInputSetForm'
 import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
 import { NodeWrapperEntity } from '../PipelineDiagram/Nodes/utils'
 import { ConditionalExecutionForm } from './StageAdvancedInputSetForm/ConditionalExecutionForm'
+import { LoopingStrategyInputSetForm } from './StageAdvancedInputSetForm/LoopingStrategyInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export function getStepFromStage(
@@ -53,6 +55,231 @@ export function getStepFromStage(
   }
 
   return undefined
+}
+
+function StepGroupRuntimeForm(props: {
+  stepGroupItem: StepGroupElementConfig
+  viewType: StepViewType
+  allowableTypes: AllowedTypes
+  formik: StageInputSetFormProps['formik']
+  path: string
+  index: number
+  indexp?: number
+  allValues?: ExecutionWrapperConfig[]
+  values?: ExecutionWrapperConfig[]
+  readonly?: boolean
+  executionIdentifier?: string
+  customStepProps?: {
+    stageIdentifier: string
+    selectedStage?: DeploymentStageConfig
+    stageType?: StageType
+    provisioner?: ExecutionElementConfig['steps']
+  }
+  parentIconData?: JSX.Element
+}): JSX.Element {
+  const {
+    stepGroupItem,
+    viewType,
+    allowableTypes,
+    formik,
+    path,
+    index,
+    indexp,
+    allValues,
+    values,
+    readonly,
+    executionIdentifier,
+    customStepProps,
+    parentIconData
+  } = props
+  const { getString } = useStrings()
+
+  const collapseHeaderPopoverContent = (stepGroup?: StepGroupElementConfig): JSX.Element => {
+    return (
+      <Text color={Color.WHITE} padding="medium">
+        {getString('pipeline.execution.stepGroupTitlePrefix')}
+        {getString('pipeline.stepLabel', stepGroup)}
+      </Text>
+    )
+  }
+  const collapseHeaderPopoverBody = (popoverIndex: number): JSX.Element => {
+    return (
+      <React.Fragment key={`icon-${popoverIndex}`}>
+        <Icon padding={{ right: 'small' }} name={'step-group'} />
+        <Icon padding={{ right: 'small' }} name={'chevron-right'} />
+      </React.Fragment>
+    )
+  }
+
+  const stepGroupPath = !isUndefined(indexp)
+    ? `${path}[${index}].parallel[${indexp}].stepGroup`
+    : `${path}[${index}].stepGroup`
+  const isTemplateStepGroup = !isEmpty(stepGroupItem?.template?.templateInputs)
+  const stepGroup = getStepFromStage(stepGroupItem?.identifier, allValues, NodeWrapperEntity.stepGroup)
+  const initialValues = getStepFromStage(stepGroupItem?.identifier, values, NodeWrapperEntity.stepGroup)
+  const isStepGroupDelegateSelectorRuntime = isTemplateStepGroup
+    ? !isEmpty(stepGroupItem?.template?.templateInputs?.delegateSelectors as unknown as string)
+    : !isEmpty(stepGroupItem?.delegateSelectors as unknown as string)
+  const isStepGroupConditionalExecutionRuntime = isTemplateStepGroup
+    ? !isEmpty(stepGroupItem?.template?.templateInputs?.when as unknown as string)
+    : !isEmpty(stepGroupItem?.when as unknown as string)
+  const isStepGroupLoopingStrategyRuntime = isTemplateStepGroup
+    ? isValueRuntimeInput(stepGroupItem?.template?.templateInputs?.strategy as unknown as string)
+    : isValueRuntimeInput(stepGroupItem?.strategy as unknown as string)
+  const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
+    ? isValueRuntimeInput(stepGroupItem?.template?.templateInputs?.failureStrategies as unknown as string)
+    : isValueRuntimeInput(stepGroupItem?.failureStrategies as unknown as string)
+
+  const iconElement = (
+    <>
+      {parentIconData}
+      <Popover
+        interactionKind={PopoverInteractionKind.HOVER}
+        position={Position.BOTTOM_RIGHT}
+        className={Classes.DARK}
+        content={collapseHeaderPopoverContent(stepGroup?.stepGroup)}
+      >
+        {collapseHeaderPopoverBody(index)}
+      </Popover>
+    </>
+  )
+  return (
+    <Layout.Vertical spacing="medium" padding={{ top: 'medium' }} key={stepGroupItem?.identifier || index}>
+      <CollapseForm
+        header={
+          <HeaderComponent
+            stepGroup={isTemplateStepGroup ? stepGroupItem : stepGroup?.stepGroup}
+            iconElement={iconElement}
+          />
+        }
+        headerProps={{ font: { size: 'normal' } }}
+        headerColor="var(--black)"
+      >
+        <StepWidget<Partial<StepElementConfig>>
+          factory={factory}
+          readonly={readonly}
+          path={stepGroupPath}
+          allowableTypes={allowableTypes}
+          template={stepGroupItem as Partial<StepElementConfig>}
+          initialValues={initialValues?.stepGroup || {}}
+          allValues={stepGroup?.stepGroup || {}}
+          type={StepType.StepGroup}
+          onUpdate={data => {
+            if (initialValues) {
+              if (!initialValues.stepGroup) {
+                initialValues.stepGroup = {
+                  identifier: stepGroup?.stepGroup?.identifier || '',
+                  name: stepGroup?.stepGroup?.name || ''
+                }
+              }
+              const execObj = {
+                ...data
+              }
+              if (data.stepGroupInfra) {
+                execObj['stepGroupInfra'] = {
+                  ...pickBy(data.stepGroupInfra, identity)
+                }
+              }
+              initialValues.stepGroup = {
+                ...execObj,
+                identifier: stepGroup?.stepGroup?.identifier || '',
+                name: stepGroup?.stepGroup?.name || ''
+              }
+              formik?.setValues(set(formik?.values, `${path}[${index}].stepGroup`, initialValues.stepGroup))
+            }
+          }}
+          stepViewType={viewType}
+          customStepProps={
+            customStepProps
+              ? {
+                  ...customStepProps,
+                  selectedStage: {
+                    stage: {
+                      spec: customStepProps?.selectedStage
+                    }
+                  }
+                }
+              : null
+          }
+        />
+        {isStepGroupDelegateSelectorRuntime && (
+          <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
+            <MultiTypeDelegateSelector
+              inputProps={{ readonly }}
+              allowableTypes={allowableTypes}
+              label={getString('delegate.DelegateSelector')}
+              name={
+                isTemplateStepGroup
+                  ? `${stepGroupPath}.template.templateInputs.delegateSelectors`
+                  : `${stepGroupPath}.delegateSelectors`
+              }
+              disabled={readonly}
+            />
+          </div>
+        )}
+        {isStepGroupConditionalExecutionRuntime && (
+          <div className={cx(stepCss.formGroup)}>
+            <ConditionalExecutionForm
+              isReadonly={!!readonly}
+              path={isTemplateStepGroup ? `${stepGroupPath}.template.templateInputs.when` : `${stepGroupPath}.when`}
+              allowableTypes={allowableTypes}
+              viewType={viewType}
+              template={isTemplateStepGroup ? stepGroupItem?.template?.templateInputs?.when : stepGroupItem.when}
+              mode={StepMode.STEP_GROUP}
+            />
+          </div>
+        )}
+        {isStepGroupLoopingStrategyRuntime && (
+          <div className={cx(stepCss.formGroup)}>
+            <LoopingStrategyInputSetForm
+              stageType={customStepProps?.stageType as StageType}
+              allowableTypes={allowableTypes}
+              path={
+                isTemplateStepGroup ? `${stepGroupPath}.template.templateInputs.strategy` : `${stepGroupPath}.strategy`
+              }
+              readonly={readonly}
+              viewType={viewType}
+              template={
+                isTemplateStepGroup ? stepGroupItem?.template?.templateInputs?.strategy : stepGroupItem.strategy
+              }
+            />
+          </div>
+        )}
+        {isStepGroupFailureStrategyRuntime && (
+          <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
+            <FailureStrategiesInputSetForm
+              readonly={readonly}
+              path={
+                isTemplateStepGroup
+                  ? `${stepGroupPath}.template.templateInputs.failureStrategies`
+                  : `${stepGroupPath}.failureStrategies`
+              }
+              viewType={viewType}
+              stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
+              mode={StepMode.STEP_GROUP}
+            />
+          </div>
+        )}
+        <ExecutionWrapperInputSetForm
+          executionIdentifier={executionIdentifier}
+          stepsTemplate={isTemplateStepGroup ? stepGroupItem?.template?.templateInputs?.steps : stepGroupItem.steps}
+          formik={formik}
+          readonly={readonly}
+          path={isTemplateStepGroup ? `${stepGroupPath}.template.templateInputs.steps` : `${stepGroupPath}.steps`}
+          allValues={defaultTo(stepGroup?.stepGroup?.steps, stepGroup?.stepGroup?.template?.templateInputs?.steps)}
+          values={
+            isTemplateStepGroup
+              ? initialValues?.stepGroup?.template?.templateInputs?.steps
+              : initialValues?.stepGroup?.steps
+          }
+          viewType={viewType}
+          allowableTypes={allowableTypes}
+          customStepProps={customStepProps}
+          parentIconData={iconElement}
+        />
+      </CollapseForm>
+    </Layout.Vertical>
+  )
 }
 
 function HeaderComponent({
@@ -104,25 +331,6 @@ export function ExecutionWrapperInputSetForm(props: {
     customStepProps,
     parentIconData
   } = props
-  const { getString } = useStrings()
-
-  const collapseHeaderPopoverContent = (stepGroup?: StepGroupElementConfig): JSX.Element => {
-    return (
-      <Text color={Color.WHITE} padding="medium">
-        {getString('pipeline.execution.stepGroupTitlePrefix')}
-        {getString('pipeline.stepLabel', stepGroup)}
-      </Text>
-    )
-  }
-
-  const collapseHeaderPopoverBody = (index: number): JSX.Element => {
-    return (
-      <React.Fragment key={`icon-${index}`}>
-        <Icon padding={{ right: 'small' }} name={'step-group'} />
-        <Icon padding={{ right: 'small' }} name={'chevron-right'} />
-      </React.Fragment>
-    )
-  }
 
   return (
     <>
@@ -212,297 +420,43 @@ export function ExecutionWrapperInputSetForm(props: {
                 />
               ) : null
             } else if (nodep.stepGroup) {
-              const isTemplateStepGroup = !isEmpty(nodep.stepGroup?.template?.templateInputs)
-              const stepGroup = getStepFromStage(nodep.stepGroup?.identifier, allValues, NodeWrapperEntity.stepGroup)
-              const initialValues = getStepFromStage(nodep.stepGroup?.identifier, values, NodeWrapperEntity.stepGroup)
-              const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
-                ? isValueRuntimeInput(nodep.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
-                : isValueRuntimeInput(nodep.stepGroup?.failureStrategies as unknown as string)
-              const isStepGroupConditionalExecutionRuntime = isTemplateStepGroup
-                ? !isEmpty(nodep.stepGroup?.template?.templateInputs?.when as unknown as string)
-                : !isEmpty(nodep.stepGroup?.when as unknown as string)
-
-              const iconElement = (
-                <>
-                  {parentIconData}
-                  <Popover
-                    interactionKind={PopoverInteractionKind.HOVER}
-                    position={Position.BOTTOM_RIGHT}
-                    className={Classes.DARK}
-                    content={collapseHeaderPopoverContent(stepGroup?.stepGroup)}
-                  >
-                    {collapseHeaderPopoverBody(index)}
-                  </Popover>
-                </>
-              )
-
               return (
-                <Layout.Vertical spacing="medium" padding={{ top: 'medium' }} key={nodep.stepGroup.identifier || index}>
-                  <CollapseForm
-                    header={
-                      <HeaderComponent
-                        stepGroup={isTemplateStepGroup ? nodep.stepGroup : stepGroup?.stepGroup}
-                        iconElement={iconElement}
-                      />
-                    }
-                    headerProps={{ font: { size: 'normal' } }}
-                    headerColor="var(--black)"
-                  >
-                    <StepWidget<Partial<StepElementConfig>>
-                      factory={factory}
-                      readonly={readonly}
-                      path={`${path}[${index}].stepGroup`}
-                      allowableTypes={allowableTypes}
-                      template={item.stepGroup as Partial<StepElementConfig>}
-                      initialValues={initialValues?.stepGroup || {}}
-                      allValues={stepGroup?.stepGroup || {}}
-                      type={StepType.StepGroup}
-                      onUpdate={data => {
-                        if (initialValues) {
-                          if (!initialValues.stepGroup) {
-                            initialValues.stepGroup = {
-                              identifier: stepGroup?.stepGroup?.identifier || '',
-                              name: stepGroup?.stepGroup?.name || ''
-                            }
-                          }
-                          const execObj = {
-                            ...data
-                          }
-                          if (data.stepGroupInfra) {
-                            execObj['stepGroupInfra'] = {
-                              ...pickBy(data.stepGroupInfra, identity)
-                            }
-                          }
-                          initialValues.stepGroup = {
-                            ...execObj,
-                            identifier: stepGroup?.stepGroup?.identifier || '',
-                            name: stepGroup?.stepGroup?.name || ''
-                          }
-                          formik?.setValues(set(formik?.values, `${path}[${index}].stepGroup`, initialValues.stepGroup))
-                        }
-                      }}
-                      stepViewType={viewType}
-                      customStepProps={
-                        customStepProps
-                          ? {
-                              ...customStepProps,
-                              selectedStage: {
-                                stage: {
-                                  spec: customStepProps?.selectedStage
-                                }
-                              }
-                            }
-                          : null
-                      }
-                    />
-
-                    {isStepGroupConditionalExecutionRuntime && (
-                      <div className={cx(stepCss.formGroup)}>
-                        <ConditionalExecutionForm
-                          isReadonly={!!readonly}
-                          path={
-                            isTemplateStepGroup
-                              ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.when`
-                              : `${path}[${index}].parallel[${indexp}].stepGroup.when`
-                          }
-                          allowableTypes={allowableTypes}
-                          viewType={viewType}
-                          template={
-                            isTemplateStepGroup ? nodep.stepGroup?.template?.templateInputs?.when : nodep.stepGroup.when
-                          }
-                          mode={StepMode.STEP_GROUP}
-                        />
-                      </div>
-                    )}
-                    {isStepGroupFailureStrategyRuntime && (
-                      <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
-                        <FailureStrategiesInputSetForm
-                          readonly={readonly}
-                          path={
-                            isTemplateStepGroup
-                              ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.failureStrategies`
-                              : `${path}[${index}].parallel[${indexp}].stepGroup.failureStrategies`
-                          }
-                          viewType={viewType}
-                          stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
-                          mode={StepMode.STEP_GROUP}
-                        />
-                      </div>
-                    )}
-
-                    <ExecutionWrapperInputSetForm
-                      executionIdentifier={executionIdentifier}
-                      stepsTemplate={
-                        isTemplateStepGroup ? nodep.stepGroup?.template?.templateInputs?.steps : nodep.stepGroup.steps
-                      }
-                      formik={formik}
-                      readonly={readonly}
-                      path={
-                        isTemplateStepGroup
-                          ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.steps`
-                          : `${path}[${index}].parallel[${indexp}].stepGroup.steps`
-                      }
-                      allValues={defaultTo(
-                        stepGroup?.stepGroup?.steps,
-                        stepGroup?.stepGroup?.template?.templateInputs?.steps
-                      )}
-                      values={
-                        isTemplateStepGroup
-                          ? nodep.stepGroup?.template?.templateInputs?.steps
-                          : initialValues?.stepGroup?.steps
-                      }
-                      viewType={viewType}
-                      allowableTypes={allowableTypes}
-                      customStepProps={customStepProps}
-                      parentIconData={iconElement}
-                    />
-                  </CollapseForm>
-                </Layout.Vertical>
+                <StepGroupRuntimeForm
+                  stepGroupItem={nodep.stepGroup}
+                  allValues={allValues}
+                  values={values}
+                  parentIconData={parentIconData}
+                  readonly={readonly}
+                  path={path}
+                  allowableTypes={allowableTypes}
+                  viewType={viewType}
+                  customStepProps={customStepProps}
+                  formik={formik}
+                  executionIdentifier={executionIdentifier}
+                  index={index}
+                  indexp={indexp}
+                />
               )
             } else {
               return null
             }
           })
         } else if (item.stepGroup) {
-          const isTemplateStepGroup = !isEmpty(item?.stepGroup?.template?.templateInputs)
-          const stepGroup = getStepFromStage(item.stepGroup.identifier, allValues, NodeWrapperEntity.stepGroup)
-          const initialValues = getStepFromStage(item.stepGroup?.identifier, values, NodeWrapperEntity.stepGroup)
-          const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
-            ? isValueRuntimeInput(item?.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
-            : isValueRuntimeInput(item?.stepGroup?.failureStrategies as unknown as string)
-          const isStepGroupConditionalExecutionRuntime = isTemplateStepGroup
-            ? !isEmpty(item?.stepGroup?.template?.templateInputs?.when as unknown as string)
-            : !isEmpty(item?.stepGroup?.when as unknown as string)
-
-          const iconElement = (
-            <>
-              {parentIconData}
-              <Popover
-                interactionKind={PopoverInteractionKind.HOVER}
-                position={Position.BOTTOM_RIGHT}
-                className={Classes.DARK}
-                content={collapseHeaderPopoverContent(stepGroup?.stepGroup)}
-              >
-                {collapseHeaderPopoverBody(index)}
-              </Popover>
-            </>
-          )
           return (
-            <Layout.Vertical spacing="medium" padding={{ top: 'medium' }} key={item.stepGroup.identifier || index}>
-              <CollapseForm
-                header={<HeaderComponent stepGroup={stepGroup?.stepGroup} iconElement={iconElement} />}
-                headerProps={{ font: { size: 'normal' } }}
-                headerColor="var(--black)"
-              >
-                <StepWidget<Partial<StepElementConfig>>
-                  factory={factory}
-                  readonly={readonly}
-                  path={`${path}[${index}].stepGroup`}
-                  allowableTypes={allowableTypes}
-                  template={item.stepGroup as Partial<StepElementConfig>}
-                  initialValues={initialValues?.stepGroup || {}}
-                  allValues={stepGroup?.stepGroup || {}}
-                  type={StepType.StepGroup}
-                  onUpdate={data => {
-                    if (initialValues) {
-                      if (!initialValues.stepGroup) {
-                        initialValues.stepGroup = {
-                          identifier: stepGroup?.stepGroup?.identifier || '',
-                          name: stepGroup?.stepGroup?.name || ''
-                        }
-                      }
-                      const execObj = {
-                        ...data
-                      }
-                      if (data.stepGroupInfra) {
-                        execObj['stepGroupInfra'] = {
-                          ...pickBy(data.stepGroupInfra, identity)
-                        }
-                      }
-                      initialValues.stepGroup = {
-                        ...execObj,
-                        identifier: stepGroup?.stepGroup?.identifier || '',
-                        name: stepGroup?.stepGroup?.name || ''
-                      }
-                      formik?.setValues(set(formik?.values, `${path}[${index}].stepGroup`, initialValues.stepGroup))
-                    }
-                  }}
-                  stepViewType={viewType}
-                  customStepProps={
-                    customStepProps
-                      ? {
-                          ...customStepProps,
-                          selectedStage: {
-                            stage: {
-                              spec: customStepProps?.selectedStage
-                            }
-                          }
-                        }
-                      : null
-                  }
-                />
-
-                {isStepGroupConditionalExecutionRuntime && (
-                  <div className={cx(stepCss.formGroup)}>
-                    <ConditionalExecutionForm
-                      isReadonly={!!readonly}
-                      path={
-                        isTemplateStepGroup
-                          ? `${path}[${index}].stepGroup.template.templateInputs.when`
-                          : `${path}[${index}].stepGroup.when`
-                      }
-                      allowableTypes={allowableTypes}
-                      viewType={viewType}
-                      template={
-                        isTemplateStepGroup ? item.stepGroup?.template?.templateInputs?.when : item.stepGroup.when
-                      }
-                      mode={StepMode.STEP_GROUP}
-                    />
-                  </div>
-                )}
-                {isStepGroupFailureStrategyRuntime && (
-                  <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
-                    <FailureStrategiesInputSetForm
-                      readonly={readonly}
-                      path={
-                        isTemplateStepGroup
-                          ? `${path}[${index}].stepGroup.template.templateInputs.failureStrategies`
-                          : `${path}[${index}].stepGroup.failureStrategies`
-                      }
-                      viewType={viewType}
-                      stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
-                      mode={StepMode.STEP_GROUP}
-                    />
-                  </div>
-                )}
-                <ExecutionWrapperInputSetForm
-                  executionIdentifier={executionIdentifier}
-                  stepsTemplate={
-                    isTemplateStepGroup ? item.stepGroup?.template?.templateInputs?.steps : item.stepGroup.steps
-                  }
-                  formik={formik}
-                  readonly={readonly}
-                  path={
-                    isTemplateStepGroup
-                      ? `${path}[${index}].stepGroup.template.templateInputs.steps`
-                      : `${path}[${index}].stepGroup.steps`
-                  }
-                  allValues={defaultTo(
-                    stepGroup?.stepGroup?.steps,
-                    stepGroup?.stepGroup?.template?.templateInputs?.steps
-                  )}
-                  values={
-                    isTemplateStepGroup
-                      ? initialValues?.stepGroup?.template?.templateInputs?.steps
-                      : initialValues?.stepGroup?.steps
-                  }
-                  viewType={viewType}
-                  allowableTypes={allowableTypes}
-                  customStepProps={customStepProps}
-                  parentIconData={iconElement}
-                />
-              </CollapseForm>
-            </Layout.Vertical>
+            <StepGroupRuntimeForm
+              stepGroupItem={item.stepGroup}
+              allValues={allValues}
+              values={values}
+              parentIconData={parentIconData}
+              readonly={readonly}
+              path={path}
+              allowableTypes={allowableTypes}
+              viewType={viewType}
+              customStepProps={customStepProps}
+              formik={formik}
+              executionIdentifier={executionIdentifier}
+              index={index}
+            />
           )
         } else {
           return null

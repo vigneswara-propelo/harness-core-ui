@@ -40,6 +40,9 @@ import { ExecutionWrapperInputSetForm } from '@pipeline/components/PipelineInput
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { ConditionalExecutionForm } from '@pipeline/components/PipelineInputSetForm/StageAdvancedInputSetForm/ConditionalExecutionForm'
 import { StepMode } from '@pipeline/utils/stepUtils'
+import { LoopingStrategyInputSetForm } from '@pipeline/components/PipelineInputSetForm/StageAdvancedInputSetForm/LoopingStrategyInputSetForm'
+import { FailureStrategiesInputSetForm } from '@pipeline/components/PipelineInputSetForm/StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -298,6 +301,29 @@ function TemplateStepWidget(
                               mode={StepMode.STEP_GROUP}
                               viewType={StepViewType.TemplateUsage}
                               template={templateInputs?.when}
+                            />
+                          </div>
+                        )}
+                        {templateInputs?.strategy && (
+                          <div className={cx(stepCss.formGroup)}>
+                            <LoopingStrategyInputSetForm
+                              stageType={customStepProps?.stageType as StageType}
+                              allowableTypes={allowableTypes}
+                              path={`${TEMPLATE_INPUT_PATH}.strategy`}
+                              readonly={readonly}
+                              viewType={StepViewType.TemplateUsage}
+                              template={templateInputs?.strategy}
+                            />
+                          </div>
+                        )}
+                        {isValueRuntimeInput(templateInputs?.failureStrategies as unknown as string) && (
+                          <div className={cx(stepCss.formGroup)}>
+                            <FailureStrategiesInputSetForm
+                              stageType={customStepProps?.stageType as StageType}
+                              path={`${TEMPLATE_INPUT_PATH}.failureStrategies`}
+                              readonly={readonly}
+                              viewType={StepViewType.TemplateUsage}
+                              mode={StepMode.STEP_GROUP}
                             />
                           </div>
                         )}

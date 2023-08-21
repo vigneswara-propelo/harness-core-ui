@@ -14,10 +14,13 @@ import { useStrings } from 'framework/strings'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { StepMode } from '@pipeline/utils/stepUtils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '../AbstractSteps/Step'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
 import { ConditionalExecutionForm } from './StageAdvancedInputSetForm/ConditionalExecutionForm'
+import { LoopingStrategyInputSetForm } from './StageAdvancedInputSetForm/LoopingStrategyInputSetForm'
+import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
 
 export function StepGroupFormSetInternal(props: {
   template: StepGroupElementConfig
@@ -57,6 +60,25 @@ export function StepGroupFormSetInternal(props: {
           mode={StepMode.STEP_GROUP}
           viewType={viewType}
           template={template?.when}
+        />
+      )}
+      {template?.strategy && (
+        <LoopingStrategyInputSetForm
+          stageType={customStepProps?.stageType as StageType}
+          allowableTypes={allowableTypes}
+          path={`${path}.strategy`}
+          readonly={readonly}
+          viewType={viewType}
+          template={template?.strategy}
+        />
+      )}
+      {isValueRuntimeInput(template?.failureStrategies as unknown as string) && (
+        <FailureStrategiesInputSetForm
+          stageType={customStepProps?.stageType as StageType}
+          path={`${path}.failureStrategies`}
+          readonly={readonly}
+          viewType={viewType}
+          mode={StepMode.STEP_GROUP}
         />
       )}
       <ExecutionWrapperInputSetForm
