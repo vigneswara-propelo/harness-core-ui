@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps, FormikValues } from 'formik'
 import * as Yup from 'yup'
-import { defaultTo, get, isEqual, memoize, merge, filter } from 'lodash-es'
+import { defaultTo, get, isEqual, memoize, merge, filter, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -377,7 +377,8 @@ function Artifactory({
     }
     artifactFormDataValues.digest =
       getMultiTypeFromValue(artifactFormDataValues.digest) === MultiTypeInputType.FIXED &&
-      artifactFormDataValues.tagType === TagTypes.Value
+      artifactFormDataValues.tagType === TagTypes.Value &&
+      !isUndefined(artifactFormDataValues.digest)
         ? getLabelValueObject(artifactFormDataValues.digest)
         : artifactFormDataValues.digest
     return artifactFormDataValues
