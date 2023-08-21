@@ -258,7 +258,7 @@ export default function DiscoveredServices({
     <Container>
       <Page.Body>
         {serviceListLoader ? (
-          <PageSpinner />
+          <PageSpinner message={getString('discovery.discoveringSpinnerMessage')} />
         ) : (
           <Container className={css.tableBody}>
             <TableV2<K8SCustomService> columns={columns} data={discoveryServices} pagination={paginationProps} />

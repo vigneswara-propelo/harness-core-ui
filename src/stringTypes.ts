@@ -5807,6 +5807,7 @@ export interface StringsMap {
   'discovery.detectNetworkTrace': string
   'discovery.discoverServices': string
   'discovery.discoveredBy': string
+  'discovery.discoveringSpinnerMessage': string
   'discovery.discoveryDetails.discoveredService.portNumber': string
   'discovery.discoveryDetails.id': string
   'discovery.discoveryDetails.lastDiscovery': string
@@ -5856,7 +5857,6 @@ export interface StringsMap {
   'discovery.searchService': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string
-  'discovery.serviceDiscoveyTable': string
   'discovery.serviceDrawer.ipFamily': string
   'discovery.serviceDrawer.selector': string
   'discovery.serviceDrawer.workloads': string

@@ -78,7 +78,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
     identifier: undefined,
     expression: initialCronExpression,
     ...getBreakdownValues(initialCronExpression),
-    duration: undefined,
+    duration: 5,
     minutes: '15',
     blacklistedNamespaces: ['kube-node-lease', 'kube-public', 'kube-system'],
     detectNetworkTrace: isNetworkTraceDetected
@@ -330,6 +330,11 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
             </Layout.Horizontal>
             <img src={NetworkMap} alt="Network Map" className={css.image} />
             <List
+              title={getString('discovery.whatIsServiceDiscovery')}
+              content={getString('discovery.whatIsServiceDiscoveryDesc')}
+              margin={{ top: 'medium', bottom: 'xlarge' }}
+            />
+            <List
               title={getString('discovery.whatIsNetworkMap')}
               content={getString('discovery.networkMapDescription')}
               margin={{ top: 'medium', bottom: 'xlarge' }}
@@ -337,11 +342,6 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
             <List
               title={getString('discovery.howToCreateNetworkMap')}
               content={getString('discovery.howToCreateNetworkMapDesc')}
-              margin={{ top: 'medium', bottom: 'xlarge' }}
-            />
-            <List
-              title={getString('discovery.whatIsServiceDiscovery')}
-              content={getString('discovery.whatIsServiceDiscoveryDesc')}
               margin={{ top: 'medium' }}
             />
           </Layout.Vertical>

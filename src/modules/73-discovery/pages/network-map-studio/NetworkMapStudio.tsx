@@ -49,7 +49,7 @@ const NetworkMapStudio: React.FC = () => {
   const { dAgentId } = useParams<DiscoveryPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-  const { isOpen, open, close } = useToggleOpen()
+  const { isOpen, open, close } = useToggleOpen(true)
   const history = useHistory()
   const createNetworkMapLabel = getString('discovery.createNetworkMap')
   const [networkMapDetails, setNetworkMapDetails] = useState<FormValues>({

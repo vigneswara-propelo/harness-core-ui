@@ -79,7 +79,7 @@ exports[`DiscoveredResourcesGraph render component with empty data 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
         >
-          Loading, please wait...
+          discovery.discoveringSpinnerMessage
         </p>
       </div>
     </div>

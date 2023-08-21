@@ -16,6 +16,7 @@ import {
   getGraphNodesFromServiceList
 } from '@discovery/components/NetworkGraph/utils/graphDataTransformation'
 import NetworkGraph from '@discovery/components/NetworkGraph/NetworkGraph'
+import { useStrings } from 'framework/strings'
 import css from './DiscoveredResourcesGraph.module.scss'
 
 interface DiscoveredResourcesGraphProps {
@@ -28,6 +29,7 @@ export default function DiscoveredResourcesGraph({
   connectionList
 }: DiscoveredResourcesGraphProps): React.ReactElement {
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
+  const { getString } = useStrings()
 
   const { data: serviceList } = useListK8SCustomService({
     agentIdentity: dAgentId,
@@ -47,7 +49,7 @@ export default function DiscoveredResourcesGraph({
   if (initialGraphNodes.length === 0 || !connectionList) {
     return (
       <Page.Body>
-        <PageSpinner />
+        <PageSpinner message={getString('discovery.discoveringSpinnerMessage')} />
       </Page.Body>
     )
   }

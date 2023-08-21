@@ -36,18 +36,13 @@ tabs:
 selectAConnector: Select a Kubernetes Connector of your cluster to discover services
 selectAConnectorDescription: A k8s connector will help to discover the services on your clusters. For the first time discovery, it may take up to 5 minutes.
 whatIsNetworkMap: What is a network map?
-networkMapDescription:
-  Harness has got you covered as we cater you with support of the most popular and widely used cloud service
-  providers out there. Select the cloud provider account in which the workloads you want to manage costs are
-  running to continue managing costs. You can always add your multiple cloud services following the same
-  procedure.
+networkMapDescription: A network map is a visual representation of the relationships and dependencies between different services or components in a system. It provides an easy-to-understand overview of how different parts of a system interact with each other to deliver a specific functionality or service.
 howToCreateNetworkMap: How to create a network Map?
-howToCreateNetworkMapDesc: There are 3 simple steps to create a network map.
+howToCreateNetworkMapDesc: There are 3 simple steps to create a network map. 1. Select a Kubernetes connector to your target cluster and we will automatically discover the services and their dependencies on the cluster. 2. Select the services that you would like to add to network map. 3. [optional] Configure customized relations between the services.
 whatIsServiceDiscovery: What is Service Discovery and how it works?
 whatIsServiceDiscoveryDesc: Service Discovery is the automatic detection and monitoring of services running in your Kubernetes clusters, which will help the team gain insights on their applications, infrastructure, and logs. Simply enable Service Discovery on your existing Kubernetes connector to start using this feature!
 discoverServices: Discovering services in your cluster
 approxTime: Approx time
-serviceDiscoveyTable: Service Discovery Table
 discoveredBy: Discovery by
 agentName: Agent Name
 dataCollectionSettings: Data Collection Settings
@@ -56,7 +51,8 @@ createNetworkMap: Create Network Map
 createNewNetworkMap: Create New Network Map
 allDiscoveredServices: All Discovered Services
 forADurationOf: For a duration of (in mins)
-blackListedNamespaces: Blacklisted Namespaces
+blackListedNamespaces: Restricted/Denied Namespaces
+discoveringSpinnerMessage: Please Wait, discovering services on your cluster...
 discoveryDetails:
   id: ID
   lastDiscovery: Last Discovery
