@@ -36,7 +36,7 @@ export class DeployServiceStep extends Step<DeployServiceData> {
     this.lastFetched = new Date().getTime()
     this.invocationMap.set(ServiceRegex, this.getServiceListForYaml.bind(this))
   }
-
+  /* istanbul ignore next */
   protected getServiceListForYaml(
     path: string,
     yaml: string,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SeviceModal  should render Services modal 1`] = `
+exports[`ServiceModal  should render Services modal 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main yamlToggle"
@@ -250,7 +250,7 @@ exports[`SeviceModal  should render Services modal 1`] = `
 </div>
 `;
 
-exports[`SeviceModal  should render Services modal 2`] = `
+exports[`ServiceModal  should render Services modal 2`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main yamlToggle"
@@ -346,7 +346,7 @@ exports[`SeviceModal  should render Services modal 2`] = `
 </div>
 `;
 
-exports[`SeviceModal  should validate edit mode snapshot 1`] = `
+exports[`ServiceModal  should validate edit mode snapshot 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main yamlToggle"

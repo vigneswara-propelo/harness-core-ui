@@ -9,6 +9,7 @@ import React from 'react'
 import { render, fireEvent, getByText, act, waitFor, queryByText } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
@@ -302,9 +303,23 @@ describe('Test DeployService Step', () => {
       "
     `)
   })
+
+  test('should test validate input set method', async () => {
+    const response = new DeployServiceStep().validateInputSet({
+      data: {
+        serviceRef: undefined
+      },
+      template: {
+        serviceRef: RUNTIME_INPUT_VALUE
+      },
+      viewType: StepViewType.DeploymentForm,
+      getString: jest.fn().mockImplementation(val => val)
+    })
+    expect(response.serviceRef).toBe('cd.pipelineSteps.serviceTab.serviceIsRequired')
+  })
 })
 
-describe('SeviceModal ', () => {
+describe('ServiceModal ', () => {
   test('should render Services modal', () => {
     const { container } = render(
       <TestWrapper>

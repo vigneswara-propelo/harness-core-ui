@@ -27,6 +27,7 @@ import produce from 'immer'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
+  DeploymentStageConfig,
   GetExecutionStrategyYamlQueryParams,
   GoogleCloudFunctionDeploymentMetaData,
   StageElementConfig,
@@ -53,6 +54,15 @@ import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
+import {
+  processFormValues,
+  processInitialValues
+} from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/utils/utils'
+import {
+  DeployServiceEntityData,
+  getAllFixedServices
+} from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
+import { DeployEnvironmentEntityCustomInputStepProps } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
   getServiceDefinitionType,
@@ -99,7 +109,11 @@ const iconNames = { tick: 'tick' as IconName }
 
 export default function DeployStageSetupShell(): JSX.Element {
   const { getString } = useStrings()
-  const { NG_SVC_ENV_REDESIGN = false, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
+  const {
+    NG_SVC_ENV_REDESIGN = false,
+    CDS_PIPELINE_STUDIO_UPGRADES,
+    CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled
+  } = useFeatureFlags()
   const layoutRef = React.useRef<HTMLDivElement>(null)
   const pipelineContext = usePipelineContext()
   const {
@@ -462,6 +476,51 @@ export default function DeployStageSetupShell(): JSX.Element {
     validate()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(selectedStage)])
+
+  const getSelectedStageSpec = (): DeployServiceEntityData => {
+    const propagatedStageId = selectedStage?.stage?.spec?.service?.useFromStage?.stage
+    if (propagatedStageId) {
+      const { stage: propagatedStage } = getStageFromPipeline<DeploymentStageElementConfig>(propagatedStageId || '')
+      if (propagatedStage) return defaultTo(propagatedStage?.stage?.spec, {})
+    }
+    return defaultTo(selectedStage?.stage?.spec, {})
+  }
+
+  // The effect below initialises the environment section in the pipeline yaml directly for a new template
+  // Removing the need for user to unnecessary visit environment tab just to initialise the section
+  React.useEffect(() => {
+    const stageSpec = get(selectedStage, 'stage.spec')
+    const { environments, environmentGroup, environment } = stageSpec || {}
+    const areAllEnvironmentRelatedConfigurationAbsent = !environments && !environmentGroup && !environment
+    const canEnvBeInitialisedAsRuntime = !(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType))
+
+    if (isNewEnvDef && areAllEnvironmentRelatedConfigurationAbsent && canEnvBeInitialisedAsRuntime) {
+      const initialValues = {
+        environment: {
+          environmentRef: RUNTIME_INPUT_VALUE
+        }
+      }
+      const customStepPropsToBeProvided = {
+        serviceIdentifiers: getAllFixedServices(getSelectedStageSpec()),
+        stageIdentifier: defaultTo(selectedStage?.stage?.identifier, ''),
+        deploymentType: selectedStage?.stage?.spec?.deploymentType,
+        gitOpsEnabled: defaultTo(selectedStage?.stage?.spec?.gitOpsEnabled, false),
+        customDeploymentRef: selectedStage?.stage?.spec?.customDeploymentRef,
+        isOverridesEnabled
+      } as DeployEnvironmentEntityCustomInputStepProps
+
+      const processedInitialValues = processInitialValues(initialValues, customStepPropsToBeProvided)
+      const finalProcessedValuesToBeUpdated = processFormValues(processedInitialValues, customStepPropsToBeProvided)
+
+      const stageData = produce(selectedStage, draft => {
+        const specObject: DeploymentStageConfig = get(draft, 'stage.spec', {})
+        if (specObject) {
+          specObject.environment = finalProcessedValuesToBeUpdated.environment
+        }
+      })
+      debounceUpdateStage(stageData?.stage)
+    }
+  }, [isNewEnvDef, scope, contextType, selectedStage, isOverridesEnabled])
 
   const originalStage = selectedStageId
     ? getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId, originalPipeline).stage

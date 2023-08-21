@@ -15,9 +15,11 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import {
   PipelineContext,
-  PipelineContextInterface
+  PipelineContextInterface,
+  PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+import metadata from '@cd/components/PipelineSteps/DeployServiceEntityStep/__tests__/servicesMetadata.json'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
@@ -27,6 +29,8 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { cdStage, envs, services } from './mocks'
 import overridePipelineContext from './overrideSetPipeline.json'
 import DeployStageSetupShell from '../DeployStageSetupShell'
+
+const updateStageMock = jest.fn().mockResolvedValue({})
 
 const context: PipelineContextInterface = {
   ...overridePipelineContext,
@@ -49,7 +53,7 @@ const context: PipelineContextInterface = {
       }
     }
   }),
-  updateStage: jest.fn().mockResolvedValue({}),
+  updateStage: updateStageMock,
   updatePipeline: jest.fn(),
   updatePipelineView: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
@@ -87,6 +91,26 @@ jest.mock('services/cd-ng', () => ({
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetServiceAccessListQuery: jest.fn(() => ({
+    data: {
+      data: [
+        {
+          service: {
+            name: 'Svc 1',
+            identifier: 'Svc_1',
+            projectIdentifier: 'dummyProject',
+            orgIdentifier: 'dummyOrg',
+            accountIdentifier: 'dummyAcc'
+          }
+        }
+      ]
+    },
+    isInitialLoading: false
+  })),
+  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: metadata } }))
 }))
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -361,5 +385,82 @@ describe('DeployStageSetupShell tests', () => {
 
     // Assert that the infrastructure tab and accordion is open
     expect(isOpen).toBe('true')
+  })
+
+  test('Should Initialise Env configuration for templates prior to visiting the tab', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CDS_PIPELINE_STUDIO_UPGRADES: false,
+      NG_SVC_ENV_REDESIGN: true,
+      CDS_SERVICE_OVERRIDES_2_0: true
+    })
+    const errorContextProvider = {
+      state: {} as any,
+      checkErrorsForTab: jest.fn().mockResolvedValue(Promise.resolve()),
+      subscribeForm: () => undefined,
+      unSubscribeForm: () => undefined,
+      submitFormsForTab: jest.fn()
+    }
+    const cdStageWithoutEnvConfiguration = {
+      stage: {
+        stage: {
+          name: 'Stage 3',
+          identifier: 's3',
+          type: StageType.DEPLOY,
+          description: '',
+          spec: {
+            type: 'Deployment',
+            deploymentType: 'Kubernetes',
+            service: {
+              serviceRef: '<+input>',
+              serviceInputs: '<+input>'
+            },
+            execution: {
+              steps: [
+                {
+                  identifier: 'shell_ID',
+                  type: 'ShellScript',
+                  name: 'Echo Welcome Message',
+                  spec: {
+                    shell: 'Bash',
+                    onDelegate: true,
+                    source: {
+                      type: 'Inline',
+                      spec: {
+                        script: 'echo "Welcome to Harness CD"'
+                      }
+                    },
+                    environmentVariables: [],
+                    outputVariables: [],
+                    executionTarget: {}
+                  }
+                }
+              ]
+            }
+          },
+          failureStrategies: {}
+        }
+      }
+    }
+
+    render(
+      <TestWrapper>
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <PipelineContext.Provider
+            value={{
+              ...context,
+              getStageFromPipeline: jest.fn().mockReturnValue(cdStageWithoutEnvConfiguration),
+              contextType: PipelineContextType.StageTemplate
+            }}
+          >
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
+        </Formik>
+      </TestWrapper>
+    )
+    await waitFor(() => {
+      expect(updateStageMock).toHaveBeenCalled()
+    })
   })
 })
