@@ -38,11 +38,12 @@ const SelectPipelineExperiment = React.lazy(() => import('chaos/SelectPipelineEx
 // eslint-disable-next-line import/no-unresolved
 const ExperimentPreview = React.lazy(() => import('chaos/ExperimentPreview'))
 
-export const MemoizedSelectPipelineExperiment = React.memo(function MemoizedSelectPipelineExperiment(
-  props: SelectPipelineExperimentProps
-) {
-  return <ChildAppMounter<SelectPipelineExperimentProps> ChildApp={SelectPipelineExperiment} {...props} />
-})
+export const MemoizedSelectPipelineExperiment = React.memo(
+  function MemoizedSelectPipelineExperiment(props: SelectPipelineExperimentProps) {
+    return <ChildAppMounter<SelectPipelineExperimentProps> ChildApp={SelectPipelineExperiment} {...props} />
+  },
+  (oldProps, newProps) => isEqual(oldProps.selectedExperimentID, newProps.selectedExperimentID)
+)
 
 export const MemoizedExperimentPreview = React.memo(
   function MemoizedExperimentPreview(props: ExperimentPreviewProps) {
