@@ -27,7 +27,12 @@ import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
 
-export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
+export interface DefaultLayoutProps {
+  disableAuxNav?: boolean
+}
+
+export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>): React.ReactElement {
+  const { disableAuxNav } = props
   const { title, subtitle, icon, navComponent: NavComponent, launchButtonText, launchButtonRedirectUrl } = useSidebar()
 
   const { pageName } = usePage()
@@ -67,17 +72,11 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
         <div className={css.children}>{props.children}</div>
       </div>
 
-      {chatEnabled ? (
+      {chatEnabled && !disableAuxNav ? (
         <div className={css.aux}>
           <ul className={css.list}>
             <li>
-              <Drawer
-                isOpen={isOpen}
-                onClose={close}
-                size={488}
-                style={{ marginRight: '60px' }}
-                transitionDuration={100}
-              >
+              <Drawer isOpen={isOpen} onClose={close} size={488} transitionDuration={100}>
                 <>
                   <Button
                     icon="cross"

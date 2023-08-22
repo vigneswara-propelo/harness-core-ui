@@ -167,6 +167,7 @@ export interface StringsMap {
   'common.checkYourNetwork': string
   'common.city': string
   'common.clear': string
+  'common.clearHistory': string
   'common.clearSelection': string
   'common.clickHere': string
   'common.clickToExpand': string

@@ -10,7 +10,6 @@ import cx from 'classnames'
 import { Avatar, Icon, Layout, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Intent, Menu, MenuItem } from '@blueprintjs/core'
-import ReactMarkdown from 'react-markdown'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
@@ -18,6 +17,7 @@ import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { SubmitTicketModal } from '@common/components/ResourceCenter/SubmitTicketModal/SubmitTicketModal'
 import { useDeepCompareEffect, useLocalStorage } from '@common/hooks'
+import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
 import css from './DocsChat.module.scss'
 
 const CHAT_HISTORY_KEY = 'aida_chat_history'
@@ -227,7 +227,7 @@ function DocsChat(): JSX.Element {
                       {getString('common.csBot.errorMessage')}
                     </a>
                   ) : (
-                    <ReactMarkdown>{message.text}</ReactMarkdown>
+                    <div dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(message.text) }} />
                   )}
                 </div>
                 {message.author === 'user' ? (
@@ -252,7 +252,7 @@ function DocsChat(): JSX.Element {
             <Icon name="menu" size={12} />
           </button>
           <Menu>
-            <MenuItem text="Clear History" onClick={clearHistory} />
+            <MenuItem text={getString('common.clearHistory')} onClick={clearHistory} />
           </Menu>
         </Popover>
         <input

@@ -662,6 +662,7 @@ test:
   connectionFailed: Connection Failed
   retest: Retest
 clearSelection: Clear Selection
+clearHistory: Clear History
 selectBranch: Select branch
 latest: Latest
 selectVersion: Select version

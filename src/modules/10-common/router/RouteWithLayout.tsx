@@ -19,16 +19,18 @@ import type { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import PageProvider from '@common/pages/pageContext/PageProvider'
 import { TemplateSelectorContextProvider } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import { TemplateSelectorDrawer } from 'framework/Templates/TemplateSelectorDrawer/TemplateSelectorDrawer'
+import { DefaultLayoutProps } from '@common/layouts/DefaultLayout'
 
 export interface RouteWithLayoutProps extends RouterRouteprops {
   layout: React.ComponentType
+  layoutProps?: DefaultLayoutProps
   sidebarProps?: SidebarContext
   licenseRedirectData?: LicenseRedirectProps
   pageName?: PAGE_NAME
 }
 
 export function RouteWithLayout(props: React.PropsWithChildren<RouteWithLayoutProps>): React.ReactElement {
-  const { children, layout: Layout, sidebarProps, licenseRedirectData, pageName, ...rest } = props
+  const { children, layout: Layout, sidebarProps, licenseRedirectData, pageName, layoutProps, ...rest } = props
   const licenseStore = useLicenseStore()
 
   const childComponent = (
@@ -38,7 +40,7 @@ export function RouteWithLayout(props: React.PropsWithChildren<RouteWithLayoutPr
           <PageProvider pageName={pageName}>
             {sidebarProps ? (
               <SidebarProvider {...sidebarProps}>
-                <Layout>{children}</Layout>
+                <Layout {...layoutProps}>{children}</Layout>
               </SidebarProvider>
             ) : (
               <Layout>{children}</Layout>
