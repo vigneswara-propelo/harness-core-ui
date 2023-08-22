@@ -74,6 +74,50 @@ export const DatadogMetricsHealthSourceMock = {
   },
   type: 'DatadogMetrics'
 }
+
+export const DatadogMetricsHealthSourceMockWithoutMetricPath = {
+  identifier: 'datadog',
+  name: 'datadog',
+  spec: {
+    connectorRef: 'datadogConnector',
+    feature: 'Datadog Cloud Metrics',
+    metricDefinitions: [
+      {
+        aggregation: 'avg',
+        analysis: {
+          deploymentVerification: { enabled: false, serviceInstanceFieldName: '' },
+          liveMonitoring: { enabled: false },
+          riskProfile: { riskCategory: 'Performance/INFRA', thresholdTypes: [] }
+        },
+        dashboardId: 'mock_dashboard_id',
+        dashboardName: 'mock_dashboard_name',
+        groupingQuery: 'mock_grouping_query',
+        identifier: 'mock_identifier',
+        isCustomCreatedMetric: true,
+        isManualQuery: true,
+        metric: 'mock_active_metric',
+        metricName: 'mock_metric_name',
+        metricTags: [],
+        query: 'mock_query',
+        sli: { enabled: false }
+      }
+    ],
+    metricPacks: [{ identifier: 'Custom', metricThresholds: [] }]
+  },
+  type: 'DatadogMetrics'
+}
+export const DatadogMetricsMockHealthSourceDataWithoutMetricPath = {
+  isEdit: true,
+  healthSourceList: [DatadogMetricsHealthSourceMockWithoutMetricPath],
+  monitoringSourceName: 'todolist',
+  monitoredServiceIdentifier: 'todolist',
+  healthSourceName: 'datadog',
+  healthSourceIdentifier: 'datadog',
+  type: HealthSourceTypes.DatadogMetrics,
+  connectorRef: 'datadogConnector',
+  product: { label: DatadogProduct.CLOUD_LOGS, value: DatadogProduct.CLOUD_LOGS }
+}
+
 export const DatadogMetricsMockHealthSourceData = {
   isEdit: true,
   healthSourceList: [DatadogMetricsHealthSourceMock],
@@ -571,4 +615,49 @@ export const mockDatadogData = {
       id: null
     }
   ]
+}
+
+const mockMetricDefinitionsMapForMetricName: Map<string, DatadogMetricInfo> = new Map([
+  [
+    'mock_metric_name',
+    {
+      aggregator: 'avg',
+      groupName: {
+        label: 'mock_dashboard_name',
+        value: 'mock_dashboard_name'
+      },
+      identifier: 'mock_identifier',
+      dashboardId: 'mock_dashboard_id',
+      groupingQuery: 'mock_grouping_query',
+      higherBaselineDeviation: false,
+      metricPath: 'mock_metric_name',
+      isManualQuery: true,
+      isCustomCreatedMetric: true,
+      lowerBaselineDeviation: false,
+      metric: 'mock_active_metric',
+      metricName: 'mock_metric_name',
+      metricTags: [],
+      query: 'mock_query',
+      riskCategory: 'Performance/INFRA',
+      serviceInstance: undefined,
+      serviceInstanceIdentifierTag: '',
+      continuousVerification: false,
+      healthScore: false,
+      sli: false,
+      ignoreThresholds: [],
+      failFastThresholds: []
+    }
+  ]
+])
+
+export const expectedResultFromSetupSourceMapping = {
+  connectorRef: 'datadogConnector',
+  failFastThresholds: [],
+  healthSourceIdentifier: 'datadog',
+  healthSourceName: 'datadog',
+  ignoreThresholds: [],
+  isEdit: true,
+  metricDefinition: mockMetricDefinitionsMapForMetricName,
+  product: { label: 'Datadog Cloud Logs', value: 'Datadog Cloud Logs' },
+  selectedDashboards: [{ id: 'mock_dashboard_id', name: 'mock_dashboard_name' }]
 }

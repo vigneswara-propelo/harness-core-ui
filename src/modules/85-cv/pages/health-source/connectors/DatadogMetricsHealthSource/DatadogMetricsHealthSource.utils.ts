@@ -91,10 +91,10 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceDat
         id: metricDefinition.dashboardId
       })
     }
-    setupSource.metricDefinition.set(metricDefinition.metricPath || '', {
+    setupSource.metricDefinition.set(metricDefinition.metricPath || metricDefinition.metricName, {
       identifier: metricDefinition.identifier?.split(' ').join('_'),
       dashboardId: metricDefinition.dashboardId,
-      metricPath: metricDefinition.metricPath,
+      metricPath: metricDefinition.metricPath || metricDefinition.metricName,
       metricName: metricDefinition.metricName,
       aggregator: metricDefinition.aggregation as DatadogAggregationType,
       metric: metricDefinition.metric,

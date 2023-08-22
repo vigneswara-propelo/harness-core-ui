@@ -18,12 +18,14 @@ import {
 import {
   DatadogMetricsHealthSourceMock,
   DatadogMetricsMockHealthSourceData,
+  DatadogMetricsMockHealthSourceDataWithoutMetricPath,
   DatadogMetricsSetupSource,
   EXPECTED_DATADOG_METRIC_INFO,
   METRIC_VALIDATION_RESULT,
   MOCK_CUSTOM_CREATED_METRICS_LIST,
   MOCK_SELECTED_DASHBOARDS_WIDGETS,
-  MOCK_SELECTED_WIDGET_DATA
+  MOCK_SELECTED_WIDGET_DATA,
+  expectedResultFromSetupSourceMapping
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/tests/mock'
 import type { DatadogMetricInfo } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.type'
 
@@ -32,6 +34,11 @@ describe('Validate DatadogMetricsHealthSource Utils', () => {
     expect(mapDatadogMetricHealthSourceToDatadogMetricSetupSource(DatadogMetricsMockHealthSourceData)).toEqual(
       DatadogMetricsSetupSource
     )
+  })
+  test('mapDatadogMetricHealthSourceToDatadogMetricSetupSource should use metric name if metric path is not present during metrics nav formation', () => {
+    expect(
+      mapDatadogMetricHealthSourceToDatadogMetricSetupSource(DatadogMetricsMockHealthSourceDataWithoutMetricPath)
+    ).toEqual(expectedResultFromSetupSourceMapping)
   })
   test('validate DatadogSetupSource to HealthSource mapping', () => {
     expect(mapDatadogMetricSetupSourceToDatadogHealthSource(DatadogMetricsSetupSource)).toEqual(
