@@ -46,7 +46,8 @@ import {
   getArtifactFormData,
   shouldHideHeaderAndNavBtns,
   hasFixedDefiniteValue,
-  resetFieldValue
+  resetFieldValue,
+  isTemplateView
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -106,6 +107,7 @@ function FormComponent(
 
   const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const isArtifactTemplate = isTemplateView(context)
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
@@ -285,10 +287,10 @@ function FormComponent(
 
   const updatedPackageTypeOptions = React.useMemo(() => {
     // Currently only ssh and winrm swimlanes support Universal packages.
-    return isSshOrWinrmDeploymentType(defaultTo(selectedDeploymentType, ''))
+    return isSshOrWinrmDeploymentType(defaultTo(selectedDeploymentType, '')) || isArtifactTemplate
       ? [...PACKAGE_TYPE_OPTIONS, UNIVERSAL_PACKAGES_OPTION]
       : PACKAGE_TYPE_OPTIONS
-  }, [selectedDeploymentType])
+  }, [selectedDeploymentType, isArtifactTemplate])
 
   return (
     <FormikForm>
