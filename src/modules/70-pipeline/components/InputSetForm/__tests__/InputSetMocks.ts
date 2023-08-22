@@ -261,7 +261,12 @@ export const GetInputSetEditGitSimplification: UseGetReturnData<ResponseInputSet
         repoName: 'gitSyncRepo'
       },
       connectorRef: 'ValidGithubRepo',
-      storeType: 'REMOTE'
+      storeType: 'REMOTE',
+      cacheResponse: {
+        cacheState: 'STALE_CACHE',
+        ttlLeft: 245049436,
+        lastUpdatedAt: 1692630119301
+      }
     },
     correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'
   }

@@ -112,6 +112,16 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = React.useContext(AppStoreContext)
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
+  const getinitialStoreMetadataPayload = React.useMemo(() => {
+    if (isGitSyncEnabled) {
+      return {}
+    } else {
+      return initialStoreMetadata.storeType === StoreType.REMOTE
+        ? initialStoreMetadata
+        : { storeType: StoreType.INLINE }
+    }
+  }, [initialStoreMetadata, isGitSyncEnabled])
+
   const createUpdateInputSet = React.useCallback(
     async (
       inputSetObj: InputSetDTO,
@@ -146,7 +156,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
                       pipelineBranch: branch
                     }
                   : {}),
-                ...(initialStoreMetadata.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
+                ...getinitialStoreMetadataPayload,
                 ...updatedGitDetails
               }
             })
@@ -166,7 +176,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
                     pipelineBranch: branch
                   }
                 : {}),
-              ...(initialStoreMetadata.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
+              ...getinitialStoreMetadataPayload,
               ...updatedGitDetails
             }
           })
@@ -234,7 +244,8 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         'connectorRef',
         'repoName',
         'filePath',
-        'storeType'
+        'storeType',
+        'cacheResponse'
       )
 
       // This removes the pseudo fields set for handling multiple fields in the form at once
