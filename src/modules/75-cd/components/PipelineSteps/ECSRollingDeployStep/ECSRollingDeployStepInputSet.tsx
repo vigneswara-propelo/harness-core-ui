@@ -69,8 +69,10 @@ const ECSRollingDeployStepInputSet = (props: ECSRollingDeployStepInputSetProps):
             multiTypeTextbox={{
               expressions,
               allowableTypes,
-              disabled: readonly
+              disabled: readonly,
+              defaultValueToReset: false
             }}
+            setToFalseWhenEmpty={true}
           />
         </Layout.Horizontal>
       )}
@@ -89,8 +91,10 @@ const ECSRollingDeployStepInputSet = (props: ECSRollingDeployStepInputSetProps):
             multiTypeTextbox={{
               expressions,
               allowableTypes,
-              disabled: readonly
+              disabled: readonly,
+              defaultValueToReset: false
             }}
+            setToFalseWhenEmpty={true}
           />
         </Layout.Horizontal>
       )}
