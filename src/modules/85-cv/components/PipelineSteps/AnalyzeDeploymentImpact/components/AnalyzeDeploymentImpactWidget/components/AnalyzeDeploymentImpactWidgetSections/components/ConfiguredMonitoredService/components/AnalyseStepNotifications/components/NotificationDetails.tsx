@@ -1,6 +1,7 @@
 import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import React from 'react'
+import { useStrings } from 'framework/strings'
 import { AnalyseStepNotificationsData } from '../AnalyseStepNotifications.types'
 import css from './NotificationDetails.module.scss'
 
@@ -10,6 +11,7 @@ interface NotificationDetailsProps {
 export default function NotificationDetails(props: NotificationDetailsProps): JSX.Element {
   const { notificationDetails } = props
   const { conditions } = notificationDetails
+  const { getString } = useStrings()
   return (
     <Container className={css.notificationDetails}>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'normal' }} padding={{ bottom: 'small' }}>
@@ -52,7 +54,7 @@ export default function NotificationDetails(props: NotificationDetailsProps): JS
                 <Layout.Horizontal>
                   <Text color={Color.BLACK}>{'Trigger : '}</Text>
                   <Text color={Color.BLACK} padding={{ left: 'small' }}>
-                    {'Deployment Impact'}
+                    {getString('cv.changeSource.DeploymentImpactAnalysis')}
                   </Text>
                 </Layout.Horizontal>
               </Layout.Vertical>

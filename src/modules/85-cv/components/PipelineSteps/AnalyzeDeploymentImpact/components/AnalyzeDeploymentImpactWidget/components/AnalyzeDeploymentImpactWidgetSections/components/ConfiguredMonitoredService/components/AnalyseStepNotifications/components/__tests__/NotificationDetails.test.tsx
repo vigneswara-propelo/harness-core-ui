@@ -3,6 +3,12 @@ import { render } from '@testing-library/react'
 import NotificationDetails from '../NotificationDetails'
 import { AnalyseStepNotificationsData } from '../../AnalyseStepNotifications.types'
 
+jest.mock('framework/strings', () => ({
+  useStrings: () => ({
+    getString: (key: string) => key
+  })
+}))
+
 describe('NotificationDetails', () => {
   test('renders conditions correctly', () => {
     const notificationDetails = {
@@ -39,7 +45,7 @@ describe('NotificationDetails', () => {
     const durationText = getByText('Duration :')
     expect(durationText).toBeInTheDocument()
 
-    const deploymentImpactText = getByText('Deployment Impact')
+    const deploymentImpactText = getByText('cv.changeSource.DeploymentImpactAnalysis')
     expect(deploymentImpactText).toBeInTheDocument()
   })
 
