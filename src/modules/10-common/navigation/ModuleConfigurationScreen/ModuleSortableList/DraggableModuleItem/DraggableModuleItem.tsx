@@ -13,6 +13,7 @@ import { Draggable } from 'react-beautiful-dnd'
 import NavModule from '@common/navigation/ModuleList/NavModule/NavModule'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './DraggableModuleItem.module.scss'
 
 export interface DraggableModuleItemProps {
@@ -32,6 +33,7 @@ const DraggableModuleItem: React.FC<DraggableModuleItemProps> = ({
   onCheckboxChange,
   checked = false
 }) => {
+  const { CDS_NAV_2_0: isLightThemed } = useFeatureFlags()
   return (
     <>
       <Draggable key={module} draggableId={module} index={index}>
@@ -49,6 +51,7 @@ const DraggableModuleItem: React.FC<DraggableModuleItemProps> = ({
                 active={isActive}
                 onClick={onClick}
                 checkboxProps={{ checked, handleChange: onCheckboxChange }}
+                theme={isLightThemed ? 'LIGHT' : 'DARK'}
               />
             </Layout.Horizontal>
           </div>

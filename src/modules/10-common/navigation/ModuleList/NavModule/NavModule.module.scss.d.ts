@@ -19,6 +19,7 @@ declare const styles: {
   readonly ff: string
   readonly iacm: string
   readonly idp: string
+  readonly lightContainer: string
   readonly sei: string
   readonly srm: string
   readonly ssca: string

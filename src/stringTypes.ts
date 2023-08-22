@@ -645,6 +645,7 @@ export interface StringsMap {
   'common.moduleConfig.navigation': string
   'common.moduleConfig.restoreDefault': string
   'common.moduleConfig.selectModules': string
+  'common.moduleConfig.selectModulesNav': string
   'common.moduleConfig.your': string
   'common.moduleDetails.cd.collapsed.title': string
   'common.moduleDetails.cd.expanded.list.four': string

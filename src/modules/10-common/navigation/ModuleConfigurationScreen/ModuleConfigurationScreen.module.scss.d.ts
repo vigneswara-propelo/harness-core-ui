@@ -15,6 +15,7 @@ declare const styles: {
   readonly defaultSettingsTextContainer: string
   readonly flex1: string
   readonly header: string
+  readonly lightContainer: string
   readonly sortableListContainer: string
 }
 export default styles

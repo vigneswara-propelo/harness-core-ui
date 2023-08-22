@@ -10,7 +10,7 @@ import { Layout, Container, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Icon } from '@harness/icons'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PageSpinner } from '@common/components'
 import { DEFAULT_MODULES_ORDER, NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -32,6 +32,7 @@ interface ModulesConfigurationScreenProps {
 
 interface ModuleConfigHeaderProps {
   onDefaultSettingsClick?: () => void
+  isLightThemed?: boolean
 }
 
 export interface ModulesPreferenceStoreData {
@@ -41,22 +42,26 @@ export interface ModulesPreferenceStoreData {
 
 export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
 
-const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = () => {
+const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ isLightThemed }) => {
   return (
     <>
       <Text inline margin={{ bottom: 'xsmall' }} flex={{ justifyContent: 'flex-start' }}>
-        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
-          <String stringID="common.moduleConfig.selectModules" />
+        <Text inline color={isLightThemed ? Color.BLACK : Color.WHITE} font={{ variation: FontVariation.H2 }}>
+          {isLightThemed ? (
+            <String stringID="common.moduleConfig.selectModulesNav" />
+          ) : (
+            <String stringID="common.moduleConfig.selectModules" />
+          )}
         </Text>
         <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
           <String stringID="common.moduleConfig.your" />
         </Text>
-        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
+        <Text inline color={isLightThemed ? Color.BLACK : Color.WHITE} font={{ variation: FontVariation.H2 }}>
           <String stringID="common.moduleConfig.navigation" />
         </Text>
       </Text>
       <Text className={css.defaultSettingsTextContainer}>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_200} inline>
+        <Text font={{ variation: FontVariation.SMALL }} color={isLightThemed ? Color.BLACK : Color.GREY_200} inline>
           (<String stringID="common.moduleConfig.autoSaved" />)
         </Text>
       </Text>
@@ -75,6 +80,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
   const { contentfulModuleMap, loading } = useGetContentfulModules()
+  const { CDS_NAV_2_0: isLightThemed } = useFeatureFlags()
 
   useEffect(() => {
     if (typeof activeModuleIndexFromProps !== 'undefined') {
@@ -99,10 +105,19 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
 
   const activeModule = orderedModules[activeModuleIndex]
   return (
-    <Layout.Vertical className={cx(css.container, className)} padding={{ left: 'xlarge' }}>
-      <Container className={css.header}>{!hideHeader ? <ModuleConfigHeader /> : null}</Container>
+    <Layout.Vertical
+      className={cx(css.container, className, { [css.lightContainer]: isLightThemed })}
+      padding={{ left: 'xlarge' }}
+    >
+      <Container className={css.header} padding={isLightThemed && { left: 'huge' }}>
+        {!hideHeader ? <ModuleConfigHeader isLightThemed={isLightThemed} /> : null}
+      </Container>
       <Layout.Horizontal
-        padding={{ bottom: 'huge', right: 'huge' }}
+        padding={{
+          bottom: 'huge',
+          right: 'huge',
+          ...(isLightThemed && { left: 'huge' })
+        }}
         margin={{ bottom: 'xxxlarge' }}
         className={css.body}
       >
@@ -129,7 +144,13 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
         </Container>
       </Layout.Horizontal>
 
-      <Icon name="cross" color={Color.WHITE} size={18} className={css.crossIcon} onClick={onClose} />
+      <Icon
+        name="cross"
+        color={isLightThemed ? Color.BLACK : Color.WHITE}
+        size={18}
+        className={css.crossIcon}
+        onClick={onClose}
+      />
     </Layout.Vertical>
   )
 }

@@ -61,3 +61,9 @@
 .active {
   background-color: var(--theme-light-nav-panel-bg) !important;
 }
+
+.lightContainer {
+  background-color: var(--primary-bg) !important;
+  box-shadow: var(--elevation-2);
+  border: 1px solid transparent;
+}

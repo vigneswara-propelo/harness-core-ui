@@ -25,6 +25,7 @@ interface NavModuleProps {
   active?: boolean
   onClick?: (module: NavModuleName) => void
   checkboxProps?: CheckboxProps
+  theme?: 'DARK' | 'LIGHT'
 }
 
 const navModuleToClassMap: Record<NavModuleName, string> = {
@@ -43,11 +44,16 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
   [ModuleName.SEI]: css.sei
 }
 
-const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps }) => {
+const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps, theme = 'DARK' }) => {
   const { icon, label } = useNavModuleInfo(module)
   return (
     <Container
-      className={cx(css.container, { [css.active]: active }, navModuleToClassMap[module])}
+      className={cx(
+        css.container,
+        { [css.active]: active },
+        { [css.lightContainer]: theme === 'LIGHT' },
+        navModuleToClassMap[module]
+      )}
       flex={{ justifyContent: 'space-between' }}
       padding={{ top: 'small', bottom: 'small', left: 'large', right: 'large' }}
       background={Color.PRIMARY_9}
@@ -60,7 +66,7 @@ const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkbox
     >
       <Layout.Horizontal flex={{ alignItems: 'center' }}>
         <Icon name={icon} size={24} margin={{ right: 'xsmall' }} />
-        <Text color={Color.WHITE}>
+        <Text color={theme === 'LIGHT' ? Color.GREY_800 : Color.WHITE}>
           <String stringID={label} />
         </Text>
       </Layout.Horizontal>

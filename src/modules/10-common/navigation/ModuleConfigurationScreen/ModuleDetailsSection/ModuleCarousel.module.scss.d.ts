@@ -11,8 +11,11 @@ declare const styles: {
   readonly carouselSlide: string
   readonly container: string
   readonly heading: string
+  readonly iconHeading: string
   readonly indicatorActive: string
   readonly indicators: string
+  readonly lightContainer: string
+  readonly lottieLayer: string
   readonly main: string
 }
 export default styles
