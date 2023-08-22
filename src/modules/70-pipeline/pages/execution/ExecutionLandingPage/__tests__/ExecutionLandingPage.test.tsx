@@ -196,7 +196,7 @@ describe('<ExecutionLandingPage /> tests', () => {
       <div
         data-testid="location"
       >
-        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=log&filterAnomalous=false&type=pipeline.verification.analysisTab.metrics
+        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=log&filterAnomalous=false
       </div>
     `)
 
@@ -206,7 +206,7 @@ describe('<ExecutionLandingPage /> tests', () => {
       <div
         data-testid="location"
       >
-        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=graph&filterAnomalous=false&type=pipeline.verification.analysisTab.metrics
+        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=graph&filterAnomalous=false
       </div>
     `)
   })

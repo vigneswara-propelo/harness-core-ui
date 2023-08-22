@@ -96,8 +96,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
 
     updateQueryParams({
       view: checked ? SavedExecutionViewTypes.LOG : SavedExecutionViewTypes.GRAPH,
-      filterAnomalous: 'false',
-      type: getString('pipeline.verification.analysisTab.metrics')
+      filterAnomalous: 'false'
     })
     setSavedExecutionView(checked ? SavedExecutionViewTypes.LOG : SavedExecutionViewTypes.GRAPH)
   }

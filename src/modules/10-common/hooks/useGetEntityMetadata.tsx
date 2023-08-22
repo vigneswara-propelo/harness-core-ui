@@ -324,6 +324,15 @@ export const useGetEntityMetadata = (
           module
         })}?sectionId=INFRASTRUCTURE&infrastructureId=${identifier}`
         break
+      case 'MonitoredService':
+        entityUrl = routes.toCVAddMonitoringServicesEdit({
+          accountId: accountIdentifier,
+          orgIdentifier,
+          projectIdentifier,
+          identifier,
+          module: 'cv'
+        })
+        break
       case 'Triggers':
         entityUrl = await getTriggerUrl(
           {

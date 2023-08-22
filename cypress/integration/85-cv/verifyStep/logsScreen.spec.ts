@@ -280,7 +280,7 @@ describe('Verify step', () => {
 
     cy.url().should(
       'include',
-      'pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?storeType=INLINE&view=log&type=Metrics&filterAnomalous=false'
+      'pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?storeType=INLINE&view=log&type=Logs&filterAnomalous=false'
     )
 
     cy.findByTestId('Known').should('exist')
