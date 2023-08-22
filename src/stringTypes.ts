@@ -541,6 +541,7 @@ export interface StringsMap {
   'common.googleCloudPlatform': string
   'common.googleCloudSourceFetchType.specificCommitId': string
   'common.googleCloudSourceFetchType.specificTag': string
+  'common.gotIt': string
   'common.governance': string
   'common.gpgkey': string
   'common.harnessClusterHostingAccount': string
@@ -6571,7 +6572,6 @@ export interface StringsMap {
   'cd.openExecution': string
   'cd.openTask.bannerMsg': string
   'cd.openTask.notificationImgAlt': string
-  'cd.openTask.notificationPopoverBtn': string
   'cd.openTask.notificationPopoverExpression': string
   'cd.openTask.notificationPopoverMsg': string
   'cd.openTask.openTaskEmptyStateMsg': string
@@ -8675,6 +8675,8 @@ export interface StringsMap {
   'cf.shared.variations': string
   'cf.staleFlagAction.checkAllStaleFlags': string
   'cf.staleFlagAction.checkStaleFlag': string
+  'cf.staleFlagAction.flagLifecycleDesc': string
+  'cf.staleFlagAction.flagLifecycleExplained': string
   'cf.staleFlagAction.flagsSelected': string
   'cf.staleFlagAction.learnMore': string
   'cf.staleFlagAction.notStale': string

@@ -667,6 +667,7 @@ selectBranch: Select branch
 latest: Latest
 selectVersion: Select version
 confirmText: Are you sure?
+gotIt: Got it
 paste: Paste
 artifactTag: tag
 clientId: Client Id

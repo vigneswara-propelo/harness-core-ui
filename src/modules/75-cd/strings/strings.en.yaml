@@ -1219,7 +1219,6 @@ openTask:
   notificationImgAlt: Notification Image
   notificationPopoverExpression: Psst!
   notificationPopoverMsg: You can still access and manage your open tasks here.
-  notificationPopoverBtn: Got it
   bannerMsg: '{{count}} Open tasks requiring your attention.'
   seeOpenTask: See Open Tasks
   title: Open Tasks

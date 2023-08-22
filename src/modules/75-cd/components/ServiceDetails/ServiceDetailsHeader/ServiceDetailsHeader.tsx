@@ -132,7 +132,7 @@ export const ServiceDetailsHeader = (
                       <Button
                         size={ButtonSize.SMALL}
                         className={css.notificationPopoverBtn}
-                        text={getString('cd.openTask.notificationPopoverBtn')}
+                        text={getString('common.gotIt')}
                         onClick={() => setNotificationPopoverVisibility?.(false)}
                       />
                     </Layout.Vertical>

@@ -1,0 +1,31 @@
+.infoDrawer {
+  display: flex;
+  flex-direction: column;
+}
+
+.infoTitle {
+  padding-left: var(--spacing-medium) !important;
+}
+
+.infoText {
+  flex-grow: 1;
+}
+
+.gotItButton {
+  align-self: flex-start;
+}
+
+.closeButton {
+  align-self: flex-start;
+  position: absolute;
+  left: -40px;
+  background-color: var(--primary-5) !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  opacity: 0.3;
+  width: 40px;
+}
+
+.closeButton[class*='bp3-button'] > span[data-icon='main-close'][class*='bp3-icon'] > svg > path {
+  fill: white !important;
+}
