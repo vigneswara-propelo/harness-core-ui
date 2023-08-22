@@ -327,6 +327,14 @@ export interface Feature {
    * A list of services linked to this Feature Flag
    */
   services?: Service[]
+  /**
+   * Whether the flag is stale or not
+   */
+  stale?: boolean
+  /**
+   * The reason that the flag was marked as stale
+   */
+  staleReason?: string
   status?: FeatureStatus
   /**
    * A list of tags for this Feature Flag

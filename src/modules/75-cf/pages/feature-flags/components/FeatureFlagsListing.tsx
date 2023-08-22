@@ -152,6 +152,7 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
         width: '21%',
         Cell: function StatusCell(cell: Cell<Feature>) {
           const metrics = featureMetrics?.find(metric => metric.identifier === cell.row.original.identifier)
+          const feature = features?.features?.find(flag => flag.identifier === cell.row.original.identifier)
 
           return featureMetricsLoading ? (
             <Text icon="spinner" iconProps={{ size: 14 }}>
@@ -161,6 +162,7 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
             <FlagStatus
               status={metrics?.status?.status as FeatureFlagStatus}
               lastAccess={metrics?.status?.lastAccess as unknown as number}
+              stale={feature?.stale}
             />
           )
         }

@@ -7,8 +7,10 @@
 
 import React from 'react'
 import { Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { TimeAgo } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import css from './FlagStatus.module.scss'
 
 export enum FeatureFlagStatus {
   ACTIVE = 'active',
@@ -21,12 +23,14 @@ export enum FeatureFlagStatus {
 export interface FlagStatusProps {
   status?: FeatureFlagStatus
   lastAccess?: number
+  stale?: boolean
 }
 
-export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess }) => {
+export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, stale }) => {
   const { getString } = useStrings()
   const isNeverRequested = status === FeatureFlagStatus.NEVER_REQUESTED
   const isPotentiallyStale = status === FeatureFlagStatus.POTENTIALLY_STALE
+
   const textStyle = {
     fontWeight: 600,
     fontSize: '10px',
@@ -54,9 +58,21 @@ export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess }) =>
 
   return (
     <ComponentLayout spacing="xsmall" style={{ alignItems: isNeverRequested ? 'baseline' : 'center' }}>
-      <Text inline style={textStyle}>
-        {(status || '').toLocaleUpperCase()}
-      </Text>
+      {stale ? (
+        <Text
+          icon="time"
+          iconProps={{ size: 12, color: Color.ORANGE_800 }}
+          font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+          className={css.cleanupMessage}
+          background={Color.ORANGE_100}
+        >
+          {getString('cf.staleFlagAction.waitingForCleanup').toLocaleUpperCase()}
+        </Text>
+      ) : (
+        <Text inline style={textStyle}>
+          {(status || '').toLocaleUpperCase()}
+        </Text>
+      )}
       {!isNeverRequested && !isPotentiallyStale && <TimeAgo time={lastAccess} icon={undefined} style={subTextStyle} />}
       {isNeverRequested && <Text style={subTextStyle}>{getString('cf.featureFlags.makeSure')}</Text>}
     </ComponentLayout>

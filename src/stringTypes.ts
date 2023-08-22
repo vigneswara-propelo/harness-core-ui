@@ -8682,6 +8682,7 @@ export interface StringsMap {
   'cf.staleFlagAction.notStale': string
   'cf.staleFlagAction.readyForCleanup': string
   'cf.staleFlagAction.selectAllPotentiallyStaleFlags': string
+  'cf.staleFlagAction.waitingForCleanup': string
   'cf.targetDetail.accountLevelTargets': string
   'cf.targetDetail.addFlagToTarget': string
   'cf.targetDetail.addTargetToSegment': string
