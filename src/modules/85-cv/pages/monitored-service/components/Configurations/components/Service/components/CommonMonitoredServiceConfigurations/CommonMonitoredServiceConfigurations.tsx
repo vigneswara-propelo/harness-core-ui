@@ -6,7 +6,7 @@
  */
 
 import { Container, Tab, Tabs, Views } from '@harness/uicore'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormikContextType, useFormikContext } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
 import type { ChangeSourceDTO, MonitoredServiceDTO } from 'services/cv'
@@ -120,6 +120,15 @@ export default function CommonMonitoredServiceConfigurations(
   const { orgIdentifier, projectIdentifier, accountId } = useParams<
     ProjectPathProps & { identifier: string; templateIdentifier?: string }
   >()
+  const [areOtherTabsDisabled, setAreOtherTabsDisabled] = useState<boolean>(true)
+
+  useEffect(() => {
+    const shouldDisableTabs = !(formik.values.serviceRef && formik.values.environmentRef)
+
+    if (shouldDisableTabs !== areOtherTabsDisabled) {
+      setAreOtherTabsDisabled(shouldDisableTabs)
+    }
+  }, [formik.values.serviceRef, formik.values.environmentRef, areOtherTabsDisabled])
 
   const handleMonitoredServiceTypeChange = (type: MonitoredServiceDTO['type']): void => {
     if (type === formik.values.type) {
@@ -150,7 +159,7 @@ export default function CommonMonitoredServiceConfigurations(
 
   return (
     <Container className={css.configurationTabs}>
-      <Tabs id={'monitoredServiceConfigurations'} defaultSelectedTabId={subTab} onChange={onTabChange}>
+      <Tabs id={'monitoredServiceConfigurations'} defaultSelectedTabId={subTab} onChange={onTabChange} animate>
         <Tab
           id={MonitoredServiceConfigurationsTabsEnum.MONITORED_SERVICE_OVERVIEW}
           title={getString('overview')}
@@ -188,6 +197,7 @@ export default function CommonMonitoredServiceConfigurations(
         />
         {isHealthSrcSectionHidden ? null : (
           <Tab
+            disabled={areOtherTabsDisabled}
             id={MonitoredServiceConfigurationsTabsEnum.HEALTH_SOURCE}
             title={getString('platform.connectors.cdng.healthSources.label')}
             panel={
@@ -239,6 +249,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {isChangeSrcSectionHidden ? null : (
           <Tab
+            disabled={areOtherTabsDisabled}
             id={MonitoredServiceConfigurationsTabsEnum.CHANGE_SOURCE}
             title={getString('cv.navLinks.adminSideNavLinks.activitySources')}
             panel={
@@ -282,6 +293,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {isAgentConfigSectionHidden ? null : (
           <Tab
+            disabled={areOtherTabsDisabled}
             id={MonitoredServiceConfigurationsTabsEnum.AGENT_CONFIG}
             title={getString('cet.monitoredservice.agentconfig')}
             panel={
@@ -291,6 +303,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {showDependencies(isTemplate as boolean, config, isSRMLicensePresentAndActive) && (
           <Tab
+            disabled={areOtherTabsDisabled}
             id={getString('pipelines-studio.dependenciesGroupTitle')}
             title={getString('pipelines-studio.dependenciesGroupTitle')}
             panel={
@@ -307,6 +320,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {isNotificationsSectionHidden ? null : (
           <Tab
+            disabled={areOtherTabsDisabled}
             id={MonitoredServiceConfigurationsTabsEnum.NOTIFICATIONS}
             title={getString('rbac.notifications.name')}
             panel={

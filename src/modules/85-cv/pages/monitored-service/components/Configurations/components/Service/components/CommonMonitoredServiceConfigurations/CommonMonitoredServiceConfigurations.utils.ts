@@ -38,7 +38,7 @@ export function handleTabChange({
   notificationTime?: number
   isTemplate?: boolean
 }): void {
-  if (nextTab !== tab && !isTemplate) {
+  if (nextTab !== tab && !isTemplate && identifier) {
     if (config) {
       history.push({
         pathname: routes.toMonitoredServicesConfigurations({

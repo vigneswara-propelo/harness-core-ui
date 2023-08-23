@@ -88,6 +88,8 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
 function WrapperComponent(props: CommonMonitoredServiceConfigurationsProps): JSX.Element {
   const history = createMemoryHistory()
   const initialValues = {
+    serviceRef: 'service-1',
+    environmentRef: 'env-1',
     sources: {
       changeSources: [
         { name: 'adadas', identifier: 'adadas', type: 'HarnessCD', enabled: true, spec: {}, category: 'Deployment' }
@@ -333,6 +335,12 @@ describe('handleTabChange', () => {
 
   test('should not push any routes when tabs are in templates mode', () => {
     const paramsWithoutConfig = { ...mockParams, isTemplate: true }
+    handleTabChange(paramsWithoutConfig)
+    expect(mockHistory.push).not.toHaveBeenCalled()
+  })
+
+  test('should not push any routes when tabs are opened in create mode of monitored service', () => {
+    const paramsWithoutConfig = { ...mockParams, identifier: '' }
     handleTabChange(paramsWithoutConfig)
     expect(mockHistory.push).not.toHaveBeenCalled()
   })
