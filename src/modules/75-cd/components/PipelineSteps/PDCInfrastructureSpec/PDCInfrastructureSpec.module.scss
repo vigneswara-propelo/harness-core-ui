@@ -57,7 +57,6 @@
 }
 
 .hostsTextArea {
-  width: 433px;
   textarea {
     min-height: var(--spacing-14) !important;
   }
@@ -125,4 +124,8 @@
       margin-bottom: 0 !important;
     }
   }
+}
+
+.runtimeWidth {
+  width: 40% !important;
 }

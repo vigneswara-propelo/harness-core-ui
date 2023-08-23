@@ -13,5 +13,6 @@ declare const styles: {
   readonly regionConfig: string
   readonly regionInput: string
   readonly regionWrapper: string
+  readonly runtimeWidth: string
 }
 export default styles

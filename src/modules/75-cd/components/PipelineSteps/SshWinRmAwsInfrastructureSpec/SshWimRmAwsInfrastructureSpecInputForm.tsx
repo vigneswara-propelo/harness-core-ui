@@ -18,7 +18,6 @@ import {
 import { useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, isEmpty } from 'lodash-es'
-import cx from 'classnames'
 import { SshWinRmAwsInfrastructure, useRegionsForAws, useTagsV2 } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
@@ -32,7 +31,7 @@ import MultiTypeSecretInput, {
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { SshWinRmAwsInfrastructureTemplate } from './SshWinRmAwsInfrastructureSpec'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './SshWinRmAwsInfrastructureSpec.module.scss'
 
 interface AwsInfrastructureSpecEditableProps {
   initialValues: SshWinRmAwsInfrastructure
@@ -129,101 +128,93 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
           event.stopPropagation()
         }
       }}
+      className={css.runtimeWidth}
     >
       {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
-        </div>
+        <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
       )}
       {getMultiTypeFromValue(get(template, 'connectorRef', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            name={`${path}.connectorRef`}
-            tooltipProps={{
-              dataTooltipId: 'awsInfraConnector'
-            }}
-            label={getString('connector')}
-            enableConfigureOptions={false}
-            placeholder={getString('common.entityPlaceholderText')}
-            disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
-            type={Connectors.AWS}
-            setRefValue
-            gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
-            onChange={() => {
-              formik.setFieldValue(`${path}.awsInstanceFilter.tags`, undefined)
-            }}
-          />
-        </div>
+        <FormMultiTypeConnectorField
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          name={`${path}.connectorRef`}
+          tooltipProps={{
+            dataTooltipId: 'awsInfraConnector'
+          }}
+          label={getString('connector')}
+          enableConfigureOptions={false}
+          placeholder={getString('common.entityPlaceholderText')}
+          disabled={readonly}
+          multiTypeProps={{ allowableTypes, expressions }}
+          type={Connectors.AWS}
+          setRefValue
+          gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+          onChange={() => {
+            formik.setFieldValue(`${path}.awsInstanceFilter.tags`, undefined)
+          }}
+          width={350}
+        />
       )}
       {getMultiTypeFromValue(get(template, 'region', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTypeInput
-            name={`${path}.region`}
-            tooltipProps={{
-              dataTooltipId: 'awsInfraRegion'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingRegions ? /* istanbul ignore next */ getString('loading') : getString('pipeline.regionPlaceholder')
-            }
-            useValue
-            selectItems={regions}
-            label={getString('regionLabel')}
-            multiTypeInputProps={{
-              onChange: () => {
-                formik.setFieldValue(`${path}.awsInstanceFilter.tags`, undefined)
-              },
-              selectProps: {
-                items: regions,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingRegions || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {loadingRegions
-                      ? getString('loading')
-                      : defaultTo(
-                          get(regionsError, errorMessage, get(regionsError, 'message', '')),
-                          getString('cd.steps.awsInfraStep.regionError')
-                        )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
+        <FormInput.MultiTypeInput
+          name={`${path}.region`}
+          tooltipProps={{
+            dataTooltipId: 'awsInfraRegion'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingRegions ? /* istanbul ignore next */ getString('loading') : getString('pipeline.regionPlaceholder')
+          }
+          useValue
+          selectItems={regions}
+          label={getString('regionLabel')}
+          multiTypeInputProps={{
+            onChange: () => {
+              formik.setFieldValue(`${path}.awsInstanceFilter.tags`, undefined)
+            },
+            selectProps: {
+              items: regions,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingRegions || readonly),
+              noResults: (
+                <Text padding={'small'}>
+                  {loadingRegions
+                    ? getString('loading')
+                    : defaultTo(
+                        get(regionsError, errorMessage, get(regionsError, 'message', '')),
+                        getString('cd.steps.awsInfraStep.regionError')
+                      )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+        />
       )}
       {getMultiTypeFromValue(get(template, 'awsInstanceFilter.tags', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <MultiTypeTagSelector
-            name={`${path}.awsInstanceFilter.tags`}
-            tooltipProps={{
-              dataTooltipId: 'awsInfraTags'
-            }}
-            allowableTypes={allowableTypes}
-            tags={tags}
-            expressions={expressions}
-            isLoadingTags={loadingTags}
-            initialTags={initialValues?.awsInstanceFilter?.tags}
-            errorMessage={get(tagsError, 'data.message', '')}
-            className="tags-select"
-          />
-        </div>
+        <MultiTypeTagSelector
+          name={`${path}.awsInstanceFilter.tags`}
+          tooltipProps={{
+            dataTooltipId: 'awsInfraTags'
+          }}
+          allowableTypes={allowableTypes}
+          tags={tags}
+          expressions={expressions}
+          isLoadingTags={loadingTags}
+          initialTags={initialValues?.awsInstanceFilter?.tags}
+          errorMessage={get(tagsError, 'data.message', '')}
+          className="tags-select"
+        />
       )}
       {getMultiTypeFromValue(get(template, 'credentialsRef', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <MultiTypeSecretInput
-            name={`${path}.credentialsRef`}
-            type={getMultiTypeSecretInputType(initialValues.serviceType)}
-            label={getString('cd.steps.common.specifyCredentials')}
-            expressions={expressions}
-          />
-        </div>
+        <MultiTypeSecretInput
+          name={`${path}.credentialsRef`}
+          type={getMultiTypeSecretInputType(initialValues.serviceType)}
+          label={getString('cd.steps.common.specifyCredentials')}
+          expressions={expressions}
+        />
       )}
     </Layout.Vertical>
   )

@@ -7,8 +7,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-
-import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
@@ -44,7 +42,6 @@ import {
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAzureInfrastructureSpec.module.scss'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 const errorMessage = 'data.message'
 
@@ -283,49 +280,44 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
             event.stopPropagation()
           }
         }}
+        className={css.runtimeWidth}
       >
         {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <ProvisionerSelectField name={`${path}.provisioner`} path={path} provisioners={provisioner} />
-          </div>
+          <ProvisionerSelectField name={`${path}.provisioner`} path={path} provisioners={provisioner} />
         )}
         {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}></div>
-        )}
-        {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <FormMultiTypeConnectorField
-              accountIdentifier={accountId}
-              projectIdentifier={projectIdentifier}
-              orgIdentifier={orgIdentifier}
-              name={`${path}.connectorRef`}
-              tooltipProps={{
-                dataTooltipId: 'azureInfraConnector'
-              }}
-              label={getString('connector')}
-              placeholder={getString('common.entityPlaceholderText')}
-              disabled={readonly}
-              multiTypeProps={{ allowableTypes, expressions }}
-              type={Connectors.AZURE}
-              setRefValue
-              onChange={
-                /* istanbul ignore next */ () => {
-                  setSubscriptions([])
-                  setResourceGroups([])
-                  formik.setFieldValue(`${path}.tags`, undefined)
-                }
+          <FormMultiTypeConnectorField
+            accountIdentifier={accountId}
+            projectIdentifier={projectIdentifier}
+            orgIdentifier={orgIdentifier}
+            name={`${path}.connectorRef`}
+            tooltipProps={{
+              dataTooltipId: 'azureInfraConnector'
+            }}
+            label={getString('connector')}
+            placeholder={getString('common.entityPlaceholderText')}
+            disabled={readonly}
+            multiTypeProps={{ allowableTypes, expressions }}
+            type={Connectors.AZURE}
+            setRefValue
+            onChange={
+              /* istanbul ignore next */ () => {
+                setSubscriptions([])
+                setResourceGroups([])
+                formik.setFieldValue(`${path}.tags`, undefined)
               }
-              gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
-              templateProps={{
-                isTemplatizedView: true,
-                templateValue: template?.connectorRef
-              }}
-            />
-          </div>
+            }
+            gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template?.connectorRef
+            }}
+            width={350}
+          />
         )}
         {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
           <SelectInputSetView
-            className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+            className={css.inputWrapper}
             name={`${path}.subscriptionId`}
             tooltipProps={{
               dataTooltipId: 'azureInfraSubscription'
@@ -381,7 +373,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         )}
         {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
           <SelectInputSetView
-            className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+            className={css.inputWrapper}
             name={`${path}.resourceGroup`}
             tooltipProps={{
               dataTooltipId: 'azureInfraResourceGroup'
@@ -458,28 +450,24 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
           />
         )}
         {getMultiTypeFromValue(template?.tags) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <MultiTypeTagSelector
-              name={`${path}.tags`}
-              className="tags-select"
-              expressions={expressions}
-              allowableTypes={allowableTypes}
-              tags={azureTags}
-              isLoadingTags={loadingSubscriptionTags || loadingSubscriptionTagsV2}
-              initialTags={initialValues?.tags}
-              errorMessage={get(defaultTo(subscriptionTagsError, subscriptionTagsV2Error), errorMessage, '')}
-            />
-          </div>
+          <MultiTypeTagSelector
+            name={`${path}.tags`}
+            className="tags-select"
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            tags={azureTags}
+            isLoadingTags={loadingSubscriptionTags || loadingSubscriptionTagsV2}
+            initialTags={initialValues?.tags}
+            errorMessage={get(defaultTo(subscriptionTagsError, subscriptionTagsV2Error), errorMessage, '')}
+          />
         )}
         {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <MultiTypeSecretInput
-              name={`${path}.credentialsRef`}
-              type={getMultiTypeSecretInputType(initialValues.serviceType)}
-              label={getString('cd.steps.common.specifyCredentials')}
-              expressions={expressions}
-            />
-          </div>
+          <MultiTypeSecretInput
+            name={`${path}.credentialsRef`}
+            type={getMultiTypeSecretInputType(initialValues.serviceType)}
+            label={getString('cd.steps.common.specifyCredentials')}
+            expressions={expressions}
+          />
         )}
       </Layout.Vertical>
     )

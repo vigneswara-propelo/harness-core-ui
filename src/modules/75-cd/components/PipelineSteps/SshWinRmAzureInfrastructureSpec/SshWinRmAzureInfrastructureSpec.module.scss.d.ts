@@ -19,6 +19,7 @@ declare const styles: {
   readonly marginTop: string
   readonly provisionerWrapper: string
   readonly removeTagBtn: string
+  readonly runtimeWidth: string
   readonly simultaneousDeployment: string
   readonly tagsSelect: string
   readonly textStyles: string

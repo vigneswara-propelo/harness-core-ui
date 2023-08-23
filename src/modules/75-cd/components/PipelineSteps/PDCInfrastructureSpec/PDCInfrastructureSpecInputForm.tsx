@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
 import { defaultTo, get, isEmpty, isString } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
@@ -30,7 +29,6 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { HostScope, parseAttributes, parseHosts, PdcInfraTemplate } from './PDCInfrastructureInterface'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
 
 interface PDCInfrastructureSpecInputProps {
@@ -135,183 +133,166 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
       onKeyDown={e => {
         e.key === 'Enter' && e.stopPropagation()
       }}
+      className={css.runtimeWidth}
     >
-      <>
-        {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <ProvisionerSelectField name={`${path}.provisioner`} path={path} provisioners={provisioner} />
-          </div>
-        )}
-        {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.connectorRuntime)}>
-            <FormMultiTypeConnectorField
-              error={get(formik, 'errors.connectorRef', undefined)}
-              name={`${path}.${getString('cd.connectorRefText')}`}
-              label={getString('connector')}
-              placeholder={getString('common.entityPlaceholderText')}
-              disabled={readonly}
-              accountIdentifier={accountId}
-              projectIdentifier={projectIdentifier}
-              orgIdentifier={orgIdentifier}
-              type={Connectors.PDC}
-              multiTypeProps={{ allowableTypes, expressions }}
-              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-              setRefValue
-              className={css.runtimeWidth}
-              onChange={(connector: any) => {
-                const connectorRef =
-                  connector?.scope && connector?.scope !== 'project'
-                    ? `${connector.scope}.${connector?.record?.identifier}`
-                    : connector?.record?.identifier || connector
-                updateData({ connectorRef })
-              }}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(template?.hosts) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeTextAreaField
-              key={getString('cd.hosts')}
-              name={`${path}.hosts`}
-              className={css.hostsTextArea}
-              label={getString('platform.connectors.pdc.hosts')}
-              multiTypeTextArea={{
-                expressions,
-                allowableTypes,
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                customValueGetter: () => {
-                  const hostsValue = get(formik.values, `${path}.hosts`, '')
-                  return isString(hostsValue) ? hostsValue : hostsValue?.join('\n')
-                },
-                onBlur: () => {
-                  const hosts = get(formik.values, `${path}.hosts`, '')
-                  const parsedHosts =
-                    getMultiTypeFromValue(hosts) === MultiTypeInputType.EXPRESSION ? hosts : parseHosts(hosts)
-                  updateData({ hosts: parsedHosts })
-                }
-              }}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(template?.hostArrayPath) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <FormInput.MultiTextInput
-              name={`${path}.hostArrayPath`}
-              placeholder={getString('cd.steps.pdcStep.hostObjectPathPlaceholder')}
-              multiTextInputProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION],
-                expressions,
-                multitypeInputValue: MultiTypeInputType.EXPRESSION
-              }}
-              label={getString('cd.steps.pdcStep.hostArrayPath')}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(template?.hostAttributes) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <MultiTypeMap
-              name={`${path}.hostAttributes`}
-              enableConfigureOptions={false}
-              valueMultiTextInputProps={{
-                expressions,
-                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                  item => !isMultiTypeRuntime(item)
-                ) as AllowedTypes
-              }}
-              multiTypeFieldSelectorProps={{
-                label: <Text style={{ color: 'rgb(11, 11, 13)' }}>{getString('cd.steps.pdcStep.hostDataMapping')}</Text>
-              }}
-              disableValueTypeSelection
-              disabled={readonly}
-            />
-          </div>
-        )}
-        {template?.hostFilter?.type === HostScope.HOST_NAME &&
-          getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME && (
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <FormMultiTypeTextAreaField
-                key={getString('cd.hostFilters')}
-                name={`${path}.hostFilter.spec.value`}
-                label={getString('cd.steps.pdcStep.specificHosts')}
-                placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
-                className={cx(css.hostsTextArea, css.runtimeWidth)}
-                tooltipProps={{
-                  dataTooltipId: 'pdcSpecificHosts'
-                }}
-                multiTypeTextArea={{
-                  expressions,
-                  allowableTypes,
-                  configureOptionsProps: {
-                    isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                  },
-                  customValueGetter: () => getHostNames(get(formik.values, path, {})),
-                  onBlur: () => {
-                    const prevValues = get(formik.values, path, {})
-                    const hostFilter: HostFilter = formFilterValue(
-                      get(prevValues, 'hostFilter.spec.value', ''),
-                      FILTER_TYPE.HostNames
-                    )
-                    updateData({ hostFilter })
-                  }
-                }}
-              />
-            </div>
-          )}
-        {template?.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
-          getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME && (
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <FormMultiTypeTextAreaField
-                key={getString('cd.attributeFilters')}
-                name={`${path}.hostFilter.spec.value`}
-                label={getString('cd.steps.pdcStep.specificAttributes')}
-                placeholder={getString('cd.steps.pdcStep.attributesPlaceholder')}
-                className={cx(css.hostsTextArea, css.runtimeWidth)}
-                tooltipProps={{
-                  dataTooltipId: 'pdcSpecificAttributes'
-                }}
-                multiTypeTextArea={{
-                  expressions,
-                  allowableTypes,
-                  configureOptionsProps: {
-                    isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                  },
-                  customValueGetter: () => getAttributeFilters(get(formik.values, path, {})),
-                  onBlur: () => {
-                    const prevValues = get(formik.values, path, {})
-                    const hostFilter = formFilterValue(
-                      get(prevValues, 'hostFilter.spec.value', ''),
-                      FILTER_TYPE.HostAttributes
-                    )
-                    updateData({ hostFilter })
-                  }
-                }}
-              />
-            </div>
-          )}
-        {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <MultiTypeSecretInput
-              name={`${path}.credentialsRef`}
-              type={getMultiTypeSecretInputType(defaultTo(initialValues.serviceType, 'SSHKey'))}
-              expressions={expressions}
-              allowableTypes={allowableTypes}
-              label={getString('cd.steps.common.specifyCredentials')}
-              onSuccess={secret => {
-                if (secret) {
-                  const credentialsRef = secret.referenceString
-                  updateData({ credentialsRef })
-                }
-              }}
-              enableConfigureOptions={true}
-              configureOptionsProps={{
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <ProvisionerSelectField name={`${path}.provisioner`} path={path} provisioners={provisioner} />
+      )}
+      {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
+        <FormMultiTypeConnectorField
+          error={get(formik, 'errors.connectorRef', undefined)}
+          name={`${path}.${getString('cd.connectorRefText')}`}
+          label={getString('connector')}
+          placeholder={getString('common.entityPlaceholderText')}
+          disabled={readonly}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          type={Connectors.PDC}
+          multiTypeProps={{ allowableTypes, expressions }}
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          setRefValue
+          onChange={(connector: any) => {
+            const connectorRef =
+              connector?.scope && connector?.scope !== 'project'
+                ? `${connector.scope}.${connector?.record?.identifier}`
+                : connector?.record?.identifier || connector
+            updateData({ connectorRef })
+          }}
+          width={350}
+        />
+      )}
+      {getMultiTypeFromValue(template?.hosts) === MultiTypeInputType.RUNTIME && (
+        <FormMultiTypeTextAreaField
+          key={getString('cd.hosts')}
+          name={`${path}.hosts`}
+          className={css.hostsTextArea}
+          label={getString('platform.connectors.pdc.hosts')}
+          multiTypeTextArea={{
+            expressions,
+            allowableTypes,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            customValueGetter: () => {
+              const hostsValue = get(formik.values, `${path}.hosts`, '')
+              return isString(hostsValue) ? hostsValue : hostsValue?.join('\n')
+            },
+            onBlur: () => {
+              const hosts = get(formik.values, `${path}.hosts`, '')
+              const parsedHosts =
+                getMultiTypeFromValue(hosts) === MultiTypeInputType.EXPRESSION ? hosts : parseHosts(hosts)
+              updateData({ hosts: parsedHosts })
+            }
+          }}
+        />
+      )}
+      {getMultiTypeFromValue(template?.hostArrayPath) === MultiTypeInputType.RUNTIME && (
+        <FormInput.MultiTextInput
+          name={`${path}.hostArrayPath`}
+          placeholder={getString('cd.steps.pdcStep.hostObjectPathPlaceholder')}
+          multiTextInputProps={{
+            allowableTypes: [MultiTypeInputType.EXPRESSION],
+            expressions,
+            multitypeInputValue: MultiTypeInputType.EXPRESSION
+          }}
+          label={getString('cd.steps.pdcStep.hostArrayPath')}
+        />
+      )}
+      {getMultiTypeFromValue(template?.hostAttributes) === MultiTypeInputType.RUNTIME && (
+        <MultiTypeMap
+          name={`${path}.hostAttributes`}
+          enableConfigureOptions={false}
+          valueMultiTextInputProps={{
+            expressions,
+            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+              item => !isMultiTypeRuntime(item)
+            ) as AllowedTypes
+          }}
+          multiTypeFieldSelectorProps={{
+            label: <Text style={{ color: 'rgb(11, 11, 13)' }}>{getString('cd.steps.pdcStep.hostDataMapping')}</Text>
+          }}
+          disableValueTypeSelection
+          disabled={readonly}
+        />
+      )}
+      {template?.hostFilter?.type === HostScope.HOST_NAME &&
+        getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME && (
+          <FormMultiTypeTextAreaField
+            key={getString('cd.hostFilters')}
+            name={`${path}.hostFilter.spec.value`}
+            label={getString('cd.steps.pdcStep.specificHosts')}
+            placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
+            className={css.hostsTextArea}
+            tooltipProps={{
+              dataTooltipId: 'pdcSpecificHosts'
+            }}
+            multiTypeTextArea={{
+              expressions,
+              allowableTypes,
+              configureOptionsProps: {
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-            />
-          </div>
+              },
+              customValueGetter: () => getHostNames(get(formik.values, path, {})),
+              onBlur: () => {
+                const prevValues = get(formik.values, path, {})
+                const hostFilter: HostFilter = formFilterValue(
+                  get(prevValues, 'hostFilter.spec.value', ''),
+                  FILTER_TYPE.HostNames
+                )
+                updateData({ hostFilter })
+              }
+            }}
+          />
         )}
-      </>
+      {template?.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
+        getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME && (
+          <FormMultiTypeTextAreaField
+            key={getString('cd.attributeFilters')}
+            name={`${path}.hostFilter.spec.value`}
+            label={getString('cd.steps.pdcStep.specificAttributes')}
+            placeholder={getString('cd.steps.pdcStep.attributesPlaceholder')}
+            className={css.hostsTextArea}
+            tooltipProps={{
+              dataTooltipId: 'pdcSpecificAttributes'
+            }}
+            multiTypeTextArea={{
+              expressions,
+              allowableTypes,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              customValueGetter: () => getAttributeFilters(get(formik.values, path, {})),
+              onBlur: () => {
+                const prevValues = get(formik.values, path, {})
+                const hostFilter = formFilterValue(
+                  get(prevValues, 'hostFilter.spec.value', ''),
+                  FILTER_TYPE.HostAttributes
+                )
+                updateData({ hostFilter })
+              }
+            }}
+          />
+        )}
+      {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
+        <MultiTypeSecretInput
+          name={`${path}.credentialsRef`}
+          type={getMultiTypeSecretInputType(defaultTo(initialValues.serviceType, 'SSHKey'))}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          label={getString('cd.steps.common.specifyCredentials')}
+          onSuccess={secret => {
+            if (secret) {
+              const credentialsRef = secret.referenceString
+              updateData({ credentialsRef })
+            }
+          }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+        />
+      )}
     </Layout.Vertical>
   )
 }
