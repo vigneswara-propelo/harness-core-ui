@@ -213,6 +213,7 @@ validation:
   fieldMustStartWithAlphanumericAndCanNotHaveSpace: '{{ name }} must start with alphanumerics and should not contain whitespaces, / or &'
   fieldCannotbeLongerThanN: '{{ name }} cannot be longer than {{ n }} characters'
   fieldMustBeAlphanumeric: '{{ name }} can only contain alphanumerics, _ and $'
+  variableNameMustBeAlphanumeric: '{{ name }} can only contain alphanumerics -, _ and $'
   groupAttributeIsRequired: Group Attribute is required
   clientIdIsRequired: Client Id is required
   clientSecretRequired: Client Secret required

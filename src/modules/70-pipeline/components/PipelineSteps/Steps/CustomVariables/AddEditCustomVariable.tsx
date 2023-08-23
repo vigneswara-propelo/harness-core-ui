@@ -101,8 +101,8 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
               getString('common.validation.fieldCannotbeLongerThanN', { name: getString('name'), n: MAX_LENGTH })
             )
             .matches(
-              /^[a-zA-Z_][0-9a-zA-Z_$.]*$/,
-              getString('common.validation.fieldMustBeAlphanumeric', { name: getString('name') })
+              /^[a-zA-Z_][0-9a-zA-Z-_$.]*$/,
+              getString('common.validation.variableNameMustBeAlphanumeric', { name: getString('name') })
             )
             .test(
               'variableAlreadyExists',

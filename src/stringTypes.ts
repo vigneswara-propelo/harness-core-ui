@@ -1391,6 +1391,7 @@ export interface StringsMap {
   'common.validation.valueMustBeGreaterThanOrEqualToN': string
   'common.validation.valueMustBeLessThanOrEqualToN': string
   'common.validation.variableAlreadyExists': string
+  'common.validation.variableNameMustBeAlphanumeric': string
   'common.validation.yamlFilePath': string
   'common.validationInProgress': string
   'common.valuePlaceholder': string
