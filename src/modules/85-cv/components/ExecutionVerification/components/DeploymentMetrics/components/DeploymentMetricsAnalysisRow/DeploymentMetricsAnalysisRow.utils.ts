@@ -91,6 +91,7 @@ export const getVerificationType = (risk: RiskValues, getString: UseStringsRetur
     case RiskValues.NO_ANALYSIS:
       return getString('cv.noAnalysis')
     case RiskValues.WARNING:
+      return getString('common.warning')
     case RiskValues.FAILED:
       return getString('failed')
     default:

@@ -10,8 +10,10 @@ import { Container, Icon, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
+import { useStrings } from 'framework/strings'
 import type { MetricsAccordionPanelSummaryProps } from './MetricsAccordionPanelSummary.types'
 import NodeCount from './components/NodesCount'
+import { getRiskDisplayName } from './MetricsAccordionPanelSummary.utils'
 import css from '../DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.module.scss'
 
 const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> = props => {
@@ -20,6 +22,8 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
     isSimpleVerification
   } = props
   const { name, type } = healthSource || {}
+
+  const { getString } = useStrings()
 
   return (
     <>
@@ -60,8 +64,9 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
         color={getRiskColorValue(risk, false)}
         style={{ borderColor: getRiskColorValue(risk, false) }}
         className={risk ? css.metricRisk : ''}
+        data-testid="riskDisplayText"
       >
-        {risk}
+        {getRiskDisplayName(risk, getString)?.toLocaleUpperCase()}
       </Text>
 
       {!isSimpleVerification && (
