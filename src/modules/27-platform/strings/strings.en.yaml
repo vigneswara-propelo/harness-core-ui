@@ -1253,9 +1253,9 @@ connectors:
   prometheus:
     urlValidation: Prometheus URL is required.
   datadog:
-    encryptedAPPKeyLabel: Encrypted APP Key
+    encryptedAPPKeyLabel: Encrypted Application Key
     urlValidation: Datadog URL is required.
-    encryptedAPPKeyValidation: Encrypted APP Key is required.
+    encryptedAPPKeyValidation: Encrypted Application Key is required.
   errorTracking:
     urlValidation: Error Tracking URL is required.
   dynatrace:
