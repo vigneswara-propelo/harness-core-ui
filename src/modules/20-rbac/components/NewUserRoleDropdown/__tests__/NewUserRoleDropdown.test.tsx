@@ -49,6 +49,7 @@ const renderComponent = (props: Partial<NewUserRoleDropdownProps> = {}): RenderR
           managed: true,
           managedRoleAssignment: false
         }}
+        setSearchTerm={jest.fn()}
         handleChange={jest.fn()}
         {...props}
       />

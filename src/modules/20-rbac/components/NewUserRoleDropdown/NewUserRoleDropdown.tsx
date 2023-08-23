@@ -21,18 +21,20 @@ export interface NewUserRoleDropdownProps {
   value: RoleOption | ResourceGroupOption
   roles: RoleOption[]
   handleChange: (value: SelectOption) => void
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>
 }
 
 const planEnforcedRoles = ['_feature_flag_manage_role']
 
 const NewUserRoleDropdown = (props: NewUserRoleDropdownProps): ReactElement => {
-  const { value, roles, handleChange } = props
+  const { value, roles, handleChange, setSearchTerm } = props
   const { getString } = useStrings()
 
   const isFeatureEnforcementEnabled = useFeatureFlag(FeatureFlag.FEATURE_ENFORCEMENT_ENABLED)
 
   return (
     <Select
+      onQueryChange={setSearchTerm}
       itemRenderer={(item: SelectOption, { handleClick }): React.ReactElement => {
         if (isFeatureEnforcementEnabled && planEnforcedRoles.includes(item.value as string)) {
           return (

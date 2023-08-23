@@ -62,15 +62,17 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
 
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const defaultResourceGroup = getScopeBasedDefaultResourceGroup(scope, getString)
-
-  const { data: roleList } = useGetRoleList({
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const { data: roleList, refetch } = useGetRoleList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       pageSize: 100,
-      sortOrders: [SortMethod.NameAsc]
+      sortOrders: [SortMethod.NameAsc],
+      searchTerm: searchTerm
     },
+    debounce: 500,
     queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
@@ -127,6 +129,12 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
     [roleList]
   )
 
+  React.useEffect(() => {
+    if (searchTerm) {
+      refetch()
+    }
+  }, [searchTerm])
+
   const resourceGroups: SelectOption[] = useMemo(
     () =>
       resourceGroupList?.data?.content?.map(response => ({
@@ -166,9 +174,15 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
               name: 'role',
               label: getString('roles'),
               // eslint-disable-next-line react/display-name
-              renderer: (value, _index, handleChange, error) => (
+              renderer: (value, index, handleChange, error) => (
                 <Layout.Vertical flex={{ alignItems: 'end' }} spacing="xsmall">
-                  <NewUserRoleDropdown value={value} handleChange={handleChange} roles={roles} />
+                  <NewUserRoleDropdown
+                    key={index}
+                    value={value}
+                    handleChange={handleChange}
+                    roles={roles}
+                    setSearchTerm={setSearchTerm}
+                  />
                   {errorCheck('assignments', formik) && error ? (
                     <Text intent="danger" font="xsmall">
                       {getString('rbac.usersPage.validation.role')}
