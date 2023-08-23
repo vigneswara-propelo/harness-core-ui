@@ -372,3 +372,9 @@ export const getBranchingProps = (state: StepsProgress): { [key: string]: string
 
   return branchDetails
 }
+
+export const getDelegateTypeString = (data: WhatToDeployType, getString: UseStringsReturn['getString']): string => {
+  return data.svcType?.id === SERVICE_TYPES.KubernetesService.id
+    ? getString('kubernetesText')
+    : getString('delegate.cardData.docker.name')
+}

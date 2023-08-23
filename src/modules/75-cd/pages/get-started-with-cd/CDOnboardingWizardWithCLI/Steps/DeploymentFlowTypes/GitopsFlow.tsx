@@ -9,10 +9,14 @@ import React from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { GITOPS_DOCS_LINKS } from '../../Constants'
+import MissingSwimlane from '../MissingSwimlane'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
 
-export default function GitopsFlow(): JSX.Element {
+export default function GitopsFlow({ artifactType }: { artifactType: string }): JSX.Element {
   const { getString } = useStrings()
+
+  const docsLink = GITOPS_DOCS_LINKS[artifactType]
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
@@ -21,6 +25,8 @@ export default function GitopsFlow(): JSX.Element {
       <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
         {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.description')}
       </Text>
+
+      {docsLink && <MissingSwimlane url={docsLink} />}
     </Layout.Vertical>
   )
 }

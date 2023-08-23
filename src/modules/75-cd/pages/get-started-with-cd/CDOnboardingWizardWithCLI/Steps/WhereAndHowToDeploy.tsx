@@ -21,10 +21,15 @@ import {
 } from '../types'
 import GitopsFlow from './DeploymentFlowTypes/GitopsFlow'
 import { useOnboardingStore } from '../Store/OnboardingStore'
-import { DELEGATE_TYPE_BY_ARTIFACT_MAP, DEPLOYMENT_FLOW_ENUMS, DEPLOYMENT_FLOW_TYPES } from '../Constants'
+import {
+  DELEGATE_TYPE_BY_ARTIFACT_MAP,
+  DEPLOYMENT_FLOW_ENUMS,
+  DEPLOYMENT_FLOW_TYPES,
+  SERVICE_TYPES
+} from '../Constants'
 import type { DelgateDetails } from '../DelegateModal'
 import CDPipeline from './DeploymentFlowTypes/CDPipeline'
-import { getBranchingProps } from '../utils'
+import { getBranchingProps, getDelegateTypeString } from '../utils'
 import { ONBOARDING_INTERACTIONS, WIZARD_STEP_OPEN } from '../TrackingConstants'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 
@@ -110,7 +115,13 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
     setState(prevState => ({ ...prevState, type: selectedType }))
   }
   const deploymentTypes = React.useMemo((): DeploymentFlowType[] => {
-    return Object.values(DEPLOYMENT_FLOW_TYPES).map((deploymentType: DeploymentFlowType) => {
+    return Object.values(DEPLOYMENT_FLOW_TYPES).filter((deploymentType: DeploymentFlowType) => {
+      if (
+        deploymentType.id === DEPLOYMENT_FLOW_ENUMS.Gitops &&
+        deploymentTypeDetails.svcType?.id !== SERVICE_TYPES.KubernetesService?.id
+      ) {
+        return false
+      }
       return deploymentType
     })
   }, [])
@@ -118,10 +129,16 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
     <Layout.Vertical>
       <Layout.Vertical>
         <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title')}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title', {
+            serviceType: getString(deploymentTypeDetails.artifactType?.label as keyof StringsMap)
+          })}
         </Text>
         <Text color={Color.BLACK} margin={{ bottom: 'xlarge' }}>
-          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.description')}
+          {getString(
+            deploymentTypeDetails.svcType?.id !== SERVICE_TYPES.KubernetesService?.id
+              ? 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.descriptionNonK8s'
+              : 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.description'
+          )}
         </Text>
         <CardSelect<DeploymentFlowType>
           data={deploymentTypes}
@@ -139,7 +156,9 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
                   {getString(item.label as keyof StringsMap)}
                 </Text>
                 <Text font={{ variation: FontVariation.BODY2_SEMI }} color={Color.GREY_500}>
-                  {getString(item.subtitle as keyof StringsMap)}
+                  {getString(item.subtitle as keyof StringsMap, {
+                    delegateType: getDelegateTypeString(deploymentTypeDetails, getString)
+                  })}
                 </Text>
               </Layout.Vertical>
             </Layout.Vertical>
@@ -147,6 +166,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
           selected={state.type}
           onChange={setType}
         />
+
         {state.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline && (
           <CDPipeline
             state={state}
@@ -156,6 +176,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
             closeDelegateDialog={closeDelegateDialog}
             onDelegateFail={onDelegateFail}
             onVerificationStart={onVerificationStart}
+            deploymentTypeDetails={deploymentTypeDetails}
             delegateTypes={
               deploymentTypeDetails.artifactSubType
                 ? DELEGATE_TYPE_BY_ARTIFACT_MAP[deploymentTypeDetails.artifactSubType?.id]
@@ -163,7 +184,15 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
             }
           />
         )}
-        {state.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops && <GitopsFlow />}
+        {state.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops && (
+          <GitopsFlow
+            artifactType={
+              deploymentTypeDetails.artifactSubType
+                ? deploymentTypeDetails.artifactSubType?.id
+                : (deploymentTypeDetails?.artifactType?.id as string)
+            }
+          />
+        )}
       </Layout.Vertical>
     </Layout.Vertical>
   )

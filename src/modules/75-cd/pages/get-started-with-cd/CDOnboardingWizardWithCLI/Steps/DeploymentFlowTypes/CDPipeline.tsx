@@ -12,7 +12,9 @@ import { useStrings } from 'framework/strings'
 import VerifyDelegateConnection from '@delegates/pages/delegates/delegateCommandLineCreation/components/VerifyDelegateConnection'
 import { DelegateCommonProblemTypes } from '@delegates/constants'
 import DelegateModal, { DelgateDetails } from '../../DelegateModal'
-import type { WhereAndHowToDeployType } from '../../types'
+import type { WhatToDeployType, WhereAndHowToDeployType } from '../../types'
+import { getDelegateTypeString } from '../../utils'
+import { SERVICE_TYPES } from '../../Constants'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
 export interface CDPipelineProps {
   state: WhereAndHowToDeployType
@@ -23,6 +25,7 @@ export interface CDPipelineProps {
   onDelegateSuccess: () => void
   onVerificationStart?: () => void
   delegateTypes?: string[]
+  deploymentTypeDetails: WhatToDeployType
 }
 export default function CDPipeline({
   state,
@@ -32,24 +35,32 @@ export default function CDPipeline({
   onDelegateFail,
   onDelegateSuccess,
   onVerificationStart,
-  delegateTypes
+  delegateTypes,
+  deploymentTypeDetails
 }: CDPipelineProps): JSX.Element {
   const { getString } = useStrings()
-
+  const clusterType =
+    deploymentTypeDetails.svcType?.id === SERVICE_TYPES.KubernetesService.id ? getString('kubernetesText') : ''
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
         {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.title')}
       </Text>
       <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.description1')}
+        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.description1', {
+          clusterType
+        })}
       </Text>
       <Text color={Color.BLACK} margin={{ bottom: 'xxlarge' }}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateDescription2')}
+        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateDescription2', {
+          clusterType
+        })}
       </Text>
       {!state.isDelegateVerified && (
         <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
-          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.installButton')}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.installButton', {
+            type: getDelegateTypeString(deploymentTypeDetails, getString)
+          })}
         </Button>
       )}
       <Layout.Vertical margin={{ bottom: 'large' }}>

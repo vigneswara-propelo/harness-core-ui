@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash-es'
 import { CDOnboardingSteps, WhatToDeployType, WhereAndHowToDeployType, PipelineSetupState } from './types'
-import { INFRA_SUB_TYPES, SWIMLANE_DOCS_LINK } from './Constants'
+import { DEPLOYMENT_FLOW_ENUMS, INFRA_SUB_TYPES, SWIMLANE_DOCS_LINK } from './Constants'
 
 function validateWhatToDeployStep(data: WhatToDeployType): boolean {
   let isValidStep = !isEmpty(data?.svcType?.id)
@@ -20,7 +20,7 @@ function validateWhatToDeployStep(data: WhatToDeployType): boolean {
 }
 
 function validateWhereAndHowToDeployStep(data: WhereAndHowToDeployType): boolean {
-  return Boolean(data?.installDelegateTried)
+  return Boolean(data?.installDelegateTried) && data.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline
 }
 
 function validatePipelineSetupStep(data: PipelineSetupState): boolean {

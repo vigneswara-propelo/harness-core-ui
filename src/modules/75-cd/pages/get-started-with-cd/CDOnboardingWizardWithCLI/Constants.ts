@@ -219,17 +219,17 @@ export const DEPLOYMENT_STRATEGY_TYPES: {
 }
 
 export const DEPLOYMENT_FLOW_TYPES: { [key in DEPLOYMENT_FLOW_ENUMS]: DeploymentFlowType } = {
-  [DEPLOYMENT_FLOW_ENUMS.Gitops]: {
-    id: DEPLOYMENT_FLOW_ENUMS.Gitops,
-    label: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.heading',
-    icon: 'slot-deployment',
-    subtitle: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.subtitle'
-  },
   [DEPLOYMENT_FLOW_ENUMS.CDPipeline]: {
     id: DEPLOYMENT_FLOW_ENUMS.CDPipeline,
     label: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.title',
     icon: 'ci-build-pipeline',
     subtitle: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.subtitle'
+  },
+  [DEPLOYMENT_FLOW_ENUMS.Gitops]: {
+    id: DEPLOYMENT_FLOW_ENUMS.Gitops,
+    label: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.heading',
+    icon: 'slot-deployment',
+    subtitle: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.subtitle'
   }
 }
 
@@ -395,4 +395,11 @@ export const PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP: Record<string, Record<string
   [CLOUD_FUNCTION_TYPES.ServerLessLambda]: {
     [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'serverlessdemo'
   }
+}
+
+export const GITOPS_DOCS_LINKS: Record<string, string> = {
+  [KubernetesType.KUBERNETES_MANIFEST]: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/manifest',
+  K8sHelm: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/helm-chart',
+  NativeHelm: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/helm-chart',
+  Kustomize: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/kustomize'
 }

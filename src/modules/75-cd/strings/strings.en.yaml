@@ -675,25 +675,26 @@ getStartedWithCD:
       title: How and where do you want to deploy?
       subtitle: Choose how you would like to deploy.
       K8s:
-        title: Tell us how and where you want to deploy your Kubernetes Manifest
+        title: Tell us how and where you want to deploy your {{serviceType}}
+        descriptionNonK8s: You will need access to a cluster that will be the deployment target.
         description: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster either via a CD pipeline or via a GitOps workflow. Make the selection below.
         cdPipeline:
           title: CD Pipeline
           delegatetitle: Install the delegate
-          subtitle: Connect with a Kubernetes Delegate
+          subtitle: Connect with a {{delegateType}} Delegate
           delegateDescription: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster via a CD pipeline.
-          delegateDescription2: You need to install a Harness Kubernetes Delegate on your Kubernetes cluster as a prerequisite for the CD Pipeline. This delegate will then receive various tasks (such as secrets decryption, connecting to private systems and more) from your CD pipeline and automatically run them on your behalf.
-          howDelegateWorks: You will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target Kubernetes cluster.
-          description1: In the CD Pipeline approach, you will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target Kubernetes cluster.
+          delegateDescription2: You need to install a Harness Delegate on your  {{clusterType}} cluster as a prerequisite for the CD Pipeline. This delegate will then receive various tasks (such as secrets decryption, connecting to private systems and more) from your CD pipeline and automatically run them on your behalf.
+          howDelegateWorks: You will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target {{clusterType}} cluster.
+          description1: In the CD Pipeline approach, you will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target  {{clusterType}} cluster.
           installDelegate: Install the Kubernetes delegate to create a CD Pipeline for deployment
-          installButton: Install the Kubernetes delegate
+          installButton: 'Install the {{type}} delegate'
           delegateFailed: Delegate connection failed
           delegateInstalled: Installed
         cdGitops:
           title: GitOps Workflow
           heading: CD Gitops
           subtitle: Connect with a GitOps agent
-          description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster. You have the Hosted GitOps and Self-Managed GitOps options to get started with Harness GitOps.
+          description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster.
     deploymentSteps:
       headsteps:
         preparation: '1. Download CLI and set up GitHub access'

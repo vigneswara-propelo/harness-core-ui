@@ -6329,6 +6329,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.title': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.description': string
+  'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.descriptionNonK8s': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.title': string
