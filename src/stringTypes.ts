@@ -9098,6 +9098,7 @@ export interface StringsMap {
   'cv.analyzeDeploymentImpact.msDisabledWarning': string
   'cv.analyzeDeploymentImpact.redirectLabel': string
   'cv.analyzeDeploymentImpact.remaining': string
+  'cv.analyzeDeploymentImpact.reportDrawer.title': string
   'cv.analyzeDeploymentImpact.reports.noData': string
   'cv.analyzeDeploymentImpact.stopAnalysis': string
   'cv.analyzeDeploymentImpact.stopAnalysisTitle': string

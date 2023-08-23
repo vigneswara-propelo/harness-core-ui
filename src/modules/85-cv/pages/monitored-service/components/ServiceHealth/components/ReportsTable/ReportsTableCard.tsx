@@ -8,11 +8,16 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Container, Heading, Icon, NoDataCard, PageError, Pagination } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { IDrawerProps } from '@blueprintjs/core'
+import { noop } from 'lodash-es'
 import noDataImage from '@cv/assets/noChangesData.svg'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import ReportsTable from './ReportsTable'
 import { useFetchReportsList } from './UseFetchReportsList'
+import ReportDrawer from './ReportDrawer/ReportDrawer'
+import { PAGE_SIZE } from './ReportsTable.constants'
 import css from './ReportsTable.module.scss'
 
 interface ReportTableInterface {
@@ -33,15 +38,26 @@ export default function ReportsTableCard(props: ReportTableInterface): JSX.Eleme
     totalItems = 0
   } = data?.resource || {}
 
+  const drawerOptions = {
+    size: '800px',
+    onClose: noop
+  } as IDrawerProps
+  const { showDrawer: showReportDrawer } = useDrawer({
+    createDrawerContent: drawerProps => <ReportDrawer {...drawerProps} />,
+    drawerOptions,
+    showConfirmationDuringClose: false
+  })
+
   useEffect(() => {
     if (startTime && endTime) {
       refetch({
-        queryParams: { startTime, endTime, pageIndex: page, pageSize: 10 },
+        queryParams: { startTime, endTime, pageIndex: page, pageSize: PAGE_SIZE },
         queryParamStringifyOptions: {
           arrayFormat: 'repeat'
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startTime, endTime, page])
 
   let content = null
@@ -63,16 +79,18 @@ export default function ReportsTableCard(props: ReportTableInterface): JSX.Eleme
       />
     )
   } else if (resourceData.length) {
-    content = <ReportsTable data={resourceData} showDrawer={() => void 0} />
+    content = <ReportsTable data={resourceData} showDrawer={showReportDrawer} />
   }
+
+  const containerHeight = totalItems > PAGE_SIZE ? 415 : 475
 
   return (
     <>
       <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
-        {getString('ce.perspectives.reports.title', { count: resourceData.length })}
+        {getString('ce.perspectives.reports.title', { count: totalItems })}
       </Heading>
       <Card className={css.reportsTableCard}>
-        <Container className={css.tableContainer} height={415}>
+        <Container className={css.tableContainer} height={containerHeight}>
           {content}
         </Container>
         <Pagination

@@ -22,7 +22,9 @@ export const reportListMock = [
     envIdentifier: 'testenv',
     environmentName: 'testenv',
     executionDetailIdentifier: 'NZUc3uHITu2u_fR5MERtkA',
-    stepName: 'AnalyzeDeploymentImpact_1'
+    stepName: 'AnalyzeDeploymentImpact_1',
+    planExecutionId: 'planExecutionId1',
+    stageStepId: 'stageStepId1'
   },
   {
     accountId: 'kmpySmUISimoRrJL6NL73w',
@@ -38,7 +40,9 @@ export const reportListMock = [
     envIdentifier: 'testenv',
     environmentName: 'testenv',
     executionDetailIdentifier: 'NZUc3uHITu2u_fR5MERtkA',
-    stepName: 'AnalyzeDeploymentImpact_2'
+    stepName: 'AnalyzeDeploymentImpact_2',
+    planExecutionId: 'planExecutionId2',
+    stageStepId: 'stageStepId2'
   },
   {
     accountId: 'kmpySmUISimoRrJL6NL73w',
@@ -54,7 +58,9 @@ export const reportListMock = [
     envIdentifier: 'testenv',
     environmentName: 'testenv',
     executionDetailIdentifier: 'NZUc3uHITu2u_fR5MERtkA',
-    stepName: 'AnalyzeDeploymentImpact_3'
+    stepName: 'AnalyzeDeploymentImpact_3',
+    planExecutionId: 'planExecutionId3',
+    stageStepId: 'stageStepId3'
   }
 ] as SRMAnalysisStepDetailDTO[]
 

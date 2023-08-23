@@ -11,6 +11,8 @@ import { IconName } from '@harness/uicore'
 export const dateFormat = 'MMM DD, YYYY'
 export const timeFormat = 'hh:mm A'
 
+export const PAGE_SIZE = 10
+
 export enum AnalysisStatus {
   RUNNING = 'RUNNING',
   COMPLETED = 'COMPLETED',

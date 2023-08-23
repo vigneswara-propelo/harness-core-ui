@@ -1339,6 +1339,8 @@ analyzeStep:
 analyzeDeploymentImpact:
   duration: Analysis duration
   remaining: Remaining
+  reportDrawer:
+    title: Impact Analysis Report
   redirectLabel: View Monitored Service details
   stopAnalysis: Stop the analysis and send the report
   analysisStopped: Analysis stopped successfully

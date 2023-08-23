@@ -16,6 +16,23 @@ export interface AbstractAnalysedNode {
   [key: string]: any
 }
 
+export interface ActiveMonitoredServiceDTO {
+  accountIdentifier?: string
+  envIdentifier: string
+  envName?: string
+  identifier: string
+  lastUpdatedSeconds?: number
+  module?: string
+  name?: string
+  orgIdentifier: string
+  orgName?: string
+  projectIdentifier: string
+  projectName?: string
+  serviceIdentifier: string
+  serviceName?: string
+  timestamp?: number
+}
+
 export interface ActiveServiceMonitoredDTO {
   accountIdentifier?: string
   identifier: string
@@ -1585,7 +1602,7 @@ export interface DynatraceValidateDataRequestDTO {
 export type ELKConnectorDTO = ConnectorConfigDTO & {
   apiKeyId?: string
   apiKeyRef?: string
-  authType?: 'UsernamePassword' | 'ApiClientToken' | 'None'
+  authType?: 'UsernamePassword' | 'ApiClientToken' | 'None' | 'Bearer Token(HTTP Header)'
   delegateSelectors?: string[]
   passwordRef?: string
   url: string
@@ -2767,6 +2784,7 @@ export type HarnessConnector = ConnectorConfigDTO & {
   apiUrl?: string
   authentication: HarnessAuthentication
   executeOnDelegate?: boolean
+  slug?: string
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -4215,6 +4233,20 @@ export interface Page {
   totalPages?: number
 }
 
+export interface PageActiveMonitoredServiceDTO {
+  content?: ActiveMonitoredServiceDTO[]
+  empty?: boolean
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
+  totalPages?: number
+}
+
 export interface PageActiveServiceMonitoredDTO {
   content?: ActiveServiceMonitoredDTO[]
   empty?: boolean
@@ -5455,6 +5487,13 @@ export interface ResponseObject {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageActiveMonitoredServiceDTO {
+  correlationId?: string
+  data?: PageActiveMonitoredServiceDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePageActiveServiceMonitoredDTO {
   correlationId?: string
   data?: PageActiveServiceMonitoredDTO
@@ -6529,10 +6568,17 @@ export interface SRMAnalysisStepDetailDTO {
   executionDetailIdentifier: string
   monitoredServiceIdentifier: string
   orgIdentifier: string
+  planExecutionId: string
   projectIdentifier: string
-  serviceIdentifier: string
+  serviceIdentifier?: string
   serviceName?: string
+  stageStepId: string
   stepName: string
+}
+
+export type SRMAnalysisStepInstanceDetails = SecondaryEventDetails & {
+  analysisDuration?: Duration
+  analysisStatus?: 'RUNNING' | 'COMPLETED' | 'ABORTED'
 }
 
 export interface SRMLicenseUsageDTO {
@@ -6558,14 +6604,14 @@ export interface SecondaryEventDetailsResponse {
   details: SecondaryEventDetails
   endTime?: number
   startTime: number
-  type: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset'
+  type: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset' | 'SrmAnalysisImpact'
 }
 
 export interface SecondaryEventsResponse {
   endTime?: number
   identifiers?: string[]
   startTime?: number
-  type?: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset'
+  type?: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset' | 'SrmAnalysisImpact'
 }
 
 export interface ServiceDependencyDTO {
@@ -7586,6 +7632,8 @@ export interface YamlSchemaWithDetails {
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
 }
+
+export type ActiveServiceMonitoredFilterParamsRequestBody = ActiveServiceMonitoredFilterParams
 
 export type AnnotationDTORequestBody = AnnotationDTO
 
@@ -16645,7 +16693,7 @@ export const getServiceLevelObjectivesRiskCountPromise = (
 
 export interface GetSecondaryEventDetailsQueryParams {
   accountId: string
-  secondaryEventType: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset'
+  secondaryEventType: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset' | 'SrmAnalysisImpact'
   identifiers: string[]
 }
 

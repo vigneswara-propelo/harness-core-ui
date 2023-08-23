@@ -8,7 +8,10 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
+import { UseGetReturn } from 'restful-react'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as cvService from 'services/cv'
+import * as pipelineNgService from 'services/pipeline-ng'
 import * as UseFetchReportList from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/UseFetchReportsList'
 import { UseFetchReportsListValue } from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/UseFetchReportsList'
 import ReportsTableCard from '../ReportsTableCard'
@@ -44,6 +47,32 @@ describe('Reports Table', () => {
       error: null,
       refetch: jest.fn()
     } as UseFetchReportsListValue)
+
+    jest.spyOn(pipelineNgService, 'useGetExecutionDetailV2').mockReturnValue({
+      data: {},
+      loading: false,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(cvService, 'useGetSRMAnalysisSummary').mockReturnValue({
+      data: {},
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(cvService, 'useGetMonitoredServiceChangeDetails').mockReturnValue({
+      data: {},
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(cvService, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({
+      data: {},
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(cvService, 'useGetSLODetails').mockReturnValue({
+      data: {},
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
 
     const { getByText, container } = render(
       <TestWrapper>
