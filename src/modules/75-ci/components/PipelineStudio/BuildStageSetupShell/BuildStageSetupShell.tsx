@@ -473,7 +473,8 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                           addOrEdit: event.addOrEdit,
                           hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors],
                           nodeStateMetadata: event?.nodeStateMetadata,
-                          relativeBasePath: event.entity?.relativeBasePath
+                          relativeBasePath: event.entity?.relativeBasePath,
+                          isAnyParentContainerStepGroup: event?.isAnyParentContainerStepGroup
                         }
                       }
                     }

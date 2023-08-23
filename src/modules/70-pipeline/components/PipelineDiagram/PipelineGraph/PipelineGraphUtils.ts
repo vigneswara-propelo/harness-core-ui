@@ -439,6 +439,7 @@ interface GetPipelineGraphDataParams {
   isNestedGroup?: boolean
   isContainerStepGroup?: boolean
   relativeBasePath?: string
+  isAnyParentContainerStepGroup?: boolean
 }
 const getPipelineGraphData = ({
   data = [],
@@ -450,7 +451,8 @@ const getPipelineGraphData = ({
   graphDataType,
   isNestedGroup,
   isContainerStepGroup,
-  relativeBasePath
+  relativeBasePath,
+  isAnyParentContainerStepGroup
 }: GetPipelineGraphDataParams): PipelineGraphState[] => {
   let graphState: PipelineGraphState[] = []
   const pipGraphDataType = graphDataType ? graphDataType : getPipelineGraphDataType(data)
@@ -475,7 +477,8 @@ const getPipelineGraphData = ({
       offsetIndex: 0,
       isNestedGroup,
       isContainerStepGroup,
-      relativeBasePath
+      relativeBasePath,
+      isAnyParentContainerStepGroup
     })
 
     if (Array.isArray(serviceDependencies) && serviceDependencies.length > 0) {
@@ -652,10 +655,11 @@ const transformStepsData = ({
   templateIcons,
   errorMap,
   parentPath,
+  relativeBasePath,
   offsetIndex = 0,
   isNestedGroup = false,
   isContainerStepGroup = false,
-  relativeBasePath
+  isAnyParentContainerStepGroup = false
 }: {
   steps: ExecutionWrapperConfig[]
   graphType: PipelineGraphType
@@ -667,6 +671,7 @@ const transformStepsData = ({
   isNestedGroup?: boolean
   isContainerStepGroup?: boolean
   relativeBasePath?: string
+  isAnyParentContainerStepGroup?: boolean
 }): PipelineGraphState[] => {
   const finalData: PipelineGraphState[] = []
 
@@ -706,6 +711,7 @@ const transformStepsData = ({
             }),
             nodeType: type === PipelineStepType.Dependency ? StepType.SERVICE : StepType.STEP
           },
+          isAnyParentContainerStepGroup,
           isInComplete: isCustomGeneratedString(step.step.identifier) || hasErrors,
           loopingStrategyEnabled: !!step.step?.strategy,
           conditionalExecutionEnabled: getConditionalExecutionEnabled(step, isExecutionView),
@@ -760,6 +766,7 @@ const transformStepsData = ({
               }),
               nodeType: StepType.STEP_GROUP
             },
+            isAnyParentContainerStepGroup: isAnyParentContainerStepGroup,
             isNestedGroup,
             isContainerStepGroup,
             isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || hasErrors,
@@ -807,6 +814,7 @@ const transformStepsData = ({
               }),
               nodeType: type === PipelineStepType.Dependency ? StepType.SERVICE : StepType.STEP
             },
+            isAnyParentContainerStepGroup,
             isInComplete: isCustomGeneratedString(identifier) || hasErrors,
             loopingStrategyEnabled: !!first.step?.strategy,
             conditionalExecutionEnabled: getConditionalExecutionEnabled(first, isExecutionView),
@@ -860,6 +868,7 @@ const transformStepsData = ({
             },
             isNestedGroup,
             isContainerStepGroup,
+            isAnyParentContainerStepGroup: isAnyParentContainerStepGroup,
             type: 'StepGroup',
             nodeType: 'StepGroup',
             icon: iconName,
@@ -898,6 +907,7 @@ const transformStepsData = ({
               }),
               nodeType: StepType.STEP
             },
+            isAnyParentContainerStepGroup,
             type: stepData?.name as string,
             nodeType: stepData?.name as string,
             icon: stepIcon,

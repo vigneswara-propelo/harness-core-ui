@@ -111,7 +111,8 @@ export const RolloutStrategy: React.FC<RolloutStrategyProps> = ({ selectedStageI
                 addOrEdit: event.addOrEdit,
                 hiddenAdvancedPanels: [AdvancedPanels.PreRequisites, AdvancedPanels.DelegateSelectors],
                 nodeStateMetadata: event?.nodeStateMetadata,
-                relativeBasePath: event.entity?.relativeBasePath
+                relativeBasePath: event.entity?.relativeBasePath,
+                isAnyParentContainerStepGroup: event?.isAnyParentContainerStepGroup
               }
             }
           }

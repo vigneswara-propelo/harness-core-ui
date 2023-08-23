@@ -79,6 +79,8 @@ export function StepGroupNode(props: any): JSX.Element {
   const stepGroupData = defaultTo(props?.data?.stepGroup, props?.data?.step?.data?.stepGroup) || props?.data?.step
   const stepsData = stepGroupData?.steps || stepGroupData?.template?.templateInputs?.steps
   const isParentMatrix = defaultTo(props?.isParentMatrix, false)
+  const isAnyParentContainerStepGroup =
+    props?.data?.isAnyParentContainerStepGroup || !!(props?.data?.stepGroup as StepGroupElementConfig)?.stepGroupInfra
   const { module, source = 'executions' } = useParams<PipelineType<ExecutionPathProps>>()
   const [currentStepGroupRetryId, setCurrentStepGroupRetryId] = React.useState<string>('')
   // Matrix / Looping Strategies baseFqn is present at root level
@@ -557,6 +559,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 isContainerStepGroup={
                   (props?.data?.stepGroup as StepGroupElementConfig)?.stepGroupInfra?.type === 'KubernetesDirect'
                 }
+                isAnyParentContainerStepGroup={isAnyParentContainerStepGroup}
                 data={
                   stageGroupTypes.includes(props?.type)
                     ? childPipelineData
@@ -608,6 +611,7 @@ export function StepGroupNode(props: any): JSX.Element {
               relativeBasePath={relativeFQNPath}
               style={{ left: getPositionOfAddIcon(props), top: isNestedStepGroup ? '48px' : '22px' }}
               className={cx(defaultCss.addNodeIcon, 'stepAddIcon', defaultCss.stepGroupAddIcon)}
+              isAnyParentContainerStepGroup={isAnyParentContainerStepGroup}
             />
           )}
           {!props?.nextNode && props?.parentIdentifier && !props.readonly && !props.isParallelNode && (
@@ -624,6 +628,9 @@ export function StepGroupNode(props: any): JSX.Element {
               relativeBasePath={relativeFQNPath}
               prevNodeIdentifier={props.prevNodeIdentifier as string}
               className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
+              isAnyParentContainerStepGroup={
+                isAnyParentContainerStepGroup && !(props?.data?.stepGroup as StepGroupElementConfig)?.stepGroupInfra
+              }
             />
           )}
           {allowAdd && !props.readonly && CreateNode && (

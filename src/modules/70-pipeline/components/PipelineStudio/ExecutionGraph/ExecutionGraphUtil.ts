@@ -734,3 +734,21 @@ export const getStepsPathWithoutStagePath = (path = ''): string => {
 export const convertToDotNotation = (path = ''): string => {
   return path.replace(/\[(\d+)\]/g, '.$1')
 }
+
+export const isAnyNestedStepGroupContainerSG = (stepGroupSteps: ExecutionWrapperConfig[]): boolean => {
+  if (!stepGroupSteps) {
+    /* istanbul ignore next */ return false // No steps provided - stepGroupTemplate scenario
+  }
+
+  for (const step of stepGroupSteps) {
+    if (step.stepGroup?.stepGroupInfra) {
+      return true
+    }
+    if (step.stepGroup?.steps) {
+      if (isAnyNestedStepGroupContainerSG(step.stepGroup.steps)) {
+        return true
+      }
+    }
+  }
+  return false
+}

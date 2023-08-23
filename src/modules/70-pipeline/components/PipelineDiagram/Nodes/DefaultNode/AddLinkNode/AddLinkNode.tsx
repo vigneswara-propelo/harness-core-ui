@@ -26,6 +26,7 @@ interface AddLinkNodeProps<T> {
   isRightAddIcon?: boolean
   setShowAddLink?: (data: boolean) => void
   relativeBasePath?: string
+  isAnyParentContainerStepGroup?: boolean
 }
 export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactElement | null {
   return (
@@ -43,7 +44,7 @@ export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactE
             isRightAddIcon: props?.isRightAddIcon,
             entityType: DiagramType.Link,
             identifier: props?.identifier,
-            node: { ...props, ...props?.data },
+            node: { isAnyParentContainerStepGroup: props?.isAnyParentContainerStepGroup, ...props, ...props?.data },
             relativeBasePath: props?.relativeBasePath
           }
         })

@@ -18,7 +18,8 @@ import type {
   ExecutionElementConfig,
   StepElementConfig,
   StepGroupElementConfig,
-  StageElementConfig
+  StageElementConfig,
+  ExecutionWrapperConfig
 } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
@@ -50,11 +51,19 @@ import {
   NodeWrapperEntity,
   getBaseDotNotationWithoutEntityIdentifier
 } from '@pipeline/components/PipelineDiagram/Nodes/utils'
-import { getStepsPathWithoutStagePath } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import {
+  getStepsPathWithoutStagePath,
+  isAnyNestedStepGroupContainerSG
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
-import { StepCommandsViews, StepOrStepGroupOrTemplateStepData, Values } from '../StepCommands/StepCommandTypes'
+import {
+  StepCommandsViews,
+  StepGroupWithStageElementConfig,
+  StepOrStepGroupOrTemplateStepData,
+  Values
+} from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
 import {
   addService,
@@ -1050,6 +1059,20 @@ export function RightDrawer(): React.ReactElement {
     })
   }
 
+  const isAnyNestedOrParentStepGroupContainerized = React.useMemo(() => {
+    if (data?.stepConfig?.isAnyParentContainerStepGroup) {
+      // Parent has a container stepGroup property defined ( top down flow maintained by graph data )
+      return data?.stepConfig?.isAnyParentContainerStepGroup
+    }
+    // Accessing parent where children have container stepGroup property defined
+    return (
+      data?.stepConfig?.isStepGroup &&
+      isAnyNestedStepGroupContainerSG(
+        (data?.stepConfig?.node as StepGroupWithStageElementConfig)?.steps as ExecutionWrapperConfig[]
+      )
+    )
+  }, [data?.stepConfig?.isAnyParentContainerStepGroup, data?.stepConfig?.isStepGroup, data?.stepConfig?.node])
+
   return (
     <Drawer
       onClose={handleClose}
@@ -1097,6 +1120,7 @@ export function RightDrawer(): React.ReactElement {
           isRollback={Boolean(isRollbackToggled)}
           gitDetails={gitDetails}
           storeMetadata={storeMetadata}
+          isAnyParentContainerStepGroup={isAnyNestedOrParentStepGroupContainerized}
         />
       )}
       {type === DrawerTypes.AddStep && selectedStageId && data?.paletteData && (
@@ -1260,6 +1284,7 @@ export function RightDrawer(): React.ReactElement {
           onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
           onRemoveTemplate={() => removeTemplate(type)}
           storeMetadata={storeMetadata}
+          isAnyParentContainerStepGroup={isAnyNestedOrParentStepGroupContainerized}
         />
       )}
     </Drawer>

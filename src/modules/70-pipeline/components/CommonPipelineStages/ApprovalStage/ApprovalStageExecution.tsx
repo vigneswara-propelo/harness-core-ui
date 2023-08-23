@@ -92,7 +92,8 @@ export function ApprovalStageExecution(): React.ReactElement {
                 addOrEdit: event.addOrEdit,
                 hiddenAdvancedPanels: [AdvancedPanels.PreRequisites],
                 relativeBasePath: event.entity?.relativeBasePath,
-                nodeStateMetadata: event?.nodeStateMetadata
+                nodeStateMetadata: event?.nodeStateMetadata,
+                isAnyParentContainerStepGroup: event?.isAnyParentContainerStepGroup
               }
             }
           }

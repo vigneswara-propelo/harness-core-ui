@@ -456,12 +456,8 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           prevNodeIdentifier={props.prevNodeIdentifier as string}
           style={{ left: getPositionOfAddIcon(props) }}
           relativeBasePath={relativeFQNPath}
-          className={cx(
-            defaultCss.addNodeIcon,
-            // { [defaultCss.left]: !isPrevNodeParallel, [defaultCss.stepGroupLeft]: isPrevNodeParallel },
-            'stepAddIcon'
-            // { [defaultCss.stepGroupLeftAddLink]: !!props.parentIdentifier }
-          )}
+          className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
+          isAnyParentContainerStepGroup={props?.data?.isAnyParentContainerStepGroup}
         />
       )}
       {!props?.nextNode && !isServiceStep && props?.parentIdentifier && !props.readonly && !props.isParallelNode && (
@@ -478,6 +474,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           prevNodeIdentifier={props.prevNodeIdentifier as string}
           relativeBasePath={relativeFQNPath}
           className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
+          isAnyParentContainerStepGroup={props?.data?.isAnyParentContainerStepGroup}
         />
       )}
     </div>

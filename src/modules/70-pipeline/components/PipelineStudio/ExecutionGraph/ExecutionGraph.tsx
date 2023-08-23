@@ -231,6 +231,7 @@ export interface ExecutionGraphEditStepEvent {
   isUnderStepGroup?: boolean
   addOrEdit: 'add' | 'edit'
   stepType: StepType | undefined
+  isAnyParentContainerStepGroup?: boolean
 }
 
 export interface ExecutionGraphProp<T extends StageElementConfig> {
@@ -362,7 +363,9 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         isUnderStepGroup: event?.entity?.parentIdentifier,
         addOrEdit: 'edit',
         stepType: StepType.STEP,
-        nodeStateMetadata: event?.data?.data?.nodeStateMetadata
+        nodeStateMetadata: event?.data?.data?.nodeStateMetadata,
+        isAnyParentContainerStepGroup:
+          event?.entity?.node?.isAnyParentContainerStepGroup || event?.entity?.node?.data?.isAnyParentContainerStepGroup
       })
       stepGroupUpdated(node)
       updateStageWithNewData(state)
@@ -568,7 +571,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             stepsMap: state.states,
             addOrEdit: 'edit',
             stepType: nodeType || stepState?.stepType,
-            nodeStateMetadata: event?.data?.nodeStateMetadata
+            nodeStateMetadata: event?.data?.nodeStateMetadata,
+            isAnyParentContainerStepGroup: event?.data?.isAnyParentContainerStepGroup
           })
 
           const stepFqn = getStepsPathWithoutStagePath(nodeDotNotationPath)
@@ -829,7 +833,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           addOrEdit: 'edit',
           stepsMap: state.states,
           stepType: StepType.STEP,
-          nodeStateMetadata: event?.data?.data?.nodeStateMetadata
+          nodeStateMetadata: event?.data?.data?.nodeStateMetadata,
+          isAnyParentContainerStepGroup: event?.data?.data?.isAnyParentContainerStepGroup
         })
       }
     }

@@ -52,6 +52,7 @@ interface StepGroupGraphProps {
   isContainerStepGroup?: boolean
   relativeBasePath?: string
   loadingStepGroupGraphData?: boolean
+  isAnyParentContainerStepGroup?: boolean
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -90,7 +91,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
           parentPath: baseFQN,
           isNestedGroup: true,
           isContainerStepGroup: props.isContainerStepGroup,
-          relativeBasePath
+          relativeBasePath,
+          isAnyParentContainerStepGroup: props?.isAnyParentContainerStepGroup
         })
       )
     }

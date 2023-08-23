@@ -301,7 +301,8 @@ export const InfraProvisioningBase = (
                                   addOrEdit: event.addOrEdit,
                                   relativeBasePath: event.entity?.relativeBasePath,
                                   hiddenAdvancedPanels: [AdvancedPanels.PreRequisites],
-                                  nodeStateMetadata: event?.nodeStateMetadata
+                                  nodeStateMetadata: event?.nodeStateMetadata,
+                                  isAnyParentContainerStepGroup: event?.isAnyParentContainerStepGroup
                                 }
                               }
                             }

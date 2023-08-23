@@ -27,6 +27,7 @@ export interface StepGroupCustomStepProps {
   stageIdentifier: string
   isRollback?: boolean
   isProvisionerStep?: boolean
+  isAnyParentContainerStepGroup?: boolean
 }
 
 interface StepGroupStepVariableProps {

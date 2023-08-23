@@ -423,10 +423,14 @@ export const stepsTransformedData = [
       isInComplete: false,
       loopingStrategyEnabled: true,
       conditionalExecutionEnabled: true,
+      isAnyParentContainerStepGroup: false,
       isTemplateNode: false,
       isNestedGroup: false,
       isContainerStepGroup: false
     },
+    icon: undefined,
+    iconUrl: undefined,
+    nodeType: undefined,
     children: []
   },
   {
@@ -457,6 +461,7 @@ export const stepsTransformedData = [
         relativeBasePath: 'pipeline.stages.0.stage.spec.execution.steps.step.Wait_2',
         nodeType: 'STEP'
       },
+      isAnyParentContainerStepGroup: false,
       isInComplete: false,
       loopingStrategyEnabled: true,
       conditionalExecutionEnabled: true,
@@ -492,6 +497,7 @@ export const stepsTransformedData = [
             relativeBasePath: 'pipeline.stages.0.stage.spec.execution.steps.step.Wait_3',
             nodeType: 'STEP'
           },
+          isAnyParentContainerStepGroup: false,
           isInComplete: false,
           loopingStrategyEnabled: true,
           conditionalExecutionEnabled: true,
@@ -499,6 +505,9 @@ export const stepsTransformedData = [
           isNestedGroup: false,
           isContainerStepGroup: false
         },
+        icon: undefined,
+        iconUrl: undefined,
+        nodeType: undefined,
         children: []
       }
     ]
@@ -599,6 +608,7 @@ export const stepsTransformedData = [
           parallelism: 1
         }
       },
+      isAnyParentContainerStepGroup: false,
       nodeStateMetadata: {
         dotNotationPath: 'pipeline.stages.0.stage.spec.execution.steps.2.parallel.0.stepGroup.sg1',
         relativeBasePath: 'pipeline.stages.0.stage.spec.execution.steps.stepGroup.sg1',
@@ -663,6 +673,8 @@ export const stepsTransformedData = [
             relativeBasePath: 'pipeline.stages.0.stage.spec.execution.steps.stepGroup.sg2',
             nodeType: 'STEP_GROUP'
           },
+          icon: undefined,
+          isAnyParentContainerStepGroup: false,
           isNestedGroup: false,
           isContainerStepGroup: false,
           type: 'StepGroup',
@@ -712,6 +724,7 @@ export const stepsTransformedData = [
           parallelism: 1
         }
       },
+      isAnyParentContainerStepGroup: false,
       nodeStateMetadata: {
         dotNotationPath: 'pipeline.stages.0.stage.spec.execution.steps.3.stepGroup.sg3',
         relativeBasePath: 'pipeline.stages.0.stage.spec.execution.steps.stepGroup.sg3',

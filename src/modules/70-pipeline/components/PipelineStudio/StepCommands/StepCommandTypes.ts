@@ -62,6 +62,7 @@ export interface StepCommandsProps {
   saveAsTemplateButtonProps?: Partial<SaveTemplateButtonProps>
   isRollback?: boolean
   isProvisionerStep?: boolean
+  isAnyParentContainerStepGroup?: boolean
 }
 
 export enum TabTypes {

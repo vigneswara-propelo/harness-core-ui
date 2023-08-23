@@ -115,6 +115,7 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
       relativeBasePath?: string
       hiddenAdvancedPanels?: AdvancedPanels[]
       nodeStateMetadata?: NodeStateMetadata
+      isAnyParentContainerStepGroup?: boolean
     }
   }
 }

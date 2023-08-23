@@ -251,6 +251,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
               [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
             }
           )}
+          isAnyParentContainerStepGroup={props?.data?.isAnyParentContainerStepGroup}
         />
       )}
       {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
@@ -278,6 +279,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
                 [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
               }
             )}
+            isAnyParentContainerStepGroup={props?.data?.isAnyParentContainerStepGroup}
           />
         )}
     </div>
