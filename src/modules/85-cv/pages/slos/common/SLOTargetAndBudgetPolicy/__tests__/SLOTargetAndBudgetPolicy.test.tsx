@@ -96,7 +96,7 @@ describe('Test SLOTargetAndBudgetPolicy component', () => {
   test('verify getWindowEndOptionsForMonth method', async () => {
     const periodLengthOptions = Array(31)
       .fill(0)
-      .map((_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }))
+      .map((_, i) => ({ label: `${i + 1}`, value: i + 1 }))
 
     expect(getWindowEndOptionsForMonth()).toEqual(periodLengthOptions)
   })

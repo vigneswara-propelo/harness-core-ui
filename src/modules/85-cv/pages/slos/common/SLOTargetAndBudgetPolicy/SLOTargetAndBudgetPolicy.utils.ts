@@ -62,7 +62,7 @@ export const getPeriodLengthOptionsForRolling = (): SelectOption[] => {
 export const getWindowEndOptionsForMonth = (): SelectOption[] => {
   return Array(31)
     .fill(0)
-    .map((_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }))
+    .map((_, i) => ({ label: `${i + 1}`, value: i + 1 }))
 }
 
 export const getErrorBudget = (values: ErrorBudgetInterface): number => {
