@@ -88,15 +88,23 @@ const useTargetingRulesFormData = ({
 
   const percentageRolloutRules = featureFlagData.envProperties?.rules?.filter(rule => rule.serve.distribution)
   const variationPercentageRollouts: VariationPercentageRollout[] = percentageRolloutRules
-    ? percentageRolloutRules.map(percentageRollout => ({
-        status: TargetingRuleItemStatus.LOADED,
-        type: TargetingRuleItemType.PERCENTAGE_ROLLOUT,
-        priority: percentageRollout.priority,
-        variations: percentageRollout.serve.distribution?.variations || [],
-        bucketBy: percentageRollout.serve.distribution?.bucketBy || 'identifier',
-        clauses: percentageRollout.clauses,
-        ruleId: percentageRollout.ruleId as string
-      }))
+    ? percentageRolloutRules.map(percentageRollout => {
+        const knownVariations = percentageRollout.serve.distribution?.variations || []
+        const allVariations = featureFlagData.variations.map(
+          ({ identifier }) =>
+            knownVariations.find(({ variation }) => variation === identifier) || { variation: identifier, weight: 0 }
+        )
+
+        return {
+          status: TargetingRuleItemStatus.LOADED,
+          type: TargetingRuleItemType.PERCENTAGE_ROLLOUT,
+          priority: percentageRollout.priority,
+          variations: allVariations,
+          bucketBy: percentageRollout.serve.distribution?.bucketBy || 'identifier',
+          clauses: percentageRollout.clauses,
+          ruleId: percentageRollout.ruleId as string
+        }
+      })
     : []
 
   const targetingRuleItems = [...formVariationMap, ...variationPercentageRollouts].sort(
