@@ -55,7 +55,7 @@ describe('Test util methods', () => {
         },
         'PipelineExecution'
       )
-    ).toEqual({ branch: 'develop' })
+    ).toEqual({ buildType: 'branch', branch: 'develop' })
 
     expect(
       getCIModuleProperties(

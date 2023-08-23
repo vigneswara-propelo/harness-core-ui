@@ -183,6 +183,7 @@ export const getCIModuleProperties = (
       } as CIWebhookInfoDTO
       break
     case BUILD_TYPE.BRANCH:
+      moduleProperties.buildType = buildType.toLowerCase()
       moduleProperties.branch = branch
       break
     case BUILD_TYPE.TAG:
