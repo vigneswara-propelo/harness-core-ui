@@ -532,6 +532,7 @@ function JiraUpdateStepMode(
     loading: issueUpdateMetadataLoading
   } = useGetJiraIssueUpdateMetadata({
     lazy: true,
+    debounce: 300,
     queryParams: {
       ...commonParams,
       connectorRef: '',
