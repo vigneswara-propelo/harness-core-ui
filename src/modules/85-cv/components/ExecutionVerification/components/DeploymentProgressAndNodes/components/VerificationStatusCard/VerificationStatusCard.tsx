@@ -30,6 +30,11 @@ export default function VerificationStatusCard({
   let iconSize = 12
   const { getString } = useStrings()
   switch (status) {
+    case 'NOT_STARTED':
+      statusMessage = getString('cv.dashboard.notStarted')
+      color = Color.PRIMARY_2
+      backgroundColor = Color.PRIMARY_6
+      break
     case 'IN_PROGRESS':
       statusMessage = getString('inProgress')
       color = Color.PRIMARY_2

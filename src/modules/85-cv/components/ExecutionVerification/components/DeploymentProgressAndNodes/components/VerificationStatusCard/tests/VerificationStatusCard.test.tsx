@@ -44,4 +44,13 @@ describe('VerificationStatusCard', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
+  test(' should show the correct text when status = NOT_STARTED', () => {
+    const { getByText } = render(
+      <TestWrapper>
+        <VerificationStatusCard status="NOT_STARTED" />
+      </TestWrapper>
+    )
+    expect(getByText('cv.dashboard.notStarted')).toBeInTheDocument()
+  })
 })
