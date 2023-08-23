@@ -49,15 +49,20 @@ const useTargetingRulesFormData = ({
           value: target.identifier
         })) || []
 
-    const variationTargetGroups: VariationTargetGroup[] =
-      featureFlagData.envProperties?.rules
-        ?.filter(rule => rule.serve.variation === variation.identifier)
-        .map(targetGroupRule => ({
-          priority: targetGroupRule.priority,
-          label: segments.find(segment => segment.identifier === targetGroupRule.clauses[0].values[0])?.name as string,
-          ruleId: targetGroupRule.ruleId as string,
-          value: targetGroupRule.clauses[0].values[0]
-        })) || []
+    const variationTargetGroups: VariationTargetGroup[] = (featureFlagData.envProperties?.rules || [])
+      .filter(rule => rule.serve.variation === variation.identifier)
+      .reduce<VariationTargetGroup[]>(
+        (rules, targetGroupRule) => [
+          ...rules,
+          ...targetGroupRule.clauses[0].values.map<VariationTargetGroup>(targetGroupIdentifier => ({
+            priority: targetGroupRule.priority,
+            label: segments.find(segment => segment.identifier === targetGroupIdentifier)?.name as string,
+            ruleId: targetGroupRule.ruleId as string,
+            value: targetGroupIdentifier
+          }))
+        ],
+        []
+      )
 
     // highest priority = lowest number
     const highestPriority =

@@ -12,7 +12,8 @@ import {
   VariationTargetGroup,
   TargetingRuleItemType,
   TargetingRulesFormValues,
-  VariationPercentageRollout
+  VariationPercentageRollout,
+  VariationTargetGroups
 } from '../types'
 
 // Utils class to help encapsulate the complexity around patch instruction creation and hide this from the components.
@@ -22,6 +23,7 @@ interface PatchFeatureFlagUtilsReturn {
   hasDefaultOffVariationChanged: () => boolean
   addedTargetGroups: (variationIdentifier: string) => VariationTargetGroup[]
   removedTargetGroups: (variationIdentifier: string) => VariationTargetGroup[]
+  updatedTargetGroups: (variationIdentifier: string) => VariationTargetGroups[]
   addedTargets: (variationIdentifier: string) => string[]
   removedTargets: (variationIdentifier: string) => string[]
   updatedPercentageRollouts: () => VariationPercentageRollout[]
@@ -33,6 +35,7 @@ interface PatchFeatureFlagUtilsReturn {
     targetGroups: VariationTargetGroup[],
     position: number
   ) => void
+  createUpdateTargetGroupsInstructions: (variationIdentifier: string, targetGroups: VariationTargetGroups[]) => void
   createRemoveTargetGroupsInstructions: (targetGroups: VariationTargetGroup[]) => void
   createAddTargetsInstructions: (variationIdentifier: string, targetIds: string[]) => void
   createRemoveTargetsInstructions: (variationIdentifier: string, targetIds: string[]) => void
@@ -84,8 +87,51 @@ export const PatchFeatureFlagUtils = (
     const submittedTargetGroups: VariationTargetGroup[] =
       submittedVariations.find(x => x.variationIdentifier === variationIdentifier)?.targetGroups || []
 
-    return initialTargetGroups.filter(
-      targetGroup => !submittedTargetGroups.map(({ label }) => label).includes(targetGroup.label)
+    return (
+      initialTargetGroups
+        // get groups that aren't in the form submission
+        .filter(targetGroup => !submittedTargetGroups.map(({ value }) => value).includes(targetGroup.value))
+        // exclude groups that share a ruleId with a non-removed group
+        .filter(
+          targetGroup =>
+            !submittedTargetGroups.find(tg => tg.ruleId === targetGroup.ruleId && tg.value !== targetGroup.value)
+        )
+    )
+  }
+
+  const updatedTargetGroups = (variationIdentifier: string): VariationTargetGroups[] => {
+    const initialTargetGroups: VariationTargetGroup[] =
+      initialVariations.find(x => x.variationIdentifier === variationIdentifier)?.targetGroups || []
+    const submittedTargetGroups: VariationTargetGroup[] =
+      submittedVariations.find(x => x.variationIdentifier === variationIdentifier)?.targetGroups || []
+
+    return (
+      initialTargetGroups
+        // get groups that aren't in the form submission
+        .filter(targetGroup => !submittedTargetGroups.map(({ value }) => value).includes(targetGroup.value))
+        // exclude groups that do not share a ruleId with a non-removed group
+        .filter(targetGroup =>
+          submittedTargetGroups.find(tg => tg.ruleId === targetGroup.ruleId && tg.value !== targetGroup.value)
+        )
+        // gather grouped rules into one
+        .reduce<VariationTargetGroups[]>((updatedRules, targetGroup) => {
+          let currentRule = updatedRules.find(({ ruleId }) => ruleId === targetGroup.ruleId)
+          if (!currentRule) {
+            currentRule = {
+              priority: targetGroup.priority,
+              ruleId: targetGroup.ruleId,
+              values: initialTargetGroups
+                .filter(initial => initial.ruleId === targetGroup.ruleId)
+                .map(({ value }) => value)
+            }
+
+            updatedRules.push(currentRule)
+          }
+
+          currentRule.values = currentRule.values.filter(targetGroupId => targetGroupId !== targetGroup.value)
+
+          return updatedRules
+        }, [])
     )
   }
 
@@ -127,7 +173,7 @@ export const PatchFeatureFlagUtils = (
 
   const createAddTargetGroupInstructions = (
     variationIdentifier: string,
-    targetGroups: VariationTargetGroup[],
+    targetGroups: Pick<VariationTargetGroup, 'ruleId' | 'value'>[],
     priority: number
   ): void => {
     patch.feature.addAllInstructions(
@@ -146,6 +192,22 @@ export const PatchFeatureFlagUtils = (
           ]
         })
       )
+    )
+  }
+
+  const createUpdateTargetGroupsInstructions = (
+    variationIdentifier: string,
+    targetGroups: VariationTargetGroups[]
+  ): void => {
+    // remove the old-style rules
+    patch.feature.addAllInstructions(targetGroups.map(({ ruleId }) => patch.creators.removeRule(ruleId)))
+    // add target groups to the variation map one at a time
+    patch.feature.addAllInstructions(
+      targetGroups
+        .map(({ values }) =>
+          values.map(value => patch.creators.addSegmentToVariationTargetMap(variationIdentifier, [value]))
+        )
+        .flat()
     )
   }
 
@@ -219,12 +281,14 @@ export const PatchFeatureFlagUtils = (
     createUpdateFlagStateInstruction,
     addedTargetGroups,
     removedTargetGroups,
+    updatedTargetGroups,
     addedTargets,
     removedTargets,
     updatedPercentageRollouts,
     createDefaultServeOnInstruction,
     createDefaultServeOffInstruction,
     createAddTargetGroupInstructions,
+    createUpdateTargetGroupsInstructions,
     createRemoveTargetGroupsInstructions,
     createAddTargetsInstructions,
     createRemoveTargetsInstructions,

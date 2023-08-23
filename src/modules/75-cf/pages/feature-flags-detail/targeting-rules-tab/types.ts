@@ -31,6 +31,12 @@ export interface VariationTargetGroup {
   value: string
 }
 
+export interface VariationTargetGroups {
+  priority: number
+  ruleId: string
+  values: string[]
+}
+
 export interface VariationTarget {
   label: string
   value: string

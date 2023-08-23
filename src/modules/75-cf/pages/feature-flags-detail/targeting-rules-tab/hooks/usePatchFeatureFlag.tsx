@@ -119,6 +119,11 @@ const usePatchFeatureFlag = ({
               patchFeatureUtils.createRemoveTargetGroupsInstructions(removedTargetGroups)
             }
 
+            const updatedTargetGroups = patchFeatureUtils.updatedTargetGroups(item.variationIdentifier)
+            if (updatedTargetGroups.length) {
+              patchFeatureUtils.createUpdateTargetGroupsInstructions(item.variationIdentifier, updatedTargetGroups)
+            }
+
             const addedTargetGroups = patchFeatureUtils.addedTargetGroups(item.variationIdentifier)
             if (addedTargetGroups.length) {
               patchFeatureUtils.createAddTargetGroupInstructions(
