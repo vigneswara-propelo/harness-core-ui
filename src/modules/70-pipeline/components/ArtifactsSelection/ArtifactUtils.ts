@@ -655,7 +655,7 @@ export const defaultArtifactInitialValues = (
           repositoryName: '',
           package: '',
           version: RUNTIME_INPUT_VALUE,
-          digest: RUNTIME_INPUT_VALUE
+          digest: ''
         }
       }
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
@@ -676,7 +676,7 @@ export const defaultArtifactInitialValues = (
         tagType: TagTypes.Value,
         tag: RUNTIME_INPUT_VALUE,
         tagRegex: RUNTIME_INPUT_VALUE,
-        digest: RUNTIME_INPUT_VALUE,
+        digest: '',
         repository: '',
         repositoryFormat: selectedDeploymentType === ServiceDeploymentType.AwsLambda ? 'maven' : 'docker',
         spec: {
@@ -729,7 +729,7 @@ export const defaultArtifactInitialValues = (
           packageName: '',
           version: '',
           versionRegex: '',
-          digest: RUNTIME_INPUT_VALUE
+          digest: ''
         }
       }
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
@@ -785,7 +785,7 @@ export const defaultArtifactInitialValues = (
         tag: RUNTIME_INPUT_VALUE,
         tagType: TagTypes.Value,
         tagRegex: RUNTIME_INPUT_VALUE,
-        digest: RUNTIME_INPUT_VALUE
+        digest: ''
       }
   }
 }
