@@ -34,7 +34,6 @@ import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import { stageTypeToIconMap } from '@pipeline/utils/constants'
-import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -417,8 +416,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     return readonly as boolean
   }
 
+  // for a child pipline - refer template for codebase since it has inputs applied and codebase properties if clone codebase is enabled
   const isCloneCodebaseEnabledAtLeastAtOneChildPipelineStage =
-    childPipelineMetadata && isCloneCodebaseEnabledAtLeastOneStage(originalPipeline)
+    childPipelineMetadata && !isEmpty(finalTemplate?.properties?.ci?.codebase)
 
   return (
     <Layout.Vertical
