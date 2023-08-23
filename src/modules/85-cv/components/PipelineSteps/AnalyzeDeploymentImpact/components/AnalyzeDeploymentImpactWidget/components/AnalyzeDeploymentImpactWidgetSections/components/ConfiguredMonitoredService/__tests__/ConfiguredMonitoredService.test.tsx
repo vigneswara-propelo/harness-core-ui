@@ -23,7 +23,8 @@ import {
   getShouldFetchMonitoredServiceData,
   updateAnalyseImpactFormik,
   checkIfMonitoredServiceIsNotPresent,
-  getShouldRenderNotifications
+  getShouldRenderNotifications,
+  shouldUpdateSpecs
 } from '../ConfiguredMonitoredService.utils'
 import ConfiguredMonitoredService from '../ConfiguredMonitoredService'
 import {
@@ -666,31 +667,35 @@ describe('checkIfMonitoredServiceIsNotPresent', () => {
 })
 
 describe('getShouldRenderNotifications', () => {
-  test('should return true if the monitored service error message does not indicate "is not present" and shouldFetchMonitoredServiceDetails is true', () => {
-    const monitoredServiceError = { data: new Error('Some other error'), message: 'Some error' }
-    const monitoredServiceIdentifier = 'abc'
-    const shouldFetchMonitoredServiceDetails = true
-
-    const result = getShouldRenderNotifications(
-      monitoredServiceError,
-      monitoredServiceIdentifier,
-      shouldFetchMonitoredServiceDetails
-    )
-
+  test('returns true when monitoredServiceError is null, shouldFetchMonitoredServiceDetails is true, and monitoredServiceLoading is false', () => {
+    const result = getShouldRenderNotifications(null, 'identifier', true, false)
     expect(result).toBe(true)
   })
 
-  test('should return false if shouldFetchMonitoredServiceDetails is false', () => {
-    const monitoredServiceError = { data: { message: 'error response' }, message: 'Some error' }
-    const monitoredServiceIdentifier = 'abc'
-    const shouldFetchMonitoredServiceDetails = false
+  test('returns true when monitoredServiceError is not null, shouldFetchMonitoredServiceDetails is true, and monitoredServiceLoading is false', () => {
+    const monitoredServiceError = { data: new Error('Sample error'), message: 'Some error' }
+    const result = getShouldRenderNotifications(monitoredServiceError, 'identifier', true, false)
+    expect(result).toBe(true)
+  })
 
-    const result = getShouldRenderNotifications(
-      monitoredServiceError,
-      monitoredServiceIdentifier,
-      shouldFetchMonitoredServiceDetails
-    )
+  test('returns false when monitoredServiceError is null, shouldFetchMonitoredServiceDetails is false, and monitoredServiceLoading is false', () => {
+    const result = getShouldRenderNotifications(null, 'identifier', false, false)
+    expect(result).toBe(false)
+  })
 
+  test('returns false when monitoredServiceError is null, shouldFetchMonitoredServiceDetails is true, and monitoredServiceLoading is true', () => {
+    const result = getShouldRenderNotifications(null, 'identifier', true, true)
+    expect(result).toBe(false)
+  })
+
+  test('returns false when monitoredServiceError is null, shouldFetchMonitoredServiceDetails is false, and monitoredServiceLoading is true', () => {
+    const result = getShouldRenderNotifications(null, 'identifier', false, true)
+    expect(result).toBe(false)
+  })
+
+  test('returns false when monitoredServiceError is not null, shouldFetchMonitoredServiceDetails is false, and monitoredServiceLoading is true', () => {
+    const monitoredServiceError = { data: new Error('Sample error'), message: 'Some error' }
+    const result = getShouldRenderNotifications(monitoredServiceError, 'identifier', false, true)
     expect(result).toBe(false)
   })
 })
@@ -712,5 +717,37 @@ describe('getMonitoredServiceIdentifier', () => {
 
     const result = getMonitoredServiceIdentifier(monitoredServiceRef, serviceIdentifier, environmentIdentifier)
     expect(result).toBe('testService_testEnv')
+  })
+})
+
+describe('shouldUpdateSpecs', () => {
+  const monitoredService = {
+    environmentRef: 'env1',
+    identifier: 'service1_env1',
+    name: 'service1_env1',
+    orgIdentifier: 'org1',
+    projectIdentifier: 'project1',
+    serviceRef: 'service1',
+    type: 'Application'
+  } as MonitoredServiceDTO
+
+  test('returns true when shouldFetchMonitoredServiceDetails is true and monitoredService is undefined', () => {
+    const result = shouldUpdateSpecs(true)
+    expect(result).toBe(true)
+  })
+
+  test('returns true when shouldFetchMonitoredServiceDetails is true and monitoredService is defined', () => {
+    const result = shouldUpdateSpecs(true, monitoredService)
+    expect(result).toBe(true)
+  })
+
+  test('returns false when shouldFetchMonitoredServiceDetails is false and monitoredService is undefined', () => {
+    const result = shouldUpdateSpecs(false)
+    expect(result).toBe(false)
+  })
+
+  test('returns true when shouldFetchMonitoredServiceDetails is false and monitoredService is defined', () => {
+    const result = shouldUpdateSpecs(false, monitoredService)
+    expect(result).toBe(true)
   })
 })

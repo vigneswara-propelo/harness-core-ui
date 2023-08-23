@@ -29,7 +29,8 @@ import {
   getMonitoredServiceOptions,
   getShouldFetchMonitoredServiceData,
   getShouldRenderNotifications,
-  getUpdatedSpecs
+  getUpdatedSpecs,
+  shouldUpdateSpecs
 } from './ConfiguredMonitoredService.utils'
 import AnalyseStepHealthSourcesList from './components/AnalyseStepHealthSourcesList/AnalyseStepHealthSourcesList'
 import ConfigureMonitoredServiceDetails from './components/ConfigureMonitoredServiceDetails/ConfigureMonitoredServiceDetails'
@@ -141,14 +142,14 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
   }, [shouldFetchMonitoredServiceDetails, environmentIdentifier, monitoredServiceRef, serviceIdentifier])
 
   useEffect(() => {
-    if (monitoredService) {
+    if (shouldUpdateSpecs(shouldFetchMonitoredServiceDetails, monitoredService)) {
       let newSpecs = { ...formValues.spec }
       newSpecs = getUpdatedSpecs(monitoredService, formValues, monitoredServiceRef)
       setFieldValue('spec', newSpecs)
       setHealthSourcesList(monitoredService?.sources?.healthSources as RowData[])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [monitoredService])
+  }, [monitoredService, monitoredServiceRef, shouldFetchMonitoredServiceDetails])
 
   useEffect(() => {
     const error = monitoredServicesDataError || monitoredServiceError
@@ -168,9 +169,10 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
     return getShouldRenderNotifications(
       monitoredServiceError,
       monitoredServiceIdentifier,
-      shouldFetchMonitoredServiceDetails
+      shouldFetchMonitoredServiceDetails,
+      monitoredServiceLoading
     )
-  }, [monitoredServiceError, monitoredServiceIdentifier, shouldFetchMonitoredServiceDetails])
+  }, [monitoredServiceError, monitoredServiceIdentifier, monitoredServiceLoading, shouldFetchMonitoredServiceDetails])
 
   const renderConfiguredMonitoredService = (): JSX.Element => {
     if (

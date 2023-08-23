@@ -189,10 +189,19 @@ export function checkIfMonitoredServiceIsNotPresent(message: string, monitoredSe
 export function getShouldRenderNotifications(
   monitoredServiceError: GetDataError<unknown> | null,
   monitoredServiceIdentifier: string,
-  shouldFetchMonitoredServiceDetails: boolean
+  shouldFetchMonitoredServiceDetails: boolean,
+  monitoredServiceLoading: boolean
 ): boolean {
   return (
     !checkIfMonitoredServiceIsNotPresent((monitoredServiceError?.data as Error)?.message, monitoredServiceIdentifier) &&
-    shouldFetchMonitoredServiceDetails
+    shouldFetchMonitoredServiceDetails &&
+    !monitoredServiceLoading
   )
+}
+
+export function shouldUpdateSpecs(
+  shouldFetchMonitoredServiceDetails: boolean,
+  monitoredService?: MonitoredServiceDTO
+): boolean {
+  return Boolean(monitoredService || (!monitoredService && shouldFetchMonitoredServiceDetails))
 }
