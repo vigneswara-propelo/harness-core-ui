@@ -1473,6 +1473,7 @@ export const buildVaultPayload = (formData: FormData): BuildVaultPayloadReturnTy
       authToken:
         formData.accessType === HashiCorpVaultAccessTypes.TOKEN ? formData.authToken?.referenceString : undefined,
       appRoleId: formData.accessType === HashiCorpVaultAccessTypes.APP_ROLE ? formData.appRoleId : undefined,
+      enableCache: formData.accessType === HashiCorpVaultAccessTypes.APP_ROLE ? formData.enableCache : undefined,
       secretId:
         formData.accessType === HashiCorpVaultAccessTypes.APP_ROLE ? formData.secretId?.referenceString : undefined,
       useVaultAgent: formData.accessType === HashiCorpVaultAccessTypes.VAULT_AGENT,
@@ -2588,6 +2589,7 @@ export const setupVaultFormData = async (connectorInfo: ConnectorInfoDTO, accoun
     accessType: connectorInfoSpec?.accessType || HashiCorpVaultAccessTypes.APP_ROLE,
     appRoleId: connectorInfoSpec?.appRoleId || '',
     secretId: secretId || undefined,
+    enableCache: connectorInfoSpec?.enableCache,
     authToken: authToken || undefined,
     sinkPath: connectorInfoSpec?.sinkPath || '',
     renewalIntervalMinutes: connectorInfoSpec?.renewalIntervalMinutes,

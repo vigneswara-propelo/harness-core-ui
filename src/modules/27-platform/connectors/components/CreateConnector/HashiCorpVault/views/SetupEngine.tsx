@@ -127,7 +127,8 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
             formData.accessType === HashiCorpVaultAccessTypes.APP_ROLE
               ? ({
                   appRoleId: formData.appRoleId,
-                  secretId: formData.secretId?.referenceString
+                  secretId: formData.secretId?.referenceString,
+                  enableCache: formData.enableCache
                 } as VaultAppRoleCredentialDTO)
               : formData.accessType === HashiCorpVaultAccessTypes.AWS_IAM
               ? ({

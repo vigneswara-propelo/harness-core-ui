@@ -91,6 +91,11 @@ const VaultConnectorFormFields: React.FC<VaultConnectorFormFieldsProps> = ({ for
       {formik?.values['accessType'] === HashiCorpVaultAccessTypes.APP_ROLE ? (
         <>
           <FormInput.Text name="appRoleId" label={getString('platform.connectors.hashiCorpVault.appRoleId')} />
+          <FormInput.CheckBox
+            name="enableCache"
+            label={getString('platform.connectors.hashiCorpVault.enableCache')}
+            padding={{ left: 'xxlarge' }}
+          />
           <SecretInput
             name="secretId"
             label={getString('platform.connectors.hashiCorpVault.secretId')}

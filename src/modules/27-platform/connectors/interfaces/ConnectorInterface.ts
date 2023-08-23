@@ -133,6 +133,7 @@ export interface VaultConfigFormData {
   vaultK8sAuthRole?: string
   serviceAccountTokenPath?: string
   k8sAuthEndpoint?: string
+  enableCache?: boolean
 }
 
 export interface SetupEngineFormData {

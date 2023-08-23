@@ -50,7 +50,8 @@ const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsPr
     renewalIntervalMinutes: 10,
     k8sAuthEndpoint: '',
     vaultK8sAuthRole: '',
-    serviceAccountTokenPath: ''
+    serviceAccountTokenPath: '',
+    enableCache: true
   }
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)

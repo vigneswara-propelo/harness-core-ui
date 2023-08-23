@@ -1090,6 +1090,7 @@ connectors:
   hashiCorpVault:
     appRole: App Role
     appRoleId: 'App Role Id'
+    enableCache: 'Enable Cache for App Role token'
     baseSecretPath: 'Base Secret Path (optional)'
     secretId: 'Secret Id'
     stepTwoName: 'HashiCorp Vault Details'

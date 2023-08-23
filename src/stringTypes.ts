@@ -2689,6 +2689,7 @@ export interface StringsMap {
   'platform.connectors.hashiCorpVault.baseSecretPath': string
   'platform.connectors.hashiCorpVault.default': string
   'platform.connectors.hashiCorpVault.defaultVault': string
+  'platform.connectors.hashiCorpVault.enableCache': string
   'platform.connectors.hashiCorpVault.engineName': string
   'platform.connectors.hashiCorpVault.engineVersion': string
   'platform.connectors.hashiCorpVault.fetchEngines': string

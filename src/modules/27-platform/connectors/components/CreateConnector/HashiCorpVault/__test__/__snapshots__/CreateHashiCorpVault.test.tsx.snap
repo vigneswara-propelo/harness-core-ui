@@ -752,7 +752,34 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="null-5"
+                data-id="enableCache-5"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                  >
+                    <input
+                      checked=""
+                      name="enableCache"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <span
+                      class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                      data-tooltip-id="vaultConfigForm_enableCache"
+                    >
+                      platform.connectors.hashiCorpVault.enableCache
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div
+                class="bp3-form-group"
+                data-id="null-6"
               >
                 <div
                   class="bp3-form-content"
@@ -869,7 +896,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="renewalIntervalMinutes-6"
+                data-id="renewalIntervalMinutes-7"
               >
                 <label
                   class="bp3-label"
@@ -904,7 +931,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="readOnly-7"
+                data-id="readOnly-8"
               >
                 <div
                   class="bp3-form-content"
@@ -930,7 +957,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="default-8"
+                data-id="default-9"
               >
                 <div
                   class="bp3-form-content"
@@ -1828,7 +1855,33 @@ exports[`Create Secret Manager Wizard should render form in edit 1`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="null-5"
+                data-id="enableCache-5"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                  >
+                    <input
+                      name="enableCache"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <span
+                      class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                      data-tooltip-id="vaultConfigForm_enableCache"
+                    >
+                      platform.connectors.hashiCorpVault.enableCache
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div
+                class="bp3-form-group"
+                data-id="null-6"
               >
                 <div
                   class="bp3-form-content"
@@ -1945,7 +1998,7 @@ exports[`Create Secret Manager Wizard should render form in edit 1`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="renewalIntervalMinutes-6"
+                data-id="renewalIntervalMinutes-7"
               >
                 <label
                   class="bp3-label"
@@ -1980,7 +2033,7 @@ exports[`Create Secret Manager Wizard should render form in edit 1`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="readOnly-7"
+                data-id="readOnly-8"
               >
                 <div
                   class="bp3-form-content"
@@ -2006,7 +2059,7 @@ exports[`Create Secret Manager Wizard should render form in edit 1`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="default-8"
+                data-id="default-9"
               >
                 <div
                   class="bp3-form-content"
