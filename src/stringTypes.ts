@@ -5755,6 +5755,7 @@ export interface StringsMap {
   'triggers.triggerExplorer.pageSubHeading': string
   'triggers.triggerExplorer.searchPlaceholder': string
   'triggers.triggerExplorer.searchTriggers': string
+  'triggers.triggerExplorer.searchWebhookTriggerLabel': string
   'triggers.triggerExplorer.selectTriggerType': string
   'triggers.triggerExplorer.showPanel': string
   'triggers.triggerExplorer.tabName': string

@@ -223,7 +223,7 @@ const RegisteredTriggers: React.FC = (): React.ReactElement => {
         {triggerType === 'Webhook' && (
           <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing={'medium'}>
             <Text font={{ weight: 'semi-bold', variation: FontVariation.H6 }}>
-              {getString('triggers.triggerExplorer.searchPlaceholder')}
+              {getString('triggers.triggerExplorer.searchWebhookTriggerLabel')}
             </Text>
             <ExpandingSearchInput
               alwaysExpanded

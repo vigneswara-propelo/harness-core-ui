@@ -174,7 +174,10 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
       selectedTriggerType === 'Manifest'
     ) {
       cols.splice(1, 1, {
-        Header: getString('triggers.activityHistory.artifactVersion'),
+        Header:
+          selectedTriggerType === 'Manifest'
+            ? getString('triggers.conditionsPanel.manifestVersion')
+            : getString('triggers.activityHistory.artifactVersion'),
         accessor: row => row?.ngTriggerEventInfo?.build,
         width: '25%',
         Cell: RenderColumnArtifactVersions
