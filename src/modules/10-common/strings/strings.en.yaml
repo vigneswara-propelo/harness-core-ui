@@ -198,7 +198,7 @@ validation:
   connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, . _ and -'
   invalidUsername: 'Invalid name. Special characters not allowed'
-  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier must start with a letter or _ and can then be followed by alphanumerics, _, or $'
+  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier must start with a letter or _ and can then be followed by alphanumerics or _'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
   harnessFolderNamePatternIsNotValid: 'Harness Folder name can only contain alphanumerics, underscore, hyphen or a whitespace'
   nameIsRequired: '{{$.validation.nameRequired}}'

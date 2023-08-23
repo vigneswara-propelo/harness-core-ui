@@ -389,7 +389,7 @@ manifestType:
   customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
   manifestIdentifier: Manifest Identifier
-  manifestIdentifierRegexErrorMsg: '{{$.pipeline.manifestType.manifestIdentifier}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
+  manifestIdentifierRegexErrorMsg: '{{$.pipeline.manifestType.manifestIdentifier}} must start with a letter or _ and can then be followed by alphanumerics or _'
   manifestPlaceholder: Enter Manifest Name
   ociHelmConnectorLabel: OCI Helm
   basePathPlaceholder: Enter Base Path
@@ -1031,7 +1031,7 @@ artifactsSelection:
   feedPlaceholder: Select Feed
   artifactSourceId: Artifact Source Identifier
   artifactSourceIdPlaceholder: Enter Artifact Source Identifier
-  artifactSourceIdRegexErrorMsg: '{{$.pipeline.artifactsSelection.artifactSourceId}} must start with a letter or _ and can then be followed by alphanumerics, _, or $'
+  artifactSourceIdRegexErrorMsg: '{{$.pipeline.artifactsSelection.artifactSourceId}} must start with a letter or _ and can then be followed by alphanumerics or _'
   projectPlaceholder: Enter Project
   projectIDPlaceholder: Enter Project ID
   repositoryTypePlaceholder: Select Repository Type
