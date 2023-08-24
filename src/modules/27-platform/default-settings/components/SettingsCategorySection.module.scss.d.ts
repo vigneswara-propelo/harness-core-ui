@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly aidaDialog: string
+  readonly aidaTerms: string
   readonly defaultSettingRenderer: string
   readonly detailSettings: string
   readonly emptyCheckBoxSpace: string

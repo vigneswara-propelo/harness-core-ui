@@ -91,3 +91,11 @@
   background-color: var(--grey-100);
   border-left: 0.5px solid var(--grey-300);
 }
+.aidaDialog {
+  width: 900px !important;
+}
+.aidaTerms {
+  max-height: 500px;
+  margin-bottom: var(--spacing-medium);
+  overflow-y: scroll;
+}

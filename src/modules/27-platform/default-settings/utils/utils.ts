@@ -9,6 +9,8 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { SettingType } from '@common/constants/Utils'
 import { ResponseListSettingResponseDTO } from 'services/cd-ng'
 
+export const AidaAgreementType = 'AIDA'
+
 export const getSettingValue = (
   settingsData: ResponseListSettingResponseDTO | null,
   identifier: string

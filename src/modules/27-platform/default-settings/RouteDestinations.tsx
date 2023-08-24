@@ -39,6 +39,7 @@ import {
   DefaultSettingsTagInput,
   DefaultSettingsToggle
 } from './components/ReusableHandlers'
+import { AIDASettingsRenderer } from './components/EULAComponents'
 
 DefaultSettingsFactory.registerCategory('CORE', {
   icon: 'cog',
@@ -70,6 +71,37 @@ DefaultSettingsFactory.registerCategory('PMS', {
   icon: 'cog',
   label: 'common.pipeline',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ci']
+})
+
+DefaultSettingsFactory.registerCategory('EULA', {
+  icon: 'cog',
+  label: 'platform.defaultSettings.eula',
+  modulesWhereCategoryWillBeDisplayed: [
+    'ci',
+    'cd',
+    'cf',
+    'cv',
+    'ce',
+    'sto',
+    'chaos',
+    'code',
+    'iacm',
+    'ssca',
+    'idp',
+    'cet',
+    'dashboards',
+    'idp-admin',
+    'cet'
+  ]
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.AIDA, {
+  label: 'platform.defaultSettings.aida.aida',
+  settingRenderer: props => {
+    return <AIDASettingsRenderer {...props} />
+  },
+  yupValidation: Yup.boolean(),
+  settingCategory: 'EULA'
 })
 
 DefaultSettingsFactory.registerCategory('CE', {

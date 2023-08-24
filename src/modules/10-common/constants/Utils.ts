@@ -110,7 +110,8 @@ export enum SettingType {
   ENABLE_SERVICE_OVERRIDE_V2 = 'service_override_v2',
   EXPORT_SERVICE_VARIABLES_AS_ENV_VARIABLES = 'export_service_variables_as_env_variables',
   TICKETING_TOOL = 'ticketing_tool',
-  TICKETING_TOOL_CONNECTOR = 'ticketing_tool_connector'
+  TICKETING_TOOL_CONNECTOR = 'ticketing_tool_connector',
+  AIDA = 'aida'
 }
 
 export const isValidYAMLFilePath = (filePath: string): boolean => {

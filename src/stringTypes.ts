@@ -2988,6 +2988,12 @@ export interface StringsMap {
   'platform.connectors.validation.tokenUrl': string
   'platform.connectors.validationPath': string
   'platform.connectors.verifyConnection': string
+  'platform.defaultSettings.aida.accept': string
+  'platform.defaultSettings.aida.aida': string
+  'platform.defaultSettings.aida.aidaEULAText': string
+  'platform.defaultSettings.aida.ifTermsAccepted': string
+  'platform.defaultSettings.aida.reject': string
+  'platform.defaultSettings.aida.terms': string
   'platform.defaultSettings.allowDifferentRepoForInputSets': string
   'platform.defaultSettings.allowOverrides': string
   'platform.defaultSettings.allowUserToMarkStepAsFailedExplicitly': string
@@ -3013,6 +3019,7 @@ export interface StringsMap {
   'platform.defaultSettings.enablePipelineExecutionAuditEvents': string
   'platform.defaultSettings.enableServiceOverrideV2': string
   'platform.defaultSettings.enforceGitExperience': string
+  'platform.defaultSettings.eula': string
   'platform.defaultSettings.executeTriggersWithAllCollectedArtifactsOrManifests': string
   'platform.defaultSettings.exportServiceVariablesAsEnvVariables': string
   'platform.defaultSettings.fetchingDefaultConnector': string
