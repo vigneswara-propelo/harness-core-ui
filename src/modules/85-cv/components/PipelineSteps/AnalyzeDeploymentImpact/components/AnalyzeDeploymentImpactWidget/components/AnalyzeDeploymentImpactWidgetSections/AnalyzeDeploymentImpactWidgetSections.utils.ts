@@ -43,14 +43,21 @@ export async function getStageServiceAndEnv({
   return data
 }
 
-export function getShouldRenderConfiguredMonitoredService(
-  serviceIdentifier: string,
-  environmentIdentifier: string,
+export function getShouldRenderConfiguredMonitoredService({
+  serviceIdentifier,
+  environmentIdentifier,
+  stepViewType,
+  hasMultiServiceOrEnvVaue
+}: {
+  serviceIdentifier: string
+  environmentIdentifier: string
   stepViewType?: StepViewType
-): boolean {
+  hasMultiServiceOrEnvVaue?: boolean
+}): boolean {
   return Boolean(
     isTemplatizedView(stepViewType) ||
       stepViewType === StepViewType.Template ||
-      (stepViewType === StepViewType.Edit && serviceIdentifier && environmentIdentifier)
+      (stepViewType === StepViewType.Edit && serviceIdentifier && environmentIdentifier) ||
+      (stepViewType === StepViewType.Edit && hasMultiServiceOrEnvVaue)
   )
 }

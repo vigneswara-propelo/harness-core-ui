@@ -81,11 +81,12 @@ export function AnalyzeDeploymentImpactWidgetSections({
   }, [pipeline, selectedStage, selectedStageId, isServiceEnvironmentFetched])
 
   const renderMonitoredService = (): JSX.Element => {
-    const shouldRenderConfiguredMonitoredService = getShouldRenderConfiguredMonitoredService(
+    const shouldRenderConfiguredMonitoredService = getShouldRenderConfiguredMonitoredService({
       serviceIdentifier,
       environmentIdentifier,
-      stepViewType
-    )
+      stepViewType,
+      hasMultiServiceOrEnvVaue: hasMultiServiceOrEnv
+    })
 
     if (stageMetaLoading || !isServiceEnvironmentFetched) {
       return (

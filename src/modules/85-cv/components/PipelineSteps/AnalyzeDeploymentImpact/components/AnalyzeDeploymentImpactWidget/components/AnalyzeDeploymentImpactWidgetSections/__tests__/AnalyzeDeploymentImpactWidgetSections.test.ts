@@ -105,32 +105,88 @@ describe('Validate Service Environment', () => {
 
 describe('getShouldRenderConfiguredMonitoredService', () => {
   test('should return false when stepViewType is undefined', () => {
-    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', undefined)
+    const serviceIdentifier = ''
+    const environmentIdentifier = ''
+    const stepViewType = undefined
+    const shouldRender = getShouldRenderConfiguredMonitoredService({
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType
+    })
     expect(shouldRender).toBe(false)
   })
 
   test('should return false when stepViewType is not Edit, Template, or a templatized view', () => {
-    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.InputVariable)
+    const serviceIdentifier = ''
+    const environmentIdentifier = ''
+    const stepViewType = StepViewType.InputVariable
+    const shouldRender = getShouldRenderConfiguredMonitoredService({
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType
+    })
     expect(shouldRender).toBe(false)
   })
 
   test('should return false when stepViewType is Edit but serviceIdentifier and environmentIdentifier are missing', () => {
-    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.Edit)
+    const serviceIdentifier = ''
+    const environmentIdentifier = ''
+    const stepViewType = StepViewType.Edit
+    const shouldRender = getShouldRenderConfiguredMonitoredService({
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType
+    })
     expect(shouldRender).toBe(false)
   })
 
   test('should return true when stepViewType is Template', () => {
-    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.Template)
+    const serviceIdentifier = ''
+    const environmentIdentifier = ''
+    const stepViewType = StepViewType.Template
+    const shouldRender = getShouldRenderConfiguredMonitoredService({
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType
+    })
     expect(shouldRender).toBe(true)
   })
 
   test('should return true when stepViewType is a templatized view', () => {
-    const shouldRender = getShouldRenderConfiguredMonitoredService('', '', StepViewType.TemplateUsage)
+    const serviceIdentifier = ''
+    const environmentIdentifier = ''
+    const stepViewType = StepViewType.TemplateUsage
+    const shouldRender = getShouldRenderConfiguredMonitoredService({
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType
+    })
     expect(shouldRender).toBe(true)
   })
 
   test('should return true when stepViewType is Edit and serviceIdentifier and environmentIdentifier are provided', () => {
-    const shouldRender = getShouldRenderConfiguredMonitoredService('service-id', 'env-id', StepViewType.Edit)
+    const serviceIdentifier = 'service-id'
+    const environmentIdentifier = 'env-id'
+    const stepViewType = StepViewType.Edit
+    const shouldRender = getShouldRenderConfiguredMonitoredService({
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType
+    })
+    expect(shouldRender).toBe(true)
+  })
+
+  test('should return true when stepViewType is Edit and muti service and env. is true', () => {
+    const serviceIdentifier = 'service-id'
+    const environmentIdentifier = 'env-id'
+    const stepViewType = StepViewType.Edit
+    const hasMultiServiceOrEnvVaue = true
+    const shouldRender = getShouldRenderConfiguredMonitoredService({
+      serviceIdentifier,
+      environmentIdentifier,
+      stepViewType,
+      hasMultiServiceOrEnvVaue
+    })
     expect(shouldRender).toBe(true)
   })
 })
