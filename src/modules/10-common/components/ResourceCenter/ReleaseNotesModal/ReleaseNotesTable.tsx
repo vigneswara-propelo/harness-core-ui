@@ -7,6 +7,8 @@
 
 import React from 'react'
 import { HTMLTable } from '@blueprintjs/core'
+import { isEmpty } from 'lodash-es'
+import { ModuleName } from 'framework/types/ModuleName'
 import {
   ModuleVersionsListResponseResponse,
   ModuleVersionsResponse,
@@ -32,20 +34,31 @@ export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
   const modulesList = React.useMemo((): ModuleVersionsResponse[] | null => {
     if (!data) return null
     const orderedModulesMap = new Map<string, ModuleVersionsResponse>([
-      ['CI', {}],
-      ['CD', {}],
-      ['CE', {}],
+      [ModuleName.CI, {}],
+      [ModuleName.CD, {}],
+      [ModuleName.CE, {}],
+      [ModuleName.CF, {}],
       ['FF', {}],
-      ['SRM', {}],
+      [ModuleName.SRM, {}],
       ['SRT', {}],
-      ['CHAOS', {}],
+      [ModuleName.STO, {}],
+      [ModuleName.CHAOS, {}],
       ['Platform', {}],
       ['Delegate', {}]
     ])
     data?.forEach((moduleData: ModuleVersionsResponse) => {
       orderedModulesMap.set(moduleData.name as string, moduleData)
     })
-    return [...orderedModulesMap.values()]
+    // to be removed once DB is updated
+    if (orderedModulesMap.has('FF') && orderedModulesMap.has('CF') && !isEmpty(orderedModulesMap.get('CF'))) {
+      orderedModulesMap.delete('FF')
+    }
+    // to be removed once DB is updated
+    if (orderedModulesMap.has('STO') && orderedModulesMap.has('SRT') && !isEmpty(orderedModulesMap.get('STO'))) {
+      orderedModulesMap.delete('STO')
+    }
+
+    return [...orderedModulesMap.values()].filter((moduleData: ModuleVersionsResponse) => !isEmpty(moduleData))
   }, [data])
   return (
     <HTMLTable className={css.table} data-testid="release-note-table">
