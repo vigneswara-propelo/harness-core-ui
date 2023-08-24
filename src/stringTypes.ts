@@ -3004,6 +3004,7 @@ export interface StringsMap {
   'platform.defaultSettings.defaultImagePullPolicyForAddOnContainer': string
   'platform.defaultSettings.defaultStoreType': string
   'platform.defaultSettings.emailToNonHarnessUsers': string
+  'platform.defaultSettings.enableBiDirectionalSync': string
   'platform.defaultSettings.enableExpressionsJsonSupport': string
   'platform.defaultSettings.enableForceDelete': string
   'platform.defaultSettings.enableGitCommands': string

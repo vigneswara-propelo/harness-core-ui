@@ -377,7 +377,7 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.TRIGGER_FOR_ALL_ARTIFA
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {
-  const { PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT } = useFeatureFlags()
+  const { PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT, PIE_GIT_BI_DIRECTIONAL_SYNC } = useFeatureFlags()
   const { getString } = useStrings()
 
   DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_FORCE_DELETE, {
@@ -416,6 +416,14 @@ export default function DefaultSettingsRoutes(): React.ReactElement {
     })
   }
 
+  if (PIE_GIT_BI_DIRECTIONAL_SYNC) {
+    DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_BI_DIRECTIONAL_SYNC, {
+      label: 'platform.defaultSettings.enableBiDirectionalSync',
+      settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+      yupValidation: Yup.boolean(),
+      settingCategory: 'GIT_EXPERIENCE'
+    })
+  }
   return (
     <>
       <RouteWithLayout
