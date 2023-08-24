@@ -91,6 +91,7 @@ import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
 import CDOnboardingWizardWithCLI from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard'
 import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
+import Webhooks from './pages/webhooks/Webhooks'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -669,6 +670,14 @@ export default (
       pageName={PAGE_NAME.ServiceOverrides}
     >
       <ServiceOverrides />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={AccountSideNavProps}
+      path={routes.toWebhooks({ ...accountPathProps })}
+      pageName={PAGE_NAME.Webhooks}
+    >
+      <Webhooks />
     </RouteWithLayout>
 
     {

@@ -791,6 +791,7 @@ changeIntelligence: Change Intelligence
 serviceReliabilityManagement: Service Reliability Management
 channel: Channel
 webhookURL: Webhook URL
+webhooks: Webhooks
 selectAChannel: Select a Channel
 slack: Slack
 pagerDuty: PagerDuty

@@ -90,6 +90,20 @@ const routes = {
     }
   ),
 
+  toWebhooks: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/webhooks`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toFreezeWindows: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `freeze-windows`

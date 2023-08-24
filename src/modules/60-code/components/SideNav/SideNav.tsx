@@ -179,7 +179,7 @@ export default function CODESideNav(): React.ReactElement {
                   size: 20
                 }
               }}
-              label={getString('code.webhooks')}
+              label={getString('common.webhooks')}
               to={routes.toCODEWebhooks({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}

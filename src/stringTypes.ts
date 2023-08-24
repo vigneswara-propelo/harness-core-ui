@@ -1410,6 +1410,7 @@ export interface StringsMap {
   'common.violations': string
   'common.warning': string
   'common.webhookURL': string
+  'common.webhooks': string
   'common.welcome': string
   'common.welcomePage.allusecases': string
   'common.welcomePage.cd.bodyText': string
@@ -3777,7 +3778,6 @@ export interface StringsMap {
   'code.learnMore': string
   'code.missingPermission': string
   'code.pullRequests': string
-  'code.webhooks': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string

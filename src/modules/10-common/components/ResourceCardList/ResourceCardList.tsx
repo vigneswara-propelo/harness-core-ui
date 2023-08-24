@@ -49,7 +49,12 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0, GITOPS_ORG_LEVEL } = useFeatureFlags()
+  const {
+    CDS_OrgAccountLevelServiceEnvEnvGroup,
+    CDS_SERVICE_OVERRIDES_2_0,
+    GITOPS_ORG_LEVEL,
+    PIE_GIT_BI_DIRECTIONAL_SYNC
+  } = useFeatureFlags()
 
   const { showError } = useToaster()
   const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
@@ -61,6 +66,15 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     lazy: false
   })
 
+  const { data: enableBidirectionalSyncSettings, error: enableBidirectionalSyncSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_BI_DIRECTIONAL_SYNC,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier
+    },
+    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC
+  })
+
   React.useEffect(() => {
     if (enableServiceOverrideSettingsError) {
       showError(getErrorInfoFromErrorObject(enableServiceOverrideSettingsError))
@@ -68,10 +82,19 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableServiceOverrideSettingsError])
 
+  React.useEffect(() => {
+    if (enableBidirectionalSyncSettingsError) {
+      showError(getErrorInfoFromErrorObject(enableBidirectionalSyncSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableBidirectionalSyncSettingsError])
+
   const isServiceOverridesEnabled =
     CDS_OrgAccountLevelServiceEnvEnvGroup &&
     CDS_SERVICE_OVERRIDES_2_0 &&
     enableServiceOverrideSettings?.data?.value === 'true'
+
+  const isBidirectionalSyncEnabled = enableBidirectionalSyncSettings?.data?.value === 'true'
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data } = useGetSmtpConfig({ queryParams: { accountId } })
@@ -191,6 +214,12 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'runtime-input',
       colorClass: css.variables,
       route: routes.toVariables({ accountId, orgIdentifier })
+    } as ResourceOption,
+    {
+      label: <String stringID="common.webhooks" />,
+      icon: 'code-webhook',
+      hidden: !isBidirectionalSyncEnabled,
+      route: routes.toWebhooks({ accountId, orgIdentifier })
     } as ResourceOption,
     ...(showGitOpsCard ? gitOpsCard : []),
     ...defaultSettingsCard
