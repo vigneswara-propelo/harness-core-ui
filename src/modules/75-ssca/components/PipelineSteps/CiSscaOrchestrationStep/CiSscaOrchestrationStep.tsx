@@ -50,7 +50,10 @@ export class CiSscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationSte
   }
 
   processFormData<T>(data: T): SscaCiOrchestrationStepData {
-    return getFormValuesInCorrectFormat<T, SscaCiOrchestrationStepData>(data, transformValuesFieldsConfig(this?.type))
+    return getFormValuesInCorrectFormat<T, SscaCiOrchestrationStepData>(
+      data,
+      transformValuesFieldsConfig(this?.type, data)
+    )
   }
 
   validateInputSet({

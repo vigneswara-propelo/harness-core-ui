@@ -9,93 +9,104 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
-export const transformValuesFieldsConfig = (stepType?: StepType) => [
-  {
-    name: 'identifier',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'name',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'spec.tool.type',
-    type: TransformValuesTypes.List
-  },
-  {
-    name: 'spec.tool.spec.format',
-    type: TransformValuesTypes.List
-  },
-  {
-    name: 'spec.attestation.type',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'spec.attestation.spec.privateKey',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'spec.attestation.spec.password',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'spec.source.type',
-    type: TransformValuesTypes.List
-  },
-  {
-    name: 'spec.source.spec.connector',
-    type: TransformValuesTypes.ConnectorRef
-  },
-  {
-    name: 'spec.source.spec.image',
-    type: TransformValuesTypes.Text
-  },
-  ...(stepType === StepType.CdSscaOrchestration
-    ? [
-        {
-          name: 'spec.infrastructure.type',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.infrastructure.spec.connectorRef',
-          type: TransformValuesTypes.ConnectorRef
-        },
-        {
-          name: 'spec.infrastructure.spec.namespace',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.infrastructure.spec.resources.limits.memory',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.infrastructure.spec.resources.limits.cpu',
-          type: TransformValuesTypes.Text
-        }
-      ]
-    : [
-        {
-          name: 'spec.mode',
-          type: TransformValuesTypes.List
-        },
-        {
-          name: 'spec.ingestion.file',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.resources.limits.memory',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.resources.limits.cpu',
-          type: TransformValuesTypes.Text
-        }
-      ]),
-  {
-    name: 'timeout',
-    type: TransformValuesTypes.Text
-  }
-]
+import { Field, SscaCdOrchestrationStepData, SscaCiOrchestrationStepData } from './types'
+
+export function transformValuesFieldsConfig<StepType, T>(stepType?: StepType, data?: T): Field[] {
+  const _data = data as SscaCiOrchestrationStepData | SscaCdOrchestrationStepData
+
+  return [
+    {
+      name: 'identifier',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'name',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.attestation.type',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.attestation.spec.privateKey',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.attestation.spec.password',
+      type: TransformValuesTypes.Text
+    },
+    {
+      name: 'spec.source.type',
+      type: TransformValuesTypes.List
+    },
+    {
+      name: 'spec.source.spec.connector',
+      type: TransformValuesTypes.ConnectorRef
+    },
+    {
+      name: 'spec.source.spec.image',
+      type: TransformValuesTypes.Text
+    },
+    ...(_data?.spec.mode === 'ingestion'
+      ? [
+          {
+            name: 'spec.ingestion.file',
+            type: TransformValuesTypes.Text
+          }
+        ]
+      : [
+          {
+            name: 'spec.tool.type',
+            type: TransformValuesTypes.List
+          },
+          {
+            name: 'spec.tool.spec.format',
+            type: TransformValuesTypes.List
+          }
+        ]),
+    ...(stepType === StepType.CdSscaOrchestration
+      ? [
+          {
+            name: 'spec.infrastructure.type',
+            type: TransformValuesTypes.Text
+          },
+          {
+            name: 'spec.infrastructure.spec.connectorRef',
+            type: TransformValuesTypes.ConnectorRef
+          },
+          {
+            name: 'spec.infrastructure.spec.namespace',
+            type: TransformValuesTypes.Text
+          },
+          {
+            name: 'spec.infrastructure.spec.resources.limits.memory',
+            type: TransformValuesTypes.Text
+          },
+          {
+            name: 'spec.infrastructure.spec.resources.limits.cpu',
+            type: TransformValuesTypes.Text
+          }
+        ]
+      : [
+          {
+            name: 'spec.mode',
+            type: TransformValuesTypes.List
+          },
+          {
+            name: 'spec.resources.limits.memory',
+            type: TransformValuesTypes.Text
+          },
+          {
+            name: 'spec.resources.limits.cpu',
+            type: TransformValuesTypes.Text
+          }
+        ]),
+    {
+      name: 'timeout',
+      type: TransformValuesTypes.Text
+    }
+  ]
+}
 
 export const editViewValidateFieldsConfig = (stepType: StepType) => [
   {

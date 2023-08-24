@@ -2,6 +2,7 @@
 import { AllowedTypes } from '@harness/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { Types } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import {
   Attestation,
   ContainerStepInfra,
@@ -67,6 +68,11 @@ export interface CommonSscaOrchestrationStepSpec {
     type: Attestation['type']
     spec: CosignAttestation
   }
+}
+
+export interface Field {
+  name: string
+  type: Types
 }
 
 export interface CommonSscaEnforcementStepSpec {

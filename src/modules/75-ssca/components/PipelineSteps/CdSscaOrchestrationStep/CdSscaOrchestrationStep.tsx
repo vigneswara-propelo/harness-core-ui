@@ -51,7 +51,10 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaCdOrchestrationSte
 
   /* istanbul ignore next */
   processFormData<T>(data: T): SscaCdOrchestrationStepData {
-    return getFormValuesInCorrectFormat<T, SscaCdOrchestrationStepData>(data, transformValuesFieldsConfig(this?.type))
+    return getFormValuesInCorrectFormat<T, SscaCdOrchestrationStepData>(
+      data,
+      transformValuesFieldsConfig(this?.type, data)
+    )
   }
 
   validateInputSet({

@@ -89,10 +89,16 @@ const SscaOrchestrationStepEdit = <T,>(
 
   return (
     <Formik
-      initialValues={getInitialValuesInCorrectFormat<T, T>(initialValues, transformValuesFieldsConfig(stepType))}
+      initialValues={getInitialValuesInCorrectFormat<T, T>(
+        initialValues,
+        transformValuesFieldsConfig(stepType, initialValues)
+      )}
       formName={stepType}
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<T, T>(valuesToValidate, transformValuesFieldsConfig(stepType))
+        const schemaValues = getFormValuesInCorrectFormat<T, T>(
+          valuesToValidate,
+          transformValuesFieldsConfig(stepType, valuesToValidate)
+        )
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
@@ -107,7 +113,7 @@ const SscaOrchestrationStepEdit = <T,>(
         )
       }}
       onSubmit={(_values: T) => {
-        const schemaValues = getFormValuesInCorrectFormat<T, T>(_values, transformValuesFieldsConfig(stepType))
+        const schemaValues = getFormValuesInCorrectFormat<T, T>(_values, transformValuesFieldsConfig(stepType, _values))
         onUpdate?.(schemaValues)
       }}
     >
