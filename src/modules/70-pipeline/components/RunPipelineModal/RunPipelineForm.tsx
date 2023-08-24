@@ -327,7 +327,7 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module || '',
       repoIdentifier,
-      branch: getPipelineBranch(),
+      branch: selectedBranch ?? getPipelineBranch(),
       notifyOnlyUser: notifyOnlyMe,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
@@ -347,7 +347,7 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module || '',
       repoIdentifier,
-      branch,
+      branch: selectedBranch ?? branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
@@ -693,7 +693,9 @@ function RunPipelineFormBasic({
               }),
               search:
                 supportingGitSimplification && storeType === StoreType.REMOTE
-                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${getPipelineBranch()}&storeType=${storeType}`
+                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${
+                      selectedBranch ?? getPipelineBranch()
+                    }&storeType=${storeType}`
                   : undefined,
               state: {
                 shouldShowGovernanceEvaluations:
