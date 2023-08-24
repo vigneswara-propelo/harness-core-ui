@@ -126,6 +126,9 @@ describe('ArchiveDialog', () => {
     const archiveBtn = screen.getByRole('button', { name: 'archive' })
 
     expect(archiveFlagTextbox).toHaveValue(incorrectFlagIdentifier)
+
+    await userEvent.click(archiveBtn)
+
     expect(screen.getByText('cf.featureFlags.archiving.mismatchIdentifierError')).toBeInTheDocument()
     expect(archiveBtn).toBeDisabled()
 

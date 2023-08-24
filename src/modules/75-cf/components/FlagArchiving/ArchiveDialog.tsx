@@ -1,17 +1,7 @@
 import React, { FC, useMemo, useState } from 'react'
-import {
-  FormError,
-  Formik,
-  FormikForm,
-  FormInput,
-  Layout,
-  ModalDialog,
-  PageError,
-  Pagination,
-  Text
-} from '@harness/uicore'
+import { Formik, FormikForm, FormInput, Layout, ModalDialog, PageError, Pagination, Text } from '@harness/uicore'
+import * as Yup from 'yup'
 import { Spinner } from '@blueprintjs/core'
-import { FormikErrors } from 'formik'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { useModalHook } from '@harness/use-modal'
 import { useToaster } from '@common/exports'
@@ -134,19 +124,6 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
     }
   }
 
-  interface FlagIdentifierValues {
-    flagIdentifier: string
-  }
-
-  const handleValidation = (values: FlagIdentifierValues): FormikErrors<FlagIdentifierValues> => {
-    const errors: { flagIdentifier?: string } = {}
-
-    if (values?.flagIdentifier !== flagIdentifier) {
-      errors.flagIdentifier = getString('cf.featureFlags.archiving.mismatchIdentifierError')
-    }
-    return errors
-  }
-
   return (
     <Formik
       formName="archive-flag-form"
@@ -158,9 +135,22 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
         }
       }}
       initialValues={{ flagIdentifier: '' }}
-      validate={handleValidation}
+      validateOnChange
+      validateOnBlur
+      validationSchema={Yup.object().shape({
+        flagIdentifier: Yup.string().test(
+          'flagIdentifier',
+          getString('cf.featureFlags.archiving.mismatchIdentifierError'),
+          userInput => {
+            if (userInput !== flagIdentifier) {
+              return false
+            }
+            return true
+          }
+        )
+      })}
     >
-      {({ dirty, errors, handleSubmit, isSubmitting, isValid }) => (
+      {({ dirty, handleSubmit, isSubmitting, isValid }) => (
         <ModalDialog
           enforceFocus={false}
           isOpen
@@ -212,7 +202,6 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
                 />
               </Layout.Vertical>
             )}
-            <FormError name="mismatchFlagIdentifierError" errorMessage={errors.flagIdentifier} />
           </FormikForm>
         </ModalDialog>
       )}

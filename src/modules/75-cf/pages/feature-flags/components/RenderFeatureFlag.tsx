@@ -21,7 +21,6 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import type { UseToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { featureFlagHasCustomRules, getErrorMessage, isFeatureFlagOn } from '@cf/utils/CFUtils'
-
 import SaveFlagToGitModal from '@cf/components/SaveFlagToGitModal/SaveFlagToGitModal'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { GitDetails, GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
