@@ -347,7 +347,8 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
 
   useEffect(() => {
     if (error && isEmpty(inputSet.identifier)) {
-      // User click reconcile button while creating input-set / overlay-input-set
+      // Error handling if User click reconcile button while creating input-set / overlay-input-set
+      // We do not need to show reconcile diff dialog and just show a toaster
       showError(getRBACErrorMessage(error))
       closeReconcileMenu?.()
     } else if (
@@ -357,11 +358,14 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
         get(yamlDiffResponse, 'data.yamlDiffPresent')) ||
       error
     ) {
+      // Error handling for already created IS is handled within ReconcileDialog
       showReconcileDialog()
     } else if (get(yamlDiffResponse, 'data.inputSetEmpty')) {
       hideReconcileDialog() // If the error object becomes empty after clicking the retry button, the reconcile dialogue should be closed
       openDeleteInputSetModal()
     } else if (get(yamlDiffResponse, 'data.yamlDiffPresent') === false) {
+      // Reconcile giving both old and new YAML as same
+      // So effectively no Reconcile occured and we do not need to show ReconcileDialog
       clear()
       showSuccess(getString('pipeline.inputSets.noReconcileOccured'))
       closeReconcileMenu?.()

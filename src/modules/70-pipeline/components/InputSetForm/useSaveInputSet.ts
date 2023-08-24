@@ -112,7 +112,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = React.useContext(AppStoreContext)
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
-  const getinitialStoreMetadataPayload = React.useMemo(() => {
+  const initialStoreMetadataPayload = React.useMemo(() => {
     if (isGitSyncEnabled) {
       return {}
     } else {
@@ -156,7 +156,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
                       pipelineBranch: branch
                     }
                   : {}),
-                ...getinitialStoreMetadataPayload,
+                ...initialStoreMetadataPayload,
                 ...updatedGitDetails
               }
             })
@@ -176,7 +176,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
                     pipelineBranch: branch
                   }
                 : {}),
-              ...getinitialStoreMetadataPayload,
+              ...initialStoreMetadataPayload,
               ...updatedGitDetails
             }
           })
