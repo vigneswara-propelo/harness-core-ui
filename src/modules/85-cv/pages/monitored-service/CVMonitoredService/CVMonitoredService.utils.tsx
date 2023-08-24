@@ -151,7 +151,7 @@ export const ServiceDeleteContext = ({ serviceName }: { serviceName?: string }):
 
   return (
     <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-      <Text color={Color.GREY_800}>
+      <Text color={Color.GREY_800} lineClamp={10}>
         {getString('cv.monitoredServices.deleteMonitoredServiceWarning', { name: serviceName })}
       </Text>
       <div>

@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Menu, Popover, Position } from '@blueprintjs/core'
-import { Button, ButtonVariation, Icon, useConfirmationDialog } from '@harness/uicore'
+import { Button, ButtonVariation, Icon, useConfirmationDialog, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { ContextMenuActionsProps } from '@cv/pages/monitored-service/CVMonitoredService/CVMonitoredService.types'
@@ -31,7 +31,11 @@ export default function ContextMenuActions({
   const { getString } = useStrings()
   const [popoverOpen, setPopoverOpen] = useState(false)
   const { openDialog } = useConfirmationDialog({
-    titleText,
+    titleText: (
+      <Text color={Color.BLACK} lineClamp={1}>
+        {titleText}
+      </Text>
+    ),
     contentText,
     confirmButtonText: confirmButtonText ?? getString('delete'),
     cancelButtonText: getString('cancel'),
