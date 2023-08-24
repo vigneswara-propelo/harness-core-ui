@@ -10,7 +10,6 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import ModulesConfigurationScreen from '../ModuleConfigurationScreen'
 import type { ModuleCarouselProps } from '../ModuleDetailsSection/ModuleCarousel'
 import type { ModuleSortableListProps } from '../ModuleSortableList/ModuleSortableList'
@@ -58,7 +57,6 @@ describe('Module Configuration screen', () => {
     })
   })
   test('should render correctly', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
     const { container, queryByText } = render(
       <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
         <ModulesConfigurationScreen onClose={jest.fn} />
@@ -72,7 +70,6 @@ describe('Module Configuration screen', () => {
   })
 
   test('test when hide reordering is enabled', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
     const { queryByText } = render(
       <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
         <ModulesConfigurationScreen hideReordering onClose={jest.fn} />
@@ -85,7 +82,6 @@ describe('Module Configuration screen', () => {
   })
 
   test('test when hide header is enabled', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
     const { queryByText } = render(
       <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
         <ModulesConfigurationScreen hideReordering hideHeader onClose={jest.fn} />
@@ -98,7 +94,6 @@ describe('Module Configuration screen', () => {
   })
 
   test('test with passing active module', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
     const { getByTestId } = render(
       <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
         <ModulesConfigurationScreen activeModuleIndex={1} onClose={jest.fn} />
@@ -109,7 +104,6 @@ describe('Module Configuration screen', () => {
   })
 
   test('test with no modules in preference store', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
     ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
       return {
         setPreference: setModuleConfigPreference,

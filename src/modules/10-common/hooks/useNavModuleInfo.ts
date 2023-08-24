@@ -46,7 +46,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.IACM,
   ModuleName.SSCA,
   ModuleName.IDP,
-  ModuleName.CET
+  ModuleName.CET,
+  ModuleName.SEI
 ]
 
 export interface useNavModuleInfoReturnType {
