@@ -134,11 +134,11 @@ describe('Connectors list', () => {
     cy.get('.MultiTypeInput--btn').eq(1).click()
     cy.contains('span', 'Runtime input').click()
     cy.wait(100)
-    cy.get('.MultiTypeInput--btn').eq(2).click()
+    cy.get('.MultiTypeInput--btn').eq(3).click()
     cy.contains('span', 'Expression').click()
     cy.get('input[name="spec.jobName"]').type('<+pipeline>')
 
-    cy.get('.MultiTypeInput--btn').eq(2).click()
+    cy.get('.MultiTypeInput--btn').eq(3).click()
     cy.contains('span', 'Runtime input').click()
 
     cy.contains('span', 'Apply Changes').click()

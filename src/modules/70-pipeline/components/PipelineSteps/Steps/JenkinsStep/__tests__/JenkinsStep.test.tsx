@@ -223,6 +223,7 @@ describe('Jenkins step tests', () => {
       type: StepType.JenkinsBuild,
       spec: {
         connectorRef: 'cid1',
+        consoleLogPollFrequency: '5s',
         jobParameter: [
           {
             name: 'x',

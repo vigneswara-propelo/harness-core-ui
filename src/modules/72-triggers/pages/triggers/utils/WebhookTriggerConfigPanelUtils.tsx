@@ -160,7 +160,7 @@ export const renderNonCustomEventFields = ({
             <>
               <FormMultiTypeDurationField
                 name="pollInterval"
-                label={getString('triggers.triggerConfigurationPanel.pollingFrequency')}
+                label={getString('pipeline.jenkinsStep.consoleLogPollFrequency')}
                 tooltipProps={{
                   dataTooltipId: 'pollInterval'
                 }}

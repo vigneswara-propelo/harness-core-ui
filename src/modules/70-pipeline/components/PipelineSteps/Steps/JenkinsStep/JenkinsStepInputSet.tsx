@@ -289,6 +289,25 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
           />
         ) : null}
 
+        {getMultiTypeFromValue(template?.spec?.consoleLogPollFrequency) === MultiTypeInputType.RUNTIME && (
+          <TimeoutFieldInputSetView
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            label={getString('pipeline.jenkinsStep.consoleLogPollFrequency')}
+            name={`${prefix}spec.consoleLogPollFrequency`}
+            disabled={readonly}
+            fieldPath={'spec.consoleLogPollFrequency'}
+            template={template}
+            className={cx(css.formGroup, css.sm)}
+          />
+        )}
+
         {getMultiTypeFromValue(template?.spec?.jobName) === MultiTypeInputType.RUNTIME ? (
           <>
             <div className={cx(css.formGroup, css.lg)}>

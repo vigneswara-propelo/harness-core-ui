@@ -172,8 +172,11 @@ jenkinsStep:
   job: job
   addJobParameters: Add Job Parameter
   hideWarning: hide warning
+  consoleLogPollFrequency: Polling Frequency
   jobParameterDuplicateWarning: Duplicate job parameters found, latest value will be picked.
   validations:
+    consoleLogPollFrequency: Minimum Poll Frequency is 5 seconds
+    pollingFrequencyExceedingTimeout: Poll Frequency should not be more than timeout
     jobName: Job Name is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters

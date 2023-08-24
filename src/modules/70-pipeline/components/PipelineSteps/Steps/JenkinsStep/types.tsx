@@ -27,6 +27,7 @@ export interface jobParameterInterface {
 
 export interface JenkinsStepSpec {
   connectorRef: string
+  consoleLogPollFrequency?: string
   jobName: SelectWithBiLevelOption | string
   childJobName?: SelectWithSubmenuOption | string
   jobParameter: jobParameterInterface[] | string

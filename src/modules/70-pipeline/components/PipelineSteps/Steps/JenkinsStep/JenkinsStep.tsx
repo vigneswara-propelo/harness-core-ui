@@ -74,6 +74,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
     spec: {
       connectorRef: '',
       jobName: '',
+      consoleLogPollFrequency: '5s',
       jobParameter: [],
       unstableStatusAsSuccess: false,
       useConnectorUrlForJobExecution: false
@@ -90,7 +91,8 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
       jobParameter,
       delegateSelectors,
       unstableStatusAsSuccess,
-      useConnectorUrlForJobExecution
+      useConnectorUrlForJobExecution,
+      consoleLogPollFrequency
     } = spec
 
     const processedData = {
@@ -101,6 +103,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
       failureStrategies,
       spec: {
         connectorRef,
+        consoleLogPollFrequency,
         jobName: childJobName
           ? typeof childJobName === 'string'
             ? childJobName

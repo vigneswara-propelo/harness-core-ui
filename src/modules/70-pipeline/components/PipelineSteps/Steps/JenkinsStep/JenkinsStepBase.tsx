@@ -54,7 +54,13 @@ import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRender
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface } from './types'
-import { getJenkinsJobParentChildName, resetForm, scriptInputType, getJobValue } from './helper'
+import {
+  getJenkinsJobParentChildName,
+  resetForm,
+  scriptInputType,
+  getJobValue,
+  isPollingIntervalGreaterThanTimeout
+} from './helper'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './JenkinsStep.module.scss'
@@ -422,6 +428,20 @@ function FormContent({
         )}
       </div>
 
+      <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <FormMultiTypeDurationField
+          name="spec.consoleLogPollFrequency"
+          label={getString('pipeline.jenkinsStep.consoleLogPollFrequency')}
+          disabled={readonly}
+          multiTypeDurationProps={{
+            expressions,
+            enableConfigureOptions: true,
+            allowableTypes,
+            isExecutionTimeFieldDisabled: false
+          }}
+        />
+      </div>
+
       <div className={cx(stepCss.formGroup, stepCss.lg, css.jobDetails)}>
         <FormInput.MultiTypeBiLevelInput
           label={getString('platform.connectors.jenkins.jobNameLabel')}
@@ -429,6 +449,7 @@ function FormContent({
           value={getJobNameValue()}
           placeholder={jobNamePlaceholder}
           multiTypeInputProps={{
+            width: 390,
             onChange: (primaryValue: any) => {
               if (primaryValue?.hasSubmenuItems) {
                 setShowChildJobField(true)
@@ -507,6 +528,7 @@ function FormContent({
             value={childJob}
             placeholder={childJobNamePlaceholder}
             multiTypeInputProps={{
+              width: 390,
               onChange: (primaryValue: any) => {
                 if (getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED && primaryValue?.label?.length) {
                   refetchJobParameters({
@@ -543,29 +565,28 @@ function FormContent({
         </div>
       )}
 
-      <div className={stepCss.formGroup}>
-        <Layout.Vertical>
-          {showJobParameterWarning && checkDuplicateJobParameter() && (
-            <Layout.Horizontal background={Color.ORANGE_100} padding="medium" spacing="small" flex>
-              <Text
-                icon="warning-sign"
-                intent="warning"
-                iconProps={{ size: 18, color: Color.RED_800, padding: { right: 'small' } }}
-                color={Color.RED_700}
-                font={{ weight: 'semi-bold' }}
-              >
-                {getString('pipeline.jenkinsStep.jobParameterDuplicateWarning')}
-              </Text>
-              <Button
-                aria-label={getString('pipeline.jenkinsStep.hideWarning')}
-                minimal
-                icon="cross"
-                iconProps={{ size: 18 }}
-                onClick={() => setShowJobParameterWarning(false)}
-              />
-            </Layout.Horizontal>
-          )}
-
+      <Layout.Vertical>
+        {showJobParameterWarning && checkDuplicateJobParameter() && (
+          <Layout.Horizontal background={Color.ORANGE_100} padding="medium" spacing="small" flex>
+            <Text
+              icon="warning-sign"
+              intent="warning"
+              iconProps={{ size: 18, color: Color.RED_800, padding: { right: 'small' } }}
+              color={Color.RED_700}
+              font={{ weight: 'semi-bold' }}
+            >
+              {getString('pipeline.jenkinsStep.jobParameterDuplicateWarning')}
+            </Text>
+            <Button
+              aria-label={getString('pipeline.jenkinsStep.hideWarning')}
+              minimal
+              icon="cross"
+              iconProps={{ size: 18 }}
+              onClick={() => setShowJobParameterWarning(false)}
+            />
+          </Layout.Horizontal>
+        )}
+        <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector
             name="spec.jobParameter"
             key={getMultiTypeFromValue(formik.values.spec.jobParameter as string)}
@@ -661,8 +682,8 @@ function FormContent({
               isReadonly={readonly}
             />
           )}
-        </Layout.Vertical>
-      </div>
+        </div>
+      </Layout.Vertical>
 
       <div className={cx(stepCss.formGroup)}>
         <FormInput.CheckBox
@@ -701,6 +722,9 @@ function JenkinsStepBase(
   const validationSchema = Yup.object().shape({
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
     spec: Yup.object().shape({
+      consoleLogPollFrequency: getDurationValidationSchema({ minimum: '5s' }).required(
+        getString('pipeline.jenkinsStep.validations.consoleLogPollFrequency')
+      ),
       connectorRef: Yup.lazy(value =>
         typeof value === 'object'
           ? Yup.object().required(getString('common.validation.connectorRef')) // typeError is necessary here, otherwise we get a bad-looking yup error
@@ -735,6 +759,15 @@ function JenkinsStepBase(
         onChange?.(valuesToValidate)
       }}
       onSubmit={(_values: JenkinsStepData) => {
+        if (
+          isPollingIntervalGreaterThanTimeout(
+            (formikRef as React.MutableRefObject<FormikProps<JenkinsStepData>>)?.current?.values
+          )
+        )
+          (formikRef as React.MutableRefObject<FormikProps<JenkinsStepData>>)?.current?.setFieldError(
+            'spec.consoleLogPollFrequency',
+            getString('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+          )
         onUpdate?.(_values)
       }}
       validationSchema={validationSchema}

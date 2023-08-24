@@ -62,6 +62,7 @@ export interface MultiTypeDurationProps
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
   inputGroupProps?: Omit<IInputGroupProps & HTMLInputProps, 'onChange' | 'value'>
   enableConfigureOptions?: boolean
+  isExecutionTimeFieldDisabled?: boolean
   configureOptionsProps?: MultiTypeDurationConfigureOptionsProps
 }
 
@@ -74,6 +75,7 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
     configureOptionsProps,
     inputGroupProps,
     allowableTypes,
+    isExecutionTimeFieldDisabled = true,
     ...rest
   } = props
 
@@ -108,7 +110,7 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
               onChange={val => onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)}
               allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
               {...configureOptionsProps}
-              isExecutionTimeFieldDisabled
+              isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled}
               isReadonly={props.disabled}
             />
           )}

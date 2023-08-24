@@ -4603,7 +4603,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                               class="Tooltip--acenter"
                               data-tooltip-id="pollInterval"
                             >
-                              triggers.triggerConfigurationPanel.pollingFrequency
+                              pipeline.jenkinsStep.consoleLogPollFrequency
                             </span>
                              
                             <span
@@ -5823,7 +5823,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                               class="Tooltip--acenter"
                               data-tooltip-id="pollInterval"
                             >
-                              triggers.triggerConfigurationPanel.pollingFrequency
+                              pipeline.jenkinsStep.consoleLogPollFrequency
                             </span>
                              
                             <span

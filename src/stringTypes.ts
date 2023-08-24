@@ -4574,6 +4574,7 @@ export interface StringsMap {
   'pipeline.jenkinsBuild': string
   'pipeline.jenkinsStep.addJobParameters': string
   'pipeline.jenkinsStep.captureEnvironmentVariable': string
+  'pipeline.jenkinsStep.consoleLogPollFrequency': string
   'pipeline.jenkinsStep.hideWarning': string
   'pipeline.jenkinsStep.job': string
   'pipeline.jenkinsStep.jobNamePlaceholder': string
@@ -4581,7 +4582,9 @@ export interface StringsMap {
   'pipeline.jenkinsStep.jobParameterDuplicateWarning': string
   'pipeline.jenkinsStep.unstableStatusAsSuccess': string
   'pipeline.jenkinsStep.useConnectorUrlForJobExecution': string
+  'pipeline.jenkinsStep.validations.consoleLogPollFrequency': string
   'pipeline.jenkinsStep.validations.jobName': string
+  'pipeline.jenkinsStep.validations.pollingFrequencyExceedingTimeout': string
   'pipeline.jiraApprovalStep.connectToJira': string
   'pipeline.jiraApprovalStep.connectorRef': string
   'pipeline.jiraApprovalStep.execution.conditions.equals': string
@@ -5745,7 +5748,6 @@ export interface StringsMap {
   'triggers.triggerConfigurationPanel.eventPlaceholder': string
   'triggers.triggerConfigurationPanel.listenOnNewWebhook': string
   'triggers.triggerConfigurationPanel.payloadType': string
-  'triggers.triggerConfigurationPanel.pollingFrequency': string
   'triggers.triggerConfigurationPanel.pollingFrequencyPlaceholder': string
   'triggers.triggerConfigurationPanel.title': string
   'triggers.triggerConfigurationPanel.webhookId': string

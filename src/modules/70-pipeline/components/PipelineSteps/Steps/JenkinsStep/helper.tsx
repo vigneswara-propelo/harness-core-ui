@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
+import { parseStringToTime, SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
+import { defaultTo } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { isValueFixed } from '@common/utils/utils'
 import type { JenkinsStepData } from './types'
+import { checkIfFixedAndValidString } from '../JiraApproval/helper'
 const JENKINS_JOB_NAME_SEPARATOR = '/'
 
 export const resetForm = (
@@ -96,4 +98,18 @@ export const getJobName = (
   if (jobName) {
     return typeof jobName === 'string' ? jobName : jobName.label
   }
+}
+
+export function isPollingIntervalGreaterThanTimeout(formikValue: JenkinsStepData): boolean {
+  const timeoutString = formikValue?.timeout
+  const pollingIntervalString = formikValue?.spec?.consoleLogPollFrequency
+  if (
+    checkIfFixedAndValidString(timeoutString || '') &&
+    checkIfFixedAndValidString(defaultTo(pollingIntervalString, ''))
+  ) {
+    const pollingInterval = parseStringToTime(defaultTo(pollingIntervalString, ''))
+    const timeout = parseStringToTime(timeoutString || '')
+    if (pollingInterval > timeout) return true
+  }
+  return false
 }

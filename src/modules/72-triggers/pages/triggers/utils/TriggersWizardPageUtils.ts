@@ -390,7 +390,7 @@ export const getValidationSchema = (
           explicitAllowedValues: ['0']
         }).required(
           getString('common.validation.fieldIsRequired', {
-            name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
+            name: getString('pipeline.jenkinsStep.consoleLogPollFrequency')
           })
         ),
         webhookId: string()
