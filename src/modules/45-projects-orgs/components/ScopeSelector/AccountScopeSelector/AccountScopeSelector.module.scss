@@ -1,0 +1,92 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.accountSearch {
+  flex: 1;
+}
+
+.pagination {
+  padding-bottom: 0px !important;
+}
+
+.accountContainerWrapper {
+  height: calc(100vh - 130px);
+  justify-content: space-between;
+  margin: var(--spacing-none) var(--spacing-none) !important;
+  overflow-y: scroll;
+  padding-bottom: var(--spacing-4) !important;
+  padding-top: var(--spacing-4) !important;
+}
+
+.table {
+  overflow: auto;
+  [class*='TableV2--cells'] {
+    height: var(--spacing-9);
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: var(--grey-200);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    opacity: 0.6;
+  }
+}
+
+.accountName {
+  padding: var(--spacing-1) !important;
+  span {
+    font-size: var(--font-size-normal) !important;
+    font-weight: 500 !important;
+    line-height: 22px !important;
+    color: var(--grey-800) !important;
+  }
+}
+
+.defaultContainer {
+  margin-right: var(--spacing-4) !important;
+
+  p {
+    background-color: var(--green-50) !important;
+    padding: var(--spacing-1) var(--spacing-2) !important;
+    border-radius: var(--spacing-2);
+    height: 18px;
+  }
+}
+
+.setDefault {
+  p {
+    background-color: var(--grey-100) !important;
+    cursor: pointer;
+  }
+}
+
+.selected {
+  border: 1px solid var(--primary-7) !important;
+  background: var(--primary-1) !important;
+}
+
+.loggedInContainer {
+  border-radius: 0px var(--spacing-2) var(--spacing-2) 0px;
+  background-color: var(--blue-50) !important;
+  transform: rotate(180deg);
+  position: absolute;
+  padding: 0px var(--spacing-2) !important;
+  left: 0;
+  height: 100%;
+  top: 0;
+  writing-mode: vertical-rl;
+  text-align: center;
+}

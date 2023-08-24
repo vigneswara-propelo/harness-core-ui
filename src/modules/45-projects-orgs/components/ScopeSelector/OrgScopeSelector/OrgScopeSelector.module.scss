@@ -1,0 +1,101 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.listHeader {
+  margin: var(--spacing-xlarge) 0 !important;
+  flex: 1;
+  > p {
+    font-size: var(--font-size-normal) !important;
+    color: var(--grey-500) !important;
+  }
+}
+
+.orgSearch {
+  flex: 1;
+  margin-right: var(--spacing-small);
+}
+
+.orgContainer {
+  box-sizing: content-box;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: var(--spacing-7);
+  justify-content: center;
+}
+
+.orgContainerWrapper {
+  height: calc(100vh - 210px);
+  justify-content: space-between;
+  margin: var(--spacing-none) var(--spacing-none) !important;
+  overflow-y: scroll;
+  padding-top: var(--spacing-4) !important;
+  padding-bottom: var(--spacing-4) !important;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: var(--grey-200);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    opacity: 0.6;
+  }
+}
+
+.pagination {
+  padding: var(--spacing-xlarge) var(--spacing-xlarge) var(--spacing-xlarge) 0px !important;
+}
+
+/* Org Card */
+
+.orgCard {
+  padding: 0px !important;
+  display: flex !important;
+  width: 272px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-7);
+  border-radius: var(--spacing-2) !important;
+  background: var(--grey-0);
+  max-height: 220px;
+}
+
+.orgInfo {
+  overflow-wrap: anywhere;
+
+  .title {
+    max-width: 232px !important;
+  }
+
+  .description {
+    padding-top: var(--spacing-4) !important;
+    height: var(--spacing-9);
+  }
+
+  .tagsContainer {
+    min-height: var(--spacing-9);
+    .tags {
+      display: flex;
+      align-items: center;
+      padding-top: var(--spacing-4);
+      overflow: auto;
+      .tagText {
+        font-size: var(--font-size-xsmall);
+        font-style: normal;
+        font-weight: 500;
+        line-height: 14px;
+        letter-spacing: 0.2px;
+      }
+    }
+  }
+}

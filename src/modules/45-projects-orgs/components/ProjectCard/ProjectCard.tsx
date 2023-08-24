@@ -37,6 +37,7 @@ export interface ProjectCardProps {
   editProject?: (project: Project) => void
   handleInviteCollaborators?: (project: Project) => void
   avatarClassName?: string
+  hideAddOption?: boolean
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = props => {
@@ -196,6 +197,7 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
                     skipCondition: /* istanbul ignore next */ () => !allowInteraction
                   }
                 }}
+                hideAddOption={props.hideAddOption}
               />
             </Layout.Vertical>
             <Layout.Vertical spacing="xsmall">
@@ -218,6 +220,7 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
                     skipCondition: /* istanbul ignore next */ () => !allowInteraction
                   }
                 }}
+                hideAddOption={props.hideAddOption}
               />
             </Layout.Vertical>
           </Layout.Horizontal>

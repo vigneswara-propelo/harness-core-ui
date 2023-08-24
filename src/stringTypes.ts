@@ -3692,6 +3692,7 @@ export interface StringsMap {
   'projectsOrgs.multipleProjects': string
   'projectsOrgs.newOrganization': string
   'projectsOrgs.newProject': string
+  'projectsOrgs.noAccounts': string
   'projectsOrgs.noCollaborators': string
   'projectsOrgs.noDataMessage': string
   'projectsOrgs.noModules': string
@@ -3711,6 +3712,7 @@ export interface StringsMap {
   'projectsOrgs.orgResources.label': string
   'projectsOrgs.pendingInvitation': string
   'projectsOrgs.pendingUsers': string
+  'projectsOrgs.pickScope': string
   'projectsOrgs.placeholder': string
   'projectsOrgs.projectCreateSuccess': string
   'projectsOrgs.projectDeleteErrorMessage': string
@@ -3756,6 +3758,7 @@ export interface StringsMap {
   'projectsOrgs.searchPlaceHolder': string
   'projectsOrgs.searchProjectPlaceHolder': string
   'projectsOrgs.selectAnExistingProject': string
+  'projectsOrgs.selectOrg': string
   'projectsOrgs.tabProjects': string
   'projectsOrgs.toConfirmOrg': string
   'projectsOrgs.toConfirmProject': string

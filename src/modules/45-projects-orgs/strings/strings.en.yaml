@@ -37,6 +37,7 @@ purposeList:
 
 noDataMessage: 'You have no organizations. Click the button below to create a new one.'
 noOrganizations: No organizations found
+noAccounts: No accounts found
 orgCreateSuccess: 'Organization created successfully'
 orgEditSuccess: 'Organization updated successfully'
 projectCreateSuccess: 'Project Created Successfully'
@@ -134,3 +135,5 @@ optional: Optional
 moduleSelectionTitle: Which Harness module would you like to start using for this project
 goToModuleBtn: Go to Module
 projectDeleteErrorMessage: 'Project {{projectName}} could not be deleted'
+pickScope: Pick a {{ scope }} and drill down to see your information.
+selectOrg: Select an Organisation

@@ -17,6 +17,7 @@ interface RbacAvatarGroupProps extends AvatarGroupProps {
   permission?: Omit<PermissionsRequest, 'permissions'> & { permission: PermissionIdentifier }
   disabled?: boolean
   featureProps?: FeatureProps
+  hideAddOption?: boolean
 }
 
 const RbacAvatarGroup: React.FC<RbacAvatarGroupProps> = ({
@@ -49,6 +50,7 @@ const RbacAvatarGroup: React.FC<RbacAvatarGroupProps> = ({
           event.stopPropagation()
         }
       }}
+      hideAddOption={restProps.hideAddOption}
     />
   )
 }

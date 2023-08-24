@@ -1,0 +1,156 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.scopeText {
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.listHeader {
+  margin: var(--spacing-xlarge) 0 !important;
+  flex: 1;
+  > p {
+    font-size: var(--font-size-normal) !important;
+    color: var(--grey-500) !important;
+  }
+}
+
+.pickScopeHelp {
+  padding: var(--spacing-huge) var(--spacing-xlarge);
+  background-position: center 0;
+  background-size: 35px;
+  background-repeat: no-repeat;
+  line-height: var(--spacing-6);
+}
+
+.projectContainer {
+  column-count: 2;
+  column-gap: var(--spacing-7);
+  box-sizing: content-box;
+  max-width: 530px;
+  margin: 0 auto;
+}
+
+.projectSearch {
+  flex: 1;
+  margin-right: var(--spacing-small);
+}
+
+.orgDropdown {
+  margin-right: var(--spacing-xsmall);
+  width: 180px;
+
+  &.orgwidth {
+    width: 139px;
+  }
+}
+
+.projectContainerWrapper {
+  height: calc(100vh - 210px);
+  justify-content: space-between;
+  margin: var(--spacing-none) var(--spacing-none) !important;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: var(--grey-200);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    opacity: 0.6;
+  }
+}
+
+.projectCard {
+  margin-bottom: var(--spacing-7);
+}
+
+.selectContainer {
+  height: 100vh;
+  padding-bottom: var(--spacing-none) !important;
+  background: var(--primary-light-hover) !important;
+
+  :global {
+    .bp3-tab-list {
+      border-bottom: 1px solid var(--grey-200);
+    }
+    .bp3-tab-panel {
+      margin-top: var(--spacing-7);
+    }
+  }
+}
+
+.popover {
+  transform: translate3d(0px, -5px, 0px) !important;
+  border: 0.5px solid var(--primary-2) !important;
+  box-shadow: var(--elevation-2);
+}
+
+.selectButton {
+  width: 100%;
+  max-height: 53px !important;
+  height: 53px !important;
+  border: 1px solid var(--grey-200) !important;
+  border-radius: var(--spacing-2);
+  min-height: unset;
+  background: var(--grey-0) !important;
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-4) !important;
+  justify-content: space-between;
+  &:hover {
+    border: 1px solid var(--primary-6) !important;
+    color: var(--primary-6) !important;
+  }
+}
+
+.active {
+  border: 1px solid var(--primary-7) !important;
+  background: var(--primary-2) !important;
+  color: var(--primary-7) !important;
+
+  p:nth-child(1) {
+    color: var(--grey-600);
+  }
+}
+
+.selectedProject {
+  justify-content: flex-start;
+}
+.pagination {
+  padding: var(--spacing-xlarge) var(--spacing-xlarge) var(--spacing-xlarge) 0px !important;
+}
+
+.row {
+  .favorite {
+    visibility: hidden;
+  }
+  .favoriteActive {
+    visibility: visible;
+  }
+
+  &:hover {
+    .favorite {
+      visibility: visible;
+    }
+  }
+}
+
+.scopeLabelText {
+  font-size: var(--spacing-3) !important;
+  font-weight: 600 !important ;
+  line-height: 14px !important;
+}
