@@ -181,7 +181,12 @@ export default function AnalyseStepNotifications(props: AnalyseStepNotifications
   return (
     <Card>
       <>
-        <Text font={{ weight: 'semi-bold' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+        <Text
+          font={{ weight: 'semi-bold' }}
+          color={Color.BLACK}
+          padding={{ bottom: 'small' }}
+          data-tooltip-id="analyzeStep_spec.monitoredService.spec.notifications"
+        >
           {'Notifications'}
         </Text>
         <Text color={Color.BLACK} padding={{ bottom: 'small' }}>

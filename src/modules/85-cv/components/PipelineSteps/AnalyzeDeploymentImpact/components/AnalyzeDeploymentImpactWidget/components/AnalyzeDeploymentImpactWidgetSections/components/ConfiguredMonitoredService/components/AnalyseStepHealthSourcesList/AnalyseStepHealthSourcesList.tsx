@@ -48,7 +48,12 @@ export default function AnalyseStepHealthSourcesList(props: AnalyseStepHealthSou
 
   return (
     <>
-      <Text padding={{ bottom: 'small', top: 'small' }} font={{ weight: 'semi-bold' }} color={Color.BLACK}>
+      <Text
+        padding={{ bottom: 'small', top: 'small' }}
+        font={{ weight: 'semi-bold' }}
+        color={Color.BLACK}
+        data-tooltip-id="analyzeStep_spec.monitoredService.spec.healthSources"
+      >
         {'Health Source'}
       </Text>
       {isEmpty(healthSourcesList) ? (
