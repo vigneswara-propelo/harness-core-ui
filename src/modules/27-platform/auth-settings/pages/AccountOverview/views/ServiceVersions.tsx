@@ -108,6 +108,11 @@ const versionAPIs = [
     label: 'GitOps',
     url: 'gitops/api/v1/version',
     id: 'gitops'
+  },
+  {
+    label: 'Governance',
+    url: 'pm/api/v1/system/version',
+    id: 'opa_service'
   }
 ]
 
