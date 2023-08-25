@@ -71,6 +71,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { usePermission } from '@rbac/hooks/usePermission'
 
+import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import GitPopover from '../GitPopover/GitPopover'
 import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -527,6 +528,37 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const handleFormDirty = (dirty: boolean): void => {
     setIsFormDirty(dirty)
   }
+  const handleSaveInputSetForm = (): void => {
+    if (selectedView === SelectedView.YAML) {
+      const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+      const inputSetDto: InputSetDTO = parse<{ inputSet: InputSetDTO }>(latestYaml)?.inputSet
+      const identifier = inputSetDto.identifier
+      const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
+      const {
+        repo: formikRepo,
+        branch: formikBranch,
+        connectorRef: formikConnectorRef,
+        repoName: formikRepoName,
+        filePath: formikFilePath,
+        storeType: formikStoreType
+      } = defaultTo(formikRef.current?.values, {}) as InputSetDTO & GitContextProps & StoreMetadata
+      handleSubmit(
+        inputSetDto,
+        {
+          repoIdentifier: formikRepo,
+          branch: formikBranch
+        },
+        {
+          connectorRef: (formikConnectorRef as unknown as ConnectorSelectedValue)?.value || formikConnectorRef,
+          repoName: formikRepoName,
+          branch: formikBranch,
+          filePath: defaultTo(formikFilePath, defaultFilePath),
+          storeType: formikStoreType
+        }
+      )
+    } else formikRef.current?.submitForm()
+  }
+
   const child = React.useCallback(
     () => (
       <PipelineVariablesContextProvider
@@ -636,6 +668,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       isEdit={isEdit}
       selectedView={selectedView}
       handleModeSwitch={handleModeSwitch}
+      handleSaveInputSetForm={handleSaveInputSetForm}
       inputSet={inputSet}
       pipeline={pipeline}
       isGitSyncEnabled={isGitSyncEnabled}
@@ -649,7 +682,6 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       isFormDirty={isFormDirty}
       onCancel={onCancel}
       isSaveEnabled={isSaveEnabled}
-      formikRef={formikRef}
     >
       {child()}
     </InputSetFormWrapper>
@@ -662,6 +694,7 @@ export interface InputSetFormWrapperProps {
   selectedView: SelectedView
   loading: boolean
   handleModeSwitch(mode: SelectedView): void
+  handleSaveInputSetForm: () => void
   inputSet: InputSetDTO
   pipeline: ResponsePMSPipelineResponseDTO | null
   isGitSyncEnabled?: boolean
@@ -675,7 +708,6 @@ export interface InputSetFormWrapperProps {
   isFormDirty: boolean
   onCancel?: () => void
   isSaveEnabled?: boolean
-  formikRef: React.MutableRefObject<FormikProps<InputSetDTO & GitContextProps & StoreMetadata> | undefined>
 }
 
 export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.ReactElement {
@@ -684,6 +716,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     children,
     selectedView,
     handleModeSwitch,
+    handleSaveInputSetForm,
     loading,
     inputSet,
     pipeline,
@@ -691,7 +724,6 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     disableVisualView,
     inputSetUpdateResponseHandler,
     menuOpen,
-    formikRef,
     handleMenu,
     onBranchChange,
     handleReloadFromCache = noop,
@@ -820,7 +852,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   text={getString('save')}
                   onClick={async e => {
                     e.preventDefault()
-                    formikRef?.current?.submitForm()
+                    handleSaveInputSetForm()
                   }}
                 />
                 <Button
