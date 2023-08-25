@@ -8,4 +8,11 @@
 .staleCheckbox {
   border-right: solid 0.5px var(--grey-200);
   margin-right: 15px;
+  margin-top: 10px;
+}
+
+.flagTable {
+  div[class*='TableV2--header'] {
+    align-items: center;
+  }
 }

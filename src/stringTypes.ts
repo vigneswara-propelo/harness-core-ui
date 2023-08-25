@@ -8706,6 +8706,7 @@ export interface StringsMap {
   'cf.staleFlagAction.flagsSelected': string
   'cf.staleFlagAction.learnMore': string
   'cf.staleFlagAction.notStale': string
+  'cf.staleFlagAction.notStaleDesc': string
   'cf.staleFlagAction.readyForCleanup': string
   'cf.staleFlagAction.selectAllPotentiallyStaleFlags': string
   'cf.staleFlagAction.waitingForCleanup': string

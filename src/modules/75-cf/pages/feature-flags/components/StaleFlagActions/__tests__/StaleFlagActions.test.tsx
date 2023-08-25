@@ -87,4 +87,24 @@ describe('StaleFlagActions', () => {
       expect(screen.queryByRole('button', { name: 'common.gotIt' })).not.toBeInTheDocument()
     })
   })
+
+  test('it should show mark as not stale dialog when button is clicked', async () => {
+    renderComponent()
+
+    userEvent.click(screen.getByRole('button', { name: 'cf.staleFlagAction.notStale' }))
+
+    const cancelBtn = await screen.findByRole('button', { name: 'cancel' })
+
+    await waitFor(() => {
+      expect(screen.getByTestId('modaldialog-header')).toBeVisible()
+      expect(screen.getByTestId('modaldialog-body')).toBeVisible()
+      expect(cancelBtn).toBeVisible()
+    })
+
+    userEvent.click(cancelBtn)
+
+    await waitFor(() => {
+      expect(cancelBtn).not.toBeInTheDocument()
+    })
+  })
 })

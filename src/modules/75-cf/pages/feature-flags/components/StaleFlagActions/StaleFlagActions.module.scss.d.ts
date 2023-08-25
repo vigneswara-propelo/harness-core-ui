@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly closeButton: string
+  readonly flagsSelected: string
   readonly gotItButton: string
   readonly infoDrawer: string
   readonly infoText: string

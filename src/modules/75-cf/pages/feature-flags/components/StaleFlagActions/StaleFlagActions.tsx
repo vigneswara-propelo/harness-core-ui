@@ -6,9 +6,9 @@
  */
 
 import React, { FC, useCallback, useState } from 'react'
-import { Button, ButtonVariation, Heading, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Heading, Layout, ModalDialog, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Drawer, Position } from '@blueprintjs/core'
+import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useGetSelectedStaleFlags } from '../../hooks/useGetSelectedStaleFlags'
 import css from './StaleFlagActions.module.scss'
@@ -17,6 +17,7 @@ export const StaleFlagActions: FC = () => {
   const { getString } = useStrings()
   const selectedFlags = useGetSelectedStaleFlags()
   const [showInfo, setShowInfo] = useState<boolean>(false)
+  const [showNotStaleDialog, setShowNotStaleDialog] = useState<boolean>(false)
 
   const hideShowInfo = useCallback(() => {
     setShowInfo(false)
@@ -30,7 +31,40 @@ export const StaleFlagActions: FC = () => {
             <Text font={{ variation: FontVariation.CARD_TITLE }}>
               {getString('cf.staleFlagAction.flagsSelected', { count: selectedFlags.length })}
             </Text>
-            <Button text={getString('cf.staleFlagAction.notStale')} variation={ButtonVariation.SECONDARY} />
+            <Button
+              text={getString('cf.staleFlagAction.notStale')}
+              variation={ButtonVariation.SECONDARY}
+              onClick={() => {
+                setShowNotStaleDialog(true)
+              }}
+            />
+            <ModalDialog
+              isOpen={showNotStaleDialog}
+              enforceFocus={false}
+              isCloseButtonShown
+              onClose={() => {
+                setShowNotStaleDialog(false)
+              }}
+              title={getString('cf.staleFlagAction.notStale')}
+            >
+              <Layout.Vertical>
+                <Text padding={{ bottom: 'medium' }}>{getString('cf.staleFlagAction.notStaleDesc')}</Text>
+                <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
+                  <Button
+                    text={getString('cf.staleFlagAction.notStale')}
+                    variation={ButtonVariation.PRIMARY}
+                    intent={Intent.PRIMARY}
+                  />
+                  <Button
+                    text={getString('cancel')}
+                    variation={ButtonVariation.TERTIARY}
+                    onClick={() => {
+                      setShowNotStaleDialog(false)
+                    }}
+                  />
+                </Layout.Horizontal>
+              </Layout.Vertical>
+            </ModalDialog>
             <Button text={getString('cf.staleFlagAction.readyForCleanup')} variation={ButtonVariation.SECONDARY} />
             <Button
               padding={{ left: 0 }}

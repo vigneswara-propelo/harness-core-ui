@@ -10,6 +10,8 @@ import { Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { TimeAgo } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import css from './FlagStatus.module.scss'
 
 export enum FeatureFlagStatus {
@@ -30,6 +32,8 @@ export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, stal
   const { getString } = useStrings()
   const isNeverRequested = status === FeatureFlagStatus.NEVER_REQUESTED
   const isPotentiallyStale = status === FeatureFlagStatus.POTENTIALLY_STALE
+
+  const flagCleanupEnabled = useFeatureFlag(FeatureFlag.FFM_8344_FLAG_CLEANUP)
 
   const textStyle = {
     fontWeight: 600,
@@ -58,7 +62,7 @@ export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, stal
 
   return (
     <ComponentLayout spacing="xsmall" style={{ alignItems: isNeverRequested ? 'baseline' : 'center' }}>
-      {stale ? (
+      {flagCleanupEnabled && stale ? (
         <Text
           icon="time"
           iconProps={{ size: 12, color: Color.ORANGE_800 }}
