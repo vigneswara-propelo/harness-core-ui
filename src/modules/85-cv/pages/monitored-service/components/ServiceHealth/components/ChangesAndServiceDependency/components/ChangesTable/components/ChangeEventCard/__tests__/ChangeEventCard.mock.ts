@@ -109,6 +109,27 @@ export const HarnessNextGenMockDataWithoutMetadata = {
   responseMessages: []
 }
 
+const analysisDetails = {
+  analysisStartTime: 1692869195894,
+  analysisEndTime: 1693128395894,
+  analysisDuration: 259200.0,
+  analysisStatus: 'RUNNING',
+  monitoredServiceIdentifier: 'datadoglogs_version1',
+  executionDetailIdentifier: 'EfjjX29_QLqp1VcpTLX8mA',
+  stepName: 'AnalyzeDeploymentImpact_1'
+}
+
+export const HarnessNextGenWithAnalysisDetails = {
+  ...HarnessNextGenMockData,
+  resource: {
+    ...HarnessNextGenMockData.resource,
+    metadata: {
+      ...HarnessNextGenMockData.resource.metadata,
+      analysisStepDetails: [{ ...analysisDetails }]
+    }
+  }
+}
+
 export const HarnessCDMockData = {
   metaData: {},
   resource: {

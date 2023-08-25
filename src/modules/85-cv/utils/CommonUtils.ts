@@ -239,6 +239,7 @@ interface GetCVMonitoringServicesSearchParamProps {
   monitoredServiceIdentifier?: string
   templateRef?: string
   eventId?: string
+  reportId?: string
 }
 
 export const getCVMonitoringServicesSearchParam = (props: GetCVMonitoringServicesSearchParamProps): string => {

@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { entries as _entries, map as _map } from 'lodash-es'
 import { Text, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { UseStringsReturn, useStrings } from 'framework/strings'
 import {
   ChangeSourceTypes,
   CustomChangeSourceList
@@ -71,6 +71,23 @@ export default function ChangeDetails({
         <StatusChip status={status} color={color} backgroundColor={backgroundColor} />
       ) : null}
     </Container>
+  )
+}
+
+export const getAnalysisStep = ({
+  getString,
+  component
+}: {
+  getString: UseStringsReturn['getString']
+  component: JSX.Element
+}): JSX.Element => {
+  return (
+    <div className={css.gridContainer}>
+      <Text className={css.gridItem} font={{ size: 'small', weight: 'semi-bold' }}>
+        {getString('cv.analyzeDeploymentImpact.cdCard.impactAnalysisStep')}
+      </Text>
+      <Layout.Vertical>{component}</Layout.Vertical>
+    </div>
   )
 }
 

@@ -19,9 +19,10 @@ import SLOAndErrorBudget from '@cv/pages/monitored-service/components/ServiceHea
 import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
 import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { UserLabel } from '@common/exports'
+import { ImpactAnalysisDetails } from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/ReportDrawer/Components/ReportDetails/ImpactAnalysisDetails/ImpactAnalysisDetails'
 import type { ChangeTitleData, ChangeDetailsDataInterface } from '../../../ChangeEventCard.types'
 import { createChangeTitleData, createChangeDetailsData } from '../../../ChangeEventCard.utils'
-import ChangeDetails from '../../ChangeDetails/ChangeDetails'
+import ChangeDetails, { getAnalysisStep } from '../../ChangeDetails/ChangeDetails'
 import DeploymentTimeDuration from '../../DeploymentTimeDuration/DeploymentTimeDuration'
 import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
 import { durationAsString } from '../../DeploymentTimeDuration/DeploymentTimeDuration.utils'
@@ -33,7 +34,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
   const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
   const metadata: HarnessCDEventMetadata = defaultTo(data.metadata, {})
-  const { artifactType = '', artifactTag = '', verifyStepSummaries } = metadata
+  const { artifactType = '', artifactTag = '', verifyStepSummaries, analysisStepDetails } = metadata
   const changeInfoData = { artifactType, artifactTag }
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
 
@@ -116,6 +117,10 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
           }
         }}
       />
+
+      {analysisStepDetails?.length
+        ? getAnalysisStep({ getString, component: <ImpactAnalysisDetails data={analysisStepDetails} /> })
+        : null}
 
       <Container margin={{ top: 'medium', bottom: 'medium' }} height={1} background={Color.GREY_200} />
       {data.eventTime && data.monitoredServiceIdentifier && (

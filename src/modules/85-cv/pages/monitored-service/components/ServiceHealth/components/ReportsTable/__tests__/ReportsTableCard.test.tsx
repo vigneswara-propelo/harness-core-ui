@@ -20,6 +20,7 @@ import { reportListMock } from './ReportsTable.mock'
 const props = {
   endTime: 0,
   startTime: 0,
+  monitoredServiceIdentifier: 'ms1',
   showDrawer: jest.fn()
 }
 

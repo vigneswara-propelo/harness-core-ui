@@ -20,6 +20,7 @@ import {
   HarnessCDMockData,
   HarnessNextGenMockData,
   HarnessNextGenMockDataWithoutMetadata,
+  HarnessNextGenWithAnalysisDetails,
   payload
 } from './ChangeEventCard.mock'
 
@@ -226,5 +227,48 @@ describe('Validate ChangeCard', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render Deployment Harness NextGen card with Analysis Step', async () => {
+    jest.spyOn(cvService, 'useGetChangeEventDetail').mockImplementation(
+      () =>
+        ({
+          data: HarnessNextGenWithAnalysisDetails,
+          refetch: jest.fn(),
+          error: null,
+          loading: false
+        } as any)
+    )
+    jest.spyOn(cvService, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({
+      data: mockedHealthScoreData,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(pipelineNgService, 'useGetExecutionDetailV2').mockReturnValue({
+      data: mockedExecutionSummary,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    const { getByText, queryAllByTestId } = render(
+      <TestWrapper>
+        <ChangeEventCard activityId={'dasda'} />
+      </TestWrapper>
+    )
+    // Card Title is rendered Correctly
+    await waitFor(() =>
+      expect(getByText(mockedExecutionSummary.data.pipelineExecutionSummary.runSequence.toString())).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(getByText(mockedExecutionSummary.data.pipelineExecutionSummary.pipelineIdentifier)).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(getByText(mockedExecutionSummary.data.pipelineExecutionSummary.status)).toBeInTheDocument()
+    )
+
+    expect(queryAllByTestId('ImpactAnalysisDetailsSection').length).toEqual(1)
+    expect(getByText('AnalyzeDeploymentImpact_1')).toBeInTheDocument()
+    expect(getByText('RUNNING')).toBeInTheDocument()
+    expect(getByText('August 24th 2023, 9:26 am to August 27th 2023, 9:26 am')).toBeInTheDocument()
+    expect(getByText('cv.analyzeDeploymentImpact.cdCard.viewReport')).toBeInTheDocument()
   })
 })

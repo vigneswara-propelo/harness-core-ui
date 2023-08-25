@@ -9119,6 +9119,10 @@ export interface StringsMap {
   'cv.allMetrics': string
   'cv.analysisScreens.totalClusters': string
   'cv.analyzeDeploymentImpact.analysisStopped': string
+  'cv.analyzeDeploymentImpact.cdCard.impactAnalysisStep': string
+  'cv.analyzeDeploymentImpact.cdCard.serviceAnalysed': string
+  'cv.analyzeDeploymentImpact.cdCard.stepName': string
+  'cv.analyzeDeploymentImpact.cdCard.viewReport': string
   'cv.analyzeDeploymentImpact.duration': string
   'cv.analyzeDeploymentImpact.msDisabledWarning': string
   'cv.analyzeDeploymentImpact.redirectLabel': string

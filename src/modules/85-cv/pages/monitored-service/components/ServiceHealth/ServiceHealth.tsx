@@ -303,6 +303,7 @@ export default function ServiceHealth({
             <ReportsTableCard
               startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
               endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
+              monitoredServiceIdentifier={monitoredServiceIdentifier}
             />
           </Container>
         </Layout.Horizontal>

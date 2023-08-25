@@ -16,20 +16,15 @@ export interface AbstractAnalysedNode {
   [key: string]: any
 }
 
-export interface ActiveMonitoredServiceDTO {
+export interface ActiveServiceDTO {
   accountIdentifier?: string
-  envIdentifier: string
-  envName?: string
+  envNames?: string[]
   identifier: string
-  lastUpdatedSeconds?: number
   module?: string
+  monitoredServiceCount?: number
   name?: string
-  orgIdentifier: string
   orgName?: string
-  projectIdentifier: string
   projectName?: string
-  serviceIdentifier: string
-  serviceName?: string
   timestamp?: number
 }
 
@@ -2766,6 +2761,7 @@ export type HarnessCDCurrentGenEventMetadata = ChangeEventMetadata & {
 }
 
 export type HarnessCDEventMetadata = ChangeEventMetadata & {
+  analysisStepDetails?: SRMAnalysisStepDetails[]
   artifactTag?: string
   artifactType?: string
   deploymentEndTime?: number
@@ -4233,8 +4229,8 @@ export interface Page {
   totalPages?: number
 }
 
-export interface PageActiveMonitoredServiceDTO {
-  content?: ActiveMonitoredServiceDTO[]
+export interface PageActiveServiceDTO {
+  content?: ActiveServiceDTO[]
   empty?: boolean
   first?: boolean
   last?: boolean
@@ -5487,9 +5483,9 @@ export interface ResponseObject {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageActiveMonitoredServiceDTO {
+export interface ResponsePageActiveServiceDTO {
   correlationId?: string
-  data?: PageActiveMonitoredServiceDTO
+  data?: PageActiveServiceDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6574,6 +6570,16 @@ export interface SRMAnalysisStepDetailDTO {
   serviceName?: string
   stageStepId: string
   stepName: string
+}
+
+export interface SRMAnalysisStepDetails {
+  analysisDuration?: Duration
+  analysisEndTime?: number
+  analysisStartTime?: number
+  analysisStatus?: 'RUNNING' | 'COMPLETED' | 'ABORTED'
+  executionDetailIdentifier?: string
+  monitoredServiceIdentifier?: string
+  stepName?: string
 }
 
 export type SRMAnalysisStepInstanceDetails = SecondaryEventDetails & {

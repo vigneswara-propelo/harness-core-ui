@@ -1341,6 +1341,11 @@ analyzeDeploymentImpact:
   remaining: Remaining
   reportDrawer:
     title: Impact Analysis Report
+  cdCard:
+    stepName: Step name
+    serviceAnalysed: Service analysed
+    viewReport: View Impact Analysis Report
+    impactAnalysisStep: Impact Analysis Step
   redirectLabel: View Monitored Service details
   stopAnalysis: Stop the analysis and send the report
   analysisStopped: Analysis stopped successfully

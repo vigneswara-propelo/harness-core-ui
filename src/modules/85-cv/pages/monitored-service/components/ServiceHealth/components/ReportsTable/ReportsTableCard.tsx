@@ -14,6 +14,7 @@ import noDataImage from '@cv/assets/noChangesData.svg'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
+import { useQueryParams } from '@common/hooks'
 import ReportsTable from './ReportsTable'
 import { useFetchReportsList } from './UseFetchReportsList'
 import ReportDrawer from './ReportDrawer/ReportDrawer'
@@ -23,13 +24,19 @@ import css from './ReportsTable.module.scss'
 interface ReportTableInterface {
   startTime: number
   endTime: number
+  monitoredServiceIdentifier: string
 }
 
 export default function ReportsTableCard(props: ReportTableInterface): JSX.Element {
-  const { startTime, endTime } = props
+  const { startTime, endTime, monitoredServiceIdentifier } = props
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
-  const { data, loading, error, refetch } = useFetchReportsList({ startTime, endTime, pageIndex: page })
+  const { reportId } = useQueryParams<{ reportId: string }>()
+  const { data, loading, error, refetch } = useFetchReportsList({
+    startTime,
+    endTime,
+    pageIndex: page
+  })
   const {
     content: resourceData = [],
     pageSize = 0,
@@ -49,9 +56,21 @@ export default function ReportsTableCard(props: ReportTableInterface): JSX.Eleme
   })
 
   useEffect(() => {
+    if (reportId) {
+      showReportDrawer({ executionDetailIdentifier: reportId })
+    }
+  }, [reportId])
+
+  useEffect(() => {
     if (startTime && endTime) {
       refetch({
-        queryParams: { startTime, endTime, pageIndex: page, pageSize: PAGE_SIZE },
+        queryParams: {
+          startTime,
+          endTime,
+          monitoredServiceIdentifiers: [monitoredServiceIdentifier],
+          pageIndex: page,
+          pageSize: PAGE_SIZE
+        },
         queryParamStringifyOptions: {
           arrayFormat: 'repeat'
         }
