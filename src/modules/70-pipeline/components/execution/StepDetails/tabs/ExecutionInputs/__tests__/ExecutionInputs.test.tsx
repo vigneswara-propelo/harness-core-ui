@@ -41,7 +41,16 @@ jest.mock('services/pipeline-ng', () => ({
     data: {}
   }),
   useHandleInterrupt: jest.fn().mockReturnValue({}),
-  useSubmitExecutionInput: jest.fn().mockReturnValue({})
+  useSubmitExecutionInput: jest.fn().mockReturnValue({}),
+  useGetNotesForExecution: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn()
+    }
+  }),
+  useUpdateNotesForExecution: jest.fn(() => ({
+    mutate: jest.fn()
+  }))
 }))
 jest.mock('services/cd-ng-rq', () => ({
   useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: mockServiceResponseData }))

@@ -10,5 +10,6 @@ declare const styles: {
   readonly childStage: string
   readonly main: string
   readonly stage: string
+  readonly textAreaInput: string
 }
 export default styles

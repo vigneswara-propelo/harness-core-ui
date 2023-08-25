@@ -1184,6 +1184,10 @@ export type ConnectorInternalFilterProperties = FilterProperties & {
   )[]
 }
 
+export type ConnectorValidationErrorMetadataDTO = ErrorMetadataDTO & {
+  taskId?: string
+}
+
 export interface ConnectorWrapperResponse {
   checkResponses?: ConnectorCheckResponse[]
   label?: string
@@ -4471,6 +4475,7 @@ export interface PipelineExecutionSummary {
   }
   modules?: string[]
   name?: string
+  notesExistForPlanExecutionId?: boolean
   orgIdentifier?: string
   parentStageInfo?: PipelineStageInfo
   pipelineIdentifier?: string
@@ -4994,7 +4999,7 @@ export interface ResourceDTO {
     | 'CET_AGENT_TOKEN'
     | 'CET_CRITICAL_EVENT'
     | 'CHAOS_SECURITY_GOVERNANCE'
-    | 'END_LEVEL_USER_AGREEMENT'
+    | 'END_USER_LICENSE_AGREEMENT'
     | 'WORKSPACE'
 }
 

@@ -110,6 +110,10 @@ jest.mock('services/pipeline-ng', () => ({
         data: {}
       }
     })
+  })),
+  useGetNotesForExecution: jest.fn().mockReturnValue({}),
+  useUpdateNotesForExecution: jest.fn(() => ({
+    mutate: jest.fn()
   }))
 }))
 

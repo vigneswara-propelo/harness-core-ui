@@ -4279,6 +4279,7 @@ export interface StringsMap {
   'pipeline.estimatedTimeRemaining': string
   'pipeline.execution.actions.abortPipeline': string
   'pipeline.execution.actions.abortStage': string
+  'pipeline.execution.actions.addExecutionNotes': string
   'pipeline.execution.actions.compareExecutions': string
   'pipeline.execution.actions.downloadLogs': string
   'pipeline.execution.actions.pausePipeline': string
@@ -4352,6 +4353,10 @@ export interface StringsMap {
   'pipeline.executionList.artifactDeployedText': string
   'pipeline.executionList.servicesDeployed': string
   'pipeline.executionList.servicesDeployedText': string
+  'pipeline.executionNotes.addNote': string
+  'pipeline.executionNotes.noteSaved': string
+  'pipeline.executionNotes.viewExecutionNotes': string
+  'pipeline.executionNotes.viewNote': string
   'pipeline.executionStartTime': string
   'pipeline.executionStatus.Aborted': string
   'pipeline.executionStatus.AbortedByFreeze': string

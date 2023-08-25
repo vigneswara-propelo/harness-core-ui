@@ -55,6 +55,7 @@ import type { PipelineExecutionSummary, PipelineStageInfo, PMSPipelineSummaryRes
 import { useQueryParams } from '@common/hooks'
 import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
 import { DateTimeContent } from '@common/components/TimeAgoPopover/TimeAgoPopover'
+import { useNotesModal } from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionHeader/NotesModal/useNotesModal'
 import FrozenExecutionDrawer from './FrozenExecutionDrawer/FrozenExecutionDrawer'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
@@ -192,7 +193,15 @@ export const PipelineNameCell: CellType = ({ row }) => {
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const queryParams = useQueryParams<GitQueryParams>()
   const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams, queryParams)
+  const notesModal = useNotesModal({
+    planExecutionId: data.planExecutionId || '',
+    pipelineExecutionSummary: data
+  })
 
+  const notesOnClickHandler = (e: React.MouseEvent<Element, MouseEvent>): void => {
+    e.stopPropagation()
+    notesModal.onClick(true)
+  }
   return (
     <Layout.Vertical>
       <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
@@ -211,6 +220,22 @@ export const PipelineNameCell: CellType = ({ row }) => {
               return _tags
             }, {} as { [key: string]: string })}
           />
+        )}
+        {data?.notesExistForPlanExecutionId && (
+          <Popover
+            interactionKind={PopoverInteractionKind.HOVER}
+            position={Position.TOP}
+            popoverClassName={css.popoverStyle}
+            content={
+              <Layout.Vertical flex={{ alignItems: 'flex-start' }} padding="medium" onClick={notesOnClickHandler}>
+                <Text font={{ variation: FontVariation.BODY2 }} color={Color.WHITE} padding={{ right: 'xsmall' }}>
+                  {getString('pipeline.executionNotes.viewExecutionNotes')}
+                </Text>
+              </Layout.Vertical>
+            }
+          >
+            <Icon className={css.chatButton} name="code-chat" size={18} onClick={notesOnClickHandler} />
+          </Popover>
         )}
       </Layout.Horizontal>
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
@@ -503,7 +528,8 @@ export const MenuCell: CellType = ({ row, column }) => {
           branch: data.gitDetails?.branch,
           stagesExecuted: data.stagesExecuted,
           storeType: data.storeType as StoreType,
-          runSequence: data?.runSequence
+          runSequence: data?.runSequence,
+          name: data.name
         }}
         isPipelineInvalid={isPipelineInvalid}
         canEdit={canEdit}
@@ -522,6 +548,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         modules={data.modules}
         menuOnlyActions
         isExecutionListView
+        showAddExecutionNotes={!data?.notesExistForPlanExecutionId}
       />
     </div>
   )

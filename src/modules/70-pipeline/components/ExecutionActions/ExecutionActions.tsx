@@ -17,7 +17,8 @@ import {
   Text,
   Container
 } from '@harness/uicore'
-import { Classes, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
+import { Color } from '@harness/design-system'
+import { Classes, Intent, Menu, MenuItem, Position, TextArea } from '@blueprintjs/core'
 import { Link } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
@@ -51,6 +52,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
+import { useNotesModal } from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionHeader/NotesModal/useNotesModal'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
@@ -75,6 +78,7 @@ export interface ExecutionActionsProps {
     accountId: string
     stagesExecuted?: string[]
     runSequence?: number
+    name?: string
   }> &
     GitQueryParams
   refetch?(): Promise<void>
@@ -94,6 +98,7 @@ export interface ExecutionActionsProps {
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
   hideRetryOption?: boolean
+  showAddExecutionNotes?: boolean
 }
 
 function MarkAsFailedConfirmationContent(): JSX.Element {
@@ -170,7 +175,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     onReRunInDebugMode,
     menuOnlyActions,
     isExecutionListView,
-    hideRetryOption = false
+    hideRetryOption = false,
+    showAddExecutionNotes = false
   } = props
   const {
     orgIdentifier,
@@ -185,7 +191,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     repoName,
     storeType,
     stagesExecuted,
-    runSequence
+    runSequence,
+    name
   } = params
   const { mutate: interrupt } = useHandleInterrupt({
     planExecutionId: executionIdentifier
@@ -203,16 +210,54 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   const { isCompareMode } = useExecutionCompareContext()
   const { trackEvent } = useTelemetry()
   const { getRBACErrorMessage } = useRBACError()
+  const [note, setNote] = React.useState('')
+
+  const {
+    notes,
+    onClick: notesOnClickHandler,
+    updateNotes,
+    refetchNotes,
+    loading
+  } = useNotesModal({
+    planExecutionId: executionIdentifier,
+    pipelineExecutionSummary: { name, runSequence }
+  })
+
+  React.useEffect(() => {
+    setNote(notes)
+  }, [notes])
+
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.execution.dialogMessages.abortExecution'),
+    contentText: (
+      <Layout.Vertical flex={{ alignItems: 'flex-start' }} padding={{ right: 'medium', left: 'medium', top: 'small' }}>
+        <Text color={Color.GREY_800} font={{ weight: 'semi-bold' }}>
+          {getString('pipeline.execution.dialogMessages.abortExecution')}
+        </Text>
+        {name && (
+          <Container padding={{ top: 'medium' }} width="100%" className={css.textAreaInput}>
+            {loading ? (
+              <ContainerSpinner />
+            ) : (
+              <TextArea
+                value={note}
+                onChange={event => setNote(event.target.value)}
+                placeholder={`${getString('pipeline.executionNotes.addNote')} ${getString('common.optionalLabel')}`}
+              />
+            )}
+          </Container>
+        )}
+      </Layout.Vertical>
+    ),
+
     titleText: getString('pipeline.execution.dialogMessages.abortTitle'),
     confirmButtonText: getString('confirm'),
     intent: Intent.WARNING,
     onCloseDialog: async isConfirmed => {
-      // istanbul ignore else
+      /* istanbul ignore else */
       if (isConfirmed) {
         abortPipeline()
+        updateNotes(note)
       }
     }
   })
@@ -355,7 +400,10 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               size={ButtonSize.SMALL}
               icon="stop"
               tooltip={getString(abortText)}
-              onClick={openAbortDialog}
+              onClick={() => {
+                setNote(notes)
+                openAbortDialog()
+              }}
               {...commonButtonProps}
               disabled={!canExecute}
             />
@@ -383,6 +431,15 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
         <Popover className={Classes.DARK} position={Position.LEFT}>
           <Button icon="Options" {...commonButtonProps} aria-label="execution menu actions" />
           <Menu style={{ backgroundColor: 'unset' }}>
+            {showAddExecutionNotes && (
+              <RbacMenuItem
+                data-test-id="add-execution-notes"
+                featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+                text={getString('pipeline.execution.actions.addExecutionNotes')}
+                onClick={() => notesOnClickHandler(true)}
+                disabled={!canRerun || isPipelineInvalid}
+              />
+            )}
             {showRetryPipelineOption && (
               <RbacMenuItem
                 data-test-id="retry-failed-pipeline"
@@ -420,7 +477,14 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                 disabled={!canRerun || isPipelineInvalid}
               />
             )}
-            <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
+            <MenuItem
+              text={getString(abortText)}
+              onClick={() => {
+                refetchNotes()
+                openAbortDialog()
+              }}
+              disabled={!canAbort}
+            />
 
             {onViewCompiledYaml ? (
               <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />

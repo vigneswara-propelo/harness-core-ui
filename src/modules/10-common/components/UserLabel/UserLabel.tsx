@@ -23,12 +23,40 @@ export interface UserLabelProps {
   textProps?: TextProps
   showUsernameInitial?: boolean
   showEmail?: boolean
+  children?: React.ReactNode
 }
 
 const handleClickOnPopoverContent = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => e.stopPropagation()
 
 export function UserLabel(props: UserLabelProps): React.ReactElement {
-  const { name, email, profilePictureUrl, className, iconProps, textProps, showUsernameInitial, showEmail } = props
+  const { name, email, profilePictureUrl, className, iconProps, textProps, showUsernameInitial, showEmail, children } =
+    props
+
+  const renderContent = (): React.ReactNode => {
+    if (children) {
+      return children
+    } else {
+      return (
+        <div className={cx(css.userLabel, className)}>
+          {profilePictureUrl ? (
+            <Avatar className={css.profilePicture} size={'xsmall'} src={profilePictureUrl} hoverCard={false} />
+          ) : showUsernameInitial ? (
+            <Avatar className={css.profilePicture} size={'small'} name={name} hoverCard={false} />
+          ) : (
+            <Icon name="nav-user-profile" size={18} {...iconProps} />
+          )}
+          <div className={css.userDetails}>
+            <Text {...textProps}>{name}</Text>
+            {showEmail && email ? (
+              <Text font={{ size: 'small' }} color={Color.GREY_200} className="UserLabel--email">
+                {email}
+              </Text>
+            ) : null}
+          </div>
+        </div>
+      )
+    }
+  }
 
   return (
     <div className={css.wrapper}>
@@ -63,23 +91,7 @@ export function UserLabel(props: UserLabelProps): React.ReactElement {
           </Layout.Horizontal>
         }
       >
-        <div className={cx(css.userLabel, className)}>
-          {profilePictureUrl ? (
-            <Avatar className={css.profilePicture} size={'xsmall'} src={profilePictureUrl} hoverCard={false} />
-          ) : showUsernameInitial ? (
-            <Avatar className={css.profilePicture} size={'small'} name={name} hoverCard={false} />
-          ) : (
-            <Icon name="nav-user-profile" size={18} {...iconProps} />
-          )}
-          <div className={css.userDetails}>
-            <Text {...textProps}>{name}</Text>
-            {showEmail && email ? (
-              <Text font={{ size: 'small' }} color={Color.GREY_200} className="UserLabel--email">
-                {email}
-              </Text>
-            ) : null}
-          </div>
-        </div>
+        {renderContent()}
       </Popover>
     </div>
   )

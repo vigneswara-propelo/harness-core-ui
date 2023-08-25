@@ -10,6 +10,7 @@ declare const styles: {
   readonly abortedByFreezePopover: string
   readonly accordionBtn: string
   readonly cdExecutionSummary: string
+  readonly chatButton: string
   readonly checkbox: string
   readonly childPipelineExecutionInfo: string
   readonly divider: string

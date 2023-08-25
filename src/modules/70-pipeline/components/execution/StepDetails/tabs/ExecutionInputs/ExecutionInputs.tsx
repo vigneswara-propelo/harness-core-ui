@@ -19,9 +19,11 @@ import {
   Text,
   useToggleOpen,
   ConfirmationDialog,
-  EXECUTION_TIME_INPUT_VALUE
+  EXECUTION_TIME_INPUT_VALUE,
+  Container
 } from '@harness/uicore'
-import { Intent, Spinner } from '@blueprintjs/core'
+import { Color } from '@harness/design-system'
+import { Intent, Spinner, TextArea } from '@blueprintjs/core'
 import type { FormikErrors } from 'formik'
 import cx from 'classnames'
 
@@ -53,6 +55,8 @@ import { StepNodeType, NonSelectableStepNodes } from '@pipeline/utils/executionU
 import { StageForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { getStageFromPipeline, validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useNotesModal } from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionHeader/NotesModal/useNotesModal'
 import css from './ExecutionInputs.module.scss'
 
 export interface ExecutionInputsProps {
@@ -80,6 +84,21 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const [fieldYaml, setFieldYaml] = useState<FieldYaml>({} as FieldYaml)
   const { CDS_SUPPORT_SERVICE_INPUTS_AS_EXECUTION_INPUTS: areServiceInputsSupportedAsExecutionInputs } =
     useFeatureFlags()
+  const [note, setNote] = React.useState('')
+
+  const {
+    notes,
+    loading: notesLoading,
+    refetchNotes: fetchNotes,
+    updateNotes
+  } = useNotesModal({
+    planExecutionId: planExecutionId,
+    pipelineExecutionSummary: { name: 'sdsd', runSequence: 1000 }
+  })
+
+  React.useEffect(() => {
+    setNote(notes)
+  }, [notes])
 
   const nodeExecutionId = defaultTo(step.uuid, '')
   const { data, loading: loadingExecutionInputTemplate } = useGetExecutionInputTemplate({
@@ -242,6 +261,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
       try {
         await abortPipeline({} as never)
         showSuccess(getString('pipeline.execution.pipelineActionMessages.abortedMessage'))
+        updateNotes(note)
         onSuccess?.()
       } catch (e: unknown) {
         showError(getRBACErrorMessage(e as RBACError))
@@ -357,14 +377,41 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
                 intent="danger"
                 data-testid="abort"
                 variation={ButtonVariation.PRIMARY}
-                onClick={openAbortConfirmation}
+                onClick={() => {
+                  fetchNotes()
+                  openAbortConfirmation()
+                }}
               >
                 {getString('pipeline.execution.actions.abortPipeline')}
               </Button>
               <ConfirmationDialog
                 isOpen={isAbortConfirmationOpen}
                 cancelButtonText={getString('cancel')}
-                contentText={getString('pipeline.execution.dialogMessages.abortExecution')}
+                contentText={
+                  <Layout.Vertical
+                    flex={{ alignItems: 'flex-start' }}
+                    padding={{ right: 'medium', left: 'medium', top: 'small' }}
+                  >
+                    <Text color={Color.GREY_800} font={{ weight: 'semi-bold' }}>
+                      {getString('pipeline.execution.dialogMessages.abortExecution')}
+                    </Text>
+                    {'name' && (
+                      <Container padding={{ top: 'medium' }} width="100%" className={css.textAreaInput}>
+                        {notesLoading ? (
+                          <ContainerSpinner />
+                        ) : (
+                          <TextArea
+                            value={note}
+                            onChange={event => setNote(event.target.value)}
+                            placeholder={`${getString('pipeline.executionNotes.addNote')} ${getString(
+                              'common.optionalLabel'
+                            )}`}
+                          />
+                        )}
+                      </Container>
+                    )}
+                  </Layout.Vertical>
+                }
                 titleText={getString('pipeline.execution.dialogMessages.abortTitle')}
                 confirmButtonText={getString('confirm')}
                 intent={Intent.WARNING}

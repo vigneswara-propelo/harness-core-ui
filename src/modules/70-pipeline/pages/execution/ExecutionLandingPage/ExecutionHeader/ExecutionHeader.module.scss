@@ -101,3 +101,13 @@
   align-items: center;
   column-gap: var(--spacing-3);
 }
+
+.notesButton {
+  padding: 0 !important;
+  padding-left: var(--spacing-small) !important;
+  .chatButton {
+    path {
+      stroke: var(--primary-7) !important;
+    }
+  }
+}

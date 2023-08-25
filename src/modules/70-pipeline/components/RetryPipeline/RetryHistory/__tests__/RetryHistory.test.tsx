@@ -39,7 +39,11 @@ jest.mock('services/pipeline-ng', () => ({
   useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetInputsetYaml: jest.fn(() => ({ data: null })),
   useRetryHistory: jest.fn(() => mockRetryHistory),
-  useLatestExecutionId: jest.fn(() => mockLatestExecutionId)
+  useLatestExecutionId: jest.fn(() => mockLatestExecutionId),
+  useGetNotesForExecution: jest.fn().mockReturnValue({}),
+  useUpdateNotesForExecution: jest.fn(() => ({
+    mutate: jest.fn()
+  }))
 }))
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')

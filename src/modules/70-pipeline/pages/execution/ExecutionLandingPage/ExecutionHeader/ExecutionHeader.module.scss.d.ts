@@ -8,11 +8,13 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly actionsBar: string
+  readonly chatButton: string
   readonly duration: string
   readonly git: string
   readonly gitRemoteDetailsWrapper: string
   readonly header: string
   readonly headerTopRow: string
+  readonly notesButton: string
   readonly pipelineId: string
   readonly startTime: string
   readonly startTimeText: string

@@ -667,6 +667,7 @@ execution:
     reRunEntirePipeline: Entire Pipeline
     reRunSpecificStageTitle: '{{ $.pipeline.execution.actions.reRun }} {{ $.pipeline.execution.actions.reRunSelectedStage }} '
     reRunLastFailedStageTitle: '{{ $.pipeline.execution.actions.reRun }} {{ $.pipeline.execution.actions.reRunLastFailedStage }} '
+    addExecutionNotes: Add Execution Notes
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -1956,3 +1957,8 @@ abortedDetails: Aborted Details
 executionStartTime: execution start time
 startTimeDesc: Start Time (New -> Old)
 startTimeAsc: Start Time (Old -> New)
+executionNotes:
+  viewNote: View Note
+  addNote: Add a Note
+  noteSaved: Note has been saved successfully
+  viewExecutionNotes: View Execution Notes

@@ -28,7 +28,11 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn()
   })),
   useGetExecutionData: jest.fn().mockReturnValue({}),
-  useGetInputsetYaml: jest.fn(() => ({ data: null }))
+  useGetInputsetYaml: jest.fn(() => ({ data: null })),
+  useGetNotesForExecution: jest.fn().mockReturnValue({}),
+  useUpdateNotesForExecution: jest.fn(() => ({
+    mutate: jest.fn()
+  }))
 }))
 jest.mock('services/cd-ng', () => ({
   useGetSettingValue: jest.fn().mockImplementation(() => {

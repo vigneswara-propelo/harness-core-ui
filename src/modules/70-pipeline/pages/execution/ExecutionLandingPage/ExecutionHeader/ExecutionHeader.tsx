@@ -8,7 +8,7 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, noop } from 'lodash-es'
-import { ButtonSize, ButtonVariation, Icon, IconName, Layout, Popover, Text } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Icon, IconName, Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu, MenuItem, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
@@ -38,7 +38,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 import { getFavIconDetailsFromPipelineExecutionStatus } from '@pipeline/utils/executionUtils'
-import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
@@ -48,6 +48,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import RbacButton from '@rbac/components/Button/Button'
+import { useNotesModal } from './NotesModal/useNotesModal'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -178,7 +179,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     storeType: pipelineMetadata?.data?.storeType
   })
 
-  const { status, canRetry, modules, stagesExecuted } = pipelineExecutionSummary
+  const { status, canRetry, modules, stagesExecuted, name } = pipelineExecutionSummary
   const params = {
     orgIdentifier,
     pipelineIdentifier,
@@ -192,7 +193,8 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     branch,
     storeType: pipelineMetadata?.data?.storeType,
     stagesExecuted,
-    runSequence: pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence
+    runSequence: pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence,
+    name
   }
   const { canRerun } = getValidExecutionActions(canExecute, status as ExecutionStatus)
   const showRetryPipelineOption = isRetryPipelineAllowed(status as ExecutionStatus) && canRetry
@@ -202,6 +204,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
 
+  const notesModal = useNotesModal({ planExecutionId: executionIdentifier, pipelineExecutionSummary })
   const retryPipeline = (fromLastFailedStage?: boolean): void => {
     trackEvent(PipelineExecutionActions.RetryPipeline, {
       triggered_from: 'button',
@@ -393,6 +396,24 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           stringID={module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'}
           vars={pipelineExecutionSummary}
         />
+        {pipelineExecutionSummary?.notesExistForPlanExecutionId && (
+          <Button
+            minimal
+            small
+            icon={pipelineExecutionSummary?.notesExistForPlanExecutionId ? 'code-chat' : 'Edit'}
+            iconProps={{ size: 14, className: css.chatButton }}
+            withoutCurrentColor
+            intent="primary"
+            onClick={() => notesModal.onClick(true)}
+            text={
+              pipelineExecutionSummary?.notesExistForPlanExecutionId
+                ? getString('pipeline.executionNotes.viewNote')
+                : getString('pipeline.executionNotes.addNote')
+            }
+            data-testid="addViewNotes"
+            className={css.notesButton}
+          />
+        )}
         {!isEmpty(pipelineExecutionSummary?.tags) ? (
           <TagsPopover
             iconProps={{ size: 14 }}

@@ -36,7 +36,11 @@ jest.mock('services/pipeline-ng', () => ({
   useHandleInterrupt: jest.fn(() => ({})),
   useGetBarrierInfo: jest.fn(() => ({})),
   useGetResourceConstraintsExecutionInfo: jest.fn(() => ({ refetch: () => ({}), data: null })),
-  useGetExecutionNode: jest.fn(() => ({ data: {}, loading: false }))
+  useGetExecutionNode: jest.fn(() => ({ data: {}, loading: false })),
+  useGetNotesForExecution: jest.fn().mockReturnValue({}),
+  useUpdateNotesForExecution: jest.fn(() => ({
+    mutate: jest.fn()
+  }))
 }))
 jest.mock('services/cd-ng', () => ({
   useGetSettingValue: jest.fn().mockImplementation(() => {
