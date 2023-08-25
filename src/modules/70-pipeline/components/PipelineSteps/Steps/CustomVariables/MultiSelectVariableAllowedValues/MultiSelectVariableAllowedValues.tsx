@@ -24,6 +24,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { parseInputStringWithCommas } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import type { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 
+import { isMultiTypeFixed } from '@common/utils/utils'
 import css from './MultiSelectVariableAllowedValues.module.scss'
 
 interface MultiSelectVariableAllowedValuesProps extends FormMultiTextTypeInputProps {
@@ -85,7 +86,10 @@ function MultiSelectVariableView(props: MultiSelectVariableAllowedValuesProps): 
   } = props
   const { expressions } = useVariablesExpression()
   const { label, placeholder, ...restprops } = rest
-  const value = get(formik?.values, name, '')
+  const formValue = get(formik?.values, name, '')
+  const [multiType, setMultiType] = React.useState<MultiTypeInputType>(getMultiTypeFromValue(formValue))
+  const value = isMultiTypeFixed(multiType) ? getMultiSelectValues(formValue) : formValue
+
   return (
     <div className={cx(css.fieldAndOptions, 'variableInput')} data-testid="multiSelectVariableAllowedValues">
       <MultiSelectTypeInput
@@ -95,9 +99,11 @@ function MultiSelectVariableView(props: MultiSelectVariableAllowedValuesProps): 
         disabled={disabled}
         allowableTypes={allowableTypes}
         expressions={expressions}
+        onTypeChange={setMultiType}
         onChange={onChange}
         multiSelectProps={{ items: selectOption, usePortal, placeholder }}
-        value={getMultiSelectValues(value)}
+        value={value}
+        resetExpressionOnFixedTypeChange
         {...restprops}
       />
     </div>
