@@ -12,7 +12,12 @@ import CVHomePage from '@cv/pages/home/CVHomePage'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
-import type { ModulePathParams, ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  ModulePathParams,
+  ProjectPathProps,
+  TemplateStudioPathProps,
+  TemplateStudioQueryParams
+} from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
 
 import './components/PipelineSteps'
@@ -234,6 +239,9 @@ const RedirectToCVTemplateStudio = (): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, templateIdentifier, templateType, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
+
+  const queryParams = useQueryParams<TemplateStudioQueryParams>()
+
   return (
     <Redirect
       to={routes.toTemplateStudioNew({
@@ -242,7 +250,8 @@ const RedirectToCVTemplateStudio = (): React.ReactElement => {
         projectIdentifier,
         templateIdentifier,
         templateType,
-        module
+        module,
+        ...queryParams
       })}
     />
   )
