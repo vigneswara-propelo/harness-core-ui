@@ -124,11 +124,11 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
           ...subscriptionProps.quantities?.featureFlag,
           customer: {
             address: {
-              postalCode: data?.zipCode,
-              line1: data?.billingAddress,
-              city: data?.city,
-              country: data?.country,
-              state: data?.state
+              postalCode: defaultTo(data?.zipCode, ''),
+              line1: defaultTo(data?.billingAddress, ''),
+              city: defaultTo(data?.city, ''),
+              country: defaultTo(data?.country, ''),
+              state: defaultTo(data?.state, '')
             },
             billingEmail: subscriptionProps.billingContactInfo.email,
             companyName: subscriptionProps.billingContactInfo.companyName
@@ -170,11 +170,11 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
           ...subscriptionProps.quantities?.ci,
           customer: {
             address: {
-              postalCode: data?.zipCode,
-              line1: data?.billingAddress,
-              city: data?.city,
-              country: data?.country,
-              state: data?.state
+              postalCode: defaultTo(data?.zipCode, ''),
+              line1: defaultTo(data?.billingAddress, ''),
+              city: defaultTo(data?.city, ''),
+              country: defaultTo(data?.country, ''),
+              state: defaultTo(data?.state, '')
             },
             billingEmail: subscriptionProps.billingContactInfo.email,
             companyName: subscriptionProps.billingContactInfo.companyName
