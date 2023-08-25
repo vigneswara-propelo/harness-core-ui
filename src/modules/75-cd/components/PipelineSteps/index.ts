@@ -142,6 +142,7 @@ import { ServerlessAwsLambdaRollbackV2Step } from './ServerlessAwsLambda/Serverl
 import { ServerlessAwsLambdaPackageV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaPackageV2Step/ServerlessAwsLambdaPackageV2Step'
 import { ServerlessAwsLambdaDeployV2Step } from './ServerlessAwsLambda/ServerlessAwsLambdaDeployV2Step/ServerlessAwsLambdaDeployV2Step'
 import { DownloadManifestsStep } from './Common/DownloadManifestsStep/DownloadManifestsStep'
+import { AwsCDKDiffStep } from './AwsCDK/AwsCDKDiffStep/AwsCDKDiffStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -278,3 +279,4 @@ factory.registerStep(new ServerlessAwsLambdaPrepareRollbackV2Step())
 factory.registerStep(new ServerlessAwsLambdaRollbackV2Step())
 factory.registerStep(new ServerlessAwsLambdaPackageV2Step())
 factory.registerStep(new ServerlessAwsLambdaDeployV2Step())
+factory.registerStep(new AwsCDKDiffStep())

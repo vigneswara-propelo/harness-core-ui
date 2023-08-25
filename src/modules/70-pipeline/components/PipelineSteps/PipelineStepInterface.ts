@@ -232,7 +232,8 @@ export enum StepType {
   ServerlessAwsLambdaDeployV2 = 'ServerlessAwsLambdaDeployV2',
   Coverity = 'Coverity',
   IACMTerraformPlugin = 'IACMTerraformPlugin',
-  IACMApproval = 'IACMApproval'
+  IACMApproval = 'IACMApproval',
+  AwsCdkDiff = 'AwsCdkDiff'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

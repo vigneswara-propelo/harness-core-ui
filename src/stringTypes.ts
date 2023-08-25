@@ -4064,6 +4064,7 @@ export interface StringsMap {
   'pipeline.buildInfra.readOnlyRootFilesystem': string
   'pipeline.buildInfra.runAsNonRoot': string
   'pipeline.buildInfra.size': string
+  'pipeline.buildInfra.stackNames': string
   'pipeline.buildInfra.tolerations': string
   'pipeline.buildInfra.volumes': string
   'pipeline.buildRegex': string
@@ -5165,6 +5166,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AdvancedCommandFlags': string
   'pipeline.stepDescription.AnalyzeDeploymentImpact': string
   'pipeline.stepDescription.AppResize': string
+  'pipeline.stepDescription.AwsCdkDiff': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
   'pipeline.stepDescription.AwsSamBuild': string
@@ -6841,6 +6843,8 @@ export interface StringsMap {
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string
   'cd.stepName': string
+  'cd.steps.awsCdkStep.awsCdkDiffCommandOptions': string
+  'cd.steps.awsCdkStep.awsCdkDiffContainerRegistry': string
   'cd.steps.awsInfraStep.labels.autoScallingGroup': string
   'cd.steps.awsInfraStep.labels.connectionAttribute': string
   'cd.steps.awsInfraStep.labels.hostName': string

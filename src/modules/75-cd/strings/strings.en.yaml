@@ -189,6 +189,9 @@ steps:
   ecsBGSwapTargetGroupsStep:
     doNotDownsizeOldService: Do not downsize old service
     downsizeOldServiceDelayInSecs: Downsize Old Service Delay (Seconds)
+  awsCdkStep:
+    awsCdkDiffContainerRegistry: AWS CDK Diff Container Registry
+    awsCdkDiffCommandOptions: AWS CDK Diff Command Options
 
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'

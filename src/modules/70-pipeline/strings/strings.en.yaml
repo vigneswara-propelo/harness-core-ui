@@ -1360,6 +1360,7 @@ stepDescription:
   SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
   AwsSamDeploy: Deploy an AWS SAM function.
   AwsSamBuild: Build an AWS SAM function.
+  AwsCdkDiff: Aws CDK Diff
   DownloadManifests: Download manifests using this step.
   SscaEnforcement: Enforce policies based on your SBOM by Allow list/Deny list
   ServerlessPrepareRollback: Prepare a rollback of your deployment.
@@ -1523,6 +1524,7 @@ buildInfra:
   runAsNonRoot: Run as Non Root
   readOnlyRootFilesystem: Read-only Root Filesystem
   privileged: Privileged
+  stackNames: Stack Names
   effect: Effect
   mountPath: Mount Path
   size: Size
