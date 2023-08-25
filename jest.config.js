@@ -33,6 +33,7 @@ module.exports = {
     '!src/**/__test__/**',
     '!src/**/__tests__/**',
     '!src/services/**',
+    '!src/**/MonacoEditor.tsx',
     '!src/**/YamlBuilder.tsx',
     '!src/**/YAMLBuilderConstants.ts',
     '!src/**/*mock*.{ts,tsx}',

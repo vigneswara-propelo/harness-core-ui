@@ -46,6 +46,7 @@ const MonacoEditor = forwardRef<MonacoCodeEditorRef, ExtendedMonacoEditorProps>(
     const model = editor.getModel()
     if (model) {
       props.setLineCount?.(model.getLineCount())
+      model.setEOL(monaco.editor.EndOfLineSequence.LF)
     }
 
     const remeasureFonts = (): void => monaco?.editor?.remeasureFonts()
