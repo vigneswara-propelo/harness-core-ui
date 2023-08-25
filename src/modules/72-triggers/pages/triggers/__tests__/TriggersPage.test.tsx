@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, getByText, screen } from '@testing-library/react'
+import { render, waitFor, fireEvent, getByText, screen, queryByText } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'
 import {
@@ -20,6 +20,7 @@ import type { GetTriggerListForTargetQueryParams } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import { pipelinePathProps } from '@common/utils/routeUtils'
 import * as useIsTriggerCreatePermission from '@triggers/components/Triggers/useIsTriggerCreatePermission'
+import { PreferenceStoreProvider } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { GetTriggerResponse } from './webhookMockResponses'
 import { GetTriggerListForTargetResponse } from './sharedMockResponses'
 import { PipelineResponse as PipelineDetailsMockResponse } from './PipelineDetailsMocks'
@@ -66,7 +67,9 @@ function WrapperComponent(props: {
       }}
       queryParams={props.queryParams}
     >
-      <TriggersPage />
+      <PreferenceStoreProvider>
+        <TriggersPage />
+      </PreferenceStoreProvider>
     </TestWrapper>
   )
 }
@@ -78,6 +81,34 @@ const getEnabledTestId = (identifier: string): string => `${identifier}-enabled`
 const getMoreTestId = (identifier: string): string => `${identifier}-more-button`
 const getEditTestId = (identifier: string): string => `${identifier}-edit-button`
 const getDeleteTestId = (identifier: string): string => `${identifier}-delete-button`
+
+const changeSortFilter = async (filter: string, sort: string[]): Promise<void> => {
+  const sortDropdown = screen.queryAllByTestId('dropdown-button')[0]
+  await waitFor(() => expect(sortDropdown).toBeInTheDocument())
+
+  // Sort by date created asc
+  fireEvent.click(sortDropdown!)
+  const popover = findPopoverContainer()
+  await waitFor(() => expect(popover).toBeInTheDocument())
+
+  fireEvent.click(queryByText(popover!, filter)!)
+
+  await waitFor(() => expect(screen.getByText(filter)).toBeInTheDocument())
+
+  expect(mockGetTriggersFunction).toBeCalledWith({
+    queryParams: {
+      accountIdentifier: 'accountId',
+      orgIdentifier: 'orgIdentifier',
+      projectIdentifier: 'projectIdentifier',
+      targetIdentifier: 'pipelineIdentifier',
+      searchTerm: undefined,
+      page: 0,
+      size: 20,
+      sort
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
+  })
+}
 
 describe('TriggersPage Triggers tests', () => {
   describe('Renders/snapshots', () => {
@@ -219,97 +250,22 @@ describe('TriggersPage Triggers tests', () => {
       expect(mockCopy).toHaveBeenCalledWith('webhookCurlCommand')
     })
 
-    // TODO: Fix this test issue and unskip
-    // eslint-disable-next-line jest/no-disabled-tests
-    test.skip('Sort the trigger', async () => {
+    test('Sort the trigger', async () => {
       render(<WrapperComponent />)
-      await waitFor(() => expect(screen.getByText('Newest')).toBeInTheDocument())
 
-      const sortDropdown = screen.queryByTestId('dropdown-button')
+      expect(await screen.findByText('triggers.newTrigger')).toBeInTheDocument()
 
-      // Sort by date created asc
-      fireEvent.click(sortDropdown!)
-      const sortBtCreatedAsc = screen.queryByText('Oldest')
-      fireEvent.click(sortBtCreatedAsc!)
+      // Sort by date created ASC
+      await changeSortFilter('Oldest', ['createdAt,ASC'])
 
-      await waitFor(() =>
-        expect(mockGetTriggersFunction).toBeCalledWith({
-          queryParams: {
-            accountIdentifier: 'accountId',
-            orgIdentifier: 'orgIdentifier',
-            projectIdentifier: 'projectIdentifier',
-            targetIdentifier: 'pipelineIdentifier',
-            searchTerm: undefined,
-            page: 0,
-            size: 20,
-            sort: ['createdAt,ASC']
-          },
-          queryParamStringifyOptions: { arrayFormat: 'repeat' }
-        })
-      )
+      // Sort by date created DESC
+      await changeSortFilter('Newest', ['createdAt,DESC'])
 
-      // Sort by date created desc
-      fireEvent.click(sortDropdown!)
-      const sortByCreatedDesc = screen.queryByText('Newest')
-      fireEvent.click(sortByCreatedDesc!)
+      // Sort by Name ASC
+      await changeSortFilter('Name (A->Z, 0->9)', ['name,ASC'])
 
-      await waitFor(() =>
-        expect(mockGetTriggersFunction).toBeCalledWith({
-          queryParams: {
-            accountIdentifier: 'accountId',
-            orgIdentifier: 'orgIdentifier',
-            projectIdentifier: 'projectIdentifier',
-            targetIdentifier: 'pipelineIdentifier',
-            searchTerm: undefined,
-            page: 0,
-            size: 20,
-            sort: ['createdAt,DESC']
-          },
-          queryParamStringifyOptions: { arrayFormat: 'repeat' }
-        })
-      )
-
-      // Sort by Name Asc
-      fireEvent.click(sortDropdown!)
-      const sortByNameAsc = screen.queryByText('Name (A->Z, 0->9)')
-      fireEvent.click(sortByNameAsc!)
-
-      await waitFor(() =>
-        expect(mockGetTriggersFunction).toBeCalledWith({
-          queryParams: {
-            accountIdentifier: 'accountId',
-            orgIdentifier: 'orgIdentifier',
-            projectIdentifier: 'projectIdentifier',
-            targetIdentifier: 'pipelineIdentifier',
-            searchTerm: undefined,
-            page: 0,
-            size: 20,
-            sort: ['name,ASC']
-          },
-          queryParamStringifyOptions: { arrayFormat: 'repeat' }
-        })
-      )
-
-      // Sort by Name Desc
-      fireEvent.click(sortDropdown!)
-      const sortByNameDesc = screen.queryByText('Name (Z->A, 9->0)')
-      fireEvent.click(sortByNameDesc!)
-
-      await waitFor(() =>
-        expect(mockGetTriggersFunction).toBeCalledWith({
-          queryParams: {
-            accountIdentifier: 'accountId',
-            orgIdentifier: 'orgIdentifier',
-            projectIdentifier: 'projectIdentifier',
-            targetIdentifier: 'pipelineIdentifier',
-            searchTerm: undefined,
-            page: 0,
-            size: 20,
-            sort: ['name,DESC']
-          },
-          queryParamStringifyOptions: { arrayFormat: 'repeat' }
-        })
-      )
+      // Sort by Name DESC
+      await changeSortFilter('Name (Z->A, 9->0)', ['name,DESC'])
     })
 
     test('New Trigger, Copy URL, Toggle, Edit & Delete Button should be disabled if user does not have the required permission', async () => {
