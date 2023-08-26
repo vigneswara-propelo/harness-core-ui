@@ -8,6 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import { useGetIndividualStaticSchemaQuery } from '@harnessio/react-pipeline-service-client'
 import {
   GetSchemaYamlQueryParams,
   GetStaticSchemaYamlQueryParams,
@@ -70,7 +71,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
 
   const error = defaultTo(schemaError, staticSchemaError)
 
-  const { data: loopingStrategySchema } = useGetStepYamlSchema({
+  const { data: loopingStrategyDynamicSchema } = useGetStepYamlSchema({
     queryParams: {
       entityType: 'StrategyNode',
       projectIdentifier: projectIdentifier,
@@ -78,13 +79,36 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
       accountIdentifier: accountId,
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }),
       yamlGroup: 'STEP'
-    }
+    },
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
+
+  const { data: loopingStrategyStaticSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'strategy',
+        node_type: 'strategy'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
+
+  const loopingStrategySchema = defaultTo(loopingStrategyDynamicSchema, {
+    data: { schema: loopingStrategyStaticSchema?.content.data }
+  })
+
   if (error?.message) {
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.yaml.error')
   }
   return (
-    <PipelineSchemaContext.Provider value={{ pipelineSchema, loopingStrategySchema }}>
+    <PipelineSchemaContext.Provider
+      value={{
+        pipelineSchema,
+        loopingStrategySchema: loopingStrategySchema as ResponseYamlSchemaResponse
+      }}
+    >
       {props.children}
     </PipelineSchemaContext.Provider>
   )
