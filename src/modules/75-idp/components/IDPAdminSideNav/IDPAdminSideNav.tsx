@@ -14,15 +14,12 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './IDPAdminSideNav.module.scss'
 
 export default function IDPAdminSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const params = useParams<ProjectPathProps>()
-  const { selectedProject } = useAppStore()
-  const isProjectSelected = !isEmpty(selectedProject?.identifier)
 
   const { data } = useGetStatusInfoByTypeQuery(
     { type: 'onboarding' },
@@ -56,7 +53,8 @@ export default function IDPAdminSideNav(): React.ReactElement {
           <SidebarLink label={getString('common.plugins')} to={routes.toPluginsPage(params)} />
           <SidebarLink label={getString('common.configurations')} to={routes.toConfigurations(params)} />
           <SidebarLink label={getString('idp.oAuthConfig')} to={routes.toIDPOAuthConfig(params)} />
-          {isProjectSelected && (
+          {/*  TODO: Pipelines routes disabled temporarily */}
+          {/* {isProjectSelected && (
             <SidebarLink
               label={getString('common.pipelineExecution')}
               to={routes.toIDPDeployments({
@@ -77,7 +75,7 @@ export default function IDPAdminSideNav(): React.ReactElement {
                   })
                 : routes.toIDPProjectSetup(params)
             }
-          />
+          /> */}
           <SidebarLink label={getString('idp.layout')} to={routes.toLayoutConfig(params)} />
           <SidebarLink label={getString('accessControl')} to={routes.toIDPAccessControl(params)} />
           <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectorsPage(params)} />

@@ -64,16 +64,6 @@ exports[`IDP Sidenav render 1`] = `
     </a>
     <a
       class="link"
-      href="/account/accountId/idp-admin/project-setup"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        pipelines
-      </p>
-    </a>
-    <a
-      class="link"
       href="/account/accountId/idp-admin/layout"
     >
       <p
