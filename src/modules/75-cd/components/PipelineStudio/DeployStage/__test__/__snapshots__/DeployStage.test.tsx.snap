@@ -51,7 +51,7 @@ exports[`Deploy stage test Should match snapshot 1`] = `
         pipelineSteps.build.create.aboutYourStage
       </p>
       <div
-        class="StyledProps--font StyledProps--main"
+        class="StyledProps--font StyledProps--main StyledProps--padding-bottom-large"
       >
         <div
           class="OverlaySpinner--overlaySpinner"

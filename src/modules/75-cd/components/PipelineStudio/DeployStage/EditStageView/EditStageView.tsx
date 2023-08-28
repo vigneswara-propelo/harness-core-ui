@@ -425,7 +425,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
             {getString('pipelineSteps.build.create.aboutYourStage')}
           </Text>
         )}
-        <Container>
+        <Container padding={{ bottom: 'large' }}>
           <Formik<EditStageFormikType>
             initialValues={{
               identifier: data?.stage?.identifier || '',

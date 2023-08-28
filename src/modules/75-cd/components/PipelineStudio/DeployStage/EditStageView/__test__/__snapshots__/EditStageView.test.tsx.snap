@@ -15,7 +15,7 @@ exports[`Edit stage view test Should match snapshot when context is provided 1`]
         stageOverview
       </div>
       <div
-        class="StyledProps--font StyledProps--main"
+        class="StyledProps--font StyledProps--main StyledProps--padding-bottom-large"
       >
         <div
           class="OverlaySpinner--overlaySpinner"
@@ -281,7 +281,7 @@ exports[`Edit stage view test Should match snapshot when template is provided 1`
         pipelineSteps.build.create.aboutYourStage
       </p>
       <div
-        class="StyledProps--font StyledProps--main"
+        class="StyledProps--font StyledProps--main StyledProps--padding-bottom-large"
       >
         <div
           class="OverlaySpinner--overlaySpinner"
