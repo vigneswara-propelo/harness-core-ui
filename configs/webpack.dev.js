@@ -34,6 +34,7 @@ const HELP_PANEL_ENVIRONMENT = process.env.HELP_PANEL_ENVIRONMENT
 const NEW_NAV_CONTENTFUL_ACCESS_TOKEN = process.env.NEW_NAV_CONTENTFUL_ACCESS_TOKEN
 const NEW_NAV_CONTENTFUL_SPACE = process.env.NEW_NAV_CONTENTFUL_SPACE
 const NEW_NAV_CONTENTFUL_ENVIRONMENT = process.env.NEW_NAV_CONTENTFUL_ENVIRONMENT
+const HARNESS_NO_AUTH_HEADER = process.env.HARNESS_NO_AUTH_HEADER === 'true'
 const DEV_FF = Object.keys(process.env)
   .filter(f => f.startsWith('FF_'))
   .reduce((obj, key) => ({ ...obj, [key.replace(/^FF_/, '')]: process.env[key] === 'true' }), {})
@@ -45,6 +46,7 @@ console.table({
   HELP_PANEL_ACCESS_TOKEN,
   HELP_PANEL_SPACE,
   HELP_PANEL_ENVIRONMENT,
+  HARNESS_NO_AUTH_HEADER,
   ...DEV_FF
 })
 
@@ -149,7 +151,8 @@ const config = {
         HARNESS_FF_SDK_EVENT_URL_DEV: HARNESS_FF_SDK_EVENT_URL,
         HARNESS_FF_SDK_ENABLE_STREAM_DEV: HARNESS_FF_SDK_ENABLE_STREAM,
         HARNESS_FF_SDK_KEY_DEV: HARNESS_FF_SDK_KEY,
-        HARNESS_FF_SDK_ASYNC_DEV: HARNESS_FF_SDK_ASYNC
+        HARNESS_FF_SDK_ASYNC_DEV: HARNESS_FF_SDK_ASYNC,
+        HARNESS_NO_AUTH_HEADER: HARNESS_NO_AUTH_HEADER
       }
     }),
     new MiniCssExtractPlugin({

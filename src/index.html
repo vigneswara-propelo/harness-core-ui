@@ -61,9 +61,20 @@
     <script type="text/javascript">
       window.browserRouterEnabled = true
     </script>
-    <% } %>
+
+    <% } %> <% if (!__DEV__) { %>
     <script type="text/javascript">
-      window.noAuthHeader = window.location.href.toString().includes('noAuthHeader=true')
+      window.noAuthHeader =
+        'HARNESS_NO_AUTH_HEADER' === 'true' || window.location.href.toString().includes('noAuthHeader=true')
+    </script>
+    <% } %> <% if (__DEV__) { %>
+    <script type="text/javascript">
+      window.noAuthHeader =
+        '<%= HARNESS_NO_AUTH_HEADER %>' === 'true' || window.location.href.toString().includes('noAuthHeader=true')
+    </script>
+    <% } %>
+
+    <script type="text/javascript">
       window.addDateIfRemoteEntry = path => (path.includes('remoteEntry.js') ? `${path}?timestamp=${Date.now()}` : path)
       // returns a cluster based url
       window.getClusterBasedUrl = path => {
