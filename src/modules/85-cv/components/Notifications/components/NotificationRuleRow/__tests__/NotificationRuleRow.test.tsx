@@ -106,30 +106,17 @@ describe('getOptionsWithAllEvents', () => {
 
   test('It should uncheck All Events when All Events is checked and other option was unchecked', async () => {
     const previous = eventTypeOptions
-    const current = [
-      allEventsTypeOption,
-      eventTypeOptions[2],
-      eventTypeOptions[3],
-      eventTypeOptions[4],
-      eventTypeOptions[5]
-    ]
+    const current = [allEventsTypeOption, eventTypeOptions[2], eventTypeOptions[3], eventTypeOptions[4]]
     expect(getOptionsWithAllEvents(previous, current)).toStrictEqual([
       eventTypeOptions[2],
       eventTypeOptions[3],
-      eventTypeOptions[4],
-      eventTypeOptions[5]
+      eventTypeOptions[4]
     ])
   })
 
   test('It should check All Events when All Events is unchecked and all other options were checked', async () => {
-    const previous = [eventTypeOptions[2], eventTypeOptions[3], eventTypeOptions[4], eventTypeOptions[5]]
-    const current = [
-      eventTypeOptions[1],
-      eventTypeOptions[2],
-      eventTypeOptions[3],
-      eventTypeOptions[4],
-      eventTypeOptions[5]
-    ]
+    const previous = [eventTypeOptions[2], eventTypeOptions[3], eventTypeOptions[4]]
+    const current = [eventTypeOptions[1], eventTypeOptions[2], eventTypeOptions[3], eventTypeOptions[4]]
     expect(getOptionsWithAllEvents(previous, current)).toStrictEqual(eventTypeOptions)
   })
 })

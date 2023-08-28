@@ -67,6 +67,5 @@ export const eventTypeOptions: SelectOption[] = [
   { label: 'Exceptions', value: EventType.EXCEPTIONS },
   { label: 'Log Errors', value: EventType.LOG_ERRORS },
   { label: 'HTTP Errors', value: EventType.HTTP_ERRORS },
-  { label: 'Custom Errors', value: EventType.CUSTOM_ERRORS },
-  { label: 'Timeout Errors', value: EventType.TIMEOUT_ERRORS }
+  { label: 'Custom Errors', value: EventType.CUSTOM_ERRORS }
 ]

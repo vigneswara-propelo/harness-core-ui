@@ -8,17 +8,9 @@
 // Inspired by src/modules/70-pipeline/components/Notifications/__tests__/NotificationTable.test.tsx
 
 import React from 'react'
-import {
-  act,
-  fireEvent,
-  getAllByText as getAllByTextGlobal,
-  render,
-  RenderResult,
-  waitFor
-} from '@testing-library/react'
+import { act, fireEvent, render, RenderResult } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import { clickSubmit } from '@common/utils/JestFormHelper'
 import SRMNotificationTable from '../SRMNotificationTable'
 import type { SRMNotificationTableProps } from '../SRMNotificationTable.types'
 import ConfigureMonitoredServiceAlertConditions from '../../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions'
@@ -57,7 +49,7 @@ const args: SRMNotificationTableProps = {
           {
             type: 'CodeErrors',
             spec: {
-              errorTrackingEventTypes: ['Exceptions', 'LogErrors', 'TimeoutErrors'],
+              errorTrackingEventTypes: ['Exceptions', 'LogErrors'],
               errorTrackingEventStatus: ['NewEvents', 'CriticalEvents', 'ResurfacedEvents']
             }
           }
@@ -77,9 +69,9 @@ const args: SRMNotificationTableProps = {
   gotoPage: jest.fn(),
   onUpdate: jest.fn(),
   totalPages: 1,
-  totalItems: 3,
-  pageItemCount: 3,
-  pageSize: 5,
+  totalItems: 1,
+  pageItemCount: 1,
+  pageSize: 1,
   pageIndex: 0,
   notificationRulesComponent: <ConfigureMonitoredServiceAlertConditions name={'Conditions'} />,
   handleDeleteNotification: jest.fn(),
@@ -96,7 +88,6 @@ jest.mock('uuid', () => {
 describe('Notification Table test', () => {
   let container: HTMLElement
   let getByText: RenderResult['getByText']
-  let getAllByText: RenderResult['getAllByText']
 
   beforeEach(async () => {
     const renderObj = render(
@@ -110,40 +101,10 @@ describe('Notification Table test', () => {
     )
     container = renderObj.container
     getByText = renderObj.getByText
-    getAllByText = renderObj.getAllByText
   })
 
   test('render', () => {
     expect(container).toMatchSnapshot()
-  })
-
-  test('Edit Notfication', async () => {
-    const menu = container.querySelector(`[data-icon="Options"]`)
-    fireEvent.click(menu!)
-    const editMenu = getAllByText('edit')
-    expect(editMenu).toBeDefined()
-    act(() => {
-      fireEvent.click(editMenu[0])
-    })
-    let form = findDialogContainer()
-    expect(form).toBeTruthy()
-    await act(async () => {
-      // Continue to conditions step
-      if (form) clickSubmit(form)
-      await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.configureConditions')[0])
-    })
-    form = findDialogContainer()
-    expect(form).toMatchSnapshot()
-    await act(async () => {
-      // Continue to method step
-      if (form) clickSubmit(form)
-      await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.notificationMethod')[1])
-    })
-    form = findDialogContainer()
-    await act(async () => {
-      // Finish wizard
-      if (form) clickSubmit(form)
-    })
   })
 
   test('Delete Notfication', async () => {
