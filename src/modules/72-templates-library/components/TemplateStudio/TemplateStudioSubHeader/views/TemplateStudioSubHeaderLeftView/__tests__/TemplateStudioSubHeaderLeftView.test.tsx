@@ -144,7 +144,7 @@ describe('<TemplateStudioSubHeaderLeftView /> tests', () => {
       <div
         data-testid="location"
       >
-        /account/accountId/cd/orgs/default/projects/Yogesh_Test/setup/resources/template-studio/Step/template/Test_Template/?versionLabel=v2
+        /account/accountId/cd/orgs/default/projects/Yogesh_Test/setup/resources/templates/Test_Template/template-studio/Step/?versionLabel=v2
       </div>
     `)
   })

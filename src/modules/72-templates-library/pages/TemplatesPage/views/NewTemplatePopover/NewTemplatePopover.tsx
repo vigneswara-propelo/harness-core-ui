@@ -66,7 +66,7 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
   const goToTemplateStudio = React.useCallback(
     (templateType: TemplateType) => {
       history.push(
-        routes.toTemplateStudio({
+        routes.toTemplateStudioNew({
           projectIdentifier,
           orgIdentifier,
           accountId,

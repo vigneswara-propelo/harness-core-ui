@@ -84,7 +84,7 @@ describe('<NewTemplatePopover> tests', () => {
       <div
         data-testid="location"
       >
-        /account/accountId/cd/orgs/default/projects/Yogesh_Test/setup/resources/template-studio/Step/template/-1/
+        /account/accountId/cd/orgs/default/projects/Yogesh_Test/setup/resources/templates/-1/template-studio/Step/
       </div>
     `)
   })

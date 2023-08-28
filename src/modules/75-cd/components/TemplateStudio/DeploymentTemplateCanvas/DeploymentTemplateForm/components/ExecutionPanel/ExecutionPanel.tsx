@@ -172,7 +172,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>): 
 
   const goToTemplateStudio = (template: TemplateSummaryResponse): void => {
     history.push(
-      routes.toTemplateStudio({
+      routes.toTemplateStudioNew({
         projectIdentifier,
         orgIdentifier,
         accountId,

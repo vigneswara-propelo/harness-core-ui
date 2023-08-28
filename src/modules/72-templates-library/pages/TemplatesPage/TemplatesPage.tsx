@@ -224,7 +224,7 @@ export default function TemplatesPage(): React.ReactElement {
 
   const goToTemplateStudio = (template: TemplateSummaryResponse): void => {
     history.push(
-      routes.toTemplateStudio({
+      routes.toTemplateStudioNew({
         projectIdentifier,
         orgIdentifier,
         accountId,

@@ -219,7 +219,7 @@ export function TemplateStudioSubHeaderLeftView(
     if (versionLabel !== DefaultNewVersionLabel && versionLabel !== template.versionLabel) {
       await deleteTemplateCache()
       history.replace(
-        routes.toTemplateStudio({
+        routes.toTemplateStudioNew({
           projectIdentifier,
           orgIdentifier,
           accountId,

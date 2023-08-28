@@ -192,7 +192,7 @@ function SaveTemplatePopover(
     updatedGitDetails?: SaveToGitFormInterface
   ): void => {
     history.replace(
-      routes.toTemplateStudio({
+      routes.toTemplateStudioNew({
         projectIdentifier: newTemplate.projectIdentifier,
         orgIdentifier: newTemplate.orgIdentifier,
         accountId,
