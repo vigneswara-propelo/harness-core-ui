@@ -51,6 +51,7 @@ describe('Reports Drawer', () => {
 
     expect(getByText('env1')).toBeInTheDocument()
     expect(getByText('datadoglogs')).toBeInTheDocument()
+    expect(getByText('datadoglogs_version1')).toBeInTheDocument()
     expect(getByText('August 22nd 2023, 10:31 am')).toBeInTheDocument()
     expect(getByText('August 25th 2023, 10:31 am')).toBeInTheDocument()
   })
@@ -105,6 +106,6 @@ describe('Reports Drawer', () => {
       </TestWrapper>
     )
 
-    expect(container.querySelectorAll('.bp3-skeleton').length).toEqual(6)
+    expect(container.querySelectorAll('.bp3-skeleton').length).toEqual(7)
   })
 })

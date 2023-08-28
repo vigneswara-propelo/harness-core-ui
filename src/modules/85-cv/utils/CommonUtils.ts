@@ -30,7 +30,6 @@ import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import { DeploymentImpactAnalysis } from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeEventCard/components/EventCards/SRMStepAnalysis/SRMStepAnalysis.constants'
 import { MonitoredServiceConfigurationsTabsEnum } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations.constants'
 
 export enum EVENT_TYPE {
@@ -354,8 +353,6 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
       return getString('common.updatedBy')
     case 'externalLinkToEntity':
       return getString('cv.changesPage.externalLink')
-    case DeploymentImpactAnalysis:
-      return getString('cv.changeSource.DeploymentImpactAnalysis')
     default:
       return key
   }

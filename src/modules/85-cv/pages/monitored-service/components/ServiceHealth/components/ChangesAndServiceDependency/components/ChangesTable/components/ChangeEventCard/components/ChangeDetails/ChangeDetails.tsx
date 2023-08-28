@@ -21,7 +21,6 @@ import { getOnClickOptions, getSourceLabel, statusToColorMapping } from './Chang
 import type { ChangeDetailsDataInterface } from '../../ChangeEventCard.types'
 import StatusChip from './components/StatusChip/StatusChip'
 import { ExternalLinkToEntity } from './ChangeDetails.constant'
-import { DeploymentImpactAnalysis } from '../EventCards/SRMStepAnalysis/SRMStepAnalysis.constants'
 import css from './ChangeDetails.module.scss'
 
 export default function ChangeDetails({
@@ -30,19 +29,11 @@ export default function ChangeDetails({
   ChangeDetailsData: ChangeDetailsDataInterface
 }): JSX.Element {
   const { getString } = useStrings()
-  const { type, status, executedBy, deploymentImpactAnalysis } = ChangeDetailsData
+  const { type, status, executedBy } = ChangeDetailsData
   let { details } = ChangeDetailsData
   const { color, backgroundColor } = statusToColorMapping(status, type) || {}
-  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.DeploymentImpactAnalysis].includes(
-    type as ChangeSourceTypes
-  )
-  if (
-    [
-      ChangeSourceTypes.HarnessCDNextGen,
-      ChangeSourceTypes.K8sCluster,
-      ChangeSourceTypes.DeploymentImpactAnalysis
-    ].includes(type as ChangeSourceTypes)
-  ) {
+  const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen].includes(type as ChangeSourceTypes)
+  if ([ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster].includes(type as ChangeSourceTypes)) {
     details = {
       source: type as string,
       ...details,
@@ -52,13 +43,6 @@ export default function ChangeDetails({
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
   } else if (CustomChangeSourceList.includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
-  }
-
-  if (type === ChangeSourceTypes.DeploymentImpactAnalysis) {
-    details = {
-      ...details,
-      deploymentImpactAnalysis: deploymentImpactAnalysis
-    } as unknown as ChangeDetailsDataInterface['details']
   }
 
   return (
@@ -95,12 +79,11 @@ export const getChanges = (details: ChangeDetailsDataInterface['details']) => {
   return _map(_entries(details), item => {
     const isExecutedBy = item[0] === EXECUTED_BY
     const isUpdatedBy = item[0] === UPDATED_BY
-    const isDeploymentImpactAnalysis = item[0] === DeploymentImpactAnalysis
     const { getString } = useStrings()
     let value: any = null
     let shouldVisible = true
 
-    if (isExecutedBy || isUpdatedBy || isDeploymentImpactAnalysis) {
+    if (isExecutedBy || isUpdatedBy) {
       shouldVisible = (item[1] as any).shouldVisible ?? true
       value = (item[1] as any).component
     } else if (Array.isArray(item[1])) {

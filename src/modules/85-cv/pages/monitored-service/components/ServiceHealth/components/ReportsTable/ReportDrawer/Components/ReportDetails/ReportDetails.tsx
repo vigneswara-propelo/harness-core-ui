@@ -33,7 +33,8 @@ export const ReportDetails = (props: ReportDetailsProps): JSX.Element => {
     analysisLoading,
     analysisStatus,
     planExecutionId,
-    stageStepId
+    stageStepId,
+    monitoredServiceIdentifier
   } = props
   const { getString } = useStrings()
   const loadingClassName = analysisLoading ? cx(Classes.SKELETON, css.loadingElement) : ''
@@ -52,6 +53,12 @@ export const ReportDetails = (props: ReportDetailsProps): JSX.Element => {
         <Container className={css.gridLayout}>
           <Text font={{ size: 'small' }}>{getString('common.executedBy')}</Text>
           <ExecutedBy planExecutionId={planExecutionId} stageNodeId={stageStepId} />
+        </Container>
+        <Container className={css.gridLayout}>
+          <Text font={{ size: 'small' }}>{getString('cv.monitoredServices.heading')}</Text>
+          <Text className={loadingClassName} font={{ size: 'small' }}>
+            {monitoredServiceIdentifier}
+          </Text>
         </Container>
         <Container className={css.gridLayout}>
           <Text font={{ size: 'small' }}>{getString('cv.analyzeDeploymentImpact.duration')}</Text>
