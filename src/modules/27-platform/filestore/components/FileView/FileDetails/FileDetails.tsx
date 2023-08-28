@@ -187,6 +187,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
         }
       }
       setInitialContent(values.fileEditor)
+      setValue(values.fileEditor)
     } catch (e) {
       if (e?.data?.message) {
         showError(e.data.message)
