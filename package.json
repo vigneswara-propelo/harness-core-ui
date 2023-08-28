@@ -137,6 +137,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
+    "@cypress/webpack-batteries-included-preprocessor": "2.4.1",
+    "@cypress/webpack-preprocessor": "^5.17.1",
     "@graphql-codegen/cli": "^2.6.2",
     "@graphql-codegen/typescript": "^2.4.5",
     "@graphql-codegen/typescript-operations": "^2.3.2",

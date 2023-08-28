@@ -1,4 +1,6 @@
 import { defineConfig } from 'cypress'
+import * as webpackPreprocessor from '@cypress/webpack-batteries-included-preprocessor'
+import { v4 as namespace } from 'uuid'
 
 export default defineConfig({
   e2e: {
@@ -13,6 +15,14 @@ export default defineConfig({
       mochaJunitReporterReporterOptions: {
         mochaFile: 'cypress-junit-[hash].xml'
       }
+    },
+    setupNodeEvents(on) {
+      on('file:preprocessor', file => {
+        const filePreprocessor = webpackPreprocessor({ typescript: 'typescript' })
+        const id = namespace()
+        file.outputPath = file.outputPath.replace(/^(.*\/)(.*?)(\..*)$/, `$1$2.${id}$3`)
+        return filePreprocessor(file)
+      })
     }
   },
   projectId: 'if5p69',
