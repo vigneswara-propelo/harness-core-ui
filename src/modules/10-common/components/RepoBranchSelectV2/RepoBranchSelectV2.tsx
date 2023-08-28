@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { Dialog, FormInput, Icon, Layout, SelectOption, SelectProps, useToggleOpen } from '@harness/uicore'
+import { Button, Dialog, FormInput, Icon, Layout, SelectOption, SelectProps, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
@@ -176,6 +176,20 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     }
   }, [loading, open, response?.data, response?.status, responseMessages, setErrorResponse, showErrorInModal])
 
+  const renderCustomSelectBranch = React.useCallback(
+    (query: string, clickHandler?: React.MouseEventHandler<Element>): React.ReactElement => (
+      <Button
+        intent="primary"
+        minimal
+        text={`${getString('common.gitSync.selectBranch')} ${query}`}
+        icon="chevron-right"
+        className={css.createNewItemButton}
+        onClick={clickHandler}
+      />
+    ),
+    []
+  )
+
   return (
     <Layout.Horizontal>
       <FormInput.Select
@@ -189,6 +203,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         selectProps={{
           usePortal: true,
           allowCreatingNewItems: true,
+          newItemRenderer: renderCustomSelectBranch,
           popoverClassName: css.gitBranchSelectorPopover,
           ...selectProps
         }}

@@ -2935,10 +2935,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/ts-transform-paths/1.0.1/8b6ee76cefebc3d6c04f3609d4df94b5ecb15d71#8b6ee76cefebc3d6c04f3609d4df94b5ecb15d71"
   integrity sha512-ktBF6O8vRCBGjH/D7i5SUOufbUzGq+SFusNqizb1NV3g2777LhWhXu/Qb2voRBZMbL7CxxYTpyG70hh5RBwi0w==
 
-"@harness/uicore@3.149.0":
-  version "3.149.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.149.0/fff07ba0e7639beddc19b768c8647f8cabd3a884#fff07ba0e7639beddc19b768c8647f8cabd3a884"
-  integrity sha512-SdL5O7QWbElvSf9hbM5jstHxA7U+CESYgrv2ou1qhW+rPcRcuQU5Cl/wvErMCNWgEe59R3kaojaY7ag2ay2mlw==
+"@harness/uicore@^3.150.0":
+  version "3.150.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.150.0/0c1b1ba120760b4ba657287d8e6962acc2e6bcd6#0c1b1ba120760b4ba657287d8e6962acc2e6bcd6"
+  integrity sha512-oYEUUZ7NKEDuzGv8KqjP2/zsQu9UXfZZC00rp09Prhn3UOW+LJaZxYmpyXhE1X7mLOhnpklaMZD1F/VA5TKc3w==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
