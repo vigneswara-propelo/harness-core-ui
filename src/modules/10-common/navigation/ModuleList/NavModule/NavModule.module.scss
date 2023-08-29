@@ -66,4 +66,8 @@
   background-color: var(--primary-bg) !important;
   box-shadow: var(--elevation-2);
   border: 1px solid transparent;
+  &:hover,
+  &.active {
+    background-color: var(--grey-0) !important;
+  }
 }

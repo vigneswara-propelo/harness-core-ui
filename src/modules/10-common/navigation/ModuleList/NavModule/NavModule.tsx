@@ -26,6 +26,8 @@ interface NavModuleProps {
   onClick?: (module: NavModuleName) => void
   checkboxProps?: CheckboxProps
   theme?: 'DARK' | 'LIGHT'
+  className?: string
+  readOnly?: boolean
 }
 
 const navModuleToClassMap: Record<NavModuleName, string> = {
@@ -44,20 +46,29 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
   [ModuleName.SEI]: css.sei
 }
 
-const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps, theme = 'DARK' }) => {
+const NavModule: React.FC<NavModuleProps> = ({
+  module,
+  active,
+  onClick,
+  checkboxProps,
+  theme = 'DARK',
+  className,
+  readOnly = false
+}) => {
   const { icon, label } = useNavModuleInfo(module)
   return (
     <Container
       className={cx(
         css.container,
-        { [css.active]: active },
+        className,
         { [css.lightContainer]: theme === 'LIGHT' },
+        { [css.active]: active },
         navModuleToClassMap[module]
       )}
       flex={{ justifyContent: 'space-between' }}
       padding={{ top: 'small', bottom: 'small', left: 'large', right: 'large' }}
       background={Color.PRIMARY_9}
-      width={checkboxProps ? 348 : 310}
+      width={checkboxProps || readOnly ? 348 : 310}
       onClick={() => {
         if (!active) {
           onClick?.(module)

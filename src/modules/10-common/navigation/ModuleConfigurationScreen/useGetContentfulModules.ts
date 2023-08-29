@@ -11,6 +11,7 @@ import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import Contentful, { ContentfulEnvironment } from './Contentful'
 
 const CONTENT_TYPE = 'module'
+const CONTENT_TYPE_LIGHT = 'moduleLight'
 
 export interface LottieContent {
   activeModule: NavModuleName
@@ -19,7 +20,9 @@ export interface LottieContent {
 
 export enum ModuleContentType {
   CENTER_ALIGNED_IMAGE_DESC = 'carouselImageAndDesc',
-  LOTTIE = 'lottie'
+  LOTTIE = 'lottie',
+  CENTER_ALIGNED_IMAGE_DESC_LIGHT = 'carouselImageAndDescLight',
+  LOTTIE_LIGHT = 'lottieLight'
 }
 
 export interface ModuleContentWithType<T> {
@@ -49,7 +52,7 @@ export interface UseGetContentfulModulesReturnType {
   loading: boolean
 }
 
-const useGetContentfulModules = (): UseGetContentfulModulesReturnType => {
+const useGetContentfulModules = (isLightThemed = false): UseGetContentfulModulesReturnType => {
   const [moduleContentfulDataMap, setModuleContentfulDataMap] = useState<
     Partial<Record<NavModuleName, MassagedModuleData>> | undefined
   >()
@@ -72,7 +75,7 @@ const useGetContentfulModules = (): UseGetContentfulModulesReturnType => {
       setLoading(true)
       Contentful.getClient()
         .getEntries<ContentfulModulesResponse>({
-          content_type: CONTENT_TYPE,
+          content_type: isLightThemed ? CONTENT_TYPE_LIGHT : CONTENT_TYPE,
           include: 10
         })
         .then(response => {

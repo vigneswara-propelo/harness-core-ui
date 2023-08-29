@@ -21,6 +21,7 @@ import useNavModuleInfo, {
 } from '@common/hooks/useNavModuleInfo'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import NavModule from './NavModule/NavModule'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 import {
@@ -126,8 +127,11 @@ const Group: React.FC<GroupProps> = ({ data, tooltipProps, onModuleClick }) => {
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true, onConfigIconClick }) => {
   const { getString } = useStrings()
   const [activeModuleCarousel, setActiveModuleCarousel] = useState<NavModuleName | undefined>(undefined)
+  const [readOnly, setReadOnly] = useState<boolean>(false)
+  const { CDS_NAV_2_0: isLightThemed } = useFeatureFlags()
   const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
+  const readOnlyConfig = readOnly && isLightThemed
 
   return (
     <>
@@ -193,6 +197,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
                 key={item.label}
                 tooltipProps={{
                   handleClick: (module: NavModuleName) => {
+                    setReadOnly(true)
                     setActiveModuleCarousel(module)
                   },
                   activeModule: activeModuleCarousel
@@ -215,12 +220,14 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
         <ModuleConfigurationScreen
           onClose={() => {
             setActiveModuleCarousel(undefined)
+            setReadOnly(false)
             close()
           }}
           activeModuleIndex={orderedModules.indexOf(activeModuleCarousel)}
-          className={css.configScreenWithoutReorder}
+          className={readOnlyConfig ? css.readOnlyConfigScreen : css.configScreenWithoutReorder}
           hideReordering
           hideHeader
+          readOnly={readOnly}
         />
       ) : null}
     </>

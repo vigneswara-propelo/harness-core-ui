@@ -11,6 +11,7 @@ import { Layout, Text } from '@harness/uicore'
 import { Icon } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './CarousellmageAndDescription.module.scss'
 
 interface CarouselImageAndDescriptionProps {
@@ -27,6 +28,7 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
   activeModule
 }) => {
   const { icon } = useNavModuleInfo(activeModule)
+  const { CDS_NAV_2_0: isLightThemed } = useFeatureFlags()
 
   return (
     <Layout.Vertical flex={{ justifyContent: 'center' }} height="100%">
@@ -44,7 +46,7 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
       {secondaryText && (
         <Text
           className={css.secondaryText}
-          color={Color.WHITE}
+          color={isLightThemed ? Color.GREY_800 : Color.WHITE}
           font={{ variation: FontVariation.BODY1 }}
           padding={{ left: 'large', right: 'large' }}
         >

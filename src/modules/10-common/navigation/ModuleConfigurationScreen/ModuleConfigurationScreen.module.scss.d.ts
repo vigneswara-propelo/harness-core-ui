@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly active: string
   readonly blueText: string
   readonly body: string
   readonly container: string
@@ -16,6 +17,8 @@ declare const styles: {
   readonly flex1: string
   readonly header: string
   readonly lightContainer: string
+  readonly readOnlyContainer: string
+  readonly readOnlyNavModule: string
   readonly sortableListContainer: string
 }
 export default styles

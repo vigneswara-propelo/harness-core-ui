@@ -52,4 +52,18 @@
   width: 100vw !important;
   left: 0 !important;
   background: var(--grey-0) !important;
+
+  .readOnlyNavModule {
+    margin-bottom: var(--spacing-large);
+    background: var(--primary-bg);
+    cursor: pointer;
+    &:hover,
+    &.active {
+      background-color: var(--grey-0) !important;
+    }
+  }
+}
+
+.readOnlyContainer {
+  background: var(--primary-bg) !important;
 }

@@ -6,7 +6,7 @@
  */
 
 .modulesList {
-  --main-nav-width: 88px;
+  --main-nav-width: 82px;
   background: var(--theme-light-nav-panel-bg);
   padding: var(--spacing-xxlarge) var(--spacing-medium) var(--spacing-xxlarge) var(--spacing-xxlarge);
   margin-left: var(--main-nav-width) !important;
@@ -80,4 +80,8 @@
 .configScreenWithoutReorder {
   left: 448px;
   width: calc(100% - 448px) !important;
+}
+
+.readOnlyConfigScreen {
+  width: 100vw;
 }

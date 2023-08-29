@@ -12,12 +12,13 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Icon } from '@harness/icons'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PageSpinner } from '@common/components'
-import { DEFAULT_MODULES_ORDER, NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { String } from 'framework/strings'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
 import ModuleCarousel from './ModuleDetailsSection/ModuleCarousel'
 import useGetContentfulModules from './useGetContentfulModules'
+import NavModule from '../ModuleList/NavModule/NavModule'
 import css from './ModuleConfigurationScreen.module.scss'
 
 interface ModulesConfigurationScreenProps {
@@ -26,11 +27,13 @@ interface ModulesConfigurationScreenProps {
   hideReordering?: boolean
   hideHeader?: boolean
   activeModuleIndex?: number
+  readOnly?: boolean
 }
 
 interface ModuleConfigHeaderProps {
   onDefaultSettingsClick?: () => void
   isLightThemed?: boolean
+  readOnlyConfig?: boolean
 }
 
 export interface ModulesPreferenceStoreData {
@@ -40,29 +43,39 @@ export interface ModulesPreferenceStoreData {
 
 export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
 
-const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ isLightThemed }) => {
+const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ isLightThemed, readOnlyConfig }) => {
   return (
     <>
-      <Text inline margin={{ bottom: 'xsmall' }} flex={{ justifyContent: 'flex-start' }}>
-        <Text inline color={isLightThemed ? Color.BLACK : Color.WHITE} font={{ variation: FontVariation.H2 }}>
-          {isLightThemed ? (
-            <String stringID="common.moduleConfig.selectModulesNav" />
-          ) : (
-            <String stringID="common.moduleConfig.selectModules" />
-          )}
+      {readOnlyConfig ? (
+        <Text margin={{ top: 'huge' }} flex={{ justifyContent: 'flex-start' }}>
+          <Text inline color={Color.BLACK} font={{ variation: FontVariation.H2 }}>
+            <String stringID="common.moduleConfig.readOnlyModules" />
+          </Text>
         </Text>
-        <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
-          <String stringID="common.moduleConfig.your" />
-        </Text>
-        <Text inline color={isLightThemed ? Color.BLACK : Color.WHITE} font={{ variation: FontVariation.H2 }}>
-          <String stringID="common.moduleConfig.navigation" />
-        </Text>
-      </Text>
-      <Text className={css.defaultSettingsTextContainer}>
-        <Text font={{ variation: FontVariation.SMALL }} color={isLightThemed ? Color.BLACK : Color.GREY_200} inline>
-          (<String stringID="common.moduleConfig.autoSaved" />)
-        </Text>
-      </Text>
+      ) : (
+        <>
+          <Text inline margin={{ bottom: 'xsmall' }} flex={{ justifyContent: 'flex-start' }}>
+            <Text inline color={isLightThemed ? Color.BLACK : Color.WHITE} font={{ variation: FontVariation.H2 }}>
+              {isLightThemed ? (
+                <String stringID="common.moduleConfig.selectModulesNav" />
+              ) : (
+                <String stringID="common.moduleConfig.selectModules" />
+              )}
+            </Text>
+            <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
+              <String stringID="common.moduleConfig.your" />
+            </Text>
+            <Text inline color={isLightThemed ? Color.BLACK : Color.WHITE} font={{ variation: FontVariation.H2 }}>
+              <String stringID="common.moduleConfig.navigation" />
+            </Text>
+          </Text>
+          <Text className={css.defaultSettingsTextContainer}>
+            <Text font={{ variation: FontVariation.SMALL }} color={isLightThemed ? Color.BLACK : Color.GREY_200} inline>
+              (<String stringID="common.moduleConfig.autoSaved" />)
+            </Text>
+          </Text>
+        </>
+      )}
     </>
   )
 }
@@ -72,14 +85,17 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   className,
   hideReordering,
   activeModuleIndex: activeModuleIndexFromProps,
-  hideHeader
+  hideHeader,
+  readOnly
 }) => {
   const [activeModuleIndex, setActiveModuleIndex] = useState<number>(0)
   const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
-  const { contentfulModuleMap, loading } = useGetContentfulModules()
   const { CDS_NAV_2_0: isLightThemed } = useFeatureFlags()
+  const { contentfulModuleMap, loading } = useGetContentfulModules(isLightThemed)
+  const readOnlyConfig = readOnly && isLightThemed
 
+  const moduleMap = useNavModuleInfoMap()
   useEffect(() => {
     if (typeof activeModuleIndexFromProps !== 'undefined') {
       setActiveModuleIndex(activeModuleIndexFromProps)
@@ -99,11 +115,18 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   const activeModule = orderedModules[activeModuleIndex]
   return (
     <Layout.Vertical
-      className={cx(css.container, className, { [css.lightContainer]: isLightThemed })}
+      className={cx(css.container, className, {
+        [css.lightContainer]: isLightThemed,
+        [css.readOnlyContainer]: readOnlyConfig
+      })}
       padding={{ left: 'xlarge' }}
     >
       <Container className={css.header} padding={isLightThemed && { left: 'huge' }}>
-        {!hideHeader ? <ModuleConfigHeader isLightThemed={isLightThemed} /> : null}
+        {!hideHeader ? (
+          <ModuleConfigHeader isLightThemed={isLightThemed} />
+        ) : readOnlyConfig ? (
+          <ModuleConfigHeader isLightThemed={isLightThemed} readOnlyConfig={readOnlyConfig} />
+        ) : null}
       </Container>
       <Layout.Horizontal
         padding={{
@@ -114,8 +137,8 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
         margin={{ bottom: 'xxxlarge' }}
         className={css.body}
       >
-        {!hideReordering ? (
-          <Container margin={{ right: 'xxlarge' }} className={css.sortableListContainer}>
+        <Container margin={{ right: 'xxlarge' }} className={css.sortableListContainer}>
+          {!hideReordering ? (
             <ModuleSortableList
               activeModule={activeModule}
               onSelect={setActiveModuleIndex}
@@ -125,14 +148,33 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
                 setModuleConfigPreference({ orderedModules: updatedOrder, selectedModules: selected })
               }}
             />
-          </Container>
-        ) : null}
+          ) : readOnlyConfig ? (
+            orderedModules
+              .filter(module => Boolean(moduleMap[module].shouldVisible))
+              .map(module => (
+                <NavModule
+                  module={module}
+                  active={activeModule === module}
+                  onClick={() => setActiveModuleIndex(orderedModules.indexOf(module))}
+                  theme={isLightThemed ? 'LIGHT' : 'DARK'}
+                  key={module}
+                  className={css.readOnlyNavModule}
+                  readOnly={readOnlyConfig}
+                />
+              ))
+          ) : null}
+        </Container>
 
         <Container className={css.flex1}>
           {loading ? (
             <PageSpinner />
           ) : (
-            <ModuleCarousel key={activeModule} module={activeModule} data={contentfulModuleMap?.[activeModule]} />
+            <ModuleCarousel
+              key={activeModule}
+              module={activeModule}
+              data={contentfulModuleMap?.[activeModule]}
+              readOnly={readOnlyConfig}
+            />
           )}
         </Container>
       </Layout.Horizontal>

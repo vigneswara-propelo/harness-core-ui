@@ -10,22 +10,8 @@
   border-radius: 8px;
   position: relative;
   overflow: hidden;
-  padding: var(--spacing-medium) !important;
+  padding: var(--spacing-xxlarge);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  .lottieLayer {
-    width: 100%;
-    height: 100%;
-    background-color: var(--grey-0);
-    border-radius: var(--spacing-3);
-    border: 1px solid var(--grey-200);
-    box-sizing: border-box;
-    padding: var(--spacing-huge);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
   .heading {
     position: absolute;
     display: flex;
@@ -66,10 +52,16 @@
     }
   }
 }
+
 .lightContainer {
-  background-color: var(--primary-1) !important;
+  background-color: var(--grey-0) !important;
+  box-sizing: border-box;
+  border: 20px solid var(--primary-1);
+  box-shadow: 0px 0px 0px 1px var(--grey-200) inset;
+  border-radius: 0px;
 }
 
-.iconHeading {
-  top: var(--spacing-huge) !important;
+.readOnlyContainer {
+  border: 20px solid #f6fcff; //Not using variables here because color not available in uicore
+  box-shadow: none !important;
 }

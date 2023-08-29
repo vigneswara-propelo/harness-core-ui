@@ -17,6 +17,7 @@ declare const styles: {
   readonly modulesList: string
   readonly modulesListContainer: string
   readonly popover: string
+  readonly readOnlyConfigScreen: string
   readonly secondaryText: string
   readonly secondaryTextContainer: string
   readonly tooltipIcon: string

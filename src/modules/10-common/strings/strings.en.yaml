@@ -1134,6 +1134,7 @@ moduleConfig:
   customize: Customize your navigation
   selectModules: Select which modules you want readily available on
   selectModulesNav: Select which modules you want available on
+  readOnlyModules: Our modules at a glance...
   your: your
   navigation: navigation
   autoSaved: Changes are automatically saved

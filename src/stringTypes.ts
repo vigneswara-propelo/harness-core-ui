@@ -644,6 +644,7 @@ export interface StringsMap {
   'common.moduleConfig.autoSaved': string
   'common.moduleConfig.customize': string
   'common.moduleConfig.navigation': string
+  'common.moduleConfig.readOnlyModules': string
   'common.moduleConfig.restoreDefault': string
   'common.moduleConfig.selectModules': string
   'common.moduleConfig.selectModulesNav': string
