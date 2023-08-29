@@ -94,21 +94,12 @@ export function getReleaseNameSchema(
   return releaseNameSchema
 }
 
-export function getValidationSchemaWithRegion(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+export function getServerlessAwsLambdaValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     region: Yup.lazy((): Yup.Schema<unknown> => {
       return Yup.string().required(getString('validation.regionRequired'))
     }),
-    stage: Yup.lazy((): Yup.Schema<unknown> => {
-      return Yup.string().required(getString('cd.pipelineSteps.infraTab.stageIsRequired'))
-    })
-  })
-}
-
-export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
-  return Yup.object().shape({
-    connectorRef: getConnectorSchema(getString),
     stage: Yup.lazy((): Yup.Schema<unknown> => {
       return Yup.string().required(getString('cd.pipelineSteps.infraTab.stageIsRequired'))
     })
@@ -157,7 +148,7 @@ export const getInfrastructureDefinitionValidationSchema = (
 ): Yup.ObjectSchema => {
   switch (deploymentType) {
     case ServiceDeploymentType.ServerlessAwsLambda:
-      return getValidationSchemaWithRegion(getString)
+      return getServerlessAwsLambdaValidationSchema(getString)
     case ServiceDeploymentType.Ssh:
       return Yup.object().shape({
         credentialsRef: getCredentialsRefSchema(getString)

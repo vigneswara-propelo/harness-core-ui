@@ -7,27 +7,27 @@
 
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import * as Yup from 'yup'
+import { FormikErrors } from 'formik'
 import { isEmpty, get } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { FormikErrors, yupToFormErrors } from 'formik'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+
+import { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { getConnectorListV2Promise, ServerlessAwsLambdaInfrastructure } from 'services/cd-ng'
-import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
+import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { connectorTypes } from '@pipeline/utils/constants'
-
 import {
-  ServerlessInputForm,
-  ServerlessSpecEditable,
-  ServerlessSpecEditableProps,
-  ServerlessVariablesForm
-} from '../ServerlessInfraSpec/ServerlessInfraSpec'
+  ServerlessAwsLambaInfraSpecEditable,
+  ServerlessAwsLambaInfraSpecEditableProps
+} from './ServerlessAwsLambaInfraSpecEditable'
+import { ServerlessAwsLambdaInfraSpecInputForm } from './ServerlessAwsLambdaInfraSpecInputForm'
 
 const logger = loggerFor(ModuleName.CD)
 type ServerlessAwsLambdaInfrastructureTemplate = { [key in keyof ServerlessAwsLambdaInfrastructure]: string }
@@ -37,10 +37,18 @@ interface ServerlessAwsLambdaInfrastructureSpecStep extends ServerlessAwsLambdaI
   identifier?: string
 }
 
+export interface ServerlessAwsLambdaInfraSpecCustomStepProps {
+  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+  variablesData: ServerlessAwsLambdaInfrastructure
+  serviceRef?: string
+  environmentRef?: string
+  infrastructureRef?: string
+}
+
 const ServerlessAwsConnectorRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
 export class ServerlessAwsLambdaInfraSpec extends PipelineStep<ServerlessAwsLambdaInfrastructureSpecStep> {
   lastFetched: number
-  protected type = StepType.ServerlessAwsInfra
+  protected type = StepType.ServerlessAwsLambdaInfra
   protected defaultValues: ServerlessAwsLambdaInfrastructure = {
     connectorRef: '',
     region: '',
@@ -113,52 +121,21 @@ export class ServerlessAwsLambdaInfraSpec extends PipelineStep<ServerlessAwsLamb
   }: ValidateInputSetProps<ServerlessAwsLambdaInfrastructure>): FormikErrors<ServerlessAwsLambdaInfrastructure> {
     const errors: Partial<ServerlessAwsLambdaInfrastructureTemplate> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+
     if (
       isEmpty(data.connectorRef) &&
       isRequired &&
       getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
     ) {
-      errors.connectorRef = getString?.('fieldRequired', { field: getString('connector') })
+      errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
     }
-    /* istanbul ignore else */ if (
-      getString &&
-      getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME
-    ) {
-      const region = Yup.object().shape({
-        region: Yup.lazy((): Yup.Schema<unknown> => {
-          return Yup.string().required(getString('regionLabel'))
-        })
-      })
-
-      try {
-        region.validateSync(data)
-      } catch (e) {
-        /* istanbul ignore else */
-        if (e instanceof Yup.ValidationError) {
-          const err = yupToFormErrors(e)
-
-          Object.assign(errors, err)
-        }
-      }
+    if (isEmpty(data.region) && isRequired && getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME) {
+      errors.region = getString?.('common.validation.fieldIsRequired', { name: getString('regionLabel') })
     }
-    /* istanbul ignore else */ if (getString && getMultiTypeFromValue(template?.stage) === MultiTypeInputType.RUNTIME) {
-      const stage = Yup.object().shape({
-        stage: Yup.lazy((): Yup.Schema<unknown> => {
-          return Yup.string().required(getString('common.stage'))
-        })
-      })
-
-      try {
-        stage.validateSync(data)
-      } catch (e) {
-        /* istanbul ignore else */
-        if (e instanceof Yup.ValidationError) {
-          const err = yupToFormErrors(e)
-
-          Object.assign(errors, err)
-        }
-      }
+    if (isEmpty(data.stage) && isRequired && getMultiTypeFromValue(template?.stage) === MultiTypeInputType.RUNTIME) {
+      errors.stage = getString?.('common.validation.fieldIsRequired', { name: getString('common.stage') })
     }
+
     return errors
   }
 
@@ -166,11 +143,8 @@ export class ServerlessAwsLambdaInfraSpec extends PipelineStep<ServerlessAwsLamb
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes } = props
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ServerlessInputForm
-          {...(customStepProps as ServerlessSpecEditableProps)}
-          initialValues={initialValues}
-          onUpdate={onUpdate}
-          stepViewType={stepViewType}
+        <ServerlessAwsLambdaInfraSpecInputForm
+          {...(customStepProps as ServerlessAwsLambdaInfraSpecCustomStepProps)}
           readonly={inputSetData?.readonly}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
@@ -179,20 +153,21 @@ export class ServerlessAwsLambdaInfraSpec extends PipelineStep<ServerlessAwsLamb
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
-        <ServerlessVariablesForm
-          onUpdate={onUpdate}
-          stepViewType={stepViewType}
-          template={inputSetData?.template}
-          {...(customStepProps as ServerlessSpecEditableProps)}
-          initialValues={initialValues}
+        <VariablesListTable
+          data={
+            (customStepProps as ServerlessAwsLambdaInfraSpecCustomStepProps)?.variablesData?.infrastructureDefinition
+              ?.spec
+          }
+          originalData={initialValues.infrastructureDefinition?.spec || initialValues}
+          metadataMap={(customStepProps as ServerlessAwsLambdaInfraSpecCustomStepProps)?.metadataMap}
         />
       )
     }
     return (
-      <ServerlessSpecEditable
+      <ServerlessAwsLambaInfraSpecEditable
         onUpdate={onUpdate}
         readonly={readonly}
-        {...(customStepProps as ServerlessSpecEditableProps)}
+        {...(customStepProps as ServerlessAwsLambaInfraSpecEditableProps)}
         initialValues={initialValues}
         allowableTypes={allowableTypes}
       />

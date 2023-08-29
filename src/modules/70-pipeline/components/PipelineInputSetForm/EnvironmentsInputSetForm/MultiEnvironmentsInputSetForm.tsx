@@ -19,11 +19,7 @@ import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceS
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 
-import {
-  getCustomStepProps,
-  getStepTypeByDeploymentType,
-  infraDefinitionTypeMapping
-} from '@pipeline/utils/stageHelpers'
+import { getStepTypeByDeploymentType, infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
 
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { StepWidget } from '../../AbstractSteps/StepWidget'
@@ -403,10 +399,6 @@ export function MultiEnvironmentsInputSetForm({
                                       readonly={readonly}
                                       stepViewType={viewType}
                                       customStepProps={{
-                                        ...getCustomStepProps(
-                                          (deploymentStage?.deploymentType as StepType) || '',
-                                          getString
-                                        ),
                                         environmentRef: environment.environmentRef,
                                         infrastructureRef: infraInputs.identifier
                                       }}

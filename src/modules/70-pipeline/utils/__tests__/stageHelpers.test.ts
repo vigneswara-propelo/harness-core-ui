@@ -21,7 +21,6 @@ import {
   isInfraDefinitionPresent,
   isServerlessDeploymentType,
   ServiceDeploymentType,
-  getCustomStepProps,
   getStepTypeByDeploymentType,
   deleteStageData,
   hasCDStage,
@@ -483,49 +482,6 @@ test('getHelpeTextForTags', () => {
   //     true
   //   )
   // ).toBe('platform.connectors.GCR.registryHostname')
-})
-
-test('getCustomStepProps', () => {
-  expect(getCustomStepProps(ServiceDeploymentType.ServerlessAwsLambda, (str: string) => str)).toStrictEqual({
-    formInfo: {
-      formName: 'serverlessAWSInfra',
-      header: 'pipelineSteps.awsConnectorLabel',
-      tooltipIds: {
-        connector: 'awsInfraConnector',
-        region: 'awsRegion',
-        stage: 'awsStage'
-      },
-      type: 'Aws'
-    },
-    hasRegion: true
-  })
-  expect(getCustomStepProps(ServiceDeploymentType.ServerlessAzureFunctions, (str: string) => str)).toStrictEqual({
-    formInfo: {
-      formName: 'serverlessAzureInfra',
-      header: 'pipelineSteps.awsConnectorLabel',
-      tooltipIds: {
-        connector: 'azureInfraConnector',
-        region: 'azureRegion',
-        stage: 'azureStage'
-      },
-      type: 'Gcp'
-    }
-  })
-  expect(getCustomStepProps(ServiceDeploymentType.ServerlessGoogleFunctions, (str: string) => str)).toStrictEqual({
-    formInfo: {
-      formName: 'serverlessGCPInfra',
-      header: 'pipelineSteps.gcpConnectorLabel',
-      tooltipIds: {
-        connector: 'gcpInfraConnector',
-        region: 'gcpRegion',
-        stage: 'gcpStage'
-      },
-      type: 'Gcp'
-    }
-  })
-  expect(getCustomStepProps(ServiceDeploymentType.AmazonSAM, (str: string) => str)).toStrictEqual({
-    formInfo: {}
-  })
 })
 
 test('hasChainedPipelineStage', () => {

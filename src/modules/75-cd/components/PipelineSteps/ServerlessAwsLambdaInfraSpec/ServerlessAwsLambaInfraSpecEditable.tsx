@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import type { FormikProps } from 'formik'
+import { useParams } from 'react-router-dom'
+import { debounce, noop } from 'lodash-es'
 import {
   Text,
   Layout,
@@ -17,63 +20,41 @@ import {
   Icon,
   AllowedTypes
 } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
-import { debounce, noop, defaultTo, isEmpty } from 'lodash-es'
-import cx from 'classnames'
-import type { FormikProps } from 'formik'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+
+import type { ExecutionElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServerlessInfraTypes } from '@pipeline/utils/stageHelpers'
-import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import type { ConnectorInfoDTO, ExecutionElementConfig } from 'services/cd-ng'
-import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
-import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
-import { getValidationSchema, getValidationSchemaWithRegion } from '../PipelineStepsUtil'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { connectorTypes } from '@pipeline/utils/constants'
+import { getServerlessAwsLambdaValidationSchema } from '../PipelineStepsUtil'
 import css from './ServerlessInfraSpec.module.scss'
 
-export interface ServerlessSpecEditableProps {
+export interface ServerlessAwsLambaInfraSpecEditableProps {
   initialValues: ServerlessInfraTypes
   onUpdate?: (data: any) => void
   stepViewType?: StepViewType
   readonly?: boolean
   template?: ServerlessInfraTypes
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: ServerlessInfraTypes
   allowableTypes: AllowedTypes
-  hasRegion?: boolean
   provisioner?: ExecutionElementConfig['steps']
-  formInfo: {
-    formName: string
-    type: ConnectorInfoDTO['type']
-    header: string
-    tooltipIds: {
-      connector: string
-      region?: string
-      stage: string
-    }
-  }
   isSingleEnv?: boolean
 }
 
-export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
+export const ServerlessAwsLambaInfraSpecEditable: React.FC<ServerlessAwsLambaInfraSpecEditableProps> = ({
   initialValues,
   onUpdate,
   readonly,
   allowableTypes,
-  hasRegion,
-  formInfo,
   isSingleEnv
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -97,25 +78,24 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
   return (
     <Layout.Vertical spacing="medium">
       <Formik<ServerlessInfraTypes>
-        formName={formInfo.formName}
+        formName={'serverlessAWSInfra'}
         initialValues={initialValues}
         validate={value => {
           const data: Partial<ServerlessInfraTypes> = {
             connectorRef: undefined,
+            region: value.region === '' ? undefined : value.region,
             stage: value.stage === '' ? undefined : value.stage,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments,
             provisioner: value?.provisioner || undefined
           }
-          if (hasRegion) {
-            data.region = value.region === '' ? undefined : value.region
-          }
+
           if (value.connectorRef) {
             data.connectorRef = (value.connectorRef as any)?.value || value.connectorRef
           }
 
           delayedOnUpdate(data)
         }}
-        validationSchema={hasRegion ? getValidationSchemaWithRegion(getString) : getValidationSchema(getString)}
+        validationSchema={getServerlessAwsLambdaValidationSchema(getString)}
         onSubmit={noop}
       >
         {formik => {
@@ -136,7 +116,7 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                   disabled={readonly}
                   accountIdentifier={accountId}
                   tooltipProps={{
-                    dataTooltipId: formInfo.tooltipIds.connector
+                    dataTooltipId: 'awsInfraConnector'
                   }}
                   multiTypeProps={{ expressions, allowableTypes }}
                   projectIdentifier={projectIdentifier}
@@ -145,7 +125,7 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                   connectorLabelClass={css.connectorRef}
                   enableConfigureOptions={false}
                   style={{ marginBottom: 'var(--spacing-large)' }}
-                  type={formInfo.type}
+                  type={connectorTypes.Aws}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -153,8 +133,8 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                     value={formik.values.connectorRef as string}
                     type={
                       <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                        <Icon name={getIconByType(formInfo.type)}></Icon>
-                        <Text>{formInfo.header}</Text>
+                        <Icon name={getIconByType(connectorTypes.Aws)}></Icon>
+                        <Text>{getString('pipelineSteps.awsConnectorLabel')}</Text>
                       </Layout.Horizontal>
                     }
                     variableName="connectorRef"
@@ -169,7 +149,7 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                       accountIdentifier: accountId,
                       projectIdentifier,
                       orgIdentifier,
-                      type: formInfo.type,
+                      type: connectorTypes.Aws,
                       label: getString('connector'),
                       disabled: readonly,
                       gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
@@ -177,44 +157,44 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                   />
                 )}
               </Layout.Horizontal>
-              {hasRegion && (
-                <Layout.Horizontal className={css.formRow} spacing="medium">
-                  <FormInput.MultiTextInput
-                    name="region"
-                    tooltipProps={{
-                      dataTooltipId: formInfo.tooltipIds.region || ''
+
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <FormInput.MultiTextInput
+                  name="region"
+                  tooltipProps={{
+                    dataTooltipId: 'awsRegion'
+                  }}
+                  className={css.inputWidth}
+                  disabled={readonly}
+                  placeholder={getString('cd.steps.serverless.regionPlaceholder')}
+                  multiTextInputProps={{
+                    expressions,
+                    disabled: readonly,
+                    allowableTypes
+                  }}
+                  label={getString('regionLabel')}
+                />
+                {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && !readonly && (
+                  <ConfigureOptions
+                    value={formik.values.region}
+                    type="String"
+                    variableName="region"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => {
+                      formik.setFieldValue('region', value)
                     }}
-                    className={css.inputWidth}
-                    disabled={readonly}
-                    placeholder={getString('cd.steps.serverless.regionPlaceholder')}
-                    multiTextInputProps={{
-                      expressions,
-                      disabled: readonly,
-                      allowableTypes
-                    }}
-                    label={getString('regionLabel')}
+                    isReadonly={readonly}
+                    className={css.marginTop}
                   />
-                  {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && !readonly && (
-                    <ConfigureOptions
-                      value={formik.values.region}
-                      type="String"
-                      variableName="region"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => {
-                        formik.setFieldValue('region', value)
-                      }}
-                      isReadonly={readonly}
-                      className={css.marginTop}
-                    />
-                  )}
-                </Layout.Horizontal>
-              )}
+                )}
+              </Layout.Horizontal>
+
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormInput.MultiTextInput
                   name="stage"
                   tooltipProps={{
-                    dataTooltipId: formInfo.tooltipIds.stage
+                    dataTooltipId: 'awsStage'
                   }}
                   className={css.inputWidth}
                   label={getString('common.stage')}
@@ -259,104 +239,4 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
       </Formik>
     </Layout.Vertical>
   )
-}
-
-export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path: string }> = ({
-  template,
-  readonly = false,
-  path,
-  allowableTypes,
-  hasRegion,
-  formInfo,
-  provisioner
-}) => {
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-  }>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { expressions } = useVariablesExpression()
-  const { getString } = useStrings()
-  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
-
-  return (
-    <Layout.Vertical spacing="small">
-      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
-        </div>
-      )}
-      {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            tooltipProps={{
-              dataTooltipId: 'awsInfraConnector'
-            }}
-            name={`${path}.connectorRef`}
-            label={getString('connector')}
-            enableConfigureOptions={false}
-            placeholder={getString('common.entityPlaceholderText')}
-            disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
-            type={formInfo?.type}
-            setRefValue
-            gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
-            templateProps={{
-              isTemplatizedView: true,
-              templateValue: template?.connectorRef
-            }}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME && hasRegion && (
-        <TextFieldInputSetView
-          name={`${path}.region`}
-          disabled={readonly}
-          placeholder={getString('cd.steps.serverless.regionPlaceholder')}
-          label={getString('regionLabel')}
-          multiTextInputProps={{
-            expressions,
-            allowableTypes
-          }}
-          template={template}
-          fieldPath={'region'}
-          className={cx(stepCss.formGroup, stepCss.md, css.regionInputWrapper)}
-        />
-      )}
-      {getMultiTypeFromValue(template?.stage) === MultiTypeInputType.RUNTIME && (
-        <TextFieldInputSetView
-          name={`${path}.stage`}
-          label={getString('common.stage')}
-          disabled={readonly}
-          multiTextInputProps={{
-            allowableTypes,
-            expressions
-          }}
-          placeholder={getString('cd.steps.serverless.stagePlaceholder')}
-          template={template}
-          fieldPath={'stage'}
-          className={cx(stepCss.formGroup, stepCss.md)}
-        />
-      )}
-    </Layout.Vertical>
-  )
-}
-
-export const ServerlessVariablesForm: React.FC<ServerlessSpecEditableProps> = ({
-  metadataMap,
-  initialValues,
-  variablesData
-}) => {
-  const infraVariables = variablesData?.infrastructureDefinition?.spec
-  return infraVariables ? (
-    /* istanbul ignore next */ <VariablesListTable
-      data={infraVariables}
-      originalData={initialValues.infrastructureDefinition?.spec || initialValues}
-      metadataMap={metadataMap}
-    />
-  ) : null
 }

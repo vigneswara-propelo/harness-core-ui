@@ -17,11 +17,7 @@ import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceS
 
 import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
-import {
-  getCustomStepProps,
-  getStepTypeByDeploymentType,
-  infraDefinitionTypeMapping
-} from '@pipeline/utils/stageHelpers'
+import { getStepTypeByDeploymentType, infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
 import {
   getFlattenedStages,
   getStageIndexFromPipeline
@@ -431,7 +427,6 @@ export default function SingleEnvironmentInputSetForm({
                           readonly={readonly}
                           stepViewType={viewType}
                           customStepProps={{
-                            ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
                             environmentRef: environment.environmentRef,
                             infrastructureRef: infraInputs.identifier,
                             provisioner: deploymentStage?.environment?.provisioner?.steps || undefined

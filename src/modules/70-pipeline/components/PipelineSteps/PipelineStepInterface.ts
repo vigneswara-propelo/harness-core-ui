@@ -110,7 +110,7 @@ export enum StepType {
   AzureWebAppServiceSpec = 'AzureWebAppServiceSpec',
   ServerlessAwsLambdaDeploy = 'ServerlessAwsLambdaDeploy',
   ServerlessAwsLambdaRollback = 'ServerlessAwsLambdaRollback',
-  ServerlessAwsInfra = 'ServerlessAwsInfra',
+  ServerlessAwsLambdaInfra = 'ServerlessAwsLambdaInfra',
   CloudFormationRollbackStack = 'RollbackStack',
   CloudFormationDeleteStack = 'DeleteStack',
   CloudFormationCreateStack = 'CreateStack',

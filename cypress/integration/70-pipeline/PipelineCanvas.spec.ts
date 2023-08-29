@@ -463,6 +463,9 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.wait(1000)
     cy.wait('@serverlessYamlSnippet')
     cy.wait('@stepLibrary')
+    cy.get('div[role="tablist"]').within(() => {
+      cy.contains('span', 'Service').click().and('have.attr', 'data-completed', 'true')
+    })
 
     // Go to Execution tab, Serverless Aws Lambda Deploy should be added by default
     // Switching between Rollback and Execution should work as expected
@@ -477,7 +480,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Add Step').click({ force: true })
     cy.findByTestId('addStepPipeline').click()
     cy.wait('@stepLibrary')
-    cy.contains('section', 'Serverless Lambda Deploy').click()
+    cy.contains('section', 'Serverless Lambda Deploy').click({ force: true })
     cy.contains('p', 'Serverless Lambda Deploy Step').should('be.visible')
     cy.get('input[name="name"]').clear().type('Serverless Deploy Step 2')
     cy.contains('div', 'Optional Configuration').click()

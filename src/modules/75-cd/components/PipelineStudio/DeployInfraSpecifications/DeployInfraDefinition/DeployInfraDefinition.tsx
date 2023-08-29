@@ -67,7 +67,6 @@ import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/Azure
 import type { AzureWebAppInfrastructureSpec } from '@cd/components/PipelineSteps/AzureWebAppInfrastructureStep/AzureWebAppInfrastructureStep'
 import {
   detailsHeaderName,
-  getCustomStepProps,
   isServerlessDeploymentType,
   isAzureWebAppDeploymentType,
   ServerlessInfraTypes,
@@ -76,8 +75,6 @@ import {
   isElastigroupDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { ServerlessAwsLambdaInfraSpec } from '@cd/components/PipelineSteps/ServerlessAwsLambdaInfraSpec/ServerlessAwsLambdaInfraSpec'
-import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
-import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
@@ -572,7 +569,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
             key={stage.stage.identifier}
             readonly={isReadonly}
             initialValues={initialInfrastructureDefinitionValues as ServerlessAwsLambdaInfraSpec}
-            type={StepType.ServerlessAwsInfra}
+            type={StepType.ServerlessAwsLambdaInfra}
             stepViewType={StepViewType.Edit}
             allowableTypes={allowableTypes}
             onUpdate={value =>
@@ -587,57 +584,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                 InfraDeploymentType.ServerlessAwsLambda
               )
             }
-            customStepProps={{ ...getCustomStepProps('ServerlessAwsLambda', getString), isSingleEnv }}
-          />
-        )
-      }
-      case InfraDeploymentType.ServerlessGoogleFunctions: {
-        return (
-          <StepWidget<ServerlessGCPSpec>
-            factory={factory}
-            key={stage.stage.identifier}
-            readonly={isReadonly}
-            initialValues={initialInfrastructureDefinitionValues as ServerlessGCPSpec}
-            type={StepType.ServerlessGCP}
-            stepViewType={StepViewType.Edit}
-            allowableTypes={allowableTypes}
-            onUpdate={value =>
-              onUpdateInfrastructureDefinition(
-                {
-                  connectorRef: value.connectorRef,
-                  stage: value.stage,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-                  provisioner: value?.provisioner
-                },
-                InfraDeploymentType.ServerlessGoogleFunctions
-              )
-            }
-            customStepProps={{ ...getCustomStepProps('ServerlessGoogleFunctions', getString), isSingleEnv }}
-          />
-        )
-      }
-      case InfraDeploymentType.ServerlessAzureFunctions: {
-        return (
-          <StepWidget<ServerlessAzureSpec>
-            factory={factory}
-            key={stage.stage.identifier}
-            readonly={isReadonly}
-            initialValues={initialInfrastructureDefinitionValues as ServerlessAzureSpec}
-            type={StepType.ServerlessAzure}
-            stepViewType={StepViewType.Edit}
-            allowableTypes={allowableTypes}
-            onUpdate={value =>
-              onUpdateInfrastructureDefinition(
-                {
-                  connectorRef: value.connectorRef,
-                  stage: value.stage,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-                  provisioner: value?.provisioner
-                },
-                InfraDeploymentType.ServerlessAzureFunctions
-              )
-            }
-            customStepProps={{ ...getCustomStepProps('ServerlessAzureFunctions', getString), isSingleEnv }}
+            customStepProps={{ isSingleEnv }}
           />
         )
       }

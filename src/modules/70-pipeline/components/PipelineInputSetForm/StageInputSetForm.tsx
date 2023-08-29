@@ -49,12 +49,7 @@ import {
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import type { StringsMap } from 'stringTypes'
-import {
-  getCustomStepProps,
-  getStepTypeByDeploymentType,
-  infraDefinitionTypeMapping,
-  StageType
-} from '@pipeline/utils/stageHelpers'
+import { getStepTypeByDeploymentType, infraDefinitionTypeMapping, StageType } from '@pipeline/utils/stageHelpers'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -1018,10 +1013,6 @@ export function StageInputSetFormInternal({
                 }}
                 stepViewType={viewType}
                 customStepProps={{
-                  ...getCustomStepProps(
-                    deploymentStage?.infrastructure?.infrastructureDefinition?.type || '',
-                    getString
-                  ),
                   provisioner: deploymentStage?.infrastructure?.infrastructureDefinition?.provisioner?.steps
                 }}
               />

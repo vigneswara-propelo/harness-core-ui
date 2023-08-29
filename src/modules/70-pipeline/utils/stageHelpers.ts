@@ -24,7 +24,7 @@ import type {
   ServiceDefinition,
   CustomDeploymentServiceSpec
 } from 'services/cd-ng'
-import { CIBuildInfrastructureType, connectorTypes } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { CIInfraDetails, DependencyElement } from 'services/ci'
@@ -772,55 +772,6 @@ export const getRepositoryFormat = (
   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.spec.repositoryFormat', null)
 }
 
-export const getCustomStepProps = (type: string, getString: (key: StringKeys) => string) => {
-  switch (type) {
-    case ServiceDeploymentType.ServerlessAwsLambda:
-      return {
-        hasRegion: true,
-        formInfo: {
-          formName: 'serverlessAWSInfra',
-          type: connectorTypes.Aws,
-          header: getString('pipelineSteps.awsConnectorLabel'),
-          tooltipIds: {
-            connector: 'awsInfraConnector',
-            region: 'awsRegion',
-            stage: 'awsStage'
-          }
-        }
-      }
-    case ServiceDeploymentType.ServerlessAzureFunctions:
-      return {
-        formInfo: {
-          formName: 'serverlessAzureInfra',
-          // @TODO - (change type to 'azure')
-          // this is not being used anywhere currently, once azure support is there we will change it.
-          type: connectorTypes.Gcp,
-          header: getString('pipelineSteps.awsConnectorLabel'),
-          tooltipIds: {
-            connector: 'azureInfraConnector',
-            region: 'azureRegion',
-            stage: 'azureStage'
-          }
-        }
-      }
-    case ServiceDeploymentType.ServerlessGoogleFunctions:
-      return {
-        formInfo: {
-          formName: 'serverlessGCPInfra',
-          type: connectorTypes.Gcp,
-          header: getString('pipelineSteps.gcpConnectorLabel'),
-          tooltipIds: {
-            connector: 'gcpInfraConnector',
-            region: 'gcpRegion',
-            stage: 'gcpStage'
-          }
-        }
-      }
-    default:
-      return { formInfo: {} }
-  }
-}
-
 export const isArtifactManifestPresent = (stage: DeploymentStageElementConfig): boolean => {
   return (
     !!stage.spec?.serviceConfig &&
@@ -920,7 +871,7 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 }
 
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
-  ServerlessAwsLambda: StepType.ServerlessAwsInfra,
+  ServerlessAwsLambda: StepType.ServerlessAwsLambdaInfra,
   ECS: StepType.EcsInfra,
   CustomDeployment: StepType.CustomDeployment,
   TAS: StepType.TasInfra,

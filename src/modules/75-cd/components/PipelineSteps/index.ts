@@ -48,8 +48,6 @@ import { PolicyStep } from './PolicyStep/PolicyStep'
 import { ServerlessLambdaDeployStep } from './ServerlessAwsLambda/ServerlessLambdaDeploy/ServerlessLambdaDeploy'
 import { ServerlessLambdaRollbackStep } from './ServerlessAwsLambda/ServerlessLambdaRollback/ServerlessLambdaRollback'
 import { ServerlessAwsLambdaInfraSpec } from './ServerlessAwsLambdaInfraSpec/ServerlessAwsLambdaInfraSpec'
-import { ServerlessAzureSpec } from './ServerlessAzure/ServerlessAzureSpec'
-import { ServerlessGCPSpec } from './ServerlessGCP/ServerlessGCPSpec'
 import { ServerlessAwsLambdaServiceSpec } from './ServerlessAwsLambdaServiceSpec/ServerlessAwsLambdaServiceSpec'
 import { CFRollbackStack } from './CloudFormation/RollbackStack/RollbackStack'
 import { CFDeleteStack } from './CloudFormation/DeleteStack/DeleteStack'
@@ -167,8 +165,6 @@ factory.registerStep(new PDCInfrastructureSpec())
 factory.registerStep(new SshWinRmAwsInfrastructureSpec())
 factory.registerStep(new SshWinRmAzureInfrastructureSpec())
 factory.registerStep(new ServerlessAwsLambdaInfraSpec())
-factory.registerStep(new ServerlessAzureSpec())
-factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
 factory.registerStep(new DeployEnvironmentEntityStep())
 factory.registerStep(new DeployEnvironmentGroupStep())

@@ -6,78 +6,211 @@
  */
 
 import React from 'react'
-import { act, fireEvent, getByText, render, waitFor } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import type { ServerlessAwsLambdaInfrastructure } from 'services/cd-ng'
-import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { awsConnectorListResponse } from '@platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { ServerlessAwsLambdaInfraSpec } from '../ServerlessAwsLambdaInfraSpec'
-import { getConnectorResponse } from '../../ServerlessInfraSpec/mocks/ConnectorResponse.mock'
+import userEvent from '@testing-library/user-event'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 
-const ConnectorResponse = getConnectorResponse('ServerlessAwsLambda')
+import type { AwsLambdaInfrastructure } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
+import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
+import { queryByNameAttribute } from '@common/utils/testUtils'
+import { awsConnectorListResponse } from '@platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
+import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { awsRegions, getYaml, invalidYaml, testConnectorRefChange } from './helper'
+import { ServerlessAwsLambdaInfraSpec } from '../ServerlessAwsLambdaInfraSpec'
+
+const fetchConnector = jest.fn().mockReturnValue({ data: awsConnectorListResponse.data?.content?.[1] })
 
 jest.mock('services/cd-ng', () => ({
-  useGetConnector: jest.fn(() => ConnectorResponse),
-  getConnectorListV2Promise: jest.fn(() => Promise.resolve(awsConnectorListResponse))
+  getConnectorListV2Promise: () => Promise.resolve(awsConnectorListResponse),
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return { data: { data: awsConnectorListResponse.data?.content?.[1] }, refetch: fetchConnector, loading: false }
+  })
 }))
 
-const getRuntimeInputsValues = (): ServerlessAwsLambdaInfrastructure => ({
-  connectorRef: RUNTIME_INPUT_VALUE,
-  region: RUNTIME_INPUT_VALUE,
-  stage: RUNTIME_INPUT_VALUE
-})
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: awsRegions, loading: false }
+  })
+}))
 
-const getConnectorRuntimeInputValue = (): ServerlessAwsLambdaInfrastructure => ({
-  connectorRef: RUNTIME_INPUT_VALUE,
-  region: 'region',
-  stage: 'stage'
-})
+const existingInitialValues = {
+  infrastructureDefinition: {
+    spec: {
+      connectorRef: 'Aws_Connector_1',
+      region: 'us-east-1',
+      stage: 'dev'
+    }
+  }
+}
 
-const getRegionRuntimeInputValue = (): ServerlessAwsLambdaInfrastructure => ({
-  connectorRef: 'connectorRef',
-  region: RUNTIME_INPUT_VALUE,
-  stage: 'stage'
-})
-
-const getStageRuntimeInputValue = (): ServerlessAwsLambdaInfrastructure => ({
-  connectorRef: 'connectorRef',
-  region: 'region',
-  stage: RUNTIME_INPUT_VALUE
-})
-
-const getInitialValues = (): ServerlessAwsLambdaInfrastructure => ({
-  connectorRef: 'connectorRef',
-  stage: 'stage',
-  region: 'region'
-})
-
-const getEmptyInitialValues = (): ServerlessAwsLambdaInfrastructure => ({
+const emptyInitialValues = {
   connectorRef: '',
-  stage: '',
-  region: ''
+  region: '',
+  stage: ''
+}
+
+const TEST_PATH = routes.toPipelineStudio({ ...projectPathProps, ...modulePathProps, ...pipelinePathProps })
+
+const TEST_PATH_PARAMS: ModulePathParams & PipelinePathProps = {
+  accountId: 'testAccountId',
+  orgIdentifier: 'testOrg',
+  projectIdentifier: 'testProject',
+  pipelineIdentifier: 'Pipeline_1',
+  module: 'cd'
+}
+
+const onUpdate = jest.fn()
+const onChange = jest.fn()
+factory.registerStep(new ServerlessAwsLambdaInfraSpec())
+
+describe('ServerlessAwsLambdaInfraSpec tests', () => {
+  test('check infra tab for empty initial values', async () => {
+    const ref = React.createRef<StepFormikRef<AwsLambdaInfrastructure>>()
+
+    const { getByTestId, container } = render(
+      <TestStepWidget
+        testWrapperProps={{
+          path: TEST_PATH,
+          pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>
+        }}
+        initialValues={emptyInitialValues}
+        allValues={emptyInitialValues}
+        readonly={false}
+        onUpdate={onUpdate}
+        type={StepType.ServerlessAwsLambdaInfra}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+      />
+    )
+
+    // Choose connectorRef
+    const connnectorRefInput = getByTestId(/connectorRef/)
+    expect(connnectorRefInput).toBeTruthy()
+    await userEvent.click(connnectorRefInput!)
+    await testConnectorRefChange()
+
+    // Region
+    const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
+    expect(regionInput).toBeInTheDocument()
+    expect(regionInput).toHaveValue('')
+    fireEvent.change(regionInput, { target: { value: 'us-east-1' } })
+
+    // Stage
+    const stageInput = queryByNameAttribute('stage', container) as HTMLInputElement
+    expect(stageInput).toBeInTheDocument()
+    expect(stageInput).toHaveValue('')
+    fireEvent.change(stageInput, { target: { value: 'dev' } })
+
+    // check Allow simultaneous deployments on the same infrastructure checkbox
+    const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
+    await userEvent.click(allowSimultaneousDeploymentsCheckbox!)
+    expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
+    // submit form and verify
+    ref.current?.submitForm()
+    await waitFor(() =>
+      expect(onUpdate).toHaveBeenCalledWith({
+        connectorRef: 'Aws_Connector_1',
+        region: 'us-east-1',
+        stage: 'dev',
+        allowSimultaneousDeployments: true,
+        provisioner: undefined
+      })
+    )
+  })
+
+  test('Variables view renders fine', async () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={existingInitialValues}
+        type={StepType.ServerlessAwsLambdaInfra}
+        onUpdate={onUpdate}
+        onChange={onChange}
+        stepViewType={StepViewType.InputVariable}
+        isNewStep={true}
+        customStepProps={{
+          stageIdentifier: 'qaStage',
+          variablesData: existingInitialValues,
+          metadataMap: {
+            Aws_Connector_1: {
+              yamlProperties: {
+                fqn: 'pipeline.stages.qaStage.infrastructure.infrastructureDefinition.spec.ServerlessAwsLambdaInfra.connectorRef',
+                localName: 'spec.ServerlessAwsLambdaInfra.connectorRef'
+              }
+            },
+            'us-east-1': {
+              yamlProperties: {
+                fqn: 'pipeline.stages.qaStage.infrastructure.infrastructureDefinition.spec.ServerlessAwsLambdaInfra.region',
+                localName: 'spec.ServerlessAwsLambdaInfra.region'
+              }
+            },
+            dev: {
+              yamlProperties: {
+                fqn: 'pipeline.stages.qaStage.infrastructure.infrastructureDefinition.spec.ServerlessAwsLambdaInfra.stage',
+                localName: 'spec.ServerlessAwsLambdaInfra.stage'
+              }
+            }
+          }
+        }}
+      />
+    )
+
+    expect(getByText('connectorRef')).toBeVisible()
+    expect(getByText('Aws_Connector_1')).toBeVisible()
+    expect(getByText('region')).toBeVisible()
+    expect(getByText('us-east-1')).toBeVisible()
+    expect(getByText('stage')).toBeVisible()
+    expect(getByText('dev')).toBeVisible()
+  })
+
+  test('Variables view should not render fine if variablesData is not sent properly', async () => {
+    const wrongInitialValues = {
+      connectorRef: 'Aws_Connector_1',
+      region: 'US East (N. Virginia)',
+      cluster: 'aws-cluster-1'
+    }
+    const { queryByText } = render(
+      <TestStepWidget
+        initialValues={wrongInitialValues}
+        type={StepType.ServerlessAwsLambdaInfra}
+        onUpdate={onUpdate}
+        onChange={onChange}
+        stepViewType={StepViewType.InputVariable}
+        isNewStep={true}
+        customStepProps={{
+          stageIdentifier: 'qaStage',
+          variablesData: wrongInitialValues,
+          metadataMap: {
+            Aws_Connector_1: {
+              yamlProperties: {
+                fqn: 'pipeline.stages.qaStage.infrastructure.infrastructureDefinition.spec.AwsLambdaInfra.connectorRef',
+                localName: 'spec.AwsLambdaInfra.connectorRef'
+              }
+            },
+            'US East (N. Virginia)': {
+              yamlProperties: {
+                fqn: 'pipeline.stages.qaStage.infrastructure.infrastructureDefinition.spec.AwsLambdaInfra.region',
+                localName: 'spec.AwsLambdaInfra.region'
+              }
+            }
+          }
+        }}
+      />
+    )
+
+    expect(queryByText('connectorRef')).toBeNull()
+    expect(queryByText('Aws_Connector_1')).toBeNull()
+    expect(queryByText('region')).toBeNull()
+    expect(queryByText('US East (N. Virginia)')).toBeNull()
+  })
 })
 
-const getInvalidYaml = () => `p ipe<>line:
-sta ges:
-   - st<>[]age:
-              s pe<> c: <> sad-~`
+const connectorRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.connectorRef'
 
-const getYaml = () => `pipeline:
-    stages:
-        - stage:
-              spec:
-                  infrastructure:
-                      infrastructureDefinition:
-                          type: ServerlessAwsLambda
-                          spec:
-                              connectorRef: account.connectorRef
-                              stage: stage
-                              region: region`
-
-const getParams = () => ({
+const params = (): PipelinePathProps & ModulePathParams => ({
   accountId: 'accountId',
   module: 'cd',
   orgIdentifier: 'default',
@@ -85,266 +218,23 @@ const getParams = () => ({
   projectIdentifier: 'projectIdentifier'
 })
 
-const customStepProps = {
-  hasRegion: true,
-  formInfo: {
-    formName: 'serverlessAWSInfra',
-    type: 'Aws',
-    header: '',
-    tooltipIds: {
-      connector: 'awsInfraConnector',
-      region: 'awsRegion',
-      stage: 'awsStage'
-    }
-  }
-}
-
-const connectorRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.connectorRef'
-
-describe('Test ServerlessAwsLambdaSpec snapshot', () => {
-  beforeEach(() => {
-    factory.registerStep(new ServerlessAwsLambdaInfraSpec())
-  })
-
-  test('should render edit view with empty initial values', () => {
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={{}}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.Edit}
-      />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render edit view with values ', () => {
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getInitialValues()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.Edit}
-      />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render edit view with runtime values ', () => {
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getRuntimeInputsValues()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.Edit}
-      />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render edit view for inputset view', () => {
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValues()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.InputSet}
-      />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render variable view', () => {
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValues()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.InputVariable}
-      />
-    )
-
-    expect(container).toMatchSnapshot()
-  })
-})
-
-describe('Test ServerlessAwsLambdaSpec behavior', () => {
-  beforeEach(() => {
-    factory.registerStep(new ServerlessAwsLambdaInfraSpec())
-  })
-
-  test('should call onUpdate if valid values entered - inputset', async () => {
-    const onUpdateHandler = jest.fn()
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValues()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={onUpdateHandler}
-      />
-    )
-
-    await act(async () => {
-      fireEvent.click(getByText(container, 'Submit'))
-    })
-    expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValues())
-  })
-
-  test('should not call onUpdate if invalid values entered - inputset', async () => {
-    const onUpdateHandler = jest.fn()
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getEmptyInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getEmptyInitialValues()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={onUpdateHandler}
-      />
-    )
-
-    await act(async () => {
-      fireEvent.click(getByText(container, 'Submit'))
-    })
-
-    expect(onUpdateHandler).not.toHaveBeenCalled()
-  })
-
-  test('should render configureOptions when connector as runtime', async () => {
-    const onUpdateHandler = jest.fn()
-    const { findByText, container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getConnectorRuntimeInputValue()}
-        template={getConnectorRuntimeInputValue()}
-        allValues={getConnectorRuntimeInputValue()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.Edit}
-        onUpdate={onUpdateHandler}
-      />
-    )
-
-    const settingsIcon = container.querySelector('[data-icon="cog"]')
-    expect(settingsIcon).toBeInTheDocument()
-    if (settingsIcon) {
-      act(() => {
-        fireEvent.click(settingsIcon)
-      })
-    }
-    const cancelButton = await findByText('cancel')
-    expect(cancelButton).toBeTruthy()
-    act(() => {
-      fireEvent.click(cancelButton)
-    })
-  })
-  test('should render configureOptions when stage as runtime', async () => {
-    const onUpdateHandler = jest.fn()
-    const { container, findByText } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getStageRuntimeInputValue()}
-        template={getStageRuntimeInputValue()}
-        allValues={getStageRuntimeInputValue()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.Edit}
-        onUpdate={onUpdateHandler}
-      />
-    )
-
-    const settingsIcon = container.querySelector('[data-icon="cog"]')
-    expect(settingsIcon).toBeInTheDocument()
-    if (settingsIcon) {
-      act(() => {
-        fireEvent.click(settingsIcon)
-      })
-    }
-    const cancelButton = await findByText('cancel')
-    expect(cancelButton).toBeTruthy()
-    act(() => {
-      fireEvent.click(cancelButton)
-    })
-  })
-  test('should render configureOptions when region as runtime', async () => {
-    const onUpdateHandler = jest.fn()
-    const { container, findByText } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getRegionRuntimeInputValue()}
-        template={getRegionRuntimeInputValue()}
-        allValues={getRegionRuntimeInputValue()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.Edit}
-        onUpdate={onUpdateHandler}
-      />
-    )
-
-    const settingsIcon = container.querySelector('[data-icon="cog"]')
-    expect(settingsIcon).toBeInTheDocument()
-    if (settingsIcon) {
-      act(() => {
-        fireEvent.click(settingsIcon)
-      })
-    }
-    const cancelButton = await findByText('cancel')
-    expect(cancelButton).toBeTruthy()
-    act(() => {
-      fireEvent.click(cancelButton)
-    })
-  })
-
-  test('should call yaml onUpdate if valid values entered - edit view', async () => {
-    const onUpdateHandler = jest.fn()
-    const ref = React.createRef<StepFormikRef<unknown>>()
-    const { container } = render(
-      <TestStepWidget
-        customStepProps={customStepProps}
-        initialValues={getInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValues()}
-        type={StepType.ServerlessAwsInfra}
-        stepViewType={StepViewType.Edit}
-        onUpdate={onUpdateHandler}
-        ref={ref}
-      />
-    )
-
-    await act(async () => {
-      const stageInput = container.querySelector('[placeholder="cd.steps.serverless.stagePlaceholder"]')
-      await fireEvent.change(stageInput!, { target: { value: 'stage changed' } })
-
-      const regionInput = container.querySelector('[placeholder="cd.steps.serverless.regionPlaceholder"]')
-      fireEvent.change(regionInput!, { target: { value: 'region changed' } })
-    })
-
-    await waitFor(() =>
-      expect(onUpdateHandler).toHaveBeenCalledWith({
-        ...getInitialValues(),
-        ...{ region: 'region changed', stage: 'stage changed' }
-      })
-    )
-  })
-})
-
-describe('Test ServerlessAwsLambdaSpec autocomplete', () => {
-  test('Test connector autocomplete', async () => {
+describe('getConnectorsListForYaml test', () => {
+  test('when connectorRefPath and yaml both are valid', async () => {
     const step = new ServerlessAwsLambdaInfraSpec() as any
-    let list: CompletionItemInterface[]
-
-    list = await step.getConnectorsListForYaml(connectorRefPath, getYaml(), getParams())
+    const list: CompletionItemInterface[] = await step.getConnectorsListForYaml(connectorRefPath, getYaml(), params)
     expect(list).toHaveLength(2)
-    expect(list[0].insertText).toBe('Aws_Connector_1')
+    expect(list[1].insertText).toBe('Aws_Connector_2')
+  })
 
-    list = await step.getConnectorsListForYaml('invalid path', getYaml(), getParams())
+  test('when connectorRefPath is invalid and yaml is valid valid', async () => {
+    const step = new ServerlessAwsLambdaInfraSpec() as any
+    const list: CompletionItemInterface[] = await step.getConnectorsListForYaml('invalid path', getYaml(), params)
     expect(list).toHaveLength(0)
-    list = await step.getConnectorsListForYaml(connectorRefPath, getInvalidYaml(), getParams())
+  })
+
+  test('when connectorRefPath is valid and yaml is invalid valid', async () => {
+    const step = new ServerlessAwsLambdaInfraSpec() as any
+    const list: CompletionItemInterface[] = await step.getConnectorsListForYaml('invalid path', invalidYaml(), params)
     expect(list).toHaveLength(0)
   })
 })
