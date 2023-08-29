@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useContext, useMemo, useState } from 'react'
-import { Container, Formik, FormikForm } from '@harness/uicore'
+import { Container, Formik, FormikForm, useToaster } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
@@ -44,6 +44,8 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
   const { data: sourceData, onSubmit } = props
+
+  const { showPrimary } = useToaster()
 
   const transformedSourceData = useMemo(() => transformCustomHealthSourceToSetupSource(sourceData), [sourceData])
 
@@ -162,6 +164,8 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
                     transformedSourceData,
                     metricThresholds
                   })
+                } else {
+                  showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                 }
               }}
             />

@@ -17,7 +17,8 @@ import {
   Accordion,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  useToaster
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
@@ -78,6 +79,8 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
     onPrevious,
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
+
+  const { showPrimary } = useToaster()
 
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
@@ -405,6 +408,8 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                       workspaceId
                     })
                   )
+                } else {
+                  showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                 }
               }}
             />

@@ -7,7 +7,7 @@
 
 import React, { Ref, useRef } from 'react'
 import { noop } from 'lodash-es'
-import { Container, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Container, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, useToaster } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
@@ -56,6 +56,8 @@ export default function CommonHealthSource({
 
   const healthSourceConfigurationsInitialValues = getInitialValuesForHealthSourceConfigurations(configurationsPageData)
   const customMetricFormRef = useRef<FormikProps<CommonCustomMetricFormikInterface>>()
+
+  const { showPrimary } = useToaster()
 
   return (
     <Formik<CommonHealthSourceConfigurations>
@@ -168,6 +170,8 @@ export default function CommonHealthSource({
                 // For showing validation error message purpose
                 if (checkIfCurrentCustomMetricFormIsValid(customMetricFormRef) && formik.isValid) {
                   onSubmit(formik.values)
+                } else {
+                  showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                 }
               }}
             />

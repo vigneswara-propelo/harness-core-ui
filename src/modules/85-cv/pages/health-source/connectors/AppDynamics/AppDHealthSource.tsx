@@ -85,7 +85,7 @@ export default function AppDMonitoredSource({
   expressions?: string[]
 }): JSX.Element {
   const { getString } = useStrings()
-  const { showError, clear } = useToaster()
+  const { showError, showPrimary, clear } = useToaster()
 
   const [selectedMetricPacks, setSelectedMetricPacks] = useState<TimeSeriesMetricPackDTO[]>([])
   const [validationResultData, setValidationResultData] = useState<AppdynamicsValidationResponse[]>()
@@ -496,6 +496,8 @@ export default function AppDMonitoredSource({
 
                 if (formik.isValid) {
                   submitData(formik, mappedMetrics, selectedMetric, onSubmit, groupedCreatedMetrics)
+                } else {
+                  showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                 }
               }}
             />

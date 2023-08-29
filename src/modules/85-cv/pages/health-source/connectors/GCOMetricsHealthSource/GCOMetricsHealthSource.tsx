@@ -19,7 +19,8 @@ import {
   PageError,
   NoDataCard,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  useToaster
 } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
@@ -84,6 +85,7 @@ function ValidationChart(props: ValidationChartProps): JSX.Element {
     noDataMessage
   } = props
   const { getString } = useStrings()
+
   const isTooManyMetrics = Boolean(
     sampleData?.series?.length && sampleData.series.length > 1 && queryValue?.includes(GroupByClause)
   )
@@ -164,6 +166,8 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
   const { getString } = useStrings()
+
+  const { showPrimary } = useToaster()
 
   const transformedData = useMemo(() => transformGCOMetricHealthSourceToGCOMetricSetupSource(data), [data])
 
@@ -464,7 +468,9 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                         formikProps.submitForm()
 
                         const errors = validate(formikProps.values, updatedData, getString)
+
                         if (!isEmpty(errors)) {
+                          showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                           formikProps.setErrors({ ...errors })
                           return
                         }

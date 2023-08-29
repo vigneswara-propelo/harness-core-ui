@@ -69,7 +69,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const { data, isTemplate, expressions } = props
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { showError } = useToaster()
+  const { showError, showPrimary } = useToaster()
 
   const transformedData = useMemo(() => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data), [data])
 
@@ -271,6 +271,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
     formikProps.submitForm()
 
     if (!formikProps.isValid) {
+      showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
       return
     }
 

@@ -38,12 +38,12 @@ jest.mock('services/cv', () => ({
   })
 }))
 
-const showPrimary = jest.fn()
+const showPrimaryMockFn = jest.fn()
 
 jest.mock('@harness/uicore', () => ({
   ...jest.requireActual('@harness/uicore'),
   useToaster: jest.fn(() => ({
-    showPrimary
+    showPrimary: showPrimaryMockFn
   }))
 }))
 
@@ -322,6 +322,39 @@ describe('CloudWatch', () => {
 
     await waitFor(() =>
       expect(screen.getByText(/cv.monitoringSources.prometheus.validation.groupName/)).toBeInTheDocument()
+    )
+  })
+
+  test('should check primary toaster is shown when user submits custom metric from invalid custom metric', async () => {
+    const onSubmit = jest.fn()
+    const { container } = render(
+      <TestWrapper>
+        <CloudWatch data={mockData} onSubmit={onSubmit} />
+      </TestWrapper>
+    )
+
+    const addCustomMetricButton = screen.getByTestId('addCustomMetricButton')
+    expect(addCustomMetricButton).not.toBeDisabled()
+
+    const metricNameInput = screen.getByPlaceholderText(/common.namePlaceholder/)
+
+    expect(metricNameInput).toHaveValue('CustomMetric 1')
+
+    await userEvent.click(addCustomMetricButton)
+
+    const metricName2 = container.querySelector('input[name="customMetrics.1.metricName"]')
+
+    expect(metricName2).toHaveValue('customMetric 2')
+
+    expect(screen.getByTestId('sideNav-customMetric 2')).toBeInTheDocument()
+    expect(screen.getByTestId('sideNav-CustomMetric 1')).toBeInTheDocument()
+
+    const submitButton = screen.getAllByText(/submit/)[1]
+
+    await userEvent.click(submitButton)
+
+    await waitFor(() =>
+      expect(showPrimaryMockFn).toHaveBeenCalledWith('cv.monitoredServices.changeCustomMetricTooltip')
     )
   })
 

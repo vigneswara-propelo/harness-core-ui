@@ -201,7 +201,8 @@ describe('Unit tests for customhealthsourcelogutils', () => {
         mappedQueries: mappedQueries as any,
         getString: jest.fn(str => str),
         selectedIndex: 0,
-        createdQueries: ['customLog', 'customLog5', 'customLog_2']
+        createdQueries: ['customLog', 'customLog5', 'customLog_2'],
+        showPrimary: () => void 0
       })
     )
     expect(onSubmitMockFn).toHaveBeenCalledWith(onSubmitMock[0], onSubmitMock[1])
@@ -217,7 +218,8 @@ describe('Unit tests for customhealthsourcelogutils', () => {
         mappedQueries: mappedQueries as any,
         getString: jest.fn(str => str),
         selectedIndex: 0,
-        createdQueries: ['customLog', 'customLog5', 'customLog_2']
+        createdQueries: ['customLog', 'customLog5', 'customLog_2'],
+        showPrimary: () => void 0
       })
     )
     expect(onSubmitMockFn).toBeCalledTimes(1)

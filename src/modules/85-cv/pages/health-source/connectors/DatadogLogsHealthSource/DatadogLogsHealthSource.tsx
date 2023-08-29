@@ -6,7 +6,7 @@
  */
 
 import React, { useContext, useMemo, useState } from 'react'
-import { Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, Utils } from '@harness/uicore'
+import { Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, useToaster, Utils } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
@@ -36,6 +36,9 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
     () => transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData, isTemplate),
     [sourceData, isTemplate]
   )
+
+  const { showPrimary } = useToaster()
+
   const isConnectorRuntimeOrExpression =
     getMultiTypeFromValue(transformedSourceData?.connectorRef as string) !== MultiTypeInputType.FIXED
 
@@ -145,7 +148,17 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
               />
             }
           />
-          <DrawerFooter isSubmit onPrevious={onPrevious} onNext={formikProps.submitForm} />
+          <DrawerFooter
+            isSubmit
+            onPrevious={onPrevious}
+            onNext={() => {
+              formikProps.submitForm()
+
+              if (!formikProps.isValid) {
+                showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
+              }
+            }}
+          />
         </FormikForm>
       )}
     </Formik>

@@ -84,7 +84,7 @@ export default function NewRelicHealthSource({
   expressions?: string[]
 }): JSX.Element {
   const { getString } = useStrings()
-  const { showError } = useToaster()
+  const { showError, showPrimary } = useToaster()
   const defailtMetricName = getString('cv.monitoringSources.newRelic.defaultNewRelicMetricName')
   const [selectedMetricPacks, setSelectedMetricPacks] = useState<TimeSeriesMetricPackDTO[]>([])
   const [validationResultData, setValidationResultData] = useState<MetricPackValidationResponse[]>()
@@ -513,6 +513,8 @@ export default function NewRelicHealthSource({
                     onSubmit,
                     groupedCreatedMetrics
                   )
+                } else {
+                  showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                 }
               }}
             />

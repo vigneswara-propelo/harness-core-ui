@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useContext, useMemo } from 'react'
-import { Container, Formik, FormikForm, Layout, SelectOption, Accordion } from '@harness/uicore'
+import { Container, Formik, FormikForm, Layout, SelectOption, Accordion, useToaster } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
@@ -49,6 +49,8 @@ export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps)
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
   const { getString } = useStrings()
+
+  const { showPrimary } = useToaster()
 
   const transformedSourceData = useMemo(
     () => transformPrometheusHealthSourceToSetupSource(sourceData, getString),
@@ -213,6 +215,7 @@ export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps)
 
                 if (Object.keys(formikProps.errors || {})?.length > 0) {
                   formikProps.validateForm()
+                  showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                   return
                 }
                 const updatedMetric = formikProps.values

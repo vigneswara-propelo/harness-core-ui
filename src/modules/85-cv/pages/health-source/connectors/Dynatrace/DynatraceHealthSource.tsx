@@ -6,7 +6,15 @@
  */
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
-import { Button, Container, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import {
+  Button,
+  Container,
+  Formik,
+  FormikForm,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  useToaster
+} from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -51,6 +59,8 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
   const [dynatraceMetricData, setDynatraceMetricData] = useState<DynatraceFormDataInterface>(initialPayload)
   const [showCustomMetric, setShowCustomMetric] = useState<boolean>(!!dynatraceMetricData.customMetrics.size)
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+
+  const { showPrimary } = useToaster()
 
   const {
     createdMetrics,
@@ -232,6 +242,8 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
                 formik.submitForm()
                 if (formik.isValid) {
                   onSubmitDynatraceData(formik, mappedMetrics, selectedMetric, onSubmit)
+                } else {
+                  showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                 }
               }}
             />

@@ -12,6 +12,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
+  useToaster,
   Utils
 } from '@harness/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
@@ -31,6 +32,8 @@ export function MapQueriesToHarnessService(props: MapQueriesToHarnessServiceProp
   const connectorIdentifier =
     typeof sourceData?.connectorRef === 'string' ? sourceData?.connectorRef : sourceData?.connectorRef?.value
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+
+  const { showPrimary } = useToaster()
 
   const initialMetricData = isConnectorRuntimeOrExpression
     ? {
@@ -155,7 +158,17 @@ export function MapQueriesToHarnessService(props: MapQueriesToHarnessServiceProp
               </>
             }
           />
-          <DrawerFooter isSubmit onPrevious={onPrevious} onNext={formikProps.submitForm} />
+          <DrawerFooter
+            isSubmit
+            onPrevious={onPrevious}
+            onNext={() => {
+              formikProps.submitForm()
+
+              if (!formikProps.isValid) {
+                showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
+              }
+            }}
+          />
         </FormikForm>
       )}
     </Formik>

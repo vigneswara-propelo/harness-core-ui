@@ -6,7 +6,7 @@
  */
 
 import React, { useContext, useState } from 'react'
-import { Container, Formik, FormikForm, Utils, Layout, Accordion, FormInput } from '@harness/uicore'
+import { Container, Formik, FormikForm, Utils, Layout, Accordion, FormInput, useToaster } from '@harness/uicore'
 import { cloneDeep, isNil, noop } from 'lodash-es'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -37,6 +37,8 @@ export default function CustomHealthLogSource(props: any): JSX.Element {
   const [{ selectedQuery, mappedQueries }, setMappedQueries] = useState<SelectedAndMappedQueries>(
     initializeSelectedQueryMap(sourceData)
   )
+
+  const { showPrimary } = useToaster()
 
   const [{ createdQueries, selectedIndex }, setCreatedQueries] = useState({
     createdQueries: Array.from(mappedQueries.keys()) || [
@@ -199,7 +201,8 @@ export default function CustomHealthLogSource(props: any): JSX.Element {
                   mappedQueries,
                   getString,
                   selectedIndex,
-                  createdQueries
+                  createdQueries,
+                  showPrimary
                 })
               }
             />

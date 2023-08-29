@@ -159,7 +159,8 @@ export async function submitForm({
   mappedQueries,
   getString,
   selectedIndex,
-  createdQueries
+  createdQueries,
+  showPrimary
 }: {
   formikProps: FormikProps<CustomHealthLogSetupSource>
   onSubmit: (formdata: CustomHealthLogSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
@@ -168,6 +169,7 @@ export async function submitForm({
   getString: UseStringsReturn['getString']
   selectedIndex: number
   createdQueries: string[]
+  showPrimary: (message: string) => void
 }): Promise<void> {
   formikProps.setTouched({
     ...formikProps.touched,
@@ -184,6 +186,7 @@ export async function submitForm({
 
   const errors = validateSetupSource(formikProps.values, getString, createdQueries, selectedIndex)
   if (Object.keys(errors || {}).length > 0) {
+    showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
     formikProps.validateForm()
     return
   }

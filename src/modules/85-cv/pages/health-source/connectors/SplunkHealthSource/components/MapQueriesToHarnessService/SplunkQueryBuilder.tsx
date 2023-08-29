@@ -19,7 +19,7 @@ import css from './SplunkQueryBuilder.module.scss'
 
 export function SplunkQueryBuilder(props: SplunkQueryBuilderProps): JSX.Element {
   const { getString } = useStrings()
-  const { showError } = useToaster()
+  const { showError, showPrimary } = useToaster()
   const { onSubmit, data: sourceData, onPrevious, isTemplate, expressions } = props
 
   const connectorIdentifier =
@@ -136,7 +136,17 @@ export function SplunkQueryBuilder(props: SplunkQueryBuilderProps): JSX.Element 
               </>
             }
           />
-          <DrawerFooter isSubmit onPrevious={onPrevious} onNext={formikProps.submitForm} />
+          <DrawerFooter
+            isSubmit
+            onPrevious={onPrevious}
+            onNext={() => {
+              formikProps.submitForm()
+
+              if (!formikProps.isValid) {
+                showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
+              }
+            }}
+          />
         </FormikForm>
       )}
     </Formik>

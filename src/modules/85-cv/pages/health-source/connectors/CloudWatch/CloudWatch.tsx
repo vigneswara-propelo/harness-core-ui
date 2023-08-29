@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react'
-import { Formik, FormikForm, Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Formik, FormikForm, Container, getMultiTypeFromValue, MultiTypeInputType, useToaster } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
@@ -22,6 +22,8 @@ export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: 
   const { getString } = useStrings()
 
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
+
+  const { showPrimary } = useToaster()
 
   const initialValues = getFormikInitialValue(data)
 
@@ -77,6 +79,8 @@ export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: 
                       })
 
                       await onSubmit(data, payload)
+                    } else {
+                      showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
                     }
                   }}
                 />
