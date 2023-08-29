@@ -11,6 +11,7 @@ import { Radio, RadioGroup } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { RetryInfo } from 'services/pipeline-ng'
+import { isExecutionFailed } from '@pipeline/utils/statusHelpers'
 import type { ParallelStageOption } from './RetryPipeline'
 import css from './RetryPipeline.module.scss'
 
@@ -22,6 +23,7 @@ interface SelectStagetoRetryProps {
   isLastIndex: boolean
   handleStageChange: (value: ParallelStageOption) => void
   handleStageType: (e: FormEvent<HTMLInputElement>) => void
+  preSelectLastStage: boolean
 }
 
 function SelectStagetoRetry({
@@ -31,19 +33,27 @@ function SelectStagetoRetry({
   isAllStage,
   isLastIndex,
   handleStageChange,
-  handleStageType
+  handleStageType,
+  preSelectLastStage
 }: SelectStagetoRetryProps): React.ReactElement | null {
   const { getString } = useStrings()
   const [stageList, setStageList] = useState<SelectOption[]>([])
 
   useEffect(() => {
     if (stageResponse?.groups?.length) {
+      let failedStageIdx = -1
       const stageListValues = stageResponse.groups.map((stageGroup, idx) => {
         if (stageGroup.info?.length === 1) {
+          failedStageIdx = isExecutionFailed(stageGroup.info[0].status) ? idx : failedStageIdx
           return { label: stageGroup.info[0].name, value: stageGroup.info[0].identifier, isLastIndex: idx }
         } else {
           const parallelStagesLabel = stageGroup.info?.map(stageName => stageName.name).join(' | ')
-          const parallelStagesValue = stageGroup.info?.map(stageName => stageName.identifier).join(' | ')
+          const parallelStagesValue = stageGroup.info
+            ?.map(stageName => {
+              failedStageIdx = isExecutionFailed(stageName?.status) ? idx : failedStageIdx
+              return stageName.identifier
+            })
+            .join(' | ')
           return {
             label: parallelStagesLabel,
             value: parallelStagesValue,
@@ -51,9 +61,13 @@ function SelectStagetoRetry({
           }
         }
       })
+
+      if (failedStageIdx !== -1 && preSelectLastStage) {
+        stageListValues.splice(failedStageIdx + 1)
+      }
       setStageList(stageListValues as SelectOption[])
     }
-  }, [stageResponse])
+  }, [stageResponse, preSelectLastStage])
 
   return (
     <div className={css.selectStageWrapper}>

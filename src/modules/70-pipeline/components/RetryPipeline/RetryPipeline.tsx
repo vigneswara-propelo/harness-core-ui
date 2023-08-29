@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Button,
   Text,
@@ -76,6 +76,7 @@ import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { isExecutionFailed } from '@pipeline/utils/statusHelpers'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -399,6 +400,19 @@ function RetryPipeline({
     resolvedPipeline
   )
 
+  const lastFailedStageIdx = useMemo(() => {
+    let _lastFailedStageIdx = -1
+    if (stageResponse?.data?.groups?.length) {
+      _lastFailedStageIdx = stageResponse.data.groups.length - 1
+      stageResponse.data.groups.forEach((stageGroup, idx) => {
+        stageGroup.info?.forEach(stageName => {
+          if (isExecutionFailed(stageName?.status)) _lastFailedStageIdx = idx
+        })
+      })
+    }
+    return _lastFailedStageIdx
+  }, [stageResponse?.data?.groups])
+
   useEffect(() => {
     // Won't actually render out RunPipelineForm
     /* istanbul ignore else */ if (inputSetData?.data?.inputSetYaml) {
@@ -669,7 +683,10 @@ function RetryPipeline({
   )
 
   const handleParallelStagesSelection = (value: ParallelStageOption): void => {
-    if ((value as ParallelStageOption).isLastIndex === (stageResponse?.data?.groups as RetryGroup[])?.length - 1) {
+    const lastStageIdx = preSelectLastStage
+      ? lastFailedStageIdx
+      : (stageResponse?.data?.groups as RetryGroup[])?.length - 1
+    if ((value as ParallelStageOption).isLastIndex === lastStageIdx) {
       setIsLastIndex(true)
     } else {
       setIsLastIndex(false)
@@ -690,9 +707,10 @@ function RetryPipeline({
   }
 
   useEffect(() => {
-    if (stageResponse?.data?.groups?.length && preSelectLastStage) {
+    if (stageResponse?.data?.groups?.length && preSelectLastStage && lastFailedStageIdx !== -1) {
       let value: ParallelStageOption
-      stageResponse.data.groups.forEach((stageGroup, idx) => {
+      for (const [idx, stageGroup] of stageResponse.data.groups.entries()) {
+        if (lastFailedStageIdx < idx) break
         const [{ name, identifier }] = stageGroup.info || []
         if (stageGroup.info?.length === 1) {
           value = { label: name as string, value: identifier as string, isLastIndex: idx }
@@ -710,10 +728,10 @@ function RetryPipeline({
           setSelectedStage(value)
           selectListOfSelectedStages(value)
         }
-      })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stageResponse?.data, preSelectLastStage])
+  }, [stageResponse?.data, preSelectLastStage, lastFailedStageIdx])
 
   const handleStageChange = (value: ParallelStageOption): void => {
     if (value.label.includes('|')) {
@@ -950,6 +968,7 @@ function RetryPipeline({
                       handleStageType={handleStageType}
                       isAllStage={isAllStage}
                       isLastIndex={isLastIndex}
+                      preSelectLastStage={preSelectLastStage}
                     />
                   )}
                   {noRuntimeInputs ? (

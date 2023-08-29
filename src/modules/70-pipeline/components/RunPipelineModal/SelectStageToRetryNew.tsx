@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, FormEvent } from 'react'
-import { isEqual, last } from 'lodash-es'
+import React, { useState, useEffect, FormEvent, useMemo } from 'react'
+import { isEqual } from 'lodash-es'
 import { Layout, Select, SelectOption, Text } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { RetryGroup, RetryInfo } from 'services/pipeline-ng'
+import { isExecutionFailed } from '@pipeline/utils/statusHelpers'
 import css from './RunPipelineForm.module.scss'
 
 export interface ParallelStageOption extends SelectOption {
@@ -58,14 +59,34 @@ function SelectStageToRetryNew({
     }
   }
 
+  const lastFailedStageIdx = useMemo(() => {
+    let _lastFailedStageIdx = -1
+    if (retryStagesResponseData?.groups?.length) {
+      _lastFailedStageIdx = retryStagesResponseData.groups.length - 1
+      retryStagesResponseData.groups.forEach((stageGroup, idx) => {
+        stageGroup.info?.forEach(stageName => {
+          if (isExecutionFailed(stageName?.status)) _lastFailedStageIdx = idx
+        })
+      })
+    }
+    return _lastFailedStageIdx
+  }, [retryStagesResponseData?.groups])
+
   useEffect(() => {
     if (retryStagesResponseData?.groups?.length) {
+      let failedStageIdx = -1
       const stageListValues = retryStagesResponseData.groups.map((stageGroup, idx) => {
         if (stageGroup.info?.length === 1) {
+          failedStageIdx = isExecutionFailed(stageGroup.info[0].status) ? idx : failedStageIdx
           return { label: stageGroup.info[0].name, value: stageGroup.info[0].identifier, isLastIndex: idx }
         } else {
           const parallelStagesLabel = stageGroup.info?.map(stageName => stageName.name).join(' | ')
-          const parallelStagesValue = stageGroup.info?.map(stageName => stageName.identifier).join(' | ')
+          const parallelStagesValue = stageGroup.info
+            ?.map(stageName => {
+              failedStageIdx = isExecutionFailed(stageName?.status) ? idx : failedStageIdx
+              return stageName.identifier
+            })
+            .join(' | ')
           return {
             label: parallelStagesLabel,
             value: parallelStagesValue,
@@ -73,9 +94,13 @@ function SelectStageToRetryNew({
           }
         }
       })
+
+      if (failedStageIdx !== -1 && preSelectLastStage) {
+        stageListValues.splice(failedStageIdx + 1)
+      }
       setStageList(stageListValues as SelectOption[])
     }
-  }, [retryStagesResponseData])
+  }, [retryStagesResponseData, preSelectLastStage])
 
   useEffect(() => {
     if (retryStagesResponseData?.groups?.length) {
@@ -86,15 +111,14 @@ function SelectStageToRetryNew({
         selectedStage
       }
 
-      if (preSelectLastStage) {
+      if (preSelectLastStage && lastFailedStageIdx !== -1) {
         let value: ParallelStageOption
         const groups = retryStagesResponseData.groups
-        const stageGroup = last(groups)
+        const stageGroup = groups[lastFailedStageIdx]
         if (stageGroup) {
-          const idx = groups.length - 1
           if (stageGroup?.info?.length === 1) {
             const [{ name, identifier }] = stageGroup?.info || []
-            value = { label: name as string, value: identifier as string, isLastIndex: idx }
+            value = { label: name as string, value: identifier as string, isLastIndex: lastFailedStageIdx }
             const selectedStages = getListOfSelectedStages(value)
             newState.selectedStage = value
             newState.listOfSelectedStages = selectedStages
@@ -105,7 +129,7 @@ function SelectStageToRetryNew({
             value = {
               label: parallelStagesLabel as string,
               value: parallelStagesValue as string,
-              isLastIndex: idx
+              isLastIndex: lastFailedStageIdx
             }
             const lastIndex = getIsLastIndexFromParallelStagesSelection(value)
             setIsLastIndex(lastIndex)
@@ -122,7 +146,7 @@ function SelectStageToRetryNew({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [retryStagesResponseData, preSelectLastStage])
+  }, [retryStagesResponseData, preSelectLastStage, lastFailedStageIdx])
 
   const getListOfSelectedStages = (value: ParallelStageOption): string[] => {
     const stagesList = retryStagesResponseData?.groups?.filter((_, stageIdx) => stageIdx < value.isLastIndex)
@@ -137,7 +161,10 @@ function SelectStageToRetryNew({
   }
 
   const getIsLastIndexFromParallelStagesSelection = (value: ParallelStageOption): boolean => {
-    return (value as ParallelStageOption).isLastIndex === (retryStagesResponseData?.groups as RetryGroup[])?.length - 1
+    const lastStageIdx = preSelectLastStage
+      ? lastFailedStageIdx
+      : (retryStagesResponseData?.groups as RetryGroup[])?.length - 1
+    return (value as ParallelStageOption).isLastIndex === lastStageIdx
   }
 
   const handleStageChange = (selectedStageValue: ParallelStageOption): void => {
