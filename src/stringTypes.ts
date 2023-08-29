@@ -7028,6 +7028,9 @@ export interface StringsMap {
   'cd.valuesYamlValidation': string
   'cd.varFile': string
   'cd.varFileDetails': string
+  'cd.webhooks.createSubtitle': string
+  'cd.webhooks.newWebhook': string
+  'cd.webhooks.noWebhook': string
   'cd.welcomeMessage': string
   'cd.welcomeToHarnessCD': string
   'cd.whatIsHarnessAdapter': string

@@ -1254,3 +1254,7 @@ customSequence:
 samVersionLabel: SAM Version
 serverlessVersionLabel: Serverless Version
 encryptJsonOutput: Encrypt json output
+webhooks:
+  newWebhook: Add a webhook
+  createSubtitle: You may add a webhook to track activities such as sync, errors, entities & more within Harness!
+  noWebhook: There are no webhook added.

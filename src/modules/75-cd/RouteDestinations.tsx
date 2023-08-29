@@ -92,6 +92,7 @@ import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
 import CDOnboardingWizardWithCLI from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard'
 import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
 import Webhooks from './pages/webhooks/Webhooks'
+import WebhookEvents from './pages/webhooks/WebhookEvents/WebhookEvents'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -678,6 +679,14 @@ export default (
       pageName={PAGE_NAME.Webhooks}
     >
       <Webhooks />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={AccountSideNavProps}
+      path={routes.toWebhooksEvents({ ...accountPathProps })}
+      pageName={PAGE_NAME.WebhookEvents}
+    >
+      <WebhookEvents />
     </RouteWithLayout>
 
     {

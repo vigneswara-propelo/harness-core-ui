@@ -42,6 +42,7 @@ export enum PAGE_NAME {
   GitSyncErrors = 'GitSyncErrors',
   GitSyncConfigTab = 'GitSyncConfigTab',
   Webhooks = 'Webhooks',
+  WebhookEvents = 'WebhookEvents',
   ConnectorDetailsPage = 'ConnectorDetailsPage',
   CIPipelineStudio = 'CIPipelineStudio',
   FullPageLogView = 'FullPageLogView',
