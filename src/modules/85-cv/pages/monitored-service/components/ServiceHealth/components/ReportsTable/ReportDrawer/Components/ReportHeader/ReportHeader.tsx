@@ -7,17 +7,21 @@
 
 import React from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Layout, Text, Icon } from '@harness/uicore'
+import { Layout, Text, Icon, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { useStrings } from 'framework/strings'
+import { openWindowInNewTab } from '@cv/utils/CommonUtils'
 import { ReportStatusCard } from '../../../ReportsTable.utils'
 
 export const ReportHeader = ({
+  url,
   name,
   status,
   service,
   isLoading,
   environment
 }: {
+  url: string
   name: string
   status: string
   service: string
@@ -25,17 +29,27 @@ export const ReportHeader = ({
   isLoading?: boolean
 }): JSX.Element => {
   const loadingClassName = isLoading ? Classes.SKELETON : ''
+  const { getString } = useStrings()
   return (
     <Layout.Vertical spacing="small">
-      <Text
-        font={{ size: 'medium', weight: 'semi-bold' }}
-        width="max-content"
-        margin={{ right: 'medium' }}
-        color={Color.BLACK_100}
-        className={loadingClassName}
-      >
-        {name}
-      </Text>
+      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
+        <Text
+          font={{ size: 'medium', weight: 'semi-bold' }}
+          width="max-content"
+          margin={{ right: 'medium' }}
+          color={Color.BLACK_100}
+          className={loadingClassName}
+        >
+          {name}
+        </Text>
+        <Button
+          onClick={() => openWindowInNewTab(url)}
+          text={getString('cv.changeSource.changeSourceCard.viewDeployment')}
+          icon="share"
+          iconProps={{ size: 12 }}
+          variation={ButtonVariation.SECONDARY}
+        />
+      </Layout.Horizontal>
       <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center', justifyContent: 'start' }}>
         <Icon name="cv-main" size={16} />
         <Text inline icon="main-setup" iconProps={{ size: 12 }} font={{ size: 'small' }} className={loadingClassName}>

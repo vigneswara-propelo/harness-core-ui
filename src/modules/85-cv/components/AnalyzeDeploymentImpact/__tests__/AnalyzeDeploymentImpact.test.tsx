@@ -44,7 +44,7 @@ describe('AnalyzeDeploymentImpact', () => {
     expect(getByTestId('stopBtn')).toBeInTheDocument()
     expect(container.querySelector('.redirectLink')).toHaveAttribute(
       'href',
-      '/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/datadoglogs_version1?tab=ServiceHealth&eventId=yRYl-h8PQeqvmLmaNUmI4g'
+      '/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/datadoglogs_version1?tab=ServiceHealth&reportId=yRYl-h8PQeqvmLmaNUmI4g'
     )
 
     await userEvent.click(getByTestId('stopBtn'))
@@ -65,7 +65,7 @@ describe('AnalyzeDeploymentImpact', () => {
     expect(getByTestId('stopBtn')).toBeInTheDocument()
     expect(container.querySelector('.redirectLink')).toHaveAttribute(
       'href',
-      '/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/datadoglogs_version1?tab=ServiceHealth&eventId=yRYl-h8PQeqvmLmaNUmI4g'
+      '/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/datadoglogs_version1?tab=ServiceHealth&reportId=yRYl-h8PQeqvmLmaNUmI4g'
     )
 
     await userEvent.click(getByTestId('stopBtn'))

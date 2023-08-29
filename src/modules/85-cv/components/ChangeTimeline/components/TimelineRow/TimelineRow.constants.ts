@@ -11,7 +11,8 @@ export enum SLO_WIDGETS {
   DOWNTIME = 'Downtime',
   ANNOTATION = 'Annotation',
   ERROR_BUDGET_RESET = 'ErrorBudgetReset',
-  DATA_COLLECTION_FAILURE = 'DataCollectionFailure'
+  DATA_COLLECTION_FAILURE = 'DataCollectionFailure',
+  SRM_ANALYSIS_IMPACT = 'SrmAnalysisImpact'
 }
 
 export const INITIAL_MESSAGE_DETAILS = { message: '', id: '' }

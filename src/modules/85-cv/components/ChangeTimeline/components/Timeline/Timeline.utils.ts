@@ -8,6 +8,7 @@
 import type { SecondaryEventsResponse } from 'services/cv'
 import downTimeIcon from '@cv/assets/downTime.svg'
 import annotationsIcon from '@cv/assets/annotations.svg'
+import impactAnalysisIcon from '@cv/assets/ImpactAnalysis.svg'
 import type { UseStringsReturn } from 'framework/strings'
 import errorBudgetResetIcon from '@cv/assets/errorBudgetReset.svg'
 import dataCollectionFailureIcon from '@cv/assets//dataCollectionFailure.svg'
@@ -83,6 +84,15 @@ export function generateSLOWidgetsInfo(
               ...updatedSLOWidgetsInfo?.tooltip,
               message: getString('cv.slos.dataCollectionFailure'),
               sideBorderColor: ''
+            }
+          }
+          break
+        case SLO_WIDGETS.SRM_ANALYSIS_IMPACT:
+          updatedSLOWidgetsInfo = {
+            ...updatedSLOWidgetsInfo,
+            icon: {
+              ...updatedSLOWidgetsInfo?.icon,
+              url: impactAnalysisIcon
             }
           }
           break

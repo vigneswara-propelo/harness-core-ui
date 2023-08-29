@@ -23,6 +23,7 @@ import WidgetsWithSameStartTime from './components/WidgetsWithSameStartTime/Widg
 import { SLO_WIDGETS } from './TimelineRow.constants'
 import ErrorBudgetReset from './components/ErrorBudgetReset/ErrorBudgetReset'
 import DataCollectionFailure from './components/DataCollectionFailure/DataCollectionFailure'
+import { ImpactAnalysis } from './components/ImpactAnalysis/ImpactAnalysis'
 import css from './TimelineRow.module.scss'
 
 export function TimelineRow(props: TimelineRowProps): JSX.Element {
@@ -87,6 +88,8 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
                     return <ErrorBudgetReset index={index} widget={widget} />
                   case SLO_WIDGETS.DATA_COLLECTION_FAILURE:
                     return <DataCollectionFailure index={index} widget={widget} />
+                  case SLO_WIDGETS.SRM_ANALYSIS_IMPACT:
+                    return <ImpactAnalysis index={index} widget={widget} />
                   default:
                     return <DefaultWidget index={index} widget={widget} />
                 }

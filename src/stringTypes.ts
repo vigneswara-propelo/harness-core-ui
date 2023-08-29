@@ -9140,6 +9140,7 @@ export interface StringsMap {
   'cv.analyzeDeploymentImpact.cdCard.stepName': string
   'cv.analyzeDeploymentImpact.cdCard.viewReport': string
   'cv.analyzeDeploymentImpact.duration': string
+  'cv.analyzeDeploymentImpact.impactAnalysis': string
   'cv.analyzeDeploymentImpact.msDisabledWarning': string
   'cv.analyzeDeploymentImpact.redirectLabel': string
   'cv.analyzeDeploymentImpact.remaining': string

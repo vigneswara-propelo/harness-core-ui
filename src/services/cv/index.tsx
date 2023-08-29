@@ -6564,6 +6564,7 @@ export interface SRMAnalysisStepDetailDTO {
   executionDetailIdentifier: string
   monitoredServiceIdentifier: string
   orgIdentifier: string
+  pipelinePath?: string
   planExecutionId: string
   projectIdentifier: string
   serviceIdentifier?: string
@@ -14111,6 +14112,61 @@ export const getMonitoredServicePlatformListPromise = (
     void
   >(getConfig('cv/api'), `/monitored-service/platform/list`, props, signal)
 
+export interface GetMSSecondaryEventsDetailsQueryParams {
+  accountId: string
+  secondaryEventType: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset' | 'SrmAnalysisImpact'
+  identifiers: string[]
+}
+
+export type GetMSSecondaryEventsDetailsProps = Omit<
+  GetProps<ResponseSecondaryEventDetailsResponse, unknown, GetMSSecondaryEventsDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * get monitored service secondary events details
+ */
+export const GetMSSecondaryEventsDetails = (props: GetMSSecondaryEventsDetailsProps) => (
+  <Get<ResponseSecondaryEventDetailsResponse, unknown, GetMSSecondaryEventsDetailsQueryParams, void>
+    path={`/monitored-service/secondary-events-details`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMSSecondaryEventsDetailsProps = Omit<
+  UseGetProps<ResponseSecondaryEventDetailsResponse, unknown, GetMSSecondaryEventsDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * get monitored service secondary events details
+ */
+export const useGetMSSecondaryEventsDetails = (props: UseGetMSSecondaryEventsDetailsProps) =>
+  useGet<ResponseSecondaryEventDetailsResponse, unknown, GetMSSecondaryEventsDetailsQueryParams, void>(
+    `/monitored-service/secondary-events-details`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get monitored service secondary events details
+ */
+export const getMSSecondaryEventsDetailsPromise = (
+  props: GetUsingFetchProps<
+    ResponseSecondaryEventDetailsResponse,
+    unknown,
+    GetMSSecondaryEventsDetailsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSecondaryEventDetailsResponse, unknown, GetMSSecondaryEventsDetailsQueryParams, void>(
+    getConfig('cv/api'),
+    `/monitored-service/secondary-events-details`,
+    props,
+    signal
+  )
+
 export interface GetMonitoredServiceFromServiceAndEnvironmentQueryParams {
   accountId: string
   orgIdentifier: string
@@ -14924,6 +14980,82 @@ export const getMonitoredServiceScoresPromise = (
     GetMonitoredServiceScoresQueryParams,
     GetMonitoredServiceScoresPathParams
   >(getConfig('cv/api'), `/monitored-service/${identifier}/scores`, props, signal)
+
+export interface GetMSSecondaryEventsQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  startTime: number
+  endTime: number
+}
+
+export interface GetMSSecondaryEventsPathParams {
+  identifier: string
+}
+
+export type GetMSSecondaryEventsProps = Omit<
+  GetProps<
+    ResponseListSecondaryEventsResponse,
+    unknown,
+    GetMSSecondaryEventsQueryParams,
+    GetMSSecondaryEventsPathParams
+  >,
+  'path'
+> &
+  GetMSSecondaryEventsPathParams
+
+/**
+ * get monitored service secondary events
+ */
+export const GetMSSecondaryEvents = ({ identifier, ...props }: GetMSSecondaryEventsProps) => (
+  <Get<ResponseListSecondaryEventsResponse, unknown, GetMSSecondaryEventsQueryParams, GetMSSecondaryEventsPathParams>
+    path={`/monitored-service/${identifier}/secondary-events`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMSSecondaryEventsProps = Omit<
+  UseGetProps<
+    ResponseListSecondaryEventsResponse,
+    unknown,
+    GetMSSecondaryEventsQueryParams,
+    GetMSSecondaryEventsPathParams
+  >,
+  'path'
+> &
+  GetMSSecondaryEventsPathParams
+
+/**
+ * get monitored service secondary events
+ */
+export const useGetMSSecondaryEvents = ({ identifier, ...props }: UseGetMSSecondaryEventsProps) =>
+  useGet<ResponseListSecondaryEventsResponse, unknown, GetMSSecondaryEventsQueryParams, GetMSSecondaryEventsPathParams>(
+    (paramsInPath: GetMSSecondaryEventsPathParams) => `/monitored-service/${paramsInPath.identifier}/secondary-events`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get monitored service secondary events
+ */
+export const getMSSecondaryEventsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListSecondaryEventsResponse,
+    unknown,
+    GetMSSecondaryEventsQueryParams,
+    GetMSSecondaryEventsPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListSecondaryEventsResponse,
+    unknown,
+    GetMSSecondaryEventsQueryParams,
+    GetMSSecondaryEventsPathParams
+  >(getConfig('cv/api'), `/monitored-service/${identifier}/secondary-events`, props, signal)
 
 export interface GetMonitoredServiceChangeDetailsQueryParams {
   accountId: string

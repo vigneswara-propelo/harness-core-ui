@@ -8345,43 +8345,6 @@
         }
       }
     },
-    "/monitored-service/environments": {
-      "get": {
-        "tags": ["monitored-service"],
-        "summary": "get monitored service list environments data ",
-        "description": "",
-        "operationId": "getMonitoredServiceListEnvironments",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListEnvironmentResponse"
-            }
-          }
-        }
-      }
-    },
     "/monitored-service/service-environment": {
       "get": {
         "tags": ["monitored-service"],
@@ -8469,6 +8432,144 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseHealthScoreDTO"
+            }
+          }
+        }
+      }
+    },
+    "/monitored-service/{identifier}/secondary-events": {
+      "get": {
+        "tags": ["monitored-service"],
+        "summary": "get monitored service secondary events",
+        "description": "",
+        "operationId": "getMSSecondaryEvents",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListSecondaryEventsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/monitored-service/secondary-events-details": {
+      "get": {
+        "tags": ["monitored-service"],
+        "summary": "get monitored service secondary events details",
+        "description": "",
+        "operationId": "getMSSecondaryEventsDetails",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secondaryEventType",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["Downtime", "DataCollectionFailure", "Annotation", "ErrorBudgetReset", "SrmAnalysisImpact"]
+          },
+          {
+            "name": "identifiers",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "maxItems": 2147483647,
+            "minItems": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseSecondaryEventDetailsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/monitored-service/environments": {
+      "get": {
+        "tags": ["monitored-service"],
+        "summary": "get monitored service list environments data ",
+        "description": "",
+        "operationId": "getMonitoredServiceListEnvironments",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListEnvironmentResponse"
             }
           }
         }
@@ -8765,6 +8866,49 @@
         }
       }
     },
+    "/monitored-service/{monitoredServiceIdentifier}/service-details": {
+      "get": {
+        "tags": ["monitored-service"],
+        "summary": "get details of a monitored service present in the Service Dependency Graph",
+        "description": "",
+        "operationId": "getMonitoredServiceDetailsWithServiceId",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "monitoredServiceIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/MonitoredServiceListItemDTO"
+            }
+          }
+        }
+      }
+    },
     "/monitored-service/service-details": {
       "get": {
         "tags": ["monitored-service"],
@@ -8813,49 +8957,6 @@
           }
         },
         "deprecated": true
-      }
-    },
-    "/monitored-service/{monitoredServiceIdentifier}/service-details": {
-      "get": {
-        "tags": ["monitored-service"],
-        "summary": "get details of a monitored service present in the Service Dependency Graph",
-        "description": "",
-        "operationId": "getMonitoredServiceDetailsWithServiceId",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "monitoredServiceIdentifier",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/MonitoredServiceListItemDTO"
-            }
-          }
-        }
       }
     },
     "/monitored-service/{monitoredServiceIdentifier}/logs": {
@@ -9177,6 +9278,103 @@
         }
       }
     },
+    "/newrelic/endpoints": {
+      "get": {
+        "tags": ["newrelic"],
+        "summary": "get all newrelic endpoints",
+        "description": "",
+        "operationId": "getNewRelicEndPoints",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListString"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/newrelic/applications": {
+      "get": {
+        "tags": ["newrelic"],
+        "summary": "get all newrelic applications",
+        "description": "",
+        "operationId": "getNewRelicApplications",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tracingId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListNewRelicApplication"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/newrelic/metric-data": {
       "post": {
         "tags": ["newrelic"],
@@ -9311,103 +9509,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseLinkedHashMap"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/newrelic/endpoints": {
-      "get": {
-        "tags": ["newrelic"],
-        "summary": "get all newrelic endpoints",
-        "description": "",
-        "operationId": "getNewRelicEndPoints",
-        "produces": ["application/json"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListString"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/newrelic/applications": {
-      "get": {
-        "tags": ["newrelic"],
-        "summary": "get all newrelic applications",
-        "description": "",
-        "operationId": "getNewRelicApplications",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "filter",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "tracingId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListNewRelicApplication"
             }
           },
           "400": {
@@ -10648,73 +10749,6 @@
         }
       }
     },
-    "/stackdriver/dashboard-detail": {
-      "get": {
-        "tags": ["stackdriver"],
-        "summary": "get details about one dashboard",
-        "description": "",
-        "operationId": "getStackdriverDashboardDetail",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "path",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "tracingId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListStackdriverDashboardDetail"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/stackdriver/dashboards": {
       "get": {
         "tags": ["stackdriver"],
@@ -10779,6 +10813,73 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponsePageStackdriverDashboardDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/stackdriver/dashboard-detail": {
+      "get": {
+        "tags": ["stackdriver"],
+        "summary": "get details about one dashboard",
+        "description": "",
+        "operationId": "getStackdriverDashboardDetail",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tracingId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListStackdriverDashboardDetail"
             }
           },
           "400": {
@@ -14156,66 +14257,6 @@
         }
       }
     },
-    "/usage/SRM/active-services-monitored/csv/download": {
-      "get": {
-        "tags": ["usage"],
-        "summary": "Download CSV Active Services Monitored report",
-        "description": "",
-        "operationId": "downloadActiveServiceMonitoredCSVReport",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "timestamp",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/usage/SRM/active-monitored-services/csv/download": {
-      "get": {
-        "tags": ["usage"],
-        "summary": "Download CSV Active Monitored Services report",
-        "description": "",
-        "operationId": "downloadActiveMonitoredServiceCSVReport",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "timestamp",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
     "/usage/CV": {
       "get": {
         "tags": ["usage"],
@@ -14413,6 +14454,66 @@
             "schema": {
               "$ref": "#/definitions/ResponsePageActiveServiceDTO"
             }
+          }
+        }
+      }
+    },
+    "/usage/SRM/active-services-monitored/csv/download": {
+      "get": {
+        "tags": ["usage"],
+        "summary": "Download CSV Active Services Monitored report",
+        "description": "",
+        "operationId": "downloadActiveServiceMonitoredCSVReport",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/usage/SRM/active-monitored-services/csv/download": {
+      "get": {
+        "tags": ["usage"],
+        "summary": "Download CSV Active Monitored Services report",
+        "description": "",
+        "operationId": "downloadActiveMonitoredServiceCSVReport",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
           }
         }
       }
@@ -19018,6 +19119,9 @@
           "type": "integer",
           "format": "int64"
         },
+        "timeTakenToFinish": {
+          "$ref": "#/definitions/Duration"
+        },
         "finalState": {
           "type": "boolean"
         },
@@ -19027,9 +19131,6 @@
         },
         "failedStatus": {
           "type": "boolean"
-        },
-        "timeTakenToFinish": {
-          "$ref": "#/definitions/Duration"
         }
       }
     },
@@ -19160,6 +19261,9 @@
           "type": "string"
         },
         "planExecutionId": {
+          "type": "string"
+        },
+        "pipelinePath": {
           "type": "string"
         }
       }
@@ -24698,6 +24802,247 @@
         }
       }
     },
+    "ResponseMonitoredServiceResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/MonitoredServiceResponse"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "HealthScoreDTO": {
+      "type": "object",
+      "properties": {
+        "currentHealthScore": {
+          "$ref": "#/definitions/RiskData"
+        },
+        "dependentHealthScore": {
+          "$ref": "#/definitions/RiskData"
+        }
+      }
+    },
+    "ResponseHealthScoreDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/HealthScoreDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseListSecondaryEventsResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SecondaryEventsResponse"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "SecondaryEventsResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["Downtime", "DataCollectionFailure", "Annotation", "ErrorBudgetReset", "SrmAnalysisImpact"]
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "AnnotationInstance": {
+      "type": "object",
+      "required": ["message", "uuid"],
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "AnnotationInstanceDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SecondaryEventDetails"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "annotations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AnnotationInstance"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "DataCollectionFailureInstanceDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SecondaryEventDetails"
+        },
+        {
+          "type": "object",
+          "required": ["message"],
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DowntimeInstanceDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SecondaryEventDetails"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "ResponseSecondaryEventDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/SecondaryEventDetailsResponse"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "SLOErrorBudgetResetInstanceDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SecondaryEventDetails"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "errorBudgetIncrementMinutes": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "SRMAnalysisStepInstanceDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SecondaryEventDetails"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "analysisDuration": {
+              "$ref": "#/definitions/Duration"
+            },
+            "analysisStatus": {
+              "type": "string",
+              "enum": ["RUNNING", "COMPLETED", "ABORTED"]
+            }
+          }
+        }
+      ]
+    },
+    "SecondaryEventDetails": {
+      "type": "object",
+      "discriminator": "type"
+    },
+    "SecondaryEventDetailsResponse": {
+      "type": "object",
+      "required": ["details", "startTime", "type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "readOnly": true,
+          "enum": ["Downtime", "DataCollectionFailure", "Annotation", "ErrorBudgetReset", "SrmAnalysisImpact"]
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "details": {
+          "$ref": "#/definitions/SecondaryEventDetails"
+        }
+      }
+    },
     "EnvironmentResponse": {
       "type": "object",
       "properties": {
@@ -24768,53 +25113,6 @@
           "items": {
             "$ref": "#/definitions/EnvironmentResponse"
           }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseMonitoredServiceResponse": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/MonitoredServiceResponse"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "HealthScoreDTO": {
-      "type": "object",
-      "properties": {
-        "currentHealthScore": {
-          "$ref": "#/definitions/RiskData"
-        },
-        "dependentHealthScore": {
-          "$ref": "#/definitions/RiskData"
-        }
-      }
-    },
-    "ResponseHealthScoreDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/HealthScoreDTO"
         },
         "metaData": {
           "type": "object"
@@ -25525,6 +25823,39 @@
         }
       }
     },
+    "NewRelicApplication": {
+      "type": "object",
+      "properties": {
+        "applicationName": {
+          "type": "string"
+        },
+        "applicationId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ResponseListNewRelicApplication": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NewRelicApplication"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
     "ResponseMetricPackValidationResponse": {
       "type": "object",
       "properties": {
@@ -25554,39 +25885,6 @@
           "type": "object",
           "additionalProperties": {
             "type": "object"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "NewRelicApplication": {
-      "type": "object",
-      "properties": {
-        "applicationName": {
-          "type": "string"
-        },
-        "applicationId": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "ResponseListNewRelicApplication": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NewRelicApplication"
           }
         },
         "metaData": {
@@ -30241,52 +30539,6 @@
         }
       }
     },
-    "DataSet": {
-      "type": "object",
-      "properties": {
-        "timeSeriesQuery": {
-          "type": "object"
-        },
-        "metricName": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseListStackdriverDashboardDetail": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/StackdriverDashboardDetail"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "StackdriverDashboardDetail": {
-      "type": "object",
-      "properties": {
-        "widgetName": {
-          "type": "string"
-        },
-        "dataSetList": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DataSet"
-          }
-        }
-      }
-    },
     "PageStackdriverDashboardDTO": {
       "type": "object",
       "properties": {
@@ -30350,6 +30602,52 @@
         },
         "path": {
           "type": "string"
+        }
+      }
+    },
+    "DataSet": {
+      "type": "object",
+      "properties": {
+        "timeSeriesQuery": {
+          "type": "object"
+        },
+        "metricName": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseListStackdriverDashboardDetail": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackdriverDashboardDetail"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "StackdriverDashboardDetail": {
+      "type": "object",
+      "properties": {
+        "widgetName": {
+          "type": "string"
+        },
+        "dataSetList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataSet"
+          }
         }
       }
     },
@@ -32505,6 +32803,9 @@
         "sloError": {
           "$ref": "#/definitions/SLOError"
         },
+        "recalculatingSLI": {
+          "type": "boolean"
+        },
         "errorBudgetRisk": {
           "type": "string",
           "enum": ["EXHAUSTED", "UNHEALTHY", "NEED_ATTENTION", "OBSERVE", "HEALTHY"]
@@ -32513,9 +32814,6 @@
           "type": "boolean"
         },
         "totalErrorBudgetApplicable": {
-          "type": "boolean"
-        },
-        "recalculatingSLI": {
           "type": "boolean"
         }
       }
@@ -32677,10 +32975,10 @@
           "type": "integer",
           "format": "int32"
         },
-        "identifier": {
+        "displayName": {
           "type": "string"
         },
-        "displayName": {
+        "identifier": {
           "type": "string"
         }
       }
@@ -32697,200 +32995,6 @@
           "items": {
             "$ref": "#/definitions/RiskCount"
           }
-        }
-      }
-    },
-    "ResponseListSecondaryEventsResponse": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SecondaryEventsResponse"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "SecondaryEventsResponse": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["Downtime", "DataCollectionFailure", "Annotation", "ErrorBudgetReset", "SrmAnalysisImpact"]
-        },
-        "identifiers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "startTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "endTime": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "AnnotationInstance": {
-      "type": "object",
-      "required": ["message", "uuid"],
-      "properties": {
-        "uuid": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "startTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "endTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createdBy": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "AnnotationInstanceDetails": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/SecondaryEventDetails"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "annotations": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AnnotationInstance"
-              }
-            }
-          }
-        }
-      ]
-    },
-    "DataCollectionFailureInstanceDetails": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/SecondaryEventDetails"
-        },
-        {
-          "type": "object",
-          "required": ["message"],
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          }
-        }
-      ]
-    },
-    "DowntimeInstanceDetails": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/SecondaryEventDetails"
-        },
-        {
-          "type": "object"
-        }
-      ]
-    },
-    "ResponseSecondaryEventDetailsResponse": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/SecondaryEventDetailsResponse"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "SLOErrorBudgetResetInstanceDetails": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/SecondaryEventDetails"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "errorBudgetIncrementMinutes": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      ]
-    },
-    "SRMAnalysisStepInstanceDetails": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/SecondaryEventDetails"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "analysisDuration": {
-              "$ref": "#/definitions/Duration"
-            },
-            "analysisStatus": {
-              "type": "string",
-              "enum": ["RUNNING", "COMPLETED", "ABORTED"]
-            }
-          }
-        }
-      ]
-    },
-    "SecondaryEventDetails": {
-      "type": "object",
-      "discriminator": "type"
-    },
-    "SecondaryEventDetailsResponse": {
-      "type": "object",
-      "required": ["details", "startTime", "type"],
-      "properties": {
-        "type": {
-          "type": "string",
-          "readOnly": true,
-          "enum": ["Downtime", "DataCollectionFailure", "Annotation", "ErrorBudgetReset", "SrmAnalysisImpact"]
-        },
-        "startTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "endTime": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "details": {
-          "$ref": "#/definitions/SecondaryEventDetails"
         }
       }
     },

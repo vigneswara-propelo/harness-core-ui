@@ -65,7 +65,7 @@ export const createDetailsData = ({
     module: 'cv'
   })}${getCVMonitoringServicesSearchParam({
     tab: MonitoredServiceEnum.ServiceHealth,
-    eventId: activityId
+    reportId: activityId
   })}`
 
   const detailsData = [

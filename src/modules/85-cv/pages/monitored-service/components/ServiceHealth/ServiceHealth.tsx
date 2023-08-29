@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import {
   Container,
   Layout,
@@ -26,11 +26,11 @@ import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
 import TimelineSlider from '@cv/components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
-import type { RiskData } from 'services/cv'
+import { useGetMSSecondaryEvents, RiskData } from 'services/cv'
 import type { ChangesInfoCardData } from '@cv/components/ChangeTimeline/ChangeTimeline.types'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
-
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   calculateLowestHealthScoreBar,
   calculateStartAndEndTimes,
@@ -69,6 +69,7 @@ export default function ServiceHealth({
 
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
 
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { notificationTime } = useQueryParams<{ notificationTime?: number }>()
   const [defaultOffset, setDefaultOffset] = useState(0)
 
@@ -208,6 +209,17 @@ export default function ServiceHealth({
     setDefaultOffset(0)
   }, [])
 
+  const { data: secondaryEvent } = useGetMSSecondaryEvents({
+    identifier: monitoredServiceIdentifier,
+    queryParams: {
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      startTime: changesTableAndSourceCardStartAndEndtime[0],
+      endTime: changesTableAndSourceCardStartAndEndtime[1]
+    }
+  })
+
   return (
     <>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -285,6 +297,8 @@ export default function ServiceHealth({
                 endTime={timeRange?.endTime as number}
                 selectedTimePeriod={selectedTimePeriod}
                 onSliderMoved={setChangeTimelineSummary}
+                sloWidgetsData={secondaryEvent?.data}
+                isSLOChartTimeline
               />
             </Container>
           </>

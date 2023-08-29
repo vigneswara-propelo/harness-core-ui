@@ -32,7 +32,13 @@ export default function ReportDrawer(props: SRMAnalysisStepDetailDTO): JSX.Eleme
     queryParams: { accountId }
   })
 
-  const { stepName = '', environmentName = '', serviceName = '', analysisStatus = '' } = analysisSummary?.resource || {}
+  const {
+    stepName = '',
+    environmentName = '',
+    serviceName = '',
+    analysisStatus = '',
+    pipelinePath = ''
+  } = analysisSummary?.resource || {}
   const title = `${getString('cv.analyzeDeploymentImpact.reportDrawer.title')}: ${stepName} `
   const analysisSummaryDetail = analysisSummary?.resource as SRMAnalysisStepDetailDTO
 
@@ -40,6 +46,7 @@ export default function ReportDrawer(props: SRMAnalysisStepDetailDTO): JSX.Eleme
     <Container margin={'large'}>
       <ReportHeader
         name={title}
+        url={pipelinePath}
         service={serviceName}
         environment={environmentName}
         status={analysisStatus}

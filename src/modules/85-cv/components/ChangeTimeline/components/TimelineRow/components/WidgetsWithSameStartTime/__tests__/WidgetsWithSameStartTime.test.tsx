@@ -232,7 +232,8 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
           startTime: 1679229000000,
           type: 'Downtime'
         }
-      ]
+      ],
+      widgetsWithImpactAnalysisType: []
     })
   })
 })

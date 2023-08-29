@@ -22,6 +22,7 @@ import { DATE_FORMAT, INITIAL_MESSAGE_DETAILS, SLO_WIDGETS } from '../../Timelin
 import type { AnnotationMessage } from '../Annotation/Annotation.types'
 import { getInitialPositionOfWidget } from '../../TimelineRow.utils'
 import type { AnnotationMessageInfo } from './WidgetsWithSameStartTime.types'
+import { ImpactAnalysis } from '../ImpactAnalysis/ImpactAnalysis'
 import css from './WidgetsWithSameStartTimeProps.module.scss'
 
 export interface WidgetsWithSameStartTimeProps {
@@ -40,7 +41,7 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
   const [messageDetailsInfo, setMessageDetailsInfo] = useState<{ message: string; id: string }>(INITIAL_MESSAGE_DETAILS)
   const { showError, showSuccess } = useToaster()
 
-  const { widgetsWithDownTimeType, widgetsWithAnnotationType } = useMemo(() => {
+  const { widgetsWithDownTimeType, widgetsWithAnnotationType, widgetsWithImpactAnalysisType } = useMemo(() => {
     return getWidgetsGroupedByType(widgets)
   }, [widgets])
 
@@ -52,7 +53,7 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
     endTime: endTimeForAnnotation,
     identifiers
   } = widgetWithAnnotationType || {}
-  const { height, width } = icon
+  const { height, width } = icon || {}
   const initialPosition = getInitialPositionOfWidget(position, height, width)
   const isAccountLevel = getIsAccountLevel(orgIdentifier, projectIdentifier, accountId)
 
@@ -250,30 +251,37 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
               ) : null}
             </Layout.Vertical>
 
-            <Text className={css.downTimeTextElements} padding={{ bottom: 'small' }}>
-              {getString('cv.sloDowntime.label')}
-            </Text>
-            <Layout.Vertical>
-              {Array.isArray(widgetsWithDownTimeType) && widgetsWithDownTimeType.length
-                ? widgetsWithDownTimeType.map((widgetInfo: TimelineDataPoint, widgetIndex: number) => {
-                    const { startTime, endTime } = widgetInfo
-                    return (
-                      <>
-                        <Layout.Horizontal
-                          key={`${startTime}-${position}-${widgetIndex}`}
-                          padding={{ bottom: 'small' }}
-                        >
-                          <Text className={css.downTimeTextElements}>
-                            {moment(new Date(startTime)).format(DATE_FORMAT)} -{' '}
-                            {moment(new Date(endTime)).format(DATE_FORMAT)}
-                          </Text>
-                        </Layout.Horizontal>
-                        <hr className={css.division} />
-                      </>
-                    )
-                  })
-                : null}
-            </Layout.Vertical>
+            {Array.isArray(widgetsWithDownTimeType) && Boolean(widgetsWithDownTimeType.length) ? (
+              <Layout.Vertical>
+                <Text className={css.downTimeTextElements} padding={{ bottom: 'small' }}>
+                  {getString('cv.sloDowntime.label')}
+                </Text>
+                {widgetsWithDownTimeType.map((widgetInfo: TimelineDataPoint, widgetIndex: number) => {
+                  const { startTime, endTime } = widgetInfo
+                  return (
+                    <>
+                      <Layout.Horizontal key={`${startTime}-${position}-${widgetIndex}`} padding={{ bottom: 'small' }}>
+                        <Text className={css.downTimeTextElements}>
+                          {moment(new Date(startTime)).format(DATE_FORMAT)} -{' '}
+                          {moment(new Date(endTime)).format(DATE_FORMAT)}
+                        </Text>
+                      </Layout.Horizontal>
+                      <hr className={css.division} />
+                    </>
+                  )
+                })}
+              </Layout.Vertical>
+            ) : null}
+            {Array.isArray(widgetsWithImpactAnalysisType) && Boolean(widgetsWithImpactAnalysisType.length) ? (
+              <Layout.Vertical>
+                <Text className={css.downTimeTextElements} padding={{ bottom: 'small' }}>
+                  {getString('cv.analyzeDeploymentImpact.impactAnalysis')}
+                </Text>
+                {widgetsWithImpactAnalysisType.map((item, idx) => {
+                  return <ImpactAnalysis widget={item} index={idx} key={idx} onlyContent />
+                })}
+              </Layout.Vertical>
+            ) : null}
           </Container>
         }
       >

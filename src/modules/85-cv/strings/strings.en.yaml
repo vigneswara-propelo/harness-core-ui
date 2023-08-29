@@ -1337,6 +1337,7 @@ analyzeStep:
     fetchingMonitoredService: Fetching monitored service details ...
     createMonitoredService: Create Monitored Service
 analyzeDeploymentImpact:
+  impactAnalysis: Impact Analysis
   duration: Analysis duration
   remaining: Remaining
   reportDrawer:

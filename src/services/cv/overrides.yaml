@@ -213,6 +213,8 @@ allowpaths:
   - /monitored-service/platform/list
   - /srm-analysis-step/{executionDetailId}/analysis-summary
   - /srm-analysis-step/{executionDetailId}/stop-analysis
+  - /monitored-service/{identifier}/secondary-events
+  - /monitored-service/secondary-events-details
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications
