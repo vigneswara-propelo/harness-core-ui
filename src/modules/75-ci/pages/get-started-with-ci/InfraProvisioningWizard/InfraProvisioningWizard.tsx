@@ -225,7 +225,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   ])
 
   const constructV0PipelinePayloadWithCodebase = React.useCallback(
-    (repository: UserRepoResponse): string => {
+    (repository: UserRepoResponse, pipelineName?: string): string => {
       const { name: repoName, namespace } = repository
       if (!repoName || !namespace || !configuredGitConnector?.identifier) {
         return ''
@@ -243,7 +243,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             orgIdentifier,
             projectIdentifier,
             repository,
-            getString
+            getString,
+            pipelineName: pipelineName ?? ''
           })
         )
       } catch (e) {
@@ -458,7 +459,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         branch = '',
         storeInGit = false,
         yamlPath = '',
-        defaultBranch = ''
+        defaultBranch = '',
+        pipelineName = ''
       } = (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {}
       const shouldSavePipelineToGit = (enableSavePipelinetoRemoteOption && storeInGit) || false
       const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
@@ -491,7 +493,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                       )
                     })
               )
-            : constructV0PipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
+            : constructV0PipelinePayloadWithCodebase(selectRepositoryRef.current.repository, pipelineName),
           queryParams: getCreatePipelineQueryParams({
             shouldSavePipelineToGit,
             defaultBranch,

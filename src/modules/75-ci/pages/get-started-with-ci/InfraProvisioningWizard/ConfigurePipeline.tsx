@@ -419,7 +419,12 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
               formName="configure-pipeline-advanced-options"
               validationSchema={Yup.object().shape({
                 pipelineName: Yup.string().trim().required(getString('createPipeline.pipelineNameRequired')),
-                branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
+                branch: Yup.string()
+                  .trim()
+                  .when('storeInGit', {
+                    is: val => !!val,
+                    then: Yup.string().required(getString('common.git.validation.branchRequired'))
+                  }),
                 yamlPath: Yup.string()
                   .trim()
                   .required(getString('gitsync.gitSyncForm.yamlPathRequired'))

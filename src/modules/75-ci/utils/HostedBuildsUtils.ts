@@ -182,7 +182,8 @@ export const getPayloadForPipelineCreation = ({
   projectIdentifier,
   orgIdentifier,
   repository,
-  configuredGitConnector
+  configuredGitConnector,
+  pipelineName
 }: {
   pipelineYaml: string
   getString: UseStringsReturn['getString']
@@ -190,11 +191,12 @@ export const getPayloadForPipelineCreation = ({
   orgIdentifier: string
   repository: UserRepoResponse
   configuredGitConnector: ConnectorInfoDTO
+  pipelineName?: string
 }): PipelineConfig => {
   const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
   return addDetailsToPipeline({
     originalPipeline: parse(pipelineYaml),
-    name: `${getString('buildText')} ${repository.name}`,
+    name: pipelineName ?? `${getString('buildText')} ${repository.name}`,
     identifier: `${getString('buildText')}_${repository.name?.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`,
     projectIdentifier,
     orgIdentifier,

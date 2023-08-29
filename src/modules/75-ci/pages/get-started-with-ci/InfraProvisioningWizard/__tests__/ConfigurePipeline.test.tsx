@@ -119,6 +119,26 @@ describe('Test ConfigurePipeline component', () => {
     expect(yamlPathValidationError).toBeInTheDocument()
   })
 
+  test('Advanced Options section should not show branch validation error message if storeInGit is false', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CI_YAML_VERSIONING: true
+    })
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <ConfigurePipeline
+          repoName="test-repo"
+          disableNextBtn={jest.fn()}
+          enableNextBtn={jest.fn()}
+          configuredGitConnector={{ identifier: 'id', name: 'test-connector', spec: {}, type: 'Github' }}
+        />
+      </TestWrapper>
+    )
+    await userEvent.click(getByText('common.seeAdvancedOptions'))
+    await userEvent.click(getByText('ci.getStartedWithCI.storeInGit'))
+    const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="branch"]')
+    expect(yamlPathValidationError).toBeNull()
+  })
+
   test('Configure Pipeline view for GitLab connector - Advanced section should be visible', async () => {
     render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
