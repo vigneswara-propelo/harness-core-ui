@@ -38,7 +38,11 @@
     display: inline-block;
   }
 
+  mark {
+    background-color: mark !important;
+  }
+
   mark[data-current-search-result='true'] {
-    background-color: var(--orange-500);
+    background-color: var(--orange-500) !important;
   }
 }
