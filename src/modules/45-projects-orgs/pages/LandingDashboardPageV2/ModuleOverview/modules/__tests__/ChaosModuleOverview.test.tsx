@@ -9,9 +9,26 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
+import * as chaosService from 'services/chaos'
 import ChaosModuleOverview from '../ChaosModuleOverview'
+import { chaosExperimentRunStats } from './mocks'
 
-describe('chos module tests', () => {
+jest.mock('services/chaos', () => ({
+  useGetChaosExperimentStats: jest.fn().mockImplementation(() => {
+    return { data: chaosExperimentRunStats, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+describe('chaos module tests', () => {
+  test('chaos module overview collapsed with data', () => {
+    const { container } = render(
+      <TestWrapper>
+        <ChaosModuleOverview isExpanded={false} timeRange={DEFAULT_TIME_RANGE} isEmptyState={false} />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('div[class*="highcharts-container"]')).not.toBeNull()
+  })
   test('chaos empty state collapsed', () => {
     const { queryByText } = render(
       <TestWrapper>
@@ -30,5 +47,25 @@ describe('chos module tests', () => {
     )
 
     expect(queryByText('common.moduleDetails.chaos.expanded.title')).not.toBeNull()
+  })
+
+  test('loading true', () => {
+    jest.spyOn(chaosService, 'useGetChaosExperimentStats').mockImplementation((): any => {
+      return {
+        data: [],
+        refetch: jest.fn(),
+        error: null,
+        loading: true
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <ChaosModuleOverview isExpanded={false} timeRange={DEFAULT_TIME_RANGE} isEmptyState={false} />
+      </TestWrapper>
+    )
+
+    //spinner should be visible
+    expect(container.querySelector('[data-icon="spinner"]')).toBeTruthy()
   })
 })

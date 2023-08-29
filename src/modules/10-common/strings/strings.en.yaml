@@ -1356,7 +1356,7 @@ moduleOverviewLabel:
   cv: Manage Service Level Objectives
   ff: Manage Feature Flags
   sto: Manage Security Tests
-  chaos: Chaos Expriments
+  chaos: Manage Resilience
 moduleDetails:
   cd:
     collapsed:
@@ -1406,6 +1406,8 @@ moduleDetails:
         one: Setup the target environment
         two: Run Chaos experiments
         three: Get resilience insights
+    overviewStatsGraphYAxis: '# of Runs'
+    overviewStatsGraphXAxis: 'Experiment Runs in {{value}}'
   ce:
     collapsed:
       title: Gain complete cloud control ...

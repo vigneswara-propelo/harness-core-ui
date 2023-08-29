@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts, { SeriesColumnOptions } from 'highcharts'
@@ -79,7 +86,7 @@ export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
       <Icon
         margin={{ right: 'tiny' }}
         size={12}
-        color={Color.GREEN_700}
+        color={countChange > 0 ? Color.GREEN_700 : Color.RED_700}
         name={countChange > 0 ? 'symbol-triangle-up' : 'symbol-triangle-down'}
       />
       <Text font={{ variation: FontVariation.TINY_SEMI }} style={{ color: rateColor }}>
@@ -106,8 +113,7 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
         </Text>
       )}
       <Layout.Vertical
-        style={{ height: isExpanded ? '230px' : '70px', width: isExpanded ? 'unset' : '100px' }}
-        margin={{ top: 'medium' }}
+        style={{ height: isExpanded ? '230px' : '66px', width: isExpanded ? 'unset' : '100px', marginTop: 'auto' }}
       >
         <Layout.Horizontal padding={{ bottom: 'tiny' }} className={css.countRow}>
           <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_900} margin={{ right: 'small' }}>

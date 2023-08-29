@@ -19,6 +19,22 @@ export interface CHAOSLicenseUsageDTO {
   timestamp?: number
 }
 
+export interface ChaosExperimentRunsStatsResponse {
+  data?: ExperimentRunsData
+}
+
+export interface ExperimentRunStats {
+  failed?: number
+  success?: number
+  time?: number
+}
+
+export interface ExperimentRunsData {
+  experimentRunStats?: ExperimentRunStats[]
+  totalExperimentChange?: number
+  totalExperimentRuns?: number
+}
+
 export interface ReferenceDTO {
   accountIdentifier?: string
   identifier?: string
@@ -32,6 +48,63 @@ export interface UsageDataDTO {
   displayName?: string
   references?: ReferenceDTO[]
 }
+
+export interface GetChaosExperimentStatsQueryParams {
+  accountIdentifier: string
+  startTime: number
+  endTime: number
+  groupBy?: 'DAY' | 'WEEK' | 'MONTH'
+}
+
+export type GetChaosExperimentStatsProps = Omit<
+  GetProps<ChaosExperimentRunsStatsResponse, void, GetChaosExperimentStatsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get overview stats for chaos experiments
+ *
+ * Get overview stats for chaos experiments for a specific account
+ */
+export const GetChaosExperimentStats = (props: GetChaosExperimentStatsProps) => (
+  <Get<ChaosExperimentRunsStatsResponse, void, GetChaosExperimentStatsQueryParams, void>
+    path={`/overview/experiment-stats`}
+    base={getConfig('chaos/manager/api/rest')}
+    {...props}
+  />
+)
+
+export type UseGetChaosExperimentStatsProps = Omit<
+  UseGetProps<ChaosExperimentRunsStatsResponse, void, GetChaosExperimentStatsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get overview stats for chaos experiments
+ *
+ * Get overview stats for chaos experiments for a specific account
+ */
+export const useGetChaosExperimentStats = (props: UseGetChaosExperimentStatsProps) =>
+  useGet<ChaosExperimentRunsStatsResponse, void, GetChaosExperimentStatsQueryParams, void>(
+    `/overview/experiment-stats`,
+    { base: getConfig('chaos/manager/api/rest'), ...props }
+  )
+
+/**
+ * Get overview stats for chaos experiments
+ *
+ * Get overview stats for chaos experiments for a specific account
+ */
+export const getChaosExperimentStatsPromise = (
+  props: GetUsingFetchProps<ChaosExperimentRunsStatsResponse, void, GetChaosExperimentStatsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ChaosExperimentRunsStatsResponse, void, GetChaosExperimentStatsQueryParams, void>(
+    getConfig('chaos/manager/api/rest'),
+    `/overview/experiment-stats`,
+    props,
+    signal
+  )
 
 export interface GetChaosLicenseUsageQueryParams {
   /**

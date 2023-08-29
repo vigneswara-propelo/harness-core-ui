@@ -23,7 +23,13 @@ const modulesOrder: NavModuleName[] = [
   ModuleName.CHAOS
 ]
 
-const MODULES_WITH_DATA: NavModuleName[] = [ModuleName.CD, ModuleName.CI, ModuleName.CF, ModuleName.CE]
+const MODULES_WITH_DATA: NavModuleName[] = [
+  ModuleName.CD,
+  ModuleName.CI,
+  ModuleName.CF,
+  ModuleName.CE,
+  ModuleName.CHAOS
+]
 
 export interface ModuleOverviewBaseProps {
   isExpanded: boolean

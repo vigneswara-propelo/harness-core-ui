@@ -135,7 +135,12 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
     >
       <Layout.Vertical className={containerStyle} onClick={onClick}>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-          <Text width="70%" color={Color.GREY_900} font={{ variation: FontVariation.H6 }}>
+          <Text
+            width="70%"
+            color={Color.GREY_900}
+            font={{ variation: FontVariation.H6 }}
+            style={{ lineHeight: '18px' }}
+          >
             {getString(label)}
           </Text>
           <Icon className={css.icon} name={icon} size={isExpanded ? 68 : 32} />

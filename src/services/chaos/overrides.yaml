@@ -1,4 +1,5 @@
 allowpaths:
   - /usage
+  - /overview/experiment-stats
 
 operationIdOverrides: {}

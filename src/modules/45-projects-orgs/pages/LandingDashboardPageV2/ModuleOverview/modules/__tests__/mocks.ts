@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { ExperimentRunsData } from 'services/chaos'
 import type { DashboardBuildExecutionInfo } from 'services/ci'
 import type { Error, Failure, ExecutionResponseDeploymentsStatsOverview } from 'services/dashboard-service'
 
@@ -139,6 +140,52 @@ export const buildsExecutionData: {
           failed: 6,
           total: 26
         }
+      }
+    ]
+  }
+}
+
+export const chaosExperimentRunStats: {
+  data: ExperimentRunsData
+} = {
+  data: {
+    totalExperimentRuns: 13,
+    totalExperimentChange: -4,
+    experimentRunStats: [
+      {
+        time: 1692662400000,
+        success: 6,
+        failed: 0
+      },
+      {
+        time: 1692748800000,
+        success: 4,
+        failed: 0
+      },
+      {
+        time: 1692835200000,
+        success: 1,
+        failed: 1
+      },
+      {
+        time: 1692921600000,
+        success: 1,
+        failed: 2
+      },
+      {
+        time: 1693008000000,
+        success: 4,
+        failed: 1
+      },
+      {
+        time: 1693094400000,
+        success: 8,
+        failed: 2
+      },
+      {
+        time: 1693180800000,
+        success: 7,
+        failed: 0
       }
     ]
   }

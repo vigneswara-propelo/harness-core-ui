@@ -661,6 +661,8 @@ export interface StringsMap {
   'common.moduleDetails.chaos.expanded.list.three': string
   'common.moduleDetails.chaos.expanded.list.two': string
   'common.moduleDetails.chaos.expanded.title': string
+  'common.moduleDetails.chaos.overviewStatsGraphXAxis': string
+  'common.moduleDetails.chaos.overviewStatsGraphYAxis': string
   'common.moduleDetails.ci.collapsed.title': string
   'common.moduleDetails.ci.expanded.list.one': string
   'common.moduleDetails.ci.expanded.list.three': string

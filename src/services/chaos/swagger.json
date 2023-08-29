@@ -46,6 +46,58 @@
           }
         }
       }
+    },
+    "/overview/experiment-stats": {
+      "get": {
+        "tags": ["overview", "stats"],
+        "summary": "Get overview stats for chaos experiments",
+        "description": "Get overview stats for chaos experiments for a specific account",
+        "operationId": "getChaosExperimentStats",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["DAY", "WEEK", "MONTH"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ChaosExperimentRunsStatsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -102,6 +154,45 @@
         },
         "accountIdentifier": {
           "type": "string"
+        }
+      }
+    },
+    "ChaosExperimentRunsStatsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ExperimentRunsData"
+        }
+      }
+    },
+    "ExperimentRunsData": {
+      "type": "object",
+      "properties": {
+        "experimentRunStats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExperimentRunStats"
+          }
+        },
+        "totalExperimentChange": {
+          "type": "integer"
+        },
+        "totalExperimentRuns": {
+          "type": "integer"
+        }
+      }
+    },
+    "ExperimentRunStats": {
+      "type": "object",
+      "properties": {
+        "failed": {
+          "type": "integer"
+        },
+        "success": {
+          "type": "integer"
+        },
+        "time": {
+          "type": "integer"
         }
       }
     }
