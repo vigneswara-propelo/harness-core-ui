@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { FormInput, MultiSelectOption, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import React, { useMemo } from 'react'
+import { FormInput, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { get } from 'lodash-es'
 
+import { defaultTo, memoize } from 'lodash-es'
+import { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -18,6 +19,8 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import css from '../../ArtifactConnector.module.scss'
 
 interface ArtifactImagePathProps {
@@ -30,9 +33,9 @@ interface ArtifactImagePathProps {
 function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { getRBACErrorMessage } = useRBACError()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { connectorRef, region, artifactType, imagePath } = props
-  const [images, setImages] = useState<SelectOption[]>([{ label: imagePath || '', value: imagePath || '' }])
+  const { connectorRef, region, artifactType } = props
 
   const imagesListAPIQueryParams: GetImagesListForEcrQueryParams = {
     accountIdentifier: accountId,
@@ -59,24 +62,27 @@ function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
     debounce: 300
   })
 
-  useEffect(() => {
-    if (imagesListData?.data) {
-      const imageResponseFormatted: MultiSelectOption[] = imagesListData?.data?.images?.map(
-        (artifactPathVal: string) => {
-          return {
-            label: artifactPathVal,
-            value: artifactPathVal
-          } as MultiSelectOption
-        }
-      ) || [
-        {
-          label: getString('pipeline.noImages'),
-          value: getString('pipeline.noImages')
-        }
-      ]
-      setImages(imageResponseFormatted)
+  const allImageOptions = useMemo(() => {
+    if (imagesListLoading) {
+      return [{ label: getString('loading'), value: getString('loading') }]
     }
-  }, [imagesListData])
+    return defaultTo(
+      imagesListData?.data?.images?.map((image: string) => ({
+        label: defaultTo(image, ''),
+        value: defaultTo(image, '')
+      })),
+      []
+    )
+  }, [imagesListLoading, imagesListData])
+
+  const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem
+      item={item}
+      itemProps={itemProps}
+      disabled={imagesListLoading || !!imagesListError}
+      style={imagesListError ? { lineClamp: 1, width: 400, padding: 'small' } : {}}
+    />
+  ))
 
   if (artifactType === ENABLED_ARTIFACT_TYPES.Ecr) {
     return (
@@ -85,7 +91,7 @@ function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
           label={getString('pipeline.imagePathLabel')}
           name="imagePath"
           useValue
-          selectItems={images}
+          selectItems={allImageOptions}
           placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
           multiTypeInputProps={{
             allowableTypes: [MultiTypeInputType.FIXED],
@@ -101,10 +107,12 @@ function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
               }
             },
             selectProps: {
-              items: images,
+              items: allImageOptions,
+              allowCreatingNewItems: true,
+              itemRenderer: itemRenderer,
               noResults: (
                 <Text lineClamp={1} width={384} margin="small">
-                  {get(imagesListError, 'data.message', null)}
+                  {getRBACErrorMessage(imagesListError as RBACError) || getString('pipeline.noImagesFound')}
                 </Text>
               )
             }

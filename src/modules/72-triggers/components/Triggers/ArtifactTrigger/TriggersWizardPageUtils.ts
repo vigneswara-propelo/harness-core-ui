@@ -1996,6 +1996,7 @@ export const getArtifactTriggerSpecSource = (
         imagePath = defaultImagePath,
         region = '',
         connectorRef = defaultConnectorRef,
+        registryId = '',
         tag = defaultTag
       } = spec as EcrSpec
 
@@ -2003,6 +2004,7 @@ export const getArtifactTriggerSpecSource = (
         type: artifactType,
         connectorRef,
         imagePath,
+        registryId,
         region,
         tag
       }

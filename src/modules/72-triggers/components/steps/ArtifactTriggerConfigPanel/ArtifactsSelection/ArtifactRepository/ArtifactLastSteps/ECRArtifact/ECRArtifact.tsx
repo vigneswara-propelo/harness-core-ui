@@ -96,6 +96,18 @@ export function ECRArtifact({
                   placeholder={getString('select')}
                 />
               </div>
+              <div className={css.imagePathContainer}>
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.artifactsSelection.registryId')}
+                  name="registryId"
+                  placeholder={getString('pipeline.artifactsSelection.registryIdPlaceholder')}
+                  isOptional={true}
+                  multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+                  onChange={() => {
+                    setFieldValue('imagePath', '')
+                  }}
+                />
+              </div>
               <ArtifactImagePath
                 connectorRef={getConnectorIdValue(prevStepData)}
                 region={values?.region}
