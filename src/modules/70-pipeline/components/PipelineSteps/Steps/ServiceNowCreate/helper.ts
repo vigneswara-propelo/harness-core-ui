@@ -12,6 +12,7 @@ import type { ServiceNowFieldAllowedValueNG, ServiceNowFieldNG, ServiceNowFieldV
 import type { ServiceNowCreateData, ServiceNowCreateFieldType, ServiceNowFieldNGWithValue } from './types'
 import type { ServiceNowUpdateData } from '../ServiceNowUpdate/types'
 import { FieldType, ServiceNowStaticFields } from './types'
+import { getkvFieldValue } from '../StepsHelper'
 
 export const resetForm = (
   formik: FormikProps<ServiceNowCreateData> | FormikProps<ServiceNowUpdateData>,
@@ -37,35 +38,33 @@ export const omitDescNShortDesc = (fields: ServiceNowCreateFieldType[]): Service
   )
 
 export const processFieldsForSubmit = (values: ServiceNowCreateData): ServiceNowCreateFieldType[] => {
+  const descriptionFields: ServiceNowCreateFieldType[] = []
+  if (values.spec.description) {
+    descriptionFields.push({
+      name: ServiceNowStaticFields.description,
+      value: values.spec.description || ''
+    })
+  }
+  if (values.spec.shortDescription) {
+    descriptionFields.push({
+      name: ServiceNowStaticFields.short_description,
+      value: values.spec.shortDescription || ''
+    })
+  }
   const toReturn: ServiceNowCreateFieldType[] =
-    values.spec.fieldType === FieldType.ConfigureFields
-      ? [
-          {
-            name: ServiceNowStaticFields.description,
-            value: values.spec.description || ''
-          },
-          {
-            name: ServiceNowStaticFields.short_description,
-            value: values.spec.shortDescription || ''
-          }
-        ]
-      : []
+    values.spec.fieldType === FieldType.ConfigureFields ? [...descriptionFields] : []
   values.spec.selectedFields?.forEach((field: ServiceNowFieldNGWithValue) => {
     const name = field.key
-    const value =
-      typeof field.value === 'string' || typeof field.value === 'number'
-        ? field.value
-        : Array.isArray(field.value)
-        ? (field.value as MultiSelectOption[]).map(opt => opt.value.toString()).join(',')
-        : typeof field.value === 'object'
-        ? (field.value as SelectOption).value?.toString()
-        : ''
+    const value = getkvFieldValue(field)
     // The return value should be comma separated string or a number
-    toReturn.push({ name, value })
+    if (value) {
+      toReturn.push({ name, value })
+    }
   })
   values.spec.fields?.forEach((kvField: ServiceNowCreateFieldType) => {
     const alreadyExists = toReturn.find(ff => ff.name === kvField.name)
-    if (!alreadyExists) {
+    const value = getkvFieldValue(kvField)
+    if (!alreadyExists && value) {
       toReturn.push(kvField)
     }
   })

@@ -13,6 +13,7 @@ import { isFieldFixed } from '@pipeline/components/ArtifactsSelection/ArtifactUt
 import type { JiraFieldNG, JiraUserData } from 'services/cd-ng'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import type { JiraCreateData, JiraCreateFieldType, JiraFieldNGWithValue } from './types'
+import { getkvFieldValue } from '../StepsHelper'
 
 export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string): void => {
   if (parent === 'connectorRef') {
@@ -48,14 +49,17 @@ export const processFieldsForSubmit = (values: JiraCreateData): JiraCreateFieldT
           ? (field.value as SelectOption).value?.toString()
           : ''
       // The return value should be comma separated string or a number
-      toReturn.push({ name, value })
+      if (value) {
+        toReturn.push({ name, value })
+      }
     })
   }
   processRequiredOptionalFields(values.spec?.selectedOptionalFields)
   processRequiredOptionalFields(values.spec?.selectedRequiredFields)
   values.spec.fields?.forEach((kvField: JiraCreateFieldType) => {
     const alreadyExists = toReturn.find(ff => ff.name === kvField.name)
-    if (!alreadyExists) {
+    const value = getkvFieldValue(kvField)
+    if (!alreadyExists && value) {
       toReturn.push(kvField)
     }
   })

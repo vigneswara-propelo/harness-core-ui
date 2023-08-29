@@ -5,28 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
+import { getkvFieldValue } from '../StepsHelper'
 import type { JiraUpdateData } from './types'
 
 export const processFieldsForSubmit = (values: JiraUpdateData): JiraCreateFieldType[] => {
   const toReturn: JiraCreateFieldType[] = []
   values.spec.selectedOptionalFields?.forEach((field: JiraFieldNGWithValue) => {
     const name = field.name
-    const value =
-      typeof field.value === 'string' || typeof field.value === 'number'
-        ? field.value
-        : Array.isArray(field.value)
-        ? (field.value as MultiSelectOption[]).map(opt => opt.value.toString()).join(',')
-        : typeof field.value === 'object'
-        ? (field.value as SelectOption).value?.toString()
-        : ''
+    const value = getkvFieldValue(field)
     // The return value should be comma separated string or a number
-    toReturn.push({ name, value })
+    if (value) {
+      toReturn.push({ name, value })
+    }
   })
   values.spec.fields?.forEach((kvField: JiraCreateFieldType) => {
     const alreadyPresent = toReturn.find(field => field.name === kvField.name)
-    if (!alreadyPresent) {
+    const value = getkvFieldValue(kvField)
+    if (!alreadyPresent && value) {
       toReturn.push(kvField)
     }
   })

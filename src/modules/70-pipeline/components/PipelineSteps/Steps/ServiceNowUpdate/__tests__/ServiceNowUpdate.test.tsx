@@ -294,7 +294,6 @@ describe('ServiceNow Update tests', () => {
         fields: [
           { name: 'description', value: 'desc' },
           { name: 'short_description', value: 'short desc' },
-          { name: 'f1', value: '' },
           { name: 'issueKey1', value: 'issueKey1Value' }
         ]
       },
@@ -490,14 +489,6 @@ describe('ServiceNow Update process form data tests', () => {
         useServiceNowTemplate: false,
         ticketType: 'INCIDENT',
         fields: [
-          {
-            name: 'description',
-            value: ''
-          },
-          {
-            name: 'short_description',
-            value: ''
-          },
           {
             name: 'f2',
             value: '<+x.y>'

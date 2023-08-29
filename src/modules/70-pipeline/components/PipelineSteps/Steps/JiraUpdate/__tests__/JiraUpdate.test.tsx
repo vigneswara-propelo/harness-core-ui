@@ -275,7 +275,6 @@ describe('Jira Update tests', () => {
         transitionTo: { transitionName: '', status: 'Done' },
         fields: [
           { name: 'f2', value: 2233 },
-          { name: 'f1', value: '' },
           { name: 'f21', value: 'value1' },
           { name: 'date', value: '23-march' }
         ]

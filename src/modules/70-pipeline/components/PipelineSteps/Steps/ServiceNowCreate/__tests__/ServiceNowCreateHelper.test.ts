@@ -79,14 +79,6 @@ describe('ServiceNow Create process form data tests', () => {
         },
         fields: [
           {
-            name: 'description',
-            value: ''
-          },
-          {
-            name: 'short_description',
-            value: ''
-          },
-          {
             name: 'f2',
             value: 'vb2'
           },
@@ -148,14 +140,6 @@ describe('ServiceNow Create process form data tests', () => {
         delegateSelectors: undefined,
         ticketType: '<+input>',
         fields: [
-          {
-            name: 'description',
-            value: ''
-          },
-          {
-            name: 'short_description',
-            value: ''
-          },
           {
             name: 'f2',
             value: '<+x.y>'

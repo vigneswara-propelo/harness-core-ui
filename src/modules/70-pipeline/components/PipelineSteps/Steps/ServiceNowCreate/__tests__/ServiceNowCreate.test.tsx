@@ -277,7 +277,6 @@ describe('ServiceNow Create tests', () => {
         fields: [
           { name: 'description', value: 'descriptionval' },
           { name: 'short_description', value: 'short description' },
-          { name: 'f1', value: '' },
           { name: 'issueKey1', value: 'issueKey1Value' }
         ]
       },

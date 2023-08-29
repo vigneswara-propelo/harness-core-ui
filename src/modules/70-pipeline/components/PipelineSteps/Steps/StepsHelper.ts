@@ -5,12 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { parseStringToTime } from '@harness/uicore'
+import { MultiSelectOption, parseStringToTime, SelectOption } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ConnectorResponse } from 'services/cd-ng'
 import { checkIfFixedAndValidString } from './JiraApproval/helper'
 import { JiraApprovalData } from './JiraApproval/types'
 import { ServiceNowApprovalData } from './ServiceNowApproval/types'
+
+export interface FieldType {
+  name: string
+  value: string | number | SelectOption | MultiSelectOption[]
+}
 
 export const getConnectorValue = (connector?: ConnectorResponse): string => {
   const connectorIdentifier = connector?.connector?.identifier
@@ -60,4 +65,14 @@ export function isRetryIntervalGreaterThanTimeout(formikValue: JiraApprovalData 
     if (retryInterval > timeout) return true
   }
   return false
+}
+
+export const getkvFieldValue = (kvField: FieldType): string | number => {
+  return typeof kvField.value === 'string' || typeof kvField.value === 'number'
+    ? kvField.value
+    : Array.isArray(kvField.value)
+    ? (kvField.value as MultiSelectOption[]).map(opt => opt.value.toString()).join(',')
+    : typeof kvField.value === 'object'
+    ? (kvField.value as SelectOption).value?.toString()
+    : ''
 }
