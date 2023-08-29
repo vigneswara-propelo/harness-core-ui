@@ -1605,16 +1605,27 @@ connectors:
           header: Cloud Governance
           feat1: Asset Management (EC2, EBS, RDS, S3)
           feat2: Automated Actions
+        commitmentOrchestration:
+          feat1: Purchase Reserved Instances offering
+          feat2: Get Reserved Instances Exchange Quote
+          feat3: Describe Instance type offerings
+          feat4: Accept RI exchange quote
+          feat5: Describe RI modifications
+          feat6: Modify Reserved Instances
+          note: '<b>Note</b>: These permissions apply to the AWS master account <b>only</b>.'
       visibility: '{{ $.common.ce.visibility }}'
       optimization: '{{ $.common.ce.optimization }}'
       visibilityDes: '{{ $.platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'
       optimizationDes: '{{ $.platform.connectors.ceAzure.chooseRequirements.optimizationCardDesc }}'
+      commitmentOrch: Commitment Orchestration
       default:
         feat1: AWS costs by services, accounts, etc.
         footer: from Cost and Usage Report
       visible:
         feat1: EC2, EBS and snapshot inventory dashboards
         feat2: ECS cluster cost, tasks, lauchtype details
+        feat3: Savings plans coverage & utilization details
+        feat4: RI coverage & utilization details
         prefix: AWS ECS & RESOURCE
         heading: Inventory management
       optimize:

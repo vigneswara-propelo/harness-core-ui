@@ -2270,6 +2270,13 @@ export interface StringsMap {
   'platform.connectors.ceAws.crossAccountRoleExtention.subHeading': string
   'platform.connectors.ceAws.crossAccountRoleStep1.adding': string
   'platform.connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat1': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat2': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat3': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat4': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat5': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat6': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.note': string
   'platform.connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer2': string
   'platform.connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3': string
   'platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.feat1': string
@@ -2277,6 +2284,7 @@ export interface StringsMap {
   'platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.header': string
   'platform.connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved': string
   'platform.connectors.ceAws.crossAccountRoleStep1.cards.providedBy': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.commitmentOrch': string
   'platform.connectors.ceAws.crossAccountRoleStep1.cost': string
   'platform.connectors.ceAws.crossAccountRoleStep1.default.feat1': string
   'platform.connectors.ceAws.crossAccountRoleStep1.default.footer': string
@@ -2299,6 +2307,8 @@ export interface StringsMap {
   'platform.connectors.ceAws.crossAccountRoleStep1.visibilityDes': string
   'platform.connectors.ceAws.crossAccountRoleStep1.visible.feat1': string
   'platform.connectors.ceAws.crossAccountRoleStep1.visible.feat2': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.visible.feat3': string
+  'platform.connectors.ceAws.crossAccountRoleStep1.visible.feat4': string
   'platform.connectors.ceAws.crossAccountRoleStep1.visible.heading': string
   'platform.connectors.ceAws.crossAccountRoleStep1.visible.prefix': string
   'platform.connectors.ceAws.crossAccountRoleStep2.dontHaveAccess': string

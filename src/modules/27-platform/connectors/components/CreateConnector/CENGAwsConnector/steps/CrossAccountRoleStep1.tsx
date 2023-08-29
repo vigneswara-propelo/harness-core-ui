@@ -9,7 +9,7 @@ import React, { useMemo, useState } from 'react'
 import { uniq } from 'lodash-es'
 import { Button, Layout, StepProps, Container, Text, Checkbox, IconName, Icon } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@platform/connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@platform/connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
@@ -17,6 +17,7 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
+import { StringsMap } from 'stringTypes'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import EmptyState from '../images/empty-state.svg'
 
@@ -26,7 +27,8 @@ export enum Features {
   VISIBILITY = 'VISIBILITY',
   OPTIMIZATION = 'OPTIMIZATION',
   BILLING = 'BILLING',
-  GOVERNANCE = 'GOVERNANCE'
+  GOVERNANCE = 'GOVERNANCE',
+  COMMITMENT_ORCHESTRATOR = 'COMMITMENT_ORCHESTRATOR'
 }
 
 interface CardData {
@@ -38,12 +40,14 @@ interface CardData {
   prefix: string
   features: string[]
   footer: React.ReactNode
+  footerNote?: keyof StringsMap
 }
 
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
 
   const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI)
+  const isCommitmentOrchEnabled = useFeatureFlag(FeatureFlag.CCM_COMM_SETUP)
 
   const FeatureCards = useMemo(() => {
     const cards = [
@@ -73,7 +77,8 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
               {getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3')}
             </Text>
           </>
-        )
+        ),
+        footerNote: ''
       },
       {
         icon: 'ce-visibility-plus',
@@ -105,7 +110,8 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
             </a>{' '}
             {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
           </>
-        )
+        ),
+        footerNote: ''
       },
       {
         icon: 'nav-settings',
@@ -140,7 +146,8 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
             </a>{' '}
             {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
           </>
-        )
+        ),
+        footerNote: ''
       }
     ]
 
@@ -172,12 +179,57 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
             </a>{' '}
             {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
           </>
-        )
+        ),
+        footerNote: ''
+      })
+    }
+
+    if (isCommitmentOrchEnabled) {
+      const visibilityFeatures = [
+        ...cards[0].features,
+        getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.feat3'),
+        getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.feat4')
+      ]
+      cards[0].features = visibilityFeatures
+
+      cards.push({
+        icon: 'nav-settings',
+        text: getString('platform.connectors.ceAws.crossAccountRoleStep1.commitmentOrch'),
+        value: Features.COMMITMENT_ORCHESTRATOR,
+        desc: (
+          <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+            {getString('platform.connectors.ceAws.crossAccountRoleStep1.commitmentOrch')}
+          </Text>
+        ),
+        heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.commitmentOrch'),
+        prefix: getString('common.aws'),
+        features: [
+          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat1'),
+          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat2'),
+          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat3'),
+          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat4'),
+          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat5'),
+          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.feat6')
+        ],
+        footer: (
+          <>
+            {getString('platform.connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+            <a
+              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
+          </>
+        ),
+        footerNote: 'platform.connectors.ceAws.crossAccountRoleStep1.cards.commitmentOrchestration.note'
       })
     }
 
     return cards as CardData[]
-  }, [isGovernanceEnabled])
+  }, [isGovernanceEnabled, isCommitmentOrchEnabled])
 
   const [selectedCards, setSelectedCards] = useState<CardData[]>(() => {
     const initialSelectedCards = []
@@ -396,6 +448,11 @@ export const FeatureDetails: React.FC<{ feature: CardData }> = ({ feature }) => 
             {feat}
           </Text>
         ))}
+        {feature.footerNote ? (
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} margin={{ top: 'small' }}>
+            <String stringID={feature.footerNote as keyof StringsMap} useRichText />
+          </Text>
+        ) : null}
       </Container>
       <Container>
         <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ bottom: 'xsmall' }}>
