@@ -153,4 +153,31 @@ Framework will display only registered settings/ groups via `registerSettingHand
 
 ## Consumption
 
-We can just call the backend api using `GetSettingValue` method by passing the setting id and scope values like project id , org id, account id and backend will resolve the setting values at various levels and gives a final value in the response which is relevant to the passed scope data
+We can just call the backend api using `GetSettingValue` method by passing the setting id and scope values like project id , org id, account id and backend will resolve the setting values at various levels and gives a final value in the response which is relevant to the passed scope data.
+
+The best way to fetch an individual setting is like this:
+
+```tsx
+import { useGetSettingValue } from 'services/cd-ng'
+
+const { data, loading } = useGetSettingValue({
+  identifier: '<settingIdentifier>', // check the settingIdentifier from the BE team
+  queryParams: { accountIdentifier, orgIdentifier?, projectIdentifier? } // pass scope according to which scope's setting override you need
+})
+```
+
+You can also fetch all settings in a group like this:
+
+```tsx
+import { useGetSettingsList } from 'services/cd-ng'
+
+const { data, loading } = useGetSettingsList({
+  queryParams: {
+    accountIdentifier,
+    orgIdentifier?,
+    projectIdentifier?,
+    category,
+    group?,
+    includeParentScopes?
+ } 
+```

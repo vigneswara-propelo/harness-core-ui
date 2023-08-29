@@ -11,3 +11,4 @@
 - [Hotfix process](https://github.com/wings-software/nextgenui#hotfix-process)
 - [Audit Trail](./architectures/AuditTrails.md)
 - [NG Tooltips](./architectures/Tooltip.md)
+- [Settings Framework](./architectures/DefaultSettings.md)
