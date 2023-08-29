@@ -29,7 +29,7 @@ import {
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
+import type { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import type { Module } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -106,7 +106,7 @@ const getRedirectionUrl = (accountId: string, source: string | undefined): strin
 }
 
 export function AppStoreProvider({ children }: PropsWithChildren<unknown>): ReactElement {
-  const featureFlags = useFeatureFlags(Object.values(FeatureFlag))
+  const featureFlags = useFeatureFlags()
   const loadingFeatureFlags = useFeatureFlagsLoading()
   const { showError } = useToaster()
   const history = useHistory()
