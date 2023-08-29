@@ -10,25 +10,10 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
-import { useGetAccountNG } from 'services/cd-ng'
 import AccountSideNav from '../AccountSideNav/AccountSideNav'
 jest.mock('services/cd-ng')
-const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
 beforeEach(() => {
   window.deploymentType = 'SAAS'
-  useGetAccountNGMock.mockImplementation(() => {
-    return {
-      data: {
-        data: {
-          name: 'account name',
-          identifier: 'id1',
-          cluster: 'free',
-          defaultExperience: 'NG'
-        }
-      },
-      refetch: jest.fn()
-    }
-  })
 })
 describe('AccountSideNav', () => {
   test('AccountSideNav simple snapshot test', () => {

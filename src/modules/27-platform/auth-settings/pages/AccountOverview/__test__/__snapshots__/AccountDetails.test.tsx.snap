@@ -112,6 +112,7 @@ exports[`AccountDetails should render AccountDetails page with values 1`] = `
         class="bp3-control bp3-switch StyledProps--font Switch--switch switch StyledProps--main"
       >
         <input
+          checked=""
           type="checkbox"
         />
         <span

@@ -14,10 +14,10 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import { isEnterprisePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useGetAccountNG } from 'services/cd-ng'
 
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
@@ -27,9 +27,8 @@ export default function AccountSideNav(): React.ReactElement {
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
   const showDeploymentFreeze = isEnterpriseEdition
-  const { data: accountData } = useGetAccountNG({
-    accountIdentifier: accountId
-  })
+  const { accountInfo } = useAppStore()
+
   return (
     <Layout.Vertical spacing="small" margin={{ top: 'xxxlarge' }}>
       <SidebarLink exact label={getString('overview')} to={routes.toAccountSettingsOverview({ accountId })} />
@@ -42,7 +41,7 @@ export default function AccountSideNav(): React.ReactElement {
         <SidebarLink label={getString('common.freezeWindows')} to={routes.toFreezeWindows({ accountId })} />
       ) : null}
       <SidebarLink to={routes.toAccessControl({ accountId })} label={getString('accessControl')} />
-      {accountData?.data?.productLed && (
+      {accountInfo?.productLed && (
         <SidebarLink exact label={getString('common.billing')} to={routes.toBilling({ accountId })} />
       )}
       {NG_LICENSES_ENABLED && (

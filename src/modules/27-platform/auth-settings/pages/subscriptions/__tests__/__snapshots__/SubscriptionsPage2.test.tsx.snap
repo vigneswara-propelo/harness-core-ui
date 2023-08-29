@@ -443,7 +443,9 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
-            />
+            >
+              account name
+            </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
             >
@@ -1458,7 +1460,9 @@ exports[`Subscriptions Page should render CI details  with no data service table
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
-            />
+            >
+              account name
+            </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
             >

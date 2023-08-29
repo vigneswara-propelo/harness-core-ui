@@ -9,7 +9,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { useGetAccountNG } from 'services/cd-ng'
 import ProjectSetupMenu from '../ProjectSetupMenu'
 
 jest.mock('framework/PreferenceStore/PreferenceStoreContext')
@@ -26,21 +25,6 @@ jest.mock('framework/PreferenceStore/PreferenceStoreContext')
 })
 
 jest.mock('services/cd-ng')
-const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
-
-useGetAccountNGMock.mockImplementation(() => {
-  return {
-    data: {
-      data: {
-        name: 'account name',
-        identifier: 'id1',
-        cluster: 'free',
-        defaultExperience: 'NG'
-      }
-    },
-    refetch: jest.fn()
-  }
-})
 
 describe('Project Setup Menu', () => {
   test('should render correctly condensed', () => {

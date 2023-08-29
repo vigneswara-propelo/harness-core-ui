@@ -56,7 +56,7 @@ export interface AppStoreContextProps {
   readonly supportingTemplatesGitx?: boolean
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
-  readonly accountInfo: AccountDTO
+  readonly accountInfo?: AccountDTO
   /** feature flags */
   readonly featureFlags: FeatureFlagMap
 
@@ -81,7 +81,7 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   currentUserInfo: { uuid: '' },
   isGitSyncEnabled: false,
   connectivityMode: undefined,
-  accountInfo: {},
+  accountInfo: undefined,
   updateAppStore: () => void 0
 })
 
@@ -138,7 +138,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     gitSyncEnabledOnlyForFF: false,
     supportingTemplatesGitx: false,
     connectivityMode: undefined,
-    accountInfo: {}
+    accountInfo: undefined
   })
 
   if (!projectIdentifier && !orgIdentifier) {

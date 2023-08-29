@@ -178,7 +178,13 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
               },
               updateAppStore: () => void 0,
               currentUserInfo: { uuid: '' },
-              accountInfo: {},
+              accountInfo: {
+                name: 'account name',
+                identifier: 'id1',
+                cluster: 'free',
+                defaultExperience: 'NG',
+                crossGenerationAccessEnabled: true
+              },
               ...defaultAppStoreValues
             }}
           >

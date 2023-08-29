@@ -12,7 +12,6 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
 import {
-  useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
   useSaveFeedback,
@@ -39,7 +38,6 @@ const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<a
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetCreditsMock = useGetCredits as jest.MockedFunction<any>
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
-const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 
 const orgListPromiseMock = jest.fn().mockImplementation(() => {
@@ -202,18 +200,6 @@ describe('Subscriptions Page', () => {
       }
     })
 
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
     const { container, getByText } = render(
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
@@ -246,18 +232,6 @@ describe('Subscriptions Page', () => {
               cdLicenseType: CDLicenseType.SERVICES
             }
           ],
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
           status: 'SUCCESS'
         },
         refetch: jest.fn()
@@ -301,18 +275,6 @@ describe('Subscriptions Page', () => {
       }
     })
 
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
     const { container, getByText } = render(
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
@@ -335,51 +297,6 @@ describe('Subscriptions Page', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('it renders a page error when the account call fails', () => {
-    useGetModuleLicenseInfoMock.mockImplementation(() => {
-      return {
-        data: {
-          data: [],
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
-        error: {
-          message: 'hello'
-        },
-        refetch: jest.fn()
-      }
-    })
-
-    const { container, queryByText } = render(
-      <TestWrapper
-        defaultAppStoreValues={{ featureFlags }}
-        defaultLicenseStoreValues={{
-          licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' },
-            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
-            CE: { edition: 'FREE', status: 'ACTIVE' }
-          }
-        }}
-      >
-        <SubscriptionsPage />
-      </TestWrapper>
-    )
-
-    expect(queryByText('common.subscriptions.title')).not.toBeInTheDocument()
-    expect(container).toMatchSnapshot()
-  })
-
   test('it renders a page error when the license call fails', () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
@@ -389,18 +306,6 @@ describe('Subscriptions Page', () => {
         },
         error: {
           message: 'hello'
-        },
-        refetch: jest.fn()
-      }
-    })
-
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
         },
         refetch: jest.fn()
       }
@@ -442,18 +347,6 @@ describe('Subscriptions Page', () => {
       }
     })
 
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
     const { container, getByText } = render(
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
@@ -487,18 +380,6 @@ describe('Subscriptions Page', () => {
       }
     })
 
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
     const { container, getByText } = render(
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
@@ -519,50 +400,6 @@ describe('Subscriptions Page', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('it shows the header and a loading spinner while the account call is loading', () => {
-    useGetModuleLicenseInfoMock.mockImplementation(() => {
-      return {
-        data: {
-          data: [],
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
-        loading: true,
-        refetch: jest.fn()
-      }
-    })
-
-    const { container, getByText, queryByText } = render(
-      <TestWrapper
-        defaultAppStoreValues={{ featureFlags }}
-        defaultLicenseStoreValues={{
-          licenseInformation: {
-            CD: { edition: 'FREE', status: 'ACTIVE' },
-            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
-            CE: { edition: 'FREE', status: 'ACTIVE' }
-          }
-        }}
-      >
-        <SubscriptionsPage />
-      </TestWrapper>
-    )
-
-    expect(getByText('common.subscriptions.title')).toBeTruthy()
-    expect(queryByText('common.subscriptions.noActiveSubscription')).not.toBeInTheDocument()
-    expect(container).toMatchSnapshot()
-  })
-
   test('it shows the header and a loading spinner while the license call is loading', () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
@@ -571,18 +408,6 @@ describe('Subscriptions Page', () => {
           status: 'SUCCESS'
         },
         loading: true,
-        refetch: jest.fn()
-      }
-    })
-
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
         refetch: jest.fn()
       }
     })
@@ -612,18 +437,6 @@ describe('Subscriptions Page', () => {
       return {
         data: {
           data: [],
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
           status: 'SUCCESS'
         },
         refetch: jest.fn()
@@ -715,18 +528,6 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
       const { getByText } = render(
         <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CD }}>
           <SubscriptionsPage />
@@ -748,18 +549,6 @@ describe('Subscriptions Page', () => {
                 cdLicenseType: CDLicenseType.SERVICE_INSTANCES
               }
             ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
             status: 'SUCCESS'
           },
           refetch: jest.fn()
@@ -793,18 +582,6 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
       const { getByText } = render(
         <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
           <SubscriptionsPage />
@@ -831,18 +608,6 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
       const { getByText } = render(
         <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
           <SubscriptionsPage />
@@ -863,18 +628,6 @@ describe('Subscriptions Page', () => {
                 moduleType: 'CI'
               }
             ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
             status: 'SUCCESS'
           },
           refetch: jest.fn()
@@ -959,18 +712,6 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
       const { getByText } = render(
         <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
           <SubscriptionsPage />
@@ -998,18 +739,6 @@ describe('Subscriptions Page', () => {
         }
       })
 
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
       const { getByText } = render(
         <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CHAOS }}>
           <SubscriptionsPage />
@@ -1031,18 +760,6 @@ describe('Subscriptions Page', () => {
                 moduleType: 'CET'
               }
             ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
-      useGetAccountMock.mockImplementation(() => {
-        return {
-          data: {
-            data: {
-              accountId: '123'
-            },
             status: 'SUCCESS'
           },
           refetch: jest.fn()

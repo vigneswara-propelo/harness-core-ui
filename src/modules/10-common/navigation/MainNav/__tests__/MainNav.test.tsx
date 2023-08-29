@@ -48,35 +48,6 @@ jest.mock('services/resourcegroups', () => ({
   useCreateZendeskTicket: jest.fn(() => Promise.resolve(zendeskCreate))
 }))
 
-jest.mock('services/cd-ng', () => ({
-  useGetAccountNGMock: jest.fn().mockImplementation(() => {
-    return {
-      data: {
-        data: {
-          name: 'account name',
-          identifier: 'id1',
-          cluster: 'free',
-          defaultExperience: 'NG'
-        }
-      },
-      refetch: jest.fn()
-    }
-  }),
-  useGetAccountNG: jest.fn().mockImplementation(() => {
-    return {
-      data: {
-        data: {
-          name: 'account name',
-          identifier: 'id1',
-          cluster: 'free',
-          defaultExperience: 'NG'
-        }
-      },
-      refetch: jest.fn()
-    }
-  })
-}))
-
 const setModuleConfigPreference = jest.fn()
 
 describe('main nav tests', () => {

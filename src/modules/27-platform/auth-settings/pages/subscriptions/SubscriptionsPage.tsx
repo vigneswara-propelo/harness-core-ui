@@ -21,8 +21,8 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
-  useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   GetModuleLicensesByAccountAndModuleTypeQueryParams
 } from 'services/cd-ng'
@@ -132,12 +132,7 @@ const SubscriptionsPage: React.FC = () => {
 
   const [selectedModuleCard, setSelectedModuleCard] = useState<ModuleSelectCard>(initialModule)
 
-  const {
-    data: accountData,
-    error: accountError,
-    loading: isGetAccountLoading,
-    refetch: refetchGetAccount
-  } = useGetAccountNG({ accountIdentifier: accountId })
+  const { accountInfo } = useAppStore()
 
   const getModuleLicenseQueryParams: GetModuleLicensesByAccountAndModuleTypeQueryParams = {
     moduleType: selectedModuleCard?.module as GetModuleLicensesByAccountAndModuleTypeQueryParams['moduleType']
@@ -167,16 +162,10 @@ const SubscriptionsPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [licenseData])
 
-  if (accountError || licenseError) {
-    const message =
-      (accountError?.data as Error)?.message ||
-      accountError?.message ||
-      (licenseError?.data as Error)?.message ||
-      licenseError?.message
+  if (licenseError) {
+    const message = (licenseError?.data as Error)?.message || licenseError?.message
 
-    return (
-      <PageError message={message} onClick={accountError ? () => refetchGetAccount() : () => refetchGetLicense()} />
-    )
+    return <PageError message={message} onClick={() => refetchGetLicense()} />
   }
 
   function getModuleSelectElements(): React.ReactElement[] {
@@ -222,21 +211,20 @@ const SubscriptionsPage: React.FC = () => {
     isFreeOrCommunity: isFreeOrCommunity
   }
 
-  const innerContent =
-    isGetAccountLoading || isGetLicenseLoading ? (
-      <Container>
-        <ContainerSpinner />
-      </Container>
-    ) : (
-      <SubscriptionTab
-        accountData={accountData?.data}
-        trialInfo={trialInformation}
-        hasLicense={hasLicense}
-        selectedModule={selectedModuleCard.module}
-        licenseData={latestModuleLicense}
-        refetchGetLicense={refetchGetLicense}
-      />
-    )
+  const innerContent = isGetLicenseLoading ? (
+    <Container>
+      <ContainerSpinner />
+    </Container>
+  ) : (
+    <SubscriptionTab
+      accountData={accountInfo}
+      trialInfo={trialInformation}
+      hasLicense={hasLicense}
+      selectedModule={selectedModuleCard.module}
+      licenseData={latestModuleLicense}
+      refetchGetLicense={refetchGetLicense}
+    />
+  )
   return (
     <>
       <Page.Header title={getString('common.subscriptions.title')} />

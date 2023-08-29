@@ -21,6 +21,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useSwitchAccountModal from '@common/modals/SwitchAccount/useSwitchAccountModal'
 import { useGetCommunity } from '@common/utils/utils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePermission } from '@rbac/hooks/usePermission'
 import AccountNameForm from './AccountNameForm'
@@ -34,7 +35,13 @@ const VERSIONS = {
 const AccountDetails: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { data, loading, refetch: refetchAcct, error } = useGetAccountNG({ accountIdentifier: accountId })
+  const { accountInfo: accountData, updateAppStore } = useAppStore()
+  const {
+    data: newAccountData,
+    loading,
+    refetch: refetchAcct,
+    error
+  } = useGetAccountNG({ accountIdentifier: accountId, lazy: true })
   const { mutate: updateAcctUpdate } = useUpdateAccountCrossGenerationAccessEnabledNG({
     accountIdentifier: accountId
   })
@@ -45,8 +52,7 @@ const AccountDetails: React.FC = () => {
   const isCommunity = useGetCommunity()
   const { PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const isCDActive = licenseInformation?.['CD']?.status === 'ACTIVE'
-  const accountData = data?.data
-  const [crossAccessVariable, setCrossAccessVariable] = React.useState(false)
+  const [crossAccessVariable, setCrossAccessVariable] = React.useState(accountData?.crossGenerationAccessEnabled)
   const [canEdit] = usePermission(
     {
       resource: {
@@ -56,9 +62,14 @@ const AccountDetails: React.FC = () => {
     },
     []
   )
+
   useEffect(() => {
-    setCrossAccessVariable(accountData?.crossGenerationAccessEnabled || false)
-  }, [accountData])
+    if (newAccountData) {
+      updateAppStore({ accountInfo: newAccountData.data })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newAccountData])
+
   const accountNameComponent = updateAccountName ? (
     <AccountNameForm
       name={accountData?.name || ''}
@@ -100,16 +111,17 @@ const AccountDetails: React.FC = () => {
   if (loading) {
     return <PageSpinner />
   }
-
-  if (error) {
+  if (error || !accountData) {
     return (
       <Container height={300}>
-        <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetchAcct()} />
+        <PageError
+          message={(error?.data as Error)?.message || error?.message || getString('somethingWentWrong')}
+          onClick={() => refetchAcct()}
+        />
       </Container>
     )
   }
-  const accountData2 = { ...accountData } || {}
-  accountData2.crossGenerationAccessEnabled = !accountData2?.crossGenerationAccessEnabled
+
   const defaultExperienceDiv = (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
@@ -159,9 +171,12 @@ const AccountDetails: React.FC = () => {
           <Text className={css.minWidth}>{getString('common.allowFirstGenAccess')}</Text>
           <Switch
             disabled={canEdit ? false : true}
-            onChange={async () => {
-              setCrossAccessVariable(!crossAccessVariable)
-              await updateAcctUpdate({ ...accountData2 })
+            onChange={async event => {
+              const enabled = event.currentTarget.checked
+              const payload = { ...(accountData ?? {}), crossGenerationAccessEnabled: enabled }
+              setCrossAccessVariable(enabled)
+              await updateAcctUpdate(payload)
+              refetchAcct()
             }}
             className={css.switch}
             checked={crossAccessVariable}

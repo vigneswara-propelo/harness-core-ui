@@ -11,11 +11,11 @@ import { NavLink as Link, NavLinkProps, useParams } from 'react-router-dom'
 import { Text, Layout, IconName, Icon, Container, TextProps, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
-import { useGetAccountNG } from 'services/cd-ng'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
-import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import css from './SideNav.module.scss'
@@ -64,7 +64,6 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
   const { getString } = useStrings()
   const { PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
-  const { accountId } = useParams<AccountPathProps>()
   const { setPreference: setSideNavExpandedPrefStore, preference: sideNavExpandedPrefStore = true } =
     usePreferenceStore<boolean>(PreferenceScope.ACCOUNT, 'collapseSideNav')
   const [sideNavHovered, setSideNavhovered] = useState<boolean>(false)
@@ -73,14 +72,13 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
   const launchButtonRedirectUrl = props.launchButtonRedirectUrl
     ? props.launchButtonRedirectUrl?.replace('{replaceAccountId}', params.accountId)
     : ''
-  const { data } = useGetAccountNG({ accountIdentifier: accountId })
-  const account = data?.data
+  const { accountInfo } = useAppStore()
   let newNavFlag = true
   if (PLG_ENABLE_CROSS_GENERATION_ACCESS) {
-    if (account?.crossGenerationAccessEnabled === undefined) {
+    if (accountInfo?.crossGenerationAccessEnabled === undefined) {
       newNavFlag = true
     } else {
-      newNavFlag = account?.crossGenerationAccessEnabled
+      newNavFlag = accountInfo?.crossGenerationAccessEnabled
     }
   }
 

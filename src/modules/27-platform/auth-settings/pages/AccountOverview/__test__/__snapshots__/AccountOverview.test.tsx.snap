@@ -132,6 +132,7 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
           class="bp3-control bp3-switch StyledProps--font Switch--switch switch StyledProps--main"
         >
           <input
+            checked=""
             type="checkbox"
           />
           <span

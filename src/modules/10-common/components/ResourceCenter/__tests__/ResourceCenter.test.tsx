@@ -10,7 +10,6 @@ import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
-import { useGetAccountNG } from 'services/cd-ng'
 import { ResourceCenter } from '../ResourceCenter'
 import {
   HARNESS_API_DOCS_LINK,
@@ -48,7 +47,6 @@ jest.mock('services/resourcegroups', () => ({
   ),
   useCreateZendeskTicket: jest.fn(() => Promise.resolve(zendeskCreate))
 }))
-const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
 jest.mock('refiner-js', () => {
   return jest.fn().mockImplementation((param, callback) => {
     if (param === 'onComplete') {
@@ -59,19 +57,6 @@ jest.mock('refiner-js', () => {
 
 beforeEach(() => {
   window.deploymentType = 'SAAS'
-  useGetAccountNGMock.mockImplementation(() => {
-    return {
-      data: {
-        data: {
-          name: 'account name',
-          identifier: 'id1',
-          cluster: 'free',
-          defaultExperience: 'NG'
-        }
-      },
-      refetch: jest.fn()
-    }
-  })
 })
 
 describe('ResourceCenter', () => {

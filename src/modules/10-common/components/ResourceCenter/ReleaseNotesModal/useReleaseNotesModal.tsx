@@ -11,8 +11,8 @@ import { Layout, Text } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
 import { String } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetAccountNG } from 'services/cd-ng'
 import { ModuleVersionTable } from './ReleaseNotesTable'
 import css from './UseReleaseNotesModal.module.scss'
 
@@ -23,11 +23,9 @@ interface ModalReturn {
 
 export const useReleaseNotesModal = (): ModalReturn => {
   const { accountId } = useParams<AccountPathProps>()
-  const { data } = useGetAccountNG({
-    accountIdentifier: accountId
-  })
+  const { accountInfo } = useAppStore()
 
-  const clusterName = data?.data?.cluster
+  const clusterName = accountInfo?.cluster
 
   const [showModal, hideModal] = useModalHook(() => {
     return (

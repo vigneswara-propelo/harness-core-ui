@@ -8,29 +8,13 @@
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
-import { useGetAccountNG } from 'services/cd-ng'
 import * as cdNgOpenApiServices from 'services/cd-ng-open-api'
 import { useReleaseNotesModal } from '../ReleaseNotesModal/useReleaseNotesModal'
 
 jest.mock('services/cd-ng')
-const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
 
 beforeEach(() => {
   window.deploymentType = 'SAAS'
-
-  useGetAccountNGMock.mockImplementation(() => {
-    return {
-      data: {
-        data: {
-          name: 'account name',
-          identifier: 'id1',
-          cluster: 'free',
-          defaultExperience: 'NG'
-        }
-      },
-      refetch: jest.fn()
-    }
-  })
 
   jest.spyOn(cdNgOpenApiServices, 'useListModuleVersions').mockReturnValue({
     data: [

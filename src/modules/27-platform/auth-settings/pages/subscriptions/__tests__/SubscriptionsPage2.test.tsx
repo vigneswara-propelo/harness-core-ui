@@ -10,7 +10,6 @@ import moment from 'moment'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
-  useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
   useSaveFeedback,
@@ -39,7 +38,6 @@ const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<a
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetCreditsMock = useGetCredits as jest.MockedFunction<any>
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
-const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 
 jest.mock('highcharts-react-official', () => () => <div />)
@@ -165,18 +163,6 @@ describe('Subscriptions Page', () => {
       }
     })
 
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
     const { container, getByText } = render(
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
@@ -207,18 +193,6 @@ describe('Subscriptions Page', () => {
               moduleType: 'CI'
             }
           ],
-          status: 'SUCCESS'
-        },
-        refetch: jest.fn()
-      }
-    })
-
-    useGetAccountMock.mockImplementation(() => {
-      return {
-        data: {
-          data: {
-            accountId: '123'
-          },
           status: 'SUCCESS'
         },
         refetch: jest.fn()
