@@ -14,7 +14,7 @@ import type {
 } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { addStepOrGroup } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
+import { ResponseStepCategory, StepCategory, getStepsV2Promise, useGetStepsV2 } from 'services/pipeline-ng'
 import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -108,12 +108,12 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     return types
   }, [selectedStage?.stage?.type, stepsData?.data?.stepCategories])
 
-  const addTemplate = async (event: ExecutionGraphAddStepEvent): Promise<void> => {
+  const addTemplate = async (event: ExecutionGraphAddStepEvent, resolvedStepTypes?: string[]): Promise<void> => {
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         filterProperties: {
-          childTypes,
+          childTypes: resolvedStepTypes ?? childTypes,
           ...(event.isLinkedTemplate && {
             templateIdentifiers: get(resolvedCustomDeploymentDetails, 'linkedTemplateRefs') as string[]
           })
@@ -176,5 +176,44 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     }
   }
 
-  return { addTemplate }
+  function stepsV2Promise(): Promise<string[]> {
+    return new Promise<string[]>(resolve => {
+      getStepsV2Promise({
+        queryParams: { accountId },
+        body: {
+          stepPalleteModuleInfos: getStepPaletteModuleInfosFromStage(
+            selectedStage?.stage?.type,
+            selectedStage?.stage,
+            undefined,
+            undefined,
+            true
+          )
+        }
+      })
+        .then((response: ResponseStepCategory) => {
+          const stepCategoriesData = response?.data?.stepCategories
+          if (stepCategoriesData) {
+            const updatedStepTypes = getStepTypesFromCategories(stepCategoriesData)
+            resolve(updatedStepTypes)
+          } else resolve([])
+        })
+        .catch(_err => {
+          resolve([])
+        })
+    })
+  }
+
+  const addStepTemplate = async (event: ExecutionGraphAddStepEvent): Promise<void> => {
+    const isContainerStepGroup: boolean = defaultTo(
+      event?.entity?.node?.data?.isContainerStepGroup,
+      !!event?.entity?.node?.isContainerStepGroup
+    )
+    if (isContainerStepGroup) {
+      stepsV2Promise().then((resolvedStepTypes: string[]) => {
+        addTemplate(event, resolvedStepTypes)
+      })
+    } else addTemplate(event)
+  }
+
+  return { addTemplate: addStepTemplate }
 }
