@@ -38,6 +38,7 @@ export interface AwsCDKCommonStepFormikValues extends StepElementConfig {
     privileged?: boolean
     imagePullPolicy?: string
     runAsUser?: string
+    appPath?: string
     resources?: {
       limits?: {
         memory?: string

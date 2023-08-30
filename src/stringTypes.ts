@@ -5174,6 +5174,7 @@ export interface StringsMap {
   'pipeline.startup.script.subtitle': string
   'pipeline.startup.scriptFilePath': string
   'pipeline.step.validation.namePatternIsNotValid': string
+  'pipeline.stepCommonFields.appPath': string
   'pipeline.stepCommonFields.runAsUser': string
   'pipeline.stepCommonFields.validation.invalidLimitCPU': string
   'pipeline.stepCommonFields.validation.invalidLimitMemory': string
@@ -5185,6 +5186,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AdvancedCommandFlags': string
   'pipeline.stepDescription.AnalyzeDeploymentImpact': string
   'pipeline.stepDescription.AppResize': string
+  'pipeline.stepDescription.AwsCdkBootstrap': string
   'pipeline.stepDescription.AwsCdkDiff': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
@@ -6862,6 +6864,8 @@ export interface StringsMap {
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string
   'cd.stepName': string
+  'cd.steps.awsCdkStep.awsCdkBootstrapCommandOptions': string
+  'cd.steps.awsCdkStep.awsCdkBootstrapContainerRegistry': string
   'cd.steps.awsCdkStep.awsCdkDiffCommandOptions': string
   'cd.steps.awsCdkStep.awsCdkDiffContainerRegistry': string
   'cd.steps.awsInfraStep.labels.autoScallingGroup': string

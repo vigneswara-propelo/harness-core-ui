@@ -166,6 +166,25 @@ export interface AwsCDKDiffStepInitialValues extends StepElementConfig {
   }
 }
 
+export interface AwsCDKBootstrapStepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image?: string
+    commandOptions?: string | string[]
+    privileged?: boolean
+    imagePullPolicy?: string
+    runAsUser?: string
+    appPath?: string
+    envVariables?: { [key: string]: string }
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+  }
+}
+
 export interface ServerlessAwsLambdaPrepareRollbackV2StepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
