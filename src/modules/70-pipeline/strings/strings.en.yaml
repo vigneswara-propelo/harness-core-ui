@@ -1925,7 +1925,7 @@ supplier: Supplier
 copilot:
   analyzeFailure: Unsure how to analyze failure?
   askAIDA: '{{ $.common.csBot.askAIDA }}'
-  label: Harness AIDA
+  label: '{{ $.common.csBot.name }}'
   aidaFullText: Harness AI Development Assistant
   assist: I can assist you with debugging the issue and suggest solutions.
   analyzing: AIDA is analyzing

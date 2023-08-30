@@ -1588,13 +1588,17 @@ clickHere: Click Here
 csBot:
   aida: AIDA
   askAIDA: Ask AIDA
-  title: Harness AIDA Chatbot
+  name: Harness AIDA
+  title: '{{ $.common.csBot.name }} Chatbot'
   beta: BETA
   placeholder: How do I install a delegate?
   subtitle: I can help searching anything on
   hdh: Harness Developer Hub
   errorMessage: Something went wrong. Click here to submit a ticket instead.
   ticketOnError: Would you like to create a support ticket?
+  turnOn: 'Turn on {{ $.common.csBot.name }}'
+  eulaNotAccepted: In order to use Harness AIDA Chatbot, you will need to enable it in the Account Settings
+  reviewEula: Review Account Settings
 addNewCreditCard: Add a new card
 analyzing: analyzing
 expressionDefaultError: Expression not found in selected execution

@@ -76,7 +76,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
         <div className={css.aux}>
           <ul className={css.list}>
             <li>
-              <Drawer isOpen={isOpen} onClose={close} size={488} transitionDuration={100}>
+              <Drawer isOpen={isOpen} onClose={close} size={488} hasBackdrop={false}>
                 <>
                   <Button
                     icon="cross"

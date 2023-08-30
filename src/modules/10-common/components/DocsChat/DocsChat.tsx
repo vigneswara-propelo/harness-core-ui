@@ -7,17 +7,22 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { Avatar, Icon, Layout, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Avatar, Container, Icon, Layout, PageSpinner, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Intent, Menu, MenuItem } from '@blueprintjs/core'
+import { Link, useParams } from 'react-router-dom'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
+import { useGetSettingValue } from 'services/cd-ng'
 import { useHarnessSupportBot } from 'services/notifications'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { SubmitTicketModal } from '@common/components/ResourceCenter/SubmitTicketModal/SubmitTicketModal'
 import { useDeepCompareEffect, useLocalStorage } from '@common/hooks'
 import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
+import routes from '@common/RouteDefinitions'
+import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { SettingType } from '@common/constants/Utils'
 import css from './DocsChat.module.scss'
 
 const CHAT_HISTORY_KEY = 'aida_chat_history'
@@ -94,6 +99,7 @@ function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps)
 function DocsChat(): JSX.Element {
   const [userInput, setUserInput] = useState('')
   const { currentUserInfo } = useAppStore()
+  const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const messageList = useRef<HTMLDivElement>(null)
   const { mutate: askQuestion, loading } = useHarnessSupportBot({})
@@ -101,6 +107,10 @@ function DocsChat(): JSX.Element {
   const { isOpen, close: closeSubmitTicketModal, open: openSubmitTicketModal } = useToggleOpen()
   const [chatHistory, setChatHistory] = useLocalStorage<Array<Message>>(CHAT_HISTORY_KEY, [], sessionStorage)
   const [messages, setMessages] = useState<Array<Message>>(chatHistory.length > 0 ? chatHistory : sampleMessages)
+  const { data: aidaSettingResponse, loading: isAidaSettingLoading } = useGetSettingValue({
+    identifier: SettingType.AIDA,
+    queryParams: { accountIdentifier: accountId }
+  })
   useTrackEvent(AIChatActions.ChatStarted, {})
 
   const getAnswer = async (oldMessages: Array<Message>, query: string): Promise<void> => {
@@ -188,6 +198,8 @@ function DocsChat(): JSX.Element {
     </div>
   )
 
+  if (isAidaSettingLoading) return <PageSpinner />
+
   return (
     <div className={css.container}>
       <Layout.Vertical spacing={'small'} className={css.header}>
@@ -208,68 +220,90 @@ function DocsChat(): JSX.Element {
           <Icon name="main-share" size={12} />
         </Layout.Horizontal>
       </Layout.Vertical>
-      <div className={css.messagesContainer} ref={messageList}>
-        {messages.map((message, index) => {
-          return (
-            <div key={message.text + index}>
-              <div
-                className={cx(css.messageContainer, {
-                  [css.harness]: message.author === 'harness',
-                  [css.user]: message.author === 'user'
-                })}
-              >
-                {message.author === 'harness' ? (
-                  <Icon name="harness-copilot" size={30} className={css.aidaIcon} />
-                ) : null}
-                <div className={css.message}>
-                  {message.text === 'error' ? (
-                    <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
-                      {getString('common.csBot.errorMessage')}
-                    </a>
-                  ) : (
-                    <div dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(message.text) }} />
-                  )}
+
+      {aidaSettingResponse?.data?.value != 'true' ? (
+        <Container background={Color.PRIMARY_1} padding="medium" margin="medium">
+          <Text font={{ variation: FontVariation.BODY2 }} margin={{ bottom: 'medium' }} icon="info-messaging">
+            <String stringID="common.csBot.turnOn" />
+          </Text>
+          <Text font={{ variation: FontVariation.BODY }} margin={{ bottom: 'medium' }}>
+            <String stringID="common.csBot.eulaNotAccepted" />
+          </Text>
+          <Link to={routes.toDefaultSettings({ accountId })}>
+            <String stringID="common.csBot.reviewEula" />
+          </Link>
+        </Container>
+      ) : (
+        <>
+          <div className={css.messagesContainer} ref={messageList}>
+            {messages.map((message, index) => {
+              return (
+                <div key={message.text + index}>
+                  <div
+                    className={cx(css.messageContainer, {
+                      [css.harness]: message.author === 'harness',
+                      [css.user]: message.author === 'user'
+                    })}
+                  >
+                    {message.author === 'harness' ? (
+                      <Icon name="harness-copilot" size={30} className={css.aidaIcon} />
+                    ) : null}
+                    <div className={css.message}>
+                      {message.text === 'error' ? (
+                        <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
+                          {getString('common.csBot.errorMessage')}
+                        </a>
+                      ) : (
+                        <div dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(message.text) }} />
+                      )}
+                    </div>
+                    {message.author === 'user' ? (
+                      <Avatar
+                        size={'small'}
+                        name={currentUserInfo.name}
+                        email={currentUserInfo.email}
+                        hoverCard={false}
+                      />
+                    ) : null}
+                  </div>
+                  {message.author === 'harness' && index > 1 ? (
+                    <UsefulOrNot
+                      answer={message.text}
+                      query={messages[index - 1].text}
+                      openSubmitTicketModal={openSubmitTicketModal}
+                    />
+                  ) : null}
                 </div>
-                {message.author === 'user' ? (
-                  <Avatar size={'small'} name={currentUserInfo.name} email={currentUserInfo.email} hoverCard={false} />
-                ) : null}
-              </div>
-              {message.author === 'harness' && index > 1 ? (
-                <UsefulOrNot
-                  answer={message.text}
-                  query={messages[index - 1].text}
-                  openSubmitTicketModal={openSubmitTicketModal}
-                />
-              ) : null}
-            </div>
-          )
-        })}
-        {loading ? loadingMessage : null}
-      </div>
-      <div className={css.inputContainer}>
-        <Popover minimal>
-          <button className={css.chatMenuButton}>
-            <Icon name="menu" size={12} />
-          </button>
-          <Menu>
-            <MenuItem text={getString('common.clearHistory')} onClick={clearHistory} />
-          </Menu>
-        </Popover>
-        <input
-          type="text"
-          autoFocus
-          name="user-input"
-          className={css.input}
-          value={userInput}
-          onChange={handleUserInput}
-          onKeyDown={handleKeyDown}
-          autoComplete="off"
-          placeholder={getString('common.csBot.placeholder')}
-        />
-        <button onClick={handleSubmitClick} className={css.submitButton}>
-          <Icon name="pipeline-deploy" size={24} />
-        </button>
-      </div>
+              )
+            })}
+            {loading ? loadingMessage : null}
+          </div>
+          <div className={css.inputContainer}>
+            <Popover minimal>
+              <button className={css.chatMenuButton}>
+                <Icon name="menu" size={12} />
+              </button>
+              <Menu>
+                <MenuItem text={getString('common.clearHistory')} onClick={clearHistory} />
+              </Menu>
+            </Popover>
+            <input
+              type="text"
+              autoFocus
+              name="user-input"
+              className={css.input}
+              value={userInput}
+              onChange={handleUserInput}
+              onKeyDown={handleKeyDown}
+              autoComplete="off"
+              placeholder={getString('common.csBot.placeholder')}
+            />
+            <button onClick={handleSubmitClick} className={css.submitButton}>
+              <Icon name="pipeline-deploy" size={24} />
+            </button>
+          </div>
+        </>
+      )}
       <SubmitTicketModal isOpen={isOpen} close={closeSubmitTicketModal} />
     </div>
   )

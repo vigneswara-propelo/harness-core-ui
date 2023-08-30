@@ -242,11 +242,15 @@ export interface StringsMap {
   'common.csBot.askAIDA': string
   'common.csBot.beta': string
   'common.csBot.errorMessage': string
+  'common.csBot.eulaNotAccepted': string
   'common.csBot.hdh': string
+  'common.csBot.name': string
   'common.csBot.placeholder': string
+  'common.csBot.reviewEula': string
   'common.csBot.subtitle': string
   'common.csBot.ticketOnError': string
   'common.csBot.title': string
+  'common.csBot.turnOn': string
   'common.current': string
   'common.currentUTCTime': string
   'common.currentlyAvailable': string
