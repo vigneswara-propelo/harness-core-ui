@@ -162,7 +162,7 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
             <FlagStatus
               status={metrics?.status?.status as FeatureFlagStatus}
               lastAccess={metrics?.status?.lastAccess as unknown as number}
-              stale={feature?.stale}
+              staleReason={feature?.staleReason}
             />
           )
         }

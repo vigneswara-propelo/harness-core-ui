@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -22,18 +22,26 @@ export enum FeatureFlagStatus {
   RECENTLY_ACCESSED = 'recently-accessed',
   ARCHIVED = 'archived'
 }
+
+export enum StaleFlagStatusReason {
+  WAITING_FOR_CLEANUP = 'marked_by_user',
+  POTENTIALLY_STALE = 'matched_criteria'
+}
+
 export interface FlagStatusProps {
   status?: FeatureFlagStatus
   lastAccess?: number
-  stale?: boolean
+  staleReason?: string
 }
 
-export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, stale }) => {
+export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, staleReason }) => {
   const { getString } = useStrings()
   const isNeverRequested = status === FeatureFlagStatus.NEVER_REQUESTED
   const isPotentiallyStale = status === FeatureFlagStatus.POTENTIALLY_STALE
 
   const flagCleanupEnabled = useFeatureFlag(FeatureFlag.FFM_8344_FLAG_CLEANUP)
+
+  const isWaitingForCleanup = staleReason === StaleFlagStatusReason.WAITING_FOR_CLEANUP
 
   const textStyle = {
     fontWeight: 600,
@@ -62,7 +70,7 @@ export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, stal
 
   return (
     <ComponentLayout spacing="xsmall" style={{ alignItems: isNeverRequested ? 'baseline' : 'center' }}>
-      {flagCleanupEnabled && stale ? (
+      {flagCleanupEnabled && isWaitingForCleanup ? (
         <Text
           icon="time"
           iconProps={{ size: 12, color: Color.ORANGE_800 }}
