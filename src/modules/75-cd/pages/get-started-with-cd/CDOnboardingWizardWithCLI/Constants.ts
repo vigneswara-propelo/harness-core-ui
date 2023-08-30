@@ -262,7 +262,8 @@ export const SYSTEM_ARCH_TYPES: KVPair = {
 
 export const DEPLOYMENT_TYPE_TO_DIR_MAP: Record<string, string> = {
   Kustomize: 'kustomize-guestbook',
-  [KubernetesType.HELM_CHART]: 'helm-guestbook',
+  K8sHelm: 'helm-guestbook',
+  NativeHelm: 'helm-guestbook',
   [KubernetesType.KUBERNETES_MANIFEST]: 'guestbook',
   [CLOUD_FUNCTION_TYPES.GCPGen1]: 'google_cloud_function',
   [CLOUD_FUNCTION_TYPES.GCPGen2]: 'google_cloud_function',
@@ -272,17 +273,18 @@ export const DEPLOYMENT_TYPE_TO_DIR_MAP: Record<string, string> = {
 
 export const DEPLOYMENT_TYPE_TO_FILE_MAPS: Record<string, Record<string, string>> = {
   K8sHelm: {
-    service: 'service-blucan',
-    infrastructure: 'infrastructure-definition-blucan',
-    [DEPLOYMENT_STRATEGY_ENUMS.BlueGreen]: 'bluegreen-pipeline',
-    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'canary-pipeline',
-    env: 'environment-blucan'
+    service: 'k8s-service',
+    infrastructure: 'k8s-infrastructure-definition',
+    [DEPLOYMENT_STRATEGY_ENUMS.BlueGreen]: 'k8s-bluegreen-pipeline',
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'k8s-canary-pipeline',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'k8s-rolling-pipeline',
+    env: 'k8s-environment'
   },
   NativeHelm: {
-    service: 'service-rolling',
-    infrastructure: 'infrastructure-definition-rolling',
-    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'rolling-pipeline',
-    env: 'environment-rolling'
+    service: 'nativehelm-service',
+    infrastructure: 'nativehelm-infrastructure-definition',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'nativehelm-rolling-pipeline',
+    env: 'nativehelm-environment'
   },
   [CLOUD_FUNCTION_TYPES.GCPGen1]: {
     [DEPLOYMENT_STRATEGY_ENUMS.Basic]: '1st_gen/basic-pipeline'
@@ -353,7 +355,7 @@ export const DELEGATE_TYPE_BY_ARTIFACT_MAP: Record<string, string[]> = {
 }
 
 export const DEPLOYMENT_TYPE_MAP: Record<string, string[]> = {
-  K8sHelm: ['Canary', 'BlueGreen'],
+  K8sHelm: ['Canary', 'BlueGreen', 'Rolling'],
   NativeHelm: ['Rolling'],
   [KubernetesType.KUBERNETES_MANIFEST]: ['Canary', 'BlueGreen', 'Rolling'],
   Kustomize: ['Canary', 'BlueGreen', 'Rolling'],
