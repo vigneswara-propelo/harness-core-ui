@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { render, waitFor, fireEvent, queryByText } from '@testing-library/react'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -19,7 +19,7 @@ import {
 } from './Dependency.mock'
 import Dependency from '../Dependency'
 
-describe('Dependency compoennt', () => {
+describe('Dependency component', () => {
   test('should render all cards', async () => {
     jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
     const onSuccessMock = jest.fn()
@@ -63,7 +63,43 @@ describe('Dependency compoennt', () => {
     )
   })
 
-  test('Ensure loading is displayed on api loadng', async () => {
+  test('Pressing save button after selecting a service', async () => {
+    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+    jest.spyOn(cvService, 'useGetNamespaces').mockReturnValue({ data: {}, refetch: jest.fn() } as any)
+
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Dependency onSuccess={jest.fn()} onDiscard={jest.fn()} value={monitoredServiceForm} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelectorAll('input[type="checkbox"]')[0]
+    fireEvent.click(checkbox!)
+    await waitFor(() => expect(getByText('unsavedChanges')).toBeInTheDocument())
+
+    fireEvent.click(getByText('save'))
+    await waitFor(() => expect(container.querySelector('[class*="spinner"]')).not.toBeNull())
+  })
+
+  test('Pressing discard button after selecting a service', async () => {
+    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+    jest.spyOn(cvService, 'useGetNamespaces').mockReturnValue({ data: {}, refetch: jest.fn() } as any)
+
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Dependency onSuccess={jest.fn()} onDiscard={jest.fn()} value={monitoredServiceForm} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelectorAll('input[type="checkbox"]')[0]
+    fireEvent.click(checkbox!)
+    await waitFor(() => expect(getByText('unsavedChanges')).toBeInTheDocument())
+
+    fireEvent.click(getByText('common.discard'))
+    await waitFor(() => expect(queryByText(container, 'unsavedChanges')).toBeNull())
+  })
+
+  test('Ensure loading is displayed on api loading', async () => {
     jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ loading: true } as any)
     const onSuccessMock = jest.fn()
 
@@ -74,6 +110,20 @@ describe('Dependency compoennt', () => {
     )
     await waitFor(() => expect(container.querySelector('[class*="leftSection"]')).not.toBeNull())
     await waitFor(() => expect(container.querySelector('[class*="spinner"]')).not.toBeNull())
+  })
+
+  test('Ensure error page is displayed on getting error from MS list API', async () => {
+    jest
+      .spyOn(cvService, 'useGetMonitoredServiceList')
+      .mockReturnValue({ error: { data: { message: 'Error from response' } } } as any)
+    const onSuccessMock = jest.fn()
+
+    const { getByText } = render(
+      <TestWrapper>
+        <Dependency onSuccess={onSuccessMock} value={monitoredServiceForm} />
+      </TestWrapper>
+    )
+    await waitFor(() => expect(getByText('Retry')).toBeInTheDocument())
   })
 
   test('Ensure API useGetMonitoredServiceList is called with environmentIdentifiers - Create - Application', () => {

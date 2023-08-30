@@ -71,9 +71,10 @@ export default function Dependency({
     resolve: response => filterCurrentMonitoredServiceFromList(response, value.identifier)
   })
 
-  const initalDependencies = useMemo(() => {
+  const initialDependencies = useMemo(() => {
     const dependencies = initializeDependencyMap(value?.dependencies)
     setDependencyMap(dependencies)
+    setIsDirty(false)
     return dependencies
   }, [value?.dependencies])
 
@@ -99,7 +100,7 @@ export default function Dependency({
           await onSuccess(updateMonitoredServiceWithDependencies(Array.from(dependencyMap.values()), value))
         }}
         onDiscard={() => {
-          setDependencyMap(initalDependencies)
+          setDependencyMap(initialDependencies)
           setIsDirty(false)
           onDiscard?.()
         }}
@@ -130,7 +131,7 @@ export default function Dependency({
                     } else {
                       newMap.delete(service.monitoredService.identifier)
                     }
-                    setIsDirty(!isEqual(initalDependencies, newMap))
+                    setIsDirty(!isEqual(initialDependencies, newMap))
                     return newMap
                   })
                 }
