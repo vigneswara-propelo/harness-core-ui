@@ -29,31 +29,26 @@ export const ReportSLIAndHealthSource = (props: SRMAnalysisStepDetailDTO): JSX.E
 
   return (
     <>
-      {monitoredServiceIdentifier && analysisStartTime ? (
-        <ChangeEventServiceHealth
-          monitoredServiceIdentifier={monitoredServiceIdentifier}
-          startTime={analysisStartTime - TWO_HOURS_IN_MILLISECONDS}
-          endTime={derivedEndTime}
-          eventType={'DeploymentImpactAnalysis'}
-          timeStamps={timeStamps}
-          setTimestamps={setTimestamps}
-          title={getString('cv.changeSource.changeSourceCard.deploymentHealth')}
-          verifyStepSummaries={[]}
-          eventStatus={analysisStatus}
-          eventEndTime={analysisEndTime}
-        />
-      ) : null}
-      {timeStamps[0] && timeStamps[1] && monitoredServiceIdentifier ? (
-        <SLOAndErrorBudget
-          monitoredServiceIdentifier={monitoredServiceIdentifier}
-          startTime={timeStamps[0]}
-          endTime={timeStamps[1]}
-          eventType="DeploymentImpactAnalysis"
-          eventTime={analysisStartTime}
-          eventStatus={analysisStatus}
-          eventEndTime={analysisEndTime}
-        />
-      ) : null}
+      <ChangeEventServiceHealth
+        monitoredServiceIdentifier={monitoredServiceIdentifier}
+        startTime={analysisStartTime - TWO_HOURS_IN_MILLISECONDS}
+        endTime={derivedEndTime}
+        eventType={'DeploymentImpactAnalysis'}
+        timeStamps={timeStamps}
+        title={getString('cv.changeSource.changeSourceCard.deploymentHealth')}
+        verifyStepSummaries={[]}
+        eventStatus={analysisStatus}
+        eventEndTime={analysisEndTime}
+      />
+      <SLOAndErrorBudget
+        monitoredServiceIdentifier={monitoredServiceIdentifier}
+        startTime={timeStamps[0]}
+        endTime={timeStamps[1]}
+        eventType="DeploymentImpactAnalysis"
+        eventTime={analysisStartTime}
+        eventStatus={analysisStatus}
+        eventEndTime={analysisEndTime}
+      />
     </>
   )
 }

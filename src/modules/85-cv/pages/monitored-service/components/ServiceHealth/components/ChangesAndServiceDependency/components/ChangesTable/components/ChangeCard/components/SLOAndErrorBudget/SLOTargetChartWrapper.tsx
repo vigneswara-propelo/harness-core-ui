@@ -38,7 +38,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   eventStatus,
   eventEndTime
 }) => {
-  const leftOffset = 35
+  const leftOffset = 40
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const mainRef = useRef<HTMLDivElement>(null)
@@ -73,7 +73,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
         )
       } else if (eventTime && isMultiMarkerStep) {
         const startMarker = calculatePositionForTimestamp({
-          containerWidth: containerWidth,
+          containerWidth: containerWidth - leftOffset,
           startTime: eventTime,
           startOfTimestamps: startTime,
           endOfTimestamps: endTime

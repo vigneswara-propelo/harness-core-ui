@@ -209,16 +209,24 @@ export default function ServiceHealth({
     setDefaultOffset(0)
   }, [])
 
-  const { data: secondaryEvent } = useGetMSSecondaryEvents({
-    identifier: monitoredServiceIdentifier,
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      startTime: changesTableAndSourceCardStartAndEndtime[0],
-      endTime: changesTableAndSourceCardStartAndEndtime[1]
-    }
+  const { data: secondaryEvent, refetch: refetchSecondaryEvent } = useGetMSSecondaryEvents({
+    lazy: true,
+    identifier: monitoredServiceIdentifier
   })
+
+  useEffect(() => {
+    if (changesTableAndSourceCardStartAndEndtime[0] && changesTableAndSourceCardStartAndEndtime[1]) {
+      refetchSecondaryEvent({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          startTime: changesTableAndSourceCardStartAndEndtime[0],
+          endTime: changesTableAndSourceCardStartAndEndtime[1]
+        }
+      })
+    }
+  }, [changesTableAndSourceCardStartAndEndtime[0], changesTableAndSourceCardStartAndEndtime[1]])
 
   return (
     <>

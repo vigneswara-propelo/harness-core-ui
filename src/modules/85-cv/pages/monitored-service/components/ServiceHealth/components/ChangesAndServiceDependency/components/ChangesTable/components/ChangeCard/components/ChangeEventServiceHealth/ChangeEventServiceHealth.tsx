@@ -78,7 +78,7 @@ export default function ChangeEventServiceHealth(props: ChangeEventServiceHealth
           if (!newStartTime || !newEndTime) {
             return
           }
-          setTimestamps([newStartTime, newEndTime])
+          setTimestamps?.([newStartTime, newEndTime])
         }}
         isChangeEventView
       />

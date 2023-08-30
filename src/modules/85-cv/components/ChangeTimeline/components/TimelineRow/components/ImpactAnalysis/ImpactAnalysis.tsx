@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon, Layout, Page, PageError, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Page, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import cx from 'classnames'
@@ -55,8 +55,10 @@ export const ImpactAnalysis = (props: ImpactAnalysisProps): JSX.Element => {
 
   if (error) {
     content = (
-      <Container flex={{ justifyContent: 'center', alignItems: 'center' }} height={124} data-testid="error">
-        <PageError message={getErrorMessage(error)} />
+      <Container className={cx(css.widgetContainer, { [impactCss.contentContainer]: onlyContent })} data-testid="error">
+        <Text className={css.widgetTextElements} padding={{ bottom: 'xsmall', right: 'small' }} color={Color.RED_400}>
+          {getErrorMessage(error)}
+        </Text>
       </Container>
     )
   } else if (loading) {

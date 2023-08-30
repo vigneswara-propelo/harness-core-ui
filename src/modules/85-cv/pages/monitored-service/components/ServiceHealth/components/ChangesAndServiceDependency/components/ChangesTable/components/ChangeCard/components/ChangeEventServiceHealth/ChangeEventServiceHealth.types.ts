@@ -13,7 +13,7 @@ export interface ChangeEventServiceHealthProps {
   endTime?: number
   eventType: ChangeEventDTO['type']
   timeStamps: [number, number]
-  setTimestamps: (timeStamps: [number, number]) => void
+  setTimestamps?: (timeStamps: [number, number]) => void
   title?: string
   verifyStepSummaries?: VerifyStepSummary[]
   eventEndTime?: number
