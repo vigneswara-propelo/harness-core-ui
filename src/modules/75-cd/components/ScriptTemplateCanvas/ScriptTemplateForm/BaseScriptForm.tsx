@@ -12,7 +12,7 @@ import type { FormikProps } from 'formik'
 
 import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
-
+import { LocationType } from '@cd/components/PipelineSteps/CommandScripts/CommandScriptsTypes'
 import { ShellScriptFormData, variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import BaseScript from '@cd/components/BaseScript/BaseScript'
 
@@ -34,9 +34,25 @@ export function BaseScriptForm(
     spec: Yup.object().shape({
       shell: Yup.string().trim().required(getString('validation.scriptTypeRequired')),
       source: Yup.object().shape({
-        spec: Yup.object().shape({
-          script: Yup.string().trim().required(getString('common.scriptRequired'))
-        })
+        spec: Yup.object()
+          .when(['type'], {
+            is: type => {
+              return type === LocationType.INLINE
+            },
+            then: Yup.object().shape({
+              script: Yup.string().trim().required(getString('common.scriptRequired'))
+            })
+          })
+          .when(['type'], {
+            is: type => {
+              return type === LocationType.HARNESS
+            },
+            then: Yup.object().shape({
+              file: Yup.string()
+                .trim()
+                .required(getString('fieldRequired', { field: 'File Path' }))
+            })
+          })
       }),
       environmentVariables: variableSchema(getString),
       outputVariables: variableSchema(getString)
@@ -60,7 +76,9 @@ export function BaseScriptForm(
   return (
     <Formik<ShellScriptFormData>
       onSubmit={/* istanbul ignore next */ submit => updateTemplate?.(submit)}
-      validate={formValues => onChange?.(formValues)}
+      validate={formValues => {
+        onChange?.(formValues)
+      }}
       formName="shellScriptForm"
       initialValues={values}
       validationSchema={validationSchema}

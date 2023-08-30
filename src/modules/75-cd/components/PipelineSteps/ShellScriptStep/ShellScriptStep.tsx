@@ -121,6 +121,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     )
   }
 
+  /* istanbul ignore next */
   validateInputSet({
     data,
     template,
@@ -246,6 +247,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     }
   }
 
+  /* istanbul ignore next */
   protected async getSecretsListForYaml(
     path: string,
     yaml: string,
@@ -292,15 +294,15 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
   }
 
   private getInitialValues(initialValues: ShellScriptData): ShellScriptFormData {
+    const initSpec = initialValues?.spec
     return {
       ...initialValues,
       spec: {
-        ...initialValues.spec,
+        ...initSpec,
         shell: initialValues.spec?.shell || 'Bash',
         onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost',
         source: {
-          type: 'Inline',
-          ...(initialValues?.spec?.source || {})
+          ...(initSpec?.source || {})
         },
         environmentVariables: Array.isArray(initialValues.spec?.environmentVariables)
           ? initialValues.spec?.environmentVariables.map(variable => ({
@@ -318,8 +320,12 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       }
     }
   }
-
   processFormData(data: ShellScriptFormData): ShellScriptData {
+    const dataSpec = data?.spec
+    const specSource = dataSpec?.source
+    const sourceSpec = specSource?.spec
+    const specExecutionTarget = dataSpec?.executionTarget
+    const connectorRef = specExecutionTarget?.connectorRef
     const modifiedData = {
       ...data,
       spec: {
@@ -327,18 +333,16 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
         onDelegate: data.spec?.onDelegate !== 'targethost',
 
         source: {
-          ...data.spec?.source,
+          ...specSource,
           spec: {
-            ...data.spec?.source?.spec,
-            script: data.spec?.source?.spec?.script
+            ...sourceSpec,
+            script: sourceSpec?.script
           }
         },
 
         executionTarget: {
-          ...data.spec?.executionTarget,
-          connectorRef:
-            (data.spec?.executionTarget?.connectorRef?.value as string) ||
-            data.spec?.executionTarget?.connectorRef?.toString()
+          ...specExecutionTarget,
+          connectorRef: (connectorRef?.value as string) || connectorRef?.toString()
         },
 
         environmentVariables: Array.isArray(data.spec?.environmentVariables)

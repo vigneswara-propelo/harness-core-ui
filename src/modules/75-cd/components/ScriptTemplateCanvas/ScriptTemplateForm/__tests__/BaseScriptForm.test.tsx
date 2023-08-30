@@ -7,9 +7,8 @@
 
 import React from 'react'
 import { MultiTypeInputType, Formik } from '@harness/uicore'
-import { render, waitFor, act } from '@testing-library/react'
+import { render, waitFor, fireEvent, queryByAttribute } from '@testing-library/react'
 import { Form } from 'formik'
-import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import { BaseScriptWithRef } from '../BaseScriptForm'
 
@@ -22,13 +21,13 @@ const defaultInitialValues = {
 const defaultInitialValuesCorrect = {
   identifier: 'id',
   name: 'name',
-  type: '',
+  type: 'PowerShell',
   spec: {
     shell: 'Bash',
     source: {
       spec: {
         type: 'Inline',
-        script: undefined
+        script: 'check'
       }
     }
   }
@@ -88,7 +87,7 @@ describe('Test BaseScriptWithRef', () => {
         <BaseScriptWithRef initialValues={initialValues} allowableTypes={[MultiTypeInputType.EXPRESSION]} />
       </TestWrapper>
     )
-    await waitFor(() => getByText('echo test'))
+    await waitFor(() => getByText('cd.steps.commands.selectScriptLocation'))
     expect(container).toMatchSnapshot()
   })
 
@@ -101,7 +100,7 @@ describe('Test BaseScriptWithRef', () => {
         />
       </TestWrapper>
     )
-    await waitFor(() => getByText('<+spec.environmentVariable.var1>'))
+    await waitFor(() => getByText('cd.steps.commands.locationFileStore'))
     expect(container).toMatchSnapshot()
   })
 
@@ -120,6 +119,7 @@ describe('Test BaseScriptWithRef', () => {
 
   test('should match snapshot for BaseScriptWithRef without initial values ', async () => {
     const onChangeMock = jest.fn()
+
     const { container } = render(
       <TestWrapper>
         <Formik<any> formName="test-form" initialValues={defaultInitialValuesCorrect} onSubmit={jest.fn()}>
@@ -138,25 +138,21 @@ describe('Test BaseScriptWithRef', () => {
         </Formik>
       </TestWrapper>
     )
-
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     const shell = container.querySelector('input[name="spec.shell"]')
     await waitFor(() => expect(shell).toBeDefined())
+    const radioButtons = container.querySelectorAll('input[type="radio"]')
 
-    act(() => {
-      fillAtForm([
-        {
-          container,
-          fieldId: 'spec.source.spec.script',
-          type: InputTypes.TEXTAREA,
-          value: 'echo test'
-        }
-      ])
+    await fireEvent.click(radioButtons[1])
+    fireEvent.input(queryByNameAttribute('spec.source.spec.script')!, {
+      target: { value: 'check' },
+      bubbles: true
     })
 
     expect(onChangeMock).toBeCalledWith({
       identifier: 'id',
       name: 'name',
-      type: '',
+      type: 'PowerShell',
       spec: {
         executionTarget: {},
         onDelegate: 'targethost',
@@ -164,7 +160,7 @@ describe('Test BaseScriptWithRef', () => {
         source: {
           spec: {
             type: 'Inline',
-            script: 'echo test'
+            script: 'check'
           }
         }
       }

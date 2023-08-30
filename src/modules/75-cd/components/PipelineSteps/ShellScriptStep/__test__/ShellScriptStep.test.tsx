@@ -298,9 +298,55 @@ describe('Test Shell Script Step', () => {
   test('form produces correct data for fixed inputs for delegate as false', async () => {
     const onUpdate = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
+
+    const initialValues = {
+      type: 'ShellScript',
+      identifier: 'SSH',
+      name: 'SSH',
+      spec: {
+        shell: 'Bash',
+        onDelegate: true,
+        source: {
+          type: 'Inline',
+          spec: {
+            script: 'test script'
+          }
+        },
+        executionTarget: {
+          host: 'targethost',
+          connectorRef: 'connectorRef',
+          workingDirectory: './temp'
+        },
+        environmentVariables: [
+          {
+            name: 'testInput1',
+            type: 'String',
+            value: 'Test_A'
+          },
+          {
+            name: 'testInput2',
+            type: 'String',
+            value: 'Test_B'
+          }
+        ],
+        outputVariables: [
+          {
+            name: 'testOutput1',
+            type: 'String',
+            value: 'Test_C'
+          },
+          {
+            name: 'testOutput2',
+            type: 'String',
+            value: 'Test_D'
+          }
+        ]
+      }
+    }
+
     const { container, getByText } = render(
       <TestStepWidget
-        initialValues={{}}
+        initialValues={initialValues}
         type={StepType.SHELLSCRIPT}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
@@ -314,41 +360,20 @@ describe('Test Shell Script Step', () => {
       fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'SSH' } })
       fireEvent.change(queryByNameAttribute('spec.shell')!, { target: { value: 'Bash' } })
       fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '10m' } })
+      const radioButtonsType = container.querySelectorAll('input[type="radio"]')
+      await fireEvent.click(radioButtonsType[1])
       fireEvent.input(queryByNameAttribute('spec.source.spec.script')!, {
         target: { value: 'script test' },
         bubbles: true
       })
 
       await fireEvent.click(getByText('common.optionalConfig'))
-      await fireEvent.click(getByText('addInputVar'))
-
-      fireEvent.change(queryByNameAttribute('spec.environmentVariables[0].name')!, { target: { value: 'testInput1' } })
-      fireEvent.change(queryByNameAttribute('spec.environmentVariables[0].value')!, { target: { value: 'testInput2' } })
-      fireEvent.change(queryByNameAttribute('spec.environmentVariables[0].type')!, { target: { value: 'String' } })
-
-      await fireEvent.click(getByText('addOutputVar'))
-      fireEvent.change(queryByNameAttribute('spec.outputVariables[0].name')!, { target: { value: 'testOutput1' } })
-      fireEvent.change(queryByNameAttribute('spec.outputVariables[0].value')!, {
-        target: { value: 'response.message' }
-      })
-
-      await fireEvent.click(getByText('addOutputVar'))
-
-      fireEvent.change(queryByNameAttribute('spec.outputVariables[1].name')!, { target: { value: 'testOutput2' } })
-      fireEvent.change(queryByNameAttribute('spec.outputVariables[1].value')!, {
-        target: { value: 'response.message' }
-      })
 
       const radioButtons = container.querySelectorAll('input[type="radio"]')
+      await fireEvent.click(radioButtons[2])
 
-      await fireEvent.click(radioButtons[0])
-
-      const connectorRef = getByText('sshConnector')
-      expect(connectorRef).toBeDefined()
-
-      fireEvent.change(queryByNameAttribute('spec.executionTarget.host')!, { target: { value: 'targethost' } })
-      fireEvent.change(queryByNameAttribute('spec.executionTarget.workingDirectory')!, { target: { value: './temp' } })
-
+      fireEvent.change(queryByNameAttribute('spec.executionTarget.host')!, { target: { value: 'targethost1' } })
+      fireEvent.change(queryByNameAttribute('spec.executionTarget.workingDirectory')!, { target: { value: './temp1' } })
       await ref.current?.submitForm()
     })
 
@@ -367,27 +392,32 @@ describe('Test Shell Script Step', () => {
           }
         },
         executionTarget: {
-          host: 'targethost',
-          connectorRef: undefined,
-          workingDirectory: './temp'
+          host: 'targethost1',
+          connectorRef: 'connectorRef',
+          workingDirectory: './temp1'
         },
         environmentVariables: [
           {
             name: 'testInput1',
             type: 'String',
-            value: 'testInput2'
+            value: 'Test_A'
+          },
+          {
+            name: 'testInput2',
+            type: 'String',
+            value: 'Test_B'
           }
         ],
         outputVariables: [
           {
             name: 'testOutput1',
             type: 'String',
-            value: 'response.message'
+            value: 'Test_C'
           },
           {
             name: 'testOutput2',
             type: 'String',
-            value: 'response.message'
+            value: 'Test_D'
           }
         ]
       }

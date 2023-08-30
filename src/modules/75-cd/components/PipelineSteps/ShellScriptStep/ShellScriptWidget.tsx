@@ -14,6 +14,8 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { LocationType } from '@cd/components/PipelineSteps/CommandScripts/CommandScriptsTypes'
+
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
@@ -91,9 +93,25 @@ export function ShellScriptWidget(
     spec: Yup.object().shape({
       shell: Yup.string().trim().required(getString('validation.scriptTypeRequired')),
       source: Yup.object().shape({
-        spec: Yup.object().shape({
-          script: Yup.string().trim().required(getString('common.scriptRequired'))
-        })
+        spec: Yup.object()
+          .when(['type'], {
+            is: type => {
+              return type === LocationType.INLINE
+            },
+            then: Yup.object().shape({
+              script: Yup.string().trim().required(getString('common.scriptRequired'))
+            })
+          })
+          .when(['type'], {
+            is: type => {
+              return type === LocationType.HARNESS
+            },
+            then: Yup.object().shape({
+              file: Yup.string()
+                .trim()
+                .required(getString('fieldRequired', { field: 'File Path' }))
+            })
+          })
       }),
       environmentVariables: variableSchema(getString),
       outputVariables: variableSchema(getString)

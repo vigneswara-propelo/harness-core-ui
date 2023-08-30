@@ -56,6 +56,7 @@ interface ShellScriptSource {
 }
 export interface ShellScriptInline {
   script?: string
+  file?: string
 }
 export interface ShellScriptData extends StepElementConfig {
   spec: Omit<ShellScriptStepInfo, 'environmentVariables' | 'outputVariables' | 'source'> & {

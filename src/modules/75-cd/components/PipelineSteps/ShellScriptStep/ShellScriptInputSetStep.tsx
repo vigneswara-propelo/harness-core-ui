@@ -13,7 +13,9 @@ import {
   FormikForm,
   AllowedTypes,
   MultiSelectOption,
-  SelectOption
+  SelectOption,
+  ExpressionInput,
+  EXPRESSION_INPUT_PLACEHOLDER
 } from '@harness/uicore'
 import { isEmpty, get, isArray, defaultTo } from 'lodash-es'
 import cx from 'classnames'
@@ -23,11 +25,14 @@ import { useStrings } from 'framework/strings'
 import type { SecretDTOV2 } from 'services/cd-ng'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { FileUsage } from '@platform/filestore/interfaces/FileStore'
+import FileStoreSelectField from '@platform/filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import MultiTypeConfigFileSelect from '@pipeline/components/StartupScriptSelection/MultiTypeConfigFileSelect'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -146,6 +151,53 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               expressions={expressions}
             />
           </MultiTypeFieldSelector>
+        </div>
+      ) : null}
+      {getMultiTypeFromValue(template?.spec?.source?.spec?.file) === MultiTypeInputType.RUNTIME ? (
+        <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
+          <MultiTypeConfigFileSelect
+            name={`${prefix}spec.source.spec.file`}
+            label={''}
+            defaultValueToReset={''}
+            hideError={true}
+            style={{ marginBottom: 0, marginTop: 0 }}
+            disableTypeSelection={false}
+            supportListOfExpressions={true}
+            onTypeChange={() => {
+              formik?.setFieldValue(`${prefix}spec.source.spec.file`, undefined)
+            }}
+            defaultType={getMultiTypeFromValue(
+              get(formik?.values, `${prefix}spec.source.spec.file`),
+              [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+              true
+            )}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
+            expressionRender={() => {
+              return (
+                <ExpressionInput
+                  name={`${prefix}spec.source.spec.file`}
+                  value={get(formik?.values, `${prefix}spec.source.spec.file`)}
+                  disabled={false}
+                  inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                  items={expressions}
+                  onChange={val =>
+                    /* istanbul ignore next */
+                    formik?.setFieldValue(`${prefix}spec.source.spec.file`, val)
+                  }
+                />
+              )
+            }}
+          >
+            <FileStoreSelectField
+              label={getString('common.git.filePath')}
+              name={`${prefix}spec.source.spec.file`}
+              onChange={(newValue: string) => {
+                formik?.setFieldValue(`${prefix}spec.source.spec.file`, newValue)
+                formik?.setFieldValue(`${prefix}spec.source.spec.file`, undefined)
+              }}
+              fileUsage={FileUsage.SCRIPT}
+            />
+          </MultiTypeConfigFileSelect>
         </div>
       ) : null}
 
