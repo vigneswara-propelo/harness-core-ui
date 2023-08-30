@@ -87,8 +87,8 @@ const ExternalAPICallContent: React.FC<ExecutionAndAPICallLogProps> = ({
               key={index}
               collapseClassName={cx(css.collapse, css[getStatusColor(status.value)])}
               collapseHeaderClassName={css.collapseHeader}
-              collapsedIcon="main-chevron-down"
-              expandedIcon="main-chevron-right"
+              collapsedIcon="main-chevron-right"
+              expandedIcon="main-chevron-down"
               heading={
                 <Layout.Horizontal padding={{ left: 'small' }} spacing="small">
                   <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_400}>
