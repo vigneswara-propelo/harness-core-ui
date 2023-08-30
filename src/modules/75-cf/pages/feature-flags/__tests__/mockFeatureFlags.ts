@@ -6,14 +6,14 @@
  */
 
 export default {
-  itemCount: 17,
+  itemCount: 19,
   pageCount: 2,
   pageIndex: 0,
   pageSize: 15,
   featureCounts: {
     totalActive: 0,
     totalEnabled: 3,
-    totalFeatures: 17,
+    totalFeatures: 19,
     totalPermanent: 2,
     totalPotentiallyStale: 2,
     totalRecentlyAccessed: 0,
@@ -603,6 +603,94 @@ export default {
           value: 'false'
         }
       ]
+    },
+    {
+      archived: false,
+      createdAt: 1658952612141,
+      defaultOffVariation: 'false',
+      defaultOnVariation: 'true',
+      description: '',
+      envProperties: {
+        defaultServe: {},
+        environment: 'Mock_Environment',
+        modifiedAt: -6795364578871,
+        offVariation: '',
+        pipelineConfigured: false,
+        rules: [],
+        state: 'off',
+        variationMap: null,
+        version: 0
+      },
+      evaluation: '',
+      evaluationIdentifier: '',
+      identifier: 'Test_CleanupFlag',
+      kind: 'boolean',
+      modifiedAt: 1659001655331,
+      name: 'Test Cleanup Flag',
+      owner: ['laura.mannus@harness.io'],
+      permanent: true,
+      prerequisites: [],
+      project: 'dummy',
+      results: null,
+      tags: [],
+      variations: [
+        {
+          identifier: 'true',
+          name: 'True',
+          value: 'true'
+        },
+        {
+          identifier: 'false',
+          name: 'False',
+          value: 'false'
+        }
+      ],
+      stale: true,
+      staleReason: 'matched_criteria'
+    },
+    {
+      archived: false,
+      createdAt: 1658952612141,
+      defaultOffVariation: 'false',
+      defaultOnVariation: 'true',
+      description: '',
+      envProperties: {
+        defaultServe: {},
+        environment: 'Mock_Environment',
+        modifiedAt: -6795364578871,
+        offVariation: '',
+        pipelineConfigured: false,
+        rules: [],
+        state: 'off',
+        variationMap: null,
+        version: 0
+      },
+      evaluation: '',
+      evaluationIdentifier: '',
+      identifier: 'Test_CleanupFlag2',
+      kind: 'boolean',
+      modifiedAt: 1659001655331,
+      name: 'Test Cleanup Flag 2',
+      owner: ['laura.mannus@harness.io'],
+      permanent: true,
+      prerequisites: [],
+      project: 'dummy',
+      results: null,
+      tags: [],
+      variations: [
+        {
+          identifier: 'true',
+          name: 'True',
+          value: 'true'
+        },
+        {
+          identifier: 'false',
+          name: 'False',
+          value: 'false'
+        }
+      ],
+      stale: true,
+      staleReason: 'marked_by_user'
     }
   ]
 }

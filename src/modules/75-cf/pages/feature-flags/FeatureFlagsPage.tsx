@@ -214,7 +214,7 @@ const FeatureFlagsPage: FC = () => {
             />
           )
         }
-        footer={FFM_8344_FLAG_CLEANUP && isStaleFlagsView && <StaleFlagActions />}
+        footer={FFM_8344_FLAG_CLEANUP && isStaleFlagsView && <StaleFlagActions flags={features?.features} />}
         loading={loading}
         error={error}
         retryOnError={() => {

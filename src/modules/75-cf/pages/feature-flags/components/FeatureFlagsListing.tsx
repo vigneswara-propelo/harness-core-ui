@@ -224,6 +224,7 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
 
   return (
     <TableV2<Feature>
+      className={css.flagTable}
       columns={filteredColumns}
       data={features?.features ?? []}
       onRowClick={feature => onRowClick(feature.identifier)}

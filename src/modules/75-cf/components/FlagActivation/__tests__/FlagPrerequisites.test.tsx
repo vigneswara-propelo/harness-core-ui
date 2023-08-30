@@ -18,7 +18,7 @@ import { FlagPrerequisites, FlagPrerequisitesProps } from '../FlagPrerequisites'
 
 const mockFeatures = {
   ...mockFeatureFlags,
-  features: [...mockFeatureFlags.features.slice(-3)]
+  features: [...mockFeatureFlags.features.slice(-5)]
 }
 
 const renderComponent = (props: Partial<FlagPrerequisitesProps> = {}): RenderResult => {

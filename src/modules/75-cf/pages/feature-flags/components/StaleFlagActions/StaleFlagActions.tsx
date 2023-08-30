@@ -5,19 +5,35 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, useCallback, useMemo, useState } from 'react'
 import { Button, ButtonVariation, Heading, Layout, ModalDialog, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
+import { Feature } from 'services/cf'
 import { useGetSelectedStaleFlags } from '../../hooks/useGetSelectedStaleFlags'
+import { StaleFlagStatusReason } from '../../FlagStatus'
 import css from './StaleFlagActions.module.scss'
 
-export const StaleFlagActions: FC = () => {
+export interface StaleFlagActionsProps {
+  flags?: Feature[] | null
+}
+
+export const StaleFlagActions: FC<StaleFlagActionsProps> = ({ flags }) => {
   const { getString } = useStrings()
   const selectedFlags = useGetSelectedStaleFlags()
   const [showInfo, setShowInfo] = useState<boolean>(false)
   const [showNotStaleDialog, setShowNotStaleDialog] = useState<boolean>(false)
+  const [showCleanupDialog, setShowCleanupDialog] = useState<boolean>(false)
+
+  const showReadyForCleanupBtn = useMemo<boolean | undefined>(
+    () =>
+      flags?.some(
+        ({ identifier, staleReason }) =>
+          selectedFlags.includes(identifier) && staleReason !== StaleFlagStatusReason.WAITING_FOR_CLEANUP
+      ),
+    [flags, selectedFlags]
+  )
 
   const hideShowInfo = useCallback(() => {
     setShowInfo(false)
@@ -28,7 +44,7 @@ export const StaleFlagActions: FC = () => {
       {!!selectedFlags.length && (
         <>
           <Layout.Horizontal padding="xlarge" border={{ top: true }} background={Color.WHITE} spacing="medium">
-            <Text font={{ variation: FontVariation.CARD_TITLE }}>
+            <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.flagsSelected}>
               {getString('cf.staleFlagAction.flagsSelected', { count: selectedFlags.length })}
             </Text>
             <Button
@@ -65,7 +81,44 @@ export const StaleFlagActions: FC = () => {
                 </Layout.Horizontal>
               </Layout.Vertical>
             </ModalDialog>
-            <Button text={getString('cf.staleFlagAction.readyForCleanup')} variation={ButtonVariation.SECONDARY} />
+            {showReadyForCleanupBtn && (
+              <>
+                <Button
+                  text={getString('cf.staleFlagAction.readyForCleanup')}
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => {
+                    setShowCleanupDialog(true)
+                  }}
+                />
+                <ModalDialog
+                  isOpen={showCleanupDialog}
+                  enforceFocus={false}
+                  isCloseButtonShown
+                  onClose={() => {
+                    setShowCleanupDialog(false)
+                  }}
+                  title={getString('cf.staleFlagAction.readyForCleanup')}
+                >
+                  <Layout.Vertical>
+                    <Text padding={{ bottom: 'medium' }}>{getString('cf.staleFlagAction.readyForCleanupDesc')}</Text>
+                    <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
+                      <Button
+                        text={getString('cf.staleFlagAction.readyForCleanup')}
+                        variation={ButtonVariation.PRIMARY}
+                        intent={Intent.PRIMARY}
+                      />
+                      <Button
+                        text={getString('cancel')}
+                        variation={ButtonVariation.TERTIARY}
+                        onClick={() => {
+                          setShowCleanupDialog(false)
+                        }}
+                      />
+                    </Layout.Horizontal>
+                  </Layout.Vertical>
+                </ModalDialog>
+              </>
+            )}
             <Button
               padding={{ left: 0 }}
               text={getString('cf.staleFlagAction.learnMore')}

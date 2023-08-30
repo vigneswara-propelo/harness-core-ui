@@ -8735,6 +8735,7 @@ export interface StringsMap {
   'cf.staleFlagAction.notStale': string
   'cf.staleFlagAction.notStaleDesc': string
   'cf.staleFlagAction.readyForCleanup': string
+  'cf.staleFlagAction.readyForCleanupDesc': string
   'cf.staleFlagAction.selectAllPotentiallyStaleFlags': string
   'cf.staleFlagAction.waitingForCleanup': string
   'cf.targetDetail.accountLevelTargets': string
