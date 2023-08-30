@@ -1256,5 +1256,5 @@ serverlessVersionLabel: Serverless Version
 encryptJsonOutput: Encrypt json output
 webhooks:
   newWebhook: Add a webhook
-  createSubtitle: You may add a webhook to track activities such as sync, errors, entities & more within Harness!
+  createSubtitle: Link to a git webhook and view bi-directional sync events via Harness Interface!
   noWebhook: There are no webhook added.

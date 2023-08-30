@@ -8,12 +8,8 @@
 .dialogStylesWebhook {
   padding-top: var(--padding-panel) !important;
   position: relative;
-  width: 550px !important;
-
-  > div[class*='bp3-dialog-header'] {
-    margin: 0px 0px 6px !important;
-    width: 330px;
-  }
+  width: 707px !important;
+  max-height: 634px !important;
 }
 
 .noWebhookHeading {
@@ -31,4 +27,47 @@
   line-height: var(--font-size-medium) !important;
   color: var(--grey-800) !important;
   text-align: center !important;
+}
+
+.addWebhookModalForm {
+  :global {
+    .TextInput--main {
+      width: 353px !important;
+      margin-bottom: 0px !important;
+    }
+  }
+}
+
+.group {
+  display: flex;
+  padding: var(--spacing-small) 0px var(--spacing-small) 0px;
+  align-items: center;
+
+  &:not(:first-child) {
+    margin-top: var(--spacing-medium);
+  }
+}
+
+.trashBtn {
+  padding-top: var(--spacing-medium) !important;
+}
+
+.width {
+  width: 353px !important;
+}
+
+.folderPath {
+  align-items: center;
+  > * {
+    margin-bottom: 0;
+  }
+}
+
+.padding-right {
+  padding-right: var(--spacing-small);
+}
+
+.add-btn {
+  padding: var(--spacing-large) 0px 0px 0px !important;
+  align-self: flex-start;
 }

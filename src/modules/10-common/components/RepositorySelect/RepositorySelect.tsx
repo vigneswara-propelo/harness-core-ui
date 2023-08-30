@@ -29,6 +29,7 @@ export interface RepositorySelectProps<T> {
   formik?: any
   disabled?: boolean
   setErrorResponse?: React.Dispatch<React.SetStateAction<ResponseMessage[]>>
+  customClassName?: string
 }
 
 export const getRepoSelectOptions = (data: GitRepositoryResponseDTO[] = []): SelectOption[] => {
@@ -41,7 +42,7 @@ export const getRepoSelectOptions = (data: GitRepositoryResponseDTO[] = []): Sel
 }
 
 const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
-  const { connectorRef, selectedValue, formikProps, disabled, setErrorResponse } = props
+  const { connectorRef, selectedValue, formikProps, disabled, setErrorResponse, customClassName } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>([])
   const [isValidating, setIsValidating] = useState(false)
@@ -141,6 +142,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
       <FormInput.Select
         name="repo"
         label={getString('repository')}
+        className={customClassName}
         placeholder={
           loading || isValidating ? getString('loading') : getString('common.git.selectRepositoryPlaceholder')
         }

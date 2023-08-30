@@ -102,7 +102,7 @@ export const gitSyncFormSchema = (
   })
 })
 
-const getSupportedProviders = (): Array<ConnectorInfoDTO['type']> => {
+export const getSupportedProviders = (): Array<ConnectorInfoDTO['type']> => {
   const supportedRepoProviders = [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.AZURE_REPO, Connectors.GITLAB]
   return supportedRepoProviders
 }

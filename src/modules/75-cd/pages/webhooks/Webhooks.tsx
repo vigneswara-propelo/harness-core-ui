@@ -27,6 +27,7 @@ import WebhooksList from './WebhooksList/WebhooksList'
 import WebhooksTabs from './WebhooksTabs'
 import WebhooksGrid from './WebhooksGrid/WebhooksGrid'
 import NewWebhookModal from './NewWebhookModal'
+import { initialWebhookModalData } from './utils'
 import css from './Webhooks.module.scss'
 
 export default function Webhooks(): React.ReactElement {
@@ -48,7 +49,7 @@ export default function Webhooks(): React.ReactElement {
             <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
               {getString('cd.webhooks.newWebhook')}
             </Text>
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
               {getString('cd.webhooks.createSubtitle')}
             </Text>
           </>
@@ -57,7 +58,7 @@ export default function Webhooks(): React.ReactElement {
         className={cx('padded-dialog', css.dialogStylesWebhook)}
       >
         <Container>
-          <NewWebhookModal />
+          <NewWebhookModal isEdit={false} initialData={initialWebhookModalData} closeModal={hideCreateModal} />
         </Container>
       </Dialog>
     ),

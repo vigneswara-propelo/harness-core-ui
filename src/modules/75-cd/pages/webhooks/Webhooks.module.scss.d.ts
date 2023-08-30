@@ -7,8 +7,15 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addBtn: string
+  readonly addWebhookModalForm: string
   readonly dialogStylesWebhook: string
+  readonly folderPath: string
+  readonly group: string
   readonly noWebhookHeading: string
   readonly noWebhookText: string
+  readonly paddingRight: string
+  readonly trashBtn: string
+  readonly width: string
 }
 export default styles
