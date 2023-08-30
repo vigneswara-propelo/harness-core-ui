@@ -118,13 +118,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
         <tr>
           <th>{`${getString('pipeline.duration')}:`}</th>
           <td>
-            <Duration
-              className={css.timer}
-              durationText=""
-              startTime={step?.startTs}
-              endTime={step?.endTs}
-              showZeroSecondsResult
-            />
+            <Duration className={css.timer} durationText="" startTime={step?.startTs} endTime={step?.endTs} />
           </td>
         </tr>
         {!!timeout && (

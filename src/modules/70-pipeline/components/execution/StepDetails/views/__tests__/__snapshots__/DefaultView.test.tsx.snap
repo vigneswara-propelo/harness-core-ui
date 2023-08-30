@@ -126,7 +126,7 @@ exports[`Default View Test error in step evaluation 1`] = `
                     class="StyledProps--font StyledProps--main timer StyledProps--inline"
                   >
                     
-                    0s
+                    
                   </span>
                 </td>
               </tr>
@@ -378,7 +378,7 @@ exports[`Default View Test failure responses 1`] = `
                     class="StyledProps--font StyledProps--main timer StyledProps--inline"
                   >
                     
-                    0s
+                    
                   </span>
                 </td>
               </tr>

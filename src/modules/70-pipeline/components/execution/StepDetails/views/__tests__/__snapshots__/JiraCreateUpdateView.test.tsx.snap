@@ -111,7 +111,7 @@ exports[`Jiracreateupdate view test  output snapshot if  not array 1`] = `
                   class="StyledProps--font StyledProps--main timer StyledProps--inline"
                 >
                   
-                  0s
+                  
                 </span>
               </td>
             </tr>
@@ -352,7 +352,7 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
                   class="StyledProps--font StyledProps--main timer StyledProps--inline"
                 >
                   
-                  0s
+                  
                 </span>
               </td>
             </tr>
