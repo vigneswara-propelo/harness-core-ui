@@ -27,8 +27,9 @@ interface CreateModalData {
 const CreateProject: React.FC<StepProps<Project> & CreateModalData> = props => {
   const { accountId, orgIdentifier: orgIdPathParam } = useParams<OrgPathProps>()
   const { orgIdentifier: orgIdQueryParam } = useQueryParams<OrgPathProps>()
+  const [orgSearchTerm, setOrgSearchTerm] = React.useState<string>(orgIdPathParam || orgIdQueryParam)
+  const [isRefetchOrg, setIsRefetchOrg] = React.useState<boolean>(true)
   const { getRBACErrorMessage } = useRBACError()
-  const orgIdentifier = orgIdPathParam || orgIdQueryParam
   const { nextStep, modules } = props
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
@@ -40,17 +41,28 @@ const CreateProject: React.FC<StepProps<Project> & CreateModalData> = props => {
     }
   })
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
-  const { data: orgData } = useGetOrganizationList({
+  const { data: orgData, refetch: refetchOrg } = useGetOrganizationList({
     queryParams: {
       accountIdentifier: accountId,
-      pageSize: 200
-    }
+      pageSize: 200,
+      searchTerm: orgSearchTerm
+    },
+    lazy: true,
+    debounce: 300
   })
+
+  React.useEffect(() => {
+    if (isRefetchOrg) {
+      refetchOrg()
+    }
+  }, [orgSearchTerm, isRefetchOrg])
 
   let defaultOrg = ''
   const organizations: SelectOption[] =
     orgData?.data?.content?.map(org => {
-      if (org.harnessManaged) defaultOrg = org.organization.identifier
+      if (org.harnessManaged) {
+        defaultOrg = org.organization.identifier
+      }
       return {
         label: org.organization.name,
         value: org.organization.identifier
@@ -92,14 +104,13 @@ const CreateProject: React.FC<StepProps<Project> & CreateModalData> = props => {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
   return (
     <>
       <ProjectForm
         disableSelect={false}
         enableEdit={true}
         disableSubmit={saving}
-        initialOrgIdentifier={orgIdentifier || defaultOrg}
+        initialOrgIdentifier={defaultOrg || orgSearchTerm}
         initialModules={modules}
         organizationItems={organizations}
         title={getString('projectsOrgs.aboutProject')}
@@ -107,6 +118,8 @@ const CreateProject: React.FC<StepProps<Project> & CreateModalData> = props => {
         saveIcon="chevron-right"
         setModalErrorHandler={setModalErrorHandler}
         onComplete={onComplete}
+        setOrgSearchTerm={setOrgSearchTerm}
+        setIsRefetchOrg={setIsRefetchOrg}
       />
       {saving ? <PageSpinner message={getString('projectsOrgs.createProjectLoader')} /> : null}
     </>

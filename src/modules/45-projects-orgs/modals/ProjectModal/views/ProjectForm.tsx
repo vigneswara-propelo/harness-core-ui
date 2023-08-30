@@ -50,6 +50,8 @@ interface ProjectModalData {
   organizationItems: SelectOption[]
   setModalErrorHandler: (modalErrorHandler: ModalErrorHandlerBinding) => void
   displayProjectCardPreview?: boolean
+  setOrgSearchTerm?: React.Dispatch<React.SetStateAction<string>>
+  setIsRefetchOrg?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface AboutPageData extends Project {
@@ -71,17 +73,24 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
     initialOrgIdentifier,
     initialModules,
     setModalErrorHandler,
-    displayProjectCardPreview = true
+    displayProjectCardPreview = true,
+    setOrgSearchTerm,
+    setIsRefetchOrg
   } = props
   const { getString } = useStrings()
   const { currentUserInfo: user } = useAppStore()
+  const [orgValue, setOrgValue] = React.useState<string>(initialOrgIdentifier)
+  React.useEffect(() => {
+    setOrgValue(initialOrgIdentifier)
+  }, [initialOrgIdentifier])
+
   return (
     <Formik
       initialValues={{
         color: DEFAULT_COLOR,
         identifier: '',
         name: '',
-        orgIdentifier: initialOrgIdentifier,
+        orgIdentifier: orgValue,
         modules: initialModules,
         description: '',
         tags: {},
@@ -118,10 +127,20 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
                   <Layout.Horizontal spacing="small" margin={{ bottom: 'xsmall' }}>
                     <FormInput.ColorPicker label={getString('color')} name="color" height={38} />
                     <FormInput.Select
+                      onQueryChange={query => {
+                        const queryValue = query.trim()
+                        setOrgSearchTerm?.(queryValue)
+                        if (queryValue) {
+                          setIsRefetchOrg?.(true)
+                        }
+                      }}
                       label={getString('orgLabel')}
                       name="orgIdentifier"
                       items={organizationItems}
                       disabled={disableSelect}
+                      onChange={() => {
+                        setIsRefetchOrg?.(false)
+                      }}
                     />
                   </Layout.Horizontal>
                   <DescriptionTags formikProps={formikProps} />
