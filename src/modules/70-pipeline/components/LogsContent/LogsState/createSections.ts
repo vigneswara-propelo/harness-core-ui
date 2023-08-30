@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, findLast, isEmpty, set, snakeCase } from 'lodash-es'
+import { defaultTo, findLast, set, snakeCase } from 'lodash-es'
 
 import {
   isExecutionComplete,
@@ -68,7 +68,6 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
   let { units = [], logKeys = [] } = defaultTo(task, {} as any)
   const progressMap = new Map<string, ProgressMapValue>()
   const isStepComplete = isExecutionComplete(node.status)
-  const unitProgresses = !isEmpty(node.unitProgresses) ? node.unitProgresses : node.progressData?.unitProgresses
   let hasNoUnits = false
 
   if (units.length === 0 && logKeys.length > 0) {
@@ -76,8 +75,8 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
     units = logKeys.map((_: unknown, i: number) => getSectionName(i + 1))
   }
 
-  if (Array.isArray(unitProgresses)) {
-    unitProgresses.forEach(row => {
+  if (Array.isArray(node.unitProgresses)) {
+    node.unitProgresses.forEach(row => {
       /* istanbul ignore else */
       if (row.unitName) {
         progressMap.set(row.unitName, {
