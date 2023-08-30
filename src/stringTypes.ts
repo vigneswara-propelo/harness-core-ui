@@ -3045,6 +3045,7 @@ export interface StringsMap {
   'platform.defaultSettings.noSettingToDisplay': string
   'platform.defaultSettings.perspectivePreferences': string
   'platform.defaultSettings.pipelineTimeout': string
+  'platform.defaultSettings.projectScopedResourceConstraintQueue': string
   'platform.defaultSettings.restoreToDefault': string
   'platform.defaultSettings.showAnomalies': string
   'platform.defaultSettings.showAwsCostAs': string

@@ -57,7 +57,11 @@ DefaultSettingsFactory.registerCategory('CD', {
   icon: 'cd',
   label: 'common.purpose.cd.fullText',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto', 'ssca'],
-  settingsAndGroupDisplayOrder: [SettingType.EMAIL_TO_NON_HARNESS_USERS, SettingType.ENABLE_SERVICE_OVERRIDE_V2]
+  settingsAndGroupDisplayOrder: [
+    SettingType.EMAIL_TO_NON_HARNESS_USERS,
+    SettingType.ENABLE_SERVICE_OVERRIDE_V2,
+    SettingType.PROJECT_SCOPED_RESOURCE_CONSTRAINT_QUEUE
+  ]
 })
 
 DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
@@ -143,6 +147,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.EMAIL_TO_NON_HARNESS_U
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_SERVICE_OVERRIDE_V2, {
   label: 'platform.defaultSettings.enableServiceOverrideV2',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CD'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.PROJECT_SCOPED_RESOURCE_CONSTRAINT_QUEUE, {
+  label: 'platform.defaultSettings.projectScopedResourceConstraintQueue',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   settingCategory: 'CD'
 })

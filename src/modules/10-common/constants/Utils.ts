@@ -108,6 +108,7 @@ export enum SettingType {
   SHOW_GCP_COST_AS = 'show_gcp_cost_as',
   EMAIL_TO_NON_HARNESS_USERS = 'email_to_non_harness_users',
   ENABLE_SERVICE_OVERRIDE_V2 = 'service_override_v2',
+  PROJECT_SCOPED_RESOURCE_CONSTRAINT_QUEUE = 'project_scoped_resource_constraint_queue',
   EXPORT_SERVICE_VARIABLES_AS_ENV_VARIABLES = 'export_service_variables_as_env_variables',
   TICKETING_TOOL = 'ticketing_tool',
   TICKETING_TOOL_CONNECTOR = 'ticketing_tool_connector',
