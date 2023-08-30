@@ -27,6 +27,7 @@ stepGroupVariables: StepGroup Variables
 scriptInputVariables: Script Input Variables
 scriptOutputVariables: Script Output Variables
 executionTarget: Execution Target
+delegateLabel: On Delegate
 removeTemplate: '<b>{{name}}</b> will be removed from this {{entity}}.'
 cloneSuccess: 'Pipeline {{name}} has been cloned successfully as {{cloneName}}'
 templateSaved: 'Template {{name}} has been published successfully. Applying {{name}} to your {{entity}} might reset some fields.'

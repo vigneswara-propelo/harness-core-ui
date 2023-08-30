@@ -140,7 +140,10 @@ const RecentDeploymentTemplates: FC<RecentDeploymentTemplatesProps> = ({
 
   return (
     <>
-      <div className={labelClassName}>{getString('cd.deploymentTemplates')}</div>
+      <div className={labelClassName} data-tooltip-id="deploymentTemplateTooltip">
+        {getString('cd.deploymentTemplates')}
+        <HarnessDocTooltip tooltipId="deploymentTemplateTooltip" useStandAlone={true} />
+      </div>
       <div className={deployServiceCss.recentDeploymentTemplates}>
         {filteredTemplates?.map(template => {
           const currentTemplateLinkConfig = getTemplateRefVersionLabelObject(template)

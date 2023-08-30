@@ -4243,6 +4243,7 @@ export interface StringsMap {
   'pipeline.dashboards.workloads': string
   'pipeline.defaultMoveCommitMsg': string
   'pipeline.delegate.DelegateSelectorOptional': string
+  'pipeline.delegateLabel': string
   'pipeline.deploymentFrequency': string
   'pipeline.deploymentRepo': string
   'pipeline.deploymentRepoStore': string

@@ -321,39 +321,52 @@ exports[`Test OptionalConfigurations Switch the tabs with data 1`] = `
                 <div
                   class="formGroup"
                 >
-                  <div>
-                    <label
-                      class="bp3-label"
+                  <div
+                    class="Layout--vertical StyledProps--main"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-medium"
                     >
-                      pipeline.executionTarget common.optionalLabel
-                    </label>
-                    <label
-                      class="bp3-control bp3-radio bp3-inline"
-                    >
-                      <input
-                        name="Blueprint3.RadioGroup-0"
-                        type="radio"
-                        value="targethost"
-                      />
-                      <span
-                        class="bp3-control-indicator"
-                      />
-                      Specify Target Host
-                    </label>
-                    <label
-                      class="bp3-control bp3-radio bp3-inline"
-                    >
-                      <input
-                        checked=""
-                        name="Blueprint3.RadioGroup-0"
-                        type="radio"
-                        value="delegate"
-                      />
-                      <span
-                        class="bp3-control-indicator"
-                      />
-                      On Delegate
-                    </label>
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="executionTargetTooltip"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-form-input-text StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+                        >
+                          pipeline.executionTarget common.optionalLabel
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="bp3-control bp3-radio bp3-inline"
+                      >
+                        <input
+                          name="Blueprint3.RadioGroup-0"
+                          type="radio"
+                          value="targethost"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        cd.specifyTargetHost
+                      </label>
+                      <label
+                        class="bp3-control bp3-radio bp3-inline"
+                      >
+                        <input
+                          checked=""
+                          name="Blueprint3.RadioGroup-0"
+                          type="radio"
+                          value="delegate"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        pipeline.delegateLabel
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>

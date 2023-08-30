@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { FormikProps, FieldArray, useFormikContext } from 'formik'
+import { Color, FontVariation } from '@harness/design-system'
 import {
   AllowedTypes,
   Button,
@@ -192,18 +193,29 @@ export default function OptionalConfiguration(props: {
           </div>
         ) : null}
         <div className={stepCss.formGroup}>
-          <RadioGroup
-            selectedValue={formValues.spec.onDelegate}
-            disabled={readonly}
-            inline={true}
-            label={getString('pipeline.executionTarget') + ' ' + getString('common.optionalLabel')}
-            onChange={e => {
-              formik.setFieldValue('spec.onDelegate', e.currentTarget.value)
-            }}
-          >
-            <Radio value={'targethost'} label={'Specify Target Host'} />
-            <Radio value={'delegate'} label={'On Delegate'} />
-          </RadioGroup>
+          <Layout.Vertical>
+            <Layout.Horizontal margin={{ bottom: 'medium' }}>
+              <Text
+                font={{ variation: FontVariation.FORM_INPUT_TEXT, weight: 'semi-bold' }}
+                color={Color.GREY_600}
+                tooltipProps={{ dataTooltipId: 'executionTargetTooltip' }}
+              >
+                {`${getString('pipeline.executionTarget')} ${getString('common.optionalLabel')}`}
+              </Text>
+            </Layout.Horizontal>
+            <RadioGroup
+              data-tooltip-id="executionTargetTooltip"
+              selectedValue={formValues.spec.onDelegate}
+              disabled={readonly}
+              inline={true}
+              onChange={e => {
+                formik.setFieldValue('spec.onDelegate', e.currentTarget.value)
+              }}
+            >
+              <Radio value={'targethost'} label={getString('cd.specifyTargetHost')} />
+              <Radio value={'delegate'} label={getString('pipeline.delegateLabel')} />
+            </RadioGroup>
+          </Layout.Vertical>
         </div>
         {formValues.spec.onDelegate === 'targethost' ? (
           <div>
