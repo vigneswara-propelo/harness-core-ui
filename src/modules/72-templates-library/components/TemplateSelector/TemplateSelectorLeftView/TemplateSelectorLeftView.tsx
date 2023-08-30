@@ -243,16 +243,12 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     }
   }, [selectedTemplate, defaultTemplate])
 
+  //Do not show selected template when user clicks on change template.
   useEffect(() => {
-    if (templateData?.data?.content) {
-      let findTemplate = templateData.data.content.find(template => areTemplatesSame(template, defaultTemplate))
-      if (defaultTemplate?.remoteFetchError) {
-        const updatedGitDetails = { ...findTemplate?.gitDetails, branch: defaultTemplate?.gitDetails?.branch }
-        findTemplate = { ...findTemplate, gitDetails: updatedGitDetails }
-      }
-      setSelectedTemplate(findTemplate)
+    if (loading) {
+      setSelectedTemplate(undefined)
     }
-  }, [templateData?.data?.content])
+  }, [loading])
 
   return (
     <Container width={762} background={Color.FORM_BG} className={css.container}>
