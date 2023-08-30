@@ -48,7 +48,7 @@ interface Field {
 
 type Dependencies = { [key: string]: any }
 
-export function removeEmptyKeys<T>(object: { [key: string]: any }): T {
+export function removeEmptyKeys<T>(object: { [key: string]: any }, keysWithAllowedEmptyValues?: Array<string>): T {
   Object.keys(object).forEach(key => {
     // We should skip this check for boolean in order not to remove a key with a value "false"
     if (((isObjectLike(object[key]) && isEmpty(object[key])) || !object[key]) && !isBoolean(object[key])) {
@@ -57,7 +57,7 @@ export function removeEmptyKeys<T>(object: { [key: string]: any }): T {
     }
 
     if (isPlainObject(object[key])) {
-      removeEmptyKeys(object[key])
+      if (!keysWithAllowedEmptyValues?.includes(key)) removeEmptyKeys(object[key], keysWithAllowedEmptyValues)
 
       if (isEmpty(object[key])) {
         delete object[key]
@@ -257,7 +257,11 @@ export function getInitialValuesInCorrectFormat<T, U>(
   return values as U
 }
 
-export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[]): U {
+export function getFormValuesInCorrectFormat<T, U>(
+  formValues: T,
+  fields: Field[],
+  keysWithAllowedEmptyValues?: Array<string>
+): U {
   const values = set(
     set({}, 'strategy', get(formValues, 'strategy', {})),
     'failureStrategies',
@@ -403,5 +407,5 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
     }
   })
 
-  return removeEmptyKeys<U>(values)
+  return removeEmptyKeys<U>(values, keysWithAllowedEmptyValues)
 }

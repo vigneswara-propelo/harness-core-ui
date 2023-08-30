@@ -79,7 +79,7 @@ export const transformValuesFieldsConfig = [
 export const getEditViewValidateFieldsConfig = (
   buildInfrastructureType: CIBuildInfrastructureType,
   isTemplateView: boolean
-): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }[] => [
+): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean; allowEmptyValue?: boolean }[] => [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -133,7 +133,8 @@ export const getEditViewValidateFieldsConfig = (
   },
   {
     name: 'spec.envVariables',
-    type: ValidationFieldTypes.Map
+    type: ValidationFieldTypes.Map,
+    allowEmptyValue: true
   },
   {
     name: 'spec.outputVariables',

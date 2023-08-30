@@ -100,7 +100,8 @@ const editViewFieldsConfig = [
   },
   {
     name: 'spec.envVariables',
-    type: Types.Map
+    type: Types.Map,
+    allowEmptyValue: true
   },
   {
     name: 'spec.outputVariables',
@@ -227,6 +228,24 @@ describe('StepValidateUtils', () => {
         undefined,
         customRegex
       )
+
+      expect(result).toEqual({})
+    })
+
+    test('should allow empty value for envVariables', () => {
+      const values = {
+        identifier: 'Identifier',
+        name: 'Step Name',
+        spec: {
+          connectorRef: 'Container',
+          image: 'Image',
+          command: 'Command',
+          envVariables: {
+            'who-to-greet': ''
+          }
+        }
+      }
+      const result = validate(values, editViewFieldsConfig, { getString: getStringMock }, StepViewType.Edit, undefined)
 
       expect(result).toEqual({})
     })

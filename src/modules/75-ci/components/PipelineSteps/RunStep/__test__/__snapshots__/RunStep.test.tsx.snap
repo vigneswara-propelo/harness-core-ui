@@ -3618,7 +3618,7 @@ exports[`Run Step InputVariable View should render properly 1`] = `
           class=""
         >
           {
-  "key1": "value1",
+  "key1": "",
   "key2": "value2",
   "key3": "value3"
 }

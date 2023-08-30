@@ -49,6 +49,8 @@ import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
 import { getCIStageInfraType } from '../../../utils/CIPipelineStudioUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
+export const keysWithAllowedEmptyValues = ['envVariables']
+
 export const RunStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: RunStepProps,
   formikRef: StepFormikFowardRef<RunStepData>
@@ -104,7 +106,8 @@ export const RunStepBase = (
         }
         const schemaValues = getFormValuesInCorrectFormat<RunStepDataUI, RunStepData>(
           valuesToValidate,
-          transformValuesFieldsConfig
+          transformValuesFieldsConfig,
+          keysWithAllowedEmptyValues
         )
         onChange?.(schemaValues)
         errors = merge(
@@ -126,7 +129,8 @@ export const RunStepBase = (
       onSubmit={(_values: RunStepDataUI) => {
         const schemaValues = getFormValuesInCorrectFormat<RunStepDataUI, RunStepData>(
           _values,
-          transformValuesFieldsConfig
+          transformValuesFieldsConfig,
+          keysWithAllowedEmptyValues
         )
         onUpdate?.(schemaValues)
       }}

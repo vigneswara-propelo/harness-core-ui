@@ -58,6 +58,7 @@ interface Field {
   isActive?: boolean
   notAllowed?: string[]
   allowNumericKeys?: boolean // default not allowed with Map schema
+  allowEmptyValue?: boolean
 }
 
 interface SchemaField {
@@ -225,7 +226,8 @@ function generateSchemaForMap(
   { label, isRequired, isInputSet, allowNumericKeys }: Field,
   { getString }: GenerateSchemaDependencies,
   objectShape?: Schema<unknown>,
-  customRegex?: RegExp
+  customRegex?: RegExp,
+  allowEmptyValue?: boolean
 ): Lazy {
   if (isInputSet) {
     // We can't add validation for key uniqueness and key's value
@@ -255,7 +257,7 @@ function generateSchemaForMap(
                       .required(getString('validation.keyRequired'))
                   }),
                   value: yup.string().when('key', {
-                    is: val => val?.length,
+                    is: val => val?.length && !allowEmptyValue,
                     then: yup.string().required(getString('validation.valueRequired'))
                   })
                 },
@@ -450,7 +452,7 @@ export function generateSchemaFields(
   customRegex?: RegExp
 ): SchemaField[] {
   return fields.map(field => {
-    const { name, type, label, isRequired, isActive } = field
+    const { name, type, label, isRequired, isActive, allowEmptyValue } = field
 
     let validationRule
 
@@ -459,7 +461,7 @@ export function generateSchemaFields(
     }
 
     if (type === Types.Map) {
-      validationRule = generateSchemaForMap(field, { getString }, undefined, customRegex)
+      validationRule = generateSchemaForMap(field, { getString }, undefined, customRegex, allowEmptyValue)
     }
 
     if (stepViewType !== StepViewType.Template && type === Types.Identifier) {

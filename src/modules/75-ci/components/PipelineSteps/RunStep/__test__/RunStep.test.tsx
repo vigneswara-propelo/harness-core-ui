@@ -338,7 +338,7 @@ describe('Run Step', () => {
             }
           },
           envVariables: {
-            key1: 'value1',
+            key1: '',
             key2: 'value2',
             key3: 'value3'
           },
@@ -392,7 +392,7 @@ describe('Run Step', () => {
                 }
               },
               envVariables: {
-                key1: 'value1',
+                key1: '',
                 key2: 'value2',
                 key3: 'value3'
               },

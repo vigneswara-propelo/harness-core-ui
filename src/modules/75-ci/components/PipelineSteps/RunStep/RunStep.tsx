@@ -29,7 +29,7 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
-import { RunStepBaseWithRef } from './RunStepBase'
+import { RunStepBaseWithRef, keysWithAllowedEmptyValues } from './RunStepBase'
 import { RunStepInputSet } from './RunStepInputSet'
 import { RunStepVariables, RunStepVariablesProps } from './RunStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './RunStepFunctionConfigs'
@@ -163,7 +163,7 @@ export class RunStep extends PipelineStep<RunStepData> {
 
   /* istanbul ignore next */
   processFormData<T>(data: T): RunStepData {
-    return getFormValuesInCorrectFormat<T, RunStepData>(data, transformValuesFieldsConfig)
+    return getFormValuesInCorrectFormat<T, RunStepData>(data, transformValuesFieldsConfig, keysWithAllowedEmptyValues)
   }
 
   validateInputSet({
