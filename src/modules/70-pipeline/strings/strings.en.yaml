@@ -1964,3 +1964,4 @@ executionNotes:
   addNote: Add a Note
   noteSaved: Note has been saved successfully
   viewExecutionNotes: View Execution Notes
+includeInfrastructureSelectors: Include Infrastructure Selectors

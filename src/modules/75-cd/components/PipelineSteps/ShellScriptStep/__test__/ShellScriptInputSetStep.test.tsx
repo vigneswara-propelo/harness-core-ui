@@ -119,6 +119,7 @@ describe('ShellScriptInputSetStep tests', () => {
       identifier: 'SSH',
       name: 'SSH',
       spec: {
+        includeInfraSelectors: RUNTIME_INPUT_VALUE,
         source: {
           spec: {
             script: RUNTIME_INPUT_VALUE
@@ -160,6 +161,7 @@ describe('ShellScriptInputSetStep tests', () => {
       identifier: 'SSH',
       name: 'SSH',
       spec: {
+        includeInfraSelectors: RUNTIME_INPUT_VALUE,
         source: {
           spec: {
             script: RUNTIME_INPUT_VALUE

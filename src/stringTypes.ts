@@ -4541,6 +4541,7 @@ export interface StringsMap {
   'pipeline.imageTag': string
   'pipeline.imageVersionDeprecated': string
   'pipeline.importSuccessMessage': string
+  'pipeline.includeInfrastructureSelectors': string
   'pipeline.infraSpecifications.architecture': string
   'pipeline.infraSpecifications.architectureTypes.amd64': string
   'pipeline.infraSpecifications.architectureTypes.arm64': string

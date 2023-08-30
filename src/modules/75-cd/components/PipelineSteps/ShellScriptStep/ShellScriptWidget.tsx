@@ -13,12 +13,17 @@ import type { FormikProps } from 'formik'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
-
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { ShellScriptFormData, variableSchema } from './shellScriptTypes'
-import BaseShellScript from './BaseShellScript'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
+import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { getServiceDefinitionType, ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import OptionalConfiguration from './OptionalConfiguration'
-
+import BaseShellScript from './BaseShellScript'
+import { ShellScriptFormData, variableSchema } from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 /**
@@ -50,6 +55,37 @@ export function ShellScriptWidget(
 ): JSX.Element {
   const { getString } = useStrings()
 
+  const {
+    state: {
+      selectionState: { selectedStageId },
+      templateServiceData
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
+  const selectedDeploymentType = (): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+    return getServiceDefinitionType(
+      stage,
+      getStageFromPipeline,
+      isNewServiceEnvEntity,
+      isSvcEnvEnabled,
+      templateServiceData
+    )
+  }
+
+  const isInfraSelectorAllowed = (): boolean => {
+    const deploymentType = selectedDeploymentType() as ServiceDeploymentType
+
+    // Infra selector option is only allowed for CD stage and K8s/NativeHelm deployment
+    return (
+      stage?.stage?.type === StageType.DEPLOY &&
+      [ServiceDeploymentType.NativeHelm, ServiceDeploymentType.Kubernetes].includes(deploymentType)
+    )
+  }
+
   const defaultSSHSchema = Yup.object().shape({
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
     spec: Yup.object().shape({
@@ -65,7 +101,7 @@ export function ShellScriptWidget(
     ...getNameAndIdentifierSchema(getString, stepViewType)
   })
 
-  const values: any = {
+  const values: ShellScriptFormData = {
     ...initialValues,
     spec: {
       ...initialValues.spec,
@@ -104,6 +140,7 @@ export function ShellScriptWidget(
               formik={formik}
               readonly={readonly}
               allowableTypes={allowableTypes}
+              isInfraSelectorAllowed={isInfraSelectorAllowed()}
             />
             <Accordion className={stepCss.accordion}>
               <Accordion.Panel

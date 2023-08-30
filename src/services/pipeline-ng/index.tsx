@@ -675,6 +675,9 @@ export type AuditFilterProperties = FilterProperties & {
     | 'ABORT'
     | 'TIMEOUT'
     | 'SIGNED_EULA'
+    | 'ROLE_ASSIGNMENT_CREATED'
+    | 'ROLE_ASSIGNMENT_UPDATED'
+    | 'ROLE_ASSIGNMENT_DELETED'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -2290,6 +2293,7 @@ export interface ExecutionGraph {
 
 export interface ExecutionInfo {
   endTs?: number
+  runSequence?: number
   startTs?: number
   status?:
     | 'Running'
@@ -3537,7 +3541,9 @@ export type JexlCriteriaSpec = CriteriaSpec & {
 export type JiraApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   approvalCriteria: CriteriaSpecWrapperDTO
   connectorRef?: string
+  delegateTaskName?: string
   issue: JiraIssueKeyNG
+  latestDelegateTaskId?: string
   rejectionCriteria: CriteriaSpecWrapperDTO
 }
 
@@ -4278,7 +4284,7 @@ export interface ParameterFieldString {
 }
 
 export interface ParameterFieldTILanguage {
-  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
   executionInput?: boolean
   expression?: boolean
   expressionValue?: string
@@ -4286,7 +4292,7 @@ export interface ParameterFieldTILanguage {
   jsonResponseField?: boolean
   responseField?: string
   typeString?: boolean
-  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
 }
 
 export interface PatchInstruction {
@@ -6282,7 +6288,7 @@ export type RunStepInfo = StepSpecType & {
 export type RunTestsStepInfo = StepSpecType & {
   args: string
   buildEnvironment?: 'Core' | 'Framework'
-  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest'
+  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest' | 'Rspec'
   connectorRef?: string
   enableTestSplitting?: boolean
   envVariables?: {
@@ -6291,7 +6297,7 @@ export type RunTestsStepInfo = StepSpecType & {
   frameworkVersion?: '5.0' | '6.0'
   image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
-  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
   namespaces?: string
   outputVariables?: OutputNGVariable[]
   packages?: string
@@ -6446,6 +6452,8 @@ export type ServiceNowApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   approvalCriteria: CriteriaSpecWrapperDTO
   changeWindowSpec?: ServiceNowChangeWindowSpec
   connectorRef?: string
+  delegateTaskName?: string
+  latestDelegateTaskId?: string
   rejectionCriteria?: CriteriaSpecWrapperDTO
   ticket: ServiceNowTicketKeyNG
 }
@@ -6564,6 +6572,7 @@ export type ShellScriptStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   environmentVariables?: NGVariable[]
   executionTarget?: ExecutionTarget
+  includeInfraSelectors?: boolean
   metadata?: string
   onDelegate: boolean
   outputVariables?: NGVariable[]
@@ -6987,7 +6996,7 @@ export type TestStepInfo = StepSpecType & {
   shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
   splitting?: Splitting
   user?: number
-  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest'
+  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest' | 'rspec'
   with?: {
     [key: string]: JsonNode
   }
@@ -16712,6 +16721,79 @@ export const nGTriggerConfigV2Promise = (
     signal
   )
 
+export interface TriggerEventHistoryBuildSourceTypeQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  targetIdentifier?: string
+  artifactType?: string
+  searchTerm?: string
+  page?: number
+  size?: number
+  sort?: string[]
+}
+
+export type TriggerEventHistoryBuildSourceTypeProps = Omit<
+  GetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryBuildSourceTypeQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get artifact and manifest trigger event history based on build source type
+ */
+export const TriggerEventHistoryBuildSourceType = (props: TriggerEventHistoryBuildSourceTypeProps) => (
+  <Get<ResponsePageNGTriggerEventHistoryResponse, Failure | Error, TriggerEventHistoryBuildSourceTypeQueryParams, void>
+    path={`/triggers/eventHistory/artifact-manifest-info`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseTriggerEventHistoryBuildSourceTypeProps = Omit<
+  UseGetProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryBuildSourceTypeQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get artifact and manifest trigger event history based on build source type
+ */
+export const useTriggerEventHistoryBuildSourceType = (props: UseTriggerEventHistoryBuildSourceTypeProps) =>
+  useGet<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryBuildSourceTypeQueryParams,
+    void
+  >(`/triggers/eventHistory/artifact-manifest-info`, { base: getConfig('pipeline/api'), ...props })
+
+/**
+ * Get artifact and manifest trigger event history based on build source type
+ */
+export const triggerEventHistoryBuildSourceTypePromise = (
+  props: GetUsingFetchProps<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryBuildSourceTypeQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageNGTriggerEventHistoryResponse,
+    Failure | Error,
+    TriggerEventHistoryBuildSourceTypeQueryParams,
+    void
+  >(getConfig('pipeline/api'), `/triggers/eventHistory/artifact-manifest-info`, props, signal)
+
 export interface TriggerHistoryEventCorrelationQueryParams {
   accountIdentifier: string
   page?: number
@@ -18991,6 +19073,7 @@ export interface GetSchemaYamlQueryParams {
     | 'AwsCdkDestroy'
     | 'IdpScorecard'
     | 'IdpCheck'
+    | 'AwsCdkRollback'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19322,6 +19405,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsCdkDestroy'
     | 'IdpScorecard'
     | 'IdpCheck'
+    | 'AwsCdkRollback'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -19651,6 +19735,7 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'AwsCdkDestroy'
     | 'IdpScorecard'
     | 'IdpCheck'
+    | 'AwsCdkRollback'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

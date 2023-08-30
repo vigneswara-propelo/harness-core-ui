@@ -37,6 +37,7 @@ import {
   isFixedInput
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
 import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import {
   scriptInputType,
   scriptOutputType,
@@ -147,6 +148,28 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           </MultiTypeFieldSelector>
         </div>
       ) : null}
+
+      {getMultiTypeFromValue(template?.spec?.includeInfraSelectors) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes,
+              disabled: readonly,
+              defaultValueToReset: false
+            }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            disabled={readonly}
+            name={`${prefix}spec.includeInfraSelectors`}
+            label={getString('pipeline.includeInfrastructureSelectors')}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+
       {isArray(template?.spec?.environmentVariables) && template?.spec?.environmentVariables ? (
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector

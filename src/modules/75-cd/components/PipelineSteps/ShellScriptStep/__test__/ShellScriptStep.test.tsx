@@ -11,10 +11,30 @@ import { act, fireEvent, queryByAttribute, render } from '@testing-library/react
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { TestWrapper } from '@common/utils/testUtils'
+import {
+  PipelineContext,
+  PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import pipelineContextMock from '@pipeline/components/PipelineStudio/PipelineCanvas/__tests__/PipelineCanvasGitSyncTestHelper'
+import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ShellScriptStep } from '../ShellScriptStep'
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
+const getContextValue = (): PipelineContextInterface => {
+  return {
+    ...pipelineContextMock,
+    state: {
+      ...pipelineContextMock.state,
+      selectionState: { selectedStageId: 's1' }
+    },
+    getStageFromPipeline: jest.fn(() => {
+      return { stage: (pipelineContextMock.state.pipeline.stages as StageElementWrapperConfig[])[0], parent: undefined }
+    })
+  } as unknown as PipelineContextInterface
+}
 
 describe('Test Shell Script Step', () => {
   beforeEach(() => {
@@ -176,6 +196,18 @@ describe('Test Shell Script Step', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render infraSelector for CD - K8s/NativeHelm deployment type', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={getContextValue()}>
+          <TestStepWidget initialValues={{}} type={StepType.SHELLSCRIPT} stepViewType={StepViewType.Edit} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const includeInfraSelectorsCheckbox = container.querySelector('input[name="spec.includeInfraSelectors"]')
+    expect(includeInfraSelectorsCheckbox).not.toHaveAttribute('checked')
   })
 
   test('form produces correct data for fixed inputs', async () => {

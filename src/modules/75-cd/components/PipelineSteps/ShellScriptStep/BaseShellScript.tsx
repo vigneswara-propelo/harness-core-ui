@@ -12,10 +12,9 @@ import { AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-
 import BaseScript from '@cd/components/BaseScript/BaseScript'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import type { ShellScriptFormData } from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -30,8 +29,9 @@ export default function BaseShellScript(props: {
   readonly?: boolean
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
+  isInfraSelectorAllowed?: boolean
 }): React.ReactElement {
-  const { formik, isNewStep, readonly, stepViewType, allowableTypes } = props
+  const { formik, isNewStep, readonly, stepViewType, allowableTypes, isInfraSelectorAllowed } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -68,6 +68,17 @@ export default function BaseShellScript(props: {
 
       <div className={stepCss.divider} />
       <BaseScript formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
+
+      {isInfraSelectorAllowed && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name="spec.includeInfraSelectors"
+            label={getString('pipeline.includeInfrastructureSelectors')}
+            disabled={readonly}
+            multiTypeTextbox={{ expressions, allowableTypes, defaultValueToReset: false, disabled: readonly }}
+          />
+        </div>
+      )}
     </>
   )
 }
