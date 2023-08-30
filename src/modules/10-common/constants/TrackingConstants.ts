@@ -41,11 +41,10 @@ export enum StageActions {
   SelectConnectorType = 'Select Connector Type'
 }
 
-export enum AIChatActions {
+export enum AidaActions {
   ChatStarted = 'CS Bot chat started',
   AnswerReceived = 'CS Bot answer',
-  BotHelpful = 'CS Bot is helpful',
-  BotNotHelpful = 'CS Bot is not helpful'
+  VoteReceived = 'AIDA Vote Received'
 }
 
 export enum SecretActions {

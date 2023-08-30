@@ -12,8 +12,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Intent, Menu, MenuItem } from '@blueprintjs/core'
 import { Link, useParams } from 'react-router-dom'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
-import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useGetSettingValue } from 'services/cd-ng'
+import { AidaActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -23,6 +23,7 @@ import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
 import routes from '@common/RouteDefinitions'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { SettingType } from '@common/constants/Utils'
+import UsefulOrNot, { AidaClient } from '@common/components/UsefulOrNot/UsefulOrNot'
 import css from './DocsChat.module.scss'
 
 const CHAT_HISTORY_KEY = 'aida_chat_history'
@@ -41,61 +42,6 @@ const sampleMessages: Array<Message> = [
   }
 ]
 
-interface UsefulOrNotProps {
-  query: string
-  answer: string
-  openSubmitTicketModal: () => void
-}
-
-enum Vote {
-  None,
-  Up,
-  Down
-}
-
-function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps): JSX.Element {
-  const { trackEvent } = useTelemetry()
-  const [voted, setVoted] = useState<Vote>(Vote.None)
-
-  return (
-    <>
-      <Layout.Horizontal flex={{ align: 'center-center' }}>
-        <Text>
-          <String stringID="common.isHelpful" />
-        </Text>
-        <button
-          disabled={voted !== Vote.None}
-          className={cx({ [css.votedUp]: voted === Vote.Up }, css.voteButton)}
-          onClick={() => {
-            trackEvent(AIChatActions.BotHelpful, { query, answer })
-            setVoted(Vote.Up)
-          }}
-        >
-          <String stringID="yes" />
-        </button>
-        <button
-          disabled={voted !== Vote.None}
-          className={cx({ [css.votedDown]: voted === Vote.Down }, css.voteButton)}
-          onClick={() => {
-            trackEvent(AIChatActions.BotNotHelpful, { query, answer })
-            setVoted(Vote.Down)
-          }}
-        >
-          <String stringID="no" />
-        </button>
-      </Layout.Horizontal>
-      {voted === Vote.Down ? (
-        <Layout.Horizontal spacing="small" flex={{ align: 'center-center' }}>
-          <String stringID="common.csBot.ticketOnError" />
-          <a href="javascript:;" onClick={openSubmitTicketModal}>
-            <String stringID="common.clickHere" />
-          </a>
-        </Layout.Horizontal>
-      ) : null}
-    </>
-  )
-}
-
 function DocsChat(): JSX.Element {
   const [userInput, setUserInput] = useState('')
   const { currentUserInfo } = useAppStore()
@@ -111,13 +57,13 @@ function DocsChat(): JSX.Element {
     identifier: SettingType.AIDA,
     queryParams: { accountIdentifier: accountId }
   })
-  useTrackEvent(AIChatActions.ChatStarted, {})
+  useTrackEvent(AidaActions.ChatStarted, {})
 
   const getAnswer = async (oldMessages: Array<Message>, query: string): Promise<void> => {
     try {
       const answer = await askQuestion({ question: query })
       if (answer?.data?.response) {
-        trackEvent(AIChatActions.AnswerReceived, {
+        trackEvent(AidaActions.AnswerReceived, {
           query,
           answer: answer?.data?.response
         })
@@ -268,9 +214,14 @@ function DocsChat(): JSX.Element {
                   </div>
                   {message.author === 'harness' && index > 1 ? (
                     <UsefulOrNot
-                      answer={message.text}
-                      query={messages[index - 1].text}
-                      openSubmitTicketModal={openSubmitTicketModal}
+                      allowCreateTicket={true}
+                      telemetry={{
+                        aidaClient: AidaClient.CS_BOT,
+                        metadata: {
+                          answer: message.text,
+                          query: messages[index - 1].text
+                        }
+                      }}
                     />
                   ) : null}
                 </div>
@@ -302,9 +253,9 @@ function DocsChat(): JSX.Element {
               <Icon name="pipeline-deploy" size={24} />
             </button>
           </div>
+          <SubmitTicketModal isOpen={isOpen} close={closeSubmitTicketModal} />
         </>
       )}
-      <SubmitTicketModal isOpen={isOpen} close={closeSubmitTicketModal} />
     </div>
   )
 }

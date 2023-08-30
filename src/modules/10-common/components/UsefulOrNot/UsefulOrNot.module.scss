@@ -1,0 +1,20 @@
+.usefulOrNot {
+  .voteButton {
+    border: none;
+    background-color: transparent;
+    padding: var(--spacing-small);
+    cursor: pointer;
+
+    &:hover:enabled {
+      color: var(--primary-7);
+    }
+  }
+
+  .votedUp {
+    color: var(--green-800);
+  }
+
+  .votedDown {
+    color: var(--red-800);
+  }
+}
