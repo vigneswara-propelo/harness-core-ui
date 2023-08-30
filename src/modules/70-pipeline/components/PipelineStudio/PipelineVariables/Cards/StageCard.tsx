@@ -7,7 +7,7 @@
 
 import React from 'react'
 import produce from 'immer'
-import { defaultTo, isEmpty, lowerCase, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, lowerCase, set } from 'lodash-es'
 import { Text, NestedAccordionPanel, AllowedTypes } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -218,6 +218,7 @@ export default function StageCard(props: StageCardProps): React.ReactElement {
                   title={getString('executionText')}
                   execution={stageSpec.execution}
                   originalExecution={originalSpec.execution}
+                  unresolvedExecution={get(unresolvedStage, 'spec.execution')}
                   metadataMap={metadataMap}
                   stageIdentifier={originalStage.identifier}
                   allowableTypes={allowableTypes}

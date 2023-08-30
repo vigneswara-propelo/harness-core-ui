@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@harness/uicore'
 import { isEmpty, omit, set } from 'lodash-es'
 import { produce } from 'immer'
@@ -57,7 +57,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ]
-  const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(originalTemplate)
+  const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(template)
 
   const onUpdate = useCallback(
     async (
@@ -77,6 +77,10 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     },
     [templateAtState]
   )
+
+  useEffect(() => {
+    setTemplateAtState(template)
+  }, [template])
 
   async function applyChanges(): Promise<void> {
     await updateTemplate(templateAtState)
@@ -121,7 +125,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                 {originalTemplate.type === TemplateType.Stage && (
                   <StageCard
                     stage={variablesTemplate as StageElementConfig}
-                    unresolvedStage={{ ...template.spec, identifier: DefaultNewStageId } as StageElementConfig}
+                    unresolvedStage={{ ...templateAtState.spec, identifier: DefaultNewStageId } as StageElementConfig}
                     originalStage={{ ...originalTemplate.spec, identifier: DefaultNewStageId } as StageElementConfig}
                     metadataMap={metadataMap}
                     path="template"
@@ -148,6 +152,9 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                   <StepGroupTemplateCard
                     templateSteps={variablesTemplate as StepGroupElementConfig}
                     originalSteps={originalTemplate?.spec?.steps}
+                    unresolvedStepGroupTemplate={
+                      { ...templateAtState.spec, identifier: DefaultNewStageId } as StepGroupElementConfig
+                    }
                     stageIdentifier={DefaultNewStageId}
                     stepGroupIdentifier={originalTemplate.identifier}
                     metadataMap={metadataMap}

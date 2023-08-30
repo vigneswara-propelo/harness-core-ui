@@ -28,6 +28,7 @@ import css from '../PipelineVariables.module.scss'
 export interface AddStepsParams {
   steps?: ExecutionWrapperConfig[]
   originalSteps?: ExecutionWrapperConfig[]
+  unresolvedSteps?: ExecutionWrapperConfig[]
   parentPath?: string
   fullParentPath?: string
 }
@@ -38,6 +39,7 @@ export interface StepRenderData {
   path: string
   fullPath: string
   type: 'StepRenderData'
+  unresolvedStep?: StepElementConfig | TemplateStepNode
 }
 
 export interface StepGroupRenderData {
@@ -49,8 +51,9 @@ export interface StepGroupRenderData {
   fullPath: string
   type: 'StepGroupRenderData'
   stepGroup: StepGroupElementConfig
-  variables?: AllNGVariables[]
   originalStepGroup: StepGroupElementConfig
+  variables?: AllNGVariables[]
+  unresolvedStepGroup?: StepGroupElementConfig
 }
 
 export interface ExecutionCardProps {
@@ -61,16 +64,18 @@ export interface ExecutionCardProps {
   metadataMap: PipelineVariablesData['metadataMap']
   stageIdentifier: string
   onUpdateExecution(data: ExecutionElementConfig): void
-  readonly?: boolean
-  path?: string
   allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
+  unresolvedExecution?: ExecutionElementConfig
+  readonly?: boolean
+  path?: string
 }
 
 export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
   const {
     execution,
     originalExecution,
+    unresolvedExecution,
     metadataMap,
     stageIdentifier,
     onUpdateExecution,
@@ -84,6 +89,7 @@ export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
     function addToCards({
       steps,
       originalSteps,
+      unresolvedSteps,
       parentPath = /* istanbul ignore next */ '',
       fullParentPath = ''
     }: AddStepsParams): Array<StepRenderData | StepGroupRenderData> {
@@ -100,10 +106,12 @@ export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
               type: '',
               identifier: ''
             },
+            unresolvedStep: unresolvedSteps?.[i]?.step,
             path: parentPath,
             fullPath: `${fullParentPath || parentPath}[${i}].step`
           })
         } else if (stepGroup) {
+          const isStepGroupTemplate = !!(unresolvedSteps?.[i]?.stepGroup as unknown as TemplateStepNode)?.template
           cards.push({
             type: 'StepGroupRenderData',
             stepGroup,
@@ -111,10 +119,14 @@ export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
               name: '',
               identifier: ''
             },
+            unresolvedStepGroup: unresolvedSteps?.[i]?.stepGroup,
             steps: [
               ...(addToCards({
                 steps: stepGroup.steps,
                 originalSteps: originalSteps?.[i]?.stepGroup?.steps,
+                unresolvedSteps: isStepGroupTemplate
+                  ? (unresolvedSteps?.[i]?.stepGroup as unknown as TemplateStepNode)?.template?.templateInputs?.steps
+                  : unresolvedSteps?.[i]?.stepGroup?.steps,
                 parentPath: `${parentPath}.steps`,
                 fullParentPath: `${fullParentPath || parentPath}[${i}].stepGroup.steps`
               }) as StepRenderData[])
@@ -130,6 +142,7 @@ export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
             ...addToCards({
               steps: parallel,
               originalSteps: originalSteps?.[i]?.parallel,
+              unresolvedSteps: unresolvedSteps?.[i]?.parallel,
               parentPath: `${parentPath}.parallel`,
               fullParentPath: `${fullParentPath || parentPath}[${i}].parallel`
             })
@@ -141,20 +154,28 @@ export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
     }
 
     return [
-      ...addToCards({ steps: execution.steps, originalSteps: originalExecution.steps, parentPath: `${path}.steps` }),
+      ...addToCards({
+        steps: execution.steps,
+        originalSteps: originalExecution.steps,
+        unresolvedSteps: unresolvedExecution?.steps,
+        parentPath: `${path}.steps`
+      }),
       ...addToCards({
         steps: execution.rollbackSteps,
         originalSteps: originalExecution.rollbackSteps,
+        unresolvedSteps: unresolvedExecution?.rollbackSteps,
         parentPath: `${path}.rollbackSteps`
       })
     ]
-  }, [execution, originalExecution])
+  }, [execution, originalExecution, unresolvedExecution])
 
   return (
     <React.Fragment>
       {allSteps.map((row, index) => {
         if (row.type === 'StepRenderData' && row.step && row.originalStep) {
-          const { step, originalStep, path: pathStep } = row
+          const { step, originalStep, path: pathStep, unresolvedStep } = row
+          const isStepTemplate = !!(unresolvedStep as unknown as TemplateStepNode)?.template
+
           return (
             <StepCardPanel
               key={index}
@@ -162,12 +183,12 @@ export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
               originalStep={originalStep}
               stepPath={pathStep}
               metadataMap={metadataMap}
-              readonly={readonly}
+              readonly={readonly || isStepTemplate}
               stageIdentifier={stageIdentifier}
               allowableTypes={allowableTypes}
               onUpdateStep={(data: StepElementConfig, stepPath: string) => {
                 onUpdateExecution(
-                  produce(originalExecution, draft => {
+                  produce(unresolvedExecution as ExecutionElementConfig, draft => {
                     set(draft, stepPath, data)
                   })
                 )
@@ -179,23 +200,26 @@ export function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
 
         /* istanbul ignore else */
         if (row.type === 'StepGroupRenderData') {
-          const { path: sgPath, stepGroup, originalStepGroup, fullPath } = row
+          const { path: sgPath, stepGroup, originalStepGroup, fullPath, unresolvedStepGroup } = row
+          const isStepGroupTemplate = !!(unresolvedStepGroup as unknown as TemplateStepNode)?.template
+
           return (
             <StepGroupCardPanel
               key={sgPath}
               originalStepGroup={originalStepGroup}
               stepGroup={stepGroup}
+              unresolvedStepGroup={unresolvedStepGroup}
               steps={row.steps}
               stepGroupIdentifier={row.identifier}
               path={sgPath}
               metadataMap={metadataMap}
-              readonly={readonly}
+              readonly={readonly || isStepGroupTemplate}
               stageIdentifier={stageIdentifier}
               allowableTypes={allowableTypes}
               fullPath={fullPath}
               onUpdateStep={(data: StepElementConfig, stepPath: string) => {
                 onUpdateExecution(
-                  produce(originalExecution, draft => {
+                  produce(unresolvedExecution as ExecutionElementConfig, draft => {
                     set(draft, stepPath, data)
                   })
                 )

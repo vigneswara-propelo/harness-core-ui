@@ -136,6 +136,7 @@ export interface StepGroupCardProps {
   originalStepGroup: StepGroupElementConfig
   stepGroup: StepGroupElementConfig
   fullPath?: string
+  unresolvedStepGroup?: StepGroupElementConfig
 }
 
 export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
@@ -149,6 +150,7 @@ export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
     stepsFactory,
     originalStepGroup,
     stepGroup,
+    unresolvedStepGroup,
     path: sgPath,
     fullPath
   } = props
@@ -192,7 +194,7 @@ export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
             stepViewType={StepViewType.InputVariable}
             onUpdate={({ variables }: CustomVariablesData) => {
               onUpdateStep(
-                produce(originalStepGroup, draft => {
+                produce(unresolvedStepGroup as StepGroupElementConfig, draft => {
                   if (draft) {
                     set(draft, 'variables', variables)
                   }
@@ -217,6 +219,9 @@ export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
       />
       {steps.map((row: any) => {
         if (row.type === 'StepGroupRenderData') {
+          // when parent is step-group and child is step-group template
+          const isStepGroupTemplate = !!(row?.unresolvedStepGroup as TemplateStepNode)?.template
+
           return (
             <StepGroupCardPanel
               key={row.path}
@@ -226,12 +231,13 @@ export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
               fullPath={row.fullPath}
               allowableTypes={allowableTypes}
               metadataMap={metadataMap}
-              readonly={readonly}
+              readonly={readonly || isStepGroupTemplate}
               stageIdentifier={stageIdentifier}
               onUpdateStep={onUpdateStep}
               stepsFactory={stepsFactory}
               originalStepGroup={row?.originalStepGroup}
               stepGroup={row?.stepGroup}
+              unresolvedStepGroup={row?.unresolvedStepGroup}
             />
           )
         }
@@ -284,11 +290,11 @@ interface StepGroupTemplateVariables extends Omit<StepGroupCardProps, 'steps'> {
   originalSteps: ExecutionWrapperConfig[]
   path: string
   fullParentPath?: string
+  unresolvedStepGroupTemplate?: StepGroupElementConfig
 }
 
 export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.ReactElement {
   const { metadataMap, stageIdentifier, onUpdateStep, readonly, path, allowableTypes, stepsFactory } = props
-  const originalSpec = (props?.originalStepGroup as NGTemplateInfoConfig).spec
 
   const onUpdateSGSpec = React.useCallback(
     execution => {
@@ -304,6 +310,7 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
     function addToCards({
       steps,
       originalSteps,
+      unresolvedSteps,
       parentPath = /* istanbul ignore next */ '',
       fullParentPath = ''
     }: AddStepsParams): Array<StepRenderData | StepGroupRenderData> {
@@ -319,10 +326,12 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
               type: '',
               identifier: ''
             },
+            unresolvedStep: unresolvedSteps?.[i]?.step,
             path: parentPath,
             fullPath: `${fullParentPath || parentPath}[${i}].step`
           })
         } else if (stepGroup) {
+          const isStepGroupTemplate = !!(unresolvedSteps?.[i]?.stepGroup as unknown as TemplateStepNode)?.template
           cards.push({
             type: 'StepGroupRenderData',
             stepGroup,
@@ -330,10 +339,14 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
               name: '',
               identifier: ''
             },
+            unresolvedStepGroup: unresolvedSteps?.[i]?.stepGroup,
             steps: [
               ...(addToCards({
                 steps: stepGroup.steps,
                 originalSteps: originalSteps?.[i]?.stepGroup?.steps,
+                unresolvedSteps: isStepGroupTemplate
+                  ? (unresolvedSteps?.[i]?.stepGroup as unknown as TemplateStepNode)?.template?.templateInputs?.steps
+                  : unresolvedSteps?.[i]?.stepGroup?.steps,
                 parentPath: `${parentPath}.steps`,
                 fullParentPath: `${fullParentPath || parentPath}[${i}].stepGroup.steps`
               }) as StepRenderData[])
@@ -349,6 +362,7 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
             ...addToCards({
               steps: parallel,
               originalSteps: originalSteps?.[i]?.parallel,
+              unresolvedSteps: unresolvedSteps?.[i]?.parallel,
               parentPath: `${parentPath}.parallel`,
               fullParentPath: `${fullParentPath || parentPath}[${i}].parallel`
             })
@@ -363,16 +377,19 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
       ...addToCards({
         steps: props?.templateSteps?.steps,
         originalSteps: props?.originalSteps,
+        unresolvedSteps: props?.unresolvedStepGroupTemplate?.steps,
         parentPath: `${path}.steps`
       })
     ]
-  }, [props?.templateSteps, props?.originalSteps, path])
+  }, [props?.templateSteps, props?.originalSteps, props?.unresolvedStepGroupTemplate, path])
 
   return (
     <React.Fragment>
       {allSteps.map((row, index) => {
         if (row.type === 'StepRenderData' && row.step && row.originalStep) {
-          const { step, originalStep, path: pathStep } = row
+          const { step, originalStep, path: pathStep, unresolvedStep } = row
+          const isStepTemplate = !!(unresolvedStep as unknown as TemplateStepNode)?.template
+
           return (
             <StepCardPanel
               key={index}
@@ -381,7 +398,7 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
               metadataMap={metadataMap}
               stageIdentifier={stageIdentifier}
               stepPath={pathStep}
-              readonly={readonly}
+              readonly={readonly || isStepTemplate}
               allowableTypes={allowableTypes}
               onUpdateStep={onUpdateStep}
               stepsFactory={stepsFactory}
@@ -391,23 +408,26 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
 
         /* istanbul ignore else */
         if (row.type === 'StepGroupRenderData') {
-          const { path: sgPath, stepGroup, originalStepGroup, fullPath } = row
+          const { path: sgPath, stepGroup, originalStepGroup, fullPath, unresolvedStepGroup } = row
+          const isStepGroupTemplate = !!(unresolvedStepGroup as unknown as TemplateStepNode)?.template
+
           return (
             <StepGroupCardPanel
               key={sgPath}
               originalStepGroup={originalStepGroup}
               stepGroup={stepGroup}
+              unresolvedStepGroup={unresolvedStepGroup}
               steps={row.steps}
               stepGroupIdentifier={row.identifier}
               path={sgPath}
               metadataMap={metadataMap}
-              readonly={readonly}
+              readonly={readonly || isStepGroupTemplate}
               stageIdentifier={stageIdentifier}
               allowableTypes={allowableTypes}
               fullPath={fullPath}
               onUpdateStep={(data: StepElementConfig, stepPath: string) => {
                 onUpdateSGSpec(
-                  produce(originalSpec, draft => {
+                  produce((props?.unresolvedStepGroupTemplate as NGTemplateInfoConfig)?.spec, draft => {
                     if (draft) {
                       set(draft, stepPath, data)
                     }
