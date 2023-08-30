@@ -380,7 +380,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.project`, template) && (
             <SelectInputSetView
               selectItems={getItems(fetchingProjects, 'Projects', projectItems)}
-              // disabled={isFeedDisabled()}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.project`)}
               name={`${path}.artifacts.${artifactPath}.spec.project`}
               label={getString('projectLabel')}
               placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
@@ -410,7 +410,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.feed`, template) && (
             <SelectInputSetView
               selectItems={getItems(fetchingFeeds, 'Feeds', feedItems)}
-              //   disabled={isFeedDisabled()}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.feed`)}
               name={`${path}.artifacts.${artifactPath}.spec.feed`}
               label={getString('pipeline.artifactsSelection.feed')}
               placeholder={getString('pipeline.artifactsSelection.feedPlaceholder')}
@@ -447,7 +447,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.package`, template) && (
             <SelectInputSetView
               selectItems={getItems(fetchingPackages, 'Packages', packageItems)}
-              // disabled={isFeedDisabled()}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.package`)}
               name={`${path}.artifacts.${artifactPath}.spec.package`}
               label={getString('pipeline.artifactsSelection.packageName')}
               placeholder={getString('pipeline.artifactsSelection.packageNamePlaceholder')}
@@ -484,7 +484,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
             <SelectInputSetView
               selectItems={getItems(fetchingVersions, 'Versions', versionItems)}
-              // disabled={isFeedDisabled()}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
