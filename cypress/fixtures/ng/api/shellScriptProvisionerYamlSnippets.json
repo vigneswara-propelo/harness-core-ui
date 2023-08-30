@@ -1,6 +1,0 @@
-{
-  "status": "SUCCESS",
-  "data": "provisioner:\n  steps:\n    - step:\n        type: ShellScriptProvision\n        name: Shell Script Provision\n        identifier: dfe51017-d346-5323-be6f-c55cbb699cc5\n        spec: {}\n        timeout: 10m\n  rollbackSteps:\n",
-  "metaData": null,
-  "correlationId": "4df77bbb-d54e-4129-af1e-106e9bde36b1"
-}
