@@ -466,6 +466,10 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                                 />
                               </svg>
                             </span>
+                          </div>
+                          <div
+                            class="Layout--horizontal StyledProps--main editButtonWrapper"
+                          >
                             <button
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main editBtn Button--with-current-color Button--without-shadow"
                               data-testid="-edit"
@@ -629,6 +633,10 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                                 />
                               </svg>
                             </span>
+                          </div>
+                          <div
+                            class="Layout--horizontal StyledProps--main editButtonWrapper"
+                          >
                             <button
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main editBtn Button--with-current-color Button--without-shadow"
                               data-testid="-edit"
@@ -2612,6 +2620,10 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                                 />
                               </svg>
                             </span>
+                          </div>
+                          <div
+                            class="Layout--horizontal StyledProps--main editButtonWrapper"
+                          >
                             <button
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main editBtn Button--with-current-color Button--without-shadow"
                               data-testid="-edit"
@@ -2775,6 +2787,10 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                                 />
                               </svg>
                             </span>
+                          </div>
+                          <div
+                            class="Layout--horizontal StyledProps--main editButtonWrapper"
+                          >
                             <button
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main editBtn Button--with-current-color Button--without-shadow"
                               data-testid="-edit"

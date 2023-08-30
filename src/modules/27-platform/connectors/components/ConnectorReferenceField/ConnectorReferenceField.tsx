@@ -428,6 +428,8 @@ const RecordRender: React.FC<RecordRenderProps> = props => {
           activeClassName={css.favoriteActive}
           isFavorite={item.record.isFavorite}
         />
+      </Layout.Horizontal>
+      <Layout.Horizontal className={css.editButtonWrapper}>
         {!item.record.harnessManaged ? (
           <RbacButton
             minimal

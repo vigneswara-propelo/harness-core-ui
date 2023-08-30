@@ -12,6 +12,9 @@
       padding-left: var(--spacing-xsmall);
     }
   }
+  .editButtonWrapper {
+    width: var(--spacing-9);
+  }
   .edit-btn {
     visibility: hidden;
   }

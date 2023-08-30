@@ -12,6 +12,7 @@ declare const styles: {
   readonly connectorNameId: string
   readonly detailsContainer: string
   readonly editBtn: string
+  readonly editButtonWrapper: string
   readonly favoriteActive: string
   readonly favoriteStar: string
   readonly flexOne: string
