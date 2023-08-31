@@ -16,14 +16,28 @@ import {
   Page,
   Text
 } from '@harness/uicore'
-import { useEnforcementnewViolationsQuery } from '@harnessio/react-ssca-service-client'
+import {
+  EnforcementnewViolationsOkResponse,
+  useEnforcementnewViolationsQuery
+} from '@harnessio/react-ssca-service-client'
+import {
+  GetPolicyViolationsOkResponse,
+  GetPolicyViolationsQueryQueryParams,
+  useGetPolicyViolationsQuery
+} from '@harnessio/react-ssca-manager-client'
 import React, { ReactElement, useRef } from 'react'
+import { useParams } from 'react-router-dom'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Width } from '@common/constants/Utils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PolicyViolationsTable } from './PolicyViolationsTable'
 import { EnforcementViolationQueryParams, getQueryParamOptions } from './utils'
+import { PolicyViolationsTableOld } from './PolicyViolationsTableOld'
 import css from './PolicyViolations.module.scss'
 
 interface PolicyViolationsDrawerProps {
@@ -41,22 +55,47 @@ export function PolicyViolationsDrawer({
   const { page, size, searchTerm, sort, order } = useQueryParams<EnforcementViolationQueryParams>(
     getQueryParamOptions()
   )
+  const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const resetFilter = (): void => {
     updateQueryParams({ searchTerm: undefined, page: 0 })
     searchRef.current.clear()
   }
 
-  const { data, isLoading, error, refetch } = useEnforcementnewViolationsQuery({
-    enforcementId,
-    queryParams: {
-      page,
-      pageSize: size,
-      searchTerm,
-      sort,
-      order
-    }
-  })
+  const SSCA_MANAGER_ENABLED = useFeatureFlag(FeatureFlag.SSCA_MANAGER_ENABLED)
+
+  const useEnforcementnewViolationsQueryResult = useEnforcementnewViolationsQuery(
+    {
+      enforcementId,
+      queryParams: {
+        page,
+        pageSize: size,
+        searchTerm,
+        sort,
+        order
+      }
+    },
+    { enabled: !SSCA_MANAGER_ENABLED }
+  )
+
+  const useGetPolicyViolationsQueryResult = useGetPolicyViolationsQuery(
+    {
+      org: orgIdentifier,
+      project: projectIdentifier,
+      'enforcement-id': enforcementId,
+      queryParams: {
+        page,
+        limit: size,
+        sort: sort as GetPolicyViolationsQueryQueryParams['sort'], // TODO: change the EnforcementViolationQueryParams client side type to this after removing FF
+        order: order as GetPolicyViolationsQueryQueryParams['order']
+      }
+    },
+    { enabled: SSCA_MANAGER_ENABLED }
+  )
+
+  const { isLoading, error, refetch, data } = SSCA_MANAGER_ENABLED
+    ? useGetPolicyViolationsQueryResult
+    : useEnforcementnewViolationsQueryResult
 
   return (
     <Drawer
@@ -85,12 +124,15 @@ export function PolicyViolationsDrawer({
 
       <Page.Body
         loading={isLoading}
-        error={error as string}
+        error={get(error, 'message', error)}
         retryOnError={() => {
           refetch()
         }}
         noData={{
-          when: () => !error && !data?.content.results?.length,
+          when: () =>
+            !error && SSCA_MANAGER_ENABLED
+              ? !(data as GetPolicyViolationsOkResponse)?.content?.length
+              : !(data as EnforcementnewViolationsOkResponse)?.content.results?.length,
           image: EmptySearchResults,
           messageTitle: getString('common.filters.noResultsFound'),
           message: getString('common.filters.noMatchingFilterData'),
@@ -117,7 +159,12 @@ export function PolicyViolationsDrawer({
           />
         </div>
 
-        {data && <PolicyViolationsTable data={data} />}
+        {data &&
+          (SSCA_MANAGER_ENABLED ? (
+            <PolicyViolationsTable data={data as GetPolicyViolationsOkResponse} />
+          ) : (
+            <PolicyViolationsTableOld data={data as EnforcementnewViolationsOkResponse} />
+          ))}
       </Page.Body>
     </Drawer>
   )

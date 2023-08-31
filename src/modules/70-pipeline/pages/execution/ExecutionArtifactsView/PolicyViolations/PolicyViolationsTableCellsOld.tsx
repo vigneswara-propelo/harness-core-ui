@@ -8,15 +8,16 @@
 
 import { Color, FontVariation } from '@harness/design-system'
 import { Layout, Text } from '@harness/uicore'
+import type { EnforcementResult } from '@harnessio/react-ssca-service-client'
 import React from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
-import { PolicyViolation } from '@harnessio/react-ssca-manager-client'
 
 export type SortBy = {
   sort: 'name' | 'supplier' | 'license'
   order: 'ASC' | 'DESC'
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D>
   row: Row<D>
@@ -24,10 +25,10 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
   value: CellValue<V>
 }
 
-type CellType = Renderer<CellTypeWithActions<PolicyViolation>>
+type CellType = Renderer<CellTypeWithActions<EnforcementResult>>
 
 export interface CellTypeRegister {
-  component: React.ComponentType<UseTableCellProps<PolicyViolation>>
+  component: React.ComponentType<UseTableCellProps<EnforcementResult>>
 }
 
 export const PackageNameCell: CellType = ({ row }) => {
@@ -55,7 +56,7 @@ export const PackageSupplierCell: CellType = ({ row }) => {
       </Text>
 
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
-        {data['supplier_type']}
+        {data.supplierType}
       </Text>
     </Layout.Vertical>
   )
@@ -75,11 +76,11 @@ export const ViolationsDetailsCell: CellType = ({ row }) => {
   return (
     <Layout.Vertical spacing="xsmall">
       <Text font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
-        {data['violation_details']}
+        {data.violationDetails}
       </Text>
 
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
-        {data['violation_type']}
+        {data.violationType}
       </Text>
     </Layout.Vertical>
   )

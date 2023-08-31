@@ -8,7 +8,7 @@
 import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
-import { GetPolicyViolationsOkResponse, PolicyViolation } from '@harnessio/react-ssca-manager-client'
+import type { EnforcementResult, EnforcementnewViolationsOkResponse } from '@harnessio/react-ssca-service-client'
 import { useStrings } from 'framework/strings'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useUpdateQueryParams, useQueryParams } from '@common/hooks'
@@ -18,7 +18,7 @@ import {
   ViolationsDetailsCell,
   SortBy,
   LicenseCell
-} from './PolicyViolationsTableCells'
+} from './PolicyViolationsTableCellsOld'
 import {
   ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
   ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
@@ -28,10 +28,10 @@ import {
 import css from './PolicyViolations.module.scss'
 
 export interface PolicyViolationsTableProps {
-  data: GetPolicyViolationsOkResponse
+  data: EnforcementnewViolationsOkResponse
 }
 
-export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): React.ReactElement {
+export function PolicyViolationsTableOld({ data }: PolicyViolationsTableProps): React.ReactElement {
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams<Partial<EnforcementViolationQueryParams>>()
   const { sort, order } = useQueryParams<EnforcementViolationQueryParams>(getQueryParamOptions())
@@ -43,7 +43,8 @@ export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): Rea
     pageCount: pageCount || 0,
     pageIndex: pageNumber
   })
-  const columns: Column<PolicyViolation>[] = React.useMemo(() => {
+
+  const columns: Column<EnforcementResult>[] = React.useMemo(() => {
     // TODO: get this type exported from UICore table
     const getServerSortProps = (id: string): unknown => {
       return {
@@ -78,7 +79,7 @@ export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): Rea
 
       {
         Header: getString('pipeline.violationDetails'),
-        accessor: 'violation_details',
+        accessor: 'violationDetails',
         Cell: ViolationsDetailsCell,
         disableSortBy: true
       }
@@ -86,6 +87,12 @@ export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): Rea
   }, [getString, order, sort, updateQueryParams])
 
   return (
-    <TableV2 className={css.table} columns={columns} data={data.content || []} sortable pagination={paginationProps} />
+    <TableV2
+      className={css.table}
+      columns={columns}
+      data={data.content.results || []}
+      sortable
+      pagination={paginationProps}
+    />
   )
 }
