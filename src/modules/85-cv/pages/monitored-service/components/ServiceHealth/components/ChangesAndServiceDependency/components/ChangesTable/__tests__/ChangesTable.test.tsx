@@ -213,7 +213,8 @@ describe('Change table', () => {
     await waitFor(() => expect(getByText('Demo Test PD')).toBeTruthy())
     await waitFor(() => expect(getByText('Kubernetes Deployment event')).toBeTruthy())
     await waitFor(() => expect(getByText('Deployment of manager in prod HarnessCD')).toBeTruthy())
-    await waitFor(() => expect(getByText('Deployment of manager in prod HarnessCDNextGen')).toBeTruthy())
+    await waitFor(() => expect(getByText('pipelineId')).toBeTruthy())
+    await waitFor(() => expect(getByText('cd.serviceDashboard.executionId 11')).toBeTruthy())
     await waitFor(() => expect(getByText('CV Trial Limit')).toBeTruthy())
 
     // verify types column

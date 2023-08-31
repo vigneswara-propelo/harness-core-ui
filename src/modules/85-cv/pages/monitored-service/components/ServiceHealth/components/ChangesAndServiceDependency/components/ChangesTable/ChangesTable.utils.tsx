@@ -12,6 +12,7 @@ import type { Renderer, CellProps } from 'react-table'
 import { ChangeEventDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { getChangeCategory } from '@cv/utils/CommonUtils'
+import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { timeFormat, dateFormat } from './ChangesTable.constants'
 import css from './ChangeTable.module.scss'
 
@@ -28,12 +29,25 @@ export const RenderTime: Renderer<CellProps<ChangeEventDTO>> = ({ row }): JSX.El
 }
 
 export const RenderName: Renderer<CellProps<ChangeEventDTO>> = ({ row }): JSX.Element => {
+  const { getString } = useStrings()
   const rowdata = row?.original
+  let name = rowdata?.name
+  let executionId = null
+  if (rowdata?.type === ChangeSourceTypes.HarnessCDNextGen) {
+    const { pipelineId = '', runSequence } = rowdata.metadata
+    name = pipelineId
+    executionId = runSequence
+  }
   return (
     <Container className={css.changeSoureName}>
-      <Text tooltip={rowdata.name} font={{ size: 'small' }}>
-        {rowdata.name}
+      <Text tooltip={name} font={{ size: 'small' }}>
+        {name}
       </Text>
+      {executionId && (
+        <Text font={{ size: 'xsmall' }}>
+          {getString('cd.serviceDashboard.executionId')} {executionId}
+        </Text>
+      )}
     </Container>
   )
 }

@@ -859,10 +859,17 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                                 class="StyledProps--font StyledProps--main StyledProps--font-size-small"
                                 tabindex="0"
                               >
-                                Deployment of manager in prod HarnessCDNextGen
+                                pipelineId
                               </p>
                             </span>
                           </span>
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                          >
+                            cd.serviceDashboard.executionId
+                             
+                            11
+                          </p>
                         </div>
                       </div>
                       <div

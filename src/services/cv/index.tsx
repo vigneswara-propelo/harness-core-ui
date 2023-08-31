@@ -2769,6 +2769,7 @@ export type HarnessCDEventMetadata = ChangeEventMetadata & {
   pipelineId?: string
   pipelinePath?: string
   planExecutionId?: string
+  runSequence?: string
   stageId?: string
   stageStepId?: string
   status?: string

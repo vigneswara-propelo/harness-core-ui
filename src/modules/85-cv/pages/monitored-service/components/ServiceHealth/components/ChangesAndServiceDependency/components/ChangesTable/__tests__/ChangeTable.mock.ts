@@ -56,7 +56,11 @@ export const mockData = {
         changeSourceIdentifier: 'harness_cd_next_gen',
         eventTime: 1634648718481,
         category: 'Deployment',
-        type: 'HarnessCDNextGen'
+        type: 'HarnessCDNextGen',
+        metadata: {
+          pipelineId: 'pipelineId',
+          runSequence: '11'
+        }
       },
       {
         id: 'Wz75tpRlTVeacqcEhTXqRA',
