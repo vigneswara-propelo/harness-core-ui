@@ -42,6 +42,9 @@ export type AuditFilterProperties = FilterProperties & {
     | 'ABORT'
     | 'TIMEOUT'
     | 'SIGNED_EULA'
+    | 'ROLE_ASSIGNMENT_CREATED'
+    | 'ROLE_ASSIGNMENT_UPDATED'
+    | 'ROLE_ASSIGNMENT_DELETED'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -229,6 +232,10 @@ export type ConnectorInternalFilterProperties = FilterProperties & {
     | 'Harness'
     | 'Rancher'
   )[]
+}
+
+export type ConnectorValidationErrorMetadataDTO = ErrorMetadataDTO & {
+  taskId?: string
 }
 
 export interface EntityDetail {
@@ -466,6 +473,8 @@ export interface EntityDetail {
     | 'AwsCdkDestroy'
     | 'IdpScorecard'
     | 'IdpCheck'
+    | 'AwsCdkRollback'
+    | 'IACM'
 }
 
 export interface EntityDetailProtoDTO {
@@ -1705,6 +1714,7 @@ export interface FilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -1839,11 +1849,14 @@ export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
 export interface Page {
   content?: { [key: string]: any }[]
   empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  pageToken?: string
-  totalItems?: number
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
   totalPages?: number
 }
 
@@ -1993,7 +2006,7 @@ export interface ResourceDTO {
     | 'CET_AGENT_TOKEN'
     | 'CET_CRITICAL_EVENT'
     | 'CHAOS_SECURITY_GOVERNANCE'
-    | 'END_LEVEL_USER_AGREEMENT'
+    | 'END_USER_LICENSE_AGREEMENT'
     | 'WORKSPACE'
 }
 
@@ -2645,6 +2658,7 @@ export interface TemplateFilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -2965,6 +2979,7 @@ export interface GetFilterListQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -3131,6 +3146,7 @@ export interface DeleteFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -3198,6 +3214,7 @@ export interface GetFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'

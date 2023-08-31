@@ -837,12 +837,12 @@ export interface AdditionalMetadata {
 }
 
 export interface AddressDto {
-  city?: string
-  country?: string
-  line1?: string
+  city: string
+  country: string
+  line1: string
   line2?: string
-  postalCode?: string
-  state?: string
+  postalCode: string
+  state: string
 }
 
 export interface AgentApplicationTargets {
@@ -1151,6 +1151,7 @@ export interface ArtifactoryImagePathsDTO {
 
 export type ArtifactoryRegistryArtifactConfig = ArtifactConfig & {
   artifactDirectory?: string
+  artifactFilter?: string
   artifactPath?: string
   artifactPathFilter?: string
   connectorRef: string
@@ -1313,6 +1314,9 @@ export type AuditFilterProperties = FilterProperties & {
     | 'ABORT'
     | 'TIMEOUT'
     | 'SIGNED_EULA'
+    | 'ROLE_ASSIGNMENT_CREATED'
+    | 'ROLE_ASSIGNMENT_UPDATED'
+    | 'ROLE_ASSIGNMENT_DELETED'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -1394,6 +1398,9 @@ export type AwsCdkDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   image: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  parameters?: {
+    [key: string]: string
+  }
   privileged?: boolean
   provisionerIdentifier: string
   resources?: ContainerResource
@@ -2374,7 +2381,7 @@ export interface BucketResponse {
 
 export interface Build {
   spec: BuildSpec
-  type: 'branch' | 'tag' | 'PR'
+  type: 'branch' | 'tag' | 'PR' | 'CommitSha'
 }
 
 export interface BuildDetails {
@@ -2802,6 +2809,10 @@ export interface CommandUnitWrapper {
   name: string
   spec?: CommandUnitBaseSpec
   type: string
+}
+
+export type CommitShaBuildSpec = BuildSpec & {
+  commitSha: string
 }
 
 export interface ConfigFile {
@@ -3669,6 +3680,7 @@ export interface DelegateFilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -3812,6 +3824,7 @@ export interface DelegateProfileFilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -4742,6 +4755,7 @@ export interface EntityDetail {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4873,6 +4887,7 @@ export interface EnvironmentFilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -6855,6 +6870,7 @@ export interface FilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -7536,6 +7552,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   )[]
   moduleType?:
     | 'CD'
@@ -7790,6 +7807,7 @@ export interface GitEntityFilterProperties {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -8123,6 +8141,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8369,6 +8388,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8746,6 +8766,7 @@ export interface GitSyncEntityDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8986,6 +9007,7 @@ export interface GitSyncEntityListDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9243,6 +9265,7 @@ export interface GitSyncErrorDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10315,6 +10338,7 @@ export interface InstanceDetailsDTO {
   instanceKey?: string
   pipelineExecutionName?: string
   podName?: string
+  rollbackStatus?: 'UNAVAILABLE' | 'NOT_STARTED' | 'STARTED' | 'SUCCESS' | 'FAILURE'
   terraformInstance?: string
 }
 
@@ -10528,6 +10552,7 @@ export type JenkinsBearerTokenDTO = JenkinsAuthCredentialsDTO & {
 
 export type JenkinsBuildStepInfo = StepSpecType & {
   connectorRef: string
+  consoleLogPollFrequency?: string
   delegateSelectors?: string[]
   jobName: string
   jobParameter?: JenkinsParameterField[]
@@ -10603,6 +10628,13 @@ export interface JiraIssueCreateMetadataNG {
   projects?: {
     [key: string]: JiraProjectNG
   }
+}
+
+export interface JiraIssueTransitionNG {
+  available?: boolean
+  id: string
+  name: string
+  to: JiraStatusNG
 }
 
 export interface JiraIssueTypeNG {
@@ -10775,6 +10807,7 @@ export type K8sDeleteStepInfo = StepSpecType & {
 }
 
 export type K8sDeploymentReleaseDetails = DeploymentDetails & {
+  helmChartInfo?: HelmChartInfo
   k8sCloudClusterConfig?: KubernetesCloudClusterConfig
   namespaces?: string[]
   releaseName?: string
@@ -10806,6 +10839,7 @@ export type K8sInfrastructureDetails = InfrastructureDetails & {
 export type K8sInstanceInfoDTO = InstanceInfoDTO & {
   blueGreenColor?: string
   containerList: K8sContainer[]
+  helmChartInfo?: HelmChartInfo
   namespace: string
   podIP?: string
   podName: string
@@ -10972,7 +11006,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -10980,6 +11014,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11326,6 +11361,21 @@ export interface ManifestOverrideSets {
   manifests?: ManifestConfigWrapper[]
 }
 
+export interface ManifestStoreInfo {
+  branch?: string
+  bucketName?: string
+  chartName?: string
+  chartVersion?: string
+  commitId?: string
+  folderPath?: string
+  helmVersion?: string
+  paths?: string[]
+  region?: string
+  repoName?: string
+  storeType?: string
+  subChartPath?: string
+}
+
 export interface ManualFailureSpecConfig {
   onTimeout: OnTimeoutConfig
   timeout: string
@@ -11641,6 +11691,7 @@ export interface NGEntityList {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   )[]
 }
 
@@ -11978,10 +12029,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -12050,7 +12100,14 @@ export interface OciHelmChartStoreConfig {
 export interface OciHelmChartStoreConfigWrapper {
   metadata?: string
   spec: OciHelmChartStoreConfig
-  type: 'Generic'
+  type: 'Generic' | 'ECR'
+}
+
+export type OciHelmChartStoreEcrConfig = OciHelmChartStoreConfig & {
+  connectorRef: string
+  metadata?: string
+  region: string
+  registryId?: string
 }
 
 export type OciHelmChartStoreGenericConfig = OciHelmChartStoreConfig & {
@@ -12837,7 +12894,7 @@ export interface ParameterFieldString {
 }
 
 export interface ParameterFieldTILanguage {
-  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
   executionInput?: boolean
   expression?: boolean
   expressionValue?: string
@@ -12845,7 +12902,7 @@ export interface ParameterFieldTILanguage {
   jsonResponseField?: boolean
   responseField?: string
   typeString?: boolean
-  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
 }
 
 export interface PartialSchemaDTO {
@@ -13546,6 +13603,7 @@ export interface ReferencedByDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
 }
 
 export interface RefreshResponse {
@@ -15032,6 +15090,7 @@ export interface ResponseListEntityType {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15121,6 +15180,13 @@ export interface ResponseListGitSyncEntityListDTO {
 export interface ResponseListHostValidationDTO {
   correlationId?: string
   data?: HostValidationDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListJiraIssueTransitionNG {
+  correlationId?: string
+  data?: JiraIssueTransitionNG[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -16384,6 +16450,13 @@ export interface ResponseServiceInstanceUsageDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseServiceNowTicketNG {
+  correlationId?: string
+  data?: ServiceNowTicketNG
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseServiceOverrideMigrationResponseDTO {
   correlationId?: string
   data?: ServiceOverrideMigrationResponseDTO
@@ -17140,7 +17213,7 @@ export type RunStepInfo = StepSpecType & {
 export type RunTestsStepInfo = StepSpecType & {
   args: string
   buildEnvironment?: 'Core' | 'Framework'
-  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest'
+  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest' | 'Rspec'
   connectorRef?: string
   enableTestSplitting?: boolean
   envVariables?: {
@@ -17149,7 +17222,7 @@ export type RunTestsStepInfo = StepSpecType & {
   frameworkVersion?: '5.0' | '6.0'
   image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
-  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
   namespaces?: string
   outputVariables?: OutputNGVariable[]
   packages?: string
@@ -18059,6 +18132,7 @@ export interface ServiceExecutionSummary {
   displayName?: string
   gitOpsEnabled?: boolean
   identifier?: string
+  manifestInfo?: ManifestStoreInfo
 }
 
 export interface ServiceHeaderInfo {
@@ -18135,6 +18209,7 @@ export interface ServiceNowFieldNG {
   internalType?: string
   key: string
   name: string
+  readOnly?: boolean
   required?: boolean
   schema: ServiceNowFieldSchemaNG
 }
@@ -18171,6 +18246,14 @@ export interface ServiceNowTemplate {
   }
   name: string
   sys_id: string
+}
+
+export interface ServiceNowTicketNG {
+  fields: {
+    [key: string]: ServiceNowFieldValueNG
+  }
+  number: string
+  url: string
 }
 
 export interface ServiceNowTicketTypeDTO {
@@ -18225,6 +18308,7 @@ export interface ServiceOverrideRequestDTOV2 {
     | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
+  v1Api?: boolean
   yamlInternal?: string
 }
 
@@ -18324,12 +18408,16 @@ export interface ServiceResponse {
 
 export interface ServiceResponseDTO {
   accountId?: string
+  cacheResponseMetadataDTO?: CacheResponseMetadata
+  connectorRef?: string
   deleted?: boolean
   description?: string
+  entityGitDetails?: EntityGitDetails
   identifier?: string
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  storeType?: 'INLINE' | 'REMOTE'
   tags?: {
     [key: string]: string
   }
@@ -18419,6 +18507,7 @@ export interface ServicesV2YamlMetadataDTO {
 
 export interface ServicesYaml {
   metadata?: ServicesMetadata
+  useFromStage?: ServiceUseFromStageV2
   values?: ServiceYamlV2[]
 }
 
@@ -18450,6 +18539,7 @@ export interface SettingDTO {
     | 'GIT_EXPERIENCE'
     | 'CONNECTORS'
     | 'EULA'
+    | 'NOTIFICATIONS'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -19743,6 +19833,11 @@ export interface TerragruntBackendConfigSpec {
   [key: string]: any
 }
 
+export interface TerragruntCliOptionFlag {
+  commandType: 'INIT' | 'WORKSPACE' | 'PLAN' | 'APPLY' | 'DESTROY'
+  flag: string
+}
+
 export interface TerragruntConfigFilesWrapper {
   moduleSource?: ModuleSource
   store: StoreConfigWrapper
@@ -19773,6 +19868,7 @@ export interface TerragruntModuleConfig {
 export interface TerragruntPlanExecutionData {
   backendConfig?: TerragruntBackendConfig
   command: 'Apply' | 'Destroy'
+  commandFlags?: TerragruntCliOptionFlag[]
   configFiles: TerragruntConfigFilesWrapper
   environmentVariables?: NGVariable[]
   exportTerragruntPlanJson?: boolean
@@ -19790,11 +19886,13 @@ export type TerragruntPlanStepInfo = StepSpecType & {
 }
 
 export type TerragruntRollbackStepInfo = StepSpecType & {
+  commandFlags?: TerragruntCliOptionFlag[]
   delegateSelectors?: string[]
   provisionerIdentifier: string
 }
 
 export interface TerragruntStepConfiguration {
+  commandFlags?: TerragruntCliOptionFlag[]
   spec?: TerragruntExecutionData
   type: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
 }
@@ -19826,7 +19924,7 @@ export type TestStepInfo = StepSpecType & {
   shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
   splitting?: Splitting
   user?: number
-  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest'
+  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest' | 'rspec'
   with?: {
     [key: string]: JsonNode
   }
@@ -21641,6 +21739,7 @@ export interface ListActivitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21873,6 +21972,7 @@ export interface ListActivitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -22204,6 +22304,7 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -22491,6 +22592,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22723,6 +22825,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -25390,6 +25493,7 @@ export interface GetBuildDetailsForArtifactoryArtifactQueryParams {
   connectorRef?: string
   accountIdentifier: string
   orgIdentifier?: string
+  artifactFilter?: string
   projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
@@ -25457,6 +25561,7 @@ export interface GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams {
   repositoryFormat?: string
   repositoryUrl?: string
   connectorRef?: string
+  artifactFilter?: string
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -36417,6 +36522,57 @@ export const hasAValidCardPromise = (
     signal
   )
 
+export interface DeleteCardQueryParams {
+  accountIdentifier: string
+}
+
+export type DeleteCardProps = Omit<
+  MutateProps<ResponseCreditCardResponse, Failure | Error, DeleteCardQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Deletes credit card information
+ */
+export const DeleteCard = (props: DeleteCardProps) => (
+  <Mutate<ResponseCreditCardResponse, Failure | Error, DeleteCardQueryParams, string, void>
+    verb="DELETE"
+    path={`/credit-cards`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteCardProps = Omit<
+  UseMutateProps<ResponseCreditCardResponse, Failure | Error, DeleteCardQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Deletes credit card information
+ */
+export const useDeleteCard = (props: UseDeleteCardProps) =>
+  useMutate<ResponseCreditCardResponse, Failure | Error, DeleteCardQueryParams, string, void>(
+    'DELETE',
+    `/credit-cards`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Deletes credit card information
+ */
+export const deleteCardPromise = (
+  props: MutateUsingFetchProps<ResponseCreditCardResponse, Failure | Error, DeleteCardQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseCreditCardResponse, Failure | Error, DeleteCardQueryParams, string, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/credit-cards`,
+    props,
+    signal
+  )
+
 export interface GetCreditsByAccountPathParams {
   accountIdentifier: string
 }
@@ -41478,6 +41634,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -41771,6 +41928,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   searchTerm?: string
 }
 
@@ -45367,6 +45525,7 @@ export interface GetReferencedByQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   searchTerm?: string
 }
 
@@ -45443,6 +45602,7 @@ export interface GetFilterListQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -45609,6 +45769,7 @@ export interface DeleteFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -45676,6 +45837,7 @@ export interface GetFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -48317,6 +48479,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -48617,6 +48780,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IdpScorecard'
       | 'IdpCheck'
       | 'AwsCdkRollback'
+      | 'IACM'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -52316,6 +52480,7 @@ export interface GetJiraStatusesQueryParams {
   projectIdentifier?: string
   projectKey?: string
   issueType?: string
+  issueKey?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -52367,6 +52532,67 @@ export const getJiraStatusesPromise = (
   getUsingFetch<ResponseListJiraStatusNG, Failure | Error, GetJiraStatusesQueryParams, void>(
     getConfig('ng/api'),
     `/jira/statuses`,
+    props,
+    signal
+  )
+
+export interface GetIssueTransitionsQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  issueKey: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetIssueTransitionsProps = Omit<
+  GetProps<ResponseListJiraIssueTransitionNG, Failure | Error, GetIssueTransitionsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get issue transitions
+ */
+export const GetIssueTransitions = (props: GetIssueTransitionsProps) => (
+  <Get<ResponseListJiraIssueTransitionNG, Failure | Error, GetIssueTransitionsQueryParams, void>
+    path={`/jira/transitions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetIssueTransitionsProps = Omit<
+  UseGetProps<ResponseListJiraIssueTransitionNG, Failure | Error, GetIssueTransitionsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get issue transitions
+ */
+export const useGetIssueTransitions = (props: UseGetIssueTransitionsProps) =>
+  useGet<ResponseListJiraIssueTransitionNG, Failure | Error, GetIssueTransitionsQueryParams, void>(
+    `/jira/transitions`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get issue transitions
+ */
+export const getIssueTransitionsPromise = (
+  props: GetUsingFetchProps<ResponseListJiraIssueTransitionNG, Failure | Error, GetIssueTransitionsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListJiraIssueTransitionNG, Failure | Error, GetIssueTransitionsQueryParams, void>(
+    getConfig('ng/api'),
+    `/jira/transitions`,
     props,
     signal
   )
@@ -55319,6 +55545,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   yamlGroup?: string
 }
 
@@ -55679,6 +55906,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -61058,6 +61286,7 @@ export interface GetServiceNowTemplateMetadataQueryParams {
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
   repoName?: string
+  searchTerm?: string
 }
 
 export type GetServiceNowTemplateMetadataProps = Omit<
@@ -61108,6 +61337,97 @@ export const getServiceNowTemplateMetadataPromise = (
     props,
     signal
   )
+
+export interface GetTicketDetailsQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  ticketType: string
+  ticketNumber: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetTicketDetailsProps = Omit<
+  MutateProps<
+    ResponseServiceNowTicketNG,
+    Failure | Error,
+    GetTicketDetailsQueryParams,
+    UpdateWhitelistedDomainsBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get ServiceNow issue details
+ */
+export const GetTicketDetails = (props: GetTicketDetailsProps) => (
+  <Mutate<
+    ResponseServiceNowTicketNG,
+    Failure | Error,
+    GetTicketDetailsQueryParams,
+    UpdateWhitelistedDomainsBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/servicenow/getTicketDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetTicketDetailsProps = Omit<
+  UseMutateProps<
+    ResponseServiceNowTicketNG,
+    Failure | Error,
+    GetTicketDetailsQueryParams,
+    UpdateWhitelistedDomainsBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get ServiceNow issue details
+ */
+export const useGetTicketDetails = (props: UseGetTicketDetailsProps) =>
+  useMutate<
+    ResponseServiceNowTicketNG,
+    Failure | Error,
+    GetTicketDetailsQueryParams,
+    UpdateWhitelistedDomainsBodyRequestBody,
+    void
+  >('POST', `/servicenow/getTicketDetails`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get ServiceNow issue details
+ */
+export const getTicketDetailsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceNowTicketNG,
+    Failure | Error,
+    GetTicketDetailsQueryParams,
+    UpdateWhitelistedDomainsBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceNowTicketNG,
+    Failure | Error,
+    GetTicketDetailsQueryParams,
+    UpdateWhitelistedDomainsBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/servicenow/getTicketDetails`, props, signal)
 
 export interface GetServiceNowIssueMetadataQueryParams {
   connectorRef: string
@@ -61901,6 +62221,7 @@ export interface GetServiceListQueryParams {
   versionLabel?: string
   includeAllServicesAccessibleAtScope?: boolean
   includeVersionInfo?: boolean
+  repoName?: string
 }
 
 export type GetServiceListProps = Omit<
@@ -61949,6 +62270,16 @@ export const getServiceListPromise = (
 
 export interface CreateServiceV2QueryParams {
   accountIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  isNewBranch?: boolean
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  repoName?: string
 }
 
 export type CreateServiceV2Props = Omit<
@@ -62012,6 +62343,17 @@ export const createServiceV2Promise = (
 
 export interface UpdateServiceV2QueryParams {
   accountIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export type UpdateServiceV2Props = Omit<
@@ -63201,6 +63543,16 @@ export interface GetServiceV2QueryParams {
   projectIdentifier?: string
   deleted?: boolean
   fetchResolvedYaml?: boolean
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  loadFromFallbackBranch?: boolean
 }
 
 export interface GetServiceV2PathParams {
@@ -63278,6 +63630,7 @@ export interface GetSettingsListQueryParams {
     | 'GIT_EXPERIENCE'
     | 'CONNECTORS'
     | 'EULA'
+    | 'NOTIFICATIONS'
   group?: string
   includeParentScopes?: boolean
 }
@@ -65730,7 +66083,7 @@ export const terraformCmdFlagsPromise = (
   )
 
 export interface TerragruntCmdFlagsQueryParams {
-  stepType: string
+  stepType?: string
 }
 
 export type TerragruntCmdFlagsProps = Omit<
@@ -72035,6 +72388,7 @@ export interface GetYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   subtype?:
     | 'K8sCluster'
     | 'Git'

@@ -914,7 +914,7 @@ export type BranchBuildSpec = BuildSpec & {
 
 export interface Build {
   spec: BuildSpec
-  type: 'branch' | 'tag' | 'PR'
+  type: 'branch' | 'tag' | 'PR' | 'CommitSha'
 }
 
 export interface BuildDetails {
@@ -1032,6 +1032,10 @@ export interface CodeBase {
   repoName?: string
   resources?: ContainerResource
   sslVerify?: boolean
+}
+
+export type CommitShaBuildSpec = BuildSpec & {
+  commitSha: string
 }
 
 export interface Condition {
@@ -2939,6 +2943,7 @@ export interface FilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -4081,6 +4086,7 @@ export interface PMSPipelineSummaryResponse {
     [key: string]: string
   }
   version?: number
+  yamlVersion?: string
 }
 
 export type PRBuildSpec = BuildSpec & {
@@ -4533,6 +4539,7 @@ export interface PipelineExecutionSummary {
   successfulStagesCount?: number
   tags?: NGTag[]
   totalStagesCount?: number
+  yamlVersion?: string
 }
 
 export interface PipelineExpandedJson {
@@ -7090,6 +7097,12 @@ export interface TriggerEventStatus {
   status?: 'SUCCESS' | 'FAILED'
 }
 
+export type TriggerFilterProperties = FilterProperties & {
+  triggerIdentifiers?: string[]
+  triggerNames?: string[]
+  triggerTypes?: ('Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact')[]
+}
+
 export interface TriggerIssuer {
   abortPrevConcurrentExecution: boolean
   triggerRef: string
@@ -7465,12 +7478,21 @@ export const getInitialStageYamlSnippetPromise = (
     signal
   )
 
+export interface GetApprovalInstanceQueryParams {
+  accountIdentifier?: string
+}
+
 export interface GetApprovalInstancePathParams {
   approvalInstanceId: string
 }
 
 export type GetApprovalInstanceProps = Omit<
-  GetProps<ResponseApprovalInstanceResponse, Failure | Error, void, GetApprovalInstancePathParams>,
+  GetProps<
+    ResponseApprovalInstanceResponse,
+    Failure | Error,
+    GetApprovalInstanceQueryParams,
+    GetApprovalInstancePathParams
+  >,
   'path'
 > &
   GetApprovalInstancePathParams
@@ -7479,7 +7501,7 @@ export type GetApprovalInstanceProps = Omit<
  * Gets an Approval Instance by identifier
  */
 export const GetApprovalInstance = ({ approvalInstanceId, ...props }: GetApprovalInstanceProps) => (
-  <Get<ResponseApprovalInstanceResponse, Failure | Error, void, GetApprovalInstancePathParams>
+  <Get<ResponseApprovalInstanceResponse, Failure | Error, GetApprovalInstanceQueryParams, GetApprovalInstancePathParams>
     path={`/approvals/${approvalInstanceId}`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -7487,7 +7509,12 @@ export const GetApprovalInstance = ({ approvalInstanceId, ...props }: GetApprova
 )
 
 export type UseGetApprovalInstanceProps = Omit<
-  UseGetProps<ResponseApprovalInstanceResponse, Failure | Error, void, GetApprovalInstancePathParams>,
+  UseGetProps<
+    ResponseApprovalInstanceResponse,
+    Failure | Error,
+    GetApprovalInstanceQueryParams,
+    GetApprovalInstancePathParams
+  >,
   'path'
 > &
   GetApprovalInstancePathParams
@@ -7496,10 +7523,16 @@ export type UseGetApprovalInstanceProps = Omit<
  * Gets an Approval Instance by identifier
  */
 export const useGetApprovalInstance = ({ approvalInstanceId, ...props }: UseGetApprovalInstanceProps) =>
-  useGet<ResponseApprovalInstanceResponse, Failure | Error, void, GetApprovalInstancePathParams>(
-    (paramsInPath: GetApprovalInstancePathParams) => `/approvals/${paramsInPath.approvalInstanceId}`,
-    { base: getConfig('pipeline/api'), pathParams: { approvalInstanceId }, ...props }
-  )
+  useGet<
+    ResponseApprovalInstanceResponse,
+    Failure | Error,
+    GetApprovalInstanceQueryParams,
+    GetApprovalInstancePathParams
+  >((paramsInPath: GetApprovalInstancePathParams) => `/approvals/${paramsInPath.approvalInstanceId}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { approvalInstanceId },
+    ...props
+  })
 
 /**
  * Gets an Approval Instance by identifier
@@ -7508,17 +7541,20 @@ export const getApprovalInstancePromise = (
   {
     approvalInstanceId,
     ...props
-  }: GetUsingFetchProps<ResponseApprovalInstanceResponse, Failure | Error, void, GetApprovalInstancePathParams> & {
-    approvalInstanceId: string
-  },
+  }: GetUsingFetchProps<
+    ResponseApprovalInstanceResponse,
+    Failure | Error,
+    GetApprovalInstanceQueryParams,
+    GetApprovalInstancePathParams
+  > & { approvalInstanceId: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseApprovalInstanceResponse, Failure | Error, void, GetApprovalInstancePathParams>(
-    getConfig('pipeline/api'),
-    `/approvals/${approvalInstanceId}`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponseApprovalInstanceResponse,
+    Failure | Error,
+    GetApprovalInstanceQueryParams,
+    GetApprovalInstancePathParams
+  >(getConfig('pipeline/api'), `/approvals/${approvalInstanceId}`, props, signal)
 
 export interface AddHarnessApprovalActivityQueryParams {
   accountIdentifier?: string
@@ -8024,6 +8060,7 @@ export interface GetFilterListQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -8190,6 +8227,7 @@ export interface DeleteFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -8257,6 +8295,7 @@ export interface GetFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'Trigger'
     | 'EnvironmentGroup'
     | 'FileStore'
     | 'CCMRecommendation'
@@ -19074,6 +19113,7 @@ export interface GetSchemaYamlQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19406,6 +19446,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -19736,6 +19777,7 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
+    | 'IACM'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }
