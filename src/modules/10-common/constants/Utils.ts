@@ -112,7 +112,11 @@ export enum SettingType {
   EXPORT_SERVICE_VARIABLES_AS_ENV_VARIABLES = 'export_service_variables_as_env_variables',
   TICKETING_TOOL = 'ticketing_tool',
   TICKETING_TOOL_CONNECTOR = 'ticketing_tool_connector',
-  AIDA = 'aida'
+  AIDA = 'aida',
+  ENABLE_PAGERDUTY_NOTIFICATION = 'enable_pagerduty_notification',
+  ENABLE_WEBHOOK_NOTIFICATION = 'enable_webhook_notification',
+  ENABLE_MSTEAMS_NOTIFICATION = 'enable_msTeams_notification',
+  ENABLE_SLACK_NOTIFICATION = 'enable_slack_notification'
 }
 
 export const isValidYAMLFilePath = (filePath: string): boolean => {

@@ -99,6 +99,28 @@ DefaultSettingsFactory.registerCategory('EULA', {
   ]
 })
 
+DefaultSettingsFactory.registerCategory('NOTIFICATIONS', {
+  icon: 'cog',
+  label: 'rbac.notifications.name',
+  modulesWhereCategoryWillBeDisplayed: [
+    'ci',
+    'cd',
+    'cf',
+    'cv',
+    'ce',
+    'sto',
+    'chaos',
+    'code',
+    'iacm',
+    'ssca',
+    'idp',
+    'cet',
+    'dashboards',
+    'idp-admin',
+    'cet'
+  ]
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.AIDA, {
   label: 'platform.defaultSettings.aida.aida',
   settingRenderer: props => {
@@ -112,6 +134,45 @@ DefaultSettingsFactory.registerCategory('CE', {
   icon: 'ccm-solid',
   label: 'common.purpose.ce.continuous',
   modulesWhereCategoryWillBeDisplayed: ['ce']
+})
+
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP, {
+  groupName: 'platform.defaultSettings.toggleNotificationChannel',
+  settingCategory: 'NOTIFICATIONS',
+  settingsDisplayOrder: [
+    SettingType.ENABLE_SLACK_NOTIFICATION,
+    SettingType.ENABLE_MSTEAMS_NOTIFICATION,
+    SettingType.ENABLE_PAGERDUTY_NOTIFICATION,
+    SettingType.ENABLE_WEBHOOK_NOTIFICATION
+  ]
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_WEBHOOK_NOTIFICATION, {
+  label: 'execution.triggerType.WEBHOOK',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_SLACK_NOTIFICATION, {
+  label: 'common.slack',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MSTEAMS_NOTIFICATION, {
+  label: 'platform.defaultSettings.notifications.msTeam',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_PAGERDUTY_NOTIFICATION, {
+  label: 'platform.defaultSettings.notifications.pagerDuty',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
 })
 
 DefaultSettingsFactory.registerGroupHandler(SettingGroups.TICKETING_PREFERENCES, {

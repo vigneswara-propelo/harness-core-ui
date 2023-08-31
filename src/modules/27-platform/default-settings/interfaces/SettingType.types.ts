@@ -12,7 +12,8 @@ export type SettingCategory = SettingDTO['category']
 export enum SettingGroups {
   test_group_2 = 'test_group_2',
   PERSPECTIVES_PREFERENCES = 'perspectives_preferences',
-  TICKETING_PREFERENCES = 'ticketing_preferences'
+  TICKETING_PREFERENCES = 'ticketing_preferences',
+  ENABLED_NOTIFICATION_CHANNELS_GROUP = 'enabled_notification_channels'
 }
 export type YupValidation =
   | Yup.BooleanSchema

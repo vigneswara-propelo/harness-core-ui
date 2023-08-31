@@ -49,6 +49,10 @@ defaultSettings:
   exportServiceVariablesAsEnvVariables: Export Service Variables as Env Variables
   ticketingToolLabel: Ticketing Tool
   ticketingToolConnectorLabel: Ticketing Tool Connector
+  toggleNotificationChannel: Enable / Disable Notification Channels
+  notifications:
+    msTeam: MS Teams
+    pagerDuty: Pager Duty
   eula: End User License Agreement
   aida:
     aidaEULAText: |

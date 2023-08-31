@@ -3047,6 +3047,8 @@ export interface StringsMap {
   'platform.defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
   'platform.defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'platform.defaultSettings.noSettingToDisplay': string
+  'platform.defaultSettings.notifications.msTeam': string
+  'platform.defaultSettings.notifications.pagerDuty': string
   'platform.defaultSettings.perspectivePreferences': string
   'platform.defaultSettings.pipelineTimeout': string
   'platform.defaultSettings.projectScopedResourceConstraintQueue': string
@@ -3062,6 +3064,7 @@ export interface StringsMap {
   'platform.defaultSettings.ticketingPreferences': string
   'platform.defaultSettings.ticketingToolConnectorLabel': string
   'platform.defaultSettings.ticketingToolLabel': string
+  'platform.defaultSettings.toggleNotificationChannel': string
   'platform.delegates.GBRam': string
   'platform.delegates.autoUpgrade': string
   'platform.delegates.commandLineCreation.clickDoneAndCheckLater': string
