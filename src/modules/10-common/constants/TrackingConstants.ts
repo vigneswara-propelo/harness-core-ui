@@ -231,7 +231,8 @@ export enum Category {
   FILESTORE = 'FileStore',
   AUDIT_TRAIL = 'AuditTrail',
   TEMPLATES = 'Templates',
-  PIPELINE_EXECUTION = 'PipelineExecution'
+  PIPELINE_EXECUTION = 'PipelineExecution',
+  SUPPORT_TICKET_DEFLECTION = 'SupportTicketDeflection'
 }
 export enum CreditCard {
   UpgradePlan = 'Upgrade Plan',
@@ -440,4 +441,10 @@ export enum PLG_ELEMENTS {
 export enum PipelineExecutionActions {
   ReRunPipeline = 'Re-run Pipeline',
   RetryPipeline = 'Retry Pipeline'
+}
+
+export enum SupportTicketActions {
+  SubmitTicketModalOpen = 'Opens the support ticket submit modal',
+  SubmitTicketModalStepTwo = 'Entered submit ticket modal step two',
+  SubmitZendeskSupportTicket = 'Requested to create a support zendesk ticket'
 }

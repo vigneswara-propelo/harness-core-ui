@@ -8,6 +8,8 @@
 import { StepWizard, ModalDialog } from '@harness/uicore'
 import React from 'react'
 import { useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, SupportTicketActions } from '@common/constants/TrackingConstants'
 import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTicketModalStepOne'
 import { SubmitTicketModalStepTwo } from './SubmitTicketModalSteps/SubmitTicketModalStepTwo'
 import { useCoveoControllers } from './Controllers/useCoveoControllers'
@@ -21,6 +23,13 @@ interface SubmitTicketModalProps {
 export const SubmitTicketModal = ({ isOpen, close }: SubmitTicketModalProps): JSX.Element => {
   const { resultList, searchBox } = useCoveoControllers()
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
+
+  React.useEffect(() => {
+    trackEvent(SupportTicketActions.SubmitTicketModalOpen, {
+      category: Category.SUPPORT_TICKET_DEFLECTION
+    })
+  }, [])
 
   return (
     <ModalDialog isOpen={isOpen} enforceFocus={false} onClose={close} className={css.submitTicketWizard} width={1200}>

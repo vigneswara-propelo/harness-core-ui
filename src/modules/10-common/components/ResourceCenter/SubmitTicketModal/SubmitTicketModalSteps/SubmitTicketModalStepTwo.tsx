@@ -27,6 +27,8 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { DEFAULT_MODULES_ORDER, moduleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { useStrings } from 'framework/strings'
+import { Category, SupportTicketActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { getBrowserName, getOsVersion, IssueType, issueTypes, priorityItems, PriorityType, SubmitTicket } from './Utils'
 import css from './SubmitTicketModalSteps.module.scss'
 
@@ -44,6 +46,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
   const { accountId } = useParams<AccountPathProps>()
   const { showSuccess, showError } = useToaster()
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
 
   const backBtnHandler = (): void => {
     previousStep?.()
@@ -84,6 +87,12 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
           subject: val.subject
         }
       })
+
+      trackEvent(SupportTicketActions.SubmitZendeskSupportTicket, {
+        category: Category.SUPPORT_TICKET_DEFLECTION,
+        ticketDetails: formData
+      })
+
       if (response) {
         if (response.data?.code === 201) {
           try {
@@ -122,6 +131,13 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
     label: getString('common.resourceCenter.ticketmenu.platform'),
     value: 'platform'
   })
+
+  React.useEffect(() => {
+    trackEvent(SupportTicketActions.SubmitTicketModalStepTwo, {
+      category: Category.SUPPORT_TICKET_DEFLECTION,
+      ticketSubject: prevStepData.subject
+    })
+  }, [])
 
   return (
     <Layout.Vertical spacing="small" style={{ minHeight: '752px' }}>
