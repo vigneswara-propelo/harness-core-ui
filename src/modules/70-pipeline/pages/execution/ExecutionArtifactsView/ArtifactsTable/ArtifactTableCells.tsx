@@ -13,8 +13,11 @@ import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, Use
 import { defaultTo } from 'lodash-es'
 import { useArtifactnewSbomQuery } from '@harnessio/react-ssca-service-client'
 import { useParams } from 'react-router-dom'
+import { useDownloadSbomQuery } from '@harnessio/react-ssca-manager-client'
 import { useStrings } from 'framework/strings'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
 import css from './ArtifactsTable.module.scss'
 
@@ -104,8 +107,9 @@ export const ViolationsCell: CellType = ({ row, column }) => {
 export const SbomCell: CellType = ({ row }) => {
   const artifact = row.original
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const SSCA_MANAGER_ENABLED = useFeatureFlag(FeatureFlag.SSCA_MANAGER_ENABLED)
 
-  const query = useArtifactnewSbomQuery(
+  const queryOld = useArtifactnewSbomQuery(
     {
       artifactId: defaultTo(artifact.id, ''),
       stepExecutionId: defaultTo(artifact.stepExecutionId, ''),
@@ -125,6 +129,22 @@ export const SbomCell: CellType = ({ row }) => {
     }
   )
 
+  const query = useDownloadSbomQuery(
+    {
+      org: orgIdentifier,
+      project: projectIdentifier,
+      'orchestration-id': artifact.stepExecutionId || ''
+    },
+    {
+      enabled: false,
+      retry: false,
+      onSuccess: _data => {
+        const blob = new Blob([_data.content.token], { type: 'text/json' })
+        downloadBlob(blob, `${artifact.sbomName}_${artifact.tag}_sbom.json`)
+      }
+    }
+  )
+
   const { getString } = useStrings()
 
   // sbomUrl is exposed as Content-Type: application/octet-stream so browser will download as file automatically
@@ -133,8 +153,8 @@ export const SbomCell: CellType = ({ row }) => {
       className={css.violations}
       variation={ButtonVariation.LINK}
       size={ButtonSize.SMALL}
-      onClick={() => query.refetch()}
-      loading={query.isInitialLoading}
+      onClick={() => (SSCA_MANAGER_ENABLED ? query.refetch() : queryOld.refetch())}
+      loading={SSCA_MANAGER_ENABLED ? query.isFetching : queryOld.isInitialLoading}
     >
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
         <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.SMALL }} lineClamp={1}>

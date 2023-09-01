@@ -37,6 +37,9 @@ jest.mock('@harnessio/react-ssca-service-client', () => ({
 jest.mock('@harnessio/react-ssca-manager-client', () => ({
   useGetPolicyViolationsQuery: jest.fn().mockImplementation(() => {
     return { data: { content: violationList } }
+  }),
+  useDownloadSbomQuery: jest.fn().mockImplementation(() => {
+    return { data: { content: { token: 'dummytext' } } }
   })
 }))
 
