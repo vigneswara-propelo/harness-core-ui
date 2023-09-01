@@ -91,8 +91,8 @@ import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
 import CDOnboardingWizardWithCLI from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard'
 import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
-import Webhooks from './pages/webhooks/Webhooks'
 import WebhookEvents from './pages/webhooks/WebhookEvents/WebhookEvents'
+import { Webhooks } from './pages/webhooks/Webhooks'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',

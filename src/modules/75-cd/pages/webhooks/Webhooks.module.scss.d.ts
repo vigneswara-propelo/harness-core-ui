@@ -9,12 +9,18 @@
 declare const styles: {
   readonly addBtn: string
   readonly addWebhookModalForm: string
+  readonly content: string
   readonly dialogStylesWebhook: string
   readonly folderPath: string
+  readonly footer: string
   readonly group: string
+  readonly header: string
+  readonly layout: string
+  readonly loading: string
   readonly noWebhookHeading: string
   readonly noWebhookText: string
   readonly paddingRight: string
+  readonly toolbar: string
   readonly trashBtn: string
   readonly width: string
 }

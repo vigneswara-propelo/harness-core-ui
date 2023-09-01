@@ -1259,3 +1259,8 @@ webhooks:
   newWebhook: Add a webhook
   createSubtitle: Link to a git webhook and view bi-directional sync events via Harness Interface!
   noWebhook: There are no webhook added.
+  delete: Delete Webhook
+  deleteConfirmation: Are you sure you want to delete this Webhook?
+  settingUpWebhook: Setting up your web hook, this may take a few seconds ...
+  successMessage: Successfully added {{name}} Webhook
+  successSubtitle: You may now perform push activity in Git and view the list of events in Harness

@@ -7055,8 +7055,13 @@ export interface StringsMap {
   'cd.varFile': string
   'cd.varFileDetails': string
   'cd.webhooks.createSubtitle': string
+  'cd.webhooks.delete': string
+  'cd.webhooks.deleteConfirmation': string
   'cd.webhooks.newWebhook': string
   'cd.webhooks.noWebhook': string
+  'cd.webhooks.settingUpWebhook': string
+  'cd.webhooks.successMessage': string
+  'cd.webhooks.successSubtitle': string
   'cd.welcomeMessage': string
   'cd.welcomeToHarnessCD': string
   'cd.whatIsHarnessAdapter': string

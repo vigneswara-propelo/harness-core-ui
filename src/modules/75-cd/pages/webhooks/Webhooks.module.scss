@@ -71,3 +71,37 @@
   padding: var(--spacing-large) 0px 0px 0px !important;
   align-self: flex-start;
 }
+
+.layout {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    'header'
+    'toolbar'
+    'content'
+    'footer';
+}
+
+.header {
+  grid-area: header;
+}
+
+.toolbar {
+  grid-area: toolbar;
+}
+
+.content {
+  grid-area: content;
+  overflow: auto;
+}
+
+.footer {
+  grid-area: footer;
+  padding: 0 var(--spacing-xlarge);
+}
+
+.loading {
+  grid-area: content;
+  place-self: center;
+}

@@ -1,142 +1,211 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useMemo } from 'react'
+import {
+  Page,
+  Heading,
+  HarnessDocTooltip,
+  Pagination,
+  getErrorInfoFromErrorObject,
+  Layout,
+  Text,
+  Container,
+  Dialog
+} from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
-import { Container, Dialog, Heading, Text, Views } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
+import { useListGitxWebhooksQuery } from '@harnessio/react-ng-manager-client'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
-import { Color, FontVariation } from '@harness/design-system'
-import { HelpPanel, HelpPanelType } from '@harness/help-panel'
-import { useGetEnvironmentListV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import {
+  PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
+  PageQueryParams,
+  PageQueryParamsWithDefaults,
+  usePageQueryParamOptions
+} from '@cd/components/EnvironmentsV2/PageTemplate/utils'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import RbacButton from '@rbac/components/Button/Button'
-import { Sort, SortFields } from '@cd/components/EnvironmentsV2/PageTemplate/utils'
-import { PageStoreContext } from '@cd/components/EnvironmentsV2/PageTemplate/PageContext'
-import PageTemplate from '@cd/components/EnvironmentsV2/PageTemplate/PageTemplate'
-import WebhooksFilters from './WebhooksFilters/WebhooksFilters'
-import WebhooksList from './WebhooksList/WebhooksList'
+import NoData from '@cd/components/EnvironmentsV2/PageTemplate/NoData'
 import WebhooksTabs from './WebhooksTabs'
-import WebhooksGrid from './WebhooksGrid/WebhooksGrid'
+import WebhooksList from './WebhooksList/WebhooksList'
 import NewWebhookModal from './NewWebhookModal'
 import { initialWebhookModalData } from './utils'
 import css from './Webhooks.module.scss'
 
-export default function Webhooks(): React.ReactElement {
-  const [view, setView] = useState(Views.LIST)
-
+export function Webhooks(): JSX.Element {
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const { orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { updateQueryParams } = useUpdateQueryParams<Partial<PageQueryParams>>()
+  const queryParamOptions = usePageQueryParamOptions()
+  const queryParams = useQueryParams<PageQueryParamsWithDefaults>(queryParamOptions)
+  const { page, size } = queryParams
+
+  const {
+    data,
+    isInitialLoading: loading,
+    isFetching: _loading,
+    error,
+    refetch
+  } = useListGitxWebhooksQuery({
+    queryParams: {
+      limit: size,
+      page: page ? page - 1 : 0
+    }
+  })
+
+  enum STATUS {
+    'loading',
+    'error',
+    'ok'
+  }
+
+  const isLoading = loading || _loading
+
+  const state = useMemo<STATUS>(() => {
+    if (error) {
+      return STATUS.error
+    } else if (isLoading) {
+      return STATUS.loading
+    }
+
+    return STATUS.ok
+  }, [error, isLoading, STATUS])
+
+  const handlePageIndexChange = /* istanbul ignore next */ (index: number): void =>
+    updateQueryParams({ page: index + 1 })
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: defaultTo(data?.pagination?.total, 0),
+    pageSize: defaultTo(data?.pagination?.pageSize, 0),
+    pageCount: defaultTo(data?.pagination?.pageCount, 0),
+    pageIndex: defaultTo(data?.pagination?.pageNumber, 0),
+    gotoPage: handlePageIndexChange,
+    onPageSizeChange: newSize => updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX, size: newSize })
+  })
+
+  const response = data
+  const hasData = Boolean(!isLoading && response && !isEmpty(response))
+  const noData = Boolean(!isLoading && isEmpty(response))
 
   const [showCreateModal, hideCreateModal] = useModalHook(
-    /* istanbul ignore next */ () => (
-      <Dialog
-        isOpen={true}
-        enforceFocus={false}
-        canEscapeKeyClose
-        canOutsideClickClose
-        onClose={hideCreateModal}
-        title={
-          <>
-            <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
-              {getString('cd.webhooks.newWebhook')}
-            </Text>
-            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
-              {getString('cd.webhooks.createSubtitle')}
-            </Text>
-          </>
-        }
-        isCloseButtonShown
-        className={cx('padded-dialog', css.dialogStylesWebhook)}
-      >
-        <Container>
-          <NewWebhookModal isEdit={false} initialData={initialWebhookModalData} closeModal={hideCreateModal} />
-        </Container>
-      </Dialog>
-    ),
+    /* istanbul ignore next */ () => {
+      const onClosehandler = (): void => {
+        refetch()
+        hideCreateModal()
+      }
+
+      return (
+        <Dialog
+          isOpen={true}
+          enforceFocus={false}
+          canEscapeKeyClose
+          canOutsideClickClose
+          onClose={onClosehandler}
+          title={
+            <>
+              <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
+                {getString('cd.webhooks.newWebhook')}
+              </Text>
+              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
+                {getString('cd.webhooks.createSubtitle')}
+              </Text>{' '}
+            </>
+          }
+          isCloseButtonShown
+          className={cx('padded-dialog', css.dialogStylesWebhook)}
+        >
+          <Container>
+            <NewWebhookModal isEdit={false} initialData={initialWebhookModalData} closeModal={onClosehandler} />
+          </Container>
+        </Dialog>
+      )
+    },
     [orgIdentifier, projectIdentifier]
   )
-
-  const handleCustomSortChange = /* istanbul ignore next */ (value: string): (SortFields | Sort)[] => {
-    return value === SortFields.AZ09
-      ? [SortFields.Name, Sort.ASC]
-      : value === SortFields.ZA90
-      ? [SortFields.Name, Sort.DESC]
-      : [SortFields.LastUpdatedAt, Sort.DESC]
-  }
 
   const createButtonProps = {
     text: getString('cd.webhooks.newWebhook'),
     dataTestid: 'add-webhook',
-    permission: {
-      // TODO add correct permissions here after BE finalises.
-      permission: PermissionIdentifier.EDIT_ENVIRONMENT,
-      resource: {
-        resourceType: ResourceType.ENVIRONMENT
-      },
-      resourceScope: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
-      attributeFilter: {
-        attributeName: 'type',
-        attributeValues: ['Production', 'PreProduction']
-      }
-    },
     onClick: showCreateModal
   }
 
   return (
-    <PageStoreContext.Provider
-      value={{
-        view,
-        setView
-      }}
-    >
-      <HelpPanel referenceId="webhookListing" type={HelpPanelType.FLOATING_CONTAINER} />
-      <PageTemplate
-        title={getString('common.webhooks')}
-        titleTooltipId="ff_webhook_heading"
-        headerToolbar={<WebhooksTabs />}
-        createButtonProps={createButtonProps}
-        useGetListHook={useGetEnvironmentListV2}
-        emptyContent={
-          <>
-            <img src={EmptyContentImg} width={300} height={150} />
-            <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
-              {getString('cd.webhooks.noWebhook')}
-            </Heading>
-            <RbacButton icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
-          </>
+    <main className={css.layout}>
+      <Page.Header
+        title={
+          <Heading level={3} font={{ variation: FontVariation.H4 }} data-tooltip-id={'ff_webhook_heading'}>
+            {getString('common.webhooks')}
+            <HarnessDocTooltip tooltipId={'ff_webhook_heading'} useStandAlone />
+          </Heading>
         }
-        ListComponent={WebhooksList}
-        GridComponent={WebhooksGrid}
-        sortOptions={[
-          {
-            label: getString('lastUpdatedSort'),
-            value: SortFields.LastUpdatedAt
-          },
-          {
-            label: getString('AZ09'),
-            value: SortFields.AZ09
-          },
-          {
-            label: getString('ZA90'),
-            value: SortFields.ZA90
-          }
-        ]}
-        defaultSortOption={[SortFields.LastUpdatedAt, Sort.DESC]}
-        handleCustomSortChange={handleCustomSortChange}
-        // TODO waiting for BE to add webhook types filterType
-        filterType={'Environment'}
-        FilterComponent={WebhooksFilters}
-        isForceDeleteAllowed
+        breadcrumbs={<NGBreadcrumbs customPathParams={{ module }} />}
+        className={css.header}
+        content={<WebhooksTabs />}
       />
-    </PageStoreContext.Provider>
+      <Page.SubHeader className={css.toolbar}>
+        <RbacButton intent="primary" icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
+      </Page.SubHeader>
+      <div className={css.content}>
+        {state === STATUS.error && (
+          <Page.Error message={getErrorInfoFromErrorObject(defaultTo(error, {}) as any)} onClick={refetch as any} />
+        )}
+        {state === STATUS.ok && !noData && (
+          <Layout.Horizontal
+            flex={{ justifyContent: 'space-between' }}
+            padding={{ top: 'large', right: 'xlarge', left: 'xlarge' }}
+          >
+            <Text color={Color.GREY_800} iconProps={{ size: 14 }}>
+              {getString('total')}: {data?.pagination?.total}
+            </Text>
+          </Layout.Horizontal>
+        )}
+        {state === STATUS.ok ? (
+          <>
+            {noData && (
+              <NoData
+                hasFilters={false}
+                emptyContent={
+                  <>
+                    <img src={EmptyContentImg} width={300} height={150} />
+                    <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
+                      {getString('cd.webhooks.noWebhook')}
+                    </Heading>
+                    <RbacButton icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
+                  </>
+                }
+              />
+            )}
+            {hasData ? (
+              <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
+                <WebhooksList response={response} refetch={refetch} />
+              </Container>
+            ) : null}
+          </>
+        ) : null}
+      </div>
+      {state === STATUS.ok && (
+        <div className={css.footer}>
+          <Pagination {...paginationProps} />
+        </div>
+      )}
+
+      {state === STATUS.loading && !error && (
+        <div className={css.loading}>
+          <ContainerSpinner />
+        </div>
+      )}
+    </main>
   )
 }

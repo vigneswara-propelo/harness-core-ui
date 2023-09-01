@@ -85,7 +85,7 @@ export const AIDASettingsRenderer = (props: SettingRendererProps): React.ReactEl
                   content: { signed: isSigned }
                 } = await validateEulaSign({
                   queryParams: {
-                    'agreement-type': AidaAgreementType
+                    agreement_type: AidaAgreementType
                   }
                 })
                 if (!isSigned && scope === Scope.ACCOUNT) {
