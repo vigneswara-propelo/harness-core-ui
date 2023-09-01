@@ -12,7 +12,7 @@ import classNames from 'classnames'
 import css from './Card.module.scss'
 
 interface CardProps {
-  children: JSX.Element
+  children: React.ReactNode
   className?: string
   contentClassName?: string
 }

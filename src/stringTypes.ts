@@ -2231,6 +2231,7 @@ export interface StringsMap {
   'platform.connectors.cdng.monitoredService.label': string
   'platform.connectors.cdng.monitoredService.monitoredServiceDef': string
   'platform.connectors.cdng.monitoredService.monitoredServiceText': string
+  'platform.connectors.cdng.monitoredService.resolvedDuringRuntimeMessage': string
   'platform.connectors.cdng.monitoredServiceType': string
   'platform.connectors.cdng.noJobsConfigured': string
   'platform.connectors.cdng.runTimeMonitoredService.backToRunPipeline': string

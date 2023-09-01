@@ -33,12 +33,14 @@ import {
 } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
 import type { MonitoredServiceProps } from './MonitoredService.types'
 import {
+  getCanFetchMonitoredServices,
   getEnvironmentIdentifierFromStage,
   getNewSpecs,
   getServiceIdentifierFromStage,
   isAnExpression
 } from './MonitoredService.utils'
 import { MONITORED_SERVICE_EXPRESSION } from './MonitoredService.constants'
+import { MONITORED_SERVICE_TYPE } from '../SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './MonitoredService.module.scss'
 
@@ -62,6 +64,8 @@ export default function MonitoredService({
   } = usePipelineContext()
   const selectedStage = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId as string)?.stage
 
+  const isMonitoredServiceDefaultType = formValues?.spec?.monitoredService?.type === MONITORED_SERVICE_TYPE.DEFAULT
+
   const environmentIdentifier = useMemo(() => {
     return getEnvironmentIdentifierFromStage(selectedStage)
   }, [selectedStage])
@@ -69,6 +73,13 @@ export default function MonitoredService({
   const serviceIdentifier = useMemo(() => {
     return getServiceIdentifierFromStage(selectedStage, pipeline)
   }, [pipeline, selectedStage])
+
+  const isAllValuesPresentForMonitoredService = getCanFetchMonitoredServices({
+    environmentIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    serviceIdentifier
+  })
 
   const createServiceQueryParams = useMemo(
     () => ({
@@ -96,7 +107,8 @@ export default function MonitoredService({
       projectIdentifier,
       environmentIdentifier,
       serviceIdentifier
-    }
+    },
+    lazy: !isAllValuesPresentForMonitoredService
   })
   const monitoredServiceData = data?.data?.monitoredService
 
@@ -151,30 +163,16 @@ export default function MonitoredService({
     [formValues.spec, monitoredServiceData?.identifier]
   )
 
-  if (loading) {
-    return (
-      <Card>
-        <>{getString('platform.connectors.cdng.monitoredService.fetchingMonitoredService')}</>
-      </Card>
-    )
+  if (!isAllValuesPresentForMonitoredService && isMonitoredServiceDefaultType) {
+    return <Card>{getString('platform.connectors.cdng.monitoredService.resolvedDuringRuntimeMessage')}</Card>
+  } else if (loading) {
+    return <Card>{getString('platform.connectors.cdng.monitoredService.fetchingMonitoredService')}</Card>
   } else if (createMonitoredServiceLoading) {
-    return (
-      <Card>
-        <>{getString('platform.connectors.cdng.monitoredService.creatingMonitoredService')}</>
-      </Card>
-    )
+    return <Card>{getString('platform.connectors.cdng.monitoredService.creatingMonitoredService')}</Card>
   } else if (error) {
-    return (
-      <Card>
-        <>{getString('platform.connectors.cdng.monitoredService.fetchingMonitoredServiceError')}</>
-      </Card>
-    )
+    return <Card>{getString('platform.connectors.cdng.monitoredService.fetchingMonitoredServiceError')}</Card>
   } else if (errorCreatingMonitoredService) {
-    return (
-      <Card>
-        <>{getString('platform.connectors.cdng.monitoredService.creatingMonitoredServiceError')}</>
-      </Card>
-    )
+    return <Card>{getString('platform.connectors.cdng.monitoredService.creatingMonitoredServiceError')}</Card>
   } else if (formValues.spec.monitoredServiceRef) {
     return (
       <>

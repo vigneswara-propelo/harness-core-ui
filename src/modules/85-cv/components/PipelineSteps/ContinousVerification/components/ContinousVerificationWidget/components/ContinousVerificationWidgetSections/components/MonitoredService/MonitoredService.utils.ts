@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE, getMultiTypeFromValue } from '@harness/uicore'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import type { HealthSource, MonitoredServiceDTO } from 'services/cv'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -95,4 +95,21 @@ export function isFirstTimeOpenForDefaultMonitoredSvc(
     !formValues?.spec?.monitoredService?.spec?.monitoredServiceRef &&
     monitoredServiceData?.identifier
   )
+}
+
+export const getCanFetchMonitoredServices = ({
+  orgIdentifier,
+  projectIdentifier,
+  environmentIdentifier,
+  serviceIdentifier
+}: {
+  orgIdentifier: string
+  projectIdentifier: string
+  environmentIdentifier: string
+  serviceIdentifier: string
+}): boolean => {
+  const isEnvValueFixedType = getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.FIXED
+  const isServiceValueFixedType = getMultiTypeFromValue(serviceIdentifier) === MultiTypeInputType.FIXED
+
+  return Boolean(projectIdentifier && orgIdentifier && isEnvValueFixedType && isServiceValueFixedType)
 }

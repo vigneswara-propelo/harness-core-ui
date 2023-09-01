@@ -191,3 +191,12 @@ export const mockedSignalFXHealthSource = {
   ...mockedHealthSource,
   type: 'SplunkSignalFXMetrics'
 }
+
+export const testWrapperPropsMock = {
+  path: '/:accountId/:projectIdentifier/:orgIdentifier',
+  pathParams: {
+    accountId: 'accountId',
+    projectIdentifier: 'projectIdentifier',
+    orgIdentifier: 'orgIdentifier'
+  }
+}

@@ -27,7 +27,8 @@ import {
   mockedCreatedMonitoredService,
   monitoredServiceYamlData,
   mockedHealthSource,
-  mockedSignalFXHealthSource
+  mockedSignalFXHealthSource,
+  testWrapperPropsMock
 } from './ContinousVerificationMocks'
 import {
   getSpecYamlData,
@@ -107,7 +108,12 @@ describe('Test ContinousVerificationStep Step', () => {
       }
     }
     const { container } = render(
-      <TestStepWidget initialValues={initialValues} type={StepType.Verify} stepViewType={StepViewType.Edit} />
+      <TestStepWidget
+        initialValues={initialValues}
+        type={StepType.Verify}
+        stepViewType={StepViewType.Edit}
+        testWrapperProps={testWrapperPropsMock}
+      />
     )
 
     await waitFor(() => expect(container).toMatchSnapshot())
@@ -200,6 +206,7 @@ describe('Test ContinousVerificationStep Step', () => {
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
+        testWrapperProps={testWrapperPropsMock}
       />
     )
 
@@ -260,6 +267,7 @@ describe('Test ContinousVerificationStep Step', () => {
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
+        testWrapperProps={testWrapperPropsMock}
       />
     )
 
@@ -320,14 +328,13 @@ describe('Test ContinousVerificationStep Step', () => {
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
+        testWrapperProps={testWrapperPropsMock}
       />
     )
 
     // entering the step name
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'CV Step' } })
-
-    screen.debug(container, 90000)
 
     // Verify if correct monitoring service is present.
     await waitFor(() => {
@@ -390,6 +397,7 @@ describe('Test ContinousVerificationStep Step', () => {
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
+        testWrapperProps={testWrapperPropsMock}
       />
     )
 
@@ -467,6 +475,7 @@ describe('Test ContinousVerificationStep Step', () => {
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
+        testWrapperProps={testWrapperPropsMock}
       />
     )
 
@@ -579,6 +588,68 @@ describe('Test ContinousVerificationStep Step', () => {
     ).toEqual({
       ...mockedSignalFXHealthSource,
       version: 'v2'
+    })
+  })
+
+  test('should not make monitored service call when its required value are not present', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    render(
+      <TestStepWidget
+        initialValues={verifyStepInitialValues}
+        type={StepType.Verify}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/platform.connectors.cdng.monitoredService.resolvedDuringRuntimeMessage/)
+      ).toBeInTheDocument()
+    )
+
+    expect(useGetMonitoredServiceFromServiceAndEnvironment).toHaveBeenCalledWith({
+      lazy: true,
+      queryParams: {
+        accountId: undefined,
+        environmentIdentifier: '',
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
+        serviceIdentifier: ''
+      }
+    })
+  })
+
+  test('should make monitored service call when its required values are present', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    render(
+      <TestStepWidget
+        testWrapperProps={testWrapperPropsMock}
+        initialValues={verifyStepInitialValues}
+        type={StepType.Verify}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+    await waitFor(() =>
+      expect(
+        screen.queryByText(/platform.connectors.cdng.monitoredService.resolvedDuringRuntimeMessage/)
+      ).not.toBeInTheDocument()
+    )
+
+    expect(useGetMonitoredServiceFromServiceAndEnvironment).toHaveBeenCalledWith({
+      lazy: false,
+      queryParams: {
+        accountId: 'accountId',
+        environmentIdentifier: '',
+        orgIdentifier: 'orgIdentifier',
+        projectIdentifier: 'projectIdentifier',
+        serviceIdentifier: ''
+      }
     })
   })
 
