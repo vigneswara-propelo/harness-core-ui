@@ -10,7 +10,10 @@ declare const styles: {
   readonly editor: string
   readonly formRow: string
   readonly inputWidth: string
+  readonly nameIdDescriptionTags: string
   readonly serviceActionWrapper: string
+  readonly serviceCardWrapper: string
+  readonly serviceForm: string
   readonly yamlToggle: string
 }
 export default styles

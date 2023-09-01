@@ -16,7 +16,11 @@ jest.mock('services/cd-ng', () => {
     useDeleteServiceV2: jest.fn(() => ({ mutate: jest.fn() })),
     useCreateServicesV2: jest.fn(() => ({ data: null })),
     useCreateServiceV2: jest.fn(() => ({ data: null })),
-    useUpsertServiceV2: jest.fn(() => ({ data: null }))
+    useUpsertServiceV2: jest.fn(() => ({ data: null })),
+    useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+    useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+    useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+    useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
   }
 })
 

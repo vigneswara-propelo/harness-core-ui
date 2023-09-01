@@ -35,11 +35,11 @@ exports[`ServiceModal  should render Services modal 1`] = `
   >
     <form
       action="#"
-      class="FormikForm--main"
+      class="FormikForm--main serviceForm"
     >
       <div>
         <div
-          class="StyledProps--font StyledProps--main main"
+          class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
         >
           <div
             class="InputWithIdentifier--txtNameContainer TextInput--main"
@@ -381,11 +381,11 @@ exports[`ServiceModal  should validate edit mode snapshot 1`] = `
   >
     <form
       action="#"
-      class="FormikForm--main"
+      class="FormikForm--main serviceForm"
     >
       <div>
         <div
-          class="StyledProps--font StyledProps--main main"
+          class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
         >
           <div
             class="InputWithIdentifier--txtNameContainer TextInput--main"
@@ -636,11 +636,11 @@ exports[`Test DeployService Step Should be able save even if there is 128 charac
     >
       <form
         action="#"
-        class="FormikForm--main"
+        class="FormikForm--main serviceForm"
       >
         <div>
           <div
-            class="StyledProps--font StyledProps--main main"
+            class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
           >
             <div
               class="InputWithIdentifier--txtNameContainer TextInput--main"
@@ -948,11 +948,11 @@ exports[`Test DeployService Step should render edit service view (service), then
     >
       <form
         action="#"
-        class="FormikForm--main"
+        class="FormikForm--main serviceForm"
       >
         <div>
           <div
-            class="StyledProps--font StyledProps--main main"
+            class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
           >
             <div
               class="InputWithIdentifier--txtNameContainer TextInput--main"
@@ -1260,11 +1260,11 @@ exports[`Test DeployService Step should render service view and save 1`] = `
     >
       <form
         action="#"
-        class="FormikForm--main"
+        class="FormikForm--main serviceForm"
       >
         <div>
           <div
-            class="StyledProps--font StyledProps--main main"
+            class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
           >
             <div
               class="InputWithIdentifier--txtNameContainer TextInput--main"

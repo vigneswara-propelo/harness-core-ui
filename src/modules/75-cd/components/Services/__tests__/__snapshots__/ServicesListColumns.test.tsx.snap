@@ -289,11 +289,11 @@ exports[`ServiceMenu Should go to editModal by clicking edit 2`] = `
       >
         <form
           action="#"
-          class="FormikForm--main"
+          class="FormikForm--main serviceForm"
         >
           <div>
             <div
-              class="StyledProps--font StyledProps--main main"
+              class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
             >
               <div
                 class="InputWithIdentifier--txtNameContainer TextInput--main"

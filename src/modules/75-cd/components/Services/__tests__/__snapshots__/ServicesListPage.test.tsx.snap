@@ -602,11 +602,11 @@ exports[`ServicesListPage Should open Add-ServiceModal, grid and list view on cl
       >
         <form
           action="#"
-          class="FormikForm--main"
+          class="FormikForm--main serviceForm"
         >
           <div>
             <div
-              class="StyledProps--font StyledProps--main main"
+              class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
             >
               <div
                 class="InputWithIdentifier--txtNameContainer TextInput--main"

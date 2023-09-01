@@ -9,6 +9,32 @@
   width: 391px;
 }
 
+.serviceCardWrapper {
+  display: flex;
+  gap: 20px;
+
+  /* Inline Card is small so it need to expand to take availvle unused space */
+  & > :first-child {
+    flex: 1;
+    & > div {
+      justify-content: flex-start !important;
+    }
+  }
+}
+
+.serviceForm {
+  .nameIdDescriptionTags {
+    width: 350px !important;
+  }
+  :global {
+    input,
+    .bp3-input-group,
+    .bp3-menu {
+      width: 350px !important;
+    }
+  }
+}
+
 .formRow {
   :global {
     .bp3-form-group {

@@ -30,7 +30,11 @@ jest.mock('services/cd-ng', () => {
         }
       })
     })),
-    useGetSettingValue: jest.fn().mockResolvedValue({})
+    useGetSettingValue: jest.fn().mockResolvedValue({}),
+    useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+    useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+    useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+    useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
   }
 })
 const mutate = jest.fn(() => {

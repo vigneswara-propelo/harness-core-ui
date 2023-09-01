@@ -10,7 +10,6 @@ import {
   Button,
   ButtonVariation,
   Formik,
-  FormikForm,
   Layout,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
@@ -18,7 +17,7 @@ import {
   Container
 } from '@harness/uicore'
 import * as Yup from 'yup'
-import { defaultTo, omit } from 'lodash-es'
+import { defaultTo, omit, pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
@@ -31,17 +30,25 @@ import {
 } from 'services/cd-ng'
 import { queryClient } from 'services/queryClient'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { useToaster } from '@common/exports'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 
-import { NameIdDescriptionTags, PageSpinner } from '@common/components'
+import { PageSpinner } from '@common/components'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 
+import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { flexStart } from './DeployServiceUtils'
 import type { NewEditServiceModalProps } from './DeployServiceInterface'
+import NewEditServiceForm from './NewEditServiceForm'
 import css from './DeployServiceStep.module.scss'
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -83,7 +90,8 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
   closeModal
 }): JSX.Element => {
   const { getString } = useStrings()
-  const inputRef = React.useRef<HTMLInputElement | null>(null)
+  const isGitXEnabledForServices = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
+
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     orgIdentifier: string
     projectIdentifier: string
@@ -103,10 +111,37 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
     }
   })
 
-  React.useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
   const { showSuccess, showError, clear } = useToaster()
+
+  const { openSaveToGitDialog } = useSaveToGitDialog({
+    onSuccess: async (gitData: SaveToGitFormInterface, _payload?: any): Promise<any> => {
+      const isNewBranch = gitData?.isNewBranch
+      const selectedBranch = formikRef.current?.values?.branch
+      const response = await createService(
+        { ..._payload, orgIdentifier, projectIdentifier },
+        {
+          queryParams: {
+            accountIdentifier: accountId,
+            storeType: StoreType.REMOTE,
+            connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value,
+            repoName: formikRef.current?.values?.repoName,
+            isNewBranch: gitData?.isNewBranch,
+            filePath: formikRef.current?.values?.filePath,
+            ...(isNewBranch ? { baseBranch: selectedBranch, branch: gitData?.branch } : { branch: selectedBranch }),
+            commitMsg: gitData?.commitMsg
+          }
+        }
+      )
+      if (response.status === 'SUCCESS') {
+        clear()
+        showSuccess(getString('cd.serviceCreated'))
+        // We invalidate the service list call on creating a new service
+        queryClient.invalidateQueries(['getServiceAccessList'])
+        onCreateOrUpdate(_payload)
+      }
+      Promise.resolve(response)
+    }
+  })
 
   const onSubmit = React.useCallback(
     async (value: ServiceRequestDTO) => {
@@ -118,6 +153,29 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           showError(getString('common.validation.fieldIsRequired', { name: 'Identifier' }))
         } else if (isEdit && id !== values.identifier) {
           showError(getString('cd.editIdError', { id: id }))
+        } else if (formikRef.current?.values?.storeType === StoreType.REMOTE) {
+          openSaveToGitDialog({
+            isEditing: isEdit,
+            resource: {
+              type: 'Service',
+              name: values.name as string,
+              identifier: values.identifier as string,
+              gitDetails: {
+                branch: formikRef.current?.values?.branch,
+                commitId: undefined,
+                filePath: formikRef.current?.values?.filePath,
+                fileUrl: undefined,
+                objectId: undefined,
+                repoName: formikRef.current?.values?.repoName,
+                repoUrl: undefined
+              },
+              storeMetadata: {
+                storeType: StoreType.REMOTE,
+                connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value
+              }
+            },
+            payload: { ...values, orgIdentifier, projectIdentifier }
+          })
         } else if (isEdit && !isService) {
           const response = await updateService({
             ...omit(values, 'accountId', 'deleted'),
@@ -147,7 +205,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
     [onCreateOrUpdate, orgIdentifier, projectIdentifier, isEdit, isService]
   )
 
-  const formikRef = React.useRef<FormikProps<ServiceResponseDTO>>()
+  const formikRef = React.useRef<FormikProps<ServiceResponseDTO & StoreMetadata>>()
   const id = data.identifier
   const { data: serviceSchema } = useGetYamlSchema({
     queryParams: {
@@ -166,7 +224,8 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
         const serviceSetYamlVisual = parse(yaml).service as ServiceResponseDTO
         if (serviceSetYamlVisual) {
           formikRef.current?.setValues({
-            ...omit(cleanData(serviceSetYamlVisual) as ServiceResponseDTO)
+            ...omit(cleanData(serviceSetYamlVisual) as ServiceResponseDTO),
+            ...pick(formikRef.current?.values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath'])
           })
         }
       }
@@ -190,7 +249,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           />
         </Layout.Horizontal>
       </Container>
-      <Formik<Required<ServiceResponseDTO>>
+      <Formik<Required<ServiceResponseDTO> & StoreMetadata>
         initialValues={data as Required<ServiceResponseDTO>}
         formName="deployService"
         onSubmit={values => {
@@ -198,7 +257,8 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
         }}
         validationSchema={Yup.object().shape({
           name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Service' }) }),
-          identifier: IdentifierSchema(getString)
+          identifier: IdentifierSchema(getString),
+          ...(isGitXEnabledForServices ? { ...gitSyncFormSchema(getString) } : {})
         })}
       >
         {formikProps => {
@@ -206,36 +266,19 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           return (
             <>
               {selectedView === SelectedView.VISUAL ? (
-                <FormikForm>
-                  <NameIdDescriptionTags
-                    formikProps={formikProps}
-                    identifierProps={{
-                      inputLabel: getString('name'),
-                      inputGroupProps: {
-                        inputGroup: {
-                          inputRef: ref => (inputRef.current = ref)
-                        }
-                      },
-                      isIdentifierEditable: !isEdit
-                    }}
-                  />
-                  <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>
-                    <Button
-                      variation={ButtonVariation.PRIMARY}
-                      type={'submit'}
-                      text={getString('save')}
-                      data-id="service-save"
-                    />
-                    <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={closeModal} />
-                  </Layout.Horizontal>
-                </FormikForm>
+                <NewEditServiceForm
+                  isEdit={isEdit}
+                  formikProps={formikProps as FormikProps<ServiceResponseDTO & StoreMetadata>}
+                  isGitXEnabledForServices={isGitXEnabledForServices}
+                  closeModal={closeModal}
+                />
               ) : (
                 <Container className={css.editor}>
                   <YAMLBuilder
                     {...yamlBuilderReadOnlyModeProps}
                     existingJSON={{
                       service: {
-                        ...omit(formikProps?.values),
+                        ...omit(formikProps?.values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath']),
                         description: defaultTo(formikProps.values.description, ''),
                         tags: defaultTo(formikProps.values.tags, {})
                       }

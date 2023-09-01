@@ -6698,6 +6698,7 @@ export interface StringsMap {
   'cd.pipelineSteps.infraTab.deploymentType': string
   'cd.pipelineSteps.infraTab.stageIsRequired': string
   'cd.pipelineSteps.serviceTab.aboutYourService': string
+  'cd.pipelineSteps.serviceTab.chooseServiceSetupHeader': string
   'cd.pipelineSteps.serviceTab.deleteServiceFromListText': string
   'cd.pipelineSteps.serviceTab.deleteServiceFromListTitleText': string
   'cd.pipelineSteps.serviceTab.deploymentTypeRequired': string

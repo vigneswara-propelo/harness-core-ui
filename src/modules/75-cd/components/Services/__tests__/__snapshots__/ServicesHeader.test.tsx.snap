@@ -195,11 +195,11 @@ exports[`ServiceHeader should open and close the Services modal 1`] = `
   >
     <form
       action="#"
-      class="FormikForm--main"
+      class="FormikForm--main serviceForm"
     >
       <div>
         <div
-          class="StyledProps--font StyledProps--main main"
+          class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
         >
           <div
             class="InputWithIdentifier--txtNameContainer TextInput--main"
