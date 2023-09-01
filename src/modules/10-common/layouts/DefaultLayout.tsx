@@ -20,8 +20,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import DocsChat from '@common/components/DocsChat/DocsChat'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { String } from 'framework/strings'
 import FeatureBanner from './FeatureBanner'
 
@@ -40,7 +39,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
   const { trackPage, identifyUser } = useTelemetry()
   const { currentUserInfo } = useAppStore()
   const { isOpen, open, close } = useToggleOpen(false)
-  const chatEnabled = useFeatureFlag(FeatureFlag.PL_AI_SUPPORT_CHATBOT)
+  const { PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED } = useFeatureFlags()
 
   useEffect(() => {
     if (pageName) {
@@ -72,7 +71,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
         <div className={css.children}>{props.children}</div>
       </div>
 
-      {chatEnabled && !disableAuxNav ? (
+      {PL_AI_SUPPORT_CHATBOT && PL_EULA_ENABLED && !disableAuxNav ? (
         <div className={css.aux}>
           <ul className={css.list}>
             <li>

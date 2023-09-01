@@ -3037,12 +3037,12 @@ export interface StringsMap {
   'platform.defaultSettings.enablePipelineExecutionAuditEvents': string
   'platform.defaultSettings.enableServiceOverrideV2': string
   'platform.defaultSettings.enforceGitExperience': string
-  'platform.defaultSettings.eula': string
   'platform.defaultSettings.executeTriggersWithAllCollectedArtifactsOrManifests': string
   'platform.defaultSettings.exportServiceVariablesAsEnvVariables': string
   'platform.defaultSettings.fetchingDefaultConnector': string
   'platform.defaultSettings.gcpIncludeDiscounts': string
   'platform.defaultSettings.gcpIncludeTaxes': string
+  'platform.defaultSettings.harnessAida': string
   'platform.defaultSettings.harnessDefault': string
   'platform.defaultSettings.inheritedFrom': string
   'platform.defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string

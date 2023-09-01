@@ -53,7 +53,7 @@ defaultSettings:
   notifications:
     msTeam: MS Teams
     pagerDuty: Pager Duty
-  eula: End User License Agreement
+  harnessAida: Harness AI Developer Assistant
   aida:
     aidaEULAText: |
       **Harness AI Developer Assistant (AIDA) Terms**
