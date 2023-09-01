@@ -31,6 +31,8 @@ import type { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/comp
 import type { FormMultiTypeCheckbox } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import type { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { FormMultiTypeDuration } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
+import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -63,5 +65,7 @@ export interface IACMCustomMicroFrontendProps {
     FormMultiTypeCheckbox: typeof FormMultiTypeCheckbox
     ConfigureOptions: typeof ConfigureOptions
     FormMultiTypeDuration: typeof FormMultiTypeDuration
+    PipelineDetailsTab: typeof PipelineDetailsTab
+    InputOutputTab: typeof InputOutputTab
   }
 }

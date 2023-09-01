@@ -35,6 +35,8 @@ import { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/component
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDuration } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { FormMultiTypeCheckbox } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
+import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
+import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -49,7 +51,9 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   DefaultConsoleViewStepDetails,
   FormMultiTypeCheckbox,
   ConfigureOptions,
-  FormMultiTypeDuration
+  FormMultiTypeDuration,
+  PipelineDetailsTab,
+  InputOutputTab
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
