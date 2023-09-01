@@ -93,24 +93,24 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
 
   const connectorRefQueryParamValue = getFinalQueryParamValue(connectorRefValue)
 
-  const projectValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.project`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.project`, ''), artifact?.spec?.project)
+  const projectValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.project`, ''), artifact?.spec?.project),
+    get(initialValues?.artifacts, `${artifactPath}.spec.project`)
   )
 
-  const feedValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.feed`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.feed`, ''), artifact?.spec?.feed)
+  const feedValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.feed`, ''), artifact?.spec?.feed),
+    get(initialValues?.artifacts, `${artifactPath}.spec.feed`)
   )
 
-  const packageValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.package`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.package`, ''), artifact?.spec?.package)
+  const packageValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.package`, ''), artifact?.spec?.package),
+    get(initialValues?.artifacts, `${artifactPath}.spec.package`)
   )
 
-  const packageTypeValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`),
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageType`, ''), artifact?.spec?.packageType)
+  const packageTypeValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageType`, ''), artifact?.spec?.packageType),
+    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`)
   )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -184,7 +184,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefQueryParamValue,
-      project: projectValue,
+      project: getFinalQueryParamValue(projectValue),
       org: '',
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
@@ -228,9 +228,9 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
       ...commonParams,
       connectorRef: connectorRefQueryParamValue,
       org: '',
-      packageType: packageTypeValue,
-      project: projectValue,
-      feed: feedValue,
+      packageType: getFinalQueryParamValue(packageTypeValue),
+      project: getFinalQueryParamValue(projectValue),
+      feed: getFinalQueryParamValue(feedValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
@@ -287,10 +287,10 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
       ...commonParams,
       connectorRef: connectorRefQueryParamValue,
       org: '',
-      packageType: packageTypeValue,
-      feed: feedValue,
-      package: packageValue,
-      project: projectValue,
+      packageType: getFinalQueryParamValue(packageTypeValue),
+      feed: getFinalQueryParamValue(feedValue),
+      package: getFinalQueryParamValue(packageValue),
+      project: getFinalQueryParamValue(projectValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
