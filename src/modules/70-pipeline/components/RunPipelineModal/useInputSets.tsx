@@ -282,9 +282,9 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
       if (executionView) {
         if (inputSetMergedData?.data?.pipelineYaml) {
-          setInputSet(memoizedParse<Pipeline>(inputSetMergedData?.data?.pipelineYaml as any))
+          setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetMergedData?.data?.pipelineYaml as any)))
         } else {
-          setInputSet(memoizedParse<Pipeline>(rerunInputSetYaml as any))
+          setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(rerunInputSetYaml as any)))
         }
       } else {
         setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any)))
