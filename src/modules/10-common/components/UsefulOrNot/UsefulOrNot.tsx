@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Container, Layout, Text, useToggleOpen } from '@harness/uicore'
 import cx from 'classnames'
 import React, { useState } from 'react'
@@ -8,7 +15,9 @@ import { SubmitTicketModal } from '../ResourceCenter/SubmitTicketModal/SubmitTic
 import css from './UsefulOrNot.module.scss'
 
 export enum AidaClient {
-  CS_BOT = 'CS_BOT'
+  CS_BOT = 'CS_BOT',
+  CD_RCA = 'CD_RCA',
+  CI_RCA = 'CI_RCA'
 }
 
 interface TelemeteryProps {

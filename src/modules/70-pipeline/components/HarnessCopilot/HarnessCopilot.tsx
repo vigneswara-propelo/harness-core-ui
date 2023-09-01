@@ -5,18 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import moment from 'moment'
 import { Drawer, PopoverInteractionKind, PopoverPosition, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { capitalize, get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, ButtonVariation, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { RcaRequestBody, ResponseRemediation, rcaPromise, Error } from 'services/logs'
 import { useStrings } from 'framework/strings'
 import { pluralize } from '@common/utils/StringUtils'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useLocalStorage } from '@common/hooks'
 import { createFormDataFromObjectPayload } from '@common/constants/Utils'
 import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
@@ -30,6 +30,8 @@ import {
   getPluginUsedFromStepParams
 } from '@pipeline/utils/executionUtils'
 import type { LogsContentProps } from '@pipeline/factories/ExecutionFactory/types'
+import UsefulOrNot, { AidaClient } from '@common/components/UsefulOrNot/UsefulOrNot'
+import { GraphLayoutNode } from 'services/pipeline-ng'
 import { getTaskFromExecutableResponse } from '../LogsContent/LogsState/createSections'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { getErrorMessage, ErrorScope } from './AIDAUtils'
@@ -54,7 +56,7 @@ const SHOW_DELAY_MSSG_AFTER_DURATION = 7000
 function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const { mode, scope } = props
   const { getString } = useStrings()
-  const { accountId } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, executionIdentifier } = useParams<PipelineType<ExecutionPathProps>>()
   const {
     pipelineStagesMap,
     selectedStageId,
@@ -76,6 +78,13 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const [showDelayMssg, setShowDelayMessage] = useState<boolean>(false)
   const controllerRef = useRef<AbortController>()
   const showMinimalView = scope === ErrorScope.Stage
+  let currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId)
+  if (!currentModule) {
+    const pipelineStagesMapFromExecutionDetails = new Map(
+      Object.entries(get(pipelineExecutionDetail, 'pipelineExecutionSummary.layoutNodeMap', {}))
+    ) as Map<string, GraphLayoutNode>
+    currentModule = getSelectedStageModule(pipelineStagesMapFromExecutionDetails, selectedStageId)
+  }
 
   useEffect(() => {
     let timerId: NodeJS.Timeout
@@ -150,24 +159,9 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     controllerRef.current
   ])
 
-  const getPostAPIBodyPayload = useCallback((): RcaRequestBody => {
-    const commonArgs = {
-      pipelineStagesMap,
-      selectedStageId,
-      pipelineExecutionDetail
-    }
-    const step_type = get(selectedStep, 'stepType', '') as StepType
-    const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId)
-    return {
-      infra: getInfraTypeFromStageForCurrentStep(commonArgs),
-      ...(currentModule === 'ci' && {
-        ...getOSTypeAndArchFromStageForCurrentStep(commonArgs),
-        plugin: getPluginUsedFromStepParams(selectedStep, step_type),
-        command: getCommandFromCurrentStep({ step: selectedStep, pipelineStagesMap, selectedStageId })
-      }),
-      step_type,
-      accountID: accountId,
-      err_summary: getErrorMessage({
+  const errorSummary = useMemo(
+    () =>
+      getErrorMessage({
         erropScope: scope,
         allNodeMap,
         pipelineExecutionDetail,
@@ -177,19 +171,45 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
         selectedStageId,
         selectedStepId
       }),
+    [
+      allNodeMap,
+      pipelineExecutionDetail,
+      pipelineStagesMap,
+      queryParams,
+      scope,
+      selectedStageExecutionId,
+      selectedStageId,
+      selectedStepId
+    ]
+  )
+
+  const getPostAPIBodyPayload = useCallback((): RcaRequestBody => {
+    const commonArgs = {
+      pipelineStagesMap,
+      selectedStageId,
+      pipelineExecutionDetail
+    }
+    const step_type = get(selectedStep, 'stepType', '') as StepType
+    return {
+      infra: getInfraTypeFromStageForCurrentStep(commonArgs),
+      ...(currentModule === 'ci' && {
+        ...getOSTypeAndArchFromStageForCurrentStep(commonArgs),
+        plugin: getPluginUsedFromStepParams(selectedStep, step_type),
+        command: getCommandFromCurrentStep({ step: selectedStep, pipelineStagesMap, selectedStageId })
+      }),
+      step_type,
+      accountID: accountId,
+      err_summary: errorSummary,
       keys: get(getTaskFromExecutableResponse(selectedStep), 'logKeys', '""')
     }
   }, [
-    allNodeMap,
-    queryParams,
     pipelineStagesMap,
     selectedStageId,
-    selectedStageExecutionId,
     pipelineExecutionDetail,
-    selectedStepId,
     selectedStep,
     accountId,
-    scope
+    errorSummary,
+    currentModule
   ])
 
   const renderCTA = useCallback((): JSX.Element => {
@@ -396,7 +416,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
               dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(remediation) }}
             />
           </Layout.Vertical>
-          <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+          <Layout.Horizontal flex={{ justifyContent: 'space-between' }} spacing={'medium'}>
             {remediationsGeneratedAt ? (
               <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.flex2}>
                 <Text color={Color.AI_PURPLE_600} font={{ variation: FontVariation.FORM_LABEL }}>{`${getString(
@@ -404,18 +424,21 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
                 )} ${moment(remediationsGeneratedAt).format('LLL')}`}</Text>
               </Layout.Horizontal>
             ) : null}
-            <Container flex className={css.flex1}>
-              <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('common.isHelpful')}</Text>
-              <Container flex>
-                <Button variation={ButtonVariation.ICON} icon="main-tick" iconProps={{ size: 15 }} />
-                <Button variation={ButtonVariation.ICON} icon="small-cross" iconProps={{ size: 20 }} />
-              </Container>
-            </Container>
+            <UsefulOrNot
+              telemetry={{
+                aidaClient: currentModule === 'cd' ? AidaClient.CD_RCA : AidaClient.CI_RCA,
+                metadata: {
+                  executionIdentifier,
+                  error: errorSummary,
+                  remediation
+                }
+              }}
+            />
           </Layout.Horizontal>
         </Layout.Vertical>
       )
     },
-    [remediationsGeneratedAt]
+    [currentModule, errorSummary, executionIdentifier, remediationsGeneratedAt]
   )
 
   return (
