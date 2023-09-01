@@ -11,8 +11,13 @@ import { Spinner, Tabs } from '@blueprintjs/core'
 import { Layout, Button, PageError, HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { ApprovalInstanceResponse, ExecutionNode, ExecutionGraph } from 'services/pipeline-ng'
-import { useGetApprovalInstance, ResponseApprovalInstanceResponse } from 'services/pipeline-ng'
+import {
+  ApprovalInstanceResponse,
+  ExecutionNode,
+  ExecutionGraph,
+  useGetApprovalInstance,
+  ResponseApprovalInstanceResponse
+} from 'services/pipeline-ng'
 import {
   isExecutionWaiting,
   isExecutionFailed,
@@ -30,11 +35,13 @@ import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 
 import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
+import { ExecutionMetadataType } from '../../common/StepDetails/utils'
 import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export const REFRESH_APPROVAL = 'REFRESH_APPROVAL'
 
-const POLL_INTERVAL = 60 * 1000 // 1 min
+const POLL_INTERVAL_MORE = 60 * 1000 // 1 min
+const POLL_INTERVAL_SMALL = 60 * 100 // 6 sec
 
 enum ApprovalStepTab {
   APPROVAL = 'APPROVAL',
@@ -56,6 +63,7 @@ interface ApprovalTabComponentProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
+  approvalInstanceMetadata?: ExecutionMetadataType
   progressData?: {
     [key: string]: string
   }
@@ -134,7 +142,10 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
   }, [shouldFetchData, step.status])
 
   usePolling(fetchApprovalInstanceData, {
-    pollingInterval: POLL_INTERVAL,
+    pollingInterval:
+      data?.data?.details?.latestDelegateTaskId || step?.progressData?.latestDelegateTaskId
+        ? POLL_INTERVAL_MORE
+        : POLL_INTERVAL_SMALL,
     startPolling: !loadingApprovalData && !!data && shouldFetchData && shouldPollForTicketStatus
   })
 
@@ -202,6 +213,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
             stepParameters={step.stepParameters}
             executionMetadata={executionMetadata}
             progressData={step.progressData}
+            approvalInstanceMetadata={{ approvalInstanceId, mock }}
           />
         }
       />

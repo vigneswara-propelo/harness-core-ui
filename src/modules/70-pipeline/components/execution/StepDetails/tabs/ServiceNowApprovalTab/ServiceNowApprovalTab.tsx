@@ -18,6 +18,7 @@ import type { StepExecutionTimeInfo } from '@pipeline/components/execution/StepD
 import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import { Collapse } from '@pipeline/components/execution/StepDetails/common/Collapse/Collapse'
 import { ServiceNowCriteria } from './ServiceNowCriteria/ServiceNowCriteria'
+import { ExecutionMetadataType } from '../../common/StepDetails/utils'
 import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
 import css from './ServiceNowApprovalTab.module.scss'
 
@@ -29,6 +30,7 @@ export type ApprovalData =
 
 export interface ServiceNowApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
+  approvalInstanceMetadata?: ExecutionMetadataType
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
   progressData?: {
@@ -37,7 +39,7 @@ export interface ServiceNowApprovalTabProps extends StepExecutionTimeInfo {
 }
 
 export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.ReactElement {
-  const { isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData } = props
+  const { isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData, approvalInstanceMetadata } = props
   const { getString } = useStrings()
   const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
@@ -109,9 +111,12 @@ export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.
       )}
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
         <StepDetails
+          approvalInstanceMetadata={approvalInstanceMetadata}
           step={{ startTs, endTs, stepParameters }}
           executionMetadata={executionMetadata}
           progressData={progressData}
+          delegateTaskName={approvalData?.details?.delegateTaskName}
+          latestDelegateTaskId={approvalData?.details?.latestDelegateTaskId}
           ticketStatus={get(approvalData, 'details.ticket.ticketFields.state')}
         />
       </Container>

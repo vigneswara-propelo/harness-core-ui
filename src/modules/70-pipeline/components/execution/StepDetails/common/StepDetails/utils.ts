@@ -5,8 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { ResponseApprovalInstanceResponse } from 'services/pipeline-ng'
+
 export function encodeURIWithReservedChars(uri: string): string {
   return encodeURIComponent(uri).replace(/[;,/?:@&=+$#]/g, function (c) {
     return '%' + c.charCodeAt(0).toString(16)
   })
+}
+
+export interface ExecutionMetadataType {
+  approvalInstanceId: string
+  mock?: {
+    data?: ResponseApprovalInstanceResponse
+    loading?: boolean
+  }
 }

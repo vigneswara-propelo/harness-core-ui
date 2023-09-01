@@ -17,6 +17,7 @@ import type { StepExecutionTimeInfo } from '@pipeline/components/execution/StepD
 import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { JiraCriteria } from './JiraCriteria/JiraCriteria'
+import { ExecutionMetadataType } from '../../common/StepDetails/utils'
 import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
 import css from './JiraApprovalTab.module.scss'
 
@@ -30,13 +31,14 @@ export interface JiraApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
+  approvalInstanceMetadata?: ExecutionMetadataType
   progressData?: {
     [key: string]: string
   }
 }
 
 export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement {
-  const { isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData } = props
+  const { isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData, approvalInstanceMetadata } = props
   const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
   const wasRejected =
@@ -108,9 +110,12 @@ export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement
 
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
         <StepDetails
+          approvalInstanceMetadata={approvalInstanceMetadata}
           step={{ startTs, endTs, stepParameters }}
           executionMetadata={executionMetadata}
           progressData={progressData}
+          delegateTaskName={approvalData?.details?.delegateTaskName}
+          latestDelegateTaskId={approvalData?.details?.latestDelegateTaskId}
           ticketStatus={get(approvalData, 'details.issue.ticketFields.Status')}
         />
       </Container>

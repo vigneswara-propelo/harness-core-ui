@@ -18,6 +18,7 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import type { StepExecutionTimeInfo } from '@pipeline/components/execution/StepDetails/views/BaseApprovalView/BaseApprovalView'
 import { CustomApprovalCriteria } from './CustomApprovalCriteria/CustomApprovalCriteria'
+import { ExecutionMetadataType } from '../../common/StepDetails/utils'
 import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
 import css from './CustomApprovalTab.module.scss'
 
@@ -25,6 +26,7 @@ export interface CustomApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
   executionMetadata: ExecutionGraph['executionMetadata']
+  approvalInstanceMetadata?: ExecutionMetadataType
   progressData?: {
     [key: string]: string
   }
@@ -52,7 +54,16 @@ function CustomApprovalMessage({ status }: { status: keyof typeof ApprovalStatus
 }
 
 export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactElement {
-  const { approvalData, isWaiting, startTs, endTs, stepParameters, executionMetadata, progressData } = props
+  const {
+    approvalData,
+    isWaiting,
+    startTs,
+    endTs,
+    stepParameters,
+    executionMetadata,
+    progressData,
+    approvalInstanceMetadata
+  } = props
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
 
   return (
@@ -91,9 +102,12 @@ export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactEle
 
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
         <StepDetails
+          approvalInstanceMetadata={approvalInstanceMetadata}
           step={{ startTs, endTs, stepParameters }}
           executionMetadata={executionMetadata}
           progressData={progressData}
+          delegateTaskName={approvalData?.details?.delegateTaskName}
+          latestDelegateTaskId={approvalData?.details?.latestDelegateTaskId}
         />
       </Container>
 

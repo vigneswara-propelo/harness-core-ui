@@ -5,14 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Text, Layout, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Link } from 'react-router-dom'
 import { defaultTo, isArray, isEmpty, isNil, isUndefined } from 'lodash-es'
+import { Spinner } from '@blueprintjs/core'
 import { Duration } from '@common/exports'
 import { useDelegateSelectionLogsModal } from '@common/components/DelegateSelectionLogs/DelegateSelectionLogs'
-import type { DelegateInfo, ExecutableResponse, ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
+import {
+  DelegateInfo,
+  ExecutableResponse,
+  ExecutionGraph,
+  ExecutionNode,
+  getApprovalInstancePromise
+} from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -38,17 +45,30 @@ export interface StepLabels {
 
 export interface StepDetailsProps {
   step: ExecutionNode
+  latestDelegateTaskId?: string
+  delegateTaskName?: string
   executionMetadata: ExecutionGraph['executionMetadata']
   labels?: StepLabels[]
   progressData?: {
     [key: string]: string
   }
   ticketStatus?: string
+  approvalInstanceMetadata?: any
 }
 
 export function StepDetails(props: StepDetailsProps): React.ReactElement {
-  const { step, executionMetadata, labels = [], progressData, ticketStatus } = props
+  const {
+    step,
+    executionMetadata,
+    labels = [],
+    progressData,
+    ticketStatus,
+    latestDelegateTaskId,
+    delegateTaskName,
+    approvalInstanceMetadata
+  } = props
   const { getString } = useStrings()
+  const [loader, setLoader] = useState<boolean>(false)
   const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
   //TODO - types will modified when the backend swagger docs are updated
   const deploymentTag = step?.stepParameters?.deploymentTag as any
@@ -103,6 +123,36 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
   const endTime = Math.floor((step?.endTs || Date.now()) / 1000) + timePadding
 
+  const handleSelectionLogClick = () => {
+    setLoader(true)
+    const approvalData = {
+      taskId: defaultTo(latestDelegateTaskId || progressData?.latestDelegateTaskId, ''),
+      taskName: defaultTo(delegateTaskName || progressData?.taskName, '')
+    }
+    getApprovalInstancePromise({
+      approvalInstanceId: approvalInstanceMetadata?.approvalInstanceId,
+      pathParams: { approvalInstanceId: approvalInstanceMetadata?.approvalInstanceId },
+      queryParams: { accountIdentifier: accountId }
+    })
+      .then(data => {
+        approvalData.taskId = defaultTo(
+          data?.data?.details?.latestDelegateTaskId || progressData?.latestDelegateTaskId,
+          ''
+        )
+        approvalData.taskName = defaultTo(data?.data?.details?.delegateTaskName || progressData?.taskName, '')
+      })
+      .finally(() => {
+        setLoader(false)
+        openDelegateSelectionLogsModal(approvalData)
+      })
+  }
+  if (loader) {
+    return (
+      <Layout.Vertical height="100%" flex={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Spinner />
+      </Layout.Vertical>
+    )
+  }
   return (
     <table className={css.detailsTable}>
       <tbody>
@@ -252,8 +302,8 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                       </div>
                     )
                   )}
-                {progressData?.latestDelegateTaskId && (
-                  <div key={progressData.latestDelegateTaskId}>
+                {((latestDelegateTaskId && delegateTaskName) || progressData?.latestDelegateTaskId) && (
+                  <div key={latestDelegateTaskId || progressData?.latestDelegateTaskId}>
                     <Text font={{ size: 'small', weight: 'bold' }}>
                       <String
                         stringID="common.delegateForTask"
@@ -264,12 +314,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                     (
                     <Text
                       font={{ size: 'small' }}
-                      onClick={() =>
-                        openDelegateSelectionLogsModal({
-                          taskId: progressData.latestDelegateTaskId,
-                          taskName: progressData?.taskName
-                        })
-                      }
+                      onClick={handleSelectionLogClick}
                       style={{ cursor: 'pointer' }}
                       color={Color.PRIMARY_7}
                     >

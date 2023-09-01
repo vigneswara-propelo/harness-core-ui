@@ -25,7 +25,7 @@ describe('Delegate Selection on Execution View', () => {
     cy.get('span[data-icon="rolling"]').should('be.visible').click({ force: true })
     cy.wait(1000)
     cy.findByText('Delegates:').next().get('div>div').eq(2).each
-    cy.get('p:contains("Delegate selection logs")')
+    cy.get('p:contains("Most Recent Delegate Selection Logs")')
       .each($elm => {
         cy.wrap($elm).click()
         cy.wait(1000)
