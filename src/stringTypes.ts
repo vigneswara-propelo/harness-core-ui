@@ -4075,6 +4075,7 @@ export interface StringsMap {
   'pipeline.buildInfra.dropCapabilities': string
   'pipeline.buildInfra.effect': string
   'pipeline.buildInfra.emptyDirectory': string
+  'pipeline.buildInfra.exportTemplate': string
   'pipeline.buildInfra.hostPath': string
   'pipeline.buildInfra.mountPath': string
   'pipeline.buildInfra.nodeSelector': string
@@ -5193,6 +5194,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AwsCdkBootstrap': string
   'pipeline.stepDescription.AwsCdkDiff': string
+  'pipeline.stepDescription.AwsCdkSynth': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
   'pipeline.stepDescription.AwsSamBuild': string
@@ -6874,6 +6876,8 @@ export interface StringsMap {
   'cd.steps.awsCdkStep.awsCdkBootstrapContainerRegistry': string
   'cd.steps.awsCdkStep.awsCdkDiffCommandOptions': string
   'cd.steps.awsCdkStep.awsCdkDiffContainerRegistry': string
+  'cd.steps.awsCdkStep.awsCdkSynthCommandOptions': string
+  'cd.steps.awsCdkStep.awsCdkSynthContainerRegistry': string
   'cd.steps.awsInfraStep.labels.autoScallingGroup': string
   'cd.steps.awsInfraStep.labels.connectionAttribute': string
   'cd.steps.awsInfraStep.labels.hostName': string

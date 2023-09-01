@@ -192,6 +192,8 @@ steps:
   awsCdkStep:
     awsCdkDiffContainerRegistry: AWS CDK Diff Container Registry
     awsCdkDiffCommandOptions: AWS CDK Diff Command Options
+    awsCdkSynthCommandOptions: AWS CDK Synthetize Command Options
+    awsCdkSynthContainerRegistry: AWS CDK Synthetize Container Registry
     awsCdkBootstrapContainerRegistry: AWS CDK Bootstrap Container Registry
     awsCdkBootstrapCommandOptions: AWS CDK Bootstrap Command Options
 filePathPlaceholder: 'Enter path within manifest folder'

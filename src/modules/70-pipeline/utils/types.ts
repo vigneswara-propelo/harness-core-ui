@@ -157,6 +157,7 @@ export interface AwsCDKDiffStepInitialValues extends StepElementConfig {
     imagePullPolicy?: string
     runAsUser?: string
     envVariables?: { [key: string]: string }
+    appPath?: string
     resources?: {
       limits?: {
         memory?: string

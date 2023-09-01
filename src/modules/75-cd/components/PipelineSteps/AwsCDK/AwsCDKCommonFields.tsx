@@ -59,6 +59,8 @@ export interface AwsCdkStepCommonOptionalFieldsEditProps {
   stepType?: StepType
 }
 
+const StackNamesIncluded = [StepType.AwsCdkDiff, StepType.AwsCdkSynth]
+
 export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFieldsEditProps): React.ReactElement {
   const { readonly, allowableTypes, formik, commandOptionsFieldName, commandOptionsFieldLabel, stepType } = props
 
@@ -85,7 +87,7 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
         </Container>
       )}
 
-      {stepType === StepType.AwsCdkDiff ? (
+      {stepType && StackNamesIncluded.includes(stepType) ? (
         <Container className={cx(stepCss.formGroup)}>
           <MultiTypeList
             name={'spec.stackNames'}

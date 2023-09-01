@@ -1363,6 +1363,7 @@ stepDescription:
   AwsSamDeploy: Deploy an AWS SAM function.
   AwsSamBuild: Build an AWS SAM function.
   AwsCdkDiff: Aws CDK Diff
+  AwsCdkSynth: Aws CDK Synthetize
   AwsCdkBootstrap: Aws CDK Bootstrap
   DownloadManifests: Download manifests using this step.
   SscaEnforcement: Enforce policies based on your SBOM by Allow list/Deny list
@@ -1528,6 +1529,7 @@ buildInfra:
   readOnlyRootFilesystem: Read-only Root Filesystem
   privileged: Privileged
   stackNames: Stack Names
+  exportTemplate: Export Template
   effect: Effect
   mountPath: Mount Path
   size: Size

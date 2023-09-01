@@ -142,6 +142,7 @@ import { ServerlessAwsLambdaDeployV2Step } from './ServerlessAwsLambda/Serverles
 import { DownloadManifestsStep } from './Common/DownloadManifestsStep/DownloadManifestsStep'
 import { AwsCDKDiffStep } from './AwsCDK/AwsCDKDiffStep/AwsCDKDiffStep'
 import { AwsCDKBootstrapStep } from './AwsCDK/AwsCDKBootstrapStep/AwsCDKBootstrapStep'
+import { AwsCDKSynthStep } from './AwsCDK/AwsCDKSynthStep/AwsCDKSynthStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -278,3 +279,4 @@ factory.registerStep(new ServerlessAwsLambdaPackageV2Step())
 factory.registerStep(new ServerlessAwsLambdaDeployV2Step())
 factory.registerStep(new AwsCDKDiffStep())
 factory.registerStep(new AwsCDKBootstrapStep())
+factory.registerStep(new AwsCDKSynthStep())
