@@ -98,7 +98,8 @@ function IDPRoutes(): React.ReactElement {
     routes.toIDPAccessControl({ ...accountPathProps }),
     routes.toConnectorsPage({ ...accountPathProps }),
     routes.toIDPOAuthConfig({ ...accountPathProps }),
-    routes.toIDPAllowListURL({ ...accountPathProps })
+    routes.toIDPAllowListURL({ ...accountPathProps }),
+    routes.toScorecards({ ...accountPathProps })
   ]
 
   return (

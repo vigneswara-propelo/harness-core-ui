@@ -2340,6 +2340,7 @@ const routes = {
   toConnectorsPage: withAccountId(() => '/idp-admin/connectors'),
   toIDPOAuthConfig: withAccountId(() => '/idp-admin/oauth'),
   toIDPAllowListURL: withAccountId(() => '/idp-admin/allowlist-url'),
+  toScorecards: withAccountId(() => '/idp-admin/scorecards'),
   toIDPPipelines: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/idp-admin/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`

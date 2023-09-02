@@ -9037,6 +9037,7 @@ export interface StringsMap {
   'idp.createProject': string
   'idp.layout': string
   'idp.oAuthConfig': string
+  'idp.scorecards': string
   'idp.urlAllowList': string
   'sei.accountSettings.advancedFeature.label': string
   'sei.accountSettings.advancedFeature.propels': string
