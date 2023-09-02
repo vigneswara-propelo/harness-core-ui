@@ -8,7 +8,7 @@
 import React from 'react'
 import moment from 'moment'
 import { Text, Container, Layout, Button, ButtonVariation } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { SRMAnalysisStepDetails } from 'services/cv'
 import { ReportStatusCard } from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/ReportsTable.utils'
@@ -35,19 +35,16 @@ export const ImpactAnalysisDetails = ({ data }: { data: SRMAnalysisStepDetails[]
       monitoredServiceIdentifier
     } = item
 
-    const openReportInServiceHealth = (): void => {
-      const linkTo = `${routes.toCVAddMonitoringServicesEdit({
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        identifier: monitoredServiceIdentifier,
-        module: 'cv'
-      })}${getCVMonitoringServicesSearchParam({
-        tab: MonitoredServiceEnum.ServiceHealth,
-        reportId: executionDetailIdentifier
-      })}`
-      window.open(linkTo, '_blank')
-    }
+    const linkTo = `${routes.toCVAddMonitoringServicesEdit({
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      identifier: monitoredServiceIdentifier,
+      module: 'cv'
+    })}${getCVMonitoringServicesSearchParam({
+      tab: MonitoredServiceEnum.ServiceHealth,
+      reportId: executionDetailIdentifier
+    })}`
 
     return (
       <Container key={stepName} className={css.gridContainer} data-testid="ImpactAnalysisDetailsSection">
@@ -77,9 +74,11 @@ export const ImpactAnalysisDetails = ({ data }: { data: SRMAnalysisStepDetails[]
 
         <Container className={css.gridLayout}>
           {analysisStatus ? <ReportStatusCard status={analysisStatus} /> : null}
-          <Button className={css.viewReport} variation={ButtonVariation.LINK} onClick={openReportInServiceHealth}>
-            {getString('cv.analyzeDeploymentImpact.cdCard.viewReport')}
-          </Button>
+          <Link to={linkTo} target="_blank">
+            <Button className={css.viewReport} variation={ButtonVariation.LINK}>
+              {getString('cv.analyzeDeploymentImpact.cdCard.viewReport')}
+            </Button>
+          </Link>
         </Container>
       </Container>
     )

@@ -59,7 +59,7 @@ describe('Create empty monitored service', () => {
 
   it('Add new AppDynamics monitored service with fixed and expression value', () => {
     const applyTemplateCall = '/template/api/templates/applyTemplates?*'
-    cy.intercept('POST', applyTemplateCall, { fixture: 'cv/templates/emptyTemplate' }).as('applyTemplates')
+    cy.intercept('POST', applyTemplateCall, { fixture: 'cv/templates/emptyTemplate' }).as('applyTemplates1')
     cy.intercept('POST', '/template/api/templates/v2/variables?*', variablesResponse).as('VariablesCall1')
     cy.addNewSRMTemplate()
     cy.populateTemplateDetails('AppD Template', '1')
@@ -68,16 +68,16 @@ describe('Create empty monitored service', () => {
     cy.setServiceEnvRuntime()
 
     // Toggle to variable view
+    cy.intercept('POST', '/template/api/templates/v2/variables?*', variablesResponseWithAppDVariable).as(
+      'VariablesCall2'
+    )
+    cy.intercept('POST', applyTemplateCall, { fixture: 'cv/templates/variableTemplate' }).as('applyTemplates2')
     cy.contains('span', 'Variables').click()
     cy.wait(2000)
     cy.contains('span', 'Add Variable').click()
     cy.fillName('AppDApplication')
     cy.findByTestId('addVariableSave').click()
     cy.get('[name="variables[0].value"]').type('cv-app')
-    cy.intercept('POST', '/template/api/templates/v2/variables?*', variablesResponseWithAppDVariable).as(
-      'VariablesCall2'
-    )
-    cy.intercept('POST', applyTemplateCall, { fixture: 'cv/templates/variableTemplate' }).as('applyTemplates')
     cy.contains('span', 'Apply Changes').click()
     cy.wait(1000)
 

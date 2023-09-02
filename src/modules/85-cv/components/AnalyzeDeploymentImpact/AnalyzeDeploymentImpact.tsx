@@ -42,6 +42,7 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
   const activityId = useMemo(() => getActivityId(step), [step])
 
   const { error, data, loading, refetch } = useGetSRMAnalysisSummary({
+    lazy: true,
     executionDetailId: activityId,
     queryParams: { accountId }
   })

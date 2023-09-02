@@ -741,7 +741,7 @@ export interface CVNGLogDTO {
   startTime?: number
   tags?: CVNGLogTag[]
   traceableId?: string
-  traceableType?: 'ONBOARDING' | 'VERIFICATION_TASK'
+  traceableType?: 'ONBOARDING' | 'VERIFICATION_TASK' | 'VERIFICATION_JOB_INSTANCE'
   type?: 'ApiCallLog' | 'ExecutionLog'
 }
 
@@ -6572,6 +6572,7 @@ export interface SRMAnalysisStepDetailDTO {
   serviceName?: string
   stageStepId: string
   stepName: string
+  verifyStepSummaries?: VerifyStepSummary[]
 }
 
 export interface SRMAnalysisStepDetails {

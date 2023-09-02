@@ -15,7 +15,7 @@ import { calculateEndtime } from './ReportSLIAndHealthSource.utils'
 
 export const ReportSLIAndHealthSource = (props: SRMAnalysisStepDetailDTO): JSX.Element => {
   const { getString } = useStrings()
-  const { analysisStatus, analysisEndTime, analysisStartTime, monitoredServiceIdentifier } = props
+  const { analysisStatus, analysisEndTime, analysisStartTime, monitoredServiceIdentifier, verifyStepSummaries } = props
 
   const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
 
@@ -36,7 +36,7 @@ export const ReportSLIAndHealthSource = (props: SRMAnalysisStepDetailDTO): JSX.E
         eventType={'DeploymentImpactAnalysis'}
         timeStamps={timeStamps}
         title={getString('cv.changeSource.changeSourceCard.deploymentHealth')}
-        verifyStepSummaries={[]}
+        verifyStepSummaries={verifyStepSummaries}
         eventStatus={analysisStatus}
         eventEndTime={analysisEndTime}
       />
