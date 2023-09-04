@@ -177,6 +177,8 @@ featureFlags:
     warningDescription: '<strong>{{ flagIdentifier }}</strong> is being served in at least one environment.<br/><br/>
       Archiving a flag removes it from all environments, but you can restore it within 30 days.<br/><br/>
       Please ensure all references to this flag are removed prior to archiving. <br/><br/>'
+  tagging:
+    emptyState: No tags assigned
   rules:
     whenFlagEnabled: When the Flag is Enabled
     whenFlagDisabled: When the Flag is Disabled

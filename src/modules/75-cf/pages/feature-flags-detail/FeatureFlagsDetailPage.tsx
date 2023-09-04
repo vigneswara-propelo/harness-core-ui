@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Layout, PageError } from '@harness/uicore'
 import { useParams, useLocation } from 'react-router-dom'
 import { GetFeatureFlagQueryParams, useGetFeatureFlag } from 'services/cf'
@@ -20,7 +20,7 @@ import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import css from './FeatureFlagsDetailPage.module.scss'
 
-const FeatureFlagsDetailPage: React.FC = () => {
+const FeatureFlagsDetailPage: FC = () => {
   const { getString } = useStrings()
   const [skipLoading, setSkipLoading] = useState(false)
   const {

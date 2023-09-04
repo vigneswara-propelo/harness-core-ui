@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { CSSProperties, FC, ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Container, FlexExpander, Heading, Layout, Text } from '@harness/uicore'
@@ -40,6 +40,7 @@ import { FlagPrerequisites } from './FlagPrerequisites'
 import ServicesList from './ServicesList'
 import FlagDetailsOptionsMenuButton from '../FlagDetailsOptionsMenuButton/FlagDetailsOptionsMenuButton'
 import JiraIssueList from './JiraIssueList'
+import TagsList from './TagsList'
 import css from './FlagActivationDetails.module.scss'
 
 interface FlagActivationDetailsProps {
@@ -49,7 +50,7 @@ interface FlagActivationDetailsProps {
   setGovernanceMetadata: (governanceMetadata: any) => void
 }
 
-const VariationItem: React.FC<{ variation: Variation; index: number }> = ({ variation, index }) => {
+const VariationItem: FC<{ variation: Variation; index: number }> = ({ variation, index }) => {
   const { getString } = useStrings()
   return (
     <Layout.Horizontal
@@ -65,7 +66,7 @@ const VariationItem: React.FC<{ variation: Variation; index: number }> = ({ vari
   )
 }
 
-const VariationsList: React.FC<{
+const VariationsList: FC<{
   featureFlag: Feature
   onEditSuccess: () => void
   gitSync: UseGitSync
@@ -129,12 +130,12 @@ const VariationsList: React.FC<{
   )
 }
 
-const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
+const FlagActivationDetails: FC<FlagActivationDetailsProps> = props => {
   const { featureFlag, refetchFlag, gitSync, setGovernanceMetadata } = props
   const { getString } = useStrings()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { withActiveEnvironment } = useActiveEnvironment()
-  const { FFM_4117_INTEGRATE_SRM, FFM_4737_JIRA_INTEGRATION } = useFeatureFlags()
+  const { FFM_4117_INTEGRATE_SRM, FFM_4737_JIRA_INTEGRATION, FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
   const breadcrumbs = [
     {
       label: getString('cf.continuous'),
@@ -173,7 +174,7 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
     environmentIdentifier: featureFlag.envProperties?.environment as string
   } as PatchFeatureQueryParams
 
-  const renderTime = (time: number, langString: StringKeys, style?: React.CSSProperties): React.ReactNode => (
+  const renderTime = (time: number, langString: StringKeys, style?: CSSProperties): ReactNode => (
     <Text
       style={{
         fontWeight: 500,
@@ -249,7 +250,10 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
           setGovernanceMetadata={setGovernanceMetadata}
         />
 
+        {FFM_8184_FEATURE_FLAG_TAGGING && <TagsList tags={featureFlag.tags} />}
+
         {FFM_4117_INTEGRATE_SRM && <ServicesList featureFlag={featureFlag} refetchFlag={refetchFlag} />}
+
         {FFM_4737_JIRA_INTEGRATION && featureFlag.envProperties?.jiraEnabled && (
           <JiraIssueList
             featureIdentifier={featureFlag.identifier}

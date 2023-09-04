@@ -8499,6 +8499,7 @@ export interface StringsMap {
   'cf.featureFlags.serveVariationToTargetLabel': string
   'cf.featureFlags.setupGitSync': string
   'cf.featureFlags.startVariation': string
+  'cf.featureFlags.tagging.emptyState': string
   'cf.featureFlags.targetUsers': string
   'cf.featureFlags.targeting': string
   'cf.featureFlags.testChanges': string

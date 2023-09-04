@@ -29,11 +29,12 @@ jest.mock('@cf/hooks/useEnvironmentSelectV2', () => ({
   })
 }))
 
-const renderComponent = (): RenderResult => {
+const renderComponent = (isTaggingFFOn: boolean): RenderResult => {
   return render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      defaultFeatureFlagValues={{ FFM_8184_FEATURE_FLAG_TAGGING: isTaggingFFOn }}
     >
       <FlagActivationDetails
         gitSync={mockGitSync}
@@ -84,7 +85,8 @@ describe('FlagActivationDetails', () => {
   })
 
   test('it should render rbac menu correctly', async () => {
-    renderComponent()
+    const isTaggingFFOn = false
+    renderComponent(isTaggingFFOn)
 
     await userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
 
@@ -92,7 +94,8 @@ describe('FlagActivationDetails', () => {
   })
 
   test('it should render edit flag modal correctly', async () => {
-    renderComponent()
+    const isTaggingFFOn = false
+    renderComponent(isTaggingFFOn)
 
     await userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
 
@@ -101,5 +104,19 @@ describe('FlagActivationDetails', () => {
 
     await waitFor(() => expect(screen.getByTestId('edit-flag-form')).toBeInTheDocument())
     expect(screen.getByTestId('edit-flag-form')).toMatchSnapshot()
+  })
+
+  test('it should show Tags subsection if FFM_8184_FEATURE_FLAG_TAGGING is toggled ON', async () => {
+    const isTaggingFFOn = true
+    renderComponent(isTaggingFFOn)
+
+    expect(screen.getByText('tagsLabel')).toBeInTheDocument()
+  })
+
+  test('it should show Tags subsection if FFM_8184_FEATURE_FLAG_TAGGING is toggled OFF', async () => {
+    const isTaggingFFOn = false
+    renderComponent(isTaggingFFOn)
+
+    expect(screen.queryByText('tagsLabel')).not.toBeInTheDocument()
   })
 })
