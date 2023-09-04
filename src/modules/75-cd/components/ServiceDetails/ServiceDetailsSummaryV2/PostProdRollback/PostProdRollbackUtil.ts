@@ -51,7 +51,8 @@ export const supportedDeploymentTypesForPostProdRollback: ServiceDefinition['typ
   'Kubernetes',
   'TAS',
   'ECS',
-  'Asg'
+  'Asg',
+  'Elastigroup'
 ]
 
 export const columnWidth = {
