@@ -144,6 +144,7 @@ import { AwsCDKDiffStep } from './AwsCDK/AwsCDKDiffStep/AwsCDKDiffStep'
 import { AwsCDKBootstrapStep } from './AwsCDK/AwsCDKBootstrapStep/AwsCDKBootstrapStep'
 import { AwsCDKDestroyStep } from './AwsCDK/AwsCDKDestroyStep/AwsCDKDestroyStep'
 import { AwsCDKSynthStep } from './AwsCDK/AwsCDKSynthStep/AwsCDKSynthStep'
+import { AwsCDKDeployStep } from './AwsCDK/AwsCDKDeploy/AwsCDKDeployStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -282,3 +283,4 @@ factory.registerStep(new AwsCDKDiffStep())
 factory.registerStep(new AwsCDKBootstrapStep())
 factory.registerStep(new AwsCDKDestroyStep())
 factory.registerStep(new AwsCDKSynthStep())
+factory.registerStep(new AwsCDKDeployStep())

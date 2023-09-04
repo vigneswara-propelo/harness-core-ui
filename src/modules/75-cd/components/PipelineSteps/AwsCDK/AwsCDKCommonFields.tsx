@@ -29,6 +29,7 @@ import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/Step
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const awsCdkStepAllowedConnectorTypes = [Connectors.GCP, Connectors.AWS, Connectors.DOCKER]
+export const awsCdkCommonParametersTypes = [StepType.AwsCdkDeploy]
 export interface AwsCDKCommonStepFormikValues extends StepElementConfig {
   spec: {
     connectorRef: ConnectorRef
@@ -39,6 +40,7 @@ export interface AwsCDKCommonStepFormikValues extends StepElementConfig {
     imagePullPolicy?: string
     runAsUser?: string
     appPath?: string
+    provisionerIdentifier?: string
     resources?: {
       limits?: {
         memory?: string
@@ -46,6 +48,7 @@ export interface AwsCDKCommonStepFormikValues extends StepElementConfig {
       }
     }
     envVariables?: MapValue
+    parameters?: MapValue
   }
 }
 export type AwsCdkCommonStepFormikValues = AwsCDKCommonStepFormikValues
@@ -244,6 +247,23 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
           disabled={readonly}
         />
       </Container>
+      {awsCdkCommonParametersTypes.includes(defaultTo(stepType, StepType.AwsCdkDiff)) ? (
+        <Container className={stepCss.formGroup}>
+          <MultiTypeMap
+            appearance={'minimal'}
+            name={'spec.parameters'}
+            valueMultiTextInputProps={{ expressions, allowableTypes }}
+            multiTypeFieldSelectorProps={{
+              label: getString('platform.connectors.parameters'),
+              disableTypeSelection: true
+            }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
+            }}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
     </>
   )
 }

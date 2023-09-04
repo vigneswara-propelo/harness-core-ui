@@ -190,6 +190,7 @@ steps:
     doNotDownsizeOldService: Do not downsize old service
     downsizeOldServiceDelayInSecs: Downsize Old Service Delay (Seconds)
   awsCdkStep:
+    awsCdkDeployCommandOptions: AWS CDK Deploy Command Options
     awsCdkDiffContainerRegistry: AWS CDK Diff Container Registry
     awsCdkDiffCommandOptions: AWS CDK Diff Command Options
     awsCdkSynthCommandOptions: AWS CDK Synthetize Command Options

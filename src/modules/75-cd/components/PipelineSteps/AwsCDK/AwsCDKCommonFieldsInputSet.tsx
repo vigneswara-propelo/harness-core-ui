@@ -224,6 +224,14 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
           templateFieldName: 'spec.envVariables',
           appliedInputSetValue: get(formik?.values, `${prefix}spec.envVariables`)
         })}
+
+      {!isEmpty(get(template, `spec.parameters`)) &&
+        renderMultiTypeMapInputSet({
+          fieldName: `${prefix}spec.parameters`,
+          fieldLabel: 'platform.connectors.parameters',
+          templateFieldName: 'spec.parameters',
+          appliedInputSetValue: get(formik?.values, `${prefix}spec.parameters`)
+        })}
     </>
   )
 }

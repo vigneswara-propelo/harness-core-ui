@@ -234,9 +234,10 @@ export enum StepType {
   IACMTerraformPlugin = 'IACMTerraformPlugin',
   IACMApproval = 'IACMApproval',
   AwsCdkDiff = 'AwsCdkDiff',
+  AwsCdkSynth = 'AwsCdkSynth',
   AwsCdkBootstrap = 'AwsCdkBootstrap',
-  AwsCdkDestroy = 'AwsCdkDestroy',
-  AwsCdkSynth = 'AwsCdkSynth'
+  AwsCdkDeploy = 'AwsCdkDeploy',
+  AwsCdkDestroy = 'AwsCdkDestroy'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
