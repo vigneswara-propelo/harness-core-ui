@@ -187,6 +187,7 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     if (
+      originalPipeline?.identifier &&
       originalPipeline?.identifier !== DefaultNewPipelineId &&
       storeType === StoreType.REMOTE &&
       !branch &&
@@ -200,7 +201,11 @@ export function PipelineCanvas({
 
   // Handling when user move a pipline to REMOTE but still opening pipelineStudio with INLINE url
   React.useEffect(() => {
-    if (originalPipeline?.identifier !== DefaultNewPipelineId && storeMetadata?.storeType !== storeType) {
+    if (
+      originalPipeline?.identifier &&
+      originalPipeline?.identifier !== DefaultNewPipelineId &&
+      storeMetadata?.storeType !== storeType
+    ) {
       getPipelineUrl(
         {
           accountIdentifier: accountId,
@@ -208,13 +213,13 @@ export function PipelineCanvas({
           projectIdentifier,
           branch: gitDetails?.branch
         },
-        pipeline?.identifier
+        defaultTo(pipeline?.identifier, pipelineIdentifier)
       ).then((remotePiplineRoute: string) => {
         history.push(remotePiplineRoute)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gitDetails?.branch, storeType])
+  }, [gitDetails?.branch, storeType, pipelineIdentifier])
 
   const { showError, clear } = useToaster()
 
