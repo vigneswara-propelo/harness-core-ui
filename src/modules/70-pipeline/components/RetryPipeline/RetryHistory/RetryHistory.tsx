@@ -21,7 +21,7 @@ import { Classes, Popover, PopoverInteractionKind, Position } from '@blueprintjs
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, get, isNumber } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
 import { ExecutionInfo, useLatestExecutionId, useRetryHistory } from 'services/pipeline-ng'
@@ -174,9 +174,7 @@ function RetryHistory({ canView, showRetryHistory, canRetry }: RetryHistoryProps
     }
   }
 
-  const getExecutionDetail = (index: number): JSX.Element => {
-    const parentId = calculateParentRunSequence()
-    const currentExecId = isNumber(parentId) ? parentId + (defaultTo(executionInfo?.length, 0) - index - 1) : '-'
+  const getExecutionDetail = (retryHistory: ExecutionInfo, index: number): JSX.Element => {
     return (
       <Layout.Horizontal spacing="xsmall">
         <Text color={Color.PRIMARY_7} font={{ size: 'normal', weight: 'semi-bold' }}>
@@ -186,7 +184,7 @@ function RetryHistory({ canView, showRetryHistory, canRetry }: RetryHistoryProps
         </Text>
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
           {getString(module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI', {
-            runSequence: currentExecId
+            runSequence: retryHistory.runSequence
           })}
         </Text>
       </Layout.Horizontal>
@@ -248,7 +246,7 @@ function RetryHistory({ canView, showRetryHistory, canRetry }: RetryHistoryProps
                       >
                         <div className={css.content}>
                           <div className={cx(css.cardSection, css.executionDetail)}>
-                            {getExecutionDetail(index)}
+                            {getExecutionDetail(retryHistory, index)}
                             <ExecutionStatusLabel status={retryHistory.status as ExecutionStatus} />
                           </div>
                           <div className={cx(css.cardSection)}>
