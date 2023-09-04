@@ -314,11 +314,9 @@ const AsgBlueGreenDeployStepEdit = (
       }
     })
     formik.setValues(updatedValues)
-    if (getMultiTypeFromValue(selectedLoadBalancer) === MultiTypeInputType.RUNTIME) {
-      setListenerList([])
-      setProdListenerRules([])
-      setStageListenerRules([])
-    }
+    setListenerList([])
+    setProdListenerRules([])
+    setStageListenerRules([])
   }
 
   return (
