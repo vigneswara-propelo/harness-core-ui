@@ -76,6 +76,9 @@ const isIntersectingBottomWhenResize = (
   percentageNodeVisible: number
 ): ResizeObserverResult => {
   const elementPos = getComputedPosition(el.id, entry.target as HTMLDivElement) as DOMRect
+
+  if (!elementPos) return { shouldCollapse: false, shouldExpand: false }
+
   const percentageVisibleHeight = elementPos.height * percentageNodeVisible
   const intersectingBottom = elementPos.top + (elementPos.height - percentageVisibleHeight) >= entry.contentRect.bottom
   const notIntersectingBottom = elementPos.bottom + bottomPadding < entry.contentRect.bottom

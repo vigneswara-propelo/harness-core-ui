@@ -64,7 +64,7 @@ export function CustomApprovalWidget(
       source: Yup.object().shape({
         spec: Yup.object().shape({
           script: Yup.string().test('script', getString('common.scriptRequired'), value => {
-            if (value === SCRIPT_DEFAULT_VALUE || isEmpty(value.trim())) {
+            if (value === SCRIPT_DEFAULT_VALUE || isEmpty(value?.trim())) {
               return false
             }
             return true
