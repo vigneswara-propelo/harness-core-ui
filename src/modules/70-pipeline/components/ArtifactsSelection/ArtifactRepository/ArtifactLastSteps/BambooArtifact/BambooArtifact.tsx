@@ -19,7 +19,8 @@ import {
   getMultiTypeFromValue,
   FormInput,
   MultiSelectOption,
-  FormikForm
+  FormikForm,
+  MultiTypeInputValue
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -57,6 +58,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { isTASDeploymentType } from '@pipeline/utils/stageHelpers'
+import { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -154,15 +156,23 @@ function FormComponent({
       selectItems: defaultTo(artifactPaths, []),
       label: getString('common.artifactPaths'),
       name: 'spec.artifactPaths',
-      placeholder: fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder'),
-      multiSelectTypeInputProps: {
-        multiSelectProps: {
-          allowCreatingNewItems: true,
-          items: defaultTo(artifactPaths, [])
-        }
-      }
+      placeholder: fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')
     }
-    return <FormInput.MultiSelectTypeInput {...commonProps} />
+    return (
+      <FormInput.MultiSelectTypeInput
+        {...commonProps}
+        multiSelectTypeInputProps={{
+          // this is added to support backward compatibility, else page would break. This will eventually removed
+          onChange: (value: AcceptableValue | undefined, _valueType: MultiTypeInputValue, type: MultiTypeInputType) => {
+            if (type === MultiTypeInputType.FIXED) formik.setFieldValue('spec.artifactPaths', value || [])
+          },
+          multiSelectProps: {
+            items: defaultTo(artifactPaths, [])
+          },
+          allowableTypes: [MultiTypeInputType.FIXED]
+        }}
+      />
+    )
   }, [artifactPaths, fetchingArtifacts, getString, isTasDeploymentTypeSelected])
 
   useEffect(() => {
