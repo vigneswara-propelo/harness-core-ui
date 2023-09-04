@@ -96,8 +96,8 @@ export function Webhooks(): JSX.Element {
   })
 
   const response = data
-  const hasData = Boolean(!isLoading && response && !isEmpty(response))
-  const noData = Boolean(!isLoading && isEmpty(response))
+  const hasData = Boolean(!isLoading && response && !isEmpty(response.content))
+  const noData = Boolean(!isLoading && response && isEmpty(response.content))
 
   const [showCreateModal, hideCreateModal] = useModalHook(
     /* istanbul ignore next */ () => {
