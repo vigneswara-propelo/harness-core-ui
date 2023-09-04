@@ -138,7 +138,8 @@ export default function EnvironmentEntitiesList({
                       key={row.environment.identifier}
                       environment={row.environment}
                       environmentInputs={row.environmentInputs}
-                      serviceOverrideInputs={row.serviceOverrideInputs}
+                      // Service override inputs are not supported for multi service configuration
+                      serviceOverrideInputs={serviceIdentifiers?.length > 1 ? {} : row.serviceOverrideInputs}
                       onDeleteClick={setEnvironmentToDelete}
                       onEditClick={setEnvironmentToEdit}
                       allowableTypes={allowableTypes}

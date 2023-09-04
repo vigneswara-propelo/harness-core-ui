@@ -118,6 +118,8 @@ export default function DeployEnvironment({
     },
     lazy: false
   })
+  const isMultiServiceConfigurationPresent = serviceIdentifiers?.length > 1
+
   const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
   React.useEffect(() => {
     if (enableServiceOverrideSettingsError) {
@@ -271,9 +273,14 @@ export default function DeployEnvironment({
             environmentInputs: {
               [values.environment]: get(values.environmentInputs, [values.environment], environment?.environmentInputs)
             },
-            serviceOverrideInputs: {
-              [values.environment]: environmentServiceOverrideInputs
-            }
+            // Service override inputs are not supported for multi service configuration
+            ...(isMultiServiceConfigurationPresent
+              ? {}
+              : {
+                  serviceOverrideInputs: {
+                    [values.environment]: environmentServiceOverrideInputs
+                  }
+                })
           })
         } else if (Array.isArray(values.environments)) {
           const updatedEnvironments = values.environments.reduce<EnvironmentWithInputs>(
@@ -305,7 +312,10 @@ export default function DeployEnvironment({
                 })
 
                 p.environmentInputs[c.value as string] = environmentInputs
-                p.serviceOverrideInputs[c.value as string] = environmentServiceOverrideInputs
+                // Service override inputs are not supported for multi service configuration
+                if (!isMultiServiceConfigurationPresent) {
+                  p.serviceOverrideInputs[c.value as string] = environmentServiceOverrideInputs
+                }
               } else {
                 p.environments.push(c)
               }
@@ -342,7 +352,7 @@ export default function DeployEnvironment({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, environmentsList, environmentsData])
+  }, [loading, environmentsList, environmentsData, isMultiServiceConfigurationPresent])
 
   const updateFormikAndLocalState = (newFormValues: DeployEnvironmentEntityFormState): void => {
     // this sets the form values
