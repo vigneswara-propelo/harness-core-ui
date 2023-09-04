@@ -494,23 +494,28 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-        const inputSetYamlVisual = parse<InputSet>(yaml).inputSet
-        if (inputSetYamlVisual) {
-          inputSet.name = inputSetYamlVisual.name
-          inputSet.identifier = inputSetYamlVisual.identifier
-          inputSet.description = inputSetYamlVisual.description
-          inputSet.pipeline = inputSetYamlVisual.pipeline
+        try {
+          const inputSetYamlVisual = parse<InputSet>(yaml).inputSet
+          if (inputSetYamlVisual) {
+            inputSet.name = inputSetYamlVisual.name
+            inputSet.identifier = inputSetYamlVisual.identifier
+            inputSet.description = inputSetYamlVisual.description
+            inputSet.pipeline = inputSetYamlVisual.pipeline
 
-          formikRef.current?.setValues({
-            ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated', 'inputSetErrorWrapper'),
-            repo: defaultTo(repoIdentifier || repoName, ''),
-            branch: defaultTo(branch, ''),
-            connectorRef: defaultTo(connectorRef, ''),
-            repoName: defaultTo(repoName, ''),
-            storeType: defaultTo(storeType, StoreType.INLINE),
-            filePath: getFilePath(inputSetYamlVisual)
-          })
-          setFilePath(getFilePath(inputSetYamlVisual))
+            formikRef.current?.setValues({
+              ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated', 'inputSetErrorWrapper'),
+              repo: defaultTo(repoIdentifier || repoName, ''),
+              branch: defaultTo(branch, ''),
+              connectorRef: defaultTo(connectorRef, ''),
+              repoName: defaultTo(repoName, ''),
+              storeType: defaultTo(storeType, StoreType.INLINE),
+              filePath: getFilePath(inputSetYamlVisual)
+            })
+            setFilePath(getFilePath(inputSetYamlVisual))
+          }
+        } catch {
+          showError(getString('common.validation.invalidYamlText'))
+          return
         }
       } else {
         setFilePath(formikRef.current?.values.filePath)
