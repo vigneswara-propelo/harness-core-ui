@@ -10,7 +10,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useArtifactnewSbomQuery } from '@harnessio/react-ssca-service-client'
 import { useParams } from 'react-router-dom'
 import { useDownloadSbomQuery } from '@harnessio/react-ssca-manager-client'
@@ -139,7 +139,7 @@ export const SbomCell: CellType = ({ row }) => {
       enabled: false,
       retry: false,
       onSuccess: _data => {
-        const blob = new Blob([_data.content.token], { type: 'text/json' })
+        const blob = new Blob([get(_data.content.sbom, '')], { type: 'text/json' })
         downloadBlob(blob, `${artifact.sbomName}_${artifact.tag}_sbom.json`)
       }
     }

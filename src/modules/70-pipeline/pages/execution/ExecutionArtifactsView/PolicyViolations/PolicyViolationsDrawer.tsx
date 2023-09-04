@@ -87,7 +87,8 @@ export function PolicyViolationsDrawer({
         page,
         limit: size,
         sort: sort as GetPolicyViolationsQueryQueryParams['sort'], // TODO: change the EnforcementViolationQueryParams client side type to this after removing FF
-        order: order as GetPolicyViolationsQueryQueryParams['order']
+        order: order as GetPolicyViolationsQueryQueryParams['order'],
+        search_text: searchTerm
       }
     },
     { enabled: SSCA_MANAGER_ENABLED }
