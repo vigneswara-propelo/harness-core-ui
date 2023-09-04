@@ -1363,6 +1363,7 @@ stepDescription:
   AwsSamDeploy: Deploy an AWS SAM function.
   AwsSamBuild: Build an AWS SAM function.
   AwsCdkDiff: Aws CDK Diff
+  AwsCdkDestroy: Aws CDK Destroy
   AwsCdkSynth: Aws CDK Synthetize
   AwsCdkBootstrap: Aws CDK Bootstrap
   DownloadManifests: Download manifests using this step.

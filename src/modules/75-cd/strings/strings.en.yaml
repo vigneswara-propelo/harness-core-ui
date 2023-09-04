@@ -196,6 +196,7 @@ steps:
     awsCdkSynthContainerRegistry: AWS CDK Synthetize Container Registry
     awsCdkBootstrapContainerRegistry: AWS CDK Bootstrap Container Registry
     awsCdkBootstrapCommandOptions: AWS CDK Bootstrap Command Options
+    awsCdkDestroyCommandOptions: AWS CDK Destroy Command Options
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

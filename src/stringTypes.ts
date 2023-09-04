@@ -5193,6 +5193,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AnalyzeDeploymentImpact': string
   'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AwsCdkBootstrap': string
+  'pipeline.stepDescription.AwsCdkDestroy': string
   'pipeline.stepDescription.AwsCdkDiff': string
   'pipeline.stepDescription.AwsCdkSynth': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
@@ -6874,6 +6875,7 @@ export interface StringsMap {
   'cd.stepName': string
   'cd.steps.awsCdkStep.awsCdkBootstrapCommandOptions': string
   'cd.steps.awsCdkStep.awsCdkBootstrapContainerRegistry': string
+  'cd.steps.awsCdkStep.awsCdkDestroyCommandOptions': string
   'cd.steps.awsCdkStep.awsCdkDiffCommandOptions': string
   'cd.steps.awsCdkStep.awsCdkDiffContainerRegistry': string
   'cd.steps.awsCdkStep.awsCdkSynthCommandOptions': string
