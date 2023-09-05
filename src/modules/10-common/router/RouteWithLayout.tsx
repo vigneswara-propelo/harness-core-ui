@@ -14,6 +14,8 @@ import { DefaultLayout } from '@common/layouts'
 import SidebarProvider, { SidebarContext } from '@common/navigation/SidebarProvider'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import { useIsPublicAccess } from 'framework/hooks/usePublicAccess'
+import PageNotPublic from 'framework/components/PublicAccess/PageNotPublic'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import PageProvider from '@common/pages/pageContext/PageProvider'
@@ -21,24 +23,48 @@ import { TemplateSelectorContextProvider } from 'framework/Templates/TemplateSel
 import { TemplateSelectorDrawer } from 'framework/Templates/TemplateSelectorDrawer/TemplateSelectorDrawer'
 import { DefaultLayoutProps } from '@common/layouts/DefaultLayout'
 
+interface PublicViewProps {
+  hideSidebar?: boolean
+}
+
 export interface RouteWithLayoutProps extends RouterRouteprops {
   layout: React.ComponentType
   layoutProps?: DefaultLayoutProps
   sidebarProps?: SidebarContext
   licenseRedirectData?: LicenseRedirectProps
   pageName?: PAGE_NAME
+  public?: boolean
+  publicViewProps?: PublicViewProps
 }
 
 export function RouteWithLayout(props: React.PropsWithChildren<RouteWithLayoutProps>): React.ReactElement {
-  const { children, layout: Layout, sidebarProps, licenseRedirectData, pageName, layoutProps, ...rest } = props
+  const {
+    children,
+    layout: Layout,
+    sidebarProps,
+    licenseRedirectData,
+    pageName,
+    layoutProps,
+    public: isRoutePublic,
+    publicViewProps,
+    ...rest
+  } = props
   const licenseStore = useLicenseStore()
+  const isPublicAccess = useIsPublicAccess()
+
+  if (!isRoutePublic && isPublicAccess) {
+    // render ERROR page/component
+    return <PageNotPublic />
+  }
+
+  const hideSidebar = isRoutePublic && isPublicAccess && publicViewProps?.hideSidebar
 
   const childComponent = (
     <RouterRoute {...rest}>
       <ModalProvider>
         <TemplateSelectorContextProvider>
           <PageProvider pageName={pageName}>
-            {sidebarProps ? (
+            {sidebarProps && !hideSidebar ? (
               <SidebarProvider {...sidebarProps}>
                 <Layout {...layoutProps}>{children}</Layout>
               </SidebarProvider>

@@ -16,6 +16,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import AccountAndOAuth from '@auth-settings/pages/Configuration/AccountAndOAuth/AccountAndOAuth'
 import SAMLProvider from '@auth-settings/pages/Configuration/SAMLProvider/SAMLProvider'
 import RestrictEmailDomains from '@auth-settings/pages/Configuration/RestrictEmailDomains/RestrictEmailDomains'
+import EnablePublicAccess from '@auth-settings/pages/Configuration/EnablePublicAccess/EnablePublicAccess'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -147,6 +148,11 @@ const Authentication: React.FC = () => {
               refetchAuthSettings={refetchAuthSettings}
               canEdit={canEdit}
               setUpdating={setUpdating}
+            />
+            <EnablePublicAccess
+              enabled={data.resource.publicAccessEnabled}
+              refetchAuthSettings={refetchAuthSettings}
+              canEdit={canEdit}
             />
             <SessionTimeOut timeout={data.resource.sessionTimeoutInMinutes} />
           </React.Fragment>

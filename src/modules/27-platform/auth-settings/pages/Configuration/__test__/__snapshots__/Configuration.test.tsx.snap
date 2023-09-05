@@ -1027,6 +1027,30 @@ exports[`Configuration Configuration page 1`] = `
               </div>
             </div>
             <div
+              class="StyledProps--font StyledProps--main StyledProps--margin-xlarge"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card card"
+              >
+                <label
+                  class="bp3-control bp3-switch StyledProps--font Switch--switch StyledProps--main"
+                >
+                  <input
+                    data-testid="toggle-enable-public-access"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-normal"
+                  >
+                    platform.authSettings.publicAccessEnabled
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
               class="OverlaySpinner--overlaySpinner"
             >
               <form

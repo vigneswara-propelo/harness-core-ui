@@ -25,6 +25,7 @@ import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecution
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { IfPrivateAccess } from 'framework/components/PublicAccess/PublicAccess'
 import { usePolling } from '@common/hooks/usePolling'
 import { useReportSummary, useGetToken } from 'services/ti-service'
 import {
@@ -364,7 +365,9 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
             <div className={css.lhs}>
               <header className={css.header}>
                 <ExecutionHeader pipelineMetadata={pipeline} />
-                <ExecutionMetadata />
+                <IfPrivateAccess>
+                  <ExecutionMetadata />
+                </IfPrivateAccess>
               </header>
               <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />
               {module === 'ci' && showWarningBanner ? (

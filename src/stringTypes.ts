@@ -623,6 +623,7 @@ export interface StringsMap {
   'common.loading': string
   'common.loadingFieldOptions': string
   'common.local': string
+  'common.login': string
   'common.logs.delegateSelectionLogs': string
   'common.logs.delegateTaskLogs': string
   'common.logs.noLogsText': string
@@ -848,6 +849,8 @@ export interface StringsMap {
   'common.projectViewer': string
   'common.projects': string
   'common.provisioner': string
+  'common.publicAccess.oopsPageNotPublic': string
+  'common.publicAccess.tryOtherOptions': string
   'common.purpose.cd.1stGen.description': string
   'common.purpose.cd.1stGen.title': string
   'common.purpose.cd.continuous': string
@@ -2059,6 +2062,7 @@ export interface StringsMap {
   'platform.authSettings.pricePreview.discount': string
   'platform.authSettings.pricePreview.title': string
   'platform.authSettings.proRata': string
+  'platform.authSettings.publicAccessEnabled': string
   'platform.authSettings.publicOAuthLoginDisabled': string
   'platform.authSettings.publicOAuthLoginEnabled': string
   'platform.authSettings.recommendation': string
@@ -2094,6 +2098,7 @@ export interface StringsMap {
   'platform.authSettings.typeAndPressEnterToAddADomain': string
   'platform.authSettings.unitPrice': string
   'platform.authSettings.updateCard': string
+  'platform.authSettings.updatedPublicAccess': string
   'platform.authSettings.updating': string
   'platform.authSettings.uploadIdentityProvider': string
   'platform.authSettings.urlIdentityProvider': string
@@ -3442,7 +3447,6 @@ export interface StringsMap {
   'auditTrail.actions.invite_resent': string
   'auditTrail.actions.invite_revoked': string
   'auditTrail.actions.invited': string
-  'auditTrail.actions.login': string
   'auditTrail.actions.login2fa': string
   'auditTrail.actions.pause': string
   'auditTrail.actions.removed_collaborator': string

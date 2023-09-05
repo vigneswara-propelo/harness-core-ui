@@ -873,6 +873,8 @@ authSettings:
   setAsDefaultCard: Set as Default Card
   updateCard: Update Card
   addCard: Add Card
+  publicAccessEnabled: Public Access enabled on account
+  updatedPublicAccess: Updated Public Access
 connectors:
   createNewConnector: Create New Connector
   confirmDeleteTitle: Delete Connector

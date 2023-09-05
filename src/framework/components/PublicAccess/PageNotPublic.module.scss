@@ -1,0 +1,32 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.bg {
+  background: var(--primary-10, --theme-light-nav-panel-bg) url('./harness-logo-page-not-public.svg') no-repeat 100% 50%;
+}
+
+.gradient {
+  background: radial-gradient(50% 50% at 50% 50%, rgba(0, 173, 228, 0.4) 0%, rgba(0, 0, 0, 0.28) 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.buttonModification.buttonModification.buttonModification.buttonModification {
+  background-color: transparent !important;
+}
+
+.content {
+  width: 660px;
+  max-width: 660px;
+}
+
+.center {
+  text-align: center;
+}

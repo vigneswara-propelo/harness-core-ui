@@ -21,6 +21,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { String, useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { IfPrivateAccess } from 'framework/components/PublicAccess/PublicAccess'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -288,38 +289,40 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
   return (
     <header className={css.header}>
       <div className={css.headerTopRow}>
-        <NGBreadcrumbs
-          links={
-            source === 'deployments'
-              ? [
-                  {
-                    url: routes.toDeployments({ orgIdentifier, projectIdentifier, accountId, module }),
-                    label: moduleLabel
-                  }
-                ]
-              : [
-                  {
-                    url: routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module }),
-                    label: getString('pipelines')
-                  },
-                  {
-                    url: routes.toPipelineDeploymentList({
-                      orgIdentifier,
-                      projectIdentifier,
-                      pipelineIdentifier,
-                      accountId,
-                      module,
-                      repoIdentifier,
-                      connectorRef,
-                      repoName,
-                      branch,
-                      storeType: pipelineMetadata?.data?.storeType
-                    }),
-                    label: pipelineExecutionSummary.name || getString('common.pipeline')
-                  }
-                ]
-          }
-        />
+        <IfPrivateAccess>
+          <NGBreadcrumbs
+            links={
+              source === 'deployments'
+                ? [
+                    {
+                      url: routes.toDeployments({ orgIdentifier, projectIdentifier, accountId, module }),
+                      label: moduleLabel
+                    }
+                  ]
+                : [
+                    {
+                      url: routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module }),
+                      label: getString('pipelines')
+                    },
+                    {
+                      url: routes.toPipelineDeploymentList({
+                        orgIdentifier,
+                        projectIdentifier,
+                        pipelineIdentifier,
+                        accountId,
+                        module,
+                        repoIdentifier,
+                        connectorRef,
+                        repoName,
+                        branch,
+                        storeType: pipelineMetadata?.data?.storeType
+                      }),
+                      label: pipelineExecutionSummary.name || getString('common.pipeline')
+                    }
+                  ]
+            }
+          />
+        </IfPrivateAccess>
         <div className={css.actionsBar}>
           {pipelineExecutionSummary.status ? (
             <ExecutionStatusLabel status={pipelineExecutionSummary.status as ExecutionStatus} />
@@ -337,55 +340,57 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
               interactionKind: PopoverInteractionKind.HOVER
             }}
           />
-          {pipelineExecutionSummary.showRetryHistory && (
-            <RetryHistory
-              canView={canView}
-              showRetryHistory={pipelineExecutionSummary.showRetryHistory}
-              canRetry={pipelineExecutionSummary.canRetry || false}
-            />
-          )}
-          <Link
-            className={css.view}
-            to={
-              isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
-                ? routes.toPipelineStudioV1(pipelineStudioRoutingProps)
-                : routes.toPipelineStudio(pipelineStudioRoutingProps)
-            }
-          >
-            <Icon name="Edit" size={12} />
-            <String stringID="editPipeline" />
-          </Link>
-          {canRerun &&
-            (showRetryPipelineOption ? (
-              ReRunPipelineButtonPopover
-            ) : (
-              <RbacButton
-                {...commonReRunProps}
-                text={getString('pipeline.execution.actions.rerunPipeline')}
-                featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+          <IfPrivateAccess>
+            {pipelineExecutionSummary.showRetryHistory && (
+              <RetryHistory
+                canView={canView}
+                showRetryHistory={pipelineExecutionSummary.showRetryHistory}
+                canRetry={pipelineExecutionSummary.canRetry || false}
               />
-            ))}
-          <ExecutionActions
-            executionStatus={pipelineExecutionSummary.status as ExecutionStatus}
-            refetch={refetch}
-            source={source}
-            params={params}
-            isPipelineInvalid={isPipelineInvalid}
-            canEdit={canEdit}
-            showEditButton={true}
-            canExecute={canExecute}
-            canRetry={pipelineExecutionSummary.canRetry}
-            modules={pipelineExecutionSummary.modules}
-            onReRunInDebugMode={
-              hasCI && CI_REMOTE_DEBUG
-                ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
-                  ? () => openRunPipelineModalV1(true)
-                  : () => openRunPipelineModal({ debugMode: true })
-                : undefined
-            }
-            onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}
-            hideRetryOption={true}
-          />
+            )}
+            <Link
+              className={css.view}
+              to={
+                isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+                  ? routes.toPipelineStudioV1(pipelineStudioRoutingProps)
+                  : routes.toPipelineStudio(pipelineStudioRoutingProps)
+              }
+            >
+              <Icon name="Edit" size={12} />
+              <String stringID="editPipeline" />
+            </Link>
+            {canRerun &&
+              (showRetryPipelineOption ? (
+                ReRunPipelineButtonPopover
+              ) : (
+                <RbacButton
+                  {...commonReRunProps}
+                  text={getString('pipeline.execution.actions.rerunPipeline')}
+                  featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+                />
+              ))}
+            <ExecutionActions
+              executionStatus={pipelineExecutionSummary.status as ExecutionStatus}
+              refetch={refetch}
+              source={source}
+              params={params}
+              isPipelineInvalid={isPipelineInvalid}
+              canEdit={canEdit}
+              showEditButton={true}
+              canExecute={canExecute}
+              canRetry={pipelineExecutionSummary.canRetry}
+              modules={pipelineExecutionSummary.modules}
+              onReRunInDebugMode={
+                hasCI && CI_REMOTE_DEBUG
+                  ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+                    ? () => openRunPipelineModalV1(true)
+                    : () => openRunPipelineModal({ debugMode: true })
+                  : undefined
+              }
+              onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}
+              hideRetryOption={true}
+            />
+          </IfPrivateAccess>
         </div>
       </div>
       <div className={css.titleContainer}>

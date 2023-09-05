@@ -7,19 +7,22 @@
 
 import React, { useLayoutEffect } from 'react'
 import cx from 'classnames'
-import { NavLink as Link, useParams } from 'react-router-dom'
+import { NavLink as Link, useParams, useHistory } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
 import { Text, Icon, Layout, Avatar, useToggleOpen, Container, Popover } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { AccessTypeRenderer, IfPrivateAccess } from 'framework/components/PublicAccess/PublicAccess'
+import { getLoginPageURL } from 'framework/utils/SessionUtils'
 
 import paths from '@common/RouteDefinitions'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
+import { returnUrlParams } from '@common/utils/routeUtils'
 import ModuleList from '../ModuleList/ModuleList'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 
@@ -33,6 +36,7 @@ const commonLinkProps: Partial<NavLinkProps> = {
 
 export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
+  const history = useHistory()
   const { NG_DASHBOARDS } = useFeatureFlags()
   const { isOpen: isModuleListOpen, toggle: toggleModuleList, close: closeModuleList } = useToggleOpen(false)
   const { isOpen: isModuleConfigOpen, toggle: toggleModuleConfig, close: closeModuleConfig } = useToggleOpen(false)
@@ -60,118 +64,148 @@ export default function L1Nav(): React.ReactElement {
         <ul className={css.navList}>
           {
             <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toMainDashboard(params)}>
+              <AccessTypeRenderer
+                public={
+                  <Layout.Vertical
+                    className={cx(css.navLink)}
+                    flex={{ align: 'center-center' }}
+                    spacing="small"
+                    onClick={() => {
+                      history.push({ pathname: paths.toRedirect(), search: returnUrlParams(getLoginPageURL({})) })
+                    }}
+                  >
+                    <Icon name={'harness'} size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID={'common.login'} />
+                    </Text>
+                  </Layout.Vertical>
+                }
+                private={
+                  <Link {...commonLinkProps} to={paths.toMainDashboard(params)}>
+                    <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                      <Icon name={'harness'} size={30} />
+                      <Text
+                        font={{ weight: 'semi-bold', align: 'center' }}
+                        padding={{ bottom: 'xsmall' }}
+                        color={Color.WHITE}
+                        className={css.text}
+                      >
+                        <String stringID={'common.home'} />
+                      </Text>
+                    </Layout.Vertical>
+                  </Link>
+                }
+              />
+            </li>
+          }
+          <IfPrivateAccess>
+            <li className={css.navItem}>
+              <Link {...commonLinkProps} to={paths.toHome(params)}>
                 <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name={'harness'} size={30} />
+                  <Icon name={'nav-project'} size={30} color={Color.PRIMARY_4} />
                   <Text
                     font={{ weight: 'semi-bold', align: 'center' }}
                     padding={{ bottom: 'xsmall' }}
                     color={Color.WHITE}
                     className={css.text}
                   >
-                    <String stringID={'common.home'} />
+                    <String stringID={'projectsText'} />
                   </Text>
                 </Layout.Vertical>
               </Link>
             </li>
-          }
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toHome(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name={'nav-project'} size={30} color={Color.PRIMARY_4} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID={'projectsText'} />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-          <li className={css.modulesContainerNavItem}>
-            <ModulesContainer />
-          </li>
-          {
-            <li>
-              <Container flex={{ justifyContent: 'center' }}>
-                <Popover
-                  content={
-                    <Text color={Color.WHITE} padding="small">
-                      <String stringID="common.selectModules" />
-                    </Text>
-                  }
-                  popoverClassName={Classes.DARK}
-                  interactionKind={PopoverInteractionKind.HOVER}
-                  position={Position.RIGHT}
-                >
-                  <button
-                    className={cx(css.allModulesButton, {
-                      [css.allModulesOpen]: isModuleListOpen
-                    })}
-                    onClick={toggleModuleList}
-                  >
-                    <Icon name={isModuleConfigOpen ? 'customize' : 'grid'} size={isModuleListOpen ? 26 : 16} />
-                    {isModuleConfigOpen && (
-                      <Text color={Color.WHITE} font={{ variation: FontVariation.TINY }} margin={{ top: 'xsmall' }}>
-                        <String stringID="common.configureModuleList" />
-                      </Text>
-                    )}
-                  </button>
-                </Popover>
-              </Container>
+            <li className={css.modulesContainerNavItem}>
+              <ModulesContainer />
             </li>
-          }
+            {
+              <li>
+                <Container flex={{ justifyContent: 'center' }}>
+                  <Popover
+                    content={
+                      <Text color={Color.WHITE} padding="small">
+                        <String stringID="common.selectModules" />
+                      </Text>
+                    }
+                    popoverClassName={Classes.DARK}
+                    interactionKind={PopoverInteractionKind.HOVER}
+                    position={Position.RIGHT}
+                  >
+                    <button
+                      className={cx(css.allModulesButton, {
+                        [css.allModulesOpen]: isModuleListOpen
+                      })}
+                      onClick={toggleModuleList}
+                    >
+                      <Icon name={isModuleConfigOpen ? 'customize' : 'grid'} size={isModuleListOpen ? 26 : 16} />
+                      {isModuleConfigOpen && (
+                        <Text color={Color.WHITE} font={{ variation: FontVariation.TINY }} margin={{ top: 'xsmall' }}>
+                          <String stringID="common.configureModuleList" />
+                        </Text>
+                      )}
+                    </button>
+                  </Popover>
+                </Container>
+              </li>
+            }
+          </IfPrivateAccess>
         </ul>
         <ul className={css.navList}>
-          <li className={css.navItem}>
-            <ResourceCenter />
-          </li>
+          <IfPrivateAccess>
+            <li className={css.navItem}>
+              <ResourceCenter />
+            </li>
 
-          {NG_DASHBOARDS && (
+            {NG_DASHBOARDS && (
+              <li className={css.navItem}>
+                <Link
+                  className={cx(css.navLink, css.settings, css.hoverNavLink)}
+                  activeClassName={css.active}
+                  to={paths.toCustomDashboard(params)}
+                >
+                  <Layout.Vertical flex spacing="xsmall">
+                    <Icon name="dashboard" size={20} />
+                    <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hoverText}>
+                      <String stringID="common.dashboards" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
             <li className={css.navItem}>
               <Link
                 className={cx(css.navLink, css.settings, css.hoverNavLink)}
                 activeClassName={css.active}
-                to={paths.toCustomDashboard(params)}
+                to={paths.toAccountSettings(params)}
               >
                 <Layout.Vertical flex spacing="xsmall">
-                  <Icon name="dashboard" size={20} />
+                  <Icon name="nav-settings" size={20} />
                   <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hoverText}>
-                    <String stringID="common.dashboards" />
+                    <String stringID="common.accountSettings" />
                   </Text>
                 </Layout.Vertical>
               </Link>
             </li>
-          )}
+          </IfPrivateAccess>
           <li className={css.navItem}>
-            <Link
-              className={cx(css.navLink, css.settings, css.hoverNavLink)}
-              activeClassName={css.active}
-              to={paths.toAccountSettings(params)}
-            >
-              <Layout.Vertical flex spacing="xsmall">
-                <Icon name="nav-settings" size={20} />
-                <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hoverText}>
-                  <String stringID="common.accountSettings" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-          <li className={css.navItem}>
-            <Link
-              className={cx(css.navLink, css.userLink, css.hoverNavLink)}
-              activeClassName={css.active}
-              to={paths.toUser(params)}
-            >
-              <Layout.Vertical flex spacing="xsmall">
-                <Avatar name={user.name || user.email} email={user.email} size="small" hoverCard={false} />
-                <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hiddenText}>
-                  <String stringID="common.myProfile" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
+            <IfPrivateAccess>
+              <Link
+                className={cx(css.navLink, css.userLink, css.hoverNavLink)}
+                activeClassName={css.active}
+                to={paths.toUser(params)}
+              >
+                <Layout.Vertical flex spacing="xsmall">
+                  <Avatar name={user.name || user.email} email={user.email} size="small" hoverCard={false} />
+                  <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hiddenText}>
+                    <String stringID="common.myProfile" />
+                  </Text>
+                </Layout.Vertical>
+              </Link>
+            </IfPrivateAccess>
           </li>
         </ul>
       </nav>

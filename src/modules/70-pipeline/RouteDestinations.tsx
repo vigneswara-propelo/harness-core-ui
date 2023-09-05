@@ -593,6 +593,8 @@ export function PipelineRouteDestinations({
         <RedirectToExecutionPipeline />
       </Route>
       <RouteWithLayout
+        public
+        publicViewProps={{ hideSidebar: true }}
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
@@ -605,6 +607,8 @@ export function PipelineRouteDestinations({
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout
+        public
+        publicViewProps={{ hideSidebar: true }}
         exact
         sidebarProps={ProjectDetailsSideNavProps}
         layout={MinimalLayout}

@@ -43,7 +43,7 @@ module.exports = {
     '!src/**/PipelineYamlView.tsx',
     '!src/**/TemplateYamlView.tsx',
     '!src/**/RouteDestinations.tsx',
-    '!src/modules/RouteDestinationsWithoutAuth.tsx',
+    '!src/modules/RouteDestinationsWithoutAccountId.tsx',
     '!src/modules/10-common/RouteDefinitions.ts',
     '!src/modules/10-common/utils/testUtils.tsx',
     '!src/modules/10-common/utils/JestFormHelper.ts',

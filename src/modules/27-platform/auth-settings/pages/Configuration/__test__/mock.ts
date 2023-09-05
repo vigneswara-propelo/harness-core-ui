@@ -120,7 +120,8 @@ export const mockAuthSettingsResponse = {
     whitelistedDomains: [],
     authenticationMechanism: 'USER_PASSWORD',
     twoFactorEnabled: false,
-    sessionTimeoutInMinutes: 530
+    sessionTimeoutInMinutes: 530,
+    publicAccessEnabled: false
   },
   responseMessages: []
 }

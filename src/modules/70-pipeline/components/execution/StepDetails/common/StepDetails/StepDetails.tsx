@@ -21,6 +21,7 @@ import {
   getApprovalInstancePromise
 } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
+import { IfPrivateAccess } from 'framework/components/PublicAccess/PublicAccess'
 import routes from '@common/RouteDefinitions'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
@@ -218,22 +219,24 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                           useRichText
                         />
                       </Text>{' '}
-                      (
-                      <Text
-                        font={{ size: 'small' }}
-                        onClick={() =>
-                          openDelegateSelectionLogsModal({
-                            taskId: item.taskId as string,
-                            taskName: item.taskName as string,
-                            delegateName: item.name as string
-                          })
-                        }
-                        style={{ cursor: 'pointer' }}
-                        color={Color.PRIMARY_7}
-                      >
-                        {getString('common.logs.delegateSelectionLogs')}
-                      </Text>
-                      )
+                      <IfPrivateAccess>
+                        (
+                        <Text
+                          font={{ size: 'small' }}
+                          onClick={() =>
+                            openDelegateSelectionLogsModal({
+                              taskId: item.taskId as string,
+                              taskName: item.taskName as string,
+                              delegateName: item.name as string
+                            })
+                          }
+                          style={{ cursor: 'pointer' }}
+                          color={Color.PRIMARY_7}
+                        >
+                          {getString('common.logs.delegateSelectionLogs')}
+                        </Text>
+                        )
+                      </IfPrivateAccess>
                     </div>
                   ))}
                 {step.stepDetails?.initStepV2DelegateTaskInfo && (
@@ -245,21 +248,23 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                         useRichText
                       />
                     </Text>{' '}
-                    (
-                    <Text
-                      font={{ size: 'small' }}
-                      onClick={() =>
-                        openDelegateSelectionLogsModal({
-                          taskId: step.stepDetails?.initStepV2DelegateTaskInfo.taskID as unknown as string,
-                          taskName: step.stepDetails?.initStepV2DelegateTaskInfo.taskName as unknown as string
-                        })
-                      }
-                      style={{ cursor: 'pointer' }}
-                      color={Color.PRIMARY_7}
-                    >
-                      {getString('common.logs.delegateSelectionLogs')}
-                    </Text>
-                    )
+                    <IfPrivateAccess>
+                      (
+                      <Text
+                        font={{ size: 'small' }}
+                        onClick={() =>
+                          openDelegateSelectionLogsModal({
+                            taskId: step.stepDetails?.initStepV2DelegateTaskInfo.taskID as unknown as string,
+                            taskName: step.stepDetails?.initStepV2DelegateTaskInfo.taskName as unknown as string
+                          })
+                        }
+                        style={{ cursor: 'pointer' }}
+                        color={Color.PRIMARY_7}
+                      >
+                        {getString('common.logs.delegateSelectionLogs')}
+                      </Text>
+                      )
+                    </IfPrivateAccess>
                   </div>
                 )}
                 {taskList &&
@@ -284,21 +289,23 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                             />
                           </Text>
                         )}{' '}
-                        (
-                        <Text
-                          font={{ size: 'small' }}
-                          onClick={() =>
-                            openDelegateSelectionLogsModal({
-                              taskId: item.taskId as string,
-                              taskName: item.taskName as string
-                            })
-                          }
-                          style={{ cursor: 'pointer' }}
-                          color={Color.PRIMARY_7}
-                        >
-                          {getString('common.logs.delegateSelectionLogs')}
-                        </Text>
-                        )
+                        <IfPrivateAccess>
+                          (
+                          <Text
+                            font={{ size: 'small' }}
+                            onClick={() =>
+                              openDelegateSelectionLogsModal({
+                                taskId: item.taskId as string,
+                                taskName: item.taskName as string
+                              })
+                            }
+                            style={{ cursor: 'pointer' }}
+                            color={Color.PRIMARY_7}
+                          >
+                            {getString('common.logs.delegateSelectionLogs')}
+                          </Text>
+                          )
+                        </IfPrivateAccess>
                       </div>
                     )
                   )}
@@ -311,28 +318,32 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                         useRichText
                       />
                     </Text>{' '}
-                    (
-                    <Text
-                      font={{ size: 'small' }}
-                      onClick={handleSelectionLogClick}
-                      style={{ cursor: 'pointer' }}
-                      color={Color.PRIMARY_7}
-                    >
-                      {getString('common.logs.delegateSelectionLogs')}
-                    </Text>
-                    )
+                    <IfPrivateAccess>
+                      (
+                      <Text
+                        font={{ size: 'small' }}
+                        onClick={handleSelectionLogClick}
+                        style={{ cursor: 'pointer' }}
+                        color={Color.PRIMARY_7}
+                      >
+                        {getString('common.logs.delegateSelectionLogs')}
+                      </Text>
+                      )
+                    </IfPrivateAccess>
                   </div>
                 )}
-                <DelegateTaskLogsButton
-                  startTime={startTime}
-                  endTime={endTime}
-                  taskIds={taskIds || []}
-                  telemetry={{
-                    taskContext: TaskContext.PipelineStep,
-                    hasError: isExecutionCompletedWithBadState(step.status)
-                  }}
-                  areLogsAvailable={delegateLogsAvailable}
-                />
+                <IfPrivateAccess>
+                  <DelegateTaskLogsButton
+                    startTime={startTime}
+                    endTime={endTime}
+                    taskIds={taskIds || []}
+                    telemetry={{
+                      taskContext: TaskContext.PipelineStep,
+                      hasError: isExecutionCompletedWithBadState(step.status)
+                    }}
+                    areLogsAvailable={delegateLogsAvailable}
+                  />
+                </IfPrivateAccess>
               </Layout.Vertical>
             </td>
           </tr>

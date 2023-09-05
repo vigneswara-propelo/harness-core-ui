@@ -14,6 +14,7 @@ import { useListGitSync } from 'services/cd-ng'
 import { GitSyncConfig, SourceCodeManagerDto, useGetSourceCodeManagersQuery } from 'services/cd-ng-rq'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useIsPrivateAccess } from 'framework/hooks/usePublicAccess'
 
 export interface GitSyncStoreProps {
   readonly gitSyncRepos: GitSyncConfig[]
@@ -42,6 +43,7 @@ export const useGitSyncStore = (): GitSyncStoreProps => {
 export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> = props => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { isGitSyncEnabled } = useAppStore()
+  const isPrivateAccess = useIsPrivateAccess()
 
   //Note: right now we support git-sync only at project level
   const {
@@ -58,7 +60,8 @@ export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> 
       queryParams: { accountIdentifier: accountId }
     },
     {
-      staleTime: Infinity
+      staleTime: Infinity,
+      enabled: isPrivateAccess
     }
   )
 

@@ -27,7 +27,7 @@ const RedirectToHome: React.FC = () => {
   }
 }
 
-const RouteDestinationsWithoutAuth: React.FC = () => {
+const RouteDestinationsWithoutAccountId: React.FC = () => {
   return (
     <Switch>
       <Route exact path="/">
@@ -53,4 +53,4 @@ const RouteDestinationsWithoutAuth: React.FC = () => {
   )
 }
 
-export default RouteDestinationsWithoutAuth
+export default RouteDestinationsWithoutAccountId

@@ -23,6 +23,7 @@ import {
 import type { RestrictionType } from '@common/constants/SubscriptionTypes'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import { useIsPublicAccess } from 'framework/hooks/usePublicAccess'
 
 import type { FeatureIdentifier } from './FeatureIdentifier'
 import type {
@@ -108,7 +109,7 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
   const [hasErr, setHasErr] = useState<boolean>(false)
   const { showError } = useToaster()
   const { getString } = useStrings()
-
+  const isPublicAccess = useIsPublicAccess()
   const { accountId } = useParams<AccountPathProps>()
 
   const {
@@ -125,7 +126,8 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
   const { data: metadata, error: gettingFeatureMetadataError } = useGetAllFeatureRestrictionMetadata({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: isPublicAccess
   })
 
   useEffect(() => {

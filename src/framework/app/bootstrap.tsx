@@ -12,7 +12,7 @@ import { Route, Switch, BrowserRouter, HashRouter } from 'react-router-dom'
 import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
 
-import { AppWithAuthentication, AppWithoutAuthentication } from './App'
+import { AppWithAuthentication, AppWithoutAccountId } from './App'
 
 const ignoredErrorClasses = ['YAMLSemanticError', 'YAMLSyntaxError', 'AbortError']
 const DefaultRouter: React.FC<React.PropsWithChildren<unknown>> = props => {
@@ -61,7 +61,7 @@ export default async function render(): Promise<void> {
           <AppWithAuthentication strings={strings} />
         </Route>
         <Route path="/">
-          <AppWithoutAuthentication strings={strings} />
+          <AppWithoutAccountId strings={strings} />
         </Route>
       </Switch>
     </DefaultRouter>,

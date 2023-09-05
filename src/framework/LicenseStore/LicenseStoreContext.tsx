@@ -28,6 +28,7 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
+import { useIsPublicAccess } from 'framework/hooks/usePublicAccess'
 import { VersionMap, LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
 
 // Only keep GA modules for now
@@ -92,6 +93,7 @@ export function useLicenseStore(): LicenseStoreContextProps {
 export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { currentUserInfo } = useAppStore()
   const { NG_LICENSES_ENABLED } = useFeatureFlags()
+  const isPublicAccess = useIsPublicAccess()
   const { getString } = useStrings()
   const { accountId } = useParams<{
     accountId: string
@@ -129,7 +131,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
   } = useGetAccountLicenses({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: isPublicAccess
   })
 
   const { mutate: getVersionMap } = useGetLastModifiedTimeForAllModuleTypes({
@@ -144,6 +147,11 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
   })
 
   useEffect(() => {
+    if (isPublicAccess) {
+      // Prevent get-version-map when public access is enabled
+      return
+    }
+
     getVersionMap()
       .then(response => {
         setState(prevState => ({
@@ -154,6 +162,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       .catch(_err => {
         // do nothing
       })
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -189,8 +198,11 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
         })
         const latestVersionMap = response.data
         if (latestVersionMap && !isEqual(latestVersionMap, versionMap)) {
-          // refresh licenses
-          getAccountLicenses()
+          // Prevent get-account-licenses call when public access is enabled
+          if (!isPublicAccess) {
+            // refresh licenses
+            getAccountLicenses()
+          }
 
           // refresh feature context
           requestFeatures(

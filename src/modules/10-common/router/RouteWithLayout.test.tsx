@@ -8,6 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { Redirect } from 'react-router-dom'
+import userEvent from '@testing-library/user-event'
+
 import { TestWrapper } from '@common/utils/testUtils'
 import { MinimalLayout, EmptyLayout } from '@common/layouts'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
@@ -280,5 +282,26 @@ describe('RouteWithLayout', () => {
     expect(getByText('sidenav')).toBeTruthy()
     expect(getByText('TITLE')).toBeTruthy()
     expect(getByText('SUBTITLE')).toBeTruthy()
+  })
+
+  test('that PageNotPublic component renders when publicAccessEnabled but route is not public', async () => {
+    const { queryByText, getByRole } = render(
+      <TestWrapper
+        path="/account/:accountId/projects"
+        pathParams={{ accountId: 'dummy' }}
+        defaultAppStoreValues={{ ...defaultAppStoreValues, publicAccessEnabled: true }}
+      >
+        <RouteWithLayout public={false} layout={EmptyLayout} path="/account/:accountId/projects">
+          <div>matched-route</div>
+        </RouteWithLayout>
+      </TestWrapper>
+    )
+
+    expect(queryByText('matched-route')).not.toBeTruthy()
+    // 'common.publicAccess.oopsPageNotPublic' is used inside PageNotPublic.tsx
+    expect(queryByText('common.publicAccess.oopsPageNotPublic')).toBeTruthy()
+    const signInBtn = getByRole('button', { name: 'signUp.signIn' })
+    await userEvent.click(signInBtn!)
+    expect(queryByText('common.publicAccess.oopsPageNotPublic')).not.toBeTruthy()
   })
 })

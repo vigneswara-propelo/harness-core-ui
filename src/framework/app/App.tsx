@@ -23,7 +23,7 @@ import { PreferenceStoreProvider, PREFERENCES_TOP_LEVEL_KEY } from 'framework/Pr
 
 import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext'
 // eslint-disable-next-line aliased-module-imports
-import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
+import RouteDestinationsWithoutAccountId from 'modules/RouteDestinationsWithoutAccountId'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
 import { useLogout, ErrorCode } from 'framework/utils/SessionUtils'
@@ -72,7 +72,9 @@ export const getRequestOptions = (): Partial<RequestInit> => {
 
   if (token && token.length > 0) {
     if (!window.noAuthHeader) {
-      headers.Authorization = `Bearer ${token}`
+      if (!window.publicAccessOnAccount) {
+        headers.Authorization = `Bearer ${token}`
+      }
     }
   }
 
@@ -188,13 +190,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   }, [accountId])
 
   useEffect(() => {
-    const token = SessionToken.getToken()
-    if (!token) {
-      forceLogout()
-    }
-  }, [forceLogout])
-
-  useEffect(() => {
     if (refreshTokenResponse?.resource) {
       // Token will be auto-set in cookie via the header "set-cookie"
       // [TEMPORARY]: Saving the new token in storage. Can remove this next line after complete migration to cookie
@@ -226,6 +221,10 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   }, 2000)
 
   useEffect(() => {
+    if (window.publicAccessOnAccount) {
+      // Disable token refresh when public access is enabled
+      return
+    }
     // considering user to be active when user is either doing mouse or key board events
     document?.addEventListener('mousedown', checkAndRefreshToken)
     document?.addEventListener('keypress', checkAndRefreshToken)
@@ -283,7 +282,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   )
 }
 
-export function AppWithoutAuthentication(props: AppProps): React.ReactElement {
+export function AppWithoutAccountId(props: AppProps): React.ReactElement {
   const { pathname, hash } = window.location
   const { browserRouterEnabled } = window
   // Redirect from `/#/account/...` to `/account/...`
@@ -297,7 +296,7 @@ export function AppWithoutAuthentication(props: AppProps): React.ReactElement {
       <QueryClientProvider client={queryClient}>
         <StringsContextProvider initialStrings={props.strings}>
           <AppErrorBoundary>
-            <RouteDestinationsWithoutAuth />
+            <RouteDestinationsWithoutAccountId />
           </AppErrorBoundary>
         </StringsContextProvider>
       </QueryClientProvider>

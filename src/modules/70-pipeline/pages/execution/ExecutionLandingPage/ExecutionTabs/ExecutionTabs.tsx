@@ -22,6 +22,7 @@ import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useIsPrivateAccess } from 'framework/hooks/usePublicAccess'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import type { ExecutionGraph } from 'services/pipeline-ng'
@@ -74,6 +75,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isSSCAEnabled = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
   const isCetCdIntegrationEnabled = useFeatureFlag(FeatureFlag.CET_CD_INTEGRATION)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
+  const isPrivateAccess = useIsPrivateAccess()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
   const isLogView =
@@ -182,7 +184,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     }
   ]
 
-  if (!isPipelineInvalid) {
+  if (isPrivateAccess && !isPipelineInvalid) {
     tabList.push({
       id: TAB_ID_MAP.INPUTS,
       title: (
@@ -198,7 +200,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (canUsePolicyEngine) {
+  if (isPrivateAccess && canUsePolicyEngine) {
     tabList.push({
       id: TAB_ID_MAP.POLICY_EVALUATIONS,
       title: (
@@ -214,7 +216,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isCI || isCIInPipeline || (isSSCAEnabled && (isCD || isCDInPipeline))) {
+  if (isPrivateAccess && (isCI || isCIInPipeline || (isSSCAEnabled && (isCD || isCDInPipeline)))) {
     tabList.push({
       id: TAB_ID_MAP.ARTIFACTS,
       title: (
@@ -228,7 +230,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
         </NavLink>
       )
     })
-    if (ciShowCommitsTab) {
+    if (isPrivateAccess && ciShowCommitsTab) {
       tabList.push({
         id: TAB_ID_MAP.COMMITS,
         title: (
@@ -245,7 +247,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     }
   }
 
-  if (isCI || isCIInPipeline) {
+  if (isPrivateAccess && (isCI || isCIInPipeline)) {
     tabList.push({
       id: TAB_ID_MAP.TESTS,
       title: (
@@ -261,7 +263,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if ((isCIInPipeline || isSTOInPipeline) && isSecurityEnabled) {
+  if (isPrivateAccess && (isCIInPipeline || isSTOInPipeline) && isSecurityEnabled) {
     tabList.push({
       id: TAB_ID_MAP.STO_SECURITY,
       title: (
@@ -277,7 +279,11 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if ((isCI || isCIInPipeline || ((isCD || isCDInPipeline) && isCetCdIntegrationEnabled)) && isErrorTrackingEnabled) {
+  if (
+    isPrivateAccess &&
+    (isCI || isCIInPipeline || ((isCD || isCDInPipeline) && isCetCdIntegrationEnabled)) &&
+    isErrorTrackingEnabled
+  ) {
     tabList.push({
       id: TAB_ID_MAP.ERROR_TRACKING,
       title: (
@@ -293,7 +299,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isCD || isFF || isChaosStepInPipeline(pipelineExecutionDetail?.executionGraph)) {
+  if (isPrivateAccess && (isCD || isFF || isChaosStepInPipeline(pipelineExecutionDetail?.executionGraph))) {
     tabList.push({
       id: TAB_ID_MAP.RESILIENCE,
       title: (
@@ -309,7 +315,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isIACMEnabled) {
+  if (isPrivateAccess && isIACMEnabled) {
     tabList.push({
       id: TAB_ID_MAP.IACM,
       title: (

@@ -57,6 +57,7 @@ export interface AppStoreContextProps {
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
   readonly accountInfo?: AccountDTO
+  readonly publicAccessEnabled?: boolean
   /** feature flags */
   readonly featureFlags: FeatureFlagMap
 
@@ -82,7 +83,8 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   isGitSyncEnabled: false,
   connectivityMode: undefined,
   accountInfo: undefined,
-  updateAppStore: () => void 0
+  updateAppStore: () => void 0,
+  publicAccessEnabled: false
 })
 
 const MAX_RECENT_PROJECTS_COUNT = 5
@@ -138,7 +140,8 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     gitSyncEnabledOnlyForFF: false,
     supportingTemplatesGitx: false,
     connectivityMode: undefined,
-    accountInfo: undefined
+    accountInfo: undefined,
+    publicAccessEnabled: window.publicAccessOnAccount
   })
 
   if (!projectIdentifier && !orgIdentifier) {
@@ -166,7 +169,8 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
   })
 
   const { data: userInfo, loading: userInfoLoading } = useGetCurrentUserInfo({
-    queryParams: { accountIdentifier: accountId }
+    queryParams: { accountIdentifier: accountId },
+    lazy: state.publicAccessEnabled
   })
 
   const { source, module } = useQueryParams<{ source?: string; module?: Module }>()
@@ -177,7 +181,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     })
   )
 
-  const { data: accountData } = useGetAccountNG({ accountIdentifier: accountId })
+  const { data: accountData } = useGetAccountNG({ accountIdentifier: accountId, lazy: state.publicAccessEnabled })
 
   useEffect(() => {
     if (accountData?.data) {
@@ -255,6 +259,11 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
   }, [legacyFeatureFlags])
 
   useEffect(() => {
+    if (state.publicAccessEnabled) {
+      // Prevent FetchFeatureFlags (legacy) when public access is enabled
+      return
+    }
+
     if (window.featureFlagsConfig.useLegacyFeatureFlags) {
       fetchLegacyFeatureFlags()
     }
@@ -348,6 +357,9 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
 
   // When projectIdentifier in URL changes, fetch projectDetails, and update selectedProject & savedProject-preference
   useEffect(() => {
+    if (state.publicAccessEnabled) {
+      return
+    }
     if (projectIdentifier && orgIdentifier) {
       getProjectPromise({
         identifier: projectIdentifier,
@@ -393,8 +405,13 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])
+
   // update selectedOrg when orgidentifier in url changes
   useEffect(() => {
+    if (state.publicAccessEnabled) {
+      // Prevent RefetchOrgs when public access is enabled
+      return
+    }
     if (orgIdentifier) {
       refetchOrg()
     }

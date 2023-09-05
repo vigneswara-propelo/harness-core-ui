@@ -32,6 +32,18 @@
         margin-top: 16px;
       }
     </style>
+    <% if (!__DEV__) { %>
+    <!--#if expr="$public_access = on" -->
+    <script>
+      window.publicAccessOnAccount = true
+    </script>
+    <!--#endif -->
+    <% } %> <% if (__DEV__) { %>
+    <script>
+      window.publicAccessOnAccount = '<%= PUBLIC_ACCESS_ENABLED_DEV %>' === 'true'
+    </script>
+    <% } %>
+
     <!-- apiurl -->
     <!-- IDPUrl -->
     <!-- segmentToken -->

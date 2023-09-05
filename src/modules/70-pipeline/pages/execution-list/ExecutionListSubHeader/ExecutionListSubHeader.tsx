@@ -140,6 +140,7 @@ function _ExecutionListSubHeader(
               {getString('runPipelineText')}
             </RbacButton>
           )}
+
           <Checkbox
             font={{ size: 'small', weight: 'semi-bold' }}
             color={Color.GREY_800}

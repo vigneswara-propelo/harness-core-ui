@@ -14,7 +14,6 @@ actions:
   create_token: Token Created
   revoke_token: Token Revoked
   force_deleted: Force Deleted
-  login: Login
   login2fa: Login Two Factor Authentication
   unsuccessfullLogin: Unsuccessful Login
   end: End
