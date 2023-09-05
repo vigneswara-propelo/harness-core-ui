@@ -37,7 +37,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
@@ -99,24 +98,15 @@ export default function ArtifactsSelection({
   const [context, setModalContext] = useState(ModalViewFor.PRIMARY)
   const [sidecarIndex, setEditIndex] = useState(0)
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
-  const [artifactTypes, setArtifactTypes] = useState<ArtifactType[]>(allowedArtifactTypes[deploymentType])
+  const artifactTypes = allowedArtifactTypes[deploymentType]
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_GITHUB_PACKAGES, CDS_SERVERLESS_V2 } = useFeatureFlags()
+  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-
-  useEffect(() => {
-    if (!CDS_GITHUB_PACKAGES && isSshOrWinrmDeploymentType(deploymentType)) {
-      setArtifactTypes(
-        artifactTypes.filter((artifact: string) => artifact !== ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
-      )
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deploymentType])
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
