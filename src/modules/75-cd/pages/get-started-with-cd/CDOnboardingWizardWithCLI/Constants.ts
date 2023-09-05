@@ -62,7 +62,7 @@ export const INFRA_TYPES: Record<string, EntityMap> = {
   TraditionalApp: {
     TraditionalAWS: {
       id: 'TraditionalAWS',
-      label: 'cd.getStartedWithCD.traditionalAWS',
+      label: 'common.aws',
       icon: 'service-ec2'
     },
     TraditionalPhysical: {
@@ -103,6 +103,30 @@ export const INFRA_SUB_TYPES: Record<string, EntityMap> = {
       id: CLOUD_FUNCTION_TYPES.GCPGen2,
       label: 'cd.getStartedWithCD.gcpGen2',
       icon: 'service-google-functions'
+    }
+  },
+  TraditionalPhysical: {
+    SSH: {
+      id: 'SSH',
+      label: 'SSH',
+      icon: 'secret-ssh'
+    },
+    WINRM: {
+      id: 'WINRM',
+      label: 'pipeline.serviceDeploymentTypes.winrm',
+      icon: 'command-winrm'
+    }
+  },
+  TraditionalAWS: {
+    SSH_AWS: {
+      id: 'SSH_AWS',
+      label: 'SSH',
+      icon: 'secret-ssh'
+    },
+    WINRM_AWS: {
+      id: 'WINRM_AWS',
+      label: 'pipeline.serviceDeploymentTypes.winrm',
+      icon: 'command-winrm'
     }
   }
 }
@@ -268,7 +292,11 @@ export const DEPLOYMENT_TYPE_TO_DIR_MAP: Record<string, string> = {
   [CLOUD_FUNCTION_TYPES.GCPGen1]: 'google_cloud_function',
   [CLOUD_FUNCTION_TYPES.GCPGen2]: 'google_cloud_function',
   [CLOUD_FUNCTION_TYPES.NativeAWSLambda]: 'aws-lambda/harnesscd-pipeline',
-  [CLOUD_FUNCTION_TYPES.ServerLessLambda]: 'serverless-lambda/harnesscd-pipeline'
+  [CLOUD_FUNCTION_TYPES.ServerLessLambda]: 'serverless-lambda/harnesscd-pipeline',
+  SSH: 'vm-pdc/ssh',
+  WINRM: 'vm-pdc/winrm',
+  SSH_AWS: 'vm-aws/ssh',
+  WINRM_AWS: 'vm-aws/winrm'
 }
 
 export const DEPLOYMENT_TYPE_TO_FILE_MAPS: Record<string, Record<string, string>> = {
@@ -299,6 +327,26 @@ export const DEPLOYMENT_TYPE_TO_FILE_MAPS: Record<string, Record<string, string>
   },
   [CLOUD_FUNCTION_TYPES.NativeAWSLambda]: {
     [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline'
+  },
+  SSH: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-ssh-basic',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-ssh-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-ssh-canary'
+  },
+  WINRM: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-basic',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-canary'
+  },
+  SSH_AWS: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-ssh-basic',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-ssh-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-ssh-canary'
+  },
+  WINRM_AWS: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-basic',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-canary'
   }
 }
 
@@ -320,7 +368,13 @@ export const ARTIFACT_STRINGS_MAP_BY_TYPE: Record<string, Record<string, keyof S
     artifact: 'cd.getStartedWithCD.flowByQuestions.what.ServerlessSteps.artifactgcf'
   },
   TraditionalApp: {
-    svcrep: 'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.artifact'
+    svcrep: 'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.svcrep'
+  },
+  TraditionalPhysical: {
+    artifact: 'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.artifact'
+  },
+  TraditionalAWS: {
+    artifact: 'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.artifactaws'
   }
 }
 
@@ -330,13 +384,13 @@ export const SWIMLANE_DOCS_LINK: {
     link: string
   }
 } = {
-  TraditionalAWS: {
-    isInComplete: true,
-    link: 'https://developer.harness.io/tutorials/cd-pipelines/vm/aws'
-  },
   TraditionalPhysical: {
-    isInComplete: true,
+    isInComplete: false,
     link: 'https://developer.harness.io/tutorials/cd-pipelines/vm/pdc'
+  },
+  TraditionalAWS: {
+    isInComplete: false,
+    link: 'https://developer.harness.io/tutorials/cd-pipelines/vm/aws'
   }
 }
 
@@ -351,7 +405,11 @@ export const DELEGATE_TYPE_BY_ARTIFACT_MAP: Record<string, string[]> = {
   [CLOUD_FUNCTION_TYPES.ServerLessLambda]: [DelegateCommandLineTypes.DOCKER],
   [KubernetesType.KUBERNETES_MANIFEST]: [DelegateCommandLineTypes.KUBERNETES],
   [KubernetesType.HELM_CHART]: [DelegateCommandLineTypes.KUBERNETES],
-  Kustomize: [DelegateCommandLineTypes.KUBERNETES]
+  Kustomize: [DelegateCommandLineTypes.KUBERNETES],
+  SSH: [DelegateCommandLineTypes.DOCKER],
+  WINRM: [DelegateCommandLineTypes.DOCKER],
+  SSH_AWS: [DelegateCommandLineTypes.DOCKER],
+  WINRM_AWS: [DelegateCommandLineTypes.DOCKER]
 }
 
 export const DEPLOYMENT_TYPE_MAP: Record<string, string[]> = {
@@ -363,7 +421,11 @@ export const DEPLOYMENT_TYPE_MAP: Record<string, string[]> = {
   NativeAWSLambda: ['Basic'],
   ServerLessLambda: ['Basic'],
   GCPGen2: ['Canary', 'BlueGreen', 'Basic'],
-  GCPGen1: ['Basic']
+  GCPGen1: ['Basic'],
+  SSH: ['Basic', 'Canary', 'Rolling'],
+  WINRM: ['Basic', 'Canary', 'Rolling'],
+  WINRM_AWS: ['Basic', 'Canary', 'Rolling'],
+  SSH_AWS: ['Basic', 'Canary', 'Rolling']
 }
 export const PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP: Record<string, Record<string, string>> = {
   [KubernetesType.KUBERNETES_MANIFEST]: {
@@ -396,6 +458,26 @@ export const PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP: Record<string, Record<string
   },
   [CLOUD_FUNCTION_TYPES.ServerLessLambda]: {
     [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'serverlessdemo'
+  },
+  SSH: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-ssh-canary',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-ssh-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-ssh-basic'
+  },
+  WINRM: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-canary',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-basic'
+  },
+  SSH_AWS: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-ssh-canary',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-ssh-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-ssh-basic'
+  },
+  WINRM_AWS: {
+    [DEPLOYMENT_STRATEGY_ENUMS.Canary]: 'pipeline-canary',
+    [DEPLOYMENT_STRATEGY_ENUMS.Rolling]: 'pipeline-rolling',
+    [DEPLOYMENT_STRATEGY_ENUMS.Basic]: 'pipeline-basic'
   }
 }
 
@@ -404,4 +486,14 @@ export const GITOPS_DOCS_LINKS: Record<string, string> = {
   K8sHelm: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/helm-chart',
   NativeHelm: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/helm-chart',
   Kustomize: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/kustomize'
+}
+
+export const ARTIFACT_BY_APP_LABEL_MAP: Record<string, keyof StringsMap> = {
+  [SERVERLESS_FUNCTIONS.AWS_LAMBDA_FUNCTION]: 'cd.getStartedWithCD.awsLambda',
+  [SERVERLESS_FUNCTIONS.GOOGLE_CLOUD_FUNCTION]: 'cd.getStartedWithCD.googleFunction',
+  [KubernetesType.HELM_CHART]: 'common.microservice',
+  Kustomize: 'common.microservice',
+  [KubernetesType.KUBERNETES_MANIFEST]: 'common.microservice',
+  TraditionalAWS: 'common.application',
+  TraditionalPhysical: 'common.application'
 }

@@ -12,7 +12,7 @@ import { useStrings } from 'framework/strings'
 import VerifyDelegateConnection from '@delegates/pages/delegates/delegateCommandLineCreation/components/VerifyDelegateConnection'
 import { DelegateCommonProblemTypes } from '@delegates/constants'
 import DelegateModal, { DelgateDetails } from '../../DelegateModal'
-import type { WhatToDeployType, WhereAndHowToDeployType } from '../../types'
+import { CLOUD_FUNCTION_TYPES, WhatToDeployType, WhereAndHowToDeployType } from '../../types'
 import { getDelegateTypeString } from '../../utils'
 import { SERVICE_TYPES } from '../../Constants'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
@@ -41,6 +41,7 @@ export default function CDPipeline({
   const { getString } = useStrings()
   const clusterType =
     deploymentTypeDetails.svcType?.id === SERVICE_TYPES.KubernetesService.id ? getString('kubernetesText') : ''
+  const showServerlessImage = deploymentTypeDetails.artifactSubType?.id === CLOUD_FUNCTION_TYPES.ServerLessLambda
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
@@ -70,11 +71,7 @@ export default function CDPipeline({
           enabledDelegateTypes={delegateTypes}
           isOpen={isDrawerOpen}
           checkAndSuggestDelegateName
-          customImageName={
-            state.delegateType === DelegateCommonProblemTypes.DOCKER
-              ? 'harnesscommunity/serverless-delegate:latest'
-              : undefined
-          }
+          customImageName={showServerlessImage ? 'harnesscommunity/serverless-delegate:latest' : undefined}
         />
       </Layout.Vertical>
 

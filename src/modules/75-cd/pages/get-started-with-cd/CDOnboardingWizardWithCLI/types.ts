@@ -56,6 +56,13 @@ export interface PipelineSetupState {
     bucketName?: string
     functionPath?: string
     accessKey?: string
+    username?: string
+    password?: string
+    port?: string
+    hostIP?: string
+    privateKeyFile?: string
+    domain?: string
+    instanceName?: string
   }
 }
 

@@ -89,11 +89,13 @@ import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestS
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
-import CDOnboardingWizardWithCLI from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard'
 import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
 import WebhookEvents from './pages/webhooks/WebhookEvents/WebhookEvents'
 import { Webhooks } from './pages/webhooks/Webhooks'
 
+const CDOnboardingWizardWithCLI = React.lazy(
+  () => import('./pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard')
+)
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
   label: 'cd.gitOps'

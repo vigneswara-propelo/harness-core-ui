@@ -631,6 +631,7 @@ export interface StringsMap {
   'common.manageSubscription': string
   'common.matchType': string
   'common.member': string
+  'common.microservice': string
   'common.modified': string
   'common.module.cd': string
   'common.module.ce': string
@@ -1152,6 +1153,7 @@ export interface StringsMap {
   'common.smtp.emailSentFail': string
   'common.smtp.enableSSL': string
   'common.smtp.fromAddress': string
+  'common.smtp.hostipfqdn': string
   'common.smtp.labelBody': string
   'common.smtp.labelSubject': string
   'common.smtp.labelTo': string
@@ -6255,12 +6257,15 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.createEntitytitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.configureAws': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.configureGcp': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.configureSsh': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.configureWinRM': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.createEntities': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.preparation': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.verifyPipeline': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsARN': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsBucketName': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsFunctionPath': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsInstance': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsRegion': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsSVCKey': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsdownload': string
@@ -6269,6 +6274,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.downloadArtifact': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.getPermissions': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.inputAWSInfo': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.inputSSHInfo': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.inputWINRMInfo': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.createBucket': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.downloadArtifact': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.gcpBucketName': string
@@ -6283,6 +6290,13 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.projectName': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.svckeyPlaceholderAws': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.uploadSVCKey': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshPrivateKey': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshPrivateKeyFile': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshPrivateKeyFilePlaceholder': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshUsername': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.winrmDomain': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.winrmPassword': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.winrmUsername': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.description': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.pipelinenotfound': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.pipelinesuccess': string
@@ -6302,14 +6316,18 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cloneRepo': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createAWSSecret': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createAWScon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createArtifactorycon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createEnv': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPSecret': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPcon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitIcon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createInfra': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createK8scon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createPDCCon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSSHSecret': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSecret': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSvc': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createWINRMSecret': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.login': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createpipeline.createbasiccmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createpipeline.createbluegreencmd': string
@@ -6339,6 +6357,19 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.creategcpcon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createinfracmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createsvccmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.cloud.createSSHAwsSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.cloud.createWINRMAwsSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.cloud.createinfraAWScmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.cloud.createinfracmdaws': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createArtifactoryCon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createGithubcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createPDCCon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createPDCConWinRM': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createSSHSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createWINRMSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createenvcmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createinfracmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createsvccmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.description1': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.description2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.title': string
@@ -6406,6 +6437,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.what.ServerlessSteps.artifactgcf': string
   'cd.getStartedWithCD.flowByQuestions.what.ServerlessSteps.svcrep': string
   'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.artifact': string
+  'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.artifactaws': string
+  'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.svcrep': string
   'cd.getStartedWithCD.flowByQuestions.what.aboutSvc': string
   'cd.getStartedWithCD.flowByQuestions.what.samplesvc': string
   'cd.getStartedWithCD.flowByQuestions.what.svcrep': string
@@ -6530,7 +6563,6 @@ export interface StringsMap {
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
   'cd.getStartedWithCD.title': string
-  'cd.getStartedWithCD.traditionalAWS': string
   'cd.getStartedWithCD.traditionalApp': string
   'cd.getStartedWithCD.tryAnotherCreds': string
   'cd.getStartedWithCD.tryCICTA': string

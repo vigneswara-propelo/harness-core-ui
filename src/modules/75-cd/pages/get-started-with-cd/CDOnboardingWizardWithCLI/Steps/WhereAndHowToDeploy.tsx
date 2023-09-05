@@ -22,6 +22,7 @@ import {
 import GitopsFlow from './DeploymentFlowTypes/GitopsFlow'
 import { useOnboardingStore } from '../Store/OnboardingStore'
 import {
+  ARTIFACT_BY_APP_LABEL_MAP,
   DELEGATE_TYPE_BY_ARTIFACT_MAP,
   DEPLOYMENT_FLOW_ENUMS,
   DEPLOYMENT_FLOW_TYPES,
@@ -130,7 +131,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
       <Layout.Vertical>
         <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
           {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title', {
-            serviceType: getString(deploymentTypeDetails.artifactType?.label as keyof StringsMap)
+            serviceType: getString(ARTIFACT_BY_APP_LABEL_MAP[deploymentTypeDetails.artifactType?.id as string])
           })}
         </Text>
         <Text color={Color.BLACK} margin={{ bottom: 'xlarge' }}>

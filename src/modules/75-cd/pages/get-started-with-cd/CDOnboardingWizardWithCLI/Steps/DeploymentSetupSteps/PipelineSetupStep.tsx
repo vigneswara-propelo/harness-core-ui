@@ -26,6 +26,8 @@ import ConfigureGCP from './GCP/ConfigureGCP'
 import ConfigureAWS from './AWS/ConfigureAWS'
 import { DEPLOYMENT_TYPE_TO_DIR_MAP } from '../../Constants'
 import ConfigureServerless from './AWS/ConfigureServerless'
+import ConfigureSSH from './TraditionalApps/ConfigureSSH'
+import ConfigureWinRM from './TraditionalApps/ConfigureWinRM'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
 
 const INFRATYPE_TO_COMPONENT_MAP: {
@@ -34,7 +36,11 @@ const INFRATYPE_TO_COMPONENT_MAP: {
   [CLOUD_FUNCTION_TYPES.GCPGen1]: ConfigureGCP,
   [CLOUD_FUNCTION_TYPES.GCPGen2]: ConfigureGCP,
   [CLOUD_FUNCTION_TYPES.ServerLessLambda]: ConfigureServerless,
-  [CLOUD_FUNCTION_TYPES.NativeAWSLambda]: ConfigureAWS
+  [CLOUD_FUNCTION_TYPES.NativeAWSLambda]: ConfigureAWS,
+  SSH: ConfigureSSH,
+  WINRM: ConfigureWinRM,
+  SSH_AWS: ConfigureSSH,
+  WINRM_AWS: ConfigureSSH
 }
 
 export default function PipelineSetupStep({

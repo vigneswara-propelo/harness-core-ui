@@ -1,5 +1,5 @@
 import { StringKeys, UseStringsReturn } from 'framework/strings'
-import { DEPLOYMENT_TYPE_TO_DIR_MAP, DEPLOYMENT_TYPE_TO_FILE_MAPS, SERVICE_TYPES } from './Constants'
+import { DEPLOYMENT_TYPE_TO_DIR_MAP, DEPLOYMENT_TYPE_TO_FILE_MAPS, INFRA_TYPES, SERVICE_TYPES } from './Constants'
 import { StepsProgress } from './Store/OnboardingStore'
 import { BRANCH_LEVEL } from './TrackingConstants'
 import {
@@ -33,27 +33,42 @@ export const getCommandsByDeploymentType = ({
   serviceType,
   artifactType
 }: GetCommandsParam): string => {
-  if (serviceType === SERVICE_TYPES?.KubernetesService?.id) {
-    return getK8sCommands({
-      getString,
-      dirPath,
-      state,
-      accountId,
-      delegateName,
-      artifactSubtype,
-      serviceType
-    })
+  switch (serviceType) {
+    case SERVICE_TYPES?.KubernetesService?.id:
+      return getK8sCommands({
+        getString,
+        dirPath,
+        state,
+        accountId,
+        delegateName,
+        artifactSubtype,
+        serviceType
+      })
+    case SERVICE_TYPES.ServerlessFunction.id:
+      return getServerLessCommands({
+        getString,
+        dirPath,
+        accountId,
+        state,
+        delegateName,
+        artifactSubtype,
+        serviceType,
+        artifactType
+      })
+    case SERVICE_TYPES.TraditionalApp.id:
+      return getTraditionalAppsCommands({
+        getString,
+        dirPath,
+        accountId,
+        state,
+        delegateName,
+        artifactSubtype,
+        serviceType,
+        artifactType
+      })
+    default:
+      return ''
   }
-  return getServerLessCommands({
-    getString,
-    dirPath,
-    accountId,
-    state,
-    delegateName,
-    artifactSubtype,
-    serviceType,
-    artifactType
-  })
 }
 
 const getK8sCommands = ({
@@ -240,8 +255,8 @@ const getServerLessCommands = ({
     ),
     getString(
       isGCP
-        ? `cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.creategcpcon`
-        : `cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createawscon`,
+        ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.creategcpcon'
+        : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createawscon',
       {
         delegateName,
         type: directory,
@@ -288,6 +303,169 @@ const getServerLessCommands = ({
   ])
 }
 
+const getTraditionalAppsCommands = ({
+  getString,
+  dirPath,
+  accountId,
+  state,
+  delegateName,
+  artifactSubtype = '',
+  artifactType = ''
+}: GetCommandsParam): string => {
+  const directory = dirPath
+  const isAWS = artifactType === INFRA_TYPES.TraditionalApp.TraditionalAWS.id
+  const isSSH = artifactSubtype.includes('SSH')
+  const { infrastructure, env } = DEPLOYMENT_TYPE_TO_FILE_MAPS[artifactSubtype as string] || {}
+
+  const infraSecret: Record<string, StringKeys> = {
+    command: isSSH
+      ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createSSHSecret'
+      : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createWINRMSecret',
+    comment: isSSH
+      ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSSHSecret'
+      : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createWINRMSecret'
+  }
+
+  const commandSnippet = getCommandStrWithNewline([
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cloneRepo'
+    ),
+    getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd', {
+      gitUser:
+        state?.githubUsername ||
+        getString(
+          'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitusernamePlaceholder'
+        )
+    }),
+    getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cdDir'),
+    getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir'),
+    getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.login'),
+    getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd', {
+      accId: accountId,
+      apiKey: state?.apiKey
+    }),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSecret'
+    ),
+    getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createsecret', {
+      gitPat:
+        state?.githubPat ||
+        getString(
+          'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitpatPlaceholder'
+        ),
+      type: directory
+    }),
+
+    getString(infraSecret.comment),
+    getString(infraSecret.command, {
+      secret: state.infraInfo?.privateKeyFile || state.infraInfo?.password,
+      username: state.infraInfo?.username,
+      port: state.infraInfo?.port,
+      domain: state.infraInfo?.domain
+    }),
+
+    ...(isAWS
+      ? [
+          getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createAWSSecret'
+          ),
+          getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createAwsSecret',
+
+            {
+              type: directory,
+              cloudType: 'aws',
+              secret: state.infraInfo?.svcKeyOrSecretKey
+            }
+          )
+        ]
+      : []),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitIcon'
+    ),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createGithubcon',
+      {
+        gitUser:
+          state?.githubUsername ||
+          getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitusernamePlaceholder'
+          ),
+        type: directory
+      }
+    ),
+    getString(
+      isAWS
+        ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createAWScon'
+        : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createPDCCon'
+    ),
+    getString(
+      isAWS
+        ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.aws.createawscon'
+        : isSSH
+        ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createPDCCon'
+        : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createPDCConWinRM',
+      {
+        delegateName,
+        type: directory,
+        region: state.infraInfo?.region,
+        rolearn: state.infraInfo?.awsArn,
+        accessKey: state.infraInfo?.accessKey,
+        port: state.infraInfo?.port,
+        hostIp: state.infraInfo?.hostIP
+      }
+    ),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createArtifactorycon'
+    ),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createArtifactoryCon',
+      {
+        type: directory
+      }
+    ),
+
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSvc'
+    ),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createsvccmd',
+      {
+        type: directory,
+        bucket: state.infraInfo?.bucketName,
+        project: state.infraInfo?.projectName,
+        region: state.infraInfo?.region
+      }
+    ),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createEnv'
+    ),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createenvcmd',
+      {
+        type: directory,
+        environment: env || 'environment'
+      }
+    ),
+    getString(
+      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createInfra'
+    ),
+    getString(
+      isAWS
+        ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.cloud.createinfracmdaws'
+        : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.traditional.pdc.createinfracmd',
+      {
+        type: directory,
+        infrastructureDefinition: infrastructure || 'infrastructure-definition',
+        region: state.infraInfo?.region,
+        project: state.infraInfo?.projectName,
+        instanceName: state.infraInfo?.instanceName
+      }
+    )
+  ])
+  return commandSnippet
+}
+
 export const getPipelineCommands = ({
   getString,
   deploymentData,
@@ -300,6 +478,12 @@ export const getPipelineCommands = ({
   switch (deploymentData.svcType?.id) {
     case SERVICE_TYPES.ServerlessFunction.id:
       return getServerlessPipelineCommands({
+        getString,
+        deploymentData,
+        strategy
+      })
+    case SERVICE_TYPES.TraditionalApp.id:
+      return getTraditionalAppsPipelineCommands({
         getString,
         deploymentData,
         strategy
@@ -356,6 +540,28 @@ export const getServerlessPipelineCommands = ({
         type: dirPath,
         pipeline: pipelineFileName || strategy?.pipelineName
       })
+}
+
+export const getTraditionalAppsPipelineCommands = ({
+  getString,
+  deploymentData,
+  strategy
+}: {
+  getString: UseStringsReturn['getString']
+  deploymentData: WhatToDeployType
+  strategy: DeploymentStrategyTypes
+}): string => {
+  const dirPath =
+    DEPLOYMENT_TYPE_TO_DIR_MAP[
+      deploymentData.artifactSubType?.id
+        ? deploymentData.artifactSubType?.id
+        : (deploymentData.artifactType?.id as string)
+    ]
+  const pipelineFileName = DEPLOYMENT_TYPE_TO_FILE_MAPS[deploymentData.artifactSubType?.id as string]?.[strategy.id]
+  return getString(strategy?.pipelineCommand, {
+    type: dirPath,
+    pipeline: pipelineFileName || strategy?.pipelineName
+  })
 }
 export const getBranchingProps = (state: StepsProgress): { [key: string]: string | undefined } => {
   const branchDetails: { [key: string]: string | undefined } = {

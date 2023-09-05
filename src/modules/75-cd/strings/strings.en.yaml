@@ -679,7 +679,9 @@ getStartedWithCD:
         artifactgcf: Select deployment type for Google Cloud Function
         artifactaws: Select deployment type for AWS Lambda
       TraditionalApp:
-        artifact: How is your Application represented?
+        svcrep: How is your Application represented?
+        artifact: Select deployment type for Physical Data Center
+        artifactaws: Select deployment type for AWS Instances
     howNwhere:
       title: How and where do you want to deploy?
       subtitle: Choose how you would like to deploy.
@@ -711,6 +713,8 @@ getStartedWithCD:
         verifyPipeline: '{{num}}. Verify that pipeline has been created'
         configureGcp: '2. Configure GCP'
         configureAws: '2. Configure AWS'
+        configureSsh: '2. Configure SSH'
+        configureWinRM: '2. Configure WinRM'
       createEntitytitle: 'Run these commands to create the Harness entities necessary to deploy your pipeline. <a rel="noreferrer nofollow" href="https://github.com/harness/harness-cli" target="_blank">Learn more </a>'
       title: Set up your deployment
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
@@ -766,13 +770,24 @@ getStartedWithCD:
           createBucket: '2.2 Create S3 bucket. <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html" target="_blank">How do I make this?</a>'
           downloadArtifact: '2.3 Download zip file and add to AWS S3 bucket.  <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/uploading-an-object-bucket.html" target="_blank">Where do I put this?</a>'
           inputAWSInfo: '2.4 Input AWS information. <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html" target="_blank">Where do I find this?</a>'
+          inputSSHInfo: '2. Input SSH configuration information'
+          inputWINRMInfo: '2. Input WinRM configuration information'
           awsSVCKey: AWS Secret Key
           awsARN: AWS Account Role ARN
+          awsInstance: AWS Instance Name
           awsRegion: AWS region
           awsBucketName: AWS bucket name
           awsFunctionPath: Link to your Function Config
           awsdownload: Download Function Config
           commitFunction: Download the updated function.json and commit to your forked repo under aws-lambda directory
+        configureTraditionalStep:
+          sshUsername: SSH Username
+          sshPrivateKey: SSH Private Key File
+          sshPrivateKeyFile: Path to SSH Private Key File
+          sshPrivateKeyFilePlaceholder: '/path/to/your/file'
+          winrmDomain: WinRM Domain
+          winrmUsername: WinRM Username
+          winrmPassword: WinRM Password
         forkStep:
           title: '1.3. Fork <a target="_blank" rel="noreferrer nofollow" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
         gitStep:
@@ -813,6 +828,22 @@ getStartedWithCD:
                 createsvccmd: 'harness service --file {{{type}}}/service.yml apply --cloud-bucket {{bucket}} --cloud-region {{{region}}}'
                 createenvcmd: harness environment --file {{{type}}}/environment.yml apply
                 createinfracmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-region {{{region}}}'
+            traditional:
+              pdc:
+                createSSHSecret: 'harness secret --file {{{secret}}} apply --secret-type SSHKey --username {{username}} --port {{port}}'
+                createWINRMSecret: 'harness secret --token {{{secret}}} apply --secret-type WinRmCredentials --username {{username}} --port {{port}} --domain {{{domain}}}'
+                createGithubcon: 'harness connector --file {{{type}}}/github-connector.yml apply --git-user {{gitUser}} '
+                createArtifactoryCon: 'harness connector --file {{{type}}}/artifactory-connector.yml apply'
+                createPDCCon: 'harness connector --file {{{type}}}/pdc-connector.yml apply --delegate-name {{delegateName}} --host-ip {{hostip}}'
+                createPDCConWinRM: 'harness connector --file {{{type}}}/pdc-connector.yml apply --delegate-name {{delegateName}} --host-ip {{hostIp}} --port {{port}}'
+                createsvccmd: 'harness service --file {{{type}}}/service.yml apply'
+                createenvcmd: harness environment --file {{{type}}}/environment.yml apply
+                createinfracmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply'
+              cloud:
+                createinfraAWScmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-region {{{region}}} --instance-name {{instanceName}}'
+                createSSHAwsSecret: 'harness secret --token {{{secret}}} apply --secret-type SSHKey  --username {{username}} --port {{port}}'
+                createWINRMAwsSecret: 'harness secret --token {{{secret}}} apply --secret-type WinRmCredentials --username {{username}} --port {{port}} --domain {{{domain}}}'
+                createinfracmdaws: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-region {{{region}}} --instance-name {{instanceName}}'
             comments:
               cloneRepo: '# Clone the repository'
               cdDir: '# Change the directory'
@@ -820,10 +851,14 @@ getStartedWithCD:
               createSecret: '# Create a Secret for GitHub PAT: This securely stores the token.'
               createGitIcon: '# Create a GiHub Connector: Access to YAMLs.'
               createK8scon: '# Create a Kubernetes Cluster Connector: Access to the deployment target.'
+              createArtifactorycon: '# Create a Artifactory Connector: Access to the deployment target.'
               createGCPcon: '# Create a GCP Connector: Access to the deployment target.'
               createAWScon: '# Create a AWS Connector: Access to the deployment target.'
+              createPDCCon: '# Create a PDC Connector: Access to the physical data center.'
               createGCPSecret: '#  Create a Secret for GCP: This securely stores the token.'
               createAWSSecret: '#  Create a Secret for AWS: This securely stores the token.'
+              createSSHSecret: '#  Create a Secret for SSH: This securely stores the token.'
+              createWINRMSecret: '#  Create a Secret for WinRM: This securely stores the token.'
               createSvc: '# Create a Service: Represents your application.'
               createEnv: '# Create an Environment: Represents the production or non-production infrastructure.'
               createInfra: '# Create an Infrastructure Definition: Specifies the target cluster for the infrastructure. '
@@ -965,7 +1000,6 @@ getStartedWithCD:
   traditionalApp: Traditional App
   awsLambda: AWS Lambda Function
   googleFunction: Google Cloud Function
-  traditionalAWS: Traditional AWS
   k8sHelm: Kubernetes with Helm
   nativeAWSLambda: Native AWS Lambda
   gcpGen1: Google Cloud Function Gen 1

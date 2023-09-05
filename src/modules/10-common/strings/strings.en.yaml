@@ -61,6 +61,7 @@ importFromGit: Import From Git
 moveToGit: Move to Git
 allEnvironments: All Environments
 allServices: All Services
+microservice: Microservice
 production: Production
 preProduction: 'Pre-Production'
 addVariable: Add Variable
@@ -951,6 +952,7 @@ smtp:
   modalSubHeading: Setup your smtp server by providing the below details
   smtpConnectivity: SMTP Connectivity Test
   port: Port
+  hostipfqdn: Host IP/FQDN
   enableSSL: Enable SSL
   startTLS: Start TLS
   fromAddress: From Address
