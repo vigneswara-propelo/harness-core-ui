@@ -110,6 +110,7 @@ rules:
         - group:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
+            - '!microfrontends/ChildComponentMounter'
       paths:
         - lodash
         - name: 'js-yaml'

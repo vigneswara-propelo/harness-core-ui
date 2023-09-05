@@ -11,6 +11,7 @@ rules:
         - group:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
+            - '!microfrontends/ChildComponentMounter'
         - group:
             - modules/27-platform/*
             - modules/38-audit-trail/*

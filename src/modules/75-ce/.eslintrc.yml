@@ -11,6 +11,7 @@ rules:
         - group:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
+            - '!microfrontends/ChildComponentMounter'
         - group:
             - modules/75-cd/*
             - modules/75-cet/*

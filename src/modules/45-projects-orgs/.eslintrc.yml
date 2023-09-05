@@ -11,6 +11,7 @@ rules:
         - group:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
+            - '!microfrontends/ChildComponentMounter'
         - group:
             - modules/45-dashboards/*
             - modules/60-code/*

@@ -7,7 +7,6 @@
 
 import React, { lazy, FC } from 'react'
 import { useRouteMatch } from 'react-router-dom'
-// eslint-disable-next-line no-restricted-imports
 import ChildComponentMounter from 'microfrontends/ChildComponentMounter'
 import { customHooks, customComponents } from './GovernanceCustomMicroFrontendProps'
 import type { RouteMatch } from './GovernanceCustomMicroFrontendProps'
