@@ -8,6 +8,7 @@
 import React from 'react'
 import { HTMLTable } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import { ModuleName } from 'framework/types/ModuleName'
 import {
   ModuleVersionsListResponseResponse,
@@ -15,6 +16,8 @@ import {
   useListModuleVersions
 } from 'services/cd-ng-open-api'
 import { useStrings } from 'framework/strings'
+import { usePublishedDelegateVersion } from 'services/cd-ng'
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './UseReleaseNotesModal.module.scss'
 
 export interface ModuleVersionTableProps {
@@ -23,6 +26,7 @@ export interface ModuleVersionTableProps {
 
 export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
   const { getString } = useStrings()
+  const { accountId: accountIdentifier } = useParams<ProjectPathProps>()
   const { data } = useListModuleVersions(
     {
       queryParams: {
@@ -30,6 +34,11 @@ export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
       }
     } || []
   )
+  const { data: delegateversiondata } = usePublishedDelegateVersion({
+    queryParams: {
+      accountIdentifier
+    }
+  })
 
   const modulesList = React.useMemo((): ModuleVersionsResponse[] | null => {
     if (!data) return null
@@ -57,9 +66,15 @@ export const ModuleVersionTable: React.FC<ModuleVersionTableProps> = () => {
     if (orderedModulesMap.has('STO') && orderedModulesMap.has('SRT') && !isEmpty(orderedModulesMap.get('STO'))) {
       orderedModulesMap.delete('STO')
     }
-
+    if (delegateversiondata?.resource?.latestSupportedVersion) {
+      const oldDelegateData = orderedModulesMap.get('Delegate')
+      orderedModulesMap.set('Delegate', {
+        ...oldDelegateData,
+        version: delegateversiondata?.resource?.latestSupportedVersion as string
+      })
+    }
     return [...orderedModulesMap.values()].filter((moduleData: ModuleVersionsResponse) => !isEmpty(moduleData))
-  }, [data])
+  }, [data, delegateversiondata])
   return (
     <HTMLTable className={css.table} data-testid="release-note-table">
       <thead>

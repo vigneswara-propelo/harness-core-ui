@@ -9,6 +9,7 @@ import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import * as cdNgOpenApiServices from 'services/cd-ng-open-api'
+import * as cdNGSVC from 'services/cd-ng'
 import { useReleaseNotesModal } from '../ReleaseNotesModal/useReleaseNotesModal'
 
 jest.mock('services/cd-ng')
@@ -31,6 +32,19 @@ beforeEach(() => {
     error: null
   } as any)
 })
+jest.spyOn(cdNGSVC, 'usePublishedDelegateVersion').mockReturnValue({
+  data: {
+    metaData: {},
+    resource: {
+      latestSupportedVersion: '23.08.80308',
+      latestSupportedMinimalVersion: '23.08.80308.minimal'
+    },
+    responseMessages: []
+  },
+  refetch: jest.fn(),
+  loading: false,
+  error: null
+} as any)
 
 const TestComponent = (): React.ReactElement => {
   const { showModal, hideModal } = useReleaseNotesModal()

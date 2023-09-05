@@ -98,6 +98,36 @@ exports[`open and close release notes  Modal Rendering should open and close the
         <td
           class="td"
           data-testid="name"
+        />
+        <td
+          class="td"
+          data-testid="version"
+        >
+          23.08.80308
+        </td>
+        <td
+          class="td"
+          data-testid="updated"
+        />
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="undefined"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
         >
           testDisplayName
         </td>

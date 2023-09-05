@@ -8,8 +8,8 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
-
 import * as cdNgOpenApiServices from 'services/cd-ng-open-api'
+import * as cdNGSVC from 'services/cd-ng'
 import { ModuleVersionTable } from '../ReleaseNotesModal/ReleaseNotesTable'
 
 jest.mock('services/cd-ng')
@@ -31,6 +31,19 @@ describe('module version table', () => {
             release_notes_link: 'link'
           }
         ],
+        refetch: jest.fn(),
+        loading: false,
+        error: null
+      } as any)
+      jest.spyOn(cdNGSVC, 'usePublishedDelegateVersion').mockReturnValue({
+        data: {
+          metaData: {},
+          resource: {
+            latestSupportedVersion: '23.08.80308',
+            latestSupportedMinimalVersion: '23.08.80308.minimal'
+          },
+          responseMessages: []
+        },
         refetch: jest.fn(),
         loading: false,
         error: null
@@ -61,6 +74,19 @@ describe('module version table', () => {
           <ModuleVersionTable />
         </TestWrapper>
       )
+      jest.spyOn(cdNGSVC, 'usePublishedDelegateVersion').mockReturnValue({
+        data: {
+          metaData: {},
+          resource: {
+            latestSupportedVersion: '23.08.80308',
+            latestSupportedMinimalVersion: '23.08.80308.minimal'
+          },
+          responseMessages: []
+        },
+        refetch: jest.fn(),
+        loading: false,
+        error: null
+      } as any)
 
       expect(container).toMatchSnapshot()
 
