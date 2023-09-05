@@ -136,6 +136,11 @@ const useGetUsageAndLimitReturnMock = {
     }
   }
 }
+jest.mock('services/cv', () => ({
+  useDownloadActiveServiceMonitoredCSVReport: jest.fn().mockImplementation(() => {
+    return { data: '', refetch: jest.fn(), loading: false }
+  })
+}))
 
 describe('Subscriptions Page', () => {
   jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
@@ -215,6 +220,41 @@ describe('Subscriptions Page', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot('ci module ')
+    // document.querySelector('[data-icon="ci-with-dark-text"]').click()
+  })
+  test('should render SRM details  with no data service table', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              numberOfCommitters: 200,
+              moduleType: 'SRM'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
+            CE: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+        pathParams={{ module: ModuleName.SRM }}
+        queryParams={{ moduleCard: ModuleName.SRM }}
+      >
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot('srm module ')
     // document.querySelector('[data-icon="ci-with-dark-text"]').click()
   })
 })

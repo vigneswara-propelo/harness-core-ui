@@ -24,9 +24,10 @@ import {
 import { listActiveDevelopersPromise, useGetCredits } from 'services/ci'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useMutateAsGet } from '@common/hooks'
 import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
-import projMockData from './mocks/projMockData.json'
+import activeMonitoredServices from './mocks/activeMonitoredServices.json'
 import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
 jest.mock('services/ci')
@@ -72,17 +73,55 @@ const orgListPromiseMock = jest.fn().mockImplementation(() => {
     }
   })
 })
+const projListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    data: {
+      pageCount: 1,
+      itemCount: 3,
+      pageSize: 50,
+      content: [
+        {
+          project: {
+            orgIdentifier: 'default',
+            identifier: 'Pratyush_Test',
+            name: 'Pratyush_Test',
+            color: '#0063f7',
+            modules: [
+              'CD',
+              'CI',
+              'CV',
+              'CF',
+              'CE',
+              'STO',
+              'CHAOS',
+              'SRM',
+              'IACM',
+              'CET',
+              'CODE',
+              'CORE',
+              'PMS',
+              'TEMPLATESERVICE'
+            ],
+            description: '',
+            tags: {}
+          },
+          createdAt: 1693472483624,
+          lastModifiedAt: 1693472483624,
+          isFavorite: false
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  })
+})
 const devListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     data: ['abc', 'def']
   })
 })
 jest.mock('highcharts-react-official', () => () => <div />)
-const projListPromiseMock = jest.fn().mockImplementation(() => {
-  return Promise.resolve({
-    projMockData
-  })
-})
+
 const serviceListPromiseMock = jest.fn().mockImplementation(() => {
   return Promise.resolve({
     serviceMockData
@@ -141,6 +180,7 @@ jest.mock('@common/hooks', () => ({
     return { data: activeServices, refetch: jest.fn(), error: null, loading: false }
   })
 }))
+
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
@@ -174,12 +214,6 @@ const useGetUsageAndLimitReturnMock = {
   }
 }
 describe('Subscriptions Page', () => {
-  useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
-    return {
-      data: '',
-      refetch: jest.fn()
-    }
-  })
   jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
   jest.useFakeTimers({ advanceTimers: true })
   jest.setSystemTime(new Date('2020-01-19'))
@@ -207,7 +241,8 @@ describe('Subscriptions Page', () => {
           licenseInformation: {
             CD: { edition: 'FREE', status: 'ACTIVE' },
             CHAOS: { edition: 'FREE', status: 'ACTIVE' },
-            CE: { edition: 'FREE', status: 'ACTIVE' }
+            CE: { edition: 'FREE', status: 'ACTIVE' },
+            SRM: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >
@@ -502,277 +537,432 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.subscriptions.title')).toBeTruthy()
     expect(container).toMatchSnapshot()
   })
-
-  describe('Subscription Details Card', () => {
-    useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+})
+jest.mock('services/cv', () => ({
+  useDownloadActiveServiceMonitoredCSVReport: jest.fn().mockImplementation(() => {
+    return { data: '', refetch: jest.fn(), loading: false }
+  })
+}))
+describe('Subscription Details Card', () => {
+  jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
+  jest.useFakeTimers({ advanceTimers: true })
+  jest.setSystemTime(new Date('2020-01-19'))
+  useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+    return {
+      data: '',
+      refetch: jest.fn()
+    }
+  })
+  test('should render CD details', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
-        data: '',
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              workloads: 100,
+              moduleType: 'CD',
+              cdLicenseType: CDLicenseType.SERVICES
+            }
+          ],
+          status: 'SUCCESS'
+        },
         refetch: jest.fn()
       }
     })
-    test('should render CD details', () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                workloads: 100,
-                moduleType: 'CD',
-                cdLicenseType: CDLicenseType.SERVICES
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
 
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CD }}>
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
+    const { getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CD }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
 
-      expect(getByText('common.subscriptions.cd.services')).toBeInTheDocument()
-    })
+    expect(getByText('common.subscriptions.cd.services')).toBeInTheDocument()
+  })
 
-    test('should render CD Service Instances', () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                workloads: 100,
-                moduleType: 'CD',
-                cdLicenseType: CDLicenseType.SERVICE_INSTANCES
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
-      const { getByText, queryByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CD }}>
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
-
-      expect(queryByText('common.subscriptions.cd.services')).not.toBeInTheDocument()
-      expect(getByText('common.subscriptions.cd.serviceInstances')).toBeInTheDocument()
-    })
-
-    test('should render CCM details', () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                spendLimit: -1,
-                moduleType: 'CE'
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
-
-      expect(getByText('common.subscriptions.ccm.cloudSpend')).toBeInTheDocument()
-    })
-
-    test('should render BuildCreditTable', () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                numberOfCommitters: 200,
-                moduleType: 'CI'
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
-
-      expect(getByText('common.subscriptions.ci.developers')).toBeInTheDocument()
-    })
-
-    test('should render CI details', async () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                numberOfCommitters: 200,
-                moduleType: 'CI'
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
-
-      const { container, getByText, getAllByText } = render(
-        <TestWrapper
-          defaultAppStoreValues={{ featureFlags }}
-          defaultLicenseStoreValues={{
-            licenseInformation: {
-              CHAOS: { edition: 'FREE', status: 'ACTIVE' },
-              CE: { edition: 'FREE', status: 'ACTIVE' }
+  test('should render CD Service Instances', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              workloads: 100,
+              moduleType: 'CD',
+              cdLicenseType: CDLicenseType.SERVICE_INSTANCES
             }
-          }}
-          pathParams={{ module: ModuleName.CI }}
-          queryParams={{ moduleCard: ModuleName.CI }}
-        >
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
-      expect(container).toMatchSnapshot('ci module ')
-      expect(getByText('common.lastBuildDate')).toBeTruthy()
-      await userEvent.click(getByText('common.lastBuildDate'))
-      expect(getByText('common.lastBuildDate')).toBeTruthy()
-
-      // checking update filters for undefined
-      const fetchButton0 = getAllByText('Update')[0]
-      expect(fetchButton0).toBeDefined()
-      await userEvent.click(fetchButton0)
-
-      // changing values in dropdowns
-      expect(getByText('common.subscriptions.usage.developers')).toBeTruthy()
-      act(() => {
-        fireEvent.click(getByText('common.subscriptions.usage.developers'))
-      })
-      await waitFor(() => {
-        getByText('abc')
-      })
-      act(() => {
-        fireEvent.click(getByText('abc'))
-      })
-      const orgDropdown = getAllByText('orgsText')[0]
-      act(() => {
-        fireEvent.click(orgDropdown)
-      })
-      // calling the orgchange by selecting value from dropdown
-      await waitFor(() => {
-        getByText('Org Name')
-      })
-      act(() => {
-        fireEvent.click(getByText('Org Name'))
-      })
-
-      const fetchButton = getAllByText('Update')[0]
-      expect(fetchButton).toBeDefined()
-      await userEvent.click(fetchButton)
-      // checking the trend tab for ci graphs
-      await waitFor(() => {
-        getByText('common.subscriptions.tabs.trend')
-      })
-      act(() => {
-        fireEvent.click(getByText('common.subscriptions.tabs.trend'))
-      })
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
     })
 
-    test('should render FF details', () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                numberOfUsers: 200,
-                numberOfClientMAUs: 20000,
-                moduleType: 'CF'
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
+    const { getByText, queryByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CD }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
 
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
+    expect(queryByText('common.subscriptions.cd.services')).not.toBeInTheDocument()
+    expect(getByText('common.subscriptions.cd.serviceInstances')).toBeInTheDocument()
+  })
 
-      expect(getByText('common.subscriptions.featureFlags.users')).toBeInTheDocument()
-      expect(getByText('common.subscriptions.featureFlags.mau')).toBeInTheDocument()
+  test('should render CCM details', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              spendLimit: -1,
+              moduleType: 'CE'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
     })
 
-    test('should render CHAOS details', () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                totalChaosExperimentRuns: 10000,
-                moduleType: 'CHAOS'
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
+    const { getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
 
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CHAOS }}>
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
+    expect(getByText('common.subscriptions.ccm.cloudSpend')).toBeInTheDocument()
+  })
 
-      expect(getByText('common.subscriptions.chaos.experiments')).toBeInTheDocument()
+  test('should render BuildCreditTable', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              numberOfCommitters: 200,
+              moduleType: 'CI'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
     })
 
-    test('should render CET details', () => {
-      useGetModuleLicenseInfoMock.mockImplementation(() => {
-        return {
-          data: {
-            data: [
-              {
-                edition: Editions.ENTERPRISE,
-                status: 'ACTIVE',
-                numberOfAgents: 100,
-                moduleType: 'CET'
-              }
-            ],
-            status: 'SUCCESS'
-          },
-          refetch: jest.fn()
-        }
-      })
+    const { getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
 
-      const { getByText } = render(
-        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CET }}>
-          <SubscriptionsPage />
-        </TestWrapper>
-      )
+    expect(getByText('common.subscriptions.ci.developers')).toBeInTheDocument()
+  })
 
-      expect(getByText('common.subscriptions.cet.agents')).toBeInTheDocument()
+  test('should render CI details', async () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              numberOfCommitters: 200,
+              moduleType: 'CI'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
     })
+
+    const { container, getByText, getAllByText } = render(
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
+            CE: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+        pathParams={{ module: ModuleName.CI }}
+        queryParams={{ moduleCard: ModuleName.CI }}
+      >
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot('ci module ')
+    expect(getByText('common.lastBuildDate')).toBeTruthy()
+    await userEvent.click(getByText('common.lastBuildDate'))
+    expect(getByText('common.lastBuildDate')).toBeTruthy()
+
+    // checking update filters for undefined
+    const fetchButton0 = getAllByText('Update')[0]
+    expect(fetchButton0).toBeDefined()
+    await userEvent.click(fetchButton0)
+
+    // changing values in dropdowns
+    expect(getByText('common.subscriptions.usage.developers')).toBeTruthy()
+    act(() => {
+      fireEvent.click(getByText('common.subscriptions.usage.developers'))
+    })
+    await waitFor(() => {
+      getByText('abc')
+    })
+    act(() => {
+      fireEvent.click(getByText('abc'))
+    })
+    const orgDropdown = getAllByText('orgsText')[0]
+    act(() => {
+      fireEvent.click(orgDropdown)
+    })
+    // calling the orgchange by selecting value from dropdown
+    await waitFor(() => {
+      getByText('Org Name')
+    })
+    act(() => {
+      fireEvent.click(getByText('Org Name'))
+    })
+
+    const fetchButton = getAllByText('Update')[0]
+    expect(fetchButton).toBeDefined()
+    await userEvent.click(fetchButton)
+    // checking the trend tab for ci graphs
+    await waitFor(() => {
+      getByText('common.subscriptions.tabs.trend')
+    })
+    act(() => {
+      fireEvent.click(getByText('common.subscriptions.tabs.trend'))
+    })
+  })
+
+  test('should render FF details', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              numberOfUsers: 200,
+              numberOfClientMAUs: 20000,
+              moduleType: 'CF'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CE }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.subscriptions.featureFlags.users')).toBeInTheDocument()
+    expect(getByText('common.subscriptions.featureFlags.mau')).toBeInTheDocument()
+  })
+
+  test('should render CHAOS details', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              totalChaosExperimentRuns: 10000,
+              moduleType: 'CHAOS'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CHAOS }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.subscriptions.chaos.experiments')).toBeInTheDocument()
+  })
+
+  test('should render CET details', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              status: 'ACTIVE',
+              numberOfAgents: 100,
+              moduleType: 'CET'
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CET }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.subscriptions.cet.agents')).toBeInTheDocument()
+  })
+  test('should render SRM details', async () => {
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return { data: activeMonitoredServices, refetch: jest.fn(), error: null, loading: true }
+    })
+
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              numberOfCommitters: 200,
+              moduleType: ModuleName.SRM
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { container, getByText, getAllByText } = render(
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
+            CE: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+        pathParams={{ module: ModuleName.SRM }}
+        queryParams={{ moduleCard: ModuleName.SRM }}
+      >
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot('srm module ')
+    expect(getAllByText('common.purpose.activeMonitoredService')[0]).toBeTruthy()
+
+    // checking update filters for undefined
+    const fetchButton0 = getAllByText('Update')[0]
+    expect(fetchButton0).toBeDefined()
+    await userEvent.click(fetchButton0)
+
+    // changing values in dropdowns
+    const orgDropdown = getAllByText('orgsText')[0]
+    act(() => {
+      fireEvent.click(orgDropdown)
+    })
+    // calling the orgchange by selecting value from dropdown
+    await waitFor(() => {
+      getByText('Org Name')
+    })
+    act(() => {
+      fireEvent.click(getByText('Org Name'))
+    })
+    // // projects
+    // const projDropdown = getAllByText('projectsText')[0]
+    // act(() => {
+    //   fireEvent.click(projDropdown)
+    // })
+    // // calling the orgchange by selecting value from dropdown
+    // await waitFor(() => {
+    //   getByText('service1')
+    // })
+    // act(() => {
+    //   fireEvent.click(getByText('service1'))
+    // })
+    // // services
+    // const servDropdown = getAllByText('Services')[0]
+    // act(() => {
+    //   fireEvent.click(servDropdown)
+    // })
+    // // calling the orgchange by selecting value from dropdown
+    // await waitFor(() => {
+    //   getByText('service1')
+    // })
+    // act(() => {
+    //   fireEvent.click(getByText('service1'))
+    // })
+
+    const fetchButton = getAllByText('Update')[0]
+    expect(fetchButton).toBeDefined()
+    await userEvent.click(fetchButton)
+  })
+
+  test('should render SRM details by selecting project', async () => {
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return { data: activeMonitoredServices, refetch: jest.fn(), error: null, loading: true }
+    })
+
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              numberOfCommitters: 200,
+              moduleType: ModuleName.SRM
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { container, getByText, getAllByText } = render(
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CHAOS: { edition: 'FREE', status: 'ACTIVE' },
+            CE: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+        pathParams={{ module: ModuleName.SRM }}
+        queryParams={{ moduleCard: ModuleName.SRM }}
+      >
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot('srm module ')
+    expect(getAllByText('common.purpose.activeMonitoredService')[0]).toBeTruthy()
+
+    // checking update filters for undefined
+    const fetchButton0 = getAllByText('Update')[0]
+    expect(fetchButton0).toBeDefined()
+    await userEvent.click(fetchButton0)
+
+    // changing values in dropdowns
+    // projects
+    const projDropdown = getAllByText('projectsText')[0]
+    act(() => {
+      fireEvent.click(projDropdown)
+    })
+    // calling the orgchange by selecting value from dropdown
+    await waitFor(() => {
+      getByText('Pratyush_Test')
+    })
+    act(() => {
+      fireEvent.click(getByText('Pratyush_Test'))
+    })
+
+    const fetchButton = getAllByText('Update')[0]
+    expect(fetchButton).toBeDefined()
+    await userEvent.click(fetchButton)
   })
 })

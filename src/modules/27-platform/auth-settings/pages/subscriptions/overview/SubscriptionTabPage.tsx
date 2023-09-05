@@ -26,11 +26,12 @@ enum SubscriptionDataTab {
   BREAKDOWN = 'BREAKDOWN',
   TREND = 'TREND'
 }
+const supportedModules = [ModuleName.CI, ModuleName.CD, ModuleName.SRM]
 
 function SubscriptionTabPage(props: SubscriptionTabPageProps) {
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(SubscriptionDataTab.BREAKDOWN)
-  if (props.module !== ModuleName.CI && props.module !== ModuleName.CD) {
+  if (!supportedModules.includes(props.module)) {
     return <></>
   }
   const renderHeading = () => {
@@ -58,6 +59,23 @@ function SubscriptionTabPage(props: SubscriptionTabPageProps) {
             {getString('common.subscriptions.usage.activeDevelopers')}
           </Heading>
         )
+      case ModuleName.SRM:
+        return (
+          <Layout.Vertical className={pageCss.headerMargin}>
+            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
+              {getString('common.subscriptions.usage.services')}
+            </Heading>
+            <div className={pageCss.tooltip}>
+              <Text
+                color={Color.PRIMARY_7}
+                tooltip={getString('common.subscriptions.usage.cdServiceTooltip')}
+                font={{ size: 'xsmall' }}
+              >
+                {getString('common.whatIsActiveService')}
+              </Text>
+            </div>
+          </Layout.Vertical>
+        )
     }
   }
   return (
@@ -78,11 +96,13 @@ function SubscriptionTabPage(props: SubscriptionTabPageProps) {
           panel={<SubscriptionUsageView {...props} />}
         />
 
-        <Tabs.Tab
-          id={SubscriptionDataTab.TREND}
-          title={getString('common.subscriptions.tabs.trend')}
-          panel={<SubscriptionGraphView {...props} />}
-        />
+        {props.module !== ModuleName.SRM ? (
+          <Tabs.Tab
+            id={SubscriptionDataTab.TREND}
+            title={getString('common.subscriptions.tabs.trend')}
+            panel={<SubscriptionGraphView {...props} />}
+          />
+        ) : null}
       </Tabs>
     </Card>
   )

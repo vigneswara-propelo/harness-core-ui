@@ -10,7 +10,7 @@
           "service": {
             "orgIdentifier": "default",
             "identifier": "TestCiproject",
-            "name": "TestCiproject",
+            "name": "service1",
             "color": "#0063F7",
             "modules": ["CI", "CD"],
             "description": "Test description",

@@ -320,6 +320,7 @@ export interface StringsMap {
   'common.entityReferenceTitle': string
   'common.entityType': string
   'common.entitycreatedSuccessfully': string
+  'common.environment': string
   'common.environmentCreated': string
   'common.environmentGroup.createNew': string
   'common.environmentGroup.created': string
@@ -852,6 +853,7 @@ export interface StringsMap {
   'common.provisioner': string
   'common.publicAccess.oopsPageNotPublic': string
   'common.publicAccess.tryOtherOptions': string
+  'common.purpose.activeMonitoredService': string
   'common.purpose.cd.1stGen.description': string
   'common.purpose.cd.1stGen.title': string
   'common.purpose.cd.continuous': string

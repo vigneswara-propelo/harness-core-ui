@@ -215,6 +215,8 @@ allowpaths:
   - /srm-analysis-step/{executionDetailId}/stop-analysis
   - /monitored-service/{identifier}/secondary-events
   - /monitored-service/secondary-events-details
+  - /usage/SRM/active-monitored-services
+  - /usage/SRM/active-services-monitored/csv/download
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

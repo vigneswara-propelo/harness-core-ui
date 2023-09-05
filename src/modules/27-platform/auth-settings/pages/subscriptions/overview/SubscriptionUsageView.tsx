@@ -11,6 +11,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import CDUsageTable from './CDUsageTable'
 import CIUsageTable from './CIUsageTable'
+import SRMUsageTable from './SRMUsageTable'
 
 interface SubscriptionUsageViewProps {
   module: ModuleName
@@ -23,6 +24,8 @@ const getModuleUsagesTable = (props: SubscriptionUsageViewProps): React.ReactEle
       return <CIUsageTable {...props} />
     case ModuleName.CD:
       return <CDUsageTable {...props} />
+    case ModuleName.SRM:
+      return <SRMUsageTable {...props} />
     default:
       return undefined
   }

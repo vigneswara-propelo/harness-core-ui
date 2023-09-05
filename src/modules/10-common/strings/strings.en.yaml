@@ -267,6 +267,7 @@ new: new
 gitops:
   startProvisioning: Start Provisioning
 purpose:
+  activeMonitoredService: Active Monitored Services
   welcome: 'Hello there, welcome to Harness'
   howToProceed: 'How would you like to proceed?'
   compare: Compare both versions
@@ -1323,6 +1324,7 @@ recents: Recents
 favorites: Favorites
 noRecentProjects: No Recent Projects
 organizations: ORGANIZATIONS
+environment: ENVIRONMENTS
 projects: PROJECTS
 serviceId: 'SERVICE ID'
 servicesInstances: 'SERVICE INSTANCES'

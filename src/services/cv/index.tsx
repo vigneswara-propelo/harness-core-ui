@@ -18907,6 +18907,136 @@ export const getSRMLicenseUsagePromise = (
     signal
   )
 
+export interface ListSRMActiveMonitoredServicesQueryParams {
+  accountIdentifier?: string
+  page?: number
+  size?: number
+  sort?: string[]
+  timestamp?: number
+}
+
+export type ListSRMActiveMonitoredServicesProps = Omit<
+  MutateProps<
+    ResponsePageActiveServiceDTO,
+    unknown,
+    ListSRMActiveMonitoredServicesQueryParams,
+    ActiveServiceMonitoredFilterParamsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List Active Services in SRM Module
+ */
+export const ListSRMActiveMonitoredServices = (props: ListSRMActiveMonitoredServicesProps) => (
+  <Mutate<
+    ResponsePageActiveServiceDTO,
+    unknown,
+    ListSRMActiveMonitoredServicesQueryParams,
+    ActiveServiceMonitoredFilterParamsRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/usage/SRM/active-monitored-services`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseListSRMActiveMonitoredServicesProps = Omit<
+  UseMutateProps<
+    ResponsePageActiveServiceDTO,
+    unknown,
+    ListSRMActiveMonitoredServicesQueryParams,
+    ActiveServiceMonitoredFilterParamsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List Active Services in SRM Module
+ */
+export const useListSRMActiveMonitoredServices = (props: UseListSRMActiveMonitoredServicesProps) =>
+  useMutate<
+    ResponsePageActiveServiceDTO,
+    unknown,
+    ListSRMActiveMonitoredServicesQueryParams,
+    ActiveServiceMonitoredFilterParamsRequestBody,
+    void
+  >('POST', `/usage/SRM/active-monitored-services`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * List Active Services in SRM Module
+ */
+export const listSRMActiveMonitoredServicesPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageActiveServiceDTO,
+    unknown,
+    ListSRMActiveMonitoredServicesQueryParams,
+    ActiveServiceMonitoredFilterParamsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageActiveServiceDTO,
+    unknown,
+    ListSRMActiveMonitoredServicesQueryParams,
+    ActiveServiceMonitoredFilterParamsRequestBody,
+    void
+  >('POST', getConfig('cv/api'), `/usage/SRM/active-monitored-services`, props, signal)
+
+export interface DownloadActiveServiceMonitoredCSVReportQueryParams {
+  accountIdentifier?: string
+  timestamp?: number
+}
+
+export type DownloadActiveServiceMonitoredCSVReportProps = Omit<
+  GetProps<void, void, DownloadActiveServiceMonitoredCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Services Monitored report
+ */
+export const DownloadActiveServiceMonitoredCSVReport = (props: DownloadActiveServiceMonitoredCSVReportProps) => (
+  <Get<void, void, DownloadActiveServiceMonitoredCSVReportQueryParams, void>
+    path={`/usage/SRM/active-services-monitored/csv/download`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDownloadActiveServiceMonitoredCSVReportProps = Omit<
+  UseGetProps<void, void, DownloadActiveServiceMonitoredCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Services Monitored report
+ */
+export const useDownloadActiveServiceMonitoredCSVReport = (props: UseDownloadActiveServiceMonitoredCSVReportProps) =>
+  useGet<void, void, DownloadActiveServiceMonitoredCSVReportQueryParams, void>(
+    `/usage/SRM/active-services-monitored/csv/download`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * Download CSV Active Services Monitored report
+ */
+export const downloadActiveServiceMonitoredCSVReportPromise = (
+  props: GetUsingFetchProps<void, void, DownloadActiveServiceMonitoredCSVReportQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, void, DownloadActiveServiceMonitoredCSVReportQueryParams, void>(
+    getConfig('cv/api'),
+    `/usage/SRM/active-services-monitored/csv/download`,
+    props,
+    signal
+  )
+
 export interface GetAllJourneysQueryParams {
   accountId: string
   orgIdentifier?: string
