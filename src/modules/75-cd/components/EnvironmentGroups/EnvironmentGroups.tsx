@@ -45,6 +45,12 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
+import {
+  PageQueryParamsWithDefaults,
+  PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
+  PAGE_TEMPLATE_DEFAULT_PAGE_SIZE,
+  usePageQueryParamOptions
+} from '@common/constants/Pagination'
 import CreateEnvironmentGroupModal from './CreateEnvironmentGroupModal'
 import EnvironmentGroupsList from './EnvironmentGroupsList/EnvironmentGroupsList'
 import NoEnvironmentGroups from './NoEnvironmentGroups'
@@ -52,12 +58,6 @@ import EnvironmentTabs from '../EnvironmentsV2/EnvironmentTabs'
 import { EnvironmentGroupsFilters } from './EnvironmentGroupsFilters/EnvironmentGroupsFilters'
 import { getHasFilterIdentifier, getHasFilters } from './EnvironmentGroupsFilters/filterUtils'
 import { EnvironmentGroupListQueryParams, Sort, SortFields } from './utils'
-import {
-  PageQueryParamsWithDefaults,
-  PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
-  PAGE_TEMPLATE_DEFAULT_PAGE_SIZE,
-  usePageQueryParamOptions
-} from '../EnvironmentsV2/PageTemplate/utils'
 
 import css from './EnvironmentGroups.module.scss'
 

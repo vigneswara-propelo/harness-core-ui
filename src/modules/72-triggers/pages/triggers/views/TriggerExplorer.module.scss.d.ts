@@ -12,6 +12,7 @@ declare const styles: {
   readonly helpPanelIconBg: string
   readonly infoMessage: string
   readonly pageBody: string
+  readonly selectArtifact: string
   readonly statusMessage: string
   readonly table: string
 }

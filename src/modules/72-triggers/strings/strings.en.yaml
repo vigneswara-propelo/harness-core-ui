@@ -167,14 +167,19 @@ triggerExplorer:
   pageHeading: 'Trigger Matching Activity'
   pageSubHeading: 'Trigger explorer enables debugging of registered triggers in Harness platform.'
   selectTriggerType: 'Select Trigger Type'
-  searchTriggers: 'Search Triggers with Event Identifier from the Response Payload'
+  searchWebhookTriggers: 'Search Triggers with Event Identifier from the Response Payload'
   searchPlaceholder: 'Enter Event Correlation id'
   searchWebhookTriggerLabel: 'Enter the eventCorrelationId (cURL) or data (Webhook) from the response payload:'
   emptyStateMessage: 'No matching trigger for this event correlation id'
   showPanel: 'Show Panel'
   hidePanel: '- Hide Panel'
   webhookHelp:
-    step1: '1. Search for registered and activated Triggers using Event Co-relation id'
+    step1: '1. Search for registered and activated triggers'
     step2: '2. Check for events received by the Trigger'
-    step3: '3. View Related Pipeline Executions'
+    step3: '3. View related pipeline executions'
+  artifactHelp:
+    step1: '1. Select the artifact trigger type'
+    step2: '2. Select the artifact event for which details are required and view the set'
+  selectArtifactType: 'Select Artifact Type'
+  searchArtifactTriggers: 'Provide a type of Artifact Trigger to filter the history of Artifact Trigger events received'
 triggerListing: Trigger Listing

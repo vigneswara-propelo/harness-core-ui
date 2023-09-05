@@ -12,9 +12,10 @@ import { get } from 'lodash-es'
 import { CellProps, Renderer } from 'react-table'
 import { Drawer } from '@blueprintjs/core'
 import { MonacoEditorProps } from 'react-monaco-editor'
-import { NGTriggerEventHistoryResponse } from 'services/pipeline-ng'
+import { NGTriggerEventHistoryResponse, NGTriggerSourceV2 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
+import { TriggerArtifactType } from '@triggers/components/Triggers/TriggerInterface'
 import css from '../TriggerLandingPage/TriggerActivityHistoryPage/TriggerActivityHistoryPage.module.scss'
 
 interface PayloadDrawerInterface {
@@ -108,3 +109,26 @@ export const PayloadDrawer = ({
     </Drawer>
   )
 }
+
+export const isWebhookTrigger = (triggerType: NGTriggerSourceV2['type']): boolean => {
+  return triggerType === 'Webhook'
+}
+
+export const artifactTriggerTypes: Array<TriggerArtifactType> = [
+  'Gcr',
+  'Ecr',
+  'DockerRegistry',
+  'Nexus3Registry',
+  'Nexus2Registry',
+  'ArtifactoryRegistry',
+  'Acr',
+  'AmazonS3',
+  'Jenkins',
+  'CustomArtifact',
+  'GoogleArtifactRegistry',
+  'GithubPackageRegistry',
+  'AzureArtifacts',
+  'AmazonMachineImage',
+  'GoogleCloudStorage',
+  'Bamboo'
+]

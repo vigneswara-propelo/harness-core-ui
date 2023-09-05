@@ -5808,13 +5808,17 @@ export interface StringsMap {
   'triggers.triggerCouldNotBeSavedContent': string
   'triggers.triggerCouldNotBeSavedGenericError': string
   'triggers.triggerCouldNotBeSavedTitle': string
+  'triggers.triggerExplorer.artifactHelp.step1': string
+  'triggers.triggerExplorer.artifactHelp.step2': string
   'triggers.triggerExplorer.emptyStateMessage': string
   'triggers.triggerExplorer.hidePanel': string
   'triggers.triggerExplorer.pageHeading': string
   'triggers.triggerExplorer.pageSubHeading': string
+  'triggers.triggerExplorer.searchArtifactTriggers': string
   'triggers.triggerExplorer.searchPlaceholder': string
-  'triggers.triggerExplorer.searchTriggers': string
   'triggers.triggerExplorer.searchWebhookTriggerLabel': string
+  'triggers.triggerExplorer.searchWebhookTriggers': string
+  'triggers.triggerExplorer.selectArtifactType': string
   'triggers.triggerExplorer.selectTriggerType': string
   'triggers.triggerExplorer.showPanel': string
   'triggers.triggerExplorer.tabName': string

@@ -36,7 +36,7 @@ import type { FilterInterface, FilterDataInterface } from '@common/components/Fi
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 
 import { useFiltersContext } from '@cd/context/FiltersContext'
-import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@cd/components/EnvironmentsV2/PageTemplate/utils'
+import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@common/constants/Pagination'
 
 import EnvironmentGroupsFilterForm from './EnvironmentGroupsFilterForm'
 import type { EnvironmentGroupListQueryParams } from '../utils'

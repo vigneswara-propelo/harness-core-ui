@@ -31,7 +31,7 @@ import {
   PageQueryParams,
   PageQueryParamsWithDefaults,
   usePageQueryParamOptions
-} from '@cd/components/EnvironmentsV2/PageTemplate/utils'
+} from '@common/constants/Pagination'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'

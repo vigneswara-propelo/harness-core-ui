@@ -3,6 +3,8 @@ import { Icon, IconName } from '@harness/icons'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { NGTriggerSourceV2 } from 'services/pipeline-ng'
+import { isWebhookTrigger } from '../utils/TriggerActivityUtils'
 import css from '../views/TriggerExplorer.module.scss'
 
 interface WebhookInfo {
@@ -10,17 +12,21 @@ interface WebhookInfo {
   info: string
 }
 
-export const WebhookTriggerHelpPanel = (): JSX.Element => {
+export const TriggerExplorerHelpPanel = ({ triggerType }: { triggerType: NGTriggerSourceV2['type'] }): JSX.Element => {
   const { getString } = useStrings()
   const steps: WebhookInfo[] = useMemo(
     () => [
       {
         iconName: 'terminal',
-        info: getString('triggers.triggerExplorer.webhookHelp.step1')
+        info: isWebhookTrigger(triggerType)
+          ? getString('triggers.triggerExplorer.webhookHelp.step1')
+          : getString('triggers.triggerExplorer.artifactHelp.step1')
       },
       {
         iconName: 'governance-policy-set',
-        info: getString('triggers.triggerExplorer.webhookHelp.step2')
+        info: isWebhookTrigger(triggerType)
+          ? getString('triggers.triggerExplorer.webhookHelp.step2')
+          : getString('triggers.triggerExplorer.artifactHelp.step2')
       },
 
       {
@@ -28,7 +34,7 @@ export const WebhookTriggerHelpPanel = (): JSX.Element => {
         info: getString('triggers.triggerExplorer.webhookHelp.step3')
       }
     ],
-    [getString]
+    [getString, triggerType]
   )
   return (
     <Layout.Horizontal padding={{ top: 'large', left: 'xlarge' }} width={'90%'}>

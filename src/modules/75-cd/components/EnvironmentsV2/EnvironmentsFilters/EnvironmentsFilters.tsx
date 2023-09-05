@@ -36,6 +36,7 @@ import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelec
 
 import { useFiltersContext } from '@cd/context/FiltersContext'
 
+import { PageQueryParams, PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@common/constants/Pagination'
 import EnvironmentsFilterForm from './EnvironmentsFilterForm'
 import {
   createRequestBodyPayload,
@@ -43,7 +44,6 @@ import {
   getFilterByIdentifier,
   getMultiSelectFromOptions
 } from './filterUtils'
-import { PageQueryParams, PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '../PageTemplate/utils'
 
 const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 

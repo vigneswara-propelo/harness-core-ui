@@ -45,15 +45,15 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
-import { usePageStore } from './PageContext'
-import NoData from './NoData'
-import { getHasFilterIdentifier, getHasFilters } from '../EnvironmentsFilters/filterUtils'
 import {
   PageQueryParams,
   PageQueryParamsWithDefaults,
   PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
   usePageQueryParamOptions
-} from './utils'
+} from '@common/constants/Pagination'
+import { usePageStore } from './PageContext'
+import NoData from './NoData'
+import { getHasFilterIdentifier, getHasFilters } from '../EnvironmentsFilters/filterUtils'
 
 import css from './PageTemplate.module.scss'
 

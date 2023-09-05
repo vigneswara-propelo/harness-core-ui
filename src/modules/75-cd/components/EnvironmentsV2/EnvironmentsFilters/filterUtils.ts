@@ -13,7 +13,7 @@ import { StringUtils } from '@common/exports'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
-import type { PageQueryParams } from '../PageTemplate/utils'
+import { PageQueryParams } from '@common/constants/Pagination'
 
 export const getHasFilterIdentifier = (filterIdentifier?: string): boolean =>
   Boolean(filterIdentifier && filterIdentifier !== StringUtils.getIdentifierFromName(UNSAVED_FILTER))
