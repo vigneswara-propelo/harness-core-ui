@@ -38,3 +38,10 @@
     color: var(--grey-400);
   }
 }
+
+.monitoredServiceContainer {
+  width: 874px !important;
+  border-radius: var(--spacing-small);
+  background: var(--primary-1) !important;
+  padding: var(--spacing-small) var(--spacing-medium) !important;
+}

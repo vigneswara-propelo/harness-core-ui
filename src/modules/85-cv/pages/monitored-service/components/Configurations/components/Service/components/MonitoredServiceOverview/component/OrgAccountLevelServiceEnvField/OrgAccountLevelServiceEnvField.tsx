@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Formik, SelectOption, useToggleOpen } from '@harness/uicore'
+import { Formik, Layout, SelectOption, useToggleOpen, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
@@ -41,33 +42,49 @@ export default function OrgAccountLevelServiceEnvField({
   return (
     <>
       {showService && (
-        <MultiTypeServiceField
-          name="serviceRef"
-          placeholder={getString('cv.selectCreateService')}
-          label={getString('cv.healthSource.serviceLabel')}
-          isOnlyFixedType={!isTemplate}
-          openAddNewModal={openAddServiceModal}
-          setRefValue={isTemplate}
-          onChange={service => onValueChange({ value: service, isTemplate, onSuccess: serviceOnSelect })}
-          {...COMMON_FIELDS_PROPS}
-        />
+        <>
+          <Layout.Vertical padding={{ top: 'large' }}>
+            <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+              {getString('service')}
+            </Text>
+            <Text>{getString('cv.monitoredServices.serviceDescription')}</Text>
+          </Layout.Vertical>
+          <MultiTypeServiceField
+            name="serviceRef"
+            placeholder={getString('cv.selectCreateService')}
+            label={'Service'}
+            isOnlyFixedType={!isTemplate}
+            openAddNewModal={openAddServiceModal}
+            setRefValue={isTemplate}
+            onChange={service => onValueChange({ value: service, isTemplate, onSuccess: serviceOnSelect })}
+            {...COMMON_FIELDS_PROPS}
+          />
+        </>
       )}
       {showEnvironment && (
-        <MultiTypeEnvironmentField
-          name="environmentRef"
-          labelClass={cx({ [css.multiSelectEnvDropdown]: isInfra })}
-          label={getString('cv.healthSource.environmentLabel')}
-          placeholder={getString('cv.selectOrCreateEnv')}
-          isOnlyFixedType={!isTemplate}
-          setRefValue={isTemplate}
-          openAddNewModal={openAddEnvModal}
-          isMultiSelect={isInfra}
-          onMultiSelectChange={(records: SelectOption[]) => {
-            onValueChange({ value: records, isTemplate, onSuccess: environmentOnSelect })
-          }}
-          onChange={env => onValueChange({ value: env, isTemplate, onSuccess: environmentOnSelect })}
-          {...COMMON_FIELDS_PROPS}
-        />
+        <>
+          <Layout.Vertical padding={{ top: 'large' }}>
+            <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+              {getString('environment')}
+            </Text>
+            <Text>{getString('cv.monitoredServices.environmentDescription')}</Text>
+          </Layout.Vertical>
+          <MultiTypeEnvironmentField
+            name="environmentRef"
+            labelClass={cx({ [css.multiSelectEnvDropdown]: isInfra })}
+            label={'Environment'}
+            placeholder={getString('cv.selectOrCreateEnv')}
+            isOnlyFixedType={!isTemplate}
+            setRefValue={isTemplate}
+            openAddNewModal={openAddEnvModal}
+            isMultiSelect={isInfra}
+            onMultiSelectChange={(records: SelectOption[]) => {
+              onValueChange({ value: records, isTemplate, onSuccess: environmentOnSelect })
+            }}
+            onChange={env => onValueChange({ value: env, isTemplate, onSuccess: environmentOnSelect })}
+            {...COMMON_FIELDS_PROPS}
+          />
+        </>
       )}
       <ServiceEnvModal
         service={{

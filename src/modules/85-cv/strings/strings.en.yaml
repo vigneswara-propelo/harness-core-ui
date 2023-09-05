@@ -653,6 +653,10 @@ monitoredServices:
     noData: No data available for service dependencies
   assignLabel: Select the services you want to apply the metric
   continuousVerification: Continuous Verification
+  defineServiceEnvironment: Define a service and environment
+  defineServiceEnvironmentDescription: To set up a monitored service for a particular application service, simply choose the service type and let Harness automatically create a Monitored Service by combining the names of the Service and Environment.
+  serviceDescription: A Service represents your microservices and other workloads.
+  environmentDescription: Location or system where the service is deployed (QA, Prod, etc).
 commonMonitoredServices:
   goTo: go to
   agentConfiguration: agent configuration

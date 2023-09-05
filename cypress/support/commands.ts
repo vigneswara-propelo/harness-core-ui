@@ -337,7 +337,7 @@ Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   cy.contains('span', 'Service is required').should('not.exist')
 
   cy.get('input[name="environment"]').click()
-  cy.contains('p', 'QA').click({ force: true })
+  cy.contains('p', 'Dev').click({ force: true })
 
   cy.contains('span', 'Environment is required').should('not.exist')
   cy.contains('span', 'Monitored Service Name is required').should('not.exist')

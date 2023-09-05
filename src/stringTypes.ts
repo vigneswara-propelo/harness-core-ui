@@ -9525,6 +9525,8 @@ export interface StringsMap {
   'cv.monitoredServices.changesTable.impact': string
   'cv.monitoredServices.continuousVerification': string
   'cv.monitoredServices.copyET': string
+  'cv.monitoredServices.defineServiceEnvironment': string
+  'cv.monitoredServices.defineServiceEnvironmentDescription': string
   'cv.monitoredServices.deleteMonitoredServiceWarning': string
   'cv.monitoredServices.deleteService': string
   'cv.monitoredServices.dependenciesHealth': string
@@ -9532,6 +9534,7 @@ export interface StringsMap {
   'cv.monitoredServices.dependencyHealthScoreDataNotAvailable': string
   'cv.monitoredServices.editMonitoredServices': string
   'cv.monitoredServices.editService': string
+  'cv.monitoredServices.environmentDescription': string
   'cv.monitoredServices.environmentValidation': string
   'cv.monitoredServices.failedToFetchHealthScore': string
   'cv.monitoredServices.failedToFetchSummaryData': string
@@ -9556,6 +9559,7 @@ export interface StringsMap {
   'cv.monitoredServices.searchMonitoresService': string
   'cv.monitoredServices.serviceAndEnvironment': string
   'cv.monitoredServices.serviceDependencies.noData': string
+  'cv.monitoredServices.serviceDescription': string
   'cv.monitoredServices.serviceHealth.anamolies': string
   'cv.monitoredServices.serviceHealth.last24Hrs': string
   'cv.monitoredServices.serviceHealth.last3Days': string

@@ -11,6 +11,7 @@ declare const styles: {
   readonly divider: string
   readonly dropdown: string
   readonly monitoredService: string
+  readonly monitoredServiceContainer: string
   readonly nameTagsDescription: string
   readonly popOverClassName: string
 }

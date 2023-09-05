@@ -14,17 +14,42 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for Monitored
       <div
         class="Layout--vertical StyledProps--main tooltipStyle monitoredService StyledProps--margin-medium"
       >
-        <p
-          class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
-        >
-          overview
-        </p>
         <div
           class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
           >
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+                style="--text-line-clamp: 1;"
+              >
+                cv.monitoredServices.defineServiceEnvironment
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main"
+                style="--text-line-clamp: 1;"
+              >
+                cv.monitoredServices.defineServiceEnvironmentDescription
+              </p>
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+              >
+                service
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                cv.monitoredServices.serviceDescription
+              </p>
+            </div>
             <div
               class="StyledProps--font StyledProps--main"
             >
@@ -32,6 +57,20 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for Monitored
                 class="bp3-button Button--button StyledProps--font StyledProps--main addService Button--with-current-color Button--iconOnly"
                 type="button"
               />
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+              >
+                environment
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                cv.monitoredServices.environmentDescription
+              </p>
             </div>
             <div
               class="StyledProps--font StyledProps--main"
@@ -393,17 +432,42 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for default M
       <div
         class="Layout--vertical StyledProps--main tooltipStyle monitoredService StyledProps--margin-medium"
       >
-        <p
-          class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
-        >
-          overview
-        </p>
         <div
           class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
           >
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+                style="--text-line-clamp: 1;"
+              >
+                cv.monitoredServices.defineServiceEnvironment
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main"
+                style="--text-line-clamp: 1;"
+              >
+                cv.monitoredServices.defineServiceEnvironmentDescription
+              </p>
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+              >
+                service
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                cv.monitoredServices.serviceDescription
+              </p>
+            </div>
             <div
               class="StyledProps--font StyledProps--main"
             >
@@ -411,6 +475,20 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for default M
                 class="bp3-button Button--button StyledProps--font StyledProps--main addService Button--with-current-color Button--iconOnly"
                 type="button"
               />
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+              >
+                environment
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                cv.monitoredServices.environmentDescription
+              </p>
             </div>
             <div
               class="StyledProps--font StyledProps--main"

@@ -106,7 +106,7 @@ describe('Unit tests for MonitoredServiceOverview', () => {
     const { container } = render(<WrapperComponent onSubmit={onSubmitMock} initialValues={{}} />)
 
     await waitFor(() => expect(container.querySelector('[class*="monitoredService"]')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="dropdown"]').length).toBe(2)
+    expect(container.querySelectorAll('[class*="dropdown"]').length).toBe(3)
 
     fireEvent.click(container.querySelector('.changeService')!)
     await waitFor(() => expect(container.querySelector('input[value="service2"]')).not.toBeNull())

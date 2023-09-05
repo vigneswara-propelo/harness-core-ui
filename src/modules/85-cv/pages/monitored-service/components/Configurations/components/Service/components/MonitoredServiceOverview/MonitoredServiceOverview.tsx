@@ -13,9 +13,11 @@ import {
   useConfirmationDialog,
   MultiTypeInputType,
   AllowedTypes,
-  SelectOption
+  SelectOption,
+  Text,
+  Container
 } from '@harness/uicore'
-import { Intent } from '@harness/design-system'
+import { Color, Intent } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { MonitoredServiceDTO } from 'services/cv'
@@ -99,112 +101,137 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
   }, [serviceIdentifier, environmentIdentifier])
 
   return (
-    <CardWithOuterTitle title={config && isEdit ? '' : getString('overview')} className={css.monitoredService}>
+    <CardWithOuterTitle className={css.monitoredService}>
       {!isEdit ? (
-        <>
-          <Layout.Horizontal spacing="large">
-            {isCDModule || !isSRMLicensePresentAndActive ? null : (
-              <FormInput.Select
-                name="type"
-                tooltipProps={{ dataTooltipId: 'monitoredServiceType' }}
-                items={MonitoredServiceTypeOptions}
-                label={getString('typeLabel')}
-                value={
-                  formikProps.values?.type === 'Infrastructure'
-                    ? MonitoredServiceTypeOptions[1]
-                    : MonitoredServiceTypeOptions[0]
+        <Layout.Vertical spacing="large">
+          <Layout.Vertical>
+            <Text
+              font={{ weight: 'semi-bold', size: 'medium' }}
+              color={Color.BLACK}
+              padding={{ bottom: 'small' }}
+              lineClamp={1}
+            >
+              {getString('cv.monitoredServices.defineServiceEnvironment')}
+            </Text>
+            <Text lineClamp={1}>{getString('cv.monitoredServices.defineServiceEnvironmentDescription')}</Text>
+          </Layout.Vertical>
+          {isCDModule || !isSRMLicensePresentAndActive ? null : (
+            <FormInput.Select
+              name="type"
+              tooltipProps={{ dataTooltipId: 'monitoredServiceType' }}
+              items={MonitoredServiceTypeOptions}
+              label={getString('common.serviceType')}
+              value={
+                formikProps.values?.type === 'Infrastructure'
+                  ? MonitoredServiceTypeOptions[1]
+                  : MonitoredServiceTypeOptions[0]
+              }
+              onChange={item => {
+                if (formikProps.values.type !== item.value) {
+                  openDialog()
+                  formikProps.setFieldValue('type', formikProps.values.type)
+                  setTempServiceType(item.value as MonitoredServiceDTO['type'])
                 }
-                onChange={item => {
-                  if (formikProps.values.type !== item.value) {
-                    openDialog()
-                    formikProps.setFieldValue('type', formikProps.values.type)
-                    setTempServiceType(item.value as MonitoredServiceDTO['type'])
+              }}
+              className={css.dropdown}
+            />
+          )}
+
+          {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+            <OrgAccountLevelServiceEnvField
+              isTemplate={isTemplate}
+              environmentOnSelect={onEnvSelect}
+              serviceOnSelect={onServiceSelect}
+            />
+          ) : (
+            <>
+              <Layout.Vertical padding={{ top: 'large' }}>
+                <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+                  {getString('service')}
+                </Text>
+                <Text>{getString('cv.monitoredServices.serviceDescription')}</Text>
+              </Layout.Vertical>
+              <HarnessServiceAsFormField
+                key={keys[0]}
+                customRenderProps={{
+                  name: 'serviceRef',
+                  label: 'Service'
+                }}
+                serviceProps={{
+                  className: css.dropdown,
+                  disabled: isEdit,
+                  isMultiType: isTemplate,
+                  allowableTypes: multiTypeByScope,
+                  item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
+                  options: serviceOptions,
+                  onSelect: (selectedService: SelectOption) =>
+                    serviceOnSelect(isTemplate, selectedService, formikProps),
+                  onNewCreated: newOption => {
+                    if (newOption?.identifier && newOption.name) {
+                      const newServiceOption = { label: newOption.name, value: newOption.identifier }
+                      setServiceOptions([newServiceOption, ...serviceOptions])
+                      updateMonitoredServiceNameForService(formikProps, newServiceOption)
+                    }
                   }
                 }}
               />
-            )}
-            {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-              <OrgAccountLevelServiceEnvField
-                isTemplate={isTemplate}
-                environmentOnSelect={onEnvSelect}
-                serviceOnSelect={onServiceSelect}
-              />
-            ) : (
-              <>
-                <HarnessServiceAsFormField
-                  key={keys[0]}
-                  customRenderProps={{
-                    name: 'serviceRef',
-                    label: getString('cv.healthSource.serviceLabel')
-                  }}
-                  serviceProps={{
+              <Layout.Vertical padding={{ top: 'large' }}>
+                <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+                  {getString('environment')}
+                </Text>
+                <Text>{getString('cv.monitoredServices.environmentDescription')}</Text>
+              </Layout.Vertical>
+              <HarnessEnvironmentAsFormField
+                key={keys[1]}
+                customRenderProps={{
+                  name: 'environmentRef',
+                  label: 'Environment'
+                }}
+                isMultiSelectField={formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE}
+                environmentProps={
+                  {
                     className: css.dropdown,
                     disabled: isEdit,
                     isMultiType: isTemplate,
                     allowableTypes: multiTypeByScope,
-                    item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
-                    options: serviceOptions,
-                    onSelect: (selectedService: SelectOption) =>
-                      serviceOnSelect(isTemplate, selectedService, formikProps),
+                    popOverClassName: css.popOverClassName,
+                    item:
+                      formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
+                        ? environmentOptions.filter(it => values.environmentRef?.includes(it.value as string))
+                        : environmentOptions.find(item => item?.value === values.environmentRef) ||
+                          values.environmentRef,
+                    onSelect: onEnvSelect,
+                    options: environmentOptions,
                     onNewCreated: newOption => {
                       if (newOption?.identifier && newOption.name) {
-                        const newServiceOption = { label: newOption.name, value: newOption.identifier }
-                        setServiceOptions([newServiceOption, ...serviceOptions])
-                        updateMonitoredServiceNameForService(formikProps, newServiceOption)
+                        const newEnvOption = { label: newOption.name, value: newOption.identifier }
+                        setEnvironmentOptions([newEnvOption, ...environmentOptions])
+                        updatedMonitoredServiceNameForEnv(formikProps, newEnvOption, formikProps.values?.type)
                       }
                     }
-                  }}
-                />
-                <HarnessEnvironmentAsFormField
-                  key={keys[1]}
-                  customRenderProps={{
-                    name: 'environmentRef',
-                    label: getString('cv.healthSource.environmentLabel')
-                  }}
-                  isMultiSelectField={formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE}
-                  environmentProps={
-                    {
-                      className: css.dropdown,
-                      disabled: isEdit,
-                      isMultiType: isTemplate,
-                      allowableTypes: multiTypeByScope,
-                      popOverClassName: css.popOverClassName,
-                      item:
-                        formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
-                          ? environmentOptions.filter(it => values.environmentRef?.includes(it.value as string))
-                          : environmentOptions.find(item => item?.value === values.environmentRef) ||
-                            values.environmentRef,
-                      onSelect: onEnvSelect,
-                      options: environmentOptions,
-                      onNewCreated: newOption => {
-                        if (newOption?.identifier && newOption.name) {
-                          const newEnvOption = { label: newOption.name, value: newOption.identifier }
-                          setEnvironmentOptions([newEnvOption, ...environmentOptions])
-                          updatedMonitoredServiceNameForEnv(formikProps, newEnvOption, formikProps.values?.type)
-                        }
-                      }
-                    } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
-                  }
-                />
-              </>
-            )}
-          </Layout.Horizontal>
+                  } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
+                }
+              />
+            </>
+          )}
           {!isTemplate && <hr className={css.divider} />}
-        </>
+        </Layout.Vertical>
       ) : null}
       {!isTemplate && (
-        <NameIdDescriptionTags
-          formikProps={formikProps}
-          inputGroupProps={{
-            disabled: formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE ? false : true
-          }}
-          className={css.nameTagsDescription}
-          identifierProps={{
-            isIdentifierEditable: formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE ? true : false,
-            inputLabel: getString('cv.monitoredServices.monitoredServiceName')
-          }}
-          tooltipProps={{ dataTooltipId: 'NameIdDescriptionTagsHealthSource' }}
-        />
+        <Container className={css.monitoredServiceContainer}>
+          <NameIdDescriptionTags
+            formikProps={formikProps}
+            inputGroupProps={{
+              disabled: formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE ? false : true
+            }}
+            className={css.nameTagsDescription}
+            identifierProps={{
+              isIdentifierEditable: formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE ? true : false,
+              inputLabel: getString('cv.monitoredServices.monitoredServiceName')
+            }}
+            tooltipProps={{ dataTooltipId: 'NameIdDescriptionTagsHealthSource' }}
+          />
+        </Container>
       )}
     </CardWithOuterTitle>
   )

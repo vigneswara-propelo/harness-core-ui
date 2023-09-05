@@ -91,7 +91,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Cancel').click({ force: true })
     cy.contains('h4', 'New Environment').should('not.exist')
     cy.get('[data-testid="environment"] input').click()
-    cy.contains('p', 'QA').click({ force: true })
+    cy.contains('p', 'Dev').click({ force: true })
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {
       cy.contains('p', 'Save Empty Monitored Service Template (1)').should('be.visible')
@@ -117,7 +117,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Environment is required').should('be.visible')
     cy.setMultiTypeService()
     cy.get('[data-testid="environment"] input').click()
-    cy.contains('p', 'QA').click({ force: true })
+    cy.contains('p', 'Dev').click({ force: true })
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {
       cy.contains('p', 'Save Empty Monitored Service Template (1)').should('be.visible')

@@ -169,7 +169,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="service"]').click()
     cy.contains('p', 'Service 101').click({ force: true })
     cy.get('input[name="environment"]').click()
-    cy.contains('p', 'QA').click({ force: true })
+    cy.contains('p', 'Dev').click({ force: true })
 
     cy.get('button[data-testid="cr-field-sources.healthSources.0.spec.connectorRef"]').click()
     cy.contains('p', 'appdtest').click()
