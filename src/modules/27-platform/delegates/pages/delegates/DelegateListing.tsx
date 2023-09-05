@@ -58,7 +58,7 @@ import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions, CDActions } from '@common/constants/TrackingConstants'
@@ -549,7 +549,11 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
         ) : delegateFetchError && shouldShowError(delegateFetchError) ? (
           <div style={{ paddingTop: '200px' }}>
             <PageError
-              message={(delegateFetchError?.data as Error)?.message || delegateFetchError?.message}
+              message={
+                getRBACErrorMessage(delegateFetchError as RBACError) ||
+                (delegateFetchError?.data as Error)?.message ||
+                delegateFetchError?.message
+              }
               onClick={(e: React.MouseEvent<Element, MouseEvent>) => {
                 e.preventDefault()
                 e.stopPropagation()
