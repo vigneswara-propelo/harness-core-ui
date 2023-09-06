@@ -128,7 +128,8 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
     body: {
       stageIdentifiers: []
     },
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
+    ...(isNewGitSyncRemotePipeline && { debounce: 300 })
   })
 
   const onReconcile = (inpSetId: string): void => {
@@ -263,7 +264,7 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
     ]
   )
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (template?.data?.inputSetTemplateYaml && selectedInputSets && selectedInputSets.length > 0) {
       const inputSetTemplate = memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)
       const fetchData = async (): Promise<void> => {
@@ -302,7 +303,6 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     template?.data?.inputSetTemplateYaml,
-    selectedInputSets?.length,
     selectedInputSets,
     accountId,
     projectIdentifier,

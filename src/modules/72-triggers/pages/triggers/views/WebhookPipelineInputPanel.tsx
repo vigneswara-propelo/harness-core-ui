@@ -218,7 +218,8 @@ function WebhookPipelineInputPanelForm({
     body: {
       stageIdentifiers: formikProps.values?.stagesToExecute ?? []
     },
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
+    ...(gitAwareForTriggerEnabled && { debounce: 300 })
   })
 
   const onReconcile = (inpSetId: string): void => {
@@ -359,7 +360,7 @@ function WebhookPipelineInputPanelForm({
     ]
   )
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (template?.data?.inputSetTemplateYaml && selectedInputSets && selectedInputSets.length > 0) {
       const inputSetTemplate = memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)
 
@@ -411,7 +412,6 @@ function WebhookPipelineInputPanelForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     template?.data?.inputSetTemplateYaml,
-    selectedInputSets?.length,
     selectedInputSets,
     accountId,
     projectIdentifier,
