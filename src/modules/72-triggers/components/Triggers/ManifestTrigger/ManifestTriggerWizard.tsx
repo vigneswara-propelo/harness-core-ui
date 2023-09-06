@@ -22,7 +22,11 @@ import {
   useConfirmationDialog,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import {
+  getPipelineInputs,
+  InputsResponseBody,
+  useGetIndividualStaticSchemaQuery
+} from '@harnessio/react-pipeline-service-client'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -138,7 +142,7 @@ export default function ManifestTriggerWizard(
   const history = useHistory()
   const { getString } = useStrings()
   const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -253,8 +257,19 @@ export default function ManifestTriggerWizard(
         orgIdentifier,
         projectIdentifier
       })
-    }
+    },
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
+  const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'trigger'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     const res = getArtifactManifestTriggerYaml({
       values,
@@ -1175,9 +1190,9 @@ export default function ManifestTriggerWizard(
           yamlObjectKey: 'trigger',
           showVisualYaml: !props.isSimplifiedYAML,
           convertFormikValuesToYaml,
-          schema: triggerSchema?.data,
+          schema: defaultTo(triggerSchema?.data, triggerStaticSchema?.content.data),
           onYamlSubmit: submitTrigger,
-          loading: loadingYamlSchema,
+          loading: defaultTo(loadingYamlSchema, loadingStaticYamlSchema),
           invocationMap: invocationMapWebhook
         }}
         renderErrorsStrip={renderErrorsStrip}

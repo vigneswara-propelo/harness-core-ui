@@ -23,7 +23,11 @@ import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import {
+  getPipelineInputs,
+  InputsResponseBody,
+  useGetIndividualStaticSchemaQuery
+} from '@harnessio/react-pipeline-service-client'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@platform/connectors/constants'
@@ -207,7 +211,8 @@ const TriggersWizardPage = (): JSX.Element => {
   const {
     CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled,
 
-    CI_YAML_VERSIONING
+    CI_YAML_VERSIONING,
+    PIE_STATIC_YAML_SCHEMA
   } = useFeatureFlags()
 
   const isSimplifiedYAML = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
@@ -307,8 +312,19 @@ const TriggersWizardPage = (): JSX.Element => {
         orgIdentifier,
         projectIdentifier
       })
-    }
+    },
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
+  const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'trigger'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
 
   useEffect(() => {
     if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
@@ -2025,9 +2041,9 @@ const TriggersWizardPage = (): JSX.Element => {
           yamlObjectKey: 'trigger',
           showVisualYaml: !isSimplifiedYAML,
           convertFormikValuesToYaml,
-          schema: triggerSchema?.data,
+          schema: defaultTo(triggerSchema?.data, triggerStaticSchema?.content.data),
           onYamlSubmit: submitTrigger,
-          loading: loadingYamlSchema,
+          loading: defaultTo(loadingYamlSchema, loadingStaticYamlSchema),
           invocationMap: invocationMapWebhook,
           positionInHeader: true
         }}

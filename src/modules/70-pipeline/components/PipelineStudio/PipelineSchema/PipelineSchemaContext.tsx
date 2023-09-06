@@ -11,11 +11,9 @@ import { defaultTo } from 'lodash-es'
 import { useGetIndividualStaticSchemaQuery } from '@harnessio/react-pipeline-service-client'
 import {
   GetSchemaYamlQueryParams,
-  GetStaticSchemaYamlQueryParams,
   ResponseJsonNode,
   ResponseYamlSchemaResponse,
   useGetSchemaYaml,
-  useGetStaticSchemaYaml,
   useGetStepYamlSchema
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -60,14 +58,16 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     lazy: PIE_STATIC_YAML_SCHEMA
   })
 
-  const { data: pipelineStaticSchema, error: staticSchemaError } = useGetStaticSchemaYaml({
-    queryParams: {
-      ...commonQueryParams
-    } as GetStaticSchemaYamlQueryParams,
-    lazy: !PIE_STATIC_YAML_SCHEMA
-  })
-
-  const pipelineSchema = defaultTo(pipelineSchemaV1, pipelineStaticSchema)
+  const { data: pipelineStaticSchema, error: staticSchemaError } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'pipeline'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
 
   const error = defaultTo(schemaError, staticSchemaError)
 
@@ -99,13 +99,15 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     data: { schema: loopingStrategyStaticSchema?.content.data }
   })
 
-  if (error?.message) {
-    showError(getRBACErrorMessage(error), undefined, 'pipeline.get.yaml.error')
+  const pipelineSchema = defaultTo(pipelineSchemaV1, pipelineStaticSchema?.content as ResponseJsonNode)
+
+  if ((error as any)?.message) {
+    showError(getRBACErrorMessage(error as any), undefined, 'pipeline.get.yaml.error')
   }
   return (
     <PipelineSchemaContext.Provider
       value={{
-        pipelineSchema,
+        pipelineSchema: pipelineSchema,
         loopingStrategySchema: loopingStrategySchema as ResponseYamlSchemaResponse
       }}
     >

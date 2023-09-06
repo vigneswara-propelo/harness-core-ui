@@ -20,6 +20,7 @@ import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { isEmpty, get, pickBy, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
+import { useGetIndividualStaticSchemaQuery } from '@harnessio/react-pipeline-service-client'
 import { NGTriggerConfigV2, useGetTriggerDetails, useGetSchemaYaml, useGetPipelineSummary } from 'services/pipeline-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { TagsPopover, PageSpinner } from '@common/components'
@@ -175,7 +176,7 @@ export default function TriggerDetailPage(): JSX.Element {
     >
   >()
 
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const { data: triggerResponse, loading: loadingTrigger } = useGetTriggerDetails({
     triggerIdentifier,
@@ -220,8 +221,20 @@ export default function TriggerDetailPage(): JSX.Element {
       orgIdentifier,
       accountIdentifier: accountId,
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
-    }
+    },
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
+
+  const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'trigger'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
 
   let triggerJSON
   const triggerResponseYaml = get(triggerResponse, 'data.yaml', '')
@@ -354,13 +367,13 @@ export default function TriggerDetailPage(): JSX.Element {
             </Layout.Horizontal>
           ) : (
             <div className={css.editor}>
-              {loading ? (
+              {defaultTo(loading, loadingStaticYamlSchema) ? (
                 <PageSpinner />
               ) : (
                 <YAMLBuilder
                   {...yamlBuilderReadOnlyModeProps}
                   isReadOnlyMode={true}
-                  schema={pipelineSchema?.data}
+                  schema={defaultTo(pipelineSchema?.data, triggerStaticSchema?.content?.data)}
                   onEnableEditMode={goToEditWizard}
                   isEditModeSupported={!isPipelineInvalid}
                   yamlSanityConfig={{

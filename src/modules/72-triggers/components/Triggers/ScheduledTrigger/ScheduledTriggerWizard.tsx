@@ -24,6 +24,7 @@ import {
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
+import { useGetIndividualStaticSchemaQuery } from '@harnessio/react-pipeline-service-client'
 import {
   NGTriggerConfigV2,
   PipelineInfoConfig,
@@ -74,6 +75,7 @@ import {
 import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
 import type { TriggerProps } from '../Trigger'
@@ -108,6 +110,7 @@ export default function ScheduledTriggerWizard(
 
   const history = useHistory()
   const { getString } = useStrings()
+  const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
   const { showSuccess, showError, clear } = useToaster()
 
   const {
@@ -173,8 +176,19 @@ export default function ScheduledTriggerWizard(
         orgIdentifier,
         projectIdentifier
       })
-    }
+    },
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
+  const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'trigger'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
 
   const returnToTriggersPage = (): void =>
     history.push(
@@ -1021,9 +1035,9 @@ export default function ScheduledTriggerWizard(
         yamlBuilderReadOnlyModeProps,
         yamlObjectKey: 'trigger',
         convertFormikValuesToYaml,
-        schema: triggerSchema?.data,
+        schema: defaultTo(triggerSchema?.data, triggerStaticSchema?.content.data),
         onYamlSubmit: submitTrigger,
-        loading: loadingYamlSchema
+        loading: defaultTo(loadingYamlSchema, loadingStaticYamlSchema)
       }}
       renderErrorsStrip={renderErrorsStrip}
       onFormikEffect={onFormikEffect}

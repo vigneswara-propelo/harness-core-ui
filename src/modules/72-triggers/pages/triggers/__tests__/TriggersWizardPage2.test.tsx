@@ -132,6 +132,10 @@ jest.mock('services/portal', () => ({
   })
 }))
 
+jest.mock('@harnessio/react-pipeline-service-client', () => ({
+  useGetIndividualStaticSchemaQuery: jest.fn(() => ({}))
+}))
+
 describe('Manifest Trigger Tests', () => {
   beforeAll(() => {
     TriggerFactory.registerTriggerForm(TriggerFormType.Manifest, {

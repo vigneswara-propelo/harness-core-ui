@@ -99,6 +99,10 @@ jest.mock('services/cd-ng-rq', () => ({
   })
 }))
 
+jest.mock('@harnessio/react-pipeline-service-client', () => ({
+  useGetIndividualStaticSchemaQuery: jest.fn(() => ({}))
+}))
+
 const mockUpdate = jest.fn().mockReturnValue(Promise.resolve({ data: {}, status: {} }))
 
 const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (

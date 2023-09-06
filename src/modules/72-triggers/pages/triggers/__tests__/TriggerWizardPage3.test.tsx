@@ -105,6 +105,9 @@ jest.mock('services/portal', () => ({
     return { data: mockRegions, refetch: jest.fn(), error: null, loading: false }
   })
 }))
+jest.mock('@harnessio/react-pipeline-service-client', () => ({
+  useGetIndividualStaticSchemaQuery: jest.fn(() => ({}))
+}))
 describe('Artifact Trigger Tests', () => {
   beforeAll(() => {
     TriggerFactory.registerTriggerForm(TriggerFormType.Artifact, {

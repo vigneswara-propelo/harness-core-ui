@@ -26,6 +26,7 @@ import {
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
+import { useGetIndividualStaticSchemaQuery } from '@harnessio/react-pipeline-service-client'
 import {
   NGTriggerConfigV2,
   PipelineInfoConfig,
@@ -123,7 +124,7 @@ export default function WebhookTriggerWizard(
   props: TriggerProps<any> & { children: JSX.Element[] }
 ): React.ReactElement {
   const { isNewTrigger, baseType, triggerData, type: sourceRepo } = props
-  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled } = useFeatureFlags()
+  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
@@ -198,8 +199,19 @@ export default function WebhookTriggerWizard(
         orgIdentifier,
         projectIdentifier
       })
-    }
+    },
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
+  const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'trigger'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
 
   const { isGithubWebhookAuthenticationEnabled } = useIsGithubWebhookAuthenticationEnabled()
 
@@ -1512,9 +1524,9 @@ export default function WebhookTriggerWizard(
         yamlBuilderReadOnlyModeProps,
         yamlObjectKey: 'trigger',
         convertFormikValuesToYaml,
-        schema: triggerSchema?.data,
+        schema: defaultTo(triggerSchema?.data, triggerStaticSchema?.content.data),
         onYamlSubmit: submitTrigger,
-        loading: loadingYamlSchema,
+        loading: defaultTo(loadingYamlSchema, loadingStaticYamlSchema),
         invocationMap: invocationMapWebhook
       }}
       renderErrorsStrip={renderErrorsStrip}

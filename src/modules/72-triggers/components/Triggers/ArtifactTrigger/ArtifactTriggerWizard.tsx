@@ -22,7 +22,11 @@ import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import {
+  getPipelineInputs,
+  InputsResponseBody,
+  useGetIndividualStaticSchemaQuery
+} from '@harnessio/react-pipeline-service-client'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import routes from '@common/RouteDefinitions'
@@ -138,7 +142,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
   const history = useHistory()
   const { getString } = useStrings()
   const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -252,8 +256,20 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         orgIdentifier,
         projectIdentifier
       })
-    }
+    },
+    lazy: PIE_STATIC_YAML_SCHEMA
   })
+
+  const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'trigger'
+      }
+    },
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     const res = getArtifactManifestTriggerYaml({
       values,
@@ -1196,9 +1212,9 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
           yamlObjectKey: 'trigger',
           showVisualYaml: !props.isSimplifiedYAML,
           convertFormikValuesToYaml,
-          schema: triggerSchema?.data,
+          schema: defaultTo(triggerSchema?.data, triggerStaticSchema?.content?.data),
           onYamlSubmit: submitTrigger,
-          loading: loadingYamlSchema,
+          loading: defaultTo(loadingYamlSchema, loadingStaticYamlSchema),
           invocationMap: invocationMapWebhook
         }}
         renderErrorsStrip={renderErrorsStrip}

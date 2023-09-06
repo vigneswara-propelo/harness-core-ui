@@ -64,6 +64,10 @@ function TestComponent(): React.ReactElement {
   )
 }
 
+jest.mock('@harnessio/react-pipeline-service-client', () => ({
+  useGetIndividualStaticSchemaQuery: jest.fn(() => ({}))
+}))
+
 describe('Test Trigger Detail Page Test', () => {
   test('should test snapshot view', async () => {
     const datespy = jest.spyOn(Date.prototype, 'toLocaleDateString')
