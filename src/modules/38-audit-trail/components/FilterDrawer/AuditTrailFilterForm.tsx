@@ -164,7 +164,13 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
         disabled={props.formikProps?.values?.['resourceType']?.length !== 1}
         tooltipProps={{ dataTooltipId: 'auditTrails_resourceIdentifier' }}
       />
-      <FormInput.MultiSelect items={auditActions} name="actions" label={getString('action')} key="actions" />
+      <FormInput.MultiSelect
+        items={auditActions}
+        name="actions"
+        label={getString('action')}
+        key="actions"
+        usePortal={true}
+      />
     </>
   )
 }
