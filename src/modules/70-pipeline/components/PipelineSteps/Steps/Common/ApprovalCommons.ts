@@ -6,7 +6,7 @@
  */
 
 // Common helpers and types for approval forms
-import { flatMap, omit } from 'lodash-es'
+import { defaultTo, flatMap, omit } from 'lodash-es'
 import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import {
   ApprovalRejectionCriteria,
@@ -62,7 +62,7 @@ export const getApprovalRejectionCriteriaForSubmit = (
     type: criteria.type,
     spec: {
       matchAnyCondition: criteria.spec.matchAnyCondition,
-      expression: criteria.spec.expression,
+      expression: defaultTo(criteria.spec.expression, ''),
       conditions: criteria.spec.conditions
         ?.filter(filterNonEmptyConditions)
         .map((condition: ApprovalRejectionCriteriaCondition) => {
