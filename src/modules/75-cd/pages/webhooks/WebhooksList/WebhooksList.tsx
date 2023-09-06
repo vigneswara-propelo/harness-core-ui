@@ -7,8 +7,16 @@
 
 import React, { useMemo } from 'react'
 import type { Column } from 'react-table'
-import { TableV2 } from '@harness/uicore'
+import { Dialog, TableV2, useToaster, Text, Container } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
+import cx from 'classnames'
+import { FontVariation, Color } from '@harness/design-system'
+import { GitXWebhookResponse, ListGitxWebhooksOkResponse, deleteGitxWebhook } from '@harnessio/react-ng-manager-client'
+import { useModalHook } from '@harness/use-modal'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   Enabled,
   FolderPath,
@@ -18,26 +26,92 @@ import {
   WebhookName,
   withWebhook
 } from './WebhooksListColumns'
+import NewWebhookModal from '../NewWebhookModal'
+import { processFolderPaths } from '../utils'
+import css from '../Webhooks.module.scss'
 
 export default function WebhooksList({
-  response
-}: // refetch,
-
-{
-  response: any
+  response,
+  refetch
+}: {
+  response: ListGitxWebhooksOkResponse | undefined
   refetch: () => void
 }): JSX.Element {
   const { getString } = useStrings()
-  const handleWebhookEdit = (): void => {
-    // TODO Edit Webhook goes here (open the create modal with data and upsert call)
+  const { getRBACErrorMessage } = useRBACError()
+  const { showError, showSuccess } = useToaster()
+  const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const [rowData, setRowData] = React.useState<GitXWebhookResponse>()
+  const [editable, setEditable] = React.useState(false)
+  const [showCreateModal, hideCreateModal] = useModalHook(
+    /* istanbul ignore next */ () => {
+      const onClosehandler = (): void => {
+        hideCreateModal()
+        setEditable(false)
+        refetch()
+      }
+      return (
+        <Dialog
+          isOpen={true}
+          enforceFocus={false}
+          canEscapeKeyClose
+          canOutsideClickClose
+          onClose={onClosehandler}
+          title={
+            <>
+              <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
+                {editable ? getString('cd.webhooks.editWebhook') : getString('cd.webhooks.newWebhook')}
+              </Text>
+              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
+                {getString('cd.webhooks.createSubtitle')}
+              </Text>{' '}
+            </>
+          }
+          isCloseButtonShown
+          className={cx('padded-dialog', css.dialogStylesWebhook)}
+        >
+          <Container>
+            <NewWebhookModal
+              isEdit={editable}
+              initialData={{
+                name: defaultTo(rowData?.webhook_name, ''),
+                identifier: defaultTo(rowData?.webhook_identifier, ''),
+                connectorRef: defaultTo(rowData?.connector_ref, ''),
+                repo: defaultTo(rowData?.repo_name, ''),
+                folderPaths: defaultTo(processFolderPaths(defaultTo(rowData?.folder_paths, [])), [])
+              }}
+              closeModal={onClosehandler}
+            />
+          </Container>
+        </Dialog>
+      )
+    },
+    [orgIdentifier, projectIdentifier, rowData, editable]
+  )
+
+  const handleWebhookEdit = (id: string): void => {
+    const dataRow = response?.content?.find(temp => {
+      return temp?.webhook_identifier === id
+    })
+    setEditable(true)
+    setRowData(dataRow)
+    showCreateModal()
   }
-  const handleWebhookDelete = async (): Promise<void> => {
-    // TODO Delete Environment goes here
+  const handleWebhookDelete = async (name: string, identifier: string): Promise<void> => {
+    try {
+      await deleteGitxWebhook({
+        'gitx-webhook': identifier
+      })
+      showSuccess(getString('cd.webhooks.deleted', { name: name }))
+      refetch()
+    } catch (e: any) {
+      showError(getRBACErrorMessage(e))
+    }
   }
 
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
-  const envColumns: CustomColumn<any>[] = useMemo(
+  const envColumns: CustomColumn<GitXWebhookResponse>[] = useMemo(
     () => [
       {
         Header: getString('name').toUpperCase(),
@@ -83,9 +157,9 @@ export default function WebhooksList({
     [getString]
   )
   return (
-    <TableV2<any>
+    <TableV2<GitXWebhookResponse>
       columns={envColumns}
-      data={response.content as any}
+      data={response?.content as GitXWebhookResponse[]}
       onRowClick={() => {
         // TODO go to webhook details page goes here
       }}

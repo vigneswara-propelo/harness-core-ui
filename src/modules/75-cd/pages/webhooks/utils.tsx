@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { Scope } from '@common/interfaces/SecretsInterface'
 
 export interface AddWebhookModalData {
@@ -12,7 +13,7 @@ export interface AddWebhookModalData {
   identifier: string
   connectorRef: string
   repo: string
-  folderPaths: { id: string; value: string }[] | string
+  folderPaths: { id: string; value: string }[]
 }
 
 export interface NewWebhookModalProps {
@@ -28,4 +29,8 @@ export const initialWebhookModalData = {
   connectorRef: '',
   repo: '',
   folderPaths: []
+}
+
+export function processFolderPaths(folderPaths: string[]): { id: string; value: string }[] {
+  return [...folderPaths].map(path => ({ id: uuid('', nameSpace()), value: path }))
 }

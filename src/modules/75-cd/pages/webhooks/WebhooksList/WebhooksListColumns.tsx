@@ -133,13 +133,15 @@ export function Enabled({ is_enabled: enabled }: { is_enabled: boolean }): JSX.E
 }
 
 export function WebhookMenu({
+  webhook_name,
   webhook_identifier,
   onEdit,
   onDelete
 }: {
+  webhook_name: string
   webhook_identifier: string
   onEdit: (identifier: string) => void
-  onDelete: (identifier: string) => void
+  onDelete: (name: string, identifier: string) => void
 }): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
@@ -154,7 +156,7 @@ export function WebhookMenu({
     onCloseDialog: async (isConfirmed: boolean) => {
       /* istanbul ignore else */
       if (isConfirmed) {
-        onDelete(webhook_identifier)
+        onDelete(webhook_name, webhook_identifier)
       }
       setMenuOpen(false)
     }

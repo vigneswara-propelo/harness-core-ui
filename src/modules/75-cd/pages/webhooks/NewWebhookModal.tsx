@@ -13,7 +13,7 @@ import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { useCreateGitxWebhookMutation } from '@harnessio/react-ng-manager-client'
+import { useCreateGitxWebhookMutation, useUpdateGitxWebhookMutation } from '@harnessio/react-ng-manager-client'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import ConnectorReferenceField from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
@@ -34,30 +34,48 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
 
   const { data, isLoading: loading, mutate: createWebhook } = useCreateGitxWebhookMutation({})
 
+  const {
+    data: webhookUpdateData,
+    isLoading: loadingUpdateWebhook,
+    mutate: updateWebhook
+  } = useUpdateGitxWebhookMutation({})
+
   function handleSubmit(values: AddWebhookModalData): void {
-    const folder_paths =
-      typeof values.folderPaths === 'string' ? [values.folderPaths] : values.folderPaths.map(path => path.value)
-    createWebhook({
-      body: {
-        connector_ref: values.connectorRef,
-        folder_paths: folder_paths,
-        repo_name: values.repo,
-        webhook_identifier: values.identifier,
-        webhook_name: values.name
-      }
-    })
+    const folder_paths = values.folderPaths.map(path => path.value)
+
+    isEdit
+      ? updateWebhook({
+          'gitx-webhook': values.identifier,
+          body: {
+            connector_ref: values.connectorRef,
+            folder_paths: folder_paths,
+            repo_name: values.repo,
+            webhook_name: values.name
+          }
+        })
+      : createWebhook({
+          body: {
+            connector_ref: values.connectorRef,
+            folder_paths: folder_paths,
+            repo_name: values.repo,
+            webhook_identifier: values.identifier,
+            webhook_name: values.name
+          }
+        })
   }
 
-  if (loading) {
+  if (loading || loadingUpdateWebhook) {
     return <ContainerSpinner message={getString('cd.webhooks.settingUpWebhook')} />
   }
 
-  if (data) {
+  if (data || webhookUpdateData) {
     return (
       <Layout.Vertical flex={{ alignItems: 'center' }}>
         <Icon name="success-tick" size={34} padding={'small'} />
         <Text font={{ variation: FontVariation.H3 }} padding={'medium'}>
-          {getString('cd.webhooks.successMessage', { name: get(formikRef.current?.values, 'name', '') })}
+          {getString(isEdit ? 'cd.webhooks.successUpdateMessage' : 'cd.webhooks.successMessage', {
+            name: get(formikRef.current?.values, 'name', '')
+          })}
         </Text>
         <Text font={{ variation: FontVariation.BODY }} padding={'small'}>
           {getString('cd.webhooks.successSubtitle')}
@@ -76,8 +94,7 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
               <NameId
                 identifierProps={{
                   inputName: 'name',
-                  isIdentifierEditable: !isEdit,
-                  inputGroupProps: { disabled: isEdit }
+                  isIdentifierEditable: !isEdit
                 }}
               />
               <ConnectorReferenceField
@@ -97,14 +114,12 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                   formik.setFieldValue('connectorRef', connectorRefWithScope)
                   formik.setFieldValue?.('repo', '')
                 }}
-                disabled={isEdit}
               />
 
               <RepositorySelect
                 formikProps={formik}
                 selectedValue={get(formik.values, 'repo')}
                 connectorRef={get(formik.values, 'connectorRef')}
-                disabled={isEdit}
                 customClassName={css.width}
               />
               <Text>{getString('common.git.folderPath')}</Text>
@@ -146,7 +161,11 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                 }}
               />
               <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
-                <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('add')} />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={isEdit ? getString('save') : getString('add')}
+                />
                 <Button
                   variation={ButtonVariation.TERTIARY}
                   onClick={() => {

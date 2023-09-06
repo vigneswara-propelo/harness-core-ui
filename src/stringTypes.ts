@@ -7108,11 +7108,14 @@ export interface StringsMap {
   'cd.webhooks.createSubtitle': string
   'cd.webhooks.delete': string
   'cd.webhooks.deleteConfirmation': string
+  'cd.webhooks.deleted': string
+  'cd.webhooks.editWebhook': string
   'cd.webhooks.newWebhook': string
   'cd.webhooks.noWebhook': string
   'cd.webhooks.settingUpWebhook': string
   'cd.webhooks.successMessage': string
   'cd.webhooks.successSubtitle': string
+  'cd.webhooks.successUpdateMessage': string
   'cd.welcomeMessage': string
   'cd.welcomeToHarnessCD': string
   'cd.whatIsHarnessAdapter': string
