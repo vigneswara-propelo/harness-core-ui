@@ -12,10 +12,11 @@ import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
 import { SRMAnalysisStepDetailDTO } from 'services/cv'
+import { ExecutionNode } from 'services/pipeline-ng'
 import AnalyzeDeploymentImpact from '../AnalyzeDeploymentImpact'
 import { stepMock, summaryMock } from './AnalyzeDeploymentImpact.mock'
 import AnalyzeDeploymentImpactConsoleView from '../AnalyzeDeploymentImpactConsoleView'
-import { calculateProgressPercentage } from '../AnalyzeDeploymentImpact.utils'
+import { calculateProgressPercentage, getExecutionDetailsId } from '../AnalyzeDeploymentImpact.utils'
 
 Date.now = jest.fn(() => 1689424620000)
 
@@ -141,5 +142,20 @@ describe('AnalyzeDeploymentImpact', () => {
     // past event
     jest.spyOn(global.Date, 'now').mockReturnValue(1689574075000)
     expect(calculateProgressPercentage(data)).toEqual(100)
+  })
+
+  test('getExecutionDetailsId', () => {
+    const mockExecutionDetailsId = 'mockExecutionDetailsId'
+    expect(getExecutionDetailsId(stepMock)).toEqual(stepMock?.outcomes?.output?.executionDetailsId)
+    expect(
+      getExecutionDetailsId({
+        outcomes: { output: { executionDetailsId: '' } }
+      } as unknown as ExecutionNode)
+    ).toEqual(undefined)
+    expect(
+      getExecutionDetailsId({
+        progressData: { executionDetailsId: mockExecutionDetailsId }
+      } as unknown as ExecutionNode)
+    ).toEqual(mockExecutionDetailsId)
   })
 })

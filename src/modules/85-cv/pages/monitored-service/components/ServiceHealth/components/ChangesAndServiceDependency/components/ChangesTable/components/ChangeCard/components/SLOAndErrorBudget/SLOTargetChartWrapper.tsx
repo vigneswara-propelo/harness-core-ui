@@ -21,7 +21,6 @@ import { TimelineBar } from '@cv/components/TimelineView/TimelineBar'
 import ColumnChartEventMarker from '@cv/components/ColumnChart/components/ColummnChartEventMarker/ColumnChartEventMarker'
 import { getColorForChangeEventType } from '@cv/components/ChangeTimeline/ChangeTimeline.utils'
 import { calculatePositionForTimestamp } from '@cv/components/ColumnChart/ColumnChart.utils'
-import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { AnalysisStatus } from '@cv/components/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
 import { SLOCardToggleViews, SLOTargetChartWrapperProps } from './SLOAndErrorBudget.types'
 import ColumChartWithStartAndStopEventMarker from './ColumChartWithStartAndStopEventMarker/ColumChartWithStartAndStopEventMarker'
@@ -36,7 +35,8 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   eventTime,
   eventType,
   eventStatus,
-  eventEndTime
+  eventEndTime,
+  isReportEvent: isMultiMarkerStep
 }) => {
   const leftOffset = 40
   const { getString } = useStrings()
@@ -44,7 +44,6 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
   const mainRef = useRef<HTMLDivElement>(null)
   const [markerPosition, setMarkerPosition] = useState<number>()
   const [multiMarkerPosition, setMultipleMarkerPosition] = useState<{ startMarker: number; stopMarker?: number }>()
-  const isMultiMarkerStep = eventType === ChangeSourceTypes.DeploymentImpactAnalysis
 
   const { data, loading, error, refetch } = useGetSLODetails({
     identifier: selectedSLO.identifier ?? '',

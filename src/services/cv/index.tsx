@@ -816,7 +816,6 @@ export interface ChangeEventDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
 }
 
 /**
@@ -855,7 +854,6 @@ export interface ChangeSourceDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
 }
 
 /**
@@ -1074,7 +1072,6 @@ export type CustomChangeEventMetadata = ChangeEventMetadata & {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   user?: string
 }
 
@@ -1360,7 +1357,6 @@ export interface DemoChangeEventDTO {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   monitoredServiceIdentifier?: string
 }
 
@@ -2800,21 +2796,6 @@ export type HarnessJWTTokenSpec = HarnessApiAccessSpecDTO & {
   tokenRef: string
 }
 
-export type HarnessSRMAnalysisEventMetadata = ChangeEventMetadata & {
-  analysisDuration?: Duration
-  analysisEndTime?: number
-  analysisStartTime?: number
-  analysisStatus?: 'RUNNING' | 'COMPLETED' | 'ABORTED'
-  artifactTag?: string
-  artifactType?: string
-  executionNotificationDetailsId?: string
-  pipelineId?: string
-  pipelinePath?: string
-  planExecutionId?: string
-  stageId?: string
-  stageStepId?: string
-}
-
 export type HarnessTokenSpec = HarnessApiAccessSpecDTO & {
   tokenRef: string
 }
@@ -3209,7 +3190,6 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
     | 'CUSTOM_INCIDENT'
     | 'CUSTOM_INFRA'
     | 'CUSTOM_FF'
-    | 'SRM_STEP_ANALYSIS'
   eventEndTime?: number
   eventStartTime?: number
   internalChangeEvent?: InternalChangeEvent
@@ -3675,6 +3655,7 @@ export interface LogRecordDTO {
 
 export interface LogRecordsResponse {
   logRecords?: LogRecord[]
+  serviceInstances?: string[]
 }
 
 export interface LogSampleRequestDTO {
@@ -6645,7 +6626,6 @@ export interface ServiceDependencyMetadata {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   )[]
   type?: 'KUBERNETES'
 }
@@ -7934,7 +7914,6 @@ export interface ChangeEventListForAccountQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   )[]
   startTime: number
   endTime: number
@@ -8121,7 +8100,6 @@ export interface ChangeEventTimelineForAccountQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   )[]
   startTime: number
   endTime: number
@@ -8464,7 +8442,6 @@ export interface ChangeEventListQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   )[]
   startTime: number
   endTime: number
@@ -8665,7 +8642,6 @@ export interface ChangeEventTimelineQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   )[]
   startTime: number
   endTime: number
@@ -11580,7 +11556,6 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   )[]
   startTime: number
   endTime: number
@@ -11651,7 +11626,6 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
     | 'CustomIncident'
     | 'CustomInfrastructure'
     | 'CustomFF'
-    | 'DeploymentImpactAnalysis'
   )[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'

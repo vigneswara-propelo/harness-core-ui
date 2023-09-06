@@ -8,7 +8,7 @@
 import React from 'react'
 import { IconName, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { HarnessSRMAnalysisEventMetadata, VerifyStepSummary } from 'services/cv'
+import type { SRMAnalysisStepDetailDTO, VerifyStepSummary } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { AnalysisStatus } from '@cv/components/AnalyzeDeploymentImpact/AnalyzeDeploymentImpact.constants'
@@ -20,7 +20,7 @@ export default function VerificationStatusCard({
   status:
     | VerifyStepSummary['verificationStatus']
     | PipelineExecutionSummary['status']
-    | HarnessSRMAnalysisEventMetadata['analysisStatus']
+    | SRMAnalysisStepDetailDTO['analysisStatus']
 }) {
   let statusMessage: string | undefined = undefined
   let color: Color | undefined = undefined

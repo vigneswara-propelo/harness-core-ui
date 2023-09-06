@@ -7,7 +7,7 @@
 
 import { Color } from '@harness/design-system'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import type { ChangeEventDTO, HarnessSRMAnalysisEventMetadata } from 'services/cv'
+import type { ChangeEventDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
 import { EXECUTION_STATUS_HARNESS_CD_NEXTGEN, EXECUTION_STATUS_HARNESS_CD } from './ChangeDetails.constant'
 
@@ -147,10 +147,7 @@ const statusToColorMappingHarnessCD = (status: keyof typeof EXECUTION_STATUS_HAR
 }
 
 export const statusToColorMapping = (
-  status:
-    | keyof typeof EXECUTION_STATUS_HARNESS_CD_NEXTGEN
-    | keyof typeof EXECUTION_STATUS_HARNESS_CD
-    | HarnessSRMAnalysisEventMetadata['analysisStatus'],
+  status: keyof typeof EXECUTION_STATUS_HARNESS_CD_NEXTGEN | keyof typeof EXECUTION_STATUS_HARNESS_CD,
   type?: ChangeEventDTO['type']
 ): {
   color: Color
@@ -160,7 +157,6 @@ export const statusToColorMapping = (
     case ChangeSourceTypes.HarnessCD:
       return statusToColorMappingHarnessCD(status as keyof typeof EXECUTION_STATUS_HARNESS_CD)
     case ChangeSourceTypes.HarnessCDNextGen:
-    case ChangeSourceTypes.DeploymentImpactAnalysis:
       return statusToColorMappingHarnessCDNextGen(status as keyof typeof EXECUTION_STATUS_HARNESS_CD_NEXTGEN)
     default:
       return {

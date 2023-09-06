@@ -30,10 +30,10 @@ export const ReportSLIAndHealthSource = (props: SRMAnalysisStepDetailDTO): JSX.E
   return (
     <>
       <ChangeEventServiceHealth
+        isReportEvent
         monitoredServiceIdentifier={monitoredServiceIdentifier}
         startTime={analysisStartTime - TWO_HOURS_IN_MILLISECONDS}
         endTime={derivedEndTime}
-        eventType={'DeploymentImpactAnalysis'}
         timeStamps={timeStamps}
         title={getString('cv.changeSource.changeSourceCard.deploymentHealth')}
         verifyStepSummaries={verifyStepSummaries}
@@ -41,10 +41,10 @@ export const ReportSLIAndHealthSource = (props: SRMAnalysisStepDetailDTO): JSX.E
         eventEndTime={analysisEndTime}
       />
       <SLOAndErrorBudget
+        isReportEvent
         monitoredServiceIdentifier={monitoredServiceIdentifier}
         startTime={timeStamps[0]}
         endTime={timeStamps[1]}
-        eventType="DeploymentImpactAnalysis"
         eventTime={analysisStartTime}
         eventStatus={analysisStatus}
         eventEndTime={analysisEndTime}

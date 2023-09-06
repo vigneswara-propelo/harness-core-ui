@@ -36,7 +36,8 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
   eventTime,
   eventType,
   eventStatus,
-  eventEndTime
+  eventEndTime,
+  isReportEvent
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -147,6 +148,7 @@ const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({
       <Layout.Vertical spacing="large">
         {selectedSLOs.map(serviceLevelObjective => (
           <SLOTargetChartWrapper
+            isReportEvent={isReportEvent}
             key={serviceLevelObjective.identifier}
             type={view}
             startTime={startTime}

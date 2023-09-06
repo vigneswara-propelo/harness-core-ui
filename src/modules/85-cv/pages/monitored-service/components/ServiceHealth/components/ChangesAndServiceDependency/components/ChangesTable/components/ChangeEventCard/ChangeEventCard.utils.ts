@@ -95,7 +95,6 @@ export const createChangeTitleDataForInternalCS = (resource?: ChangeEventDTO): C
 export const getTextForRedirectButton = (getString: UseStringsReturn['getString'], type?: string): string => {
   switch (type) {
     case ChangeSourceTypes.HarnessCDNextGen:
-    case ChangeSourceTypes.DeploymentImpactAnalysis:
       return getString('cv.changeSource.changeSourceCard.viewDeployment')
     case ChangeSourceTypes.HarnessFF:
       return getString('cv.changeSource.changeSourceCard.viewFeatureFlag')

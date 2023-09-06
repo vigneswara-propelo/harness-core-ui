@@ -14,6 +14,7 @@ import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
+import { ExecutionNode } from 'services/pipeline-ng'
 import { AnalysisStatus } from './AnalyzeDeploymentImpact.constants'
 
 interface CreateDetailsDataProps {
@@ -100,4 +101,8 @@ export const calculateProgressPercentage = (data: RestResponseSRMAnalysisStepDet
     return Number(((1 - (analysisEndTime - Date.now()) / (analysisEndTime - analysisStartTime)) * 100).toFixed(1))
   }
   return 0
+}
+
+export const getExecutionDetailsId = (step: ExecutionNode): string => {
+  return (step?.outcomes?.output?.executionDetailsId || step?.progressData?.executionDetailsId) as unknown as string
 }

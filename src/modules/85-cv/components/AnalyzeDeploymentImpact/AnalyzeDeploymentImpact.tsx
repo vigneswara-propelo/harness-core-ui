@@ -16,11 +16,10 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetSRMAnalysisSummary } from 'services/cv'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import { getActivityId } from '../ExecutionVerification/ExecutionVerificationView.utils'
 import CVProgressBar from '../ExecutionVerification/components/DeploymentProgressAndNodes/components/CVProgressBar/CVProgressBar'
 import VerificationStatusCard from '../ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
 import { StopAnalysisButton } from './components/StopAnalysisButton'
-import { calculateProgressPercentage, createDetailsData } from './AnalyzeDeploymentImpact.utils'
+import { calculateProgressPercentage, createDetailsData, getExecutionDetailsId } from './AnalyzeDeploymentImpact.utils'
 import { POLLING_INTERVAL } from '../ExecutionVerification/components/DeploymentMetrics/DeploymentMetrics.constants'
 import { AnalysisStatus } from './AnalyzeDeploymentImpact.constants'
 import css from './AnalyzeDeploymentImpact.module.scss'
@@ -39,7 +38,7 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
   const { accountId } = params
   const { status, failureInfo } = step
   const hasError = Boolean(failureInfo?.responseMessages?.length)
-  const activityId = useMemo(() => getActivityId(step), [step])
+  const activityId = useMemo(() => getExecutionDetailsId(step), [step])
 
   const { error, data, loading, refetch } = useGetSRMAnalysisSummary({
     lazy: true,

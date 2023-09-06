@@ -11,11 +11,12 @@ export interface ChangeEventServiceHealthProps {
   monitoredServiceIdentifier: string
   startTime: number
   endTime?: number
-  eventType: ChangeEventDTO['type']
+  eventType?: ChangeEventDTO['type']
   timeStamps: [number, number]
   setTimestamps?: (timeStamps: [number, number]) => void
   title?: string
   verifyStepSummaries?: VerifyStepSummary[]
   eventEndTime?: number
   eventStatus?: string
+  isReportEvent?: boolean
 }

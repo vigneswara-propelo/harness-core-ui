@@ -13,7 +13,7 @@ export const stepMock = {
   name: 'AnalyzeDeploymentImpact_1',
   identifier: 'AnalyzeDeploymentImpact_1',
   baseFqn: 'pipeline.stages.Deployment_101.spec.execution.steps.AnalyzeDeploymentImpact_1',
-  outcomes: { output: { activityId: 'yRYl-h8PQeqvmLmaNUmI4g' } },
+  outcomes: { output: { executionDetailsId: 'yRYl-h8PQeqvmLmaNUmI4g' } },
   stepParameters: {
     identifier: 'AnalyzeDeploymentImpact_1',
     name: 'AnalyzeDeploymentImpact_1',
