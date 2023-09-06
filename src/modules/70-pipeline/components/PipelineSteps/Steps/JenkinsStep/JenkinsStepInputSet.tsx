@@ -123,20 +123,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
         }) || []
       const clonedFormik = cloneDeep(formik.values)
       set(clonedFormik, `${prefix}spec.jobParameter`, parameterData)
-      formik.setValues({
-        ...clonedFormik
-      })
+      formik.setValues(clonedFormik)
     }
   }, [jobParameterResponse])
-
-  useEffect(() => {
-    if (!isArray(get(formik, `values.${prefix}spec.jobParameter`)) && template?.spec?.jobParameter) {
-      formik.setFieldValue(
-        `${prefix}spec.jobParameter`,
-        isArray(template?.spec?.jobParameter) ? template?.spec?.jobParameter : []
-      )
-    }
-  }, [])
 
   useEffect(() => {
     if (lastOpenedJob.current) {
@@ -310,7 +299,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
 
         {getMultiTypeFromValue(template?.spec?.jobName) === MultiTypeInputType.RUNTIME ? (
           <>
-            <div className={cx(css.formGroup, css.lg)}>
+            <div className={cx(css.formGroup, css.md)}>
               <FormInput.MultiTypeBiLevelInput
                 label={'Job Name'}
                 name={`${prefix}spec.jobName`}
@@ -325,7 +314,6 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                     : getString('select')
                 }
                 multiTypeInputProps={{
-                  width: 400,
                   onChange: (primaryValue: any) => {
                     if (primaryValue?.hasSubmenuItems) {
                       setShowChildJobField(true)
@@ -449,15 +437,13 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
           </>
         ) : null}
 
-        {(isArray(template?.spec?.jobParameter) ||
-          getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME) &&
-        Array.isArray(jobParameters) ? (
-          <div className={css.formGroup}>
+        {isArray(template?.spec?.jobParameter) ||
+        getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME ? (
+          <div className={cx(css.formGroup, css.md)}>
             <MultiTypeFieldSelector
               name={`${prefix}spec.jobParameter`}
               label={getString('pipeline.jenkinsStep.jobParameter')}
               defaultValueToReset={[]}
-              disableTypeSelection
               formik={formik}
             >
               <FieldArray
@@ -473,44 +459,43 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                       {fetchingJobParameters ? (
                         <Spinner />
                       ) : (
-                        (get(formik, `values.${prefix}spec.jobParameter`) || [])?.map(
-                          (type: jobParameterInterface, i: number) => {
-                            const jobParameterPath = `${prefix}spec.jobParameter[${i}]`
-                            return (
-                              <div className={stepCss.jobParameter} key={type.id}>
-                                <FormInput.Text
-                                  name={`${jobParameterPath}.name`}
-                                  placeholder={getString('name')}
-                                  disabled={readonly}
-                                />
-                                <FormInput.Select
-                                  items={jobParameterInputType}
-                                  name={`${jobParameterPath}.type`}
-                                  placeholder={getString('typeLabel')}
-                                  disabled={readonly}
-                                />
-                                <FormInput.MultiTextInput
-                                  name={`${jobParameterPath}.value`}
-                                  multiTextInputProps={{
-                                    allowableTypes,
-                                    expressions,
-                                    disabled: readonly
-                                  }}
-                                  label=""
-                                  disabled={readonly}
-                                  placeholder={getString('valueLabel')}
-                                />
-                                <Button
-                                  variation={ButtonVariation.ICON}
-                                  icon="main-trash"
-                                  data-testid={`remove-environmentVar-${i}`}
-                                  onClick={() => remove(i)}
-                                  disabled={readonly}
-                                />
-                              </div>
-                            )
-                          }
-                        )
+                        isArray(jobParameters) &&
+                        jobParameters?.map((type: jobParameterInterface, i: number) => {
+                          const jobParameterPath = `${prefix}spec.jobParameter[${i}]`
+                          return (
+                            <div className={stepCss.jobParameter} key={type.id}>
+                              <FormInput.Text
+                                name={`${jobParameterPath}.name`}
+                                placeholder={getString('name')}
+                                disabled={readonly}
+                              />
+                              <FormInput.Select
+                                items={jobParameterInputType}
+                                name={`${jobParameterPath}.type`}
+                                placeholder={getString('typeLabel')}
+                                disabled={readonly}
+                              />
+                              <FormInput.MultiTextInput
+                                name={`${jobParameterPath}.value`}
+                                multiTextInputProps={{
+                                  allowableTypes,
+                                  expressions,
+                                  disabled: readonly
+                                }}
+                                label=""
+                                disabled={readonly}
+                                placeholder={getString('valueLabel')}
+                              />
+                              <Button
+                                variation={ButtonVariation.ICON}
+                                icon="main-trash"
+                                data-testid={`remove-environmentVar-${i}`}
+                                onClick={() => remove(i)}
+                                disabled={readonly}
+                              />
+                            </div>
+                          )
+                        })
                       )}
                       <Button
                         icon="plus"

@@ -134,6 +134,48 @@ export const getJenkinsStepDeploymentModeProps = (): JenkinsStepDeploymentModePr
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
 })
 
+export const getJenkinsStepTemplateUsageViewProps = (): JenkinsStepDeploymentModeProps => ({
+  stepViewType: StepViewType.TemplateUsage,
+  initialValues: {
+    identifier: 'Jenkins_Template',
+    type: StepType.JenkinsBuild,
+    spec: {
+      jobName: RUNTIME_INPUT_VALUE,
+      connectorRef: RUNTIME_INPUT_VALUE,
+      delegateSelectors: [],
+      jobParameter: RUNTIME_INPUT_VALUE
+    }
+  },
+  inputSetData: {
+    template: {
+      identifier: 'Jenkins_Template',
+      type: StepType.JenkinsBuild,
+      spec: {
+        connectorRef: RUNTIME_INPUT_VALUE,
+        jobName: RUNTIME_INPUT_VALUE,
+        jobParameter: RUNTIME_INPUT_VALUE
+      }
+    },
+    allValues: {
+      type: StepType.JenkinsBuild,
+      name: 'Jenkins Template',
+      identifier: 'Jenkins_Template',
+      spec: {
+        connectorRef: RUNTIME_INPUT_VALUE,
+        jobParameter: RUNTIME_INPUT_VALUE,
+        delegateSelectors: [],
+        unstableStatusAsSuccess: false,
+        useConnectorUrlForJobExecution: false,
+        jobName: RUNTIME_INPUT_VALUE
+      },
+      timeout: '10m'
+    },
+    path: 'stages[0].stage.spec.execution.steps[0].step'
+  },
+  onUpdate: jest.fn(),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+})
+
 export const getJenkinsStepInputVariableModeProps = () => ({
   customStepProps: {
     variablesData: {

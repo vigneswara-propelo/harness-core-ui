@@ -7,9 +7,12 @@
 
 import React from 'react'
 import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
+import { Formik, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { TestStepWidget, factory } from '../../__tests__/StepTestUtil'
+import { JenkinsStep } from '../JenkinsStep'
 import {
   getJenkinsStepEditModeProps,
   getJenkinsStepEditModePropsWithConnectorId,
@@ -18,9 +21,9 @@ import {
   mockConnectorResponse,
   mockJobResponse,
   mockJobParamterResponse,
-  getJenkinsStepInputVariableModeProps
+  getJenkinsStepInputVariableModeProps,
+  getJenkinsStepTemplateUsageViewProps
 } from './JenkinsStepTestHelper'
-import { JenkinsStep } from '../JenkinsStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -30,11 +33,6 @@ jest.mock('services/cd-ng', () => ({
   useGetJobParametersForJenkins: () => mockJobParamterResponse
 }))
 describe('Jira Approval fetch projects', () => {
-  beforeAll(() => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    // useGetJiraProjects.mockImplementation(() => mockProjectsErrorResponse)
-  })
   beforeEach(() => {
     factory.registerStep(new JenkinsStep())
   })
@@ -54,11 +52,6 @@ describe('Jira Approval fetch projects', () => {
 })
 
 describe('Jenkins step tests', () => {
-  beforeAll(() => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    // useGetJiraProjects.mockImplementation(() => mockProjectsResponse)
-  })
   beforeEach(() => {
     factory.registerStep(new JenkinsStep())
   })
@@ -138,7 +131,6 @@ describe('Jenkins step tests', () => {
     expect(container).toMatchSnapshot('jira-approval-input variable view')
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
   test('Basic functions - edit stage view validations', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const props = getJenkinsStepEditModeProps()
@@ -193,7 +185,7 @@ describe('Jenkins step tests', () => {
   test('Open a saved jenkins step - edit stage view', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const props = getJenkinsSteplEditModePropsWithValues()
-    const { container, getByText, queryByDisplayValue, debug } = render(
+    const { container, getByText, queryByDisplayValue } = render(
       <TestStepWidget
         initialValues={props.initialValues}
         type={StepType.JenkinsBuild}
@@ -202,8 +194,6 @@ describe('Jenkins step tests', () => {
         onUpdate={props.onUpdate}
       />
     )
-
-    debug(container)
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'jenkins step' } })
@@ -270,5 +260,38 @@ describe('Jenkins step tests', () => {
       viewType: StepViewType.TriggerForm
     })
     expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+  })
+
+  test('it should render all fields as Runtime input in TemplateUsage view if they are marked as Runtime input in template', async () => {
+    const onSubmitFnMock = jest.fn()
+    const props = getJenkinsStepTemplateUsageViewProps()
+    const { container } = render(
+      <Formik formName="testJenkinsTemplateUsage" initialValues={props.initialValues} onSubmit={onSubmitFnMock}>
+        {() => {
+          return (
+            <TestStepWidget
+              initialValues={props.initialValues}
+              type={StepType.JenkinsBuild}
+              stepViewType={StepViewType.TemplateUsage}
+              template={props.inputSetData?.template}
+            />
+          )
+        }}
+      </Formik>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const connectorRefInput = queryByNameAttribute('spec.connectorRef') as HTMLInputElement
+    expect(connectorRefInput).toBeInTheDocument()
+    expect(connectorRefInput.value).toBe(RUNTIME_INPUT_VALUE)
+
+    const jobNameInput = queryByNameAttribute('spec.jobName') as HTMLInputElement
+    expect(jobNameInput).toBeInTheDocument()
+    expect(jobNameInput.value).toBe(RUNTIME_INPUT_VALUE)
+
+    const jobParameterInput = queryByNameAttribute('spec.jobParameter') as HTMLInputElement
+    expect(jobParameterInput).toBeInTheDocument()
+    expect(jobParameterInput.value).toBe(RUNTIME_INPUT_VALUE)
   })
 })
