@@ -301,6 +301,7 @@ function WebhookPipelineInputPanelForm({
           inputSetRefs?.every((ref: string) => selectedInputSets?.find(item => item.value === ref))
         ) {
           // No need to fetch input sets if they are fetched already
+          setFetchInputSetsInProgress(false)
           return
         }
 
@@ -402,9 +403,9 @@ function WebhookPipelineInputPanelForm({
       }
       setMergingInputSets(true)
       try {
-        fetchData()
-          .then(() => setMergingInputSets(false))
-          .catch(() => setMergingInputSets(false))
+        fetchData().finally(() => {
+          setMergingInputSets(false)
+        })
       } catch (e) {
         setMergingInputSets(false)
       }
@@ -524,7 +525,7 @@ function WebhookPipelineInputPanelForm({
         </Text>
       </Layout.Horizontal>
 
-      {loading && !isPipelineBranchNameInFocus() ? (
+      {(loading || fetchInputSetsInProgress || mergingInputSets) && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
