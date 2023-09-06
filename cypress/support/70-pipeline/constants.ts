@@ -431,6 +431,8 @@ export const triggersListData = {
     'Github Package Registry',
     'Google Artifact Registry',
     'Google Cloud Storage',
+    'Jenkins',
+    'Nexus3',
     'Bamboo'
   ],
   Manifest: ['Helm Chart'],

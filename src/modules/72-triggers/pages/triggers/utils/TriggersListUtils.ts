@@ -181,25 +181,24 @@ const triggerDrawerMap = (
           iconName: ArtifactIconByType.GithubPackageRegistry as IconName,
           disabled: isNewService
         },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
+          value: ENABLED_ARTIFACT_TYPES.Jenkins,
+          iconName: ArtifactIconByType.Jenkins as IconName,
+          disabled: isNewService
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
+          value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+          iconName: ArtifactIconByType.Nexus3Registry as IconName,
+          disabled: isNewService
+        },
         ...(allowV2Artifacts
           ? [
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
-                value: ENABLED_ARTIFACT_TYPES.Jenkins,
-                iconName: ArtifactIconByType.Jenkins as IconName,
-                disabled: isNewService
-              },
-
               {
                 itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts]),
                 value: ENABLED_ARTIFACT_TYPES.AzureArtifacts,
                 iconName: ArtifactIconByType.AzureArtifacts as IconName,
-                disabled: isNewService
-              },
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
-                value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-                iconName: ArtifactIconByType.Nexus3Registry as IconName,
                 disabled: isNewService
               },
               {
