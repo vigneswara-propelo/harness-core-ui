@@ -11,6 +11,7 @@ import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
@@ -363,6 +364,12 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
           ])
         }
         onSuccessfulCrudOperation={refetchFilterList}
+        validationSchema={Yup.object().shape({
+          services: Yup.string().when('artifacts', {
+            is: val => !isEmpty(val),
+            then: Yup.string().required(getString('pipeline.validation.serviceProvideArtifacts'))
+          })
+        })}
       />
     </Layout.Horizontal>
   )

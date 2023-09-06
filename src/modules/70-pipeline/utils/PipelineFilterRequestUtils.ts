@@ -24,7 +24,8 @@ const exclusionList = [
   'services',
   'environments',
   'deploymentType',
-  'infrastructureType'
+  'infrastructureType',
+  'artifacts'
 ]
 
 export const getValidFilterArguments = (
@@ -42,7 +43,8 @@ export const getValidFilterArguments = (
     environments,
     deploymentType,
     infrastructureType,
-    pipelineTags
+    pipelineTags,
+    artifacts
   } = formData
   return Object.assign(omit(formData, ...exclusionList), {
     pipelineTags: Object.keys(pipelineTags || {})?.map((key: string) => {
@@ -64,7 +66,8 @@ export const getValidFilterArguments = (
         deploymentTypes: deploymentType,
         infrastructureTypes: infrastructureType ? [infrastructureType] : undefined,
         serviceNames: services?.map((service: MultiSelectOption) => service?.value),
-        environmentNames: environments?.map((env: MultiSelectOption) => env?.value)
+        environmentNames: environments?.map((env: MultiSelectOption) => env?.value),
+        artifacts
       }
     }
   })

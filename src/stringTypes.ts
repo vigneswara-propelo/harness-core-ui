@@ -5470,6 +5470,7 @@ export interface StringsMap {
   'pipeline.validation.policySetEvaluation': string
   'pipeline.validation.policySetIssuesN': string
   'pipeline.validation.revalidate': string
+  'pipeline.validation.serviceProvideArtifacts': string
   'pipeline.validation.templateIssuesN': string
   'pipeline.validation.templateUsage': string
   'pipeline.validation.validated': string

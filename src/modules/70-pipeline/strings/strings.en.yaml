@@ -1851,6 +1851,7 @@ validation:
   pending: pending
   templateIssuesN: Template issues ({{n}})
   policySetIssuesN: Policy set issues ({{n}})
+  serviceProvideArtifacts: For the provided Artifacts filter, Services field is required
 bamboo:
   planName: Plan Name
   planKey: Plan Key
