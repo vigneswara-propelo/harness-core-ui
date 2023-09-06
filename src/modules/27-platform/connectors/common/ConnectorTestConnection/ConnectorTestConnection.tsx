@@ -28,7 +28,8 @@ import {
   ConnectorInfoDTO,
   EntityGitDetails,
   ResponseMessage,
-  AccessControlCheckError
+  AccessControlCheckError,
+  ConnectorValidationErrorMetadataDTO
 } from 'services/cd-ng'
 
 import type { StepDetails } from '@platform/connectors/interfaces/ConnectorInterface'
@@ -314,8 +315,13 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
       lazy: true
     })
 
+    const timePadding = 60 * 5 // 5 minutes
+    const testStartTimeForApi = Math.floor((testStartTime || 0) / 1000) - timePadding
+    const testEndTimeForApi = Math.floor((testEndTime || 0) / 1000) + timePadding * 2
+
     const renderError = () => {
       const { responseMessages = null } = testConnectionResponse?.data as Error
+      const metadata = (testConnectionResponse?.data as Error).metadata as ConnectorValidationErrorMetadataDTO
       const genericHandler = (
         <Layout.Vertical>
           <Layout.Horizontal className={css.errorResult}>
@@ -404,6 +410,15 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                     : getString('platform.connectors.testConnectionStep.viewPermissions')}
                 </Text>
               )}
+              {connectorInfo && connectorInfo?.spec?.executeOnDelegate != false ? (
+                <DelegateTaskLogsButton
+                  taskIds={[metadata?.taskId || '']}
+                  areLogsAvailable={!!metadata?.taskId}
+                  startTime={testStartTimeForApi}
+                  endTime={testEndTimeForApi}
+                  telemetry={{ hasError: true, taskContext: TaskContext.ConnectorValidation }}
+                />
+              ) : null}
             </Layout.Horizontal>
           ) : null}
           {/* ) : (
@@ -481,6 +496,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
             }
           } catch (err) {
             setTestConnectionResponse(err)
+            setTestEndTime(Date.now())
             setStepDetails({
               step: 1,
               intent: Intent.DANGER,
@@ -499,10 +515,6 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
         refetchDelegateFromId()
       }
     }, [testConnectionResponse?.data?.delegateId])
-
-    const timePadding = 60 * 5 // 5 minutes
-    const testStartTimeForApi = Math.floor((testStartTime || 0) / 1000) - timePadding
-    const testEndTimeForApi = Math.floor((testEndTime || 0) / 1000) + timePadding * 2
 
     return (
       <Layout.Vertical>
