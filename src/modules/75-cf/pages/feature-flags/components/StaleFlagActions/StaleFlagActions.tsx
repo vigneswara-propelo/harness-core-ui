@@ -6,25 +6,37 @@
  */
 
 import React, { FC, useCallback, useMemo, useState } from 'react'
-import { Button, ButtonVariation, Heading, Layout, ModalDialog, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Heading, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Drawer, Intent, Position } from '@blueprintjs/core'
+import { Drawer, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { Feature } from 'services/cf'
 import { useGetSelectedStaleFlags } from '../../hooks/useGetSelectedStaleFlags'
 import { StaleFlagStatusReason } from '../../FlagStatus'
+import { StaleFlagActionDialog } from './StaleFlagActionDialog'
 import css from './StaleFlagActions.module.scss'
 
 export interface StaleFlagActionsProps {
   flags?: Feature[] | null
+  onAction: () => void
 }
 
-export const StaleFlagActions: FC<StaleFlagActionsProps> = ({ flags }) => {
+export const StaleFlagActions: FC<StaleFlagActionsProps> = ({ flags, onAction }) => {
   const { getString } = useStrings()
   const selectedFlags = useGetSelectedStaleFlags()
   const [showInfo, setShowInfo] = useState<boolean>(false)
   const [showNotStaleDialog, setShowNotStaleDialog] = useState<boolean>(false)
-  const [showCleanupDialog, setShowCleanupDialog] = useState<boolean>(false)
+  const [showReadyForCleanupDialog, setShowReadyForCleanupDialog] = useState<boolean>(false)
+
+  const onReadyForCleanupAction = useCallback((): void => {
+    setShowReadyForCleanupDialog(false)
+    onAction()
+  }, [onAction])
+
+  const onNotStaleAction = useCallback((): void => {
+    setShowNotStaleDialog(false)
+    onAction()
+  }, [onAction])
 
   const showReadyForCleanupBtn = useMemo<boolean | undefined>(
     () =>
@@ -54,69 +66,31 @@ export const StaleFlagActions: FC<StaleFlagActionsProps> = ({ flags }) => {
                 setShowNotStaleDialog(true)
               }}
             />
-            <ModalDialog
-              isOpen={showNotStaleDialog}
-              enforceFocus={false}
-              isCloseButtonShown
-              onClose={() => {
-                setShowNotStaleDialog(false)
-              }}
-              title={getString('cf.staleFlagAction.notStale')}
-            >
-              <Layout.Vertical>
-                <Text padding={{ bottom: 'medium' }}>{getString('cf.staleFlagAction.notStaleDesc')}</Text>
-                <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
-                  <Button
-                    text={getString('cf.staleFlagAction.notStale')}
-                    variation={ButtonVariation.PRIMARY}
-                    intent={Intent.PRIMARY}
-                  />
-                  <Button
-                    text={getString('cancel')}
-                    variation={ButtonVariation.TERTIARY}
-                    onClick={() => {
-                      setShowNotStaleDialog(false)
-                    }}
-                  />
-                </Layout.Horizontal>
-              </Layout.Vertical>
-            </ModalDialog>
+            {showNotStaleDialog && (
+              <StaleFlagActionDialog
+                markAsNotStale
+                selectedFlags={selectedFlags}
+                onAction={() => onNotStaleAction()}
+                onClose={() => setShowNotStaleDialog(false)}
+              />
+            )}
+
             {showReadyForCleanupBtn && (
               <>
                 <Button
                   text={getString('cf.staleFlagAction.readyForCleanup')}
                   variation={ButtonVariation.SECONDARY}
                   onClick={() => {
-                    setShowCleanupDialog(true)
+                    setShowReadyForCleanupDialog(true)
                   }}
                 />
-                <ModalDialog
-                  isOpen={showCleanupDialog}
-                  enforceFocus={false}
-                  isCloseButtonShown
-                  onClose={() => {
-                    setShowCleanupDialog(false)
-                  }}
-                  title={getString('cf.staleFlagAction.readyForCleanup')}
-                >
-                  <Layout.Vertical>
-                    <Text padding={{ bottom: 'medium' }}>{getString('cf.staleFlagAction.readyForCleanupDesc')}</Text>
-                    <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
-                      <Button
-                        text={getString('cf.staleFlagAction.readyForCleanup')}
-                        variation={ButtonVariation.PRIMARY}
-                        intent={Intent.PRIMARY}
-                      />
-                      <Button
-                        text={getString('cancel')}
-                        variation={ButtonVariation.TERTIARY}
-                        onClick={() => {
-                          setShowCleanupDialog(false)
-                        }}
-                      />
-                    </Layout.Horizontal>
-                  </Layout.Vertical>
-                </ModalDialog>
+                {showReadyForCleanupDialog && (
+                  <StaleFlagActionDialog
+                    selectedFlags={selectedFlags}
+                    onAction={() => onReadyForCleanupAction()}
+                    onClose={() => setShowReadyForCleanupDialog(false)}
+                  />
+                )}
               </>
             )}
             <Button

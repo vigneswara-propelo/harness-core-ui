@@ -38,7 +38,7 @@ describe('FlagStatus', () => {
   })
 
   test('it should render waiting for cleanup status', () => {
-    renderComponent({ staleReason: StaleFlagStatusReason.WAITING_FOR_CLEANUP })
+    renderComponent({ isStale: true, staleReason: StaleFlagStatusReason.WAITING_FOR_CLEANUP })
 
     expect(screen.getByText('cf.staleFlagAction.waitingForCleanup'.toLocaleUpperCase())).toBeVisible()
   })

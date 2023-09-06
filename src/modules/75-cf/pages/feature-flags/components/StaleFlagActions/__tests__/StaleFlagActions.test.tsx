@@ -16,7 +16,7 @@ import { StaleFlagActions, StaleFlagActionsProps } from '../StaleFlagActions'
 const renderComponent = (props: Partial<StaleFlagActionsProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <StaleFlagActions {...props} />
+      <StaleFlagActions onAction={jest.fn()} {...props} />
     </TestWrapper>
   )
 

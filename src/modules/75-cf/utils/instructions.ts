@@ -43,6 +43,8 @@ type PatchKind =
   | 'updateRule'
   | 'updatePermanent'
   | 'addJiraIssueToFlag'
+  | 'markAsStale'
+  | 'markAsNotStale'
 
 export type PrerequisiteFeature = Pick<Prerequisite, 'feature'>
 export type VariationIdentifier = Pick<Variation, 'identifier'>[]

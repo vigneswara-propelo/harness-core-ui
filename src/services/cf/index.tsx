@@ -13,6 +13,16 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '1.0.0'
 /**
+ * An AIDA Response
+ */
+export interface Aida {
+  /**
+   * The Response from AIDA
+   */
+  text: string
+}
+
+/**
  * The API key is used by SDKs to connect to Harness Feature Flags
  */
 export interface ApiKey {
@@ -379,6 +389,21 @@ export type FeatureAvailablePipelines = Pagination & {
   availablePipelines: FeatureAvailablePipeline[]
 }
 
+export interface FeatureConfig {
+  defaultServe: Serve
+  environment: string
+  feature: string
+  kind: 'boolean' | 'int' | 'string' | 'json'
+  offVariation: string
+  prerequisites?: Prerequisite[]
+  project: string
+  rules?: ServingRule[]
+  state: FeatureState
+  variationToTargetMap?: VariationMap[]
+  variations: Variation[]
+  version?: number
+}
+
 export interface FeatureCounts {
   /**
    * The total number of flags with a active status in a project/environment
@@ -684,6 +709,11 @@ export interface FlagState {
 }
 
 /**
+ * The type of Flag
+ */
+export type FlagType = 'boolean' | 'number' | 'json' | 'string'
+
+/**
  * The commit message to use as part of a gitsync operation
  */
 export interface GitDetails {
@@ -746,6 +776,19 @@ export interface GitRepo {
 export interface GitRepoResp {
   repoDetails?: GitRepo
   repoSet: boolean
+}
+
+export interface GitSyncMultipleFlagPatchOperation {
+  /**
+   * A comment explaining the reason for this patch operation
+   */
+  comment?: string
+  /**
+   * Time of execution in unix epoch milliseconds when the scheduled changes will be applied
+   */
+  executionTime?: number
+  flags: MultipleFlagPatchInstruction
+  gitDetails?: GitDetails
 }
 
 export interface GitSyncPatchOperation {
@@ -815,6 +858,14 @@ export interface JiraSearchIssues {
    */
   total?: number
 }
+
+export type MultipleFlagPatchInstruction = {
+  /**
+   * identifier of the flag to patch
+   */
+  identifier: string
+  instructions: PatchInstruction
+}[]
 
 /**
  * An object id and object body generated from an audit event
@@ -955,6 +1006,74 @@ export interface Projects {
   projects?: Project[]
 }
 
+/**
+ * TBD
+ */
+export type ProxyConfig = Pagination & {
+  environments?: {
+    apiKeys?: string[]
+    featureConfigs?: FeatureConfig[]
+    id?: string
+    segments?: TargetSegment[]
+  }[]
+}
+
+export interface ProxyKey {
+  /**
+   * The ProxyKeys ID
+   */
+  id: string
+  /**
+   * The Proxy Keys identifier
+   */
+  identifier: string
+  /**
+   * The ProxyKeys name
+   */
+  name: string
+  projects?: {
+    environments?: {
+      /**
+       * The environments ID
+       */
+      id?: string
+      /**
+       * The environments identifier
+       */
+      identifier?: string
+      /**
+       * The environments name
+       */
+      name?: string
+    }[]
+    /**
+     * The projects identifier
+     */
+    identifier?: string
+    /**
+     * name of the project
+     */
+    name?: string
+  }[]
+}
+
+/**
+ * A Proxy Key instruction
+ */
+export type ProxyKeyInstruction = {
+  kind?: string
+  parameters?: {
+    environments?: string[]
+  }
+}[]
+
+/**
+ * An array of ProxyKeys and the environments they're scoped to
+ */
+export type ProxyKeys = Pagination & {
+  keys?: ProxyKey[]
+}
+
 export interface ReferenceDTO {
   /**
    * The account which this reference belongs to
@@ -995,6 +1114,11 @@ export interface Results {
    */
   variationName: string
 }
+
+/**
+ * The type of sdk
+ */
+export type SdkType = 'client' | 'server'
 
 /**
  * A Target Group (Segment) response
@@ -1134,17 +1258,36 @@ export interface ServingRule {
 export type Status = 'SUCCESS' | 'FAILURE' | 'ERROR'
 
 /**
- * A tag has a name and value
+ * A Tag object used to tag feature flags - consists of name and identifier
  */
 export interface Tag {
+  /**
+   * The identifier of the tag
+   */
+  identifier: string
   /**
    * The name of the tag
    */
   name: string
+}
+
+export interface TagResponseMetadata {
   /**
-   * The value of the tag
+   * Additional metadata about the request
    */
-  value?: string
+  details?: {
+    /**
+     * Summary of governance checks including any warnings
+     */
+    governanceMetadata?: { [key: string]: any }
+  }
+}
+
+/**
+ * A list of Tags - requirement for feature flag tagging
+ */
+export type Tags = Pagination & {
+  tags?: Tag[]
 }
 
 /**
@@ -1258,6 +1401,19 @@ export interface TargetMap {
   name: string
 }
 
+export interface TargetSegment {
+  excluded?: string[]
+  /**
+   * Unique identifier for the segment.
+   */
+  identifier: string
+  included?: string[]
+  /**
+   * An array of rules that can cause a user to be included in this segment.
+   */
+  rules?: Clause[]
+}
+
 /**
  * A list of Targets
  */
@@ -1356,6 +1512,16 @@ export interface WeightedVariation {
   weight: number
 }
 
+export interface AIDARequestRequestBody {
+  flagType: FlagType
+  framework?: string
+  identifier: string
+  language: string
+  sdkKey?: string
+  sdkType: SdkType
+  version?: string
+}
+
 export interface APIKeyRequestRequestBody {
   description?: string
   expiredAt?: number
@@ -1405,6 +1571,8 @@ export interface FeaturePipelineRequestRequestBody {
 
 export type FeatureYamlRequestRequestBody = FeatureFlagsYaml
 
+export type FeaturesPatchRequestRequestBody = GitSyncMultipleFlagPatchOperation
+
 export type GitRepoPatchRequestRequestBody = PatchOperation
 
 export interface GitRepoRequestRequestBody {
@@ -1423,6 +1591,16 @@ export interface ProjectRequestRequestBody {
   identifier: string
   name: string
   tags?: Tag[]
+}
+
+export interface ProxyKeysPatchRequestRequestBody {
+  instructions?: ProxyKeyInstruction
+}
+
+export interface ProxyKeysPostRequestRequestBody {
+  environments?: string[]
+  identifier?: string
+  name?: string
 }
 
 export type SegmentPatchRequestRequestBody = GitSyncPatchOperation
@@ -1444,9 +1622,16 @@ export interface SegmentRequestRequestBody {
   tags?: Tag[]
 }
 
+export type TagRequestRequestBody = Tag
+
 export type TargetPatchRequestRequestBody = GitSyncPatchOperation
 
 export type TargetRequestRequestBody = Target
+
+/**
+ * OK
+ */
+export type AIDAResponseResponse = Aida
 
 /**
  * Created
@@ -1541,6 +1726,11 @@ export type FeatureYamlResponseResponse = FeatureFlagsYaml
 /**
  * OK
  */
+export type FeaturesEditResponseResponse = FeatureResponseMetadata[]
+
+/**
+ * OK
+ */
 export type FeaturesResponseResponse = Features
 
 /**
@@ -1606,6 +1796,28 @@ export interface ProjectsResponseResponse {
 /**
  * OK
  */
+export type ProxyConfigResponseResponse = ProxyConfig
+
+/**
+ * OK
+ */
+export type ProxyKeyResponseResponse = ProxyKey
+
+/**
+ * Created
+ */
+export interface ProxyKeysEditResponseResponse {
+  status?: string
+}
+
+/**
+ * OK
+ */
+export type ProxyKeysResponseResponse = ProxyKeys
+
+/**
+ * OK
+ */
 export type SegmentFlagsResponseResponse = SegmentFlag[]
 
 /**
@@ -1617,6 +1829,16 @@ export type SegmentResponseResponse = Segment
  * OK
  */
 export type SegmentsResponseResponse = Segments
+
+/**
+ * OK
+ */
+export type TagEditResponseResponse = TagResponseMetadata
+
+/**
+ * OK
+ */
+export type TagsResponseResponse = Tags
 
 /**
  * OK
@@ -1662,6 +1884,85 @@ export type UnauthorizedResponse = Error
  * OK
  */
 export type UserFlagOverviewResponseResponse = UserFlagOverview
+
+export type CreateAIDAQueryProps = Omit<
+  MutateProps<
+    AIDAResponseResponse,
+    BadRequestResponse | UnauthenticatedResponse | UnauthorizedResponse | InternalServerErrorResponse,
+    void,
+    AIDARequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Makes an AIDA Request
+ *
+ * Makes a request to AIDA to return an SDK Code Sample
+ */
+export const CreateAIDAQuery = (props: CreateAIDAQueryProps) => (
+  <Mutate<
+    AIDAResponseResponse,
+    BadRequestResponse | UnauthenticatedResponse | UnauthorizedResponse | InternalServerErrorResponse,
+    void,
+    AIDARequestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/admin/aida`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseCreateAIDAQueryProps = Omit<
+  UseMutateProps<
+    AIDAResponseResponse,
+    BadRequestResponse | UnauthenticatedResponse | UnauthorizedResponse | InternalServerErrorResponse,
+    void,
+    AIDARequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Makes an AIDA Request
+ *
+ * Makes a request to AIDA to return an SDK Code Sample
+ */
+export const useCreateAIDAQuery = (props: UseCreateAIDAQueryProps) =>
+  useMutate<
+    AIDAResponseResponse,
+    BadRequestResponse | UnauthenticatedResponse | UnauthorizedResponse | InternalServerErrorResponse,
+    void,
+    AIDARequestRequestBody,
+    void
+  >('POST', `/admin/aida`, { base: getConfig('cf'), ...props })
+
+/**
+ * Makes an AIDA Request
+ *
+ * Makes a request to AIDA to return an SDK Code Sample
+ */
+export const createAIDAQueryPromise = (
+  props: MutateUsingFetchProps<
+    AIDAResponseResponse,
+    BadRequestResponse | UnauthenticatedResponse | UnauthorizedResponse | InternalServerErrorResponse,
+    void,
+    AIDARequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    AIDAResponseResponse,
+    BadRequestResponse | UnauthenticatedResponse | UnauthorizedResponse | InternalServerErrorResponse,
+    void,
+    AIDARequestRequestBody,
+    void
+  >('POST', getConfig('cf'), `/admin/aida`, props, signal)
 
 export interface GetAllAPIKeysQueryParams {
   /**
@@ -3088,6 +3389,104 @@ export const getAllFeaturesPromise = (
     GetAllFeaturesQueryParams,
     void
   >(getConfig('cf'), `/admin/features`, props, signal)
+
+export interface PatchFeaturesQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment
+   */
+  environmentIdentifier?: string
+}
+
+export type PatchFeaturesProps = Omit<
+  MutateProps<
+    FeaturesEditResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    PatchFeaturesQueryParams,
+    FeaturesPatchRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Updates Feature Flags for the project
+ *
+ * Updates Feature Flag details for the given project
+ */
+export const PatchFeatures = (props: PatchFeaturesProps) => (
+  <Mutate<
+    FeaturesEditResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    PatchFeaturesQueryParams,
+    FeaturesPatchRequestRequestBody,
+    void
+  >
+    verb="PATCH"
+    path={`/admin/features`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UsePatchFeaturesProps = Omit<
+  UseMutateProps<
+    FeaturesEditResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    PatchFeaturesQueryParams,
+    FeaturesPatchRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Updates Feature Flags for the project
+ *
+ * Updates Feature Flag details for the given project
+ */
+export const usePatchFeatures = (props: UsePatchFeaturesProps) =>
+  useMutate<
+    FeaturesEditResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    PatchFeaturesQueryParams,
+    FeaturesPatchRequestRequestBody,
+    void
+  >('PATCH', `/admin/features`, { base: getConfig('cf'), ...props })
+
+/**
+ * Updates Feature Flags for the project
+ *
+ * Updates Feature Flag details for the given project
+ */
+export const patchFeaturesPromise = (
+  props: MutateUsingFetchProps<
+    FeaturesEditResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    PatchFeaturesQueryParams,
+    FeaturesPatchRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    FeaturesEditResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    PatchFeaturesQueryParams,
+    FeaturesPatchRequestRequestBody,
+    void
+  >('PATCH', getConfig('cf'), `/admin/features`, props, signal)
 
 export interface CreateFeatureFlagQueryParams {
   /**
@@ -6473,6 +6872,693 @@ export const createGitRepoPromise = (
     CreateGitRepoPathParams
   >('POST', getConfig('cf'), `/admin/projects/${identifier}/git_repo`, props, signal)
 
+export interface GetProxyConfigQueryParams {
+  /**
+   * Accepts an EnvironmentID. If this is provided then the endpoint will only return config for this environment. If this is left empty then the Proxy will return config for all environments associated with the Proxy Key.
+   */
+  environment?: string
+  /**
+   * Accpets a Proxy Key.
+   */
+  key: string
+}
+
+export type GetProxyConfigProps = Omit<
+  GetProps<
+    ProxyConfigResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyConfigQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Gets Proxy config for multiple environments
+ *
+ * Gets Proxy config for multiple environments if the Key query param is provided or gets config for a single environment if an environment query param is provided
+ */
+export const GetProxyConfig = (props: GetProxyConfigProps) => (
+  <Get<
+    ProxyConfigResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyConfigQueryParams,
+    void
+  >
+    path={`/admin/proxy/config`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetProxyConfigProps = Omit<
+  UseGetProps<
+    ProxyConfigResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyConfigQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Gets Proxy config for multiple environments
+ *
+ * Gets Proxy config for multiple environments if the Key query param is provided or gets config for a single environment if an environment query param is provided
+ */
+export const useGetProxyConfig = (props: UseGetProxyConfigProps) =>
+  useGet<
+    ProxyConfigResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyConfigQueryParams,
+    void
+  >(`/admin/proxy/config`, { base: getConfig('cf'), ...props })
+
+/**
+ * Gets Proxy config for multiple environments
+ *
+ * Gets Proxy config for multiple environments if the Key query param is provided or gets config for a single environment if an environment query param is provided
+ */
+export const getProxyConfigPromise = (
+  props: GetUsingFetchProps<
+    ProxyConfigResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyConfigQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ProxyConfigResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyConfigQueryParams,
+    void
+  >(getConfig('cf'), `/admin/proxy/config`, props, signal)
+
+export interface GetProxyKeysQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+}
+
+export type GetProxyKeysProps = Omit<
+  GetProps<
+    ProxyKeysResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Gets all the Proxy keys for an account & org
+ *
+ * Gets all the Proxy keys for an account & org
+ */
+export const GetProxyKeys = (props: GetProxyKeysProps) => (
+  <Get<
+    ProxyKeysResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >
+    path={`/admin/proxy/keys`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetProxyKeysProps = Omit<
+  UseGetProps<
+    ProxyKeysResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Gets all the Proxy keys for an account & org
+ *
+ * Gets all the Proxy keys for an account & org
+ */
+export const useGetProxyKeys = (props: UseGetProxyKeysProps) =>
+  useGet<
+    ProxyKeysResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >(`/admin/proxy/keys`, { base: getConfig('cf'), ...props })
+
+/**
+ * Gets all the Proxy keys for an account & org
+ *
+ * Gets all the Proxy keys for an account & org
+ */
+export const getProxyKeysPromise = (
+  props: GetUsingFetchProps<
+    ProxyKeysResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ProxyKeysResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >(getConfig('cf'), `/admin/proxy/keys`, props, signal)
+
+export interface CreateProxyKeyQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+}
+
+export type CreateProxyKeyProps = Omit<
+  MutateProps<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateProxyKeyQueryParams,
+    ProxyKeysPostRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a Proxy Key in the account & org
+ *
+ * Creates a Proxy Key in the account & org
+ */
+export const CreateProxyKey = (props: CreateProxyKeyProps) => (
+  <Mutate<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateProxyKeyQueryParams,
+    ProxyKeysPostRequestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/admin/proxy/keys`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseCreateProxyKeyProps = Omit<
+  UseMutateProps<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateProxyKeyQueryParams,
+    ProxyKeysPostRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a Proxy Key in the account & org
+ *
+ * Creates a Proxy Key in the account & org
+ */
+export const useCreateProxyKey = (props: UseCreateProxyKeyProps) =>
+  useMutate<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateProxyKeyQueryParams,
+    ProxyKeysPostRequestRequestBody,
+    void
+  >('POST', `/admin/proxy/keys`, { base: getConfig('cf'), ...props })
+
+/**
+ * Creates a Proxy Key in the account & org
+ *
+ * Creates a Proxy Key in the account & org
+ */
+export const createProxyKeyPromise = (
+  props: MutateUsingFetchProps<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateProxyKeyQueryParams,
+    ProxyKeysPostRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateProxyKeyQueryParams,
+    ProxyKeysPostRequestRequestBody,
+    void
+  >('POST', getConfig('cf'), `/admin/proxy/keys`, props, signal)
+
+export interface DeleteProxyKeyQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+}
+
+export type DeleteProxyKeyProps = Omit<
+  MutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteProxyKeyQueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Deletes a ProxyKey
+ *
+ * Deletes a ProxyKey
+ */
+export const DeleteProxyKey = (props: DeleteProxyKeyProps) => (
+  <Mutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteProxyKeyQueryParams,
+    string,
+    void
+  >
+    verb="DELETE"
+    path={`/admin/proxy/keys`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseDeleteProxyKeyProps = Omit<
+  UseMutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteProxyKeyQueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Deletes a ProxyKey
+ *
+ * Deletes a ProxyKey
+ */
+export const useDeleteProxyKey = (props: UseDeleteProxyKeyProps) =>
+  useMutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteProxyKeyQueryParams,
+    string,
+    void
+  >('DELETE', `/admin/proxy/keys`, { base: getConfig('cf'), ...props })
+
+/**
+ * Deletes a ProxyKey
+ *
+ * Deletes a ProxyKey
+ */
+export const deleteProxyKeyPromise = (
+  props: MutateUsingFetchProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteProxyKeyQueryParams,
+    string,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteProxyKeyQueryParams,
+    string,
+    void
+  >('DELETE', getConfig('cf'), `/admin/proxy/keys`, props, signal)
+
+export interface GetProxyKeyQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+}
+
+export interface GetProxyKeyPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type GetProxyKeyProps = Omit<
+  GetProps<
+    ProxyKeyResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeyQueryParams,
+    GetProxyKeyPathParams
+  >,
+  'path'
+> &
+  GetProxyKeyPathParams
+
+/**
+ * Returns a ProxyKey
+ *
+ * Returns a ProxyKey
+ */
+export const GetProxyKey = ({ identifier, ...props }: GetProxyKeyProps) => (
+  <Get<
+    ProxyKeyResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeyQueryParams,
+    GetProxyKeyPathParams
+  >
+    path={`/admin/proxy/keys/${identifier}`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetProxyKeyProps = Omit<
+  UseGetProps<
+    ProxyKeyResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeyQueryParams,
+    GetProxyKeyPathParams
+  >,
+  'path'
+> &
+  GetProxyKeyPathParams
+
+/**
+ * Returns a ProxyKey
+ *
+ * Returns a ProxyKey
+ */
+export const useGetProxyKey = ({ identifier, ...props }: UseGetProxyKeyProps) =>
+  useGet<
+    ProxyKeyResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeyQueryParams,
+    GetProxyKeyPathParams
+  >((paramsInPath: GetProxyKeyPathParams) => `/admin/proxy/keys/${paramsInPath.identifier}`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Returns a ProxyKey
+ *
+ * Returns a ProxyKey
+ */
+export const getProxyKeyPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ProxyKeyResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeyQueryParams,
+    GetProxyKeyPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ProxyKeyResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProxyKeyQueryParams,
+    GetProxyKeyPathParams
+  >(getConfig('cf'), `/admin/proxy/keys/${identifier}`, props, signal)
+
+export interface UpdateProxyKeyQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+}
+
+export interface UpdateProxyKeyPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type UpdateProxyKeyProps = Omit<
+  MutateProps<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    UpdateProxyKeyQueryParams,
+    ProxyKeysPatchRequestRequestBody,
+    UpdateProxyKeyPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateProxyKeyPathParams
+
+/**
+ * Updates a Proxy Key in the account & org
+ *
+ * This operation is used to modify which environments a ProxyKey has access to. The requet body can include one or more instructions that can assign or unassign environmnets to the ProxyKey
+ *
+ * {
+ *   "kind": "addEnvironment",
+ *   "parameters": {
+ *     "environments": ["env1", "env2"]
+ *   }
+ *   "kind": "removeEnvironment",
+ *   "parameters": {
+ *     "environments": ["env3"]
+ *   }
+ * }
+ *
+ */
+export const UpdateProxyKey = ({ identifier, ...props }: UpdateProxyKeyProps) => (
+  <Mutate<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    UpdateProxyKeyQueryParams,
+    ProxyKeysPatchRequestRequestBody,
+    UpdateProxyKeyPathParams
+  >
+    verb="PATCH"
+    path={`/admin/proxy/keys/${identifier}`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseUpdateProxyKeyProps = Omit<
+  UseMutateProps<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    UpdateProxyKeyQueryParams,
+    ProxyKeysPatchRequestRequestBody,
+    UpdateProxyKeyPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateProxyKeyPathParams
+
+/**
+ * Updates a Proxy Key in the account & org
+ *
+ * This operation is used to modify which environments a ProxyKey has access to. The requet body can include one or more instructions that can assign or unassign environmnets to the ProxyKey
+ *
+ * {
+ *   "kind": "addEnvironment",
+ *   "parameters": {
+ *     "environments": ["env1", "env2"]
+ *   }
+ *   "kind": "removeEnvironment",
+ *   "parameters": {
+ *     "environments": ["env3"]
+ *   }
+ * }
+ *
+ */
+export const useUpdateProxyKey = ({ identifier, ...props }: UseUpdateProxyKeyProps) =>
+  useMutate<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    UpdateProxyKeyQueryParams,
+    ProxyKeysPatchRequestRequestBody,
+    UpdateProxyKeyPathParams
+  >('PATCH', (paramsInPath: UpdateProxyKeyPathParams) => `/admin/proxy/keys/${paramsInPath.identifier}`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Updates a Proxy Key in the account & org
+ *
+ * This operation is used to modify which environments a ProxyKey has access to. The requet body can include one or more instructions that can assign or unassign environmnets to the ProxyKey
+ *
+ * {
+ *   "kind": "addEnvironment",
+ *   "parameters": {
+ *     "environments": ["env1", "env2"]
+ *   }
+ *   "kind": "removeEnvironment",
+ *   "parameters": {
+ *     "environments": ["env3"]
+ *   }
+ * }
+ *
+ */
+export const updateProxyKeyPromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    UpdateProxyKeyQueryParams,
+    ProxyKeysPatchRequestRequestBody,
+    UpdateProxyKeyPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ProxyKeysEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    UpdateProxyKeyQueryParams,
+    ProxyKeysPatchRequestRequestBody,
+    UpdateProxyKeyPathParams
+  >('PATCH', getConfig('cf'), `/admin/proxy/keys/${identifier}`, props, signal)
+
 export interface GetAllSegmentsQueryParams {
   /**
    * Account Identifier
@@ -7304,6 +8390,495 @@ export const getSegmentFlagsPromise = (
     GetSegmentFlagsQueryParams,
     GetSegmentFlagsPathParams
   >(getConfig('cf'), `/admin/segments/${identifier}/flags`, props, signal)
+
+export interface GetAllTagsQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment Identifier
+   */
+  environmentIdentifier: string
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+  /**
+   * SortOrder
+   */
+  sortOrder?: 'ASCENDING' | 'DESCENDING'
+  /**
+   * SortByField
+   */
+  sortByField?: 'name' | 'identifier' | 'archived' | 'kind' | 'modifiedAt'
+  /**
+   * Name of the field
+   */
+  name?: string
+  /**
+   * Identifier of the field
+   */
+  identifier?: string
+  /**
+   * Identifier of the tag to filter on
+   */
+  tagIdentifierFilter?: string
+}
+
+export type GetAllTagsProps = Omit<
+  GetProps<
+    TagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllTagsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns all Tags
+ *
+ * Returns all the Tags for the given Account ID
+ */
+export const GetAllTags = (props: GetAllTagsProps) => (
+  <Get<
+    TagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllTagsQueryParams,
+    void
+  >
+    path={`/admin/tags`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetAllTagsProps = Omit<
+  UseGetProps<
+    TagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllTagsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns all Tags
+ *
+ * Returns all the Tags for the given Account ID
+ */
+export const useGetAllTags = (props: UseGetAllTagsProps) =>
+  useGet<
+    TagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllTagsQueryParams,
+    void
+  >(`/admin/tags`, { base: getConfig('cf'), ...props })
+
+/**
+ * Returns all Tags
+ *
+ * Returns all the Tags for the given Account ID
+ */
+export const getAllTagsPromise = (
+  props: GetUsingFetchProps<
+    TagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllTagsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    TagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAllTagsQueryParams,
+    void
+  >(getConfig('cf'), `/admin/tags`, props, signal)
+
+export interface CreateTagQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+}
+
+export type CreateTagProps = Omit<
+  MutateProps<
+    TagEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateTagQueryParams,
+    TagRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a Tag
+ *
+ * Create Tags for the given identifier
+ */
+export const CreateTag = (props: CreateTagProps) => (
+  <Mutate<
+    TagEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateTagQueryParams,
+    TagRequestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/admin/tags`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseCreateTagProps = Omit<
+  UseMutateProps<
+    TagEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateTagQueryParams,
+    TagRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a Tag
+ *
+ * Create Tags for the given identifier
+ */
+export const useCreateTag = (props: UseCreateTagProps) =>
+  useMutate<
+    TagEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateTagQueryParams,
+    TagRequestRequestBody,
+    void
+  >('POST', `/admin/tags`, { base: getConfig('cf'), ...props })
+
+/**
+ * Creates a Tag
+ *
+ * Create Tags for the given identifier
+ */
+export const createTagPromise = (
+  props: MutateUsingFetchProps<
+    TagEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateTagQueryParams,
+    TagRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    TagEditResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateTagQueryParams,
+    TagRequestRequestBody,
+    void
+  >('POST', getConfig('cf'), `/admin/tags`, props, signal)
+
+export interface DeleteTagQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Git commit message
+   */
+  commitMsg?: string
+  /**
+   * Permanently deletes the the feature flag
+   */
+  forceDelete?: boolean
+}
+
+export type DeleteTagProps = Omit<
+  MutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteTagQueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Tag
+ *
+ * Delete Tag for the given identifier and account ID
+ */
+export const DeleteTag = (props: DeleteTagProps) => (
+  <Mutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteTagQueryParams,
+    string,
+    void
+  >
+    verb="DELETE"
+    path={`/admin/tags`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseDeleteTagProps = Omit<
+  UseMutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteTagQueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Tag
+ *
+ * Delete Tag for the given identifier and account ID
+ */
+export const useDeleteTag = (props: UseDeleteTagProps) =>
+  useMutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteTagQueryParams,
+    string,
+    void
+  >('DELETE', `/admin/tags`, { base: getConfig('cf'), ...props })
+
+/**
+ * Delete a Tag
+ *
+ * Delete Tag for the given identifier and account ID
+ */
+export const deleteTagPromise = (
+  props: MutateUsingFetchProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteTagQueryParams,
+    string,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    DeleteTagQueryParams,
+    string,
+    void
+  >('DELETE', getConfig('cf'), `/admin/tags`, props, signal)
+
+export interface GetTagQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment
+   */
+  environmentIdentifier?: string
+  /**
+   * Parameter to indicate if metrics data is requested in response
+   */
+  metrics?: boolean
+  /**
+   * Status of the feature flag
+   */
+  archived?: boolean
+}
+
+export interface GetTagPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type GetTagProps = Omit<
+  GetProps<
+    FeatureResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetTagQueryParams,
+    GetTagPathParams
+  >,
+  'path'
+> &
+  GetTagPathParams
+
+/**
+ * Returns a Tag
+ *
+ * Returns details such as identifier,Associated Feature Flag etc for the given Tag
+ */
+export const GetTag = ({ identifier, ...props }: GetTagProps) => (
+  <Get<
+    FeatureResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetTagQueryParams,
+    GetTagPathParams
+  >
+    path={`/admin/tags/${identifier}`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetTagProps = Omit<
+  UseGetProps<
+    FeatureResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetTagQueryParams,
+    GetTagPathParams
+  >,
+  'path'
+> &
+  GetTagPathParams
+
+/**
+ * Returns a Tag
+ *
+ * Returns details such as identifier,Associated Feature Flag etc for the given Tag
+ */
+export const useGetTag = ({ identifier, ...props }: UseGetTagProps) =>
+  useGet<
+    FeatureResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetTagQueryParams,
+    GetTagPathParams
+  >((paramsInPath: GetTagPathParams) => `/admin/tags/${paramsInPath.identifier}`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Returns a Tag
+ *
+ * Returns details such as identifier,Associated Feature Flag etc for the given Tag
+ */
+export const getTagPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    FeatureResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetTagQueryParams,
+    GetTagPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    FeatureResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetTagQueryParams,
+    GetTagPathParams
+  >(getConfig('cf'), `/admin/tags/${identifier}`, props, signal)
 
 export interface GetAllTargetsQueryParams {
   /**

@@ -31,17 +31,18 @@ export enum StaleFlagStatusReason {
 export interface FlagStatusProps {
   status?: FeatureFlagStatus
   lastAccess?: number
+  isStale?: boolean
   staleReason?: string
 }
 
-export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, staleReason }) => {
+export const FlagStatus: React.FC<FlagStatusProps> = ({ status, lastAccess, isStale, staleReason }) => {
   const { getString } = useStrings()
   const isNeverRequested = status === FeatureFlagStatus.NEVER_REQUESTED
   const isPotentiallyStale = status === FeatureFlagStatus.POTENTIALLY_STALE
 
   const flagCleanupEnabled = useFeatureFlag(FeatureFlag.FFM_8344_FLAG_CLEANUP)
 
-  const isWaitingForCleanup = staleReason === StaleFlagStatusReason.WAITING_FOR_CLEANUP
+  const isWaitingForCleanup = staleReason === StaleFlagStatusReason.WAITING_FOR_CLEANUP && isStale
 
   const textStyle = {
     fontWeight: 600,

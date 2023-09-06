@@ -23,7 +23,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
-import { FeatureFlagStatus } from '@cf/pages/feature-flags/FlagStatus'
+import { FeatureFlagStatus, StaleFlagStatusReason } from '@cf/pages/feature-flags/FlagStatus'
+import { StaleFlagActionDialog } from '@cf/pages/feature-flags/components/StaleFlagActions/StaleFlagActionDialog'
 import ArchiveDialog from '../FlagArchiving/ArchiveDialog'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 import useRestoreFlagDialog from '../FlagArchiving/useRestoreFlagDialog'
@@ -43,6 +44,8 @@ export interface FlagOptionsMenuButtonProps {
   clearFilter?: () => void
   isLastArchivedFlag?: boolean
   noEdit?: boolean
+  isStale?: boolean
+  staleReason?: string
 }
 
 const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
@@ -52,7 +55,9 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   deleteFlag,
   queryParams,
   refetchFlags,
-  noEdit = false
+  noEdit = false,
+  isStale,
+  staleReason
 }) => {
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
@@ -62,6 +67,17 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
   const { FFM_7921_ARCHIVING_FEATURE_FLAGS, FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
   const [showArchiveDialog, setShowArchiveDialog] = useState<boolean>()
+  const [showNotStaleDialog, setShowNotStaleDialog] = useState<boolean>(false)
+  const [showCleanupDialog, setShowCleanupDialog] = useState<boolean>(false)
+  const isWaitingForCleanup = staleReason === StaleFlagStatusReason.WAITING_FOR_CLEANUP && isStale
+
+  const handleShowCleanupDialog = (): void => {
+    setShowCleanupDialog(true)
+  }
+
+  const handleShowNotStaleDialog = (): void => {
+    setShowNotStaleDialog(true)
+  }
 
   const planEnforcementProps = isPlanEnforcementEnabled
     ? {
@@ -100,14 +116,6 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
         environment
       )
     )
-  }
-
-  const handleNotStaleClick = (): void => {
-    //TODO: Implement on click
-  }
-
-  const handleCleanupClick = (): void => {
-    //TODO: Implement on click
   }
 
   const options: Record<string, RbacMenuItemProps> = {
@@ -155,13 +163,13 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
       className: css.staleFlagItem,
       icon: 'blank',
       text: getString('cf.staleFlagAction.readyForCleanup'),
-      onClick: handleCleanupClick
+      onClick: handleShowCleanupDialog
     },
     notStale: {
       className: css.staleFlagItem,
       icon: 'blank',
       text: getString('cf.staleFlagAction.notStale'),
-      onClick: handleNotStaleClick
+      onClick: handleShowNotStaleDialog
     }
   }
 
@@ -171,7 +179,11 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     menuOptions: Record<string, RbacMenuItemProps>
   ): RbacOptionsMenuButtonProps['items'] => {
     if (FFM_8344_FLAG_CLEANUP && flagFilter.queryProps?.value === FeatureFlagStatus.POTENTIALLY_STALE) {
-      return [menuOptions.edit, menuOptions.archive, '-', menuOptions.cleanup, menuOptions.notStale]
+      if (!isWaitingForCleanup) {
+        return [menuOptions.edit, menuOptions.archive, '-', menuOptions.cleanup, menuOptions.notStale]
+      } else {
+        return [menuOptions.edit, menuOptions.archive, '-', menuOptions.notStale]
+      }
     } else if (archivingFlags) {
       if (flag.archived) {
         return [menuOptions.restore, menuOptions.delete]
@@ -196,6 +208,23 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
           gitSync={gitSync}
           queryParams={queryParams}
           setShowArchiveDialog={setShowArchiveDialog}
+        />
+      )}
+
+      {showCleanupDialog && (
+        <StaleFlagActionDialog
+          selectedFlags={[flagData.identifier]}
+          onAction={refetchFlags}
+          onClose={() => setShowCleanupDialog(false)}
+        />
+      )}
+
+      {showNotStaleDialog && (
+        <StaleFlagActionDialog
+          markAsNotStale
+          selectedFlags={[flagData.identifier]}
+          onAction={refetchFlags}
+          onClose={() => setShowNotStaleDialog(false)}
         />
       )}
 

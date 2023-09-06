@@ -162,6 +162,7 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
             <FlagStatus
               status={metrics?.status?.status as FeatureFlagStatus}
               lastAccess={metrics?.status?.lastAccess as unknown as number}
+              isStale={feature?.stale}
               staleReason={feature?.staleReason}
             />
           )
@@ -195,6 +196,8 @@ const FeatureFlagsListing: FC<FeatureFlagsListingProps> = ({
               deleteFlag={deleteFlag}
               gitSync={gitSync}
               refetchFlags={refetchFlags}
+              isStale={cell.row.original.stale}
+              staleReason={cell.row.original.staleReason}
             />
           </Container>
         ),
