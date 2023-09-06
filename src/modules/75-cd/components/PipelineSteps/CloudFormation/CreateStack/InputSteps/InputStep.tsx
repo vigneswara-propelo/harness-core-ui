@@ -87,42 +87,43 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const [regionsRef, setRegionsRef] = useState(
     defaultTo(get(initialValues, 'spec.configuration.region'), get(allValues, 'spec.configuration.region'))
   )
+  const capabilitiesRequired = isRuntime(inputSetData?.template?.spec?.configuration?.capabilities as string)
+  const awsStatusRequired = isRuntime(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string)
 
   useEffect(() => {
     /* istanbul ignore next */
-    if (isArray(selectedCapabilities) && selectedCapabilities.length > 0) {
-      formik?.setFieldValue(
-        `${path}.spec.configuration.capabilities`,
-        map(selectedCapabilities, cap => cap.value)
-      )
-    } else if (
-      !isEmpty(selectedCapabilities) &&
-      getMultiTypeFromValue(selectedCapabilities) !== MultiTypeInputType.FIXED
-    ) {
-      formik?.setFieldValue(`${path}.spec.configuration.capabilities`, selectedCapabilities)
-    } else {
-      formik?.setFieldValue(`${path}.spec.configuration.capabilities`, [])
+    if (capabilitiesRequired) {
+      if (isArray(selectedCapabilities) && selectedCapabilities.length > 0) {
+        formik?.setFieldValue(
+          `${path}.spec.configuration.capabilities`,
+          map(selectedCapabilities, cap => cap.value)
+        )
+      } else if (
+        !isEmpty(selectedCapabilities) &&
+        getMultiTypeFromValue(selectedCapabilities) !== MultiTypeInputType.FIXED
+      ) {
+        formik?.setFieldValue(`${path}.spec.configuration.capabilities`, selectedCapabilities)
+      }
     }
   }, [selectedCapabilities])
 
   useEffect(() => {
     /* istanbul ignore next */
-    if (isArray(selectedStackStatus) && selectedStackStatus.length > 0) {
-      formik?.setFieldValue(
-        `${path}.spec.configuration.skipOnStackStatuses`,
-        map(selectedStackStatus, status => status.value)
-      )
-    } else if (
-      !isEmpty(selectedStackStatus) &&
-      getMultiTypeFromValue(selectedStackStatus) !== MultiTypeInputType.FIXED
-    ) {
-      formik?.setFieldValue(`${path}.spec.configuration.skipOnStackStatuses`, selectedStackStatus)
-    } else {
-      formik?.setFieldValue(`${path}.spec.configuration.skipOnStackStatuses`, [])
+    if (awsStatusRequired) {
+      if (isArray(selectedStackStatus) && selectedStackStatus.length > 0) {
+        formik?.setFieldValue(
+          `${path}.spec.configuration.skipOnStackStatuses`,
+          map(selectedStackStatus, status => status.value)
+        )
+      } else if (
+        !isEmpty(selectedStackStatus) &&
+        getMultiTypeFromValue(selectedStackStatus) !== MultiTypeInputType.FIXED
+      ) {
+        formik?.setFieldValue(`${path}.spec.configuration.skipOnStackStatuses`, selectedStackStatus)
+      }
     }
   }, [selectedStackStatus])
 
-  const capabilitiesRequired = isRuntime(inputSetData?.template?.spec?.configuration?.capabilities as string)
   const { data: capabilitiesData, refetch: getAwsCapabilities } = useCFCapabilitiesForAws({ lazy: true })
   useEffect(() => {
     if (capabilitiesData) {
@@ -136,7 +137,6 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
     }
   }, [capabilitiesData, capabilitiesRequired])
 
-  const awsStatusRequired = isRuntime(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string)
   const { data: awsStatusData, refetch: getAwsStatuses } = useCFStatesForAws({ lazy: true })
 
   useEffect(() => {
@@ -383,7 +383,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       )}
       {
         /* istanbul ignore next */
-        isRuntime(inputSetData?.template?.spec?.configuration?.capabilities as string) && (
+        capabilitiesRequired && (
           <Layout.Vertical>
             <Label style={{ color: Color.GREY_900 }}>{getString('cd.cloudFormation.specifyCapabilities')}</Label>
             <MultiSelectTypeInput
@@ -443,7 +443,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       }
       {
         /* istanbul ignore next */
-        isRuntime(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string) && (
+        awsStatusRequired && (
           <Layout.Vertical>
             <Label style={{ color: Color.GREY_900 }}>{getString('cd.cloudFormation.continueStatus')}</Label>
             <MultiSelectTypeInput
