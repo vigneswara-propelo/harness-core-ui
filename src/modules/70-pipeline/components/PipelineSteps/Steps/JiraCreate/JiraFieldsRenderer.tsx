@@ -16,7 +16,8 @@ import {
   Label,
   Layout,
   MultiSelectTypeInput,
-  MultiTypeInputType
+  MultiTypeInputType,
+  getMultiTypeFromValue
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -27,6 +28,7 @@ import { useStrings } from 'framework/strings'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { JiraUpdateData } from '@pipeline/components/PipelineSteps/Steps/JiraUpdate/types'
+import { isMultiTypeFixed } from '@common/utils/utils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setAllowedValuesOptions } from '../JiraApproval/helper'
 import { processMultiSelectTypeInputRuntimeValues } from './helper'
@@ -112,6 +114,12 @@ function GetMappedFieldComponent({
     }
   }, [index, selectedField])
 
+  const formValue = get(props.formik?.values, formikFieldPath, '')
+  const [multiType, setMultiType] = React.useState<MultiTypeInputType>(getMultiTypeFromValue(formValue))
+  const multiSelectTypeInputValue = isMultiTypeFixed(multiType)
+    ? processMultiSelectTypeInputRuntimeValues(formValue)
+    : formValue
+
   if (shouldShowTextField(selectedField)) {
     return (
       <TextFieldInputSetView
@@ -146,6 +154,7 @@ function GetMappedFieldComponent({
             }}
             expressions={expressions}
             allowableTypes={allowableTypes}
+            onTypeChange={setMultiType}
             onChange={items => {
               const valueArr = [] as string[]
               if (Array.isArray(items)) {
@@ -160,7 +169,8 @@ function GetMappedFieldComponent({
 
               props.formik.setFieldValue(formikFieldPath, valueArr.toString())
             }}
-            value={processMultiSelectTypeInputRuntimeValues(get(props.formik?.values, formikFieldPath))}
+            value={multiSelectTypeInputValue}
+            resetExpressionOnFixedTypeChange
           />
           {!isNil(get(props.formik?.errors, formikFieldPath)) ? (
             <FormError

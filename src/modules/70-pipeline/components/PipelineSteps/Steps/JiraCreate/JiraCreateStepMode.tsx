@@ -588,6 +588,7 @@ function FormContent({
             renderRequiredFields={true}
             readonly={readonly}
             connectorRef={defaultTo(connectorRefFixedValue, '')}
+            formik={formik}
           />
         </div>
         {!ALLOW_USER_TYPE_FIELDS_JIRA && unsupportedRequiredFields?.length > 0 && (
@@ -631,6 +632,7 @@ function FormContent({
                       formik.setFieldValue('spec.fields', customFields)
                     }}
                     connectorRef={defaultTo(connectorRefFixedValue, '')}
+                    formik={formik}
                   />
 
                   {!isEmpty(formik.values.spec.fields) ? (
