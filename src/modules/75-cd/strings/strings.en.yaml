@@ -23,6 +23,7 @@ steps:
     addCommand: Add Command
     editCommand: Edit Command
     sourceTypeLabel: Select file type to copy
+    winRmConfig: WinRm supporting only config source type
     destinationPath: Destination Path
     destinationPathPlaceholder: Enter Destination Path
     scriptTypePlaceholder: Enter Script Type

@@ -9,12 +9,13 @@ import React from 'react'
 import type { FormikProps } from 'formik'
 import { Container, FormInput, AllowedTypes, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
-import { CommandUnitType, sourceTypeOptions } from '../CommandScriptsTypes'
+import { CommandUnitType, SourceType, sourceTypeOptions } from '../CommandScriptsTypes'
 import css from './CommandEdit.module.scss'
 
 interface CopyCommandEditProps {
@@ -30,14 +31,27 @@ export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
+  const sourceOptions = React.useMemo(() => {
+    return isWinRmDeploymentType(deploymentType)
+      ? sourceTypeOptions.filter((option: RadioButtonProps) => option.value !== SourceType.ARTIFACT)
+      : sourceTypeOptions
+  }, [deploymentType])
+
   return (
     <>
       <FormInput.RadioGroup
         name="spec.sourceType"
         radioGroup={{ inline: true }}
-        items={sourceTypeOptions}
-        label={getString('cd.steps.commands.sourceTypeLabel')}
-        disabled={readonly || isWinRmDeploymentType(deploymentType)}
+        items={sourceOptions}
+        label={
+          <Text
+            color={Color.GREY_500}
+            tooltip={isWinRmDeploymentType(deploymentType) ? getString('cd.steps.commands.winRmConfig') : ''}
+          >
+            {getString('cd.steps.commands.sourceTypeLabel')}
+          </Text>
+        }
+        disabled={readonly}
         onChange={(event: React.FormEvent<HTMLInputElement>) => {
           const currentValue = event.currentTarget.value
           formik.setFieldValue('spec.sourceType', currentValue)

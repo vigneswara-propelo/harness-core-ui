@@ -6975,6 +6975,7 @@ export interface StringsMap {
   'cd.steps.commands.sourceTypeLabel': string
   'cd.steps.commands.validation.destinationPathRequired': string
   'cd.steps.commands.validation.sourceTypeRequired': string
+  'cd.steps.commands.winRmConfig': string
   'cd.steps.common.clusterDetails': string
   'cd.steps.common.enableKubernetesPruning': string
   'cd.steps.common.releaseNamePlaceholder': string
