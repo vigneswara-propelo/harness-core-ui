@@ -284,7 +284,7 @@ delegates:
     infoText: Harness Delegate is a service that can run in local network or VPC to connect artifact servers, infrastructure, collaboration, verification and other providers, with the Harness Manager. Harness provides different types of Delegates to give you flexibility in how you manage deployments. You can either deploy a kubernetes based delegate or a docker based delegate
     installDelegateSubText: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
     firstCommandHeadingHelm: Add Harness helm chart repo to your local helm registry
-    firstCommandHelmFirstLine: helm repo add harness-delegate https://app.harness.io/storage/harness-download/delegate-helm-chart/
+    firstCommandHelmFirstLine: helm repo add harness-delegate
     firstCommandHelmSecondLine: helm repo update harness-delegate
     secondCommandHeadingHelm: Now we are ready to install the delegate
     firstComandHeadingKubernetes: Create your own YAML from a Kubernetes manifest template

@@ -17,16 +17,17 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import css from '../DelegateCommandLineCreation.module.scss'
 interface HelmChartCommandsProps {
   command: string
+  helmCommandFirstLine: string
   combineAllCommands?: boolean
 }
-const HelmChartCommands: React.FC<HelmChartCommandsProps> = ({ command, combineAllCommands }) => {
+const HelmChartCommands: React.FC<HelmChartCommandsProps> = ({ command, helmCommandFirstLine, combineAllCommands }) => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
 
   const combinedCommands = React.useMemo(
     () =>
       [
-        getString('platform.delegates.commandLineCreation.firstCommandHelmFirstLine'),
+        `${getString('platform.delegates.commandLineCreation.firstCommandHelmFirstLine')} ${helmCommandFirstLine}`,
         getString('platform.delegates.commandLineCreation.firstCommandHelmSecondLine'),
         command
       ].join(' ; \n'),
@@ -93,16 +94,22 @@ const HelmChartCommands: React.FC<HelmChartCommandsProps> = ({ command, combineA
           </Text>
           <Layout.Vertical margin={{ bottom: 'xxlarge' }} className={css.codeBlock}>
             <Container margin={{ bottom: 'medium' }}>
-              <CommandBlock
-                telemetryProps={{
-                  copyTelemetryProps: {
-                    eventName: DelegateActions.DelegateCommandLineHelmCommandCopy1,
-                    properties: { category: Category.DELEGATE }
-                  }
-                }}
-                commandSnippet={`${getString('platform.delegates.commandLineCreation.firstCommandHelmFirstLine')}`}
-                allowCopy={true}
-              />
+              <OverlaySpinner show={!helmCommandFirstLine}>
+                {helmCommandFirstLine && (
+                  <CommandBlock
+                    telemetryProps={{
+                      copyTelemetryProps: {
+                        eventName: DelegateActions.DelegateCommandLineHelmCommandCopy1,
+                        properties: { category: Category.DELEGATE }
+                      }
+                    }}
+                    commandSnippet={`${getString(
+                      'platform.delegates.commandLineCreation.firstCommandHelmFirstLine'
+                    )} ${helmCommandFirstLine}`}
+                    allowCopy={true}
+                  />
+                )}
+              </OverlaySpinner>
             </Container>
             <CommandBlock
               commandSnippet={`${getString('platform.delegates.commandLineCreation.firstCommandHelmSecondLine')}`}

@@ -46,12 +46,17 @@ jest.mock('services/portal', () => ({
   useGetInstallationCommand: jest.fn().mockImplementation(() => {
     return {
       mutate: jest.fn(),
-      data: { resource: { command: 'test' } },
+      data: {
+        resource: {
+          command: 'test',
+          delegateHelmRepoUrl: 'www.abc.com'
+        }
+      },
       loading: false,
       error: null,
       refetch: jest.fn().mockImplementation(() => {
         return {
-          data: { resource: { command: 'test' } },
+          data: { resource: { command: 'test', delegateHelmRepoUrl: 'www.abc.com' } },
           loading: false,
           error: null
         }

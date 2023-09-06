@@ -1544,50 +1544,54 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
               class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
             >
               <div
-                class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+                class="OverlaySpinner--overlaySpinner"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
-                >
-                  platform.delegates.commandLineCreation.firstCommandHelmFirstLine
-                </p>
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
+                  class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
-                  <span
-                    class="bp3-popover-wrapper"
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
+                  >
+                    platform.delegates.commandLineCreation.firstCommandHelmFirstLine www.abc.com
+                  </p>
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
                   >
                     <span
-                      class="bp3-popover-target"
+                      class="bp3-popover-wrapper"
                     >
-                      <button
-                        aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                        tabindex="0"
-                        type="button"
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
-                          icon="duplicate"
+                        <button
+                          aria-label="common.copied"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          tabindex="0"
+                          type="button"
                         >
-                          <svg
-                            data-icon="duplicate"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
+                          <span
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
+                            icon="duplicate"
                           >
-                            <desc>
-                              duplicate
-                            </desc>
-                            <path
-                              d="M15 0H5c-.55 0-1 .45-1 1v2h2V2h8v7h-1v2h2c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 4H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H2V6h8v8z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                            <svg
+                              data-icon="duplicate"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                            >
+                              <desc>
+                                duplicate
+                              </desc>
+                              <path
+                                d="M15 0H5c-.55 0-1 .45-1 1v2h2V2h8v7h-1v2h2c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 4H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H2V6h8v8z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2069,50 +2073,54 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
               class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
             >
               <div
-                class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
+                class="OverlaySpinner--overlaySpinner"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
-                >
-                  platform.delegates.commandLineCreation.firstCommandHelmFirstLine
-                </p>
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
+                  class="Layout--horizontal StyledProps--main commandBlock StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
                 >
-                  <span
-                    class="bp3-popover-wrapper"
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--font-variation-yaml"
+                  >
+                    platform.delegates.commandLineCreation.firstCommandHelmFirstLine www.abc.com
+                  </p>
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
                   >
                     <span
-                      class="bp3-popover-target"
+                      class="bp3-popover-wrapper"
                     >
-                      <button
-                        aria-label="common.copied"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                        tabindex="0"
-                        type="button"
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
-                          icon="duplicate"
+                        <button
+                          aria-label="common.copied"
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                          tabindex="0"
+                          type="button"
                         >
-                          <svg
-                            data-icon="duplicate"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
+                          <span
+                            class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color"
+                            icon="duplicate"
                           >
-                            <desc>
-                              duplicate
-                            </desc>
-                            <path
-                              d="M15 0H5c-.55 0-1 .45-1 1v2h2V2h8v7h-1v2h2c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 4H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H2V6h8v8z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                            <svg
+                              data-icon="duplicate"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                            >
+                              <desc>
+                                duplicate
+                              </desc>
+                              <path
+                                d="M15 0H5c-.55 0-1 .45-1 1v2h2V2h8v7h-1v2h2c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 4H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H2V6h8v8z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>

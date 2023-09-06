@@ -67,6 +67,7 @@ export const CreateK8sDelegateV2 = ({
   const [errorDelegateNameLength, setErrorDelegateNameLength] = useState<boolean>(false)
   const [errorDelegateName, setErrorDelegateName] = useState<boolean>(false)
   const [command, setCommand] = useState<string>('')
+  const [helmCommandFirstLine, setHelmCommandFirstLine] = useState<string>('')
   const [originalCommand, setOriginalCommand] = useState<string>('')
   const [verifyButtonClicked, setVerifyButtonClicked] = useState<boolean>(
     !isEmpty(delegateData?.environmentEntities?.delegate)
@@ -93,9 +94,14 @@ export const CreateK8sDelegateV2 = ({
   })
 
   useEffect(() => {
-    if (commandData && commandData?.resource && commandData?.resource['command']) {
-      setCommand(commandData?.resource['command'])
-      setOriginalCommand(commandData?.resource['command'])
+    if (commandData?.resource) {
+      if (commandData?.resource['command']) {
+        setCommand(commandData?.resource['command'])
+        setOriginalCommand(commandData?.resource['command'])
+      }
+      if (commandData?.resource['delegateHelmRepoUrl']) {
+        setHelmCommandFirstLine(commandData?.resource['delegateHelmRepoUrl'])
+      }
     }
   }, [commandData])
 
@@ -252,7 +258,7 @@ export const CreateK8sDelegateV2 = ({
               {getString('cd.getStartedWithCD.installationInstructions')}
               <HarnessDocTooltip tooltipId="cdOnboardingDelegateInstructions" useStandAlone={true} />
             </Text>
-            <HelmChartCommands command={command} combineAllCommands />
+            <HelmChartCommands command={command} helmCommandFirstLine={helmCommandFirstLine} combineAllCommands />
           </li>
 
           <li className={`${css.progressItem} ${css.progressItemActive}`}>

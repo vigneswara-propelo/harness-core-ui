@@ -94,6 +94,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
     return isDockerDelegate ? CommandType.DOCKER : CommandType.HELM
   })
   const [command, setCommand] = useState<string>('')
+  const [helmCommandFirstLine, setHelmCommandFirstLine] = useState<string>('')
   const [errorDelegateName, setErrorDelegateName] = useState<boolean>(false)
   const [errorDelegateNameLength, setErrorDelegateNameLength] = useState<boolean>(false)
   const [delegateDefaultName, setDelegateDefaultName] = useState<string>((): string => {
@@ -199,6 +200,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   useEffect(() => {
     if (commandType) {
       setCommand('')
+      setHelmCommandFirstLine('')
       setOriginalCommand('')
       if (commandType === CommandType.TERRAFORM) {
         if (!terraFormData) {
@@ -214,10 +216,15 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
     }
   }, [commandType])
   useEffect(() => {
-    if (commandData && commandData?.resource && commandData?.resource['command']) {
-      const commandUpdated = getYamlWithCustomImage(commandData?.resource['command'], customImageName)
-      setCommand(commandUpdated)
-      setOriginalCommand(commandUpdated)
+    if (commandData?.resource) {
+      if (commandData?.resource['command']) {
+        const commandUpdated = getYamlWithCustomImage(commandData?.resource['command'], customImageName)
+        setCommand(commandUpdated)
+        setOriginalCommand(commandUpdated)
+      }
+      if (commandData?.resource['delegateHelmRepoUrl']) {
+        setHelmCommandFirstLine(commandData?.resource['delegateHelmRepoUrl'])
+      }
     }
   }, [commandData])
   const commonCommandsForAllDelegateTypes = (): void => {
@@ -423,7 +430,11 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       <>
         {delegateType === DelegateCommandLineTypes.KUBERNETES && (
           <>
-            <>{kubernetesType === KubernetesType.HELM_CHART && <HelmChartCommands command={command} />}</>
+            <>
+              {kubernetesType === KubernetesType.HELM_CHART && (
+                <HelmChartCommands command={command} helmCommandFirstLine={helmCommandFirstLine} />
+              )}
+            </>
             <>
               {kubernetesType === KubernetesType.KUBERNETES_MANIFEST && (
                 <KubernetesManifestCommands
