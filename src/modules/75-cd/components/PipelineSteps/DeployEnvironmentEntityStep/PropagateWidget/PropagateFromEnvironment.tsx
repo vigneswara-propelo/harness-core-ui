@@ -57,7 +57,7 @@ export default function PropagateFromEnvironmentV2({
           then: Yup.object().test(
             'selectedPropagatedState',
             getString('cd.pipelineSteps.infraTab.stageIsRequired'),
-            propagatedState => !isEmpty(propagatedState.value)
+            propagatedState => !isEmpty(propagatedState?.value)
           )
         })
       })}

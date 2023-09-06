@@ -435,7 +435,7 @@ export const validateStage = ({
 
     // Validation for infrastructure namespace
     // For CD spec is DeploymentStageConfig
-    const stageConfig = stage.spec as DeploymentStageConfig | undefined
+    const stageConfig = stage?.spec as DeploymentStageConfig | undefined
     const templateStageConfig = template?.spec as DeploymentStageConfig | undefined
     const originalStageConfig = originalStage?.spec as DeploymentStageConfig | undefined
     if (
@@ -450,7 +450,7 @@ export const validateStage = ({
         getString?.('fieldRequired', { field: getString?.('pipelineSteps.build.infraSpecifications.namespace') })
       )
     }
-    if (stage.type === 'Deployment' && templateStageConfig?.serviceConfig?.serviceRef) {
+    if (stage?.type === 'Deployment' && templateStageConfig?.serviceConfig?.serviceRef) {
       const step = factory.getStep(StepType.DeployService)
       const errorsResponse = step?.validateInputSet({
         data: stageConfig?.serviceConfig,
@@ -463,7 +463,7 @@ export const validateStage = ({
       }
     }
 
-    if (stage.type === 'Deployment' && templateStageConfig?.service) {
+    if (stage?.type === 'Deployment' && templateStageConfig?.service) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
       const stepErrorsResponse = currentStep?.validateInputSet({
         data: stageConfig,
@@ -504,7 +504,7 @@ export const validateStage = ({
         }
       }
     }
-    if (stage.type === 'Deployment' && templateStageConfig?.services) {
+    if (stage?.type === 'Deployment' && templateStageConfig?.services) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
       const stepErrorsResponse = currentStep?.validateInputSet({
         data: stageConfig,
@@ -553,7 +553,7 @@ export const validateStage = ({
       }
     }
 
-    if (stage.type === 'Deployment' && templateStageConfig?.infrastructure?.environmentRef) {
+    if (stage?.type === 'Deployment' && templateStageConfig?.infrastructure?.environmentRef) {
       const step = factory.getStep(StepType.DeployEnvironment)
       const errorsResponse = step?.validateInputSet({
         data: stageConfig?.infrastructure,
