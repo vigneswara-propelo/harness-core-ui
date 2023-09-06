@@ -680,6 +680,10 @@ notifications:
   changeType: Change Type
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
+  notificationConditions:
+    thresholdValue: Threshold Value
+    changeObserved: Change Observed
+    eventTypes: Event Types
   validations:
     conditionIsRequired: Condition is required
     eventStatusIsRequired: Events is required

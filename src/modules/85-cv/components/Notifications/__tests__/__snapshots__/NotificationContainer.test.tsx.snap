@@ -367,7 +367,19 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 20%;"
+              style="width: 7%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 18%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -379,7 +391,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 25%;"
+              style="width: 23%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -391,7 +403,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 25%;"
+              style="width: 24%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -403,7 +415,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
               class="TableV2--cell"
               colspan="1"
               role="columnheader"
-              style="width: 28%;"
+              style="width: 26%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -437,7 +449,43 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 20%;"
+                  style="width: 7%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main toggleAccordion StyledProps--color StyledProps--color-grey600 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                      style="cursor: pointer;"
+                      title="Toggle Row Expanded"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                        icon="chevron-right"
+                      >
+                        <svg
+                          data-icon="chevron-right"
+                          height="19"
+                          viewBox="0 0 16 16"
+                          width="19"
+                        >
+                          <desc>
+                            chevron-right
+                          </desc>
+                          <path
+                            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 18%;"
                 >
                   <label
                     class="bp3-control bp3-switch StyledProps--font Switch--switch StyledProps--main"
@@ -453,7 +501,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 25%;"
+                  style="width: 23%;"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -465,7 +513,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 25%;"
+                  style="width: 24%;"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -477,7 +525,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
                 <div
                   class="TableV2--cell"
                   role="cell"
-                  style="width: 28%;"
+                  style="width: 26%;"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"

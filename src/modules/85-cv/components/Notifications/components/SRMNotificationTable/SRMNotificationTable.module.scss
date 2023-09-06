@@ -51,3 +51,8 @@
 .notificationsNoData {
   max-height: 263px;
 }
+
+.toggleAccordion {
+  // to have better click target area for toggle
+  padding: var(--spacing-none) var(--spacing-small) !important;
+}

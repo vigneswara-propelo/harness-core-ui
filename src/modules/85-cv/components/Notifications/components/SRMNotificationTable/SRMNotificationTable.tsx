@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useMemo } from 'react'
+import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, Layout, Button, Switch, Container, Icon, ButtonVariation, TableV2, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useFormikContext } from 'formik'
-import type { CellProps, Renderer } from 'react-table'
+import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { getIconByNotificationMethod } from '@rbac/utils/NotificationUtils'
@@ -25,10 +25,12 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
 import type { MonitoredServiceForm } from '@cv/pages/monitored-service/components/Configurations/components/Service/Service.types'
 import { CompositeSLOContext } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CompositeSLOContext'
+import { killEvent } from '@common/utils/eventUtils'
 import { useSRMNotificationModal } from '../useSRMNotificationModal/useSRMNotificationModal'
 import type { CustomColumn, NotificationRulesItem, SRMNotificationTableProps } from './SRMNotificationTable.types'
 import { SRMNotificationType } from '../../NotificationsContainer.types'
 import { getCurrentNotification, NotificationDeleteContext } from './SRMNotificationTable.utils'
+import NotificationConditions from './components/NotificationConditions/NotificationConditions'
 import css from './SRMNotificationTable.module.scss'
 
 function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElement {
@@ -57,10 +59,28 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
 
   const formik = useFormikContext<MonitoredServiceForm>()
   const { values: formValues } = formik || {}
-
   const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
-
   const isNotificationDisabled = isSRMLicenseEnabled && formValues?.isEdit && !formValues?.isMonitoredServiceEnabled
+
+  const renderRowSubComponent = useCallback(
+    ({ row }) => <NotificationConditions notificationDetails={row?.original} />,
+    []
+  )
+
+  const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<NotificationRuleResponse> }> = ({ row }) => {
+    return (
+      <Layout.Horizontal onClick={killEvent}>
+        <Button
+          {...row.getToggleRowExpandedProps()}
+          color={Color.GREY_600}
+          icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
+          variation={ButtonVariation.ICON}
+          iconProps={{ size: 19 }}
+          className={css.toggleAccordion}
+        />
+      </Layout.Horizontal>
+    )
+  }
 
   const getAddNotificationButton = (): JSX.Element => (
     <RbacButton
@@ -173,12 +193,18 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
   const columns: CustomColumn<NotificationRuleResponse>[] = useMemo(
     () => [
       {
+        Header: '',
+        id: 'rowSelectOrExpander',
+        Cell: ToggleAccordionCell,
+        width: '7%'
+      },
+      {
         Header: getString('enabledLabel').toUpperCase(),
         id: 'enabled',
         className: css.notificationTableHeader,
         accessor: row => row.enabled,
         onUpdate: onUpdate,
-        width: '20%',
+        width: '18%',
         Cell: RenderColumnEnabled,
         disableSortBy: true
       },
@@ -187,7 +213,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
         id: 'name',
         className: css.notificationTableHeader,
         accessor: row => row.notificationRule.name,
-        width: '25%',
+        width: '23%',
         Cell: RenderColumnName,
         disableSortBy: true
       },
@@ -195,7 +221,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
         Header: 'CATEGORY',
         id: 'category',
         className: css.notificationTableHeader,
-        width: '25%',
+        width: '24%',
         Cell: RenderColumnCategory,
         disableSortBy: true
       },
@@ -204,7 +230,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
         id: 'methods',
         className: css.notificationTableHeader,
         accessor: row => row.notificationRule.type,
-        width: '28%',
+        width: '26%',
         Cell: RenderColumnMethod,
         disableSortBy: true
       },
@@ -288,6 +314,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
           columns={columns}
           data={notificationsData}
           className={css.notificationTable}
+          renderRowSubComponent={renderRowSubComponent}
           pagination={{
             showPagination: true,
             itemCount: totalItems,
