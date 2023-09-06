@@ -747,29 +747,51 @@ exports[`Test delegate buttons click on filter 1`] = `
                           style="--text-line-clamp: 1;"
                         >
                           <div
-                            class="StyledProps--font StyledProps--main"
-                            style="display: inline-flex; flex-wrap: wrap;"
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main"
-                              style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                            <span
+                              class="Tag--main"
                             >
-                              implicitSelector1
-                            </p>
-                            <p
-                              class="StyledProps--font StyledProps--main"
-                              style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                              <span
+                                class="bp3-tag"
+                                style="max-width: 80px;"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  implicitSelector1
+                                </span>
+                              </span>
+                            </span>
+                            <span
+                              class="Tag--main"
                             >
-                              customtag1
-                            </p>
-                            <p
-                              class="StyledProps--font StyledProps--main"
-                              style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                              <span
+                                class="bp3-tag"
+                                style="max-width: 80px;"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  customtag1
+                                </span>
+                              </span>
+                            </span>
+                            <span
+                              class="Tag--main"
                             >
-                              customtag2
-                            </p>
+                              <span
+                                class="bp3-tag"
+                                style="max-width: 80px;"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  customtag2
+                                </span>
+                              </span>
+                            </span>
                           </div>
-                          <span />
                         </p>
                       </div>
                       <div
@@ -1442,29 +1464,51 @@ exports[`Test delegate buttons click on new delegate 1`] = `
                           style="--text-line-clamp: 1;"
                         >
                           <div
-                            class="StyledProps--font StyledProps--main"
-                            style="display: inline-flex; flex-wrap: wrap;"
+                            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main"
-                              style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                            <span
+                              class="Tag--main"
                             >
-                              implicitSelector1
-                            </p>
-                            <p
-                              class="StyledProps--font StyledProps--main"
-                              style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                              <span
+                                class="bp3-tag"
+                                style="max-width: 80px;"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  implicitSelector1
+                                </span>
+                              </span>
+                            </span>
+                            <span
+                              class="Tag--main"
                             >
-                              customtag1
-                            </p>
-                            <p
-                              class="StyledProps--font StyledProps--main"
-                              style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                              <span
+                                class="bp3-tag"
+                                style="max-width: 80px;"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  customtag1
+                                </span>
+                              </span>
+                            </span>
+                            <span
+                              class="Tag--main"
                             >
-                              customtag2
-                            </p>
+                              <span
+                                class="bp3-tag"
+                                style="max-width: 80px;"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  customtag2
+                                </span>
+                              </span>
+                            </span>
                           </div>
-                          <span />
                         </p>
                       </div>
                       <div

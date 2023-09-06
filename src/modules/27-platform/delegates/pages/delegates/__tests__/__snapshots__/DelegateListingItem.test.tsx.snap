@@ -288,29 +288,51 @@ exports[`Delegates Listing With Groups render data 1`] = `
                 style="--text-line-clamp: 1;"
               >
                 <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                  <span
+                    class="Tag--main"
                   >
-                    implicitSelector1
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    <span
+                      class="bp3-tag"
+                      style="max-width: 80px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        implicitSelector1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
                   >
-                    customtag1
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    <span
+                      class="bp3-tag"
+                      style="max-width: 80px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        customtag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
                   >
-                    customtag2
-                  </p>
+                    <span
+                      class="bp3-tag"
+                      style="max-width: 80px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        customtag2
+                      </span>
+                    </span>
+                  </span>
                 </div>
-                <span />
               </p>
             </div>
             <div
@@ -555,18 +577,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
               class="TableV2--cell"
               role="cell"
               style="width: 17%;"
-            >
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-medium"
-                style="--text-line-clamp: 1;"
-              >
-                <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
-                />
-                <span />
-              </p>
-            </div>
+            />
             <div
               class="TableV2--cell"
               role="cell"
@@ -808,17 +819,23 @@ exports[`Delegates Listing With Groups render data 1`] = `
                 style="--text-line-clamp: 1;"
               >
                 <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                  <span
+                    class="Tag--main"
                   >
-                    cdp-workload-identity-gcp
-                  </p>
+                    <span
+                      class="bp3-tag"
+                      style="max-width: 240px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        cdp-workload-identity-gcp
+                      </span>
+                    </span>
+                  </span>
                 </div>
-                <span />
               </p>
             </div>
             <div
@@ -1066,17 +1083,23 @@ exports[`Delegates Listing With Groups render data 1`] = `
                 style="--text-line-clamp: 1;"
               >
                 <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                  <span
+                    class="Tag--main"
                   >
-                    test-old
-                  </p>
+                    <span
+                      class="bp3-tag"
+                      style="max-width: 240px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        test-old
+                      </span>
+                    </span>
+                  </span>
                 </div>
-                <span />
               </p>
             </div>
             <div

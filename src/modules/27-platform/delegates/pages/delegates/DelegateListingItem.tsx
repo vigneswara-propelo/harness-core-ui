@@ -21,9 +21,9 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 import { Table } from '@common/components'
+import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { killEvent } from '@common/utils/eventUtils'
 import { DelegateInstanceList } from './DelegateInstanceList'
 import { getAutoUpgradeTextColor, getInstanceStatus } from './utils/DelegateHelper'
@@ -75,16 +75,16 @@ const RenderDelegateName: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) 
 const RenderTags: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
   const delegate = row.original
   const allSelectors = Object.keys(delegate.groupImplicitSelectors || {}).concat(delegate.groupCustomSelectors || [])
-  return (
-    delegate?.groupImplicitSelectors && (
-      <>
-        <Text lineClamp={1} margin={{ right: 'medium' }}>
-          <TagsViewer key="tags" tags={allSelectors.slice(0, 3)} />
-          <span key="hidenTags">{allSelectors.length > 3 ? '+' + (allSelectors.length - 3) : ''}</span>
-        </Text>
-      </>
-    )
-  )
+  // TagsRenderer component accepts object { [key: string]: string } so converting the received array into acceptable format
+  const delegateTags = {} as { [key: string]: string }
+  allSelectors.forEach(item => (delegateTags[item] = ''))
+  return Object.keys(delegateTags).length > 0 ? (
+    <>
+      <Text lineClamp={1} margin={{ right: 'medium' }}>
+        <TagsRenderer tags={delegateTags} length={3} />
+      </Text>
+    </>
+  ) : null
 }
 
 const RenderVersion: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
