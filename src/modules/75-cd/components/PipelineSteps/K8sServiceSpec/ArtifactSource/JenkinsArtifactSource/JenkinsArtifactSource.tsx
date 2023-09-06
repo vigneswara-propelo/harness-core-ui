@@ -276,7 +276,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
       artifactPath: artifactPathValue,
-      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
+      jobName: jobNameValue,
       serviceId,
       fqnPath: getFqnPath(
         path as string,
