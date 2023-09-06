@@ -257,7 +257,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       connectorRef: connectorRefValue?.toString(),
       artifactPath: artifactPathValue
     },
-    jobName: jobNameValue ? getEncodedValue(jobNameValue) : ''
+    jobName: jobNameValue ? getEncodedValue(jobNameValue) : '',
+    lazy: true
   })
 
   const {
