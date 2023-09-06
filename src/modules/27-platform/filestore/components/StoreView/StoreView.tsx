@@ -23,8 +23,8 @@ export default function StoreView(): React.ReactElement {
     if (activeTab === FILE_VIEW_TAB.DETAILS) {
       return
     }
-    setActiveTab(FILE_VIEW_TAB.DETAILS)
-  }, [currentNode])
+    setActiveTab(activeTab as FILE_VIEW_TAB)
+  }, [currentNode, activeTab])
 
   if (loading) {
     return <PageSpinner />
