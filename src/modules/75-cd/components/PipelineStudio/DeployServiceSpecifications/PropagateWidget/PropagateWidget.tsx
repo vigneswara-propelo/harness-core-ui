@@ -59,7 +59,7 @@ export default function PropagateWidget(props: PropagateWidgetProps): JSX.Elemen
           then: Yup.object().test(
             'selectedPropagatedState',
             getString('cd.pipelineSteps.infraTab.stageIsRequired'),
-            propagatedState => !isEmpty(propagatedState.value)
+            propagatedState => !isEmpty(propagatedState?.value)
           )
         })
       })}
