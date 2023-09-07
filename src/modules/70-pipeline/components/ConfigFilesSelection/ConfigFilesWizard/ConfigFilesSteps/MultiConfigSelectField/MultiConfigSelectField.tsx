@@ -102,6 +102,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
   const getDefaultResetValue = () => (name === 'paramsPaths' ? [] : [''])
   const isDeploymentForm = stepViewType === StepViewType.DeploymentForm
   const value = get(formik?.values, name, getDefaultResetValue())
+  const setFieldValue = defaultTo(formik?.setFieldValue, () => null)
 
   const allowableFileSelectTypes = (allowableTypes as MultiTypeInputType[])?.filter(
     item => !isMultiTypeRuntime(item)
@@ -124,28 +125,26 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
           disabled={false}
           inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
           items={expressions}
-          onChange={val =>
-            /* istanbul ignore next */
-            formik?.setFieldValue(fieldName, val)
-          }
+          onChange={val => setFieldValue(fieldName, val)}
         />
       </FormGroup>
     )
   }
 
+  /* istanbul ignore next */
+  const handleDragnEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return
+    }
+    const res = Array.from(value as [])
+    const [removed] = res.splice(result.source.index, 1)
+    res.splice(result.destination.index, 0, removed)
+    setFieldValue(name, [...res])
+    setChanged(!changed)
+  }
+
   return (
-    <DragDropContext
-      onDragEnd={(result: DropResult) => {
-        if (!result.destination) {
-          return
-        }
-        const res = Array.from(value as [])
-        const [removed] = res.splice(result.source.index, 1)
-        res.splice(result.destination.index, 0, removed)
-        formik?.setFieldValue(name, [...res])
-        setChanged(!changed)
-      }}
-    >
+    <DragDropContext onDragEnd={handleDragnEnd}>
       <Droppable droppableId="droppableSelect">
         {(provided, _snapshot) => (
           <div
@@ -170,10 +169,9 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               useExecutionTimeInput={isDeploymentForm}
               onTypeChange={type => {
                 if (!isMultiTypeRuntime(type)) {
-                  formik?.setFieldValue(name, getDefaultResetValue())
+                  setFieldValue(name, getDefaultResetValue())
                 }
               }}
-              expressionRender={() => expressionInputRenderer(name)}
             >
               <FieldArray
                 name={name}
@@ -186,6 +184,15 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                             const { ...restValue } = field
                             const error = get(formik?.errors, `${name}[${index}]`)
                             const hasError = errorCheck(`${name}[${index}]`, formik) && typeof error === 'string'
+                            /* istanbul ignore next */
+                            const handleChange = (newValue: string, id?: string | number): void => {
+                              replace(id as number, {
+                                ...restValue,
+                                value: newValue
+                              })
+                              setFieldValue(`${name}[${index}]`, newValue)
+                            }
+
                             return (
                               <Draggable key={index} draggableId={`${index}`} index={index}>
                                 {providedDrag => (
@@ -246,37 +253,27 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                                   value={get(formik?.values, `${name}[${index}]`)}
                                                   name={`${name}[${index}]`}
                                                   isSshWinRm={isSshOrWinrmDeploymentType(defaultTo(deploymentType, ''))}
-                                                  onChange={(newValue, i) => {
-                                                    replace(i as number, {
-                                                      ...restValue,
-                                                      value: newValue
-                                                    })
-                                                    formik?.setFieldValue(`${name}[${index}]`, newValue)
-                                                  }}
+                                                  onChange={handleChange}
                                                 />
                                               ) : (
                                                 <FileStoreSelectField
                                                   name={`${name}[${index}]`}
                                                   fileUsage={fileUsage}
-                                                  onChange={(newValue, i) => {
-                                                    replace(i, {
-                                                      ...restValue,
-                                                      value: newValue
-                                                    })
-                                                    formik?.setFieldValue(`${name}[${index}]`, newValue)
-                                                  }}
+                                                  onChange={handleChange}
                                                 />
                                               )}
                                             </div>
                                           </MultiTypeConfigFileSelect>
-                                          <Button
-                                            icon="main-trash"
-                                            iconProps={{ size: 20 }}
-                                            minimal
-                                            data-testid={`remove-${name}-[${index}]`}
-                                            onClick={() => remove(index)}
-                                            disabled={disabled || (!allowSinglePathDeletion && value.length <= 1)}
-                                          />
+                                          {!allowSinglePathDeletion && value.length > 1 ? (
+                                            <Button
+                                              icon="main-trash"
+                                              iconProps={{ size: 20 }}
+                                              minimal
+                                              data-testid={`remove-${name}-[${index}]`}
+                                              onClick={() => remove(index)}
+                                              disabled={disabled}
+                                            />
+                                          ) : null}
                                         </div>
                                       </div>
                                     </Layout.Horizontal>
@@ -286,7 +283,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                             )
                           })}
                       </div>
-                      {restrictToSingleEntry && Array.isArray(value) && value?.length === 1 ? null : (
+                      {restrictToSingleEntry && Array.isArray(value) && value.length === 1 ? null : (
                         <Button
                           intent="primary"
                           minimal
@@ -316,7 +313,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                   variableName={name}
                   showRequiredField={false}
                   showDefaultField={false}
-                  onChange={val => formik?.setFieldValue(name, val)}
+                  onChange={val => setFieldValue(name, val)}
                   {...configureOptionsProps}
                   isReadonly={props.disabled}
                 />

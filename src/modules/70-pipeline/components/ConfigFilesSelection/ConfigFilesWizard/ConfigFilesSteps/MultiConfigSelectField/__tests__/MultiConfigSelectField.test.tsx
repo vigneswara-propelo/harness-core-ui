@@ -6,29 +6,25 @@
  */
 
 import React from 'react'
-import { Label, MultiTypeInputType, Formik, FormikForm } from '@harness/uicore'
+import { Label, MultiTypeInputType, Formik, FormikForm, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { act } from 'react-dom/test-utils'
-import { render, fireEvent, waitFor, findByTestId } from '@testing-library/react'
+import { render, fireEvent, waitFor, findByTestId, createEvent, screen, queryByAttribute } from '@testing-library/react'
+
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-
+import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-
-import { TestWrapper } from '@common/utils/testUtils'
 
 import MultiConfigSelectField from '../MultiConfigSelectField'
 
 jest.useFakeTimers()
 
+const eventData = { dataTransfer: { setData: jest.fn(), dropEffect: '', getData: () => '' } }
+
 function WrapperComponent(props: any): JSX.Element {
   const { initialValues, initialErrors, values = ['/t2confiog'] } = props || {}
   return (
     <TestWrapper>
-      <Formik
-        initialErrors={initialErrors}
-        initialValues={initialValues}
-        onSubmit={() => undefined}
-        formName="TestWrapper"
-      >
+      <Formik initialErrors={initialErrors} initialValues={initialValues} onSubmit={jest.fn()} formName="TestWrapper">
         {formikProps => {
           return (
             <FormikForm>
@@ -148,10 +144,6 @@ describe('Define Multi type config select field', () => {
     )
     const addBtn = await findByTestId(container, 'add-files')
     expect(addBtn).toBeInTheDocument()
-
-    const deleteBtn = await findByTestId(container, 'remove-files-[0]')
-    expect(deleteBtn).toBeInTheDocument()
-    expect(deleteBtn).toBeDisabled()
   })
   test('Remove field', async () => {
     const { container } = render(
@@ -175,5 +167,74 @@ describe('Define Multi type config select field', () => {
     })
     expect(deleteBtn).toBeInTheDocument()
     expect(deleteBtn).toBeEnabled()
+  })
+  test('Update filestore field', async () => {
+    const { container, getAllByRole } = render(
+      <WrapperComponent
+        fileUsage="CONFIG"
+        name="files"
+        initialValues={{
+          files: ['/t2confiog', '<+stage>'],
+          fileType: FILE_TYPE_VALUES.FILE_STORE
+        }}
+        initialErrors={{ files: ['error test', 'error test2'] }}
+        isAttachment
+        values={['/t2confiog', '/test1']}
+      />
+    )
+
+    const expressionInput = queryByAttribute('name', container, 'files[1]')
+    await fireEvent.change(expressionInput!, { target: { value: '<+org.description>' } })
+    const btn = getAllByRole('button')[0]
+
+    await fireEvent.click(btn)
+
+    await waitFor(() => expect(screen.getByText('Fixed value')).toBeInTheDocument())
+    await fireEvent.click(screen.getByText('Fixed value'))
+
+    const addLabel = await findByTestId(container, 'add-files')
+    await fireEvent.click(addLabel)
+    await fireEvent.click(addLabel)
+
+    const paramOne = await findByTestId(container, 'files[0]')
+    const deleteBtn = await findByTestId(container, 'remove-files-[1]')
+    await fireEvent.click(deleteBtn)
+    act(() => {
+      const dragStartEvent = Object.assign(createEvent.dragStart(paramOne), eventData)
+
+      fireEvent(paramOne, dragStartEvent)
+      fireEvent.dragEnd(addLabel)
+      fireEvent.dragLeave(paramOne)
+
+      const dropEffectEvent = Object.assign(createEvent.dragOver(paramOne), eventData)
+      fireEvent(addLabel, dropEffectEvent)
+
+      const dropEvent = Object.assign(createEvent.drop(paramOne), eventData)
+      fireEvent(addLabel, dropEvent)
+    })
+    expect(paramOne).toBeInTheDocument()
+  })
+  test('Update runtime filestore field', async () => {
+    const { container, getAllByRole } = render(
+      <WrapperComponent
+        fileUsage="CONFIG"
+        name="files"
+        initialValues={{
+          files: ['/test'],
+          fileType: FILE_TYPE_VALUES.FILE_STORE
+        }}
+        values={['/test']}
+      />
+    )
+
+    const multiTypeBtn = getAllByRole('button')[0]
+
+    fireEvent.click(multiTypeBtn!)
+
+    await waitFor(() => expect(screen.getByText('Runtime input')).toBeInTheDocument())
+    fireEvent.click(screen.getByText('Runtime input'))
+
+    const fileInput = queryByNameAttribute('files', container) as HTMLInputElement
+    expect(fileInput.value).toBe(RUNTIME_INPUT_VALUE)
   })
 })
