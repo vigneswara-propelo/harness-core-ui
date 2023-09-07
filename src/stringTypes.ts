@@ -5205,6 +5205,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AwsCdkDeploy': string
   'pipeline.stepDescription.AwsCdkDestroy': string
   'pipeline.stepDescription.AwsCdkDiff': string
+  'pipeline.stepDescription.AwsCdkRollBack': string
   'pipeline.stepDescription.AwsCdkSynth': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
   'pipeline.stepDescription.AwsLambdaDeployRollback': string

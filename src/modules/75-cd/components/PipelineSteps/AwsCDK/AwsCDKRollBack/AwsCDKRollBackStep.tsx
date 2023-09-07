@@ -12,58 +12,55 @@ import { IconName, AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } fro
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
-import type { ListValue } from '@common/components/MultiTypeList/MultiTypeList'
 import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { AwsCDKDiffStepInitialValues } from '@pipeline/utils/types'
-import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
+import type { AwsCDKRollBackStepInitialValues } from '@pipeline/utils/types'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
-import { AwsCDKDiffStepInputSetMode } from './AwsCDKDiffStepInputSet'
-import { AwsCDKDiffStepEditRef } from './AwsCDKDiffStepEdit'
-import type { AwsCDKCommonStepFormikValues } from '../AwsCDKCommonFields'
+import { AwsCDKRollBackStepInputSetMode } from './AwsCDKRollBackStepInputSet'
+import { AwsCDKRollBackStepEditRef, AwsCDKRollBackStepFormikValues } from './AwsCDKRollBackStepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-export interface AwsCDKDiffStepEditProps {
-  initialValues: AwsCDKDiffStepInitialValues
-  onUpdate?: (data: AwsCDKDiffStepInitialValues) => void
+export interface AwsCDKRollBackStepEditProps {
+  initialValues: AwsCDKRollBackStepInitialValues
+  onUpdate?: (data: AwsCDKRollBackStepInitialValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsCDKDiffStepInitialValues) => void
+  onChange?: (data: AwsCDKRollBackStepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData: {
-    template?: AwsCDKDiffStepInitialValues
+    template?: AwsCDKRollBackStepInitialValues
     path?: string
     readonly?: boolean
   }
 }
 
-export interface AwsCDKDiffVariableStepProps {
-  initialValues: AwsCDKDiffStepInitialValues
+export interface AwsCDKRollBackVariableStepProps {
+  initialValues: AwsCDKRollBackStepInitialValues
   stageIdentifier: string
-  onUpdate?(data: AwsCDKDiffStepInitialValues): void
+  onUpdate?(data: AwsCDKRollBackStepInitialValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: AwsCDKDiffStepInitialValues
+  variablesData: AwsCDKRollBackStepInitialValues
 }
 
-export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
-  protected type = StepType.AwsCdkDiff
-  protected stepName = 'AWS CDK Diff'
-  protected stepIcon: IconName = 'cdk-diff'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsCdkDiff'
+export class AwsCDKRollBackStep extends PipelineStep<AwsCDKRollBackStepInitialValues> {
+  protected type = StepType.AwsCdkRollback
+  protected stepName = 'AWS CDK Rollback'
+  protected stepIcon: IconName = 'cdk-roll-back'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsCdkRollBack'
   protected isHarnessSpecific = false
-  protected referenceId = 'AwsCDKDiffStep'
+  protected referenceId = 'AwsCDKRollBackStep'
 
-  protected defaultValues: AwsCDKDiffStepInitialValues = {
+  protected defaultValues: AwsCDKRollBackStepInitialValues = {
     identifier: '',
     name: '',
-    type: StepType.AwsCdkDiff,
+    type: StepType.AwsCdkRollback,
     timeout: '10m',
     spec: {
-      connectorRef: ''
+      provisionerIdentifier: ''
     }
   }
 
@@ -73,7 +70,7 @@ export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<AwsCDKDiffStepInitialValues>): JSX.Element {
+  renderStep(props: StepProps<AwsCDKRollBackStepInitialValues>): JSX.Element {
     const {
       initialValues,
       stepViewType,
@@ -89,14 +86,14 @@ export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <AwsCDKDiffStepInputSetMode
+        <AwsCDKRollBackStepInputSetMode
           initialValues={initialValues}
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<AwsCDKDiffStepInitialValues>}
+          inputSetData={inputSetData as InputSetData<AwsCDKRollBackStepInitialValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as AwsCDKDiffVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as AwsCDKRollBackVariableStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -108,10 +105,10 @@ export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
     }
 
     return (
-      <AwsCDKDiffStepEditRef
+      <AwsCDKRollBackStepEditRef
         initialValues={initialValues}
-        onUpdate={(formData: AwsCDKCommonStepFormikValues) => onUpdate?.(this.processFormData(formData))}
-        onChange={(formData: AwsCDKCommonStepFormikValues) => onChange?.(this.processFormData(formData))}
+        onUpdate={(formData: AwsCDKRollBackStepFormikValues) => onUpdate?.(this.processFormData(formData))}
+        onChange={(formData: AwsCDKRollBackStepFormikValues) => onChange?.(this.processFormData(formData))}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}
@@ -126,7 +123,7 @@ export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<AwsCDKDiffStepInitialValues>): FormikErrors<AwsCDKDiffStepInitialValues> {
+  }: ValidateInputSetProps<AwsCDKRollBackStepInitialValues>): FormikErrors<AwsCDKRollBackStepInitialValues> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
     const errors = validateGenericFields({
@@ -134,26 +131,18 @@ export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
       template,
       getString,
       viewType
-    }) as FormikErrors<AwsCDKDiffStepInitialValues>
+    }) as FormikErrors<AwsCDKRollBackStepInitialValues>
 
     if (
-      isEmpty(data?.spec?.connectorRef) &&
+      isEmpty(data?.spec?.provisionerIdentifier) &&
       isRequired &&
-      getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME
     ) {
       set(
         errors,
-        `spec.connectorRef`,
+        `spec.provisionerIdentifier`,
         getString?.('common.validation.fieldIsRequired', { name: getString?.('pipelineSteps.connectorLabel') })
       )
-    }
-
-    if (
-      isEmpty(data?.spec?.image) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.spec?.image) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `spec.image`, getString?.('common.validation.fieldIsRequired', { name: getString?.('imageLabel') }))
     }
 
     if (isEmpty(errors.spec)) {
@@ -163,25 +152,7 @@ export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
     return errors
   }
   /* eslint-disable */
-  processFormData(formData: any): AwsCDKDiffStepInitialValues {
-    let commandOptions
-    let stackNames
-    if (formData.spec?.commandOptions && !isEmpty(formData.spec?.commandOptions)) {
-      commandOptions =
-        typeof formData.spec.commandOptions === 'string'
-          ? formData.spec.commandOptions
-          : (formData.spec.commandOptions as ListValue)?.map(
-              (commandOption: { id: string; value: string }) => commandOption.value
-            )
-    }
-
-    if (formData.spec?.stackNames && !isEmpty(formData.spec?.stackNames)) {
-      stackNames =
-        typeof formData.spec.stackNames === 'string'
-          ? formData.spec.stackNames
-          : (formData.spec.stackNames as ListValue)?.map((stackName: { id: string; value: string }) => stackName.value)
-    }
-
+  processFormData(formData: any): AwsCDKRollBackStepInitialValues {
     let envVariables
     if (formData.spec.envVariables && !isEmpty(formData.spec.envVariables)) {
       envVariables = (formData.spec?.envVariables as MapValue).reduce(
@@ -192,18 +163,10 @@ export class AwsCDKDiffStep extends PipelineStep<AwsCDKDiffStepInitialValues> {
         {}
       )
     }
-
     return {
       ...formData,
       spec: {
         ...formData.spec,
-        connectorRef: getConnectorRefValue(formData.spec.connectorRef as ConnectorRefFormValueType),
-        commandOptions,
-        stackNames,
-        imagePullPolicy:
-          formData.spec.imagePullPolicy && formData.spec.imagePullPolicy.length > 0
-            ? formData.spec.imagePullPolicy
-            : undefined,
         envVariables
       }
     }

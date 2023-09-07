@@ -52,7 +52,7 @@ export interface AwsCDKBootstrapVariableStepProps {
 export class AwsCDKBootstrapStep extends PipelineStep<AwsCDKBootstrapStepInitialValues> {
   protected type = StepType.AwsCdkBootstrap
   protected stepName = 'AWS CDK Bootstrap'
-  protected stepIcon: IconName = 'service-aws'
+  protected stepIcon: IconName = 'cdk-bootstrap'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsCdkBootstrap'
   protected isHarnessSpecific = false
   protected referenceId = 'AwsCDKBootstrapStep'

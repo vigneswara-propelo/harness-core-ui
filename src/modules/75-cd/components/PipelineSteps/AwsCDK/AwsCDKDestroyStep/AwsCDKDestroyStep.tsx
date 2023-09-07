@@ -56,7 +56,7 @@ export interface AwsCDKDestroyVariableStepProps {
 export class AwsCDKDestroyStep extends PipelineStep<AwsCDKDestroyStepInitialValues> {
   protected type = StepType.AwsCdkDestroy
   protected stepName = 'AWS CDK Destroy'
-  protected stepIcon: IconName = 'service-aws'
+  protected stepIcon: IconName = 'cdk-destroy'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsCdkDestroy'
   protected isHarnessSpecific = false
   protected referenceId = 'AwsCDKDestroyStep'

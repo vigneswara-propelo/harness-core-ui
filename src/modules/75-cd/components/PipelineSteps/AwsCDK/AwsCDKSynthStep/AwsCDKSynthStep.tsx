@@ -72,7 +72,7 @@ export interface AwsCDKBootstrapVariableStepProps {
 export class AwsCDKSynthStep extends PipelineStep<AwsCDKSynthStepInitialValues> {
   protected type = StepType.AwsCdkSynth
   protected stepName = 'AWS CDK Synthetize'
-  protected stepIcon: IconName = 'service-aws'
+  protected stepIcon: IconName = 'cdk-synth'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsCdkSynth'
   protected isHarnessSpecific = false
   protected referenceId = 'AwsCDKSynthStep'

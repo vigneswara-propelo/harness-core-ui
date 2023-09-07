@@ -52,7 +52,7 @@ export interface AwsCDKDeployVariableStepProps {
 export class AwsCDKDeployStep extends PipelineStep<AwsCDKDeployStepInitialValues> {
   protected type = StepType.AwsCdkDeploy
   protected stepName = 'AWS CDK Deploy'
-  protected stepIcon: IconName = 'service-aws'
+  protected stepIcon: IconName = 'cdk-deploy'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsCdkDeploy'
   protected isHarnessSpecific = false
   protected referenceId = 'AwsCDKDeployStep'

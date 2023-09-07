@@ -1367,6 +1367,7 @@ stepDescription:
   AwsCdkSynth: Aws CDK Synthetize
   AwsCdkBootstrap: Aws CDK Bootstrap
   AwsCdkDeploy: Aws CDK Deploy
+  AwsCdkRollBack: Aws CDK RollBack
   DownloadManifests: Download manifests using this step.
   SscaEnforcement: Enforce policies based on your SBOM by Allow list/Deny list
   ServerlessPrepareRollback: Prepare a rollback of your deployment.

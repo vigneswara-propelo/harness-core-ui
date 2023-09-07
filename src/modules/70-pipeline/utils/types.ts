@@ -167,6 +167,13 @@ export interface AwsCDKDiffStepInitialValues extends StepElementConfig {
   }
 }
 
+export interface AwsCDKRollBackStepInitialValues extends StepElementConfig {
+  spec: {
+    provisionerIdentifier: string
+    envVariables?: { [key: string]: string }
+  }
+}
+
 export interface AwsCDKBootstrapStepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
