@@ -200,7 +200,7 @@ export function getSelectedInfrastructuresWhenPropagating(
   if (isValueRuntimeInput(infrastructureDefinitions as any)) return []
 
   const prevInfraId = infrastructureDefinitions?.[0].identifier
-  return prevInfraId ? [prevInfraId] : []
+  return prevInfraId && isValueFixed(prevInfraId) ? [prevInfraId] : []
 }
 
 export function getAllFixedInfrastructures(
