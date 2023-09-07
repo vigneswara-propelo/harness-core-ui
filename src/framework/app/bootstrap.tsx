@@ -41,6 +41,10 @@ export default async function render(): Promise<void> {
           return false
         }
 
+        event.addMetadata('NETWORK STATUS', {
+          online: navigator.onLine
+        })
+
         return true
       }
     })
