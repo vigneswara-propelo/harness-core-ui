@@ -491,6 +491,19 @@ const getPipelineGraphData = ({
   return graphState
 }
 
+function getIsConditionalExecutionEnabled(entity: any): boolean {
+  if (entity.when) {
+    return entity.when?.pipelineStatus !== 'Success' || !!entity.when?.condition?.trim()
+  }
+  if (entity.template?.templateInputs?.when) {
+    return (
+      entity.template.templateInputs.when?.pipelineStatus !== 'Success' ||
+      !!entity.template.templateInputs.when?.condition?.trim()
+    )
+  }
+  return false
+}
+
 const transformStageData = ({
   stages,
   graphType,
@@ -538,9 +551,7 @@ const transformStageData = ({
           }),
           isInComplete: isCustomGeneratedString(identifier) || hasErrors,
           loopingStrategyEnabled: !!stage.stage?.strategy,
-          conditionalExecutionEnabled: stage.stage.when
-            ? stage.stage.when?.pipelineStatus !== 'Success' || !!stage.stage.when?.condition?.trim()
-            : false,
+          conditionalExecutionEnabled: getIsConditionalExecutionEnabled(stage.stage),
           isTemplateNode: Boolean(templateRef)
         }
       })
@@ -575,9 +586,7 @@ const transformStageData = ({
           }),
           isInComplete: isCustomGeneratedString(identifier) || hasErrors,
           loopingStrategyEnabled: !!first.stage?.strategy,
-          conditionalExecutionEnabled: first?.stage?.when
-            ? first?.stage?.when?.pipelineStatus !== 'Success' || !!first?.stage.when?.condition?.trim()
-            : false,
+          conditionalExecutionEnabled: getIsConditionalExecutionEnabled(first.stage),
           isTemplateNode: Boolean(templateRef)
         },
         children: transformStageData({
@@ -618,9 +627,7 @@ const transformStageData = ({
           }),
           isInComplete: isCustomGeneratedString(identifier) || hasErrors,
           loopingStrategyEnabled: !!stage?.strategy,
-          conditionalExecutionEnabled: stage.when
-            ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
-            : false,
+          conditionalExecutionEnabled: getIsConditionalExecutionEnabled(stage),
           isTemplateNode: Boolean(templateRef)
         }
       })
@@ -643,9 +650,7 @@ const getConditionalExecutionEnabled = (
   }
   return isExecutionView
     ? getConditionalExecutionFlag(defaultTo(stepData?.when, (stepData as any)?.data?.when))
-    : stepData?.when
-    ? stepData?.when?.stageStatus !== 'Success' || !!stepData?.when?.condition?.trim()
-    : false
+    : getIsConditionalExecutionEnabled(stepData)
 }
 
 const transformStepsData = ({
