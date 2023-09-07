@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Heading, Layout, TabNavigation } from '@harness/uicore'
+import { Heading, Layout, TabNavigation, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams, useRouteMatch } from 'react-router-dom'
 import { Page } from '@common/exports'
@@ -58,6 +58,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const location = useLocation()
   const { trackEvent } = useTelemetry()
+  const { showError } = useToaster()
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
   const { isExact: isPipelineStudioV0Route } = useRouteMatch(
@@ -144,13 +145,18 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier
-      }).then((res: ResponseEOLBannerResponseDTO) => {
-        if (res?.data?.showBanner) {
-          setShowBanner(true)
-        }
       })
+        .then((res: ResponseEOLBannerResponseDTO) => {
+          if (res?.data?.showBanner) {
+            setShowBanner(true)
+          }
+        })
+        .catch((err: Error) => {
+          showError(err.message || getString('somethingWentWrong'))
+        })
     }
-  }, [pipelineIdentifier])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgIdentifier, projectIdentifier, pipelineIdentifier, CDS_V1_EOL_BANNER])
 
   React.useEffect(() => {
     if (repoIdentifier && !storeType) {

@@ -37,7 +37,6 @@ import type {
   TemplateStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import TemplateYamlView from '@templates-library/components/TemplateStudio/TemplateYamlView/TemplateYamlView'
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
@@ -55,7 +54,7 @@ import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
-import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO } from 'services/cd-ng'
+import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO, Error } from 'services/cd-ng'
 import { DefaultNewVersionLabel } from 'framework/Templates/templates'
 import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { TemplateContext } from './TemplateContext/TemplateContext'
@@ -134,11 +133,15 @@ export function TemplateStudioInternal(): React.ReactElement {
         templateIdentifier,
         orgIdentifier,
         projectIdentifier
-      }).then((res: ResponseEOLBannerResponseDTO) => {
-        if (res?.data?.showBanner) {
-          setShowBanner(true)
-        }
       })
+        .then((res: ResponseEOLBannerResponseDTO) => {
+          if (res?.data?.showBanner) {
+            setShowBanner(true)
+          }
+        })
+        .catch((err: Error) => {
+          showError(err.message || getString('somethingWentWrong'))
+        })
     }
   }, [templateType, templateIdentifier])
 
