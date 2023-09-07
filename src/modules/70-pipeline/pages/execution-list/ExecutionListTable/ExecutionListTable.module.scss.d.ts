@@ -46,6 +46,6 @@ declare const styles: {
   readonly triggerIcon: string
   readonly triggerInfo: string
   readonly triggerInfoCell: string
-  readonly viewWindowTextStyle: string
+  readonly viewTextStyle: string
 }
 export default styles

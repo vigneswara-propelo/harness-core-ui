@@ -228,7 +228,12 @@ export const PipelineNameCell: CellType = ({ row }) => {
             popoverClassName={css.popoverStyle}
             content={
               <Layout.Vertical flex={{ alignItems: 'flex-start' }} padding="medium" onClick={notesOnClickHandler}>
-                <Text font={{ variation: FontVariation.BODY2 }} color={Color.WHITE} padding={{ right: 'xsmall' }}>
+                <Text
+                  className={css.viewTextStyle}
+                  font={{ variation: FontVariation.BODY2 }}
+                  color={Color.WHITE}
+                  padding={{ right: 'xsmall' }}
+                >
                   {getString('pipeline.executionNotes.viewExecutionNotes')}
                 </Text>
               </Layout.Vertical>
@@ -268,7 +273,7 @@ export const StatusCell: CellType = ({ row }) => {
             e.stopPropagation()
             setDrawerOpen(true)
           }}
-          className={css.viewWindowTextStyle}
+          className={css.viewTextStyle}
         >
           {getString('pipeline.frozenExecPopover.viewFreezeWindows')}
         </Text>
