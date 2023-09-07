@@ -39,6 +39,9 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import MultiTypeSecretInput from '@platform/secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import { Modes } from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import css from './BuildStageSpecifications.module.scss'
@@ -55,6 +58,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
   const { variablesPipeline, metadataMap } = usePipelineVariables()
 
   const { getString } = useStrings()
+  const SSCA_SLSA_COMPLIANCE = useFeatureFlag(FeatureFlag.SSCA_SLSA_COMPLIANCE)
 
   const {
     state: {
@@ -102,6 +106,16 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
     cacheIntelligencePaths?: string[]
     cacheIntelligenceKey?: string
     variables: NGVariable[]
+    slsa_provenance?: {
+      enabled: boolean
+      attestation: {
+        type: 'cosign'
+        spec: {
+          password: string
+          private_key: string
+        }
+      }
+    }
   } => {
     const pipelineData = stage?.stage || null
     const spec = stage?.stage?.spec || null
@@ -140,9 +154,10 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
       tags,
       cloneCodebase,
       sharedPaths: sharedPaths as any,
-      cacheIntelligenceEnabled: cacheIntelligenceEnabled,
+      cacheIntelligenceEnabled,
       cacheIntelligencePaths,
       cacheIntelligenceKey,
+      slsa_provenance: (spec as any)?.slsa_provenance,
       variables
     }
   }
@@ -170,7 +185,20 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
   const validationSchema = yup.object().shape({
     ...(isContextTypeNotStageTemplate(contextType) && { name: NameSchema(getString) }),
     sharedPaths: commonValidationSchema,
-    cacheIntelligencePaths: commonValidationSchema
+    cacheIntelligencePaths: commonValidationSchema,
+    slsa_provenance: yup.object().shape({
+      enabled: yup.boolean(),
+      attestation: yup.object().when('enabled', {
+        is: true,
+        then: yup.object().shape({
+          type: yup.string(),
+          spec: yup.object().shape({
+            private_key: yup.string().required('Private key is required'),
+            password: yup.string().required('Password is required')
+          })
+        })
+      })
+    })
   })
 
   const handleValidate = (values: any): void => {
@@ -233,6 +261,18 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
           stageData.skipCondition = values.skipCondition
         } else {
           delete stageData.skipCondition
+        }
+
+        if (SSCA_SLSA_COMPLIANCE) {
+          set(spec, 'slsa_provenance.enabled', !!values.slsa_provenance?.enabled)
+          if (values.slsa_provenance?.enabled) {
+            set(spec, 'slsa_provenance.attestation.type', 'cosign')
+            set(spec, 'slsa_provenance.attestation.spec', values.slsa_provenance.attestation.spec)
+          } else if (spec.slsa_provenance.attestation) {
+            delete spec.slsa_provenance.attestation
+          }
+        } else {
+          delete spec.slsa_provenance
         }
       })
 
@@ -335,86 +375,135 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                   </FormikForm>
                 </Card>
 
-                <>
-                  <div className={css.tabHeading} id="cacheIntelligence">
-                    {getString('ci.cacheIntelligence.label')}
-                  </div>
-                  <Card disabled={isReadonly} className={cx(css.sectionCard)}>
-                    <FormikForm className={cx(css.fields, css.contentCard)}>
-                      <Layout.Vertical spacing="medium">
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <Switch
-                            checked={formValues.cacheIntelligenceEnabled}
-                            label={getString('ci.cacheIntelligence.enable')}
-                            onChange={e => setFieldValue('cacheIntelligenceEnabled', e.currentTarget.checked)}
-                            disabled={isReadonly || buildInfraType !== CIBuildInfrastructureType.Cloud}
-                            tooltipProps={{ tooltipId: 'enableCacheIntelligence' }}
-                          />
-                        </div>
-                        {formValues.cacheIntelligenceEnabled ? (
-                          <>
-                            <MultiTypeList
-                              name="cacheIntelligencePaths"
-                              multiTextInputProps={{
-                                expressions,
-                                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-                              }}
-                              multiTypeFieldSelectorProps={{
-                                label: (
-                                  <Text
-                                    font={{ variation: FontVariation.FORM_LABEL }}
-                                    tooltipProps={{ dataTooltipId: 'cacheIntelligencePaths' }}
-                                  >
-                                    {getString('pipelineSteps.paths')}
-                                  </Text>
-                                ),
-                                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-                              }}
-                              disabled={isReadonly}
-                              configureOptionsProps={{ hideExecutionTimeField: true }}
-                            />
-                            <MultiTypeTextField
-                              name={'cacheIntelligenceKey'}
-                              label={
-                                <Layout.Horizontal
-                                  flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}
-                                  spacing="xsmall"
-                                  padding={{ bottom: 'small' }}
+                <div className={css.tabHeading} id="cacheIntelligence">
+                  {getString('ci.cacheIntelligence.label')}
+                </div>
+                <Card disabled={isReadonly} className={cx(css.sectionCard)}>
+                  <FormikForm className={cx(css.fields, css.contentCard)}>
+                    <Layout.Vertical spacing="medium">
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Switch
+                          checked={formValues.cacheIntelligenceEnabled}
+                          label={getString('ci.cacheIntelligence.enable')}
+                          onChange={e => setFieldValue('cacheIntelligenceEnabled', e.currentTarget.checked)}
+                          disabled={isReadonly || buildInfraType !== CIBuildInfrastructureType.Cloud}
+                          tooltipProps={{ tooltipId: 'enableCacheIntelligence' }}
+                        />
+                      </div>
+                      {formValues.cacheIntelligenceEnabled ? (
+                        <>
+                          <MultiTypeList
+                            name="cacheIntelligencePaths"
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                            }}
+                            multiTypeFieldSelectorProps={{
+                              label: (
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  tooltipProps={{ dataTooltipId: 'cacheIntelligencePaths' }}
                                 >
-                                  <Text
-                                    font={{ size: 'small', weight: 'semi-bold' }}
-                                    tooltipProps={{ dataTooltipId: 'cacheIntelligenceKey' }}
-                                  >
-                                    {getString('keyLabel')}
-                                  </Text>
-                                  <Text
-                                    color={Color.GREY_400}
-                                    font={{ size: 'small', weight: 'semi-bold' }}
-                                    style={{ textTransform: 'capitalize' }}
-                                  >
-                                    {getString('common.optionalLabel')}
-                                  </Text>
-                                </Layout.Horizontal>
-                              }
-                              multiTextInputProps={{
-                                disabled: isReadonly,
-                                multiTextInputProps: {
-                                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-                                },
-                                placeholder: getString('ci.cacheIntelligence.keyNamePlaceholder')
-                              }}
-                              configureOptionsProps={{
-                                hideExecutionTimeField: true
-                              }}
+                                  {getString('pipelineSteps.paths')}
+                                </Text>
+                              ),
+                              allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                            }}
+                            disabled={isReadonly}
+                            configureOptionsProps={{ hideExecutionTimeField: true }}
+                          />
+                          <MultiTypeTextField
+                            name="cacheIntelligenceKey"
+                            label={
+                              <Layout.Horizontal
+                                flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}
+                                spacing="xsmall"
+                                padding={{ bottom: 'small' }}
+                              >
+                                <Text
+                                  font={{ size: 'small', weight: 'semi-bold' }}
+                                  tooltipProps={{ dataTooltipId: 'cacheIntelligenceKey' }}
+                                >
+                                  {getString('keyLabel')}
+                                </Text>
+                                <Text
+                                  color={Color.GREY_400}
+                                  font={{ size: 'small', weight: 'semi-bold' }}
+                                  style={{ textTransform: 'capitalize' }}
+                                >
+                                  {getString('common.optionalLabel')}
+                                </Text>
+                              </Layout.Horizontal>
+                            }
+                            multiTextInputProps={{
+                              disabled: isReadonly,
+                              multiTextInputProps: {
+                                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                              },
+                              placeholder: getString('ci.cacheIntelligence.keyNamePlaceholder')
+                            }}
+                            configureOptionsProps={{
+                              hideExecutionTimeField: true
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </Layout.Vertical>
+                  </FormikForm>
+                </Card>
+
+                {SSCA_SLSA_COMPLIANCE && (
+                  <>
+                    <div className={css.tabHeading} id="slsaProvenance">
+                      {getString('pipeline.slsaProvenance')}
+                    </div>
+                    <Card disabled={isReadonly} className={cx(css.sectionCard)}>
+                      <FormikForm className={cx(css.fields, css.contentCard)}>
+                        <Layout.Vertical spacing="medium">
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Switch
+                              checked={formValues.slsa_provenance?.enabled}
+                              label={getString('ci.slsaProvenance.generate')}
+                              onChange={e => setFieldValue('slsa_provenance.enabled', e.currentTarget.checked)}
+                              disabled={isReadonly}
+                              tooltipProps={{ tooltipId: 'enableSlsaProvenance' }}
                             />
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </Layout.Vertical>
-                    </FormikForm>
-                  </Card>
-                </>
+                          </div>
+                          {formValues.slsa_provenance?.enabled && (
+                            <>
+                              <MultiTypeSecretInput
+                                type="SecretFile"
+                                name="slsa_provenance.attestation.spec.private_key"
+                                label={getString('platform.connectors.serviceNow.privateKey')}
+                                expressions={expressions}
+                                allowableTypes={allowableTypes}
+                                enableConfigureOptions
+                                configureOptionsProps={{
+                                  hideExecutionTimeField: true
+                                }}
+                                disabled={isReadonly}
+                              />
+
+                              <MultiTypeSecretInput
+                                name="slsa_provenance.attestation.spec.password"
+                                label={getString('password')}
+                                expressions={expressions}
+                                allowableTypes={allowableTypes}
+                                enableConfigureOptions
+                                configureOptionsProps={{
+                                  hideExecutionTimeField: true
+                                }}
+                                disabled={isReadonly}
+                              />
+                            </>
+                          )}
+                        </Layout.Vertical>
+                      </FormikForm>
+                    </Card>
+                  </>
+                )}
 
                 <Accordion className={css.accordionTitle} activeId="">
                   <Accordion.Panel

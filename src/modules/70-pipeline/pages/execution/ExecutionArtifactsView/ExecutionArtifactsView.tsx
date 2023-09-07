@@ -98,7 +98,8 @@ export const getStepArtifacts: (data: ExecutionGraph | undefined, stageIds: stri
           const {
             publishedFileArtifacts = [],
             publishedImageArtifacts = [],
-            publishedSbomArtifacts = []
+            publishedSbomArtifacts = [],
+            provenanceArtifacts = []
           } = item.stepArtifacts
 
           artifacts.push(
@@ -112,11 +113,12 @@ export const getStepArtifacts: (data: ExecutionGraph | undefined, stageIds: stri
               ...artifact,
               type: 'Image',
               node,
-              stage
+              stage,
+              provenance: provenanceArtifacts[0] // slsa provenance to be shown along with image
             })),
             ...publishedSbomArtifacts.map((artifact: Artifact) => ({
               ...artifact,
-              type: 'Sbom',
+              type: 'SBOM',
               node,
               stage
             }))
@@ -124,7 +126,7 @@ export const getStepArtifacts: (data: ExecutionGraph | undefined, stageIds: stri
         } else {
           // CD stage steps
           if (!isEmpty(item.sbomArtifact)) {
-            artifacts.push({ ...(item.sbomArtifact as any), type: 'Sbom', node, stage })
+            artifacts.push({ ...(item.sbomArtifact as any), type: 'SBOM', node, stage })
           }
         }
       })
@@ -143,12 +145,13 @@ export default function ExecutionArtifactsView(): React.ReactElement {
   const { stage } = useQueryParams<{ stage: string }>()
 
   const stageSetupIds = getSscaArtifactStageSetupIds(pipelineExecutionSummary?.layoutNodeMap)
-  const stageNodes = getStageNodesWithArtifacts(executionGraph, stageSetupIds)
   const stepArtifacts = getStepArtifacts(
     executionGraph,
     stageSetupIds,
     pipelineExecutionSummary?.layoutNodeMap?.[stage]?.name
   )
+
+  const stageNodes = getStageNodesWithArtifacts(executionGraph, stageSetupIds)
   const artifactGroups = getArtifactGroups(stageNodes)
 
   return SSCA_ENABLED ? (

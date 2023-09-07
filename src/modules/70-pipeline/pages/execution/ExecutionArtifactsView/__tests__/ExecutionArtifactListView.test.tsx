@@ -172,9 +172,7 @@ describe('ExecutionArtifactListView', () => {
   test('should trigger the download with the correct URL and filename', () => {
     const createElementSpy = jest.spyOn(document, 'createElement')
 
-    const mockBlob = new Blob(['Test content'], { type: 'text/plain' })
-    const mockFilename = 'test.json'
-    downloadBlob(mockBlob, mockFilename)
+    downloadBlob('Test content', 'test.json')
 
     expect(global.URL.createObjectURL).toHaveBeenCalled()
     expect(createElementSpy).toHaveBeenCalledWith('a')

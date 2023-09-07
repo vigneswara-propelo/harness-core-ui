@@ -1974,3 +1974,5 @@ executionNotes:
   noteSaved: Note has been saved successfully
   viewExecutionNotes: View Execution Notes
 includeInfrastructureSelectors: Include Infrastructure Selectors
+slsaVerification: SLSA Verification
+slsaProvenance: SLSA Provenance

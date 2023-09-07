@@ -5163,6 +5163,8 @@ export interface StringsMap {
   'pipeline.setVariableRequiredDuringRuntime': string
   'pipeline.singleStageExecution': string
   'pipeline.skipInstances.title': string
+  'pipeline.slsaProvenance': string
+  'pipeline.slsaVerification': string
   'pipeline.sslVerify': string
   'pipeline.stageDataDeleteWarningText': string
   'pipeline.stageDataDeleteWarningTitle': string
@@ -9080,6 +9082,7 @@ export interface StringsMap {
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string
+  'ci.slsaProvenance.generate': string
   'ci.successful': string
   'ci.templates': string
   'ci.testSummary': string

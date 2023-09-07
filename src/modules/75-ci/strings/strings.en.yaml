@@ -237,3 +237,5 @@ cacheIntelligence:
   label: Cache Intelligence
   enable: Enable {{ $.ci.cacheIntelligence.label }}
   keyNamePlaceholder: Enter key
+slsaProvenance:
+  generate: Generate SLSA Provenance

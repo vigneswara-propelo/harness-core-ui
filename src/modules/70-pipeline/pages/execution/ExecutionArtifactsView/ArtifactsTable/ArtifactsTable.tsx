@@ -10,10 +10,10 @@ import React from 'react'
 import type { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import { ArtifactCell, PipelineStepCell, SbomCell, TypeCell, ViolationsCell } from './ArtifactTableCells'
+import { ArtifactCell, PipelineStepCell, SLSAVerificationCell, TypeCell, ViolationsCell } from './ArtifactTableCells'
 import css from './ArtifactsTable.module.scss'
 
-export type ArtifactType = 'File' | 'Image' | 'Sbom'
+export type ArtifactType = 'File' | 'Image' | 'SBOM'
 
 export interface Artifact {
   type: ArtifactType
@@ -29,6 +29,7 @@ export interface Artifact {
   stage: string
   allowListViolationCount: number | undefined
   denyListViolationCount: number | undefined
+  provenance?: any //TODO
 }
 
 export interface ArtifactsColumnActions {
@@ -66,9 +67,9 @@ export function ArtifactsTable({ artifacts, showEnforcementViolations }: Artifac
         showEnforcementViolations
       },
       {
-        Header: getString('common.sbom'),
+        Header: getString('pipeline.slsaVerification'),
         accessor: 'sbomName',
-        Cell: SbomCell
+        Cell: SLSAVerificationCell
       }
     ]
   }, [getString, showEnforcementViolations])

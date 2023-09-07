@@ -7,8 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly action: string
   readonly table: string
   readonly uppercase: string
-  readonly violations: string
 }
 export default styles
