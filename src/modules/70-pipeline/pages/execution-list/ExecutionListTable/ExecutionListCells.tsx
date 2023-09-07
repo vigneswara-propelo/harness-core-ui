@@ -58,7 +58,7 @@ import { DateTimeContent } from '@common/components/TimeAgoPopover/TimeAgoPopove
 import { useNotesModal } from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionHeader/NotesModal/useNotesModal'
 import FrozenExecutionDrawer from './FrozenExecutionDrawer/FrozenExecutionDrawer'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
-import type { ExecutionListColumnActions } from './ExecutionListTable'
+import type { ExecutionListColumnActions, ExecutionListExpandedColumnProps } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 
 export const getExecutionPipelineViewLink = (
@@ -172,13 +172,43 @@ export const RowSelectCell: CellType = ({ row }) => {
   )
 }
 
-export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineExecutionSummary> }> = ({ row }) => {
+export const ToggleAccordionCell: Renderer<{
+  row: UseExpandedRowProps<PipelineExecutionSummary> & Row<PipelineExecutionSummary>
+  column: ColumnInstance<PipelineExecutionSummary> & ExecutionListExpandedColumnProps
+}> = ({ row, column }) => {
+  const { expandedRows, setExpandedRows } = column
+  const data = row.original
+  const [isExpanded, setIsExpanded] = React.useState<boolean>(row.isExpanded)
+
+  React.useEffect(() => {
+    if (data?.planExecutionId) {
+      const isRowExpanded = expandedRows.has(data.planExecutionId)
+      setIsExpanded(isRowExpanded)
+      row.toggleRowExpanded(isRowExpanded)
+    }
+  }, [data?.planExecutionId, expandedRows])
+
+  const toggleRow = (): void => {
+    setExpandedRows((prevExpandedRows: Set<string>) => {
+      if (data?.planExecutionId) {
+        const isRowExpanded = prevExpandedRows.has(data.planExecutionId)
+        if (!isRowExpanded) {
+          prevExpandedRows.add(data.planExecutionId)
+        } else {
+          prevExpandedRows.delete(data.planExecutionId)
+        }
+      }
+      return new Set(prevExpandedRows)
+    })
+  }
+
   return (
     <Layout.Horizontal onClick={killEvent}>
       <Button
         {...row.getToggleRowExpandedProps()}
+        onClick={toggleRow}
         color={Color.GREY_600}
-        icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
+        icon={isExpanded ? 'chevron-down' : 'chevron-right'}
         variation={ButtonVariation.ICON}
         iconProps={{ size: 19 }}
         className={css.toggleAccordion}

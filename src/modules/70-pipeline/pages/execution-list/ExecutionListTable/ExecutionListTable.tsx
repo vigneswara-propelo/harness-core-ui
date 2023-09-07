@@ -44,6 +44,11 @@ export interface ExecutionListColumnActions {
   isPipelineInvalid?: boolean
 }
 
+export interface ExecutionListExpandedColumnProps {
+  expandedRows: Set<string>
+  setExpandedRows: React.Dispatch<React.SetStateAction<Set<string>>>
+}
+
 export interface ExecutionListTableProps extends ExecutionListColumnActions {
   executionList: PagePipelineExecutionSummary
 }
@@ -61,6 +66,7 @@ function ExecutionListTable({
   const { isCompareMode } = useExecutionCompareContext()
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const [currentSort, currentOrder] = queryParams.sort
+  const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set())
 
   const {
     content = [],
@@ -87,7 +93,9 @@ function ExecutionListTable({
         Header: '',
         id: 'rowSelectOrExpander',
         Cell: isCompareMode ? RowSelectCell : ToggleAccordionCell,
-        disableSortBy: true
+        disableSortBy: true,
+        expandedRows,
+        setExpandedRows
       },
       {
         Header: getString('filters.executions.pipelineName'),
@@ -128,7 +136,7 @@ function ExecutionListTable({
         disableSortBy: true
       }
     ]
-  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort])
+  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort, expandedRows, setExpandedRows])
 
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
 
