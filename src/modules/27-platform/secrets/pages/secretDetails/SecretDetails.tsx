@@ -146,11 +146,14 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
     openDialog()
   }
 
-  const handleChange = React.useCallback(() => {
-    requestAnimationFrame(() => {
+  React.useEffect(() => {
+    const errors = yamlHandler?.getYAMLValidationErrorMap()
+    if (
+      errors?.size === 0 // Don't update for Invalid Yaml
+    ) {
       setSecretDataState(parse(yamlHandler?.getLatestYaml() || ''))
-      setHasValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
-    })
+    }
+    setHasValidationErrors(!isEmpty(errors))
   }, [yamlHandler])
 
   return (
@@ -166,7 +169,6 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
             schema={secretSchema?.data}
             isReadOnlyMode={false}
             yamlSanityConfig={yamlSanityConfig}
-            onChange={handleChange}
           />
           <Layout.Horizontal spacing="medium">
             <Button
