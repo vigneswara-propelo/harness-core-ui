@@ -21,6 +21,7 @@ import type {
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { StringsMap } from 'stringTypes'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { isPollingIntervalGreaterThanTimeout } from './helper'
 import { JenkinsStepBaseWithRef } from './JenkinsStepBase'
 import JenkinsStepInputSetBasic from './JenkinsStepInputSet'
 import { JenkinsStepVariables, JenkinsStepVariablesProps } from './JenkinsStepVariables'
@@ -127,7 +128,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<JenkinsStepData>): FormikErrors<JenkinsStepData> {
-    const errors: FormikErrors<JenkinsStepData> = {}
+    const errors = { spec: {} } as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
       const timeout = Yup.object().shape({
@@ -144,7 +145,31 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
         }
       }
     }
+    if (getMultiTypeFromValue(template?.spec?.consoleLogPollFrequency) === MultiTypeInputType.RUNTIME) {
+      const consoleLogPollFrequencyValidation = Yup.object().shape({
+        consoleLogPollFrequency: getDurationValidationSchema({ minimum: '5s' }).required(
+          getString?.('pipeline.jenkinsStep.validations.consoleLogPollFrequency')
+        )
+      })
 
+      try {
+        consoleLogPollFrequencyValidation.validateSync(data.spec)
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+          Object.assign(errors.spec, err)
+        }
+      }
+    }
+
+    if (!isEmpty(data?.spec?.consoleLogPollFrequency) && !isEmpty(data?.timeout)) {
+      if (isPollingIntervalGreaterThanTimeout(data)) {
+        Object.assign(errors.spec, {
+          consoleLogPollFrequency: getString?.('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+        })
+      }
+    }
     if (
       typeof template?.spec?.connectorRef === 'string' &&
       getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
@@ -166,7 +191,6 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
         jobName: getString?.('pipeline.jenkinsStep.validations.jobName')
       }
     }
-
     return errors
   }
 

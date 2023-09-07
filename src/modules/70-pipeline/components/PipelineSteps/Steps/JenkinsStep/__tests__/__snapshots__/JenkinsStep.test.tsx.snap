@@ -1469,6 +1469,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
 
 exports[`Jenkins step tests Minimum time cannot be less than 10s: Value must be greater than or equal to "10s" 1`] = `
 Object {
+  "spec": Object {},
   "timeout": "Value must be greater than or equal to \\"10s\\"",
 }
 `;
