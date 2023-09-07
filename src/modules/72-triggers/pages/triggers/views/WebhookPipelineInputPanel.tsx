@@ -559,6 +559,7 @@ function WebhookPipelineInputPanelForm({
                     invalidInputSetReferences={invalidInputSetIds}
                     loadingMergeInputSets={mergingInputSets}
                     onReconcile={onReconcile}
+                    closeInputSetModalOnApply
                   />
                 </GitSyncStoreProvider>
                 {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
