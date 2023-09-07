@@ -229,7 +229,8 @@ export function useSaveToGitDialog<T = Record<string, string>>(
         style={{
           minWidth: 600,
           paddingBottom: 0,
-          maxHeight: 600
+          maxHeight: 600,
+          overflow: 'auto'
         }}
         enforceFocus={false}
       >
@@ -258,7 +259,8 @@ export function useSaveToGitDialog<T = Record<string, string>>(
         style={{
           minWidth: 600,
           paddingBottom: 0,
-          maxHeight: 500
+          maxHeight: 500,
+          overflow: 'auto'
         }}
       >
         <ProgressOverlay
