@@ -180,7 +180,7 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
             class="environments"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main serviceArtifact"
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -266,7 +266,7 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
                 class="environments"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--horizontal StyledProps--main serviceArtifact"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -310,7 +310,7 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
                 class="environments"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--horizontal StyledProps--main serviceArtifact"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -326,7 +326,7 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
                   </p>
                 </div>
                 <div
-                  class="Layout--horizontal StyledProps--main"
+                  class="Layout--horizontal StyledProps--main serviceArtifact"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -506,7 +506,7 @@ exports[`ServiceExecutionsCard  render when called from overview dashboard 1`] =
             </svg>
           </span>
           <div
-            class="Layout--horizontal StyledProps--main"
+            class="Layout--horizontal StyledProps--main serviceArtifact"
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -522,7 +522,7 @@ exports[`ServiceExecutionsCard  render when called from overview dashboard 1`] =
             </p>
           </div>
           <div
-            class="Layout--horizontal StyledProps--main"
+            class="Layout--horizontal StyledProps--main serviceArtifact"
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main"

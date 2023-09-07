@@ -18,6 +18,7 @@ declare const styles: {
   readonly mainPopover: string
   readonly moduleData: string
   readonly moduleIcon: string
+  readonly serviceArtifact: string
   readonly serviceName: string
   readonly serviceWrapper: string
   readonly services: string

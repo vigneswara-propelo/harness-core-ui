@@ -70,6 +70,10 @@
     font-size: var(--font-size-small);
     color: var(--grey-800);
 
+    .serviceArtifact {
+      width: fit-content;
+    }
+
     p {
       color: var(--primary-7) !important;
       font-weight: 500 !important;
