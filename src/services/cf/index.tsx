@@ -1019,6 +1019,7 @@ export type ProxyConfig = Pagination & {
 }
 
 export interface ProxyKey {
+  environments?: string[]
   /**
    * The ProxyKeys ID
    */
@@ -1031,47 +1032,16 @@ export interface ProxyKey {
    * The ProxyKeys name
    */
   name: string
-  projects?: {
-    environments?: {
-      /**
-       * The environments ID
-       */
-      id?: string
-      /**
-       * The environments identifier
-       */
-      identifier?: string
-      /**
-       * The environments name
-       */
-      name?: string
-    }[]
-    /**
-     * The projects identifier
-     */
-    identifier?: string
-    /**
-     * name of the project
-     */
-    name?: string
-  }[]
 }
 
 /**
  * A Proxy Key instruction
  */
-export type ProxyKeyInstruction = {
-  kind?: string
-  parameters?: {
-    environments?: string[]
+export interface ProxyKeyInstruction {
+  instructions?: {
+    addEnvironments?: string[]
+    removeEnvironments?: string[]
   }
-}[]
-
-/**
- * An array of ProxyKeys and the environments they're scoped to
- */
-export type ProxyKeys = Pagination & {
-  keys?: ProxyKey[]
 }
 
 export interface ReferenceDTO {
@@ -1593,9 +1563,7 @@ export interface ProjectRequestRequestBody {
   tags?: Tag[]
 }
 
-export interface ProxyKeysPatchRequestRequestBody {
-  instructions?: ProxyKeyInstruction
-}
+export type ProxyKeysPatchRequestRequestBody = ProxyKeyInstruction
 
 export interface ProxyKeysPostRequestRequestBody {
   environments?: string[]
@@ -1809,11 +1777,6 @@ export type ProxyKeyResponseResponse = ProxyKey
 export interface ProxyKeysEditResponseResponse {
   status?: string
 }
-
-/**
- * OK
- */
-export type ProxyKeysResponseResponse = ProxyKeys
 
 /**
  * OK
@@ -6874,6 +6837,14 @@ export const createGitRepoPromise = (
 
 export interface GetProxyConfigQueryParams {
   /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+  /**
    * Accepts an EnvironmentID. If this is provided then the endpoint will only return config for this environment. If this is left empty then the Proxy will return config for all environments associated with the Proxy Key.
    */
   environment?: string
@@ -6954,89 +6925,6 @@ export const getProxyConfigPromise = (
     GetProxyConfigQueryParams,
     void
   >(getConfig('cf'), `/admin/proxy/config`, props, signal)
-
-export interface GetProxyKeysQueryParams {
-  /**
-   * Account Identifier
-   */
-  accountIdentifier: string
-  /**
-   * Organization Identifier
-   */
-  orgIdentifier: string
-}
-
-export type GetProxyKeysProps = Omit<
-  GetProps<
-    ProxyKeysResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyKeysQueryParams,
-    void
-  >,
-  'path'
->
-
-/**
- * Gets all the Proxy keys for an account & org
- *
- * Gets all the Proxy keys for an account & org
- */
-export const GetProxyKeys = (props: GetProxyKeysProps) => (
-  <Get<
-    ProxyKeysResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyKeysQueryParams,
-    void
-  >
-    path={`/admin/proxy/keys`}
-    base={getConfig('cf')}
-    {...props}
-  />
-)
-
-export type UseGetProxyKeysProps = Omit<
-  UseGetProps<
-    ProxyKeysResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyKeysQueryParams,
-    void
-  >,
-  'path'
->
-
-/**
- * Gets all the Proxy keys for an account & org
- *
- * Gets all the Proxy keys for an account & org
- */
-export const useGetProxyKeys = (props: UseGetProxyKeysProps) =>
-  useGet<
-    ProxyKeysResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyKeysQueryParams,
-    void
-  >(`/admin/proxy/keys`, { base: getConfig('cf'), ...props })
-
-/**
- * Gets all the Proxy keys for an account & org
- *
- * Gets all the Proxy keys for an account & org
- */
-export const getProxyKeysPromise = (
-  props: GetUsingFetchProps<
-    ProxyKeysResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyKeysQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ProxyKeysResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyKeysQueryParams,
-    void
-  >(getConfig('cf'), `/admin/proxy/keys`, props, signal)
 
 export interface CreateProxyKeyQueryParams {
   /**
