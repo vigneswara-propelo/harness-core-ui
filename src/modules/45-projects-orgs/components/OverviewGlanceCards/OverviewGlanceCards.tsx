@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import GlanceCard, { GlanceCardProps } from '@common/components/GlanceCard/GlanceCard'
+import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CountChangeDetails, ResponseExecutionResponseCountOverview, useGetCounts } from 'services/dashboard-service'
 import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
@@ -35,6 +36,7 @@ interface RenderGlanceCardProps {
   loading: boolean
   data: RenderGlanceCardData
   className?: string
+  href?: string
 }
 
 const projectsTitleId = 'projectsText'
@@ -110,14 +112,15 @@ const getDataForCard = (
 }
 
 const RenderGlanceCard: React.FC<RenderGlanceCardProps> = props => {
-  const { loading, data, className } = props
+  const { loading, data, className, href: entityPath } = props
+
   const { getString } = useStrings()
   return loading ? (
     <Card className={cx(css.loadingWrapper, className)}>
       <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
     </Card>
   ) : (
-    <GlanceCard {...data} title={getString(data.title)} className={className} />
+    <GlanceCard {...data} href={entityPath} title={getString(data.title)} className={className} />
   )
 }
 
@@ -135,7 +138,8 @@ export interface OverviewGlanceCardsProp {
 
 const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
   const { glanceCardData, hideCards = [], glanceCardProps, className } = props
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const projectDetailsParams = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = projectDetailsParams
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const [pageLoadGlanceCardData, setPageLoadGlanceCardData] =
@@ -201,6 +205,7 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
         )}
         {hideCards?.indexOf(OverviewGalanceCard.SERVICES) > -1 ? null : (
           <RenderGlanceCard
+            href={projectIdentifier && routes.toServices(projectDetailsParams)}
             loading={!!loading}
             className={glanceCardClass}
             data={getDataForCard(OverviewGalanceCard.SERVICES, servicesCountDetail)}
@@ -208,6 +213,7 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
         )}
         {hideCards?.indexOf(OverviewGalanceCard.ENV) > -1 ? null : (
           <RenderGlanceCard
+            href={projectIdentifier && routes.toEnvironment(projectDetailsParams)}
             loading={!!loading}
             className={glanceCardClass}
             data={getDataForCard(OverviewGalanceCard.ENV, envCountDetail)}
@@ -215,6 +221,7 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
         )}
         {hideCards?.indexOf(OverviewGalanceCard.PIPELINES) > -1 ? null : (
           <RenderGlanceCard
+            href={projectIdentifier && routes.toPipelines(projectDetailsParams)}
             loading={!!loading}
             className={glanceCardClass}
             data={getDataForCard(OverviewGalanceCard.PIPELINES, pipelinesCountDetail)}

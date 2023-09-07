@@ -506,7 +506,8 @@ exports[`Project Details render with modules and edit menu 1`] = `
               class="glanceCards glanceCardContainer"
             >
               <div
-                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card glanceCard Card--interactive"
+                tabindex="0"
               >
                 <span
                   class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
@@ -551,7 +552,8 @@ exports[`Project Details render with modules and edit menu 1`] = `
                 </p>
               </div>
               <div
-                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card glanceCard Card--interactive"
+                tabindex="0"
               >
                 <span
                   class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
@@ -596,7 +598,8 @@ exports[`Project Details render with modules and edit menu 1`] = `
                 </p>
               </div>
               <div
-                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card glanceCard Card--interactive"
+                tabindex="0"
               >
                 <span
                   class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
@@ -1080,7 +1083,8 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
               class="glanceCards glanceCardContainer"
             >
               <div
-                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card glanceCard Card--interactive"
+                tabindex="0"
               >
                 <span
                   class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
@@ -1125,7 +1129,8 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
                 </p>
               </div>
               <div
-                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card glanceCard Card--interactive"
+                tabindex="0"
               >
                 <span
                   class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
@@ -1170,7 +1175,8 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
                 </p>
               </div>
               <div
-                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card glanceCard Card--interactive"
+                tabindex="0"
               >
                 <span
                   class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
