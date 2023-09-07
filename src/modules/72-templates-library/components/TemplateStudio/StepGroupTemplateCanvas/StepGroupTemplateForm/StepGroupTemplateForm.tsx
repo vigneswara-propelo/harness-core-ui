@@ -6,12 +6,9 @@
  */
 
 import React from 'react'
-import { Container, MultiTypeInputType, Tabs, Tab } from '@harness/uicore'
+import { Container, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, isEmpty, isEqual, set } from 'lodash-es'
-import type { FormikProps } from 'formik'
-import { useStrings } from 'framework/strings'
-import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
@@ -19,16 +16,12 @@ import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepComm
 import type { StepGroupElementConfig } from 'services/cd-ng'
 import type { Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
-import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
 
 import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { TemplateContext } from '../../TemplateContext/TemplateContext'
+import { StepGroupTemplateCommandsWithRef } from './StepGroupTemplateCommands'
 import css from './StepGroupTemplateForm.module.scss'
-
-enum StepCommandTabs {
-  StepConfiguration = 'StepConfiguration',
-  Advanced = 'Advanced'
-}
 
 const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX.Element => {
   const {
@@ -36,12 +29,9 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
     updateTemplate,
     isReadonly
   } = React.useContext(TemplateContext)
-  const { getString } = useStrings()
-
   const stepFormikRef = React.useRef<StepFormikRef | null>(null)
-  const advancedConfRef = React.useRef<FormikProps<unknown> | null>(null)
 
-  React.useImperativeHandle(formikRef, () => ({
+  /* istanbul ignore next */ React.useImperativeHandle(formikRef, () => ({
     resetForm() {
       return stepFormikRef.current?.resetForm()
     },
@@ -75,25 +65,17 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
   return (
     <Container background={Color.FORM_BG} className={css.stepGroupForm}>
       {template && !isEmpty(template.spec) && !!template.type && (
-        <Tabs id="step-commands" selectedTabId={StepCommandTabs.Advanced}>
-          <Tab
-            id={StepCommandTabs.Advanced}
-            title={getString('advancedTitle')}
-            panel={
-              <AdvancedStepsWithRef
-                helpPanelVisible
-                step={template.spec as any}
-                isReadonly={isReadonly}
-                stepsFactory={factory}
-                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-                onChange={debounceSubmit}
-                isStepGroup={true}
-                ref={advancedConfRef}
-                stepType={StepType.StepGroup}
-              />
-            }
-          />
-        </Tabs>
+        <StepGroupTemplateCommandsWithRef
+          step={template.spec as StepGroupElementConfig}
+          isReadonly={isReadonly}
+          stepsFactory={factory}
+          onChange={debounceSubmit}
+          onUpdate={debounceSubmit}
+          stepViewType={StepViewType.Template}
+          ref={stepFormikRef}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isStepGroup={true}
+        />
       )}
     </Container>
   )

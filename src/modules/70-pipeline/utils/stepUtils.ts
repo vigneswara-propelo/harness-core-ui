@@ -327,7 +327,7 @@ export function getStepDataFromValues(
   initialValues: StepOrStepGroupOrTemplateStepData,
   isStepGroup = false
 ): StepElementConfig {
-  const processNode = produce(initialValues as StepElementConfig, node => {
+  const processNode = produce(initialValues as StepElementConfig & StepGroupElementConfig, node => {
     if ((item as StepElementConfig).description) {
       node.description = (item as StepElementConfig).description
     } else if (node.description) {
@@ -376,6 +376,12 @@ export function getStepDataFromValues(
       node.failureStrategies = item.failureStrategies
     } else if (node.failureStrategies) {
       delete node.failureStrategies
+    }
+
+    if ((item as StepGroupElementConfig)?.variables) {
+      set(node, 'variables', (item as StepGroupElementConfig).variables)
+    } else {
+      delete node.variables
     }
   })
   sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })

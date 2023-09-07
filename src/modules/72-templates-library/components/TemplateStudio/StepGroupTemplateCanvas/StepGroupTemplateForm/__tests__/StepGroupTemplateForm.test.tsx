@@ -6,10 +6,18 @@
  */
 
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import {
+  render,
+  fireEvent,
+  act,
+  waitFor,
+  queryByAttribute,
+  getByText as getByTextGlobal,
+  findAllByText
+} from '@testing-library/react'
 import { set } from 'lodash-es'
 import produce from 'immer'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import pipelineContextMock from '@pipeline/components/PipelineStudio/RightDrawer/__tests__/stateMock'
@@ -65,7 +73,7 @@ describe('<StepGroupTemplateForm /> tests', () => {
   const stepGroupTemplateContextMock = getTemplateContextMock(TemplateType.StepGroup)
 
   test('should call renderPipelineStage with correct arguments', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, findByText } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContext}>
           <TemplateContext.Provider value={stepGroupTemplateContextMock}>
@@ -87,9 +95,29 @@ describe('<StepGroupTemplateForm /> tests', () => {
     })
     const changeButtonNoTab = getByText('onChange no tab')
     fireEvent.click(changeButtonNoTab as HTMLElement)
-
     expect(stepGroupTemplateContextMock.updateTemplate).toBeCalledWith({
       ...stepGroupTemplateMock
     })
+    const advancedTab = document.body.querySelector('[class*="bp3-tab-list"] [data-tab-id="Advanced"]') as Element
+    expect(advancedTab).toBeInTheDocument()
+    fireEvent.click(advancedTab)
+    expect(() => getByText('common.variables')).toBeDefined()
+
+    // Addition of new variable flow
+    const add = await findByText('platform.variables.newVariable')
+    act(() => {
+      fireEvent.click(add)
+    })
+    const dialog = findDialogContainer() as HTMLElement
+    await waitFor(() => findAllByText(dialog, 'platform.variables.newVariable'))
+    const nameField = queryByAttribute('name', dialog, 'name')
+    const valueField = queryByAttribute('name', dialog, 'value')
+    fireEvent.change(nameField!, { target: { value: 'stringNewVariable' } })
+    fireEvent.change(valueField!, { target: { value: 'stringNewVariableValue' } })
+    const submitBtn = getByTextGlobal(dialog, 'save')
+    fireEvent.click(submitBtn!)
+    // Validate new variable
+    expect(container.querySelector('input[name="variables[0].name"]')).toHaveValue('stringNewVariable')
+    expect(container.querySelector('input[name="variables[0].value"]')).toHaveValue('stringNewVariableValue')
   })
 })

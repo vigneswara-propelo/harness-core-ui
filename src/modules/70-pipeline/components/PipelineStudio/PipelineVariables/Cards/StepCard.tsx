@@ -294,8 +294,10 @@ interface StepGroupTemplateVariables extends Omit<StepGroupCardProps, 'steps'> {
 }
 
 export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.ReactElement {
-  const { metadataMap, stageIdentifier, onUpdateStep, readonly, path, allowableTypes, stepsFactory } = props
+  const { metadataMap, stageIdentifier, onUpdateStep, readonly, path, allowableTypes, stepsFactory, templateSteps } =
+    props
 
+  const { getString } = useStrings()
   const onUpdateSGSpec = React.useCallback(
     execution => {
       const processedData = produce(props?.originalStepGroup, draft => {
@@ -381,10 +383,67 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
         parentPath: `${path}.steps`
       })
     ]
-  }, [props?.templateSteps, props?.originalSteps, props?.unresolvedStepGroupTemplate, path])
+  }, [templateSteps, props?.originalSteps, props?.unresolvedStepGroupTemplate, path])
 
   return (
-    <React.Fragment>
+    <>
+      <VariablesListTable
+        data={templateSteps}
+        className={css.variablePaddingL0}
+        originalData={props?.originalStepGroup}
+        metadataMap={metadataMap}
+      />
+      <NestedAccordionPanel
+        noAutoScroll
+        isDefaultOpen
+        key={`stepGroup.variables`}
+        id={`stepGroup.variables`}
+        addDomId
+        collapseProps={{
+          keepChildrenMounted: true
+        }}
+        summary={
+          <VariableAccordionSummary>
+            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
+              {getString('pipeline.stepGroupVariables')}
+            </Text>
+          </VariableAccordionSummary>
+        }
+        details={
+          <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
+            factory={stepsFactory}
+            initialValues={{
+              variables: ((props?.originalStepGroup as any)?.spec?.variables || []) as AllNGVariables[],
+              canAddVariable: true
+            }}
+            type={StepType.CustomVariable}
+            stepViewType={StepViewType.InputVariable}
+            readonly={readonly}
+            allowableTypes={allowableTypes}
+            onUpdate={({ variables }: CustomVariablesData) => {
+              onUpdateSGSpec(
+                produce(
+                  (props?.unresolvedStepGroupTemplate as NGTemplateInfoConfig)?.spec ||
+                    (props?.unresolvedStepGroupTemplate as NGTemplateInfoConfig),
+                  draft => {
+                    if (draft) {
+                      set(draft, 'variables', variables)
+                    }
+                  }
+                )
+              )
+            }}
+            customStepProps={{
+              formName: 'addEditStepGroupVariableForm',
+              className: cx(css.customVariables, css.customVarPadL1, css.addVariableL1),
+              hideExecutionTimeField: true,
+              yamlProperties: (templateSteps.variables as AllNGVariables[])?.map(
+                variable => metadataMap[variable.value || '']?.yamlProperties || {}
+              )
+            }}
+          />
+        }
+      />
       {allSteps.map((row, index) => {
         if (row.type === 'StepRenderData' && row.step && row.originalStep) {
           const { step, originalStep, path: pathStep, unresolvedStep } = row
@@ -427,7 +486,7 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
               fullPath={fullPath}
               onUpdateStep={(data: StepElementConfig, stepPath: string) => {
                 onUpdateSGSpec(
-                  produce((props?.unresolvedStepGroupTemplate as NGTemplateInfoConfig)?.spec, draft => {
+                  produce(props?.unresolvedStepGroupTemplate as NGTemplateInfoConfig, draft => {
                     if (draft) {
                       set(draft, stepPath, data)
                     }
@@ -441,6 +500,6 @@ export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.
 
         return null
       })}
-    </React.Fragment>
+    </>
   )
 }
