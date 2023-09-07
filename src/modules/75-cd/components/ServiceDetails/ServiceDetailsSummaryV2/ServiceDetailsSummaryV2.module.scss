@@ -20,6 +20,12 @@
     align-items: center;
     justify-content: space-between;
   }
+
+  .chartVersion {
+    :global(.bp3-popover-wrapper) {
+      margin-left: var(--spacing-small) !important;
+    }
+  }
 }
 
 .height220 {

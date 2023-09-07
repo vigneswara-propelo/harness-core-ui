@@ -403,6 +403,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
             margin={{ top: 'medium', bottom: 'small' }}
             flex={{ alignItems: 'center', justifyContent: 'start' }}
             spacing="small"
+            style={{ flexWrap: 'wrap' }}
           >
             <Icon name="instances" color={Color.GREY_1000} />
             <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
@@ -428,6 +429,15 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
             </Text>
             <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} tooltipProps={{ isDark: true }}>
               {artifact ? artifact : '-'}
+            </Text>
+            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_600}>
+              {' | '}
+            </Text>
+            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+              {getString('pipeline.manifestType.http.chartVersion') + ':'}
+            </Text>
+            <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} tooltipProps={{ isDark: true }}>
+              {chartVersion ? chartVersion : '-'}
             </Text>
           </Layout.Horizontal>
           <InstanceView

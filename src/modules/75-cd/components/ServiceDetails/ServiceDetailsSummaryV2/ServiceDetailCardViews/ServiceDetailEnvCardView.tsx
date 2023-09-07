@@ -9,7 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { capitalize, defaultTo, isEmpty, isUndefined } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
-import { Card, Container, Icon, Text } from '@harness/uicore'
+import { Card, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Popover, Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
 import { String, useStrings } from 'framework/strings'
@@ -165,7 +165,14 @@ export function EnvCard({
           </div>
         )}
         {renderArtifactOrChartVersionName(artifactName)}
-        {showChartVersion && renderArtifactOrChartVersionName(chartVersion)}
+        {showChartVersion && (
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }} className={css.chartVersion}>
+            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} margin={'none'}>
+              {`${getString('pipeline.manifestType.http.chartVersion')}:`}
+            </Text>
+            {renderArtifactOrChartVersionName(chartVersion)}
+          </Layout.Horizontal>
+        )}
       </Card>
     </>
   )

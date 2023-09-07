@@ -12,6 +12,7 @@ declare const styles: {
   readonly artifactCards: string
   readonly artifactViewEnvDetail: string
   readonly artifactViewEnvList: string
+  readonly chartVersion: string
   readonly collapse: string
   readonly collapseHeader: string
   readonly cursor: string
