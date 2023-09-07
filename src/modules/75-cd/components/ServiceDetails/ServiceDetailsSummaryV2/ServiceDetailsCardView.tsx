@@ -7,6 +7,9 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
+import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
+import { Switch } from '@blueprintjs/core'
 import {
   Button,
   Carousel,
@@ -15,38 +18,47 @@ import {
   Text,
   Container,
   ButtonVariation,
-  PillToggle,
   getErrorInfoFromErrorObject,
   PageError,
   DropDown,
   SelectOption,
-  useToaster
+  useToaster,
+  CardSelect
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
-import { Switch } from '@blueprintjs/core'
-import { useStrings } from 'framework/strings'
-import { useMutateAsGet } from '@common/hooks'
-import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+
 import {
   ArtifactInstanceDetail,
+  ChartVersionInstanceDetail,
   EnvironmentGroupInstanceDetail,
   GetArtifactInstanceDetailsQueryParams,
   GetEnvironmentInstanceDetailsQueryParams,
   setCustomSequenceStatusPromise,
   useGetArtifactInstanceDetails,
+  useGetChartVersionInstanceDetails,
   useGetCustomSequenceStatus,
   useGetEnvironmentInstanceDetails
 } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
+import { useMutateAsGet } from '@common/hooks'
+import { CardInterface } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import { EnvCardViewEmptyState } from './ServiceDetailEmptyStates'
 import ServiceDetailsDialog from './ServiceDetailsDialog'
-import { CardSortOption, CardView, createGroups, EnvCardProps, ServiceDetailsCardViewProps } from './ServiceDetailUtils'
+import {
+  CardSortOption,
+  CardView,
+  createGroups,
+  EnvCardProps,
+  ServiceDetailsCardViewProps,
+  shouldShowChartVersion
+} from './ServiceDetailUtils'
 import { EnvCard } from './ServiceDetailCardViews/ServiceDetailEnvCardView'
 import { ArtifactCard } from './ServiceDetailCardViews/ServiceDetailArtifactCardView'
 import CustomSequenceDrawer from './CustomSequence/CustomSequence'
-
+import { ChartVersionCard } from './ServiceDetailCardViews/ServiceDetailChartVersionCardView'
 import css from './ServiceDetailsSummaryV2.module.scss'
 
 const sortFilterParam = (sortFilter: string): string[] => {
@@ -54,7 +66,8 @@ const sortFilterParam = (sortFilter: string): string[] => {
 }
 
 export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): React.ReactElement {
-  const { setEnvId, setArtifactName } = props
+  const { setEnvId, setArtifactName, setChartVersionName } = props
+  const { selectedDeploymentType } = useServiceContext()
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
   const [selectedEnv, setSelectedEnv] = useState<{ envId?: string; isEnvGroup: boolean }>()
@@ -74,6 +87,11 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
   const [selectedArtifact, setSelectedArtifact] = useState<string>()
   const [artifactFilter, setArtifactFilter] = useState<string | undefined>('')
   const [artifactFilterApplied, setArtifactFilterApplied] = useState(false)
+
+  // Chart Version state
+  const [selectedChartVersion, setSelectedChartVersion] = useState<string>()
+  const [chartVersionFilter, setChartVersionFilter] = useState<string | undefined>('')
+  const [chartVersionFilterApplied, setChartVersionFilterApplied] = useState(false)
 
   //filter
   const [sortOptions, setSortOptions] = useState<CardSortOption>(CardSortOption.ALL)
@@ -119,8 +137,24 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
     loading: artifactLoading,
     error: artifactError,
     refetch: artifactRefetch
-  } = useGetArtifactInstanceDetails({ queryParams })
+  } = useGetArtifactInstanceDetails({
+    queryParams
+  })
   const artifactCardData = defaultTo(artifactData?.data?.artifactInstanceDetails, [] as ArtifactInstanceDetail[])
+
+  // Chart Version Card
+  const {
+    data: chartVersionInstanceDetailsData,
+    loading: chartVersionInstanceDetailsLoading,
+    error: chartVersionInstanceDetailsFetchError,
+    refetch: refetchChartVersionInstanceDetails
+  } = useGetChartVersionInstanceDetails({
+    queryParams
+  })
+  const chartVersionInstanceDetailsCardData = defaultTo(
+    chartVersionInstanceDetailsData?.data?.chartVersionInstanceDetails,
+    [] as ChartVersionInstanceDetail[]
+  )
 
   const envList: EnvCardProps[] = resData.map(item => {
     return {
@@ -143,63 +177,33 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
     }
   })
 
+  const chartVersionInstanceDetailsList: ChartVersionInstanceDetail[] = chartVersionInstanceDetailsCardData.map(
+    item => {
+      return {
+        chartVersion: item.chartVersion,
+        environmentGroupInstanceDetails: item.environmentGroupInstanceDetails
+      }
+    }
+  )
+
   const [data, loading, error, refetch, visibleCardCount, cardInfoList] =
     cardView === CardView.ENV
       ? [resData, envLoading, envError, envRefetch, 5, envList]
-      : [artifactCardData, artifactLoading, artifactError, artifactRefetch, 3, artifactList]
+      : cardView === CardView.ARTIFACT
+      ? [artifactCardData, artifactLoading, artifactError, artifactRefetch, 3, artifactList]
+      : [
+          chartVersionInstanceDetailsCardData,
+          chartVersionInstanceDetailsLoading,
+          chartVersionInstanceDetailsFetchError,
+          refetchChartVersionInstanceDetails,
+          3,
+          chartVersionInstanceDetailsList
+        ]
 
   const renderCards = createGroups(cardInfoList, visibleCardCount)
 
-  const artifactSlide = [0, 1, 2]
+  const slide = [0, 1, 2]
   const envSlide = [0, 1, 2, 3, 4]
-
-  const cardSlides =
-    cardView === CardView.ENV
-      ? renderCards.map((item, idx) => {
-          const envInfo = item as EnvCardProps[]
-          return (
-            <Layout.Horizontal key={idx} className={css.envCardGrid}>
-              {envSlide.map(i => {
-                if (!envInfo[i]) return null
-                return (
-                  <EnvCard
-                    key={i}
-                    setSelectedEnv={setSelectedEnv}
-                    setEnvId={setEnvId}
-                    setIsDetailsDialogOpen={setIsDetailsDialogOpen}
-                    setEnvFilter={setEnvFilter}
-                    env={envInfo[i]}
-                    selectedEnv={selectedEnv}
-                  />
-                )
-              })}
-            </Layout.Horizontal>
-          )
-        })
-      : renderCards.map((item, idx) => {
-          const artifactInfo = item as ArtifactInstanceDetail[]
-          return (
-            <Layout.Horizontal key={idx} className={css.artifactCardGrid}>
-              {artifactSlide.map(i => {
-                if (!artifactInfo[i]) return null
-
-                return (
-                  <ArtifactCard
-                    key={i}
-                    setArtifactName={setArtifactName}
-                    setSelectedArtifact={setSelectedArtifact}
-                    setIsDetailsDialogOpen={setIsDetailsDialogOpen}
-                    setEnvFilter={setEnvFilter}
-                    setArtifactFilter={setArtifactFilter}
-                    artifact={artifactInfo[i]}
-                    selectedArtifact={selectedArtifact}
-                    setArtifactFilterApplied={setArtifactFilterApplied}
-                  />
-                )
-              })}
-            </Layout.Horizontal>
-          )
-        })
 
   const dropdownOptions = React.useMemo(() => {
     return [
@@ -278,7 +282,7 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
       } else {
         showError(getString('cd.customSequence.switchFailedMsg'))
       }
-    } catch (err: any) {
+    } catch (err) {
       // istanbul ignore next
       showError(getErrorInfoFromErrorObject(err))
     } finally {
@@ -286,6 +290,114 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
     }
   }
 
+  const getCardSlides = (): JSX.Element[] => {
+    if (cardView === CardView.ENV) {
+      return renderCards.map((item, idx) => {
+        const envInfo = item as EnvCardProps[]
+        return (
+          <Layout.Horizontal key={idx} className={css.envCardGrid}>
+            {envSlide.map(i => {
+              if (!envInfo[i]) return null
+              return (
+                <EnvCard
+                  key={i}
+                  setSelectedEnv={setSelectedEnv}
+                  setEnvId={setEnvId}
+                  setIsDetailsDialogOpen={setIsDetailsDialogOpen}
+                  setEnvFilter={setEnvFilter}
+                  env={envInfo[i]}
+                  selectedEnv={selectedEnv}
+                />
+              )
+            })}
+          </Layout.Horizontal>
+        )
+      })
+    }
+
+    if (cardView === CardView.ARTIFACT) {
+      return renderCards.map((item, idx) => {
+        const artifactInfo = item as ArtifactInstanceDetail[]
+        return (
+          <Layout.Horizontal key={idx} className={css.artifactCardGrid}>
+            {slide.map(i => {
+              if (!artifactInfo[i]) return null
+
+              return (
+                <ArtifactCard
+                  key={i}
+                  setArtifactName={setArtifactName}
+                  setSelectedArtifact={setSelectedArtifact}
+                  setIsDetailsDialogOpen={setIsDetailsDialogOpen}
+                  setEnvFilter={setEnvFilter}
+                  setArtifactFilter={setArtifactFilter}
+                  artifact={artifactInfo[i]}
+                  selectedArtifact={selectedArtifact}
+                  setArtifactFilterApplied={setArtifactFilterApplied}
+                />
+              )
+            })}
+          </Layout.Horizontal>
+        )
+      })
+    }
+
+    if (cardView === CardView.CHART_VERSIONS) {
+      return renderCards.map((item, idx) => {
+        const chartVersionInstanceDetailList = item as ChartVersionInstanceDetail[]
+        return (
+          <Layout.Horizontal key={idx} className={css.artifactCardGrid}>
+            {slide.map(i => {
+              if (!chartVersionInstanceDetailList[i]) return null
+
+              return (
+                <ChartVersionCard
+                  key={i}
+                  setChartVersionName={setChartVersionName}
+                  setSelectedChartVersion={setSelectedChartVersion}
+                  setIsDetailsDialogOpen={setIsDetailsDialogOpen}
+                  setEnvFilter={setEnvFilter}
+                  setChartVersionFilter={setChartVersionFilter}
+                  chartVersion={chartVersionInstanceDetailList[i]}
+                  selectedChartVersion={selectedChartVersion}
+                  setChartVersionFilterApplied={setChartVersionFilterApplied}
+                />
+              )
+            })}
+          </Layout.Horizontal>
+        )
+      })
+    }
+
+    return []
+  }
+
+  const cardList: CardInterface[] = [
+    {
+      type: CardView.ENV,
+      title: getString('environments'),
+      info: '',
+      icon: 'environments',
+      size: 16
+    },
+    {
+      type: CardView.ARTIFACT,
+      title: getString('artifacts'),
+      info: '',
+      icon: 'environments',
+      size: 16
+    }
+  ]
+
+  if (shouldShowChartVersion(selectedDeploymentType)) {
+    cardList.push({
+      type: CardView.CHART_VERSIONS,
+      title: getString('common.chartVersions'),
+      info: '',
+      icon: 'chart',
+      size: 16
+    })
+  }
   return (
     <Container>
       <Text color={Color.GREY_800} font={{ variation: FontVariation.H6 }} className={css.titleText}>
@@ -310,8 +422,10 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
             onClick={() => {
               setEnvFilter({ envId: undefined, isEnvGroup: false })
               setArtifactFilter(undefined)
+              setChartVersionFilter(undefined)
               setIsDetailsDialogOpen(true)
               setArtifactFilterApplied(false)
+              setChartVersionFilterApplied(false)
             }}
             disabled={!data || data.length === 0}
           />
@@ -353,23 +467,27 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
             setIsOpen={setIsDetailsDialogOpen}
             envFilter={envFilter}
             artifactFilter={artifactFilter}
+            chartVersionFilter={chartVersionFilter}
             isEnvView={cardView === CardView.ENV}
+            isArtifactView={cardView === CardView.ARTIFACT}
             artifactFilterApplied={artifactFilterApplied}
+            chartVersionFilterApplied={chartVersionFilterApplied}
           />
-          <PillToggle
-            selectedView={cardView}
-            options={[
-              { label: getString('environments'), value: CardView.ENV },
-              { label: getString('artifacts'), value: CardView.ARTIFACT }
-            ]}
+
+          <CardSelect
+            data={cardList}
             className={css.pillToggle}
-            onChange={val => {
+            renderItem={(item: CardInterface) => <>{item.title}</>}
+            selected={cardList.find(card => card.type === cardView)}
+            onChange={(val: CardInterface) => {
               setEnvId(undefined)
               setArtifactName(undefined)
+              setChartVersionName(undefined)
               setSelectedEnv(undefined)
               setSelectedArtifact(undefined)
+              setSelectedChartVersion(undefined)
               setArtifactFilterApplied(false)
-              setCardView(val)
+              setCardView(val.type as CardView)
             }}
           />
         </div>
@@ -427,7 +545,7 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
           onChange={setActiveSlide}
           slideClassName={cx(css.slideStyle, { [css.paddingLeft12]: activeSlide === 1 })}
         >
-          {cardSlides}
+          {getCardSlides()}
         </Carousel>
       )}
     </Container>

@@ -19,12 +19,14 @@ export function DialogEmptyState({
   isSearchApplied,
   resetSearch,
   message,
-  isServicePage = false
+  isServicePage = false,
+  isArtifactView = true
 }: {
   isSearchApplied: boolean
   resetSearch: () => void
   message: string
   isServicePage?: boolean
+  isArtifactView?: boolean
 }): JSX.Element {
   const { getString } = useStrings()
   return (
@@ -43,7 +45,14 @@ export function DialogEmptyState({
         </>
       ) : (
         <>
-          <img src={emptyInstanceDetail} alt={getString('cd.environmentDetailPage.selectArtifactMsg')} />
+          <img
+            src={emptyInstanceDetail}
+            alt={
+              isArtifactView
+                ? getString('cd.environmentDetailPage.selectArtifactMsg')
+                : getString('cd.environmentDetailPage.selectChartVersionMsg')
+            }
+          />
           <Text>{message}</Text>
         </>
       )}

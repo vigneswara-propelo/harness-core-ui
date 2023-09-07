@@ -14,7 +14,8 @@ import { Popover, Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
 import { String, useStrings } from 'framework/strings'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
-import { EnvCardComponentProps, getLatestTimeAndArtifact } from '../ServiceDetailUtils'
+import { useServiceContext } from '@cd/context/ServiceContext'
+import { EnvCardComponentProps, getLatestTimeArtifactChartVersion, shouldShowChartVersion } from '../ServiceDetailUtils'
 import ServiceDetailDriftTable from '../ServiceDetailDriftTable'
 
 import css from '../ServiceDetailsSummaryV2.module.scss'
@@ -27,11 +28,16 @@ export function EnvCard({
   env,
   selectedEnv
 }: EnvCardComponentProps): JSX.Element | null {
+  const { selectedDeploymentType } = useServiceContext()
   const { getString } = useStrings()
   const envName = env?.name
   const envId = env?.id
   const artifactDeploymentDetails = env?.artifactDeploymentDetails
-  const { lastDeployedAt: latestTime, artifact: artifactName } = getLatestTimeAndArtifact(artifactDeploymentDetails)
+  const {
+    lastDeployedAt: latestTime,
+    artifact: artifactName,
+    chartVersion
+  } = getLatestTimeArtifactChartVersion(artifactDeploymentDetails)
 
   const deploymentText = env?.isRollback
     ? getString('cd.serviceDashboard.rollbacked')
@@ -46,14 +52,45 @@ export function EnvCard({
     ? (defaultTo(artifactDeploymentDetails?.map(envValue => envValue.envId)?.filter(Boolean), []) as string[])
     : []
 
+  const renderArtifactOrChartVersionName = (name?: string): React.ReactElement => {
+    return (
+      <Container flex>
+        <Popover
+          interactionKind="hover"
+          content={<ServiceDetailDriftTable data={defaultTo(artifactDeploymentDetails, [])} isArtifactView={false} />}
+          disabled={!isDrift}
+          popoverClassName={css.driftPopover}
+          position={Position.BOTTOM}
+          modifiers={{ preventOverflow: { escapeWithReference: true } }}
+        >
+          <Container flex={{ alignItems: 'center' }}>
+            {isDrift && <Icon name="execution-warning" color={Color.RED_700} />}
+            <Text
+              font={{ variation: FontVariation.CARD_TITLE, weight: 'semi-bold' }}
+              color={isDrift ? Color.RED_700 : Color.GREY_800}
+              lineClamp={1}
+              margin={{ left: 'small' }}
+              tooltipProps={{ isDark: true, disabled: isDrift }}
+            >
+              {name || '-'}
+            </Text>
+          </Container>
+        </Popover>
+      </Container>
+    )
+  }
+
   /* istanbul ignore next */
   if (isUndefined(envId)) {
     return null
   }
+
+  const showChartVersion = shouldShowChartVersion(selectedDeploymentType)
+
   return (
     <>
       <Card
-        className={cx(css.envCards, css.cursor)}
+        className={cx(css.envCards, css.cursor, showChartVersion && css.height220)}
         onClick={() => {
           if (selectedEnv?.envId === envId) {
             setSelectedEnv(undefined)
@@ -127,29 +164,8 @@ export function EnvCard({
             </Text>
           </div>
         )}
-        <Container flex>
-          <Popover
-            interactionKind="hover"
-            content={<ServiceDetailDriftTable data={defaultTo(artifactDeploymentDetails, [])} isArtifactView={false} />}
-            disabled={!isDrift}
-            popoverClassName={css.driftPopover}
-            position={Position.BOTTOM}
-            modifiers={{ preventOverflow: { escapeWithReference: true } }}
-          >
-            <Container flex={{ alignItems: 'center' }}>
-              {isDrift && <Icon name="execution-warning" color={Color.RED_700} />}
-              <Text
-                font={{ variation: FontVariation.CARD_TITLE, weight: 'semi-bold' }}
-                color={isDrift ? Color.RED_700 : Color.GREY_800}
-                lineClamp={1}
-                margin={{ left: 'small' }}
-                tooltipProps={{ isDark: true, disabled: isDrift }}
-              >
-                {artifactName || '-'}
-              </Text>
-            </Container>
-          </Popover>
-        </Container>
+        {renderArtifactOrChartVersionName(artifactName)}
+        {showChartVersion && renderArtifactOrChartVersionName(chartVersion)}
       </Card>
     </>
   )

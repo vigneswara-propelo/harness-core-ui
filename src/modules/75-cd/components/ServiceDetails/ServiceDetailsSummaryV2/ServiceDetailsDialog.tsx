@@ -14,22 +14,36 @@ import { useStrings } from 'framework/strings'
 import ServiceDetailInstanceView, { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
 import ServiceDetailsEnvTable from './ServiceDetailsEnvTable'
 import ServiceDetailsArtifactTable from './ServiceDetailsArtifactTable'
+import ServiceDetailsChartVersionTable from './ServiceDetailsChartVersionTable'
 import css from './ServiceDetailsSummaryV2.module.scss'
 
 interface ServiceDetailsDialogProps {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
   isEnvView: boolean
+  isArtifactView?: boolean
   envFilter?: {
     envId?: string
     isEnvGroup: boolean
   }
   artifactFilter?: string
   artifactFilterApplied?: boolean
+  chartVersionFilter?: string
+  chartVersionFilterApplied?: boolean
 }
 
 export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): React.ReactElement {
-  const { isOpen, setIsOpen, envFilter, artifactFilter, isEnvView, artifactFilterApplied } = props
+  const {
+    isOpen,
+    setIsOpen,
+    envFilter,
+    artifactFilter,
+    isEnvView,
+    isArtifactView,
+    artifactFilterApplied,
+    chartVersionFilter,
+    chartVersionFilterApplied
+  } = props
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState('')
   const isSearchApplied = useRef<boolean>(!isEmpty(searchTerm))
@@ -37,6 +51,7 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const [rowClickFilter, setRowClickFilter] = useState<ServiceDetailInstanceViewProps>({
     artifact: '',
+    chartVersion: '',
     envId: '',
     environmentType: 'PreProduction',
     envName: '',
@@ -58,6 +73,7 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
   const resetDialogState = useCallback(() => {
     setRowClickFilter({
       artifact: '',
+      chartVersion: '',
       envId: '',
       environmentType: 'PreProduction',
       envName: '',
@@ -96,7 +112,7 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
                 resetSearch={resetSearch}
                 setRowClickFilter={setRowClickFilter}
               />
-            ) : (
+            ) : isArtifactView ? (
               <ServiceDetailsArtifactTable
                 artifactFilter={artifactFilter}
                 envFilter={envFilter}
@@ -105,10 +121,20 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
                 setRowClickFilter={setRowClickFilter}
                 artifactFilterApplied={artifactFilterApplied}
               />
+            ) : (
+              <ServiceDetailsChartVersionTable
+                chartVersionFilter={chartVersionFilter}
+                envFilter={envFilter}
+                searchTerm={searchTerm}
+                resetSearch={resetSearch}
+                setRowClickFilter={setRowClickFilter}
+                chartVersionFilterApplied={chartVersionFilterApplied}
+              />
             )}
           </Container>
           <ServiceDetailInstanceView
             artifact={rowClickFilter.artifact}
+            chartVersion={rowClickFilter.chartVersion}
             envName={rowClickFilter.envName}
             envId={rowClickFilter.envId}
             environmentType={rowClickFilter.environmentType}

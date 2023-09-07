@@ -55,26 +55,28 @@ const getEnvTableData = (
             const clusterId = infraDetail.clusterId
             infraDetail.instanceGroupedByArtifactList.forEach(artifactDetail => {
               const artifact = artifactDetail.artifact
-              const instanceCount = defaultTo(artifactDetail.count, 0)
-              tableData.push({
-                artifact: artifact,
-                clusterId: clusterId,
-                envId,
-                envName,
-                lastDeployedAt: artifactDetail.lastDeployedAt,
-                infrastructureId: infraId,
-                infrastructureName: infraName,
-                instanceCount: instanceCount,
-                pipelineId: artifactDetail.pipelineIdentifier,
-                pipelineName: artifactDetail.pipelineIdentifier, // this is only for phase 1
-                planexecutionId: artifactDetail.lastPlanExecutionId,
-                rollbackStatus: getRollbackStatusFromResponse(artifactDetail.rollbackStatus),
-                stageExecutionId: artifactDetail.stageNodeExecutionId,
-                infrastructureMappingId: artifactDetail.infrastructureMappingId,
-                instanceKey: artifactDetail.instanceKey,
-                stageId: artifactDetail.stageSetupId,
-                showEnv,
-                showInfra
+              artifactDetail.instanceGroupedByChartVersionList?.forEach(chartVersionDetail => {
+                const instanceCount = defaultTo(chartVersionDetail.count, 0)
+                tableData.push({
+                  artifact: artifact,
+                  clusterId: clusterId,
+                  envId,
+                  envName,
+                  lastDeployedAt: chartVersionDetail.lastDeployedAt,
+                  infrastructureId: infraId,
+                  infrastructureName: infraName,
+                  instanceCount: instanceCount,
+                  pipelineId: chartVersionDetail.pipelineIdentifier,
+                  pipelineName: chartVersionDetail.pipelineIdentifier, // this is only for phase 1
+                  planexecutionId: chartVersionDetail.lastPlanExecutionId,
+                  rollbackStatus: getRollbackStatusFromResponse(chartVersionDetail.rollbackStatus),
+                  stageExecutionId: chartVersionDetail.stageNodeExecutionId,
+                  infrastructureMappingId: chartVersionDetail.infrastructureMappingId,
+                  instanceKey: chartVersionDetail.instanceKey,
+                  stageId: chartVersionDetail.stageSetupId,
+                  showEnv,
+                  showInfra
+                })
               })
               showEnv = false
               showInfra = false

@@ -7,10 +7,12 @@
 
 import type {
   ResponseArtifactInstanceDetails,
+  ResponseChartVersionInstanceDetails,
   ResponseEnvironmentGroupInstanceDetails,
   ResponseInstanceDetailGroupedByPipelineExecutionList,
   ResponseInstanceGroupedByEnvironmentList,
   ResponseInstanceGroupedOnArtifactList,
+  ResponseInstanceGroupedOnChartVersionList,
   ResponseOpenTaskDetails,
   ResponseSequenceToggleDTO
 } from 'services/cd-ng'
@@ -137,7 +139,12 @@ export const activeInstanceGroupByEnv: ResponseInstanceGroupedByEnvironmentList 
                 instanceGroupedByArtifactList: [
                   {
                     artifact: '/test-artifact',
-                    count: 2,
+                    instanceGroupedByChartVersionList: [
+                      {
+                        chartVersion: '1.2.3',
+                        count: 2
+                      }
+                    ],
                     lastDeployedAt: 1663761753831
                   }
                 ],
@@ -164,7 +171,12 @@ export const activeInstanceGroupByEnv: ResponseInstanceGroupedByEnvironmentList 
                 instanceGroupedByArtifactList: [
                   {
                     artifact: '/test-artifact',
-                    count: 2,
+                    instanceGroupedByChartVersionList: [
+                      {
+                        chartVersion: '1.2.3',
+                        count: 2
+                      }
+                    ],
                     lastDeployedAt: 1666870992508
                   }
                 ],
@@ -191,7 +203,12 @@ export const activeInstanceGroupByEnv: ResponseInstanceGroupedByEnvironmentList 
                 instanceGroupedByArtifactList: [
                   {
                     artifact: '/test-artifact',
-                    count: 2,
+                    instanceGroupedByChartVersionList: [
+                      {
+                        chartVersion: '1.2.3',
+                        count: 2
+                      }
+                    ],
                     lastDeployedAt: 1666785805123
                   }
                 ],
@@ -218,12 +235,17 @@ export const activeInstanceGroupByEnv: ResponseInstanceGroupedByEnvironmentList 
                 instanceGroupedByArtifactList: [
                   {
                     artifact: '/test-artifact',
-                    count: 1,
+                    instanceGroupedByChartVersionList: [
+                      {
+                        chartVersion: '1.2.3',
+                        count: 2
+                      }
+                    ],
                     lastDeployedAt: 1666150641027
                   },
                   {
                     artifact: '',
-                    count: 3,
+                    instanceGroupedByChartVersionList: [],
                     lastDeployedAt: 1666150641029
                   }
                 ],
@@ -369,6 +391,77 @@ export const artifactInstanceDetailsMock: ResponseArtifactInstanceDetails = {
   correlationId: 'test'
 }
 
+export const chartVersionInstanceDetailsMock: ResponseChartVersionInstanceDetails = {
+  status: 'SUCCESS',
+  data: {
+    chartVersionInstanceDetails: [
+      {
+        chartVersion: 'testChartVersion',
+        environmentGroupInstanceDetails: {
+          environmentGroupInstanceDetails: [
+            {
+              id: 'sampleEnv',
+              name: 'sampleEnv',
+              environmentTypes: ['PreProduction'],
+              count: undefined,
+              isDrift: false,
+              isEnvGroup: false,
+              isRevert: false,
+              isRollback: false,
+              artifactDeploymentDetails: [
+                {
+                  artifact: 'testArtifactDisplayName',
+                  lastPipelineExecutionId: 'exectestplan',
+                  lastDeployedAt: 1676812202024,
+                  envId: 'testenv',
+                  pipelineId: 'waitpipetest',
+                  envName: 'testenv'
+                }
+              ]
+            },
+            {
+              id: 'demodriftgroup',
+              name: 'demodriftgroup',
+              environmentTypes: ['PreProduction', 'Production'],
+              count: 2,
+              isDrift: true,
+              isEnvGroup: true,
+              isRevert: false,
+              isRollback: false,
+              artifactDeploymentDetails: [
+                {
+                  artifact: 'demodrift:1.0',
+                  envName: 'testenv31',
+                  lastDeployedAt: 1676812202024,
+                  envId: 'testenv31',
+                  lastPipelineExecutionId: 'exectestplan',
+                  pipelineId: 'waitpipetest'
+                },
+                {
+                  envId: 'testenv2',
+                  artifact: '/demodrift',
+                  lastDeployedAt: 1666870992508,
+                  envName: 'testenv2',
+                  pipelineId: 'waitpipetest',
+                  lastPipelineExecutionId: 'exectestplan'
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        chartVersion: undefined,
+        environmentGroupInstanceDetails: {
+          environmentGroupInstanceDetails: []
+        }
+      }
+    ]
+  },
+  metaData: undefined,
+  correlationId: 'test'
+}
+
 export const artifactTableMock: ResponseInstanceGroupedOnArtifactList = {
   status: 'SUCCESS',
   data: {
@@ -376,23 +469,28 @@ export const artifactTableMock: ResponseInstanceGroupedOnArtifactList = {
       {
         artifact: 'testArtifactName',
         lastDeployedAt: 1675925501095,
-        instanceGroupedOnEnvironmentList: [
+        instanceGroupedOnChartVersionList: [
           {
-            envId: 'sampleEnv',
-            envName: 'sampleEnv',
-            lastDeployedAt: 1675925501095,
-            instanceGroupedOnEnvironmentTypeList: [
+            chartVersion: '1.2.3',
+            instanceGroupedOnEnvironmentList: [
               {
-                environmentType: 'PreProduction',
+                envId: 'sampleEnv',
+                envName: 'sampleEnv',
                 lastDeployedAt: 1675925501095,
-                instanceGroupedOnInfrastructureList: [
+                instanceGroupedOnEnvironmentTypeList: [
                   {
-                    infrastructureId: 'infra',
-                    infrastructureName: 'infra',
-                    clusterId: undefined,
-                    agentId: undefined,
+                    environmentType: 'PreProduction',
                     lastDeployedAt: 1675925501095,
-                    count: 1
+                    instanceGroupedOnInfrastructureList: [
+                      {
+                        infrastructureId: 'infra',
+                        infrastructureName: 'infra',
+                        clusterId: undefined,
+                        agentId: undefined,
+                        lastDeployedAt: 1675925501095,
+                        count: 1
+                      }
+                    ]
                   }
                 ]
               }
@@ -403,31 +501,36 @@ export const artifactTableMock: ResponseInstanceGroupedOnArtifactList = {
       {
         artifact: 'testArtifactName2',
         lastDeployedAt: 1675925501095,
-        instanceGroupedOnEnvironmentList: [
+        instanceGroupedOnChartVersionList: [
           {
-            envId: 'sampleEnv2',
-            envName: 'sampleEnv2',
-            lastDeployedAt: 1675925501095,
-            instanceGroupedOnEnvironmentTypeList: [
+            chartVersion: '1.2.3',
+            instanceGroupedOnEnvironmentList: [
               {
-                environmentType: 'Production',
+                envId: 'sampleEnv2',
+                envName: 'sampleEnv2',
                 lastDeployedAt: 1675925501095,
-                instanceGroupedOnInfrastructureList: [
+                instanceGroupedOnEnvironmentTypeList: [
                   {
-                    infrastructureId: undefined,
-                    infrastructureName: undefined,
-                    clusterId: 'clusterId',
-                    agentId: undefined,
+                    environmentType: 'Production',
                     lastDeployedAt: 1675925501095,
-                    count: 1
-                  },
-                  {
-                    infrastructureId: undefined,
-                    infrastructureName: undefined,
-                    clusterId: undefined,
-                    agentId: undefined,
-                    lastDeployedAt: 1675925501095,
-                    count: 1
+                    instanceGroupedOnInfrastructureList: [
+                      {
+                        infrastructureId: undefined,
+                        infrastructureName: undefined,
+                        clusterId: 'clusterId',
+                        agentId: undefined,
+                        lastDeployedAt: 1675925501095,
+                        count: 1
+                      },
+                      {
+                        infrastructureId: undefined,
+                        infrastructureName: undefined,
+                        clusterId: undefined,
+                        agentId: undefined,
+                        lastDeployedAt: 1675925501095,
+                        count: 1
+                      }
+                    ]
                   }
                 ]
               }
@@ -480,4 +583,88 @@ export const getCustomSequenceStatusMock: ResponseSequenceToggleDTO = {
   },
   metaData: undefined,
   correlationId: 'testCorrelationId'
+}
+
+export const activeInstanceGroupedByChartVersionResponse: ResponseInstanceGroupedOnChartVersionList = {
+  status: 'SUCCESS',
+  data: {
+    instanceGroupByChartVersionList: [
+      {
+        chartVersion: '0.0.4',
+        lastDeployedAt: 1693579670606,
+        instanceGroupByArtifactList: [
+          {
+            artifact: 'library/nginx:mainline-bullseye',
+            lastDeployedAt: 1693579670606,
+            instanceGroupedOnEnvironmentList: [
+              {
+                envId: 'test',
+                envName: 'test',
+                lastDeployedAt: 1693579670606,
+                instanceGroupedOnEnvironmentTypeList: [
+                  {
+                    environmentType: 'Production',
+                    lastDeployedAt: 1693579670606,
+                    instanceGroupedOnInfrastructureList: [
+                      {
+                        infrastructureId: 'k8s',
+                        infrastructureName: 'k8s',
+                        lastDeployedAt: 1693579670606,
+                        count: 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                envId: 'prod1',
+                envName: 'prod1',
+                lastDeployedAt: 1693579670079,
+                instanceGroupedOnEnvironmentTypeList: [
+                  {
+                    environmentType: 'Production',
+                    lastDeployedAt: 1693579670079,
+                    instanceGroupedOnInfrastructureList: [
+                      {
+                        infrastructureId: 'Prod_Infra_1',
+                        infrastructureName: 'Prod Infra 1',
+                        lastDeployedAt: 1693579670079,
+                        count: 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            artifact: 'library/nginx:stable-bullseye-perl',
+            lastDeployedAt: 1693578264080,
+            instanceGroupedOnEnvironmentList: [
+              {
+                envId: 'testPreprod',
+                envName: 'testPre-prod',
+                lastDeployedAt: 1693578264080,
+                instanceGroupedOnEnvironmentTypeList: [
+                  {
+                    environmentType: 'PreProduction',
+                    lastDeployedAt: 1693578264080,
+                    instanceGroupedOnInfrastructureList: [
+                      {
+                        infrastructureId: 'K8s_Infra_For_PreProd_Env',
+                        infrastructureName: 'K8s Infra For PreProd Env',
+                        lastDeployedAt: 1693578264080,
+                        count: 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  correlationId: '872fa04e-adf8-413c-984f-82f60a2f3033'
 }

@@ -164,6 +164,7 @@ export interface StringsMap {
   'common.changeIntelligence': string
   'common.changesUnsaved': string
   'common.channel': string
+  'common.chartVersions': string
   'common.checkYourNetwork': string
   'common.city': string
   'common.clear': string
@@ -6152,8 +6153,10 @@ export interface StringsMap {
   'cd.environmentDetailPage.infraSlashCluster': string
   'cd.environmentDetailPage.noInstancesToShow': string
   'cd.environmentDetailPage.noServiceArtifactMsg': string
+  'cd.environmentDetailPage.noServiceChartVersionMsg': string
   'cd.environmentDetailPage.seeFull': string
   'cd.environmentDetailPage.selectArtifactMsg': string
+  'cd.environmentDetailPage.selectChartVersionMsg': string
   'cd.environmentDetailPage.viewInTable': string
   'cd.environmentUpdated': string
   'cd.existingEnvironment': string

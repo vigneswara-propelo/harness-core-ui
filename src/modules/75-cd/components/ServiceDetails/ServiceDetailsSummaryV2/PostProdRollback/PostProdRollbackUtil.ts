@@ -6,9 +6,9 @@
  */
 
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
-import type { InstanceGroupedByArtifact, ServiceDefinition } from 'services/cd-ng'
+import type { InstanceGroupedByChartVersion, ServiceDefinition } from 'services/cd-ng'
 
-export type PostProdRollbackStatusType = InstanceGroupedByArtifact['rollbackStatus']
+export type PostProdRollbackStatusType = InstanceGroupedByChartVersion['rollbackStatus']
 export interface PostProdTableData {
   artifact?: string
   envId?: string

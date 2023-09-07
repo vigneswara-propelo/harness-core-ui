@@ -6,7 +6,9 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import type { ArtifactDeploymentDetail, ArtifactInstanceDetail } from 'services/cd-ng'
+
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { ArtifactDeploymentDetail, ArtifactInstanceDetail, ChartVersionInstanceDetail } from 'services/cd-ng'
 
 export enum CardSortOption {
   ALL = 'All',
@@ -17,11 +19,13 @@ export enum CardSortOption {
 export interface ServiceDetailsCardViewProps {
   setEnvId: React.Dispatch<React.SetStateAction<string | string[] | undefined>>
   setArtifactName: React.Dispatch<React.SetStateAction<string | undefined>>
+  setChartVersionName: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 export enum CardView {
   ENV = 'ENV',
-  ARTIFACT = 'ARTIFACT'
+  ARTIFACT = 'ARTIFACT',
+  CHART_VERSIONS = 'CHART_VERSIONS'
 }
 
 export interface EnvCardProps {
@@ -37,9 +41,9 @@ export interface EnvCardProps {
 }
 
 export function createGroups(
-  arr: ArtifactInstanceDetail[] | EnvCardProps[],
+  arr: ArtifactInstanceDetail[] | EnvCardProps[] | ChartVersionInstanceDetail[],
   groupSize: number
-): (ArtifactInstanceDetail[] | EnvCardProps[])[] {
+): (ArtifactInstanceDetail[] | EnvCardProps[] | ChartVersionInstanceDetail[])[] {
   const numGroups = Math.ceil(arr.length / groupSize)
   return new Array(numGroups).fill('').map((_, i) => arr.slice(i * groupSize, (i + 1) * groupSize))
 }
@@ -69,7 +73,9 @@ export interface EnvCardComponentProps {
   }
 }
 
-export const getLatestTimeAndArtifact = (data: ArtifactDeploymentDetail[] | undefined): ArtifactDeploymentDetail => {
+export const getLatestTimeArtifactChartVersion = (
+  data: ArtifactDeploymentDetail[] | undefined
+): ArtifactDeploymentDetail => {
   return defaultTo(
     data?.reduce(
       (latest, deployment) =>
@@ -100,6 +106,22 @@ export interface ArtifactCardProps {
   setArtifactFilterApplied?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+export interface ChartVersionCardProps {
+  setChartVersionName: React.Dispatch<React.SetStateAction<string | undefined>>
+  setSelectedChartVersion: React.Dispatch<React.SetStateAction<string | undefined>>
+  setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setEnvFilter: React.Dispatch<
+    React.SetStateAction<{
+      envId?: string
+      isEnvGroup: boolean
+    }>
+  >
+  setChartVersionFilter: React.Dispatch<React.SetStateAction<string | undefined>>
+  chartVersion: ChartVersionInstanceDetail
+  selectedChartVersion?: string
+  setChartVersionFilterApplied?: React.Dispatch<React.SetStateAction<boolean>>
+}
+
 export interface PipelineExecInfoProps {
   pipelineId: string
   planExecutionId: string
@@ -110,4 +132,11 @@ export interface PipelineExecInfoProps {
   rollbackStatus?: 'UNAVAILABLE' | 'NOT_STARTED' | 'STARTED' | 'SUCCESS' | 'FAILURE'
   stageNodeExecutionId?: string
   stageSetupId?: string
+}
+
+export const shouldShowChartVersion = (selectedDeploymentType: ServiceDeploymentType): boolean => {
+  return (
+    selectedDeploymentType === ServiceDeploymentType.Kubernetes ||
+    selectedDeploymentType === ServiceDeploymentType.NativeHelm
+  )
 }

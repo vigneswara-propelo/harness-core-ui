@@ -207,20 +207,18 @@ exports[`Service Detail Summary -  Initial render - basic snapshot 1`] = `
             </p>
           </div>
           <div
-            class="PillToggle--optionBtns pillToggle"
+            class="pillToggle"
           >
             <div
-              class="PillToggle--item PillToggle--selected"
-              data-name="toggle-option-one"
-              role="button"
+              class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--selected Card--interactive"
+              data-index="0"
               tabindex="0"
             >
               environments
             </div>
             <div
-              class="PillToggle--item"
-              data-name="toggle-option-two"
-              role="button"
+              class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--interactive"
+              data-index="1"
               tabindex="0"
             >
               artifacts

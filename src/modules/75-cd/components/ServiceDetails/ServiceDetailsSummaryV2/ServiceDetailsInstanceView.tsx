@@ -64,6 +64,7 @@ export interface ServiceDetailInstanceViewProps {
   infraName?: string
   clusterIdentifier?: string
   artifact?: string
+  chartVersion?: string
   closeDailog?: () => void
   isEnvView: boolean
   setRollbacking?: React.Dispatch<React.SetStateAction<boolean>>
@@ -301,6 +302,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 export default function ServiceDetailInstanceView(props: ServiceDetailInstanceViewProps): React.ReactElement {
   const {
     artifact,
+    chartVersion,
     envName,
     envId,
     environmentType,
@@ -324,6 +326,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
     envId,
     environmentType,
     artifact,
+    chartVersion,
     clusterIdentifier,
     infraIdentifier
   }

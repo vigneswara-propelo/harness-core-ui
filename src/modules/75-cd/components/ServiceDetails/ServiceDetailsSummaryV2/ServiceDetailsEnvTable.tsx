@@ -10,22 +10,24 @@ import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Color, FontVariation } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
 import { Container, getErrorInfoFromErrorObject, Icon, PageError, Text } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
-import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
-import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { Table } from '@common/components'
+import { Color, FontVariation } from '@harness/design-system'
+
 import {
   GetActiveInstanceGroupedByEnvironmentQueryParams,
   InstanceGroupedByEnvironment,
   useGetActiveInstanceGroupedByEnvironment
 } from 'services/cd-ng'
+import { StringKeys, useStrings } from 'framework/strings'
+import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import { Table } from '@common/components'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import { numberFormatter } from '@common/utils/utils'
+import { useServiceContext } from '@cd/context/ServiceContext'
+import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import type { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
-
+import { shouldShowChartVersion } from './ServiceDetailUtils'
 import css from './ServiceDetailsSummaryV2.module.scss'
 
 interface ServiceDetailsEnvTableProps {
@@ -39,6 +41,7 @@ interface ServiceDetailsEnvTableProps {
 }
 export interface TableRowData {
   artifact?: string
+  chartVersion?: string
   envId?: string
   envName?: string
   envGroups?: string[]
@@ -52,6 +55,7 @@ export interface TableRowData {
   showEnv?: boolean
   showEnvType?: boolean
   showArtifact?: boolean
+  showChartVersion?: boolean
 }
 
 /* istanbul ignore next */
@@ -89,25 +93,29 @@ const getEnvTableData = (
             const clusterId = infraDetail.clusterId
             infraDetail.instanceGroupedByArtifactList.forEach(artifactDetail => {
               const artifact = artifactDetail.artifact
-              const instanceCount = defaultTo(artifactDetail.count, 0)
-              tableData.push({
-                artifact: artifact,
-                clusterId: clusterId,
-                envId,
-                envName,
-                envGroups,
-                lastDeployedAt,
-                environmentType: envType,
-                infrastructureId: infraId,
-                infrastructureName: infraName,
-                instanceCount: instanceCount,
-                showEnv,
-                showEnvType,
-                showInfra
+              artifactDetail.instanceGroupedByChartVersionList.forEach(chartVersionDetail => {
+                const chartVersion = chartVersionDetail.chartVersion
+                const instanceCount = defaultTo(chartVersionDetail.count, 0)
+                tableData.push({
+                  artifact: artifact,
+                  chartVersion: chartVersion,
+                  clusterId: clusterId,
+                  envId,
+                  envName,
+                  envGroups,
+                  lastDeployedAt,
+                  environmentType: envType,
+                  infrastructureId: infraId,
+                  infrastructureName: infraName,
+                  instanceCount: instanceCount,
+                  showEnv,
+                  showEnvType,
+                  showInfra
+                })
+                showEnv = false
+                showEnvType = false
+                showInfra = false
               })
-              showEnv = false
-              showEnvType = false
-              showInfra = false
             })
             showInfra = true
           })
@@ -264,8 +272,23 @@ export const RenderArtifact: Renderer<CellProps<TableRowData>> = ({
   )
 }
 
+export const RenderChartVersion: Renderer<CellProps<TableRowData>> = ({
+  row: {
+    original: { chartVersion }
+  }
+}) => {
+  return (
+    <Container>
+      <Text lineClamp={1} tooltipProps={{ isDark: true }} className={css.envColumnStyle}>
+        {chartVersion ? chartVersion : '-'}
+      </Text>
+    </Container>
+  )
+}
+
 export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProps): React.ReactElement {
   const { envFilter: envFilterObj, resetSearch, setRowClickFilter, searchTerm } = props
+  const { selectedDeploymentType } = useServiceContext()
   const envFilter = envFilterObj?.envId
   const isEnvGroup = !!envFilterObj?.isEnvGroup
   const { getString } = useStrings()
@@ -281,7 +304,9 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
     envGroupIdentifier: isEnvGroup ? envFilter : undefined
   }
 
-  const { data, loading, error, refetch } = useGetActiveInstanceGroupedByEnvironment({ queryParams })
+  const { data, loading, error, refetch } = useGetActiveInstanceGroupedByEnvironment({
+    queryParams
+  })
 
   const envTableDetailData = data?.data?.instanceGroupedByEnvironmentList
 
@@ -304,8 +329,12 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
               infraOrCluster =>
                 infraOrCluster.clusterId?.toLocaleLowerCase().includes(searchValue) ||
                 infraOrCluster.infrastructureName?.toLocaleLowerCase().includes(searchValue) ||
-                infraOrCluster.instanceGroupedByArtifactList.some(artifact =>
-                  artifact.artifact?.toLocaleLowerCase().includes(searchValue)
+                infraOrCluster.instanceGroupedByArtifactList.some(
+                  artifact =>
+                    artifact.artifact?.toLocaleLowerCase().includes(searchValue) ||
+                    artifact.instanceGroupedByChartVersionList.some(chartVersionDetail =>
+                      chartVersionDetail.chartVersion?.toLocaleLowerCase().includes(searchTerm)
+                    )
                 )
             )
         )
@@ -324,6 +353,8 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
     }
   }, [filteredTableData, searchApplied])
 
+  const showChartVersion = shouldShowChartVersion(selectedDeploymentType)
+
   const columns: Column<TableRowData>[] = useMemo(() => {
     const columnsArray = [
       {
@@ -335,25 +366,25 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       {
         Header: getString('pipeline.verification.tableHeaders.group'),
         id: 'environmentGroups',
-        width: '20%',
+        width: showChartVersion ? '15%' : '20%',
         Cell: RenderEnvGroups
       },
       {
         Header: getString('typeLabel'),
         id: 'envType',
-        width: '13%',
+        width: showChartVersion ? '8%' : '13%',
         Cell: RenderEnvType
       },
       {
         Header: getString('cd.infra'),
         id: 'infra',
-        width: '22%',
+        width: showChartVersion ? '17%' : '22%',
         Cell: RenderInfra
       },
       {
         Header: getString('cd.serviceDashboard.artifact'),
         id: 'artifact',
-        width: '25%',
+        width: showChartVersion ? '20%' : '25%',
         Cell: RenderArtifact
       },
       {
@@ -376,12 +407,21 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
         Cell: RenderInstanceCount
       }
     ]
+    if (showChartVersion) {
+      columnsArray.splice(5, 0, {
+        Header: getString('pipeline.manifestType.http.chartVersion'),
+        id: 'chartVersion',
+        width: '20%',
+        Cell: RenderChartVersion
+      })
+    }
     return columnsArray as unknown as Column<TableRowData>[]
-  }, [getString])
+  }, [getString, showChartVersion])
 
   if (isUndefined(selectedRow) && tableData.length) {
     setRowClickFilter({
       artifact: tableData[0].artifact,
+      chartVersion: tableData[0].chartVersion,
       envId: defaultTo(tableData[0].envId, ''),
       environmentType: tableData[0].environmentType as 'PreProduction' | 'Production',
       envName: defaultTo(tableData[0].envName, ''),
@@ -430,6 +470,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       onRowClick={(row, idx) => {
         setRowClickFilter({
           artifact: row.artifact,
+          chartVersion: row.chartVersion,
           envId: defaultTo(row.envId, ''),
           environmentType: row.environmentType as 'PreProduction' | 'Production',
           envName: defaultTo(row.envName, ''),

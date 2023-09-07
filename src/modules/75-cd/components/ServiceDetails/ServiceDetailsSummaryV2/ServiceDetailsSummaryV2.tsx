@@ -18,13 +18,15 @@ export default function ServiceDetailsSummaryV2(): JSX.Element {
   const { serviceId } = useParams<ServicePathProps>()
   const [envIdFilter, setEnvIdFilter] = useState<string | string[]>()
   const [artifactNameFilter, setArtifactNameFilter] = useState<string>()
+  const [chartVersionFilter, setChartVersionFilter] = useState<string>()
 
   const executionListFilter = {
     moduleProperties: {
       cd: {
         envIdentifiers: envIdFilter,
         serviceIdentifiers: serviceId && serviceId.length ? serviceId : undefined,
-        artifactDisplayNames: artifactNameFilter
+        artifactDisplayNames: artifactNameFilter,
+        chartVersionFilter: chartVersionFilter ? undefined : undefined
       }
     },
     filterType: 'PipelineExecution'
@@ -33,7 +35,11 @@ export default function ServiceDetailsSummaryV2(): JSX.Element {
   return (
     <Page.Body className={css.pageStyles}>
       <OpenTasks />
-      <ServiceDetailsCardView setEnvId={setEnvIdFilter} setArtifactName={setArtifactNameFilter} />
+      <ServiceDetailsCardView
+        setEnvId={setEnvIdFilter}
+        setArtifactName={setArtifactNameFilter}
+        setChartVersionName={setChartVersionFilter}
+      />
       <ExecutionList isExecutionPage={false} filters={executionListFilter} />
     </Page.Body>
   )

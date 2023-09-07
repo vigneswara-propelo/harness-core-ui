@@ -13,23 +13,21 @@ import { Container, getErrorInfoFromErrorObject, Icon, PageError, Text } from '@
 import { Color } from '@harness/design-system'
 
 import {
-  GetActiveInstanceGroupedByArtifactQueryParams,
-  InstanceGroupedOnArtifact,
-  useGetActiveInstanceGroupedByArtifact
+  GetActiveInstanceGroupedByChartVersionQueryParams,
+  InstanceGroupByChartVersion,
+  useGetActiveInstanceGroupedByChartVersion
 } from 'services/cd-ng'
 import { StringKeys, useStrings } from 'framework/strings'
-import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { Table } from '@common/components'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
+import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
-import { useServiceContext } from '@cd/context/ServiceContext'
 import type { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
 import { RenderEnv, RenderEnvType, RenderInstanceCount, TableRowData } from './ServiceDetailsEnvTable'
-import { shouldShowChartVersion } from './ServiceDetailUtils'
 import css from './ServiceDetailsSummaryV2.module.scss'
 
-interface ServiceDetailsArtifactTableProps {
-  artifactFilter?: string
+interface ServiceDetailsChartVersionTableProps {
+  chartVersionFilter?: string
   envFilter?: {
     envId?: string
     isEnvGroup: boolean
@@ -37,10 +35,9 @@ interface ServiceDetailsArtifactTableProps {
   resetSearch: () => void
   setRowClickFilter: React.Dispatch<React.SetStateAction<ServiceDetailInstanceViewProps>>
   searchTerm: string
-  artifactFilterApplied?: boolean
+  chartVersionFilterApplied?: boolean
 }
 
-/* istanbul ignore next */
 export const convertToEnvType = (envType: string): StringKeys => {
   if (envType === EnvironmentType.PRODUCTION) {
     return 'cd.serviceDashboard.prod'
@@ -48,69 +45,69 @@ export const convertToEnvType = (envType: string): StringKeys => {
   return 'cd.preProduction'
 }
 
-const getArtifactTableData = (
-  artifactTableData: InstanceGroupedOnArtifact[],
+const getChartVersionTableData = (
+  chartVersionTableData: InstanceGroupByChartVersion[],
   isEnvGroup: boolean,
   envFilter?: string,
-  artifactFilter?: string
+  chartVersionFilter?: string
 ): TableRowData[] => {
   const tableData: TableRowData[] = []
-  artifactTableData.forEach(artifact => {
-    /* istanbul ignore else */
-    if ((artifactFilter && artifact.artifact === artifactFilter) || !artifactFilter) {
-      const artifactName = artifact.artifact
-      const lastDeployedAt = defaultTo(artifact.lastDeployedAt, 0)
+  chartVersionTableData.forEach(chartVersionDetails => {
+    if ((chartVersionFilter && chartVersionDetails.chartVersion === chartVersionFilter) || !chartVersionFilter) {
+      const chartVersion = chartVersionDetails.chartVersion
+      const lastDeployedAt = defaultTo(chartVersionDetails.lastDeployedAt, 0)
       let showEnv = true
       let showArtifact = true
+      let showChartVersion = true
 
-      /* istanbul ignore else */
-      if (artifact.instanceGroupedOnChartVersionList) {
-        artifact.instanceGroupedOnChartVersionList.forEach(chartVersionDetails => {
-          const chartVersion = chartVersionDetails.chartVersion
-          let showChartVersion = true
-          chartVersionDetails.instanceGroupedOnEnvironmentList?.forEach(env => {
-            const envId = env.envId
-            const envName = defaultTo(env.envName, '-')
-            if (
-              env.envId &&
-              env.instanceGroupedOnEnvironmentTypeList &&
-              ((!isEnvGroup && envFilter && env.envId === envFilter) || isEnvGroup || !envFilter)
-            ) {
-              env.instanceGroupedOnEnvironmentTypeList.forEach(envDetail => {
-                const envType = envDetail.environmentType
-                if (envType && envDetail.instanceGroupedOnInfrastructureList) {
-                  envDetail.instanceGroupedOnInfrastructureList.forEach((infraDetail, infraDetailIdx) => {
-                    const infraId = infraDetail.infrastructureId
-                    const infraName = infraDetail.infrastructureName
-                    const clusterId = infraDetail.clusterId
-                    const instanceCount = defaultTo(infraDetail.count, 0)
-                    tableData.push({
-                      artifact: artifactName,
-                      chartVersion: chartVersion,
-                      clusterId: clusterId,
-                      envId,
-                      envName,
-                      lastDeployedAt,
-                      environmentType: envType,
-                      infrastructureId: infraId,
-                      infrastructureName: infraName,
-                      instanceCount: instanceCount,
-                      showEnv,
-                      showEnvType: !infraDetailIdx,
-                      showArtifact,
-                      showChartVersion
+      if (chartVersionDetails.instanceGroupByArtifactList) {
+        chartVersionDetails.instanceGroupByArtifactList.forEach(artifact => {
+          const artifactName = artifact.artifact
+          if (artifact.instanceGroupedOnEnvironmentList) {
+            artifact.instanceGroupedOnEnvironmentList?.forEach(env => {
+              const envId = env.envId
+              const envName = defaultTo(env.envName, '-')
+              if (
+                env.envId &&
+                env.instanceGroupedOnEnvironmentTypeList &&
+                ((!isEnvGroup && envFilter && env.envId === envFilter) || isEnvGroup || !envFilter)
+              ) {
+                env.instanceGroupedOnEnvironmentTypeList.forEach(envDetail => {
+                  const envType = envDetail.environmentType
+                  if (envType && envDetail.instanceGroupedOnInfrastructureList) {
+                    envDetail.instanceGroupedOnInfrastructureList.forEach((infraDetail, infraDetailIdx) => {
+                      const infraId = infraDetail.infrastructureId
+                      const infraName = infraDetail.infrastructureName
+                      const clusterId = infraDetail.clusterId
+                      const instanceCount = defaultTo(infraDetail.count, 0)
+                      tableData.push({
+                        chartVersion: chartVersion,
+                        artifact: artifactName,
+                        clusterId: clusterId,
+                        envId,
+                        envName,
+                        lastDeployedAt,
+                        environmentType: envType,
+                        infrastructureId: infraId,
+                        infrastructureName: infraName,
+                        instanceCount: instanceCount,
+                        showEnv,
+                        showEnvType: !infraDetailIdx,
+                        showArtifact,
+                        showChartVersion
+                      })
+                      showEnv = false
+                      showArtifact = false
+                      showChartVersion = false
                     })
-                    showEnv = false
-                    showArtifact = false
-                    showChartVersion = false
-                  })
-                }
-              })
-              showEnv = true
-            }
-          })
+                  }
+                })
+                showEnv = true
+              }
+            })
+            showArtifact = true
+          }
         })
-        showArtifact = true
       }
     }
   })
@@ -166,49 +163,50 @@ export const RenderChartVersion: Renderer<CellProps<TableRowData>> = ({
   )
 }
 
-export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifactTableProps): React.ReactElement {
+export default function ServiceDetailsChartVersionTable(
+  props: ServiceDetailsChartVersionTableProps
+): React.ReactElement {
   const {
-    artifactFilter,
+    chartVersionFilter,
     envFilter: envFilterObj,
     resetSearch,
     setRowClickFilter,
     searchTerm,
-    artifactFilterApplied = false
+    chartVersionFilterApplied = false
   } = props
-  const { selectedDeploymentType } = useServiceContext()
   const envFilter = envFilterObj?.envId
   const isEnvGroup = !!envFilterObj?.isEnvGroup
   const { getString } = useStrings()
   const [selectedRow, setSelectedRow] = React.useState<string>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
 
-  const queryParams: GetActiveInstanceGroupedByArtifactQueryParams = {
+  const queryParams: GetActiveInstanceGroupedByChartVersionQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     serviceId,
-    artifact: artifactFilter,
+    chartVersion: !isEmpty(chartVersionFilter) ? chartVersionFilter : undefined,
     environmentIdentifier: !isEnvGroup ? envFilter : undefined,
     envGroupIdentifier: isEnvGroup ? envFilter : undefined,
-    filterOnArtifact: artifactFilterApplied
+    filterOnChartVersion: chartVersionFilterApplied
   }
 
-  const { data, loading, error, refetch } = useGetActiveInstanceGroupedByArtifact({ queryParams })
+  const { data, loading, error, refetch } = useGetActiveInstanceGroupedByChartVersion({ queryParams })
 
-  const artifactTableDetailData = data?.data?.instanceGroupedOnArtifactList
+  const chartVersionTableDetailData: InstanceGroupByChartVersion[] | undefined =
+    data?.data?.instanceGroupByChartVersionList
 
-  const filteredTableData = useMemo(() => {
+  const filteredTableData: InstanceGroupByChartVersion[] | undefined = useMemo(() => {
     if (!searchTerm) {
-      return artifactTableDetailData
+      return chartVersionTableDetailData
     }
 
     const searchValue = searchTerm.toLocaleLowerCase()
-    /* istanbul ignore next */
-    return artifactTableDetailData?.filter(
-      artifactDetail =>
-        artifactDetail.artifact?.toLocaleLowerCase().includes(searchValue) ||
-        artifactDetail.instanceGroupedOnChartVersionList?.some(chartVersion =>
-          chartVersion.instanceGroupedOnEnvironmentList?.some(
+    return chartVersionTableDetailData?.filter(
+      chartVersionDetail =>
+        chartVersionDetail.chartVersion?.toLocaleLowerCase().includes(searchValue) ||
+        chartVersionDetail.instanceGroupByArtifactList.some(artifact =>
+          artifact.instanceGroupedOnEnvironmentList?.some(
             envDetail =>
               envDetail.envName?.toLocaleLowerCase().includes(searchValue) ||
               envDetail.instanceGroupedOnEnvironmentTypeList?.some(
@@ -224,16 +222,16 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
           )
         )
     )
-  }, [searchTerm, artifactTableDetailData])
+  }, [searchTerm, chartVersionTableDetailData, getString])
 
   const tableData: TableRowData[] = useMemo(() => {
-    return getArtifactTableData(
-      defaultTo(filteredTableData, [] as InstanceGroupedOnArtifact[]),
+    return getChartVersionTableData(
+      defaultTo(filteredTableData, [] as InstanceGroupByChartVersion[]),
       isEnvGroup,
       envFilter,
-      artifactFilter
+      chartVersionFilter
     )
-  }, [envFilter, artifactFilter, filteredTableData, isEnvGroup])
+  }, [envFilter, chartVersionFilter, filteredTableData, isEnvGroup])
 
   const searchApplied = !isEmpty(searchTerm.trim())
 
@@ -243,14 +241,18 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
     }
   }, [filteredTableData, searchApplied])
 
-  const showChartVersion = shouldShowChartVersion(selectedDeploymentType)
-
   const columns: Column<TableRowData>[] = useMemo(() => {
     const columnsArray = [
       {
+        Header: getString('pipeline.manifestType.http.chartVersion'),
+        id: 'chartVersion',
+        width: '23%',
+        Cell: RenderChartVersion
+      },
+      {
         Header: getString('cd.serviceDashboard.artifact'),
         id: 'artifact',
-        width: showChartVersion ? '22%' : '30%',
+        width: '22%',
         Cell: RenderArtifact
       },
       {
@@ -262,31 +264,22 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
       {
         Header: getString('typeLabel'),
         id: 'envType',
-        width: showChartVersion ? '8%' : '13%',
+        width: '8%',
         Cell: RenderEnvType
       },
       {
         Header: getString('cd.infra'),
         id: 'infra',
-        width: showChartVersion ? '22%' : '27%',
+        width: '22%',
         Cell: RenderInfra
       },
       {
         Header: getString('cd.serviceDashboard.headers.instances'),
         id: 'instances',
-        width: showChartVersion ? '5%' : '10%',
+        width: '5%',
         Cell: RenderInstanceCount
       }
     ]
-
-    if (showChartVersion) {
-      columnsArray.splice(1, 0, {
-        Header: getString('pipeline.manifestType.http.chartVersion'),
-        id: 'chartVersion',
-        width: '23%',
-        Cell: RenderChartVersion
-      })
-    }
     return columnsArray as unknown as Column<TableRowData>[]
   }, [getString])
 
@@ -310,7 +303,7 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
       <Container
         flex={{ justifyContent: 'center', alignItems: 'center' }}
         height={730}
-        data-test="ServiceArtifactTableLoading"
+        data-testid="chartVersionTableLoading"
       >
         <Icon name="spinner" color={Color.BLUE_500} size={30} />
       </Container>
@@ -318,18 +311,19 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
   }
   if (error) {
     return (
-      <Container data-test="ServiceArtifactTableError" height={730} flex={{ justifyContent: 'center' }}>
-        <PageError onClick={() => refetch?.()} message={getErrorInfoFromErrorObject(error)} />
+      <Container data-testid="chartVersionTableError" height={730} flex={{ justifyContent: 'center' }}>
+        <PageError onClick={() => refetch()} message={getErrorInfoFromErrorObject(error)} />
       </Container>
     )
   }
   if (!filteredTableData?.length) {
     return (
       <DialogEmptyState
+        isArtifactView={false}
         isSearchApplied={searchApplied}
         isServicePage={true}
         resetSearch={resetSearch}
-        message={getString('cd.environmentDetailPage.noServiceArtifactMsg')}
+        message={getString('cd.environmentDetailPage.noServiceChartVersionMsg')}
       />
     )
   }

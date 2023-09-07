@@ -31,6 +31,7 @@ function ServiceStudio(): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const refetch = useRef<ServiceHeaderRefetchRef>(null)
   const [isDeploymentTypeDisabled, setIsDeploymentTypeDisabled] = useState(false)
+  const [deploymentType, setDeploymentType] = useState<ServiceDeploymentType>('' as ServiceDeploymentType)
   const isServiceDetailSummaryV2 = useFeatureFlag(FeatureFlag.CDC_SERVICE_DASHBOARD_REVAMP_NG)
 
   const { data: serviceResponse, loading: serviceDataLoading } = useGetServiceV2({
@@ -44,9 +45,10 @@ function ServiceStudio(): React.ReactElement | null {
 
   useEffect(() => {
     if (!serviceDataLoading && serviceResponse?.data?.service) {
-      setIsDeploymentTypeDisabled(
-        !!parse(defaultTo(serviceResponse?.data?.service?.yaml, '{}'))?.service?.serviceDefinition?.type
-      )
+      const serviceDefinitionType = parse(defaultTo(serviceResponse?.data?.service?.yaml, '{}'))?.service
+        ?.serviceDefinition?.type
+      setDeploymentType(serviceDefinitionType)
+      setIsDeploymentTypeDisabled(!!serviceDefinitionType)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serviceDataLoading, serviceResponse?.data?.service])
@@ -69,7 +71,7 @@ function ServiceStudio(): React.ReactElement | null {
         isServiceEntityPage={true}
         isServiceCreateModalView={false}
         serviceCacheKey={''}
-        selectedDeploymentType={'' as ServiceDeploymentType}
+        selectedDeploymentType={defaultTo(deploymentType, '') as ServiceDeploymentType}
         gitOpsEnabled={false}
         isDeploymentTypeDisabled={isDeploymentTypeDisabled}
         setIsDeploymentTypeDisabled={setIsDeploymentTypeDisabled}

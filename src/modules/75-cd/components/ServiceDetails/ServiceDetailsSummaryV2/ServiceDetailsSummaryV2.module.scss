@@ -22,6 +22,10 @@
   }
 }
 
+.height220 {
+  height: 220px;
+}
+
 .headerTile {
   position: absolute;
   z-index: 1;
@@ -150,37 +154,45 @@
 }
 
 .pillToggle {
+  display: inline-flex;
+  align-items: center;
   height: var(--spacing-7);
   margin-left: var(--spacing-4);
   background-color: var(--grey-100);
   border: 1px solid var(--grey-300) !important;
   border-radius: var(--spacing-2) !important;
+  font-size: var(--font-size-xsmall);
+  font-weight: bold;
 
-  > div[class*='PillToggle--item'] {
-    color: var(--grey-400);
+  > div[class*='Card--card'] {
+    width: 115px !important;
+    height: var(--spacing-7);
     display: flex;
+    text-align: center;
     align-items: center;
+    text-transform: uppercase;
+    color: var(--grey-400);
+    background-color: inherit;
     padding: var(--spacing-3);
+    padding-left: var(--spacing-4);
+    margin-left: -1px;
+    margin-right: -1px;
+    border: inherit;
+    border-radius: var(--spacing-2) !important;
+    box-shadow: none;
+    &:global(.bp3-card.bp3-elevation-0) {
+      transition: none;
+    }
   }
 
   > div[class*='selected'] {
+    width: 125px !important;
     background-color: var(--primary-1);
     color: var(--primary-6);
     border: 1px solid var(--primary-6);
     height: var(--spacing-7);
     margin-left: -1px;
     margin-right: -1px;
-  }
-
-  :global(.PillToggle--item) {
-    width: 100px !important;
-    text-transform: uppercase;
-    border-radius: var(--spacing-2) !important;
-  }
-
-  div[data-name='toggle-option-two'] {
-    width: 80px !important;
-    padding-left: var(--spacing-4);
   }
 }
 

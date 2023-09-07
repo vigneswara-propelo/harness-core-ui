@@ -1616,6 +1616,7 @@ billingInfo:
     zipCode: Cannot be more than 10 characters
 forMoreInfo: For more info
 workflow: Workflow
+chartVersions: Chart Versions
 login: Login
 publicAccess:
   oopsPageNotPublic: Oooops! The page you are trying to access is not public.

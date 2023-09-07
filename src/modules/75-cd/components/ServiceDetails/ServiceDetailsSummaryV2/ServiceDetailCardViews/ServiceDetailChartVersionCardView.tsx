@@ -8,32 +8,32 @@
 import React from 'react'
 import cx from 'classnames'
 import { defaultTo, isEmpty, isUndefined } from 'lodash-es'
-import { Color, FontVariation } from '@harness/design-system'
-import { Card, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Popover, Position } from '@blueprintjs/core'
+import { Card, Container, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
+
 import { useStrings } from 'framework/strings'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
-import { ArtifactCardProps, getLatestTimeArtifactChartVersion } from '../ServiceDetailUtils'
+import { ChartVersionCardProps, getLatestTimeArtifactChartVersion } from '../ServiceDetailUtils'
 import ServiceDetailDriftTable from '../ServiceDetailDriftTable'
-
 import css from '../ServiceDetailsSummaryV2.module.scss'
 
-export function ArtifactCard({
-  setArtifactName,
-  setSelectedArtifact,
+export function ChartVersionCard({
+  setChartVersionName,
+  setSelectedChartVersion,
   setIsDetailsDialogOpen,
   setEnvFilter,
-  setArtifactFilter,
-  artifact,
-  selectedArtifact,
-  setArtifactFilterApplied
-}: ArtifactCardProps): JSX.Element | null {
-  const artifactName = artifact?.artifact
+  setChartVersionFilter,
+  chartVersion,
+  selectedChartVersion,
+  setChartVersionFilterApplied
+}: ChartVersionCardProps): JSX.Element | null {
+  const chartVersionName = chartVersion.chartVersion
   const { getString } = useStrings()
-  const envList = defaultTo(artifact?.environmentGroupInstanceDetails.environmentGroupInstanceDetails, [])
+  const envList = defaultTo(chartVersion.environmentGroupInstanceDetails.environmentGroupInstanceDetails, [])
 
-  if (isUndefined(artifactName) && !envList.length) {
+  if (isUndefined(chartVersionName) && !envList.length) {
     return null
   }
 
@@ -41,15 +41,15 @@ export function ArtifactCard({
     <Card
       className={cx(css.artifactCards, css.cursor)}
       onClick={() => {
-        if (selectedArtifact === artifactName) {
-          setSelectedArtifact(undefined)
-          setArtifactName(undefined)
+        if (selectedChartVersion === chartVersionName) {
+          setSelectedChartVersion(undefined)
+          setChartVersionName(undefined)
         } else {
-          setSelectedArtifact(artifactName)
-          setArtifactName(artifactName)
+          setSelectedChartVersion(chartVersionName)
+          setChartVersionName(chartVersionName)
         }
       }}
-      selected={selectedArtifact === artifactName}
+      selected={selectedChartVersion === chartVersionName}
     >
       <Text
         font={{ variation: FontVariation.H5 }}
@@ -57,17 +57,15 @@ export function ArtifactCard({
         lineClamp={1}
         className={css.hoverUnderline}
         tooltipProps={{ isDark: true }}
-        onClick={
-          /* istanbul ignore next */ e => {
-            e.stopPropagation()
-            setArtifactFilter(artifactName)
-            setEnvFilter({ envId: undefined, isEnvGroup: false })
-            setArtifactFilterApplied?.(true)
-            setIsDetailsDialogOpen(true)
-          }
-        }
+        onClick={e => {
+          e.stopPropagation()
+          setChartVersionFilter(chartVersionName)
+          setEnvFilter({ envId: undefined, isEnvGroup: false })
+          setChartVersionFilterApplied?.(true)
+          setIsDetailsDialogOpen(true)
+        }}
       >
-        {!isEmpty(artifactName) ? artifactName : '--'}
+        {!isEmpty(chartVersionName) ? chartVersionName : '--'}
       </Text>
       <div className={css.artifactViewEnvList}>
         {envList.map((envInfo, idx) => {
@@ -82,8 +80,8 @@ export function ArtifactCard({
                   content={
                     <ServiceDetailDriftTable
                       data={defaultTo(envInfo.artifactDeploymentDetails, [])}
-                      isArtifactView={true}
-                      artifactName={artifactName}
+                      isArtifactView={false}
+                      chartVersionName={chartVersionName}
                     />
                   }
                   disabled={!isDrift}
@@ -103,8 +101,8 @@ export function ArtifactCard({
                         /* istanbul ignore next */ e => {
                           e.stopPropagation()
                           setEnvFilter({ envId: envInfo.id, isEnvGroup: !!envInfo.isEnvGroup })
-                          setArtifactFilter(artifactName)
-                          setArtifactFilterApplied?.(true)
+                          setChartVersionFilter(chartVersionName)
+                          setChartVersionFilterApplied?.(true)
                           setIsDetailsDialogOpen(true)
                         }
                       }

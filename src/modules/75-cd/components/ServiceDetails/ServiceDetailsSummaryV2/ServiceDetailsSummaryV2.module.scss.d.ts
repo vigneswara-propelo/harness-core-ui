@@ -35,6 +35,7 @@ declare const styles: {
   readonly environmentType: string
   readonly fullViewTableStyle: string
   readonly headerTile: string
+  readonly height220: string
   readonly hoverUnderline: string
   readonly instanceCountStyle: string
   readonly instanceDetail: string

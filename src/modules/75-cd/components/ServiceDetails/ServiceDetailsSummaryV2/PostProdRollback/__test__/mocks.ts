@@ -30,40 +30,52 @@ export const singleEnvResponse: ResponseInstanceGroupedByEnvironmentList = {
                 agentId: undefined,
                 instanceGroupedByArtifactList: [
                   {
-                    instanceKey: 'K8sInstanceKey',
-                    infrastructureMappingId: 'testMapId',
                     artifact: 'artifactTestPerl',
-                    count: 7,
-                    lastDeployedAt: 1682673599809,
-                    lastPlanExecutionId: 'testplanexec',
-                    stageNodeExecutionId: 'teststagenoe',
-                    pipelineIdentifier: 'k8sTestPipeline_multi',
-                    stageSetupId: 'teststageid',
-                    rollbackStatus: 'NOT_STARTED'
+                    instanceGroupedByChartVersionList: [
+                      {
+                        instanceKey: 'K8sInstanceKey',
+                        infrastructureMappingId: 'testMapId',
+                        count: 7,
+                        lastDeployedAt: 1682673599809,
+                        lastPlanExecutionId: 'testplanexec',
+                        stageNodeExecutionId: 'teststagenoe',
+                        pipelineIdentifier: 'k8sTestPipeline_multi',
+                        stageSetupId: 'teststageid',
+                        rollbackStatus: 'NOT_STARTED'
+                      }
+                    ]
                   },
                   {
-                    instanceKey: 'testKey1',
-                    infrastructureMappingId: 'testid1',
                     artifact: 'artifact',
-                    count: undefined,
-                    lastDeployedAt: 1682673599809,
-                    lastPlanExecutionId: 'testplanexec1',
-                    stageNodeExecutionId: 'teststagenoe1',
-                    pipelineIdentifier: 'k8sTestPipeline_multi1',
-                    stageSetupId: 'teststageid1',
-                    rollbackStatus: 'FAILURE'
+                    instanceGroupedByChartVersionList: [
+                      {
+                        instanceKey: 'testKey1',
+                        infrastructureMappingId: 'testid1',
+                        count: undefined,
+                        lastDeployedAt: 1682673599809,
+                        lastPlanExecutionId: 'testplanexec1',
+                        stageNodeExecutionId: 'teststagenoe1',
+                        pipelineIdentifier: 'k8sTestPipeline_multi1',
+                        stageSetupId: 'teststageid1',
+                        rollbackStatus: 'FAILURE'
+                      }
+                    ]
                   },
                   {
-                    instanceKey: 'testkey',
-                    infrastructureMappingId: 'testid',
                     artifact: undefined,
-                    count: 7,
-                    lastDeployedAt: undefined,
-                    lastPlanExecutionId: undefined,
-                    stageNodeExecutionId: undefined,
-                    pipelineIdentifier: undefined,
-                    stageSetupId: undefined,
-                    rollbackStatus: 'UNAVAILABLE'
+                    instanceGroupedByChartVersionList: [
+                      {
+                        instanceKey: 'testkey',
+                        infrastructureMappingId: 'testid',
+                        count: 7,
+                        lastDeployedAt: undefined,
+                        lastPlanExecutionId: undefined,
+                        stageNodeExecutionId: undefined,
+                        pipelineIdentifier: undefined,
+                        stageSetupId: undefined,
+                        rollbackStatus: 'UNAVAILABLE'
+                      }
+                    ]
                   }
                 ],
                 lastDeployedAt: 1682673599809
@@ -99,16 +111,20 @@ export const envGroupResponse: ResponseInstanceGroupedByEnvironmentList = {
                 agentId: undefined,
                 instanceGroupedByArtifactList: [
                   {
-                    instanceKey: 'K8sInstanceInfoperl',
-                    infrastructureMappingId: 'testingMapIdPerl',
                     artifact: 'artifactTestPerl',
-                    count: 2,
-                    lastDeployedAt: 1682673688340,
-                    lastPlanExecutionId: 'testplanexec',
-                    stageNodeExecutionId: 'teststagenoe',
-                    pipelineIdentifier: 'k8sTestPipeline_envGroup',
-                    stageSetupId: 'teststageid',
-                    rollbackStatus: 'SUCCESS'
+                    instanceGroupedByChartVersionList: [
+                      {
+                        instanceKey: 'K8sInstanceInfoperl',
+                        infrastructureMappingId: 'testingMapIdPerl',
+                        count: 2,
+                        lastDeployedAt: 1682673688340,
+                        lastPlanExecutionId: 'testplanexec',
+                        stageNodeExecutionId: 'teststagenoe',
+                        pipelineIdentifier: 'k8sTestPipeline_envGroup',
+                        stageSetupId: 'teststageid',
+                        rollbackStatus: 'SUCCESS'
+                      }
+                    ]
                   }
                 ],
                 lastDeployedAt: 1682673688340
@@ -134,16 +150,20 @@ export const envGroupResponse: ResponseInstanceGroupedByEnvironmentList = {
                 agentId: undefined,
                 instanceGroupedByArtifactList: [
                   {
-                    instanceKey: 'K8sInstanceInfoDTOslim',
-                    infrastructureMappingId: 'testMapIdSlim',
                     artifact: 'testArtifactslim',
-                    count: 1,
-                    lastDeployedAt: 1682526891980,
-                    lastPlanExecutionId: 'testplan',
-                    stageNodeExecutionId: undefined,
-                    pipelineIdentifier: 'k8sTestPipeline_Group',
-                    stageSetupId: undefined,
-                    rollbackStatus: 'STARTED'
+                    instanceGroupedByChartVersionList: [
+                      {
+                        instanceKey: 'K8sInstanceInfoDTOslim',
+                        infrastructureMappingId: 'testMapIdSlim',
+                        count: 1,
+                        lastDeployedAt: 1682526891980,
+                        lastPlanExecutionId: 'testplan',
+                        stageNodeExecutionId: undefined,
+                        pipelineIdentifier: 'k8sTestPipeline_Group',
+                        stageSetupId: undefined,
+                        rollbackStatus: 'STARTED'
+                      }
+                    ]
                   }
                 ],
                 lastDeployedAt: 1682526891980

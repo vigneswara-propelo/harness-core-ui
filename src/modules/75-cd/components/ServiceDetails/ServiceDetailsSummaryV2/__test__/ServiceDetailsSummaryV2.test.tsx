@@ -28,6 +28,7 @@ import {
   activeInstanceGroupByEnv,
   artifactInstanceDetailsMock,
   artifactTableMock,
+  chartVersionInstanceDetailsMock,
   envInstanceDetailsMock,
   getCustomSequenceStatusMock,
   openTaskMock
@@ -75,6 +76,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetCustomSequenceStatus: jest.fn().mockImplementation(() => {
     return { data: getCustomSequenceStatusMock, refetch: jest.fn(), loading: false, error: false }
+  }),
+  useGetChartVersionInstanceDetails: jest.fn().mockImplementation(() => {
+    return { data: chartVersionInstanceDetailsMock, refetch: jest.fn(), loading: false, error: false }
   })
 }))
 
@@ -143,7 +147,7 @@ const configurations = (): void => {
 
 const toggleToArtifact = async (container: HTMLElement): Promise<void> => {
   //toggle to artifact view
-  const artifactTab = container.querySelector('[data-name="toggle-option-two"]')
+  const artifactTab = getByText(container, 'artifacts')
   expect(artifactTab).toBeInTheDocument()
   await userEvent.click(artifactTab!)
 }

@@ -1006,6 +1006,7 @@ export interface ArtifactConfig {
 
 export interface ArtifactDeploymentDetail {
   artifact?: string
+  chartVersion?: string
   envId?: string
   envName?: string
   lastDeployedAt?: number
@@ -2639,6 +2640,15 @@ export type ChaosStepInfo = StepSpecType & {
   assertion?: string
   expectedResilienceScore: number
   experimentRef: string
+}
+
+export interface ChartVersionInstanceDetail {
+  chartVersion?: string
+  environmentGroupInstanceDetails: EnvironmentGroupInstanceDetails
+}
+
+export interface ChartVersionInstanceDetails {
+  chartVersionInstanceDetails: ChartVersionInstanceDetail[]
 }
 
 export interface CloudProvider {
@@ -10342,8 +10352,34 @@ export interface InstanceDetailsDTO {
   terraformInstance?: string
 }
 
+export interface InstanceGroupByArtifact {
+  artifact?: string
+  instanceGroupedOnEnvironmentList?: InstanceGroupedOnEnvironment[]
+  lastDeployedAt?: number
+}
+
+export interface InstanceGroupByChartVersion {
+  chartVersion?: string
+  instanceGroupByArtifactList: InstanceGroupByArtifact[]
+  lastDeployedAt?: number
+}
+
 export interface InstanceGroupedByArtifact {
   artifact?: string
+  instanceGroupedByChartVersionList: InstanceGroupedByChartVersion[]
+  lastDeployedAt?: number
+}
+
+export interface InstanceGroupedByArtifactV2 {
+  artifactPath?: string
+  artifactVersion?: string
+  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironmentV2[]
+  lastDeployedAt?: number
+  latest?: boolean
+}
+
+export interface InstanceGroupedByChartVersion {
+  chartVersion?: string
   count?: number
   infrastructureMappingId?: string
   instanceKey?: string
@@ -10353,14 +10389,6 @@ export interface InstanceGroupedByArtifact {
   rollbackStatus?: 'UNAVAILABLE' | 'NOT_STARTED' | 'STARTED' | 'SUCCESS' | 'FAILURE'
   stageNodeExecutionId?: string
   stageSetupId?: string
-}
-
-export interface InstanceGroupedByArtifactV2 {
-  artifactPath?: string
-  artifactVersion?: string
-  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironmentV2[]
-  lastDeployedAt?: number
-  latest?: boolean
 }
 
 export interface InstanceGroupedByEnvironment {
@@ -10427,12 +10455,22 @@ export interface InstanceGroupedByServiceList {
 
 export interface InstanceGroupedOnArtifact {
   artifact?: string
-  instanceGroupedOnEnvironmentList: InstanceGroupedOnEnvironment[]
+  instanceGroupedOnChartVersionList: InstanceGroupedOnChartVersion[]
   lastDeployedAt?: number
 }
 
 export interface InstanceGroupedOnArtifactList {
   instanceGroupedOnArtifactList: InstanceGroupedOnArtifact[]
+}
+
+export interface InstanceGroupedOnChartVersion {
+  chartVersion?: string
+  instanceGroupedOnEnvironmentList?: InstanceGroupedOnEnvironment[]
+  lastDeployedAt?: number
+}
+
+export interface InstanceGroupedOnChartVersionList {
+  instanceGroupByChartVersionList: InstanceGroupByChartVersion[]
 }
 
 export interface InstanceGroupedOnEnvironment {
@@ -14028,6 +14066,13 @@ export interface ResponseCardDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseChartVersionInstanceDetails {
+  correlationId?: string
+  data?: ChartVersionInstanceDetails
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseClusterBatchResponse {
   correlationId?: string
   data?: ClusterBatchResponse
@@ -14677,6 +14722,13 @@ export interface ResponseInstanceGroupedByServiceList {
 export interface ResponseInstanceGroupedOnArtifactList {
   correlationId?: string
   data?: InstanceGroupedOnArtifactList
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInstanceGroupedOnChartVersionList {
+  correlationId?: string
+  data?: InstanceGroupedOnChartVersionList
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -20884,9 +20936,11 @@ export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
-export type UpdateWhitelistedDomainsBodyRequestBody = string[]
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
-export type UploadSamlMetaDataRequestBody = void
+export type UpdateSamlMetaDataForSamlSSOIdRequestBody = void
+
+export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
@@ -32103,7 +32157,13 @@ export interface UploadSamlMetaDataQueryParams {
 }
 
 export type UploadSamlMetaDataProps = Omit<
-  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
+  MutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -32111,7 +32171,13 @@ export type UploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
-  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>
+  <Mutate<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >
     verb="POST"
     path={`/authentication-settings/saml-metadata-upload`}
     base={getConfig('ng/api')}
@@ -32120,7 +32186,13 @@ export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
 )
 
 export type UseUploadSamlMetaDataProps = Omit<
-  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
+  UseMutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -32128,11 +32200,13 @@ export type UseUploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
-  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
-    'POST',
-    `/authentication-settings/saml-metadata-upload`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >('POST', `/authentication-settings/saml-metadata-upload`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Create SAML Config
@@ -32142,18 +32216,18 @@ export const uploadSamlMetaDataPromise = (
     RestResponseSSOConfig,
     unknown,
     UploadSamlMetaDataQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/authentication-settings/saml-metadata-upload`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload`, props, signal)
 
 export interface UpdateSamlMetaDataQueryParams {
   accountId: string
@@ -32219,7 +32293,7 @@ export type UpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -32234,7 +32308,7 @@ export const UpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UpdateSa
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >
     verb="PUT"
@@ -32249,7 +32323,7 @@ export type UseUpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -32264,7 +32338,7 @@ export const useUpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseUp
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >(
     'PUT',
@@ -32284,7 +32358,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   > & { samlSSOId: string },
   signal?: RequestInit['signal']
@@ -32293,7 +32367,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
 
@@ -37446,6 +37520,83 @@ export const getActiveInstanceGroupedByArtifactPromise = (
     void
   >(getConfig('ng/api'), `/dashboard/getActiveInstanceGroupedByArtifact`, props, signal)
 
+export interface GetActiveInstanceGroupedByChartVersionQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceId: string
+  environmentIdentifier?: string
+  envGroupIdentifier?: string
+  chartVersion?: string
+  filterOnChartVersion: boolean
+}
+
+export type GetActiveInstanceGroupedByChartVersionProps = Omit<
+  GetProps<
+    ResponseInstanceGroupedOnChartVersionList,
+    Failure | Error,
+    GetActiveInstanceGroupedByChartVersionQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get active instance count for a service grouped on chart version, artifact, environment, infrastructure
+ */
+export const GetActiveInstanceGroupedByChartVersion = (props: GetActiveInstanceGroupedByChartVersionProps) => (
+  <Get<
+    ResponseInstanceGroupedOnChartVersionList,
+    Failure | Error,
+    GetActiveInstanceGroupedByChartVersionQueryParams,
+    void
+  >
+    path={`/dashboard/getActiveInstanceGroupedByChartVersion`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveInstanceGroupedByChartVersionProps = Omit<
+  UseGetProps<
+    ResponseInstanceGroupedOnChartVersionList,
+    Failure | Error,
+    GetActiveInstanceGroupedByChartVersionQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get active instance count for a service grouped on chart version, artifact, environment, infrastructure
+ */
+export const useGetActiveInstanceGroupedByChartVersion = (props: UseGetActiveInstanceGroupedByChartVersionProps) =>
+  useGet<
+    ResponseInstanceGroupedOnChartVersionList,
+    Failure | Error,
+    GetActiveInstanceGroupedByChartVersionQueryParams,
+    void
+  >(`/dashboard/getActiveInstanceGroupedByChartVersion`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get active instance count for a service grouped on chart version, artifact, environment, infrastructure
+ */
+export const getActiveInstanceGroupedByChartVersionPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceGroupedOnChartVersionList,
+    Failure | Error,
+    GetActiveInstanceGroupedByChartVersionQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInstanceGroupedOnChartVersionList,
+    Failure | Error,
+    GetActiveInstanceGroupedByChartVersionQueryParams,
+    void
+  >(getConfig('ng/api'), `/dashboard/getActiveInstanceGroupedByChartVersion`, props, signal)
+
 export interface GetActiveInstanceGroupedByEnvironmentQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -37587,6 +37738,7 @@ export interface GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryP
   infraIdentifier?: string
   clusterIdentifier?: string
   artifact?: string
+  chartVersion?: string
 }
 
 export type GetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps = Omit<
@@ -37886,6 +38038,62 @@ export const getArtifactInstanceDetailsPromise = (
   getUsingFetch<ResponseArtifactInstanceDetails, Failure | Error, GetArtifactInstanceDetailsQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/getArtifactInstanceDetails`,
+    props,
+    signal
+  )
+
+export interface GetChartVersionInstanceDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceId: string
+}
+
+export type GetChartVersionInstanceDetailsProps = Omit<
+  GetProps<ResponseChartVersionInstanceDetails, Failure | Error, GetChartVersionInstanceDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get last deployment detail in each environment for chart versions having active instances of a service
+ */
+export const GetChartVersionInstanceDetails = (props: GetChartVersionInstanceDetailsProps) => (
+  <Get<ResponseChartVersionInstanceDetails, Failure | Error, GetChartVersionInstanceDetailsQueryParams, void>
+    path={`/dashboard/getChartVersionInstanceDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetChartVersionInstanceDetailsProps = Omit<
+  UseGetProps<ResponseChartVersionInstanceDetails, Failure | Error, GetChartVersionInstanceDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get last deployment detail in each environment for chart versions having active instances of a service
+ */
+export const useGetChartVersionInstanceDetails = (props: UseGetChartVersionInstanceDetailsProps) =>
+  useGet<ResponseChartVersionInstanceDetails, Failure | Error, GetChartVersionInstanceDetailsQueryParams, void>(
+    `/dashboard/getChartVersionInstanceDetails`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get last deployment detail in each environment for chart versions having active instances of a service
+ */
+export const getChartVersionInstanceDetailsPromise = (
+  props: GetUsingFetchProps<
+    ResponseChartVersionInstanceDetails,
+    Failure | Error,
+    GetChartVersionInstanceDetailsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseChartVersionInstanceDetails, Failure | Error, GetChartVersionInstanceDetailsQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getChartVersionInstanceDetails`,
     props,
     signal
   )

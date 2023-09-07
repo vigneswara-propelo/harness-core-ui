@@ -1214,10 +1214,12 @@ deploymentTemplates: 'Deployment Templates'
 environmentDetailPage:
   infraSlashCluster: Infra / GitOps Cluster
   selectArtifactMsg: 'Select an Artifact to view instance details'
+  selectChartVersionMsg: 'Select a Chart Version to view instance details'
   noInstancesToShow: No Instances to show
   seeFull: See full
   viewInTable: 'View in table'
   noServiceArtifactMsg: 'There is no service and artifact details present'
+  noServiceChartVersionMsg: 'There is no service and chart version details present'
   emptyInstanceDetailMsg: 'Empty instance detail'
   emptyServiceDetailMsg: 'There are no services with instances in this environment.'
 ElastigroupStep:

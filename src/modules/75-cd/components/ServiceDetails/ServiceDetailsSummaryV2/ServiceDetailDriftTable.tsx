@@ -26,7 +26,11 @@ import routes from '@common/RouteDefinitions'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 
-type columnType = ColumnInstance<ArtifactDeploymentDetail> & { isArtifactView: boolean; artifactName?: string }
+type columnType = ColumnInstance<ArtifactDeploymentDetail> & {
+  isArtifactView: boolean
+  artifactName?: string
+  chartVersionName?: string
+}
 
 const RenderEnvName: Renderer<CellProps<ArtifactDeploymentDetail>> = ({ row }) => {
   const envName = row.original.envName
@@ -62,11 +66,23 @@ const RenderEnvName: Renderer<CellProps<ArtifactDeploymentDetail>> = ({ row }) =
 
 const RenderLatestVersion: Renderer<CellProps<ArtifactDeploymentDetail>> = ({ row, column }) => {
   const artifactVersion = row.original.artifact
-  const { artifactName, isArtifactView } = column as columnType
-  const nameIntent = isArtifactView && artifactName && artifactName !== artifactVersion ? Color.RED_400 : Color.GREY_100
+  const chartVersion = row.original.chartVersion
+  const { artifactName, chartVersionName, isArtifactView } = column as columnType
+  let nameIntent = Color.GREY_100
+
+  if (isArtifactView) {
+    if (artifactName && artifactName !== artifactVersion) {
+      nameIntent = Color.RED_400
+    }
+  } else {
+    if (chartVersionName && chartVersionName !== chartVersion) {
+      nameIntent = Color.RED_400
+    }
+  }
+
   return (
     <Text color={nameIntent} font={{ variation: FontVariation.SMALL }} lineClamp={1} tooltipProps={{ isDark: true }}>
-      {artifactVersion || '--'}
+      {isArtifactView ? artifactVersion : chartVersion || '--'}
     </Text>
   )
 }
@@ -121,11 +137,13 @@ const RenderLastDeployedTime: Renderer<CellProps<ArtifactDeploymentDetail>> = ({
 function ServiceDetailDriftTable({
   data,
   artifactName,
-  isArtifactView
+  isArtifactView,
+  chartVersionName
 }: {
   data: ArtifactDeploymentDetail[]
   isArtifactView: boolean
   artifactName?: string
+  chartVersionName?: string
 }): JSX.Element {
   const { getString } = useStrings()
   const artifactDetail = defaultTo(data, [])
@@ -144,6 +162,7 @@ function ServiceDetailDriftTable({
         Cell: RenderLatestVersion,
         Header: getString('cd.serviceDashboard.latestVersion').toUpperCase(),
         artifactName,
+        chartVersionName,
         isArtifactView
       },
       {
