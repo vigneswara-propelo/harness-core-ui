@@ -30,7 +30,7 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Intent } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, noop } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import {
   UserAggregate,
   useRemoveUser,
@@ -56,7 +56,7 @@ import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/Manage
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacButton from '@rbac/components/Button/Button'
-import { getUserName, useGetCommunity } from '@common/utils/utils'
+import { getUserName } from '@common/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -404,7 +404,6 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const queryParamOptions = useRbacQueryParamOptions()
   const { page, size } = useQueryParams(queryParamOptions)
-  const isCommunity = useGetCommunity()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)
 
@@ -446,11 +445,11 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
         Cell: RenderColumnUser
       },
       {
-        Header: isCommunity ? '' : getString('rbac.usersPage.roleBinding'),
+        Header: getString('rbac.usersPage.roleBinding'),
         id: 'roleBinding',
         accessor: row => row.roleAssignmentMetadata,
         width: '45%',
-        Cell: isCommunity ? () => noop : RenderColumnRoleAssignments,
+        Cell: RenderColumnRoleAssignments,
         openRoleAssignmentModal: addRole
       },
       {

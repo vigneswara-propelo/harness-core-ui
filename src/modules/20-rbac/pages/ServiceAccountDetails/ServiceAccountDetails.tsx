@@ -27,7 +27,6 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { useGetCommunity } from '@common/utils/utils'
 import css from './ServiceAccountDetails.module.scss'
 
 const ServiceAccountDetails: React.FC = () => {
@@ -35,7 +34,6 @@ const ServiceAccountDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module, serviceAccountIdentifier } = useParams<
     ProjectPathProps & ServiceAccountPathProps & ModulePathParams
   >()
-  const isCommunity = useGetCommunity()
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({
     queryParams: {
@@ -128,42 +126,37 @@ const ServiceAccountDetails: React.FC = () => {
         }
       />
       <Page.Body className={css.body}>
-        {!isCommunity && (
-          <Layout.Vertical spacing="medium" padding={{ bottom: 'large' }}>
-            <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
-              {getString('rbac.roleBinding')}
-            </Text>
-            <Card className={css.card}>
-              <RoleBindingsList data={serviceAccountData.roleAssignmentsMetadataDTO} showNoData={true} />
-            </Card>
-            <Layout.Horizontal
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-              padding={{ top: 'medium' }}
-            >
-              <RbacButton
-                data-testid={'addRole-ServiceAccount'}
-                text={`${getString('common.manage')} ${getString('roles')}`}
-                variation={ButtonVariation.SECONDARY}
-                size={ButtonSize.SMALL}
-                onClick={event => {
-                  event.stopPropagation()
-                  openRoleAssignmentModal(
-                    PrincipalType.SERVICE,
-                    serviceAccountData.serviceAccount,
-                    serviceAccountData.roleAssignmentsMetadataDTO
-                  )
-                }}
-                permission={{
-                  permission: PermissionIdentifier.EDIT_SERVICEACCOUNT,
-                  resource: {
-                    resourceType: ResourceType.SERVICEACCOUNT,
-                    resourceIdentifier: serviceAccountData.serviceAccount.identifier
-                  }
-                }}
-              />
-            </Layout.Horizontal>
-          </Layout.Vertical>
-        )}
+        <Layout.Vertical spacing="medium" padding={{ bottom: 'large' }}>
+          <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
+            {getString('rbac.roleBinding')}
+          </Text>
+          <Card className={css.card}>
+            <RoleBindingsList data={serviceAccountData.roleAssignmentsMetadataDTO} showNoData={true} />
+          </Card>
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} padding={{ top: 'medium' }}>
+            <RbacButton
+              data-testid={'addRole-ServiceAccount'}
+              text={`${getString('common.manage')} ${getString('roles')}`}
+              variation={ButtonVariation.SECONDARY}
+              size={ButtonSize.SMALL}
+              onClick={event => {
+                event.stopPropagation()
+                openRoleAssignmentModal(
+                  PrincipalType.SERVICE,
+                  serviceAccountData.serviceAccount,
+                  serviceAccountData.roleAssignmentsMetadataDTO
+                )
+              }}
+              permission={{
+                permission: PermissionIdentifier.EDIT_SERVICEACCOUNT,
+                resource: {
+                  resourceType: ResourceType.SERVICEACCOUNT,
+                  resourceIdentifier: serviceAccountData.serviceAccount.identifier
+                }
+              }}
+            />
+          </Layout.Horizontal>
+        </Layout.Vertical>
 
         <ApiKeyList />
       </Page.Body>

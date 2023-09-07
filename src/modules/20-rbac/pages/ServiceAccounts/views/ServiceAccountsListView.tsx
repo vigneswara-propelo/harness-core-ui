@@ -21,7 +21,6 @@ import {
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Classes, Intent, Menu, Position } from '@blueprintjs/core'
-import { noop } from 'lodash-es'
 import {
   PageServiceAccountAggregateDTO,
   RoleAssignmentMetadataDTO,
@@ -40,7 +39,6 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PrincipalType } from '@rbac/utils/utils'
-import { useGetCommunity } from '@common/utils/utils'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
@@ -258,7 +256,6 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
 }) => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
-  const isCommunity = useGetCommunity()
   const history = useHistory()
   const columns: Column<ServiceAccountAggregateDTO>[] = useMemo(
     () => [
@@ -270,11 +267,11 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
         Cell: RenderColumnDetails
       },
       {
-        Header: isCommunity ? '' : getString('rbac.roleBinding'),
+        Header: getString('rbac.roleBinding'),
         id: 'roleBindings',
         accessor: row => row.roleAssignmentsMetadataDTO,
         width: '35%',
-        Cell: isCommunity ? () => noop : RenderColumnRoleAssignments,
+        Cell: RenderColumnRoleAssignments,
         openRoleAssignmentModal
       },
       {

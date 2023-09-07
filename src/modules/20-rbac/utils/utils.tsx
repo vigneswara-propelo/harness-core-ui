@@ -198,10 +198,9 @@ export const isAccountBasicRole = (identifier: string): boolean => {
 export const getScopeBasedDefaultAssignment = (
   scope: Scope,
   getString: UseStringsReturn['getString'],
-  isCommunity: boolean,
   disableDefaultAssignment: boolean
 ): Assignment[] => {
-  if (isCommunity || disableDefaultAssignment) {
+  if (disableDefaultAssignment) {
     return []
   } else {
     const resourceGroup: ResourceGroupOption = {

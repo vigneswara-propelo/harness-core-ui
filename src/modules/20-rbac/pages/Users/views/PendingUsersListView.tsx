@@ -27,7 +27,6 @@ import {
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Tag, Intent } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
 import { Invite, useDeleteInvite, useGetPendingUsersAggregated, useUpdateInvite } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
@@ -38,7 +37,6 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useRbacQueryParamOptions } from '@rbac/utils/utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
@@ -211,7 +209,6 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const queryParamOptions = useRbacQueryParamOptions()
   const { page, size } = useQueryParams(queryParamOptions)
-  const isCommunity = useGetCommunity()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.UsersPage}`)
 
@@ -252,11 +249,11 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
         Cell: RenderColumnUser
       },
       {
-        Header: isCommunity ? '' : getString('rbac.usersPage.roleBinding'),
+        Header: getString('rbac.usersPage.roleBinding'),
         id: 'roleBinding',
         accessor: row => row.roleBindings,
         width: '35%',
-        Cell: isCommunity ? () => noop : RenderColumnRoleAssignments,
+        Cell: RenderColumnRoleAssignments,
         openRoleAssignmentModal: openRoleAssignmentModal
       },
       {

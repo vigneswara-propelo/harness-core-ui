@@ -21,7 +21,6 @@ import {
   getPrincipalScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
-import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import RoleAssignmentForm from './RoleAssignmentForm'
 import type { RoleAssignmentValues } from './RoleAssignment'
@@ -49,14 +48,13 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const isCommunity = useGetCommunity()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { mutate: createRoleAssignment, loading: saving } = usePostRoleAssignments({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
-  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, isCommunity, false)
+  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, false)
 
   const handleRoleAssignment = async (values: UserGroupRoleAssignmentValues): Promise<void> => {
     /* istanbul ignore next */ if (values.assignments.length === 0) {
@@ -111,16 +109,12 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
       formName="UserGroupRoleAssignmentForm"
       validationSchema={Yup.object().shape({
         userGroups: Yup.array().min(1, getString('rbac.userGroupRequired')),
-        .../* istanbul ignore next */ (isCommunity
-          ? {}
-          : {
-              assignments: Yup.array().of(
-                Yup.object().shape({
-                  role: Yup.object().nullable().required(),
-                  resourceGroup: Yup.object().nullable().required()
-                })
-              )
-            })
+        assignments: Yup.array().of(
+          Yup.object().shape({
+            role: Yup.object().nullable().required(),
+            resourceGroup: Yup.object().nullable().required()
+          })
+        )
       })}
       onSubmit={values => {
         /* istanbul ignore next */ modalErrorHandler?.hide()
@@ -132,17 +126,15 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
           <Form>
             <ModalErrorHandler bind={setModalErrorHandler} />
             {formValues.userGroupField}
-            {!isCommunity && (
-              <RoleAssignmentForm
-                noRoleAssignmentsText={getString('rbac.usersPage.noDataText')}
-                formik={
-                  formik as FormikProps<UserGroupRoleAssignmentValues | UserRoleAssignmentValues | RoleAssignmentValues>
-                }
-                onSuccess={onRoleAssignmentSuccess}
-                disabled={saving}
-                onCancel={onCancel}
-              />
-            )}
+            <RoleAssignmentForm
+              noRoleAssignmentsText={getString('rbac.usersPage.noDataText')}
+              formik={
+                formik as FormikProps<UserGroupRoleAssignmentValues | UserRoleAssignmentValues | RoleAssignmentValues>
+              }
+              onSuccess={onRoleAssignmentSuccess}
+              disabled={saving}
+              onCancel={onCancel}
+            />
           </Form>
         )
       }}

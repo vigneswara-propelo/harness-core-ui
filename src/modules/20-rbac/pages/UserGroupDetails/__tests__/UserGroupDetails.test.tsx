@@ -20,7 +20,6 @@ import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, userGroupPathProps } from '@common/utils/routeUtils'
 import { ResponseBoolean, useGetUserGroupAggregate } from 'services/cd-ng'
-import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import UserGroupDetails from '../UserGroupDetails'
 import {
   mockResponse,
@@ -121,22 +120,11 @@ describe('UserGroupDetails Test', () => {
     getAllByText = renderObj.getAllByText
     await waitFor(() => getAllByText('accessControl: common.userGroups'))
   })
+
   test('render data', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('render data for community editiion', () => {
-    const communityEditionRender = render(
-      <TestWrapper
-        defaultLicenseStoreValues={communityLicenseStoreValues}
-        path={routes.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
-        pathParams={{ accountId: 'testAcc', userGroupIdentifier: 'New_RG' }}
-      >
-        <UserGroupDetails />
-      </TestWrapper>
-    )
-    expect(communityEditionRender.container).toMatchSnapshot()
-  })
   test('Delete Member', async () => {
     deleteMember.mockReset()
     const menu = container.querySelector(`[data-testid="menu-${userInfo.data?.content?.[0].uuid}"]`)

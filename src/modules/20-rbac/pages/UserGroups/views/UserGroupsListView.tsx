@@ -22,7 +22,6 @@ import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Intent, PopoverInteractionKind, IconName, MenuItem } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
 import {
   UserGroupAggregateDTO,
   useDeleteUserGroup,
@@ -51,7 +50,7 @@ import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/Manage
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
-import { getUserName, useGetCommunity } from '@common/utils/utils'
+import { getUserName } from '@common/utils/utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -411,7 +410,6 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
   const { data, reload, openRoleAssignmentModal, openUserGroupModal } = props
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
-  const isCommunity = useGetCommunity()
   const history = useHistory()
   const columns: Column<UserGroupAggregateDTO>[] = useMemo(
     () => [
@@ -431,11 +429,11 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
         Cell: RenderColumnMembers
       },
       {
-        Header: isCommunity ? '' : getString('rbac.roleBinding'),
+        Header: getString('rbac.roleBinding'),
         id: 'roleBindings',
         accessor: row => row.roleAssignmentsMetadataDTO,
         width: '35%',
-        Cell: isCommunity ? () => noop : RenderColumnRoleAssignments,
+        Cell: RenderColumnRoleAssignments,
         openRoleAssignmentModal: openRoleAssignmentModal
       },
       {

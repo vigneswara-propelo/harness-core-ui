@@ -39,7 +39,6 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import NotificationList from '@rbac/components/NotificationList/NotificationList'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { useGetCommunity } from '@common/utils/utils'
 import UserGroupRefScopeList from '@rbac/components/UserGroupRefScopeList/UserGroupRefScopeList'
 import css from './UserGroupDetails.module.scss'
 
@@ -48,7 +47,6 @@ const UserGroupDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module, userGroupIdentifier } =
     useParams<PipelineType<ProjectPathProps & { userGroupIdentifier: string }>>()
   const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
-  const isCommunity = useGetCommunity()
   const history = useHistory()
 
   const { data, loading, error, refetch } = useGetUserGroupAggregate({
@@ -239,34 +237,32 @@ const UserGroupDetails: React.FC = () => {
           />
         </Container>
         <Container width="50%" className={css.detailsContainer}>
-          {!isCommunity && (
-            <Layout.Vertical spacing="medium" padding={{ bottom: 'large' }}>
-              <Text font={{ variation: FontVariation.H5 }} color={Color.BLACK}>
-                {getString('rbac.roleBinding')}
-              </Text>
-              <Card className={css.card}>
-                <RoleBindingsList data={userGroupAggregateResponse?.roleAssignmentsMetadataDTO} showNoData={true} />
-              </Card>
-              <Layout.Horizontal
-                flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                padding={{ top: 'medium' }}
-              >
-                <ManagePrincipalButton
-                  data-testid={'addRole-UserGroup'}
-                  text={`${getString('common.manage')} ${getString('roles')}`}
-                  variation={ButtonVariation.SECONDARY}
-                  size={ButtonSize.SMALL}
-                  onClick={event => {
-                    event.stopPropagation()
-                    openRoleAssignmentModal(PrincipalType.USER_GROUP, userGroup, data?.data?.roleAssignmentsMetadataDTO)
-                  }}
-                  resourceType={ResourceType.USERGROUP}
-                  resourceIdentifier={userGroupIdentifier}
-                  resourceScope={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
-                />
-              </Layout.Horizontal>
-            </Layout.Vertical>
-          )}
+          <Layout.Vertical spacing="medium" padding={{ bottom: 'large' }}>
+            <Text font={{ variation: FontVariation.H5 }} color={Color.BLACK}>
+              {getString('rbac.roleBinding')}
+            </Text>
+            <Card className={css.card}>
+              <RoleBindingsList data={userGroupAggregateResponse?.roleAssignmentsMetadataDTO} showNoData={true} />
+            </Card>
+            <Layout.Horizontal
+              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+              padding={{ top: 'medium' }}
+            >
+              <ManagePrincipalButton
+                data-testid={'addRole-UserGroup'}
+                text={`${getString('common.manage')} ${getString('roles')}`}
+                variation={ButtonVariation.SECONDARY}
+                size={ButtonSize.SMALL}
+                onClick={event => {
+                  event.stopPropagation()
+                  openRoleAssignmentModal(PrincipalType.USER_GROUP, userGroup, data?.data?.roleAssignmentsMetadataDTO)
+                }}
+                resourceType={ResourceType.USERGROUP}
+                resourceIdentifier={userGroupIdentifier}
+                resourceScope={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
+              />
+            </Layout.Horizontal>
+          </Layout.Vertical>
           <Layout.Vertical spacing="medium">
             <Text font={{ variation: FontVariation.H5 }} color={Color.BLACK}>
               {getString('common.notificationPreferences')}
