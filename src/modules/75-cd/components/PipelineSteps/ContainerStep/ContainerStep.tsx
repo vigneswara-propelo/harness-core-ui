@@ -30,6 +30,7 @@ export class ContainerStep extends PipelineStep<ContainerStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
+    this._hasDelegateSelectionVisible = true
   }
   protected defaultValues: ContainerStepData = {
     identifier: '',
