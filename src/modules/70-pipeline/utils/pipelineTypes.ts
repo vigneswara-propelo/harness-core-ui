@@ -13,13 +13,7 @@ import type {
   CustomStageConfig,
   PipelineStageConfig
 } from 'services/pipeline-ng'
-import type {
-  IntegrationStageConfig,
-  K8sDirectInfraYaml,
-  K8sHostedInfraYaml,
-  UseFromStageInfraYaml,
-  VmPoolYaml
-} from 'services/ci'
+import type { IntegrationStageConfig, K8sDirectInfraYaml, UseFromStageInfraYaml, VmPoolYaml } from 'services/ci'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 
 export type AllStageConfig =
@@ -49,7 +43,7 @@ export interface FeatureFlagStageElementConfig extends StageElementConfig {
 
 export interface BuildStageElementConfig extends Omit<StageElementConfig, 'spec'> {
   spec?: IntegrationStageConfig & {
-    infrastructure: K8sDirectInfraYaml | UseFromStageInfraYaml | VmPoolYaml | K8sHostedInfraYaml
+    infrastructure: K8sDirectInfraYaml | UseFromStageInfraYaml | VmPoolYaml // | K8sHostedInfraYaml @vardanbansal-harness to fix
   }
 }
 

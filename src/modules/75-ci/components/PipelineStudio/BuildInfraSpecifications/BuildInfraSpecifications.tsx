@@ -641,7 +641,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               ...getVmInfraPayload
             }
           }
-        } else if (enabledHostedBuildsForFreeUsers && infraType === CIBuildInfrastructureType.KubernetesHosted) {
+        } else if (
+          enabledHostedBuildsForFreeUsers &&
+          (infraType as any) === CIBuildInfrastructureType.KubernetesHosted
+        ) {
+          // @vardanbansal-harness to fix
           return {
             buildInfraType: CIBuildInfrastructureType.KubernetesHosted
           }

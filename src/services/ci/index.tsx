@@ -17,6 +17,9 @@ export type ACRStepInfo = StepSpecType & {
   buildArgs?: {
     [key: string]: string
   }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
   connectorRef: string
   context?: string
   dockerfile?: string
@@ -84,6 +87,15 @@ export interface Attestation {
 
 export interface AttestationSpec {
   [key: string]: any
+}
+
+export interface AttestationSpecV1 {
+  [key: string]: any
+}
+
+export interface AttestationV1 {
+  spec?: AttestationSpecV1
+  type?: 'cosign'
 }
 
 export interface AuthorInfo {
@@ -203,6 +215,7 @@ export type BlackDuckStepInfo = StepSpecType & {
   privileged?: boolean
   resources?: ContainerResource
   runAsUser?: number
+  sbom?: STOYamlSBOM
   settings?: ParameterFieldMapStringJsonNode
   target: STOYamlTarget
   tool?: STOYamlBlackduckToolData
@@ -237,7 +250,7 @@ export type BranchWebhookEvent = WebhookEvent & {
 
 export interface Build {
   spec: BuildSpec
-  type: 'branch' | 'tag' | 'PR'
+  type: 'branch' | 'tag' | 'PR' | 'commitSha'
 }
 
 export interface BuildActiveInfo {
@@ -422,8 +435,10 @@ export interface CIExecutionImages {
   gcsUploadTag?: string
   gitCloneTag?: string
   liteEngineTag?: string
+  provenanceTag?: string
   s3UploadTag?: string
   securityTag?: string
+  slsaVerificationTag?: string
   sscaEnforcementTag?: string
   sscaOrchestrationTag?: string
 }
@@ -649,11 +664,19 @@ export interface CommitDetails {
   timeStamp?: number
 }
 
+export type CommitShaBuildSpec = BuildSpec & {
+  commitSha: string
+}
+
 export interface ConnectorConversionInfo {
   connectorRef?: string
   envToSecretsMap?: {
     [key: string]: string
   }
+}
+
+export type ConnectorValidationErrorMetadataDTO = ErrorMetadataDTO & {
+  taskId?: string
 }
 
 export interface ContainerDefinitionInfo {
@@ -733,6 +756,15 @@ export interface ContainerResourceParams {
 export type CosignAttestation = AttestationSpec & {
   password?: string
   privateKey?: string
+}
+
+export type CosignAttestationV1 = AttestationSpecV1 & {
+  password?: string
+  private_key?: string
+}
+
+export type CosignSlsaVerifyAttestation = SlsaVerifyAttestationSpec & {
+  public_key?: string
 }
 
 export type CosignVerifyAttestation = VerifyAttestationSpec & {
@@ -851,7 +883,7 @@ export interface DockerInfraSpec {
 
 export type DockerInfraYaml = Infrastructure & {
   spec: DockerInfraSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM'
 }
 
 export type DockerRuntime = Runtime & {
@@ -861,6 +893,12 @@ export type DockerRuntime = Runtime & {
 
 export interface DockerRuntimeSpec {
   [key: string]: any
+}
+
+export type DockerSourceSpec = ProvenanceSourceSpec & {
+  connector?: string
+  repo: string
+  tags: string[]
 }
 
 export type DockerStepInfo = StepSpecType & {
@@ -1323,7 +1361,9 @@ export interface Error {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1703,7 +1743,9 @@ export interface ErrorMetadata {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   errorMessage?: string
 }
 
@@ -2109,7 +2151,9 @@ export interface Failure {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2296,11 +2340,14 @@ export interface HostedVmInfraSpec {
 
 export type HostedVmInfraYaml = Infrastructure & {
   spec: HostedVmInfraSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM'
 }
 
 export type IACMApprovalInfo = StepSpecType & {
-  env?: ParameterFieldMapStringString
+  image?: string
+}
+
+export type IACMCostEstimationInfo = StepSpecType & {
   image?: string
 }
 
@@ -2325,7 +2372,6 @@ export type IACMStepInfo = StepSpecType & { [key: string]: any }
 
 export type IACMTerraformPluginInfo = StepSpecType & {
   command: string
-  env?: ParameterFieldMapStringString
   image?: string
 }
 
@@ -2350,7 +2396,7 @@ export type ImageSbomSource = SbomSourceSpec & {
 }
 
 export interface Infrastructure {
-  type?: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+  type?: 'KubernetesDirect' | 'UseFromStage' | 'VM'
 }
 
 export type InitializeStepInfo = StepSpecType & {
@@ -2423,6 +2469,7 @@ export type IntegrationStageConfigImpl = StageInfoConfig & {
   runtime?: Runtime
   serviceDependencies?: DependencyElement[]
   sharedPaths?: string[]
+  slsa_provenance?: SlsaConfig
 }
 
 export type IntegrationStageConfigImplV1 = StageInfoConfig & {
@@ -2472,7 +2519,7 @@ export type K8sDirectInfra = StepGroupInfra & {
 
 export type K8sDirectInfraYaml = Infrastructure & {
   spec: K8sDirectInfraYamlSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM'
 }
 
 export interface K8sDirectInfraYamlSpec {
@@ -2498,15 +2545,6 @@ export interface K8sDirectInfraYamlSpec {
   serviceAccountName?: string
   tolerations?: Toleration[]
   volumes?: CIVolume[]
-}
-
-export type K8sHostedInfraYaml = Infrastructure & {
-  spec: K8sHostedInfraYamlSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
-}
-
-export interface K8sHostedInfraYamlSpec {
-  identifier: string
 }
 
 export interface LastRepositoryInfo {
@@ -2986,7 +3024,7 @@ export interface ParameterFieldString {
 }
 
 export interface ParameterFieldTILanguage {
-  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
   executionInput?: boolean
   expression?: boolean
   expressionValue?: string
@@ -2994,7 +3032,7 @@ export interface ParameterFieldTILanguage {
   jsonResponseField?: boolean
   responseField?: string
   typeString?: boolean
-  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
 }
 
 export interface PartialSchemaDTO {
@@ -3136,10 +3174,25 @@ export type PrismaCloudStepInfo = StepSpecType & {
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
   target: STOYamlTarget
+  tool?: STOYamlPrismaCloudToolData
 }
 
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
   type: 'ProceedWithDefaultValues'
+}
+
+export interface ProvenanceSource {
+  spec?: ProvenanceSourceSpec
+  type?: 'docker'
+}
+
+export interface ProvenanceSourceSpec {
+  [key: string]: any
+}
+
+export type ProvenanceStepInfo = StepSpecType & {
+  attestation?: AttestationV1
+  source?: ProvenanceSource
 }
 
 export type ProwlerStepInfo = StepSpecType & {
@@ -3729,7 +3782,9 @@ export interface ResponseMessage {
     | 'HTTP_SERVICE_UNAVAILABLE'
     | 'HTTP_GATEWAY_TIMEOUT'
     | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -3829,8 +3884,13 @@ export interface RetryFailureSpecConfig {
 }
 
 export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
-  spec: RetryFailureSpecConfig
+  spec: RetryStepGroupFailureSpecConfig
   type: 'RetryStepGroup'
+}
+
+export interface RetryStepGroupFailureSpecConfig {
+  retryCount: number
+  retryIntervals: string[]
 }
 
 export type RunStepInfo = StepSpecType & {
@@ -3852,7 +3912,7 @@ export type RunStepInfo = StepSpecType & {
 export type RunTestsStepInfo = StepSpecType & {
   args: string
   buildEnvironment?: 'Core' | 'Framework'
-  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest'
+  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest' | 'Rspec'
   connectorRef?: string
   enableTestSplitting?: boolean
   envVariables?: {
@@ -3861,7 +3921,7 @@ export type RunTestsStepInfo = StepSpecType & {
   frameworkVersion?: '5.0' | '6.0'
   image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
-  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python'
+  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp' | 'Python' | 'Ruby'
   namespaces?: string
   outputVariables?: OutputNGVariable[]
   packages?: string
@@ -3987,6 +4047,15 @@ export interface STOYamlMendToolData {
   project_token?: string
 }
 
+export interface STOYamlPrismaCloudToolData {
+  image_name?: string
+}
+
+export interface STOYamlSBOM {
+  format?: 'spdx-json' | 'cyclonedx-json'
+  generate?: boolean
+}
+
 export interface STOYamlSonarqubeToolData {
   exclude?: string
   include?: string
@@ -4042,6 +4111,10 @@ export type SaveCacheS3StepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   sourcePaths: string[]
+}
+
+export interface SbomFile {
+  file?: string
 }
 
 export interface SbomOrchestrationSpec {
@@ -4155,6 +4228,40 @@ export type ShiftLeftStepInfo = StepSpecType & {
   target: STOYamlTarget
 }
 
+export interface SlsaConfig {
+  attestation?: AttestationV1
+  enabled?: boolean
+}
+
+export type SlsaDockerSourceSpec = SlsaVerificationSourceSpec & {
+  connector?: string
+  image_path: string
+  tag: string
+}
+
+export interface SlsaVerificationSource {
+  spec?: SlsaVerificationSourceSpec
+  type?: 'Docker'
+}
+
+export interface SlsaVerificationSourceSpec {
+  [key: string]: any
+}
+
+export type SlsaVerificationStepInfo = StepSpecType & {
+  source?: SlsaVerificationSource
+  verify_attestation?: SlsaVerifyAttestation
+}
+
+export interface SlsaVerifyAttestation {
+  spec?: SlsaVerifyAttestationSpec
+  type?: 'cosign'
+}
+
+export interface SlsaVerifyAttestationSpec {
+  [key: string]: any
+}
+
 export type SniperStepInfo = StepSpecType & {
   advanced?: STOYamlAdvancedSettings
   baseImageConnectorRefs?: ParameterFieldListString
@@ -4218,14 +4325,18 @@ export interface Splitting {
 
 export type SscaEnforcementStepInfo = StepSpecType & {
   policy: EnforcementPolicy
+  resources?: ContainerResource
   source: SbomSource
-  verifyAttestation: VerifyAttestation
+  verifyAttestation?: VerifyAttestation
 }
 
 export type SscaOrchestrationStepInfo = StepSpecType & {
-  attestation: Attestation
+  attestation?: Attestation
+  ingestion?: SbomFile
+  mode?: 'generation' | 'ingestion'
+  resources?: ContainerResource
   source: SbomSource
-  tool: SbomOrchestrationTool
+  tool?: SbomOrchestrationTool
 }
 
 export interface StackTraceElement {
@@ -4468,7 +4579,7 @@ export type TestStepInfo = StepSpecType & {
   shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
   splitting?: Splitting
   user?: number
-  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest'
+  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest' | 'rspec'
   with?: {
     [key: string]: JsonNode
   }
@@ -4603,7 +4714,7 @@ export interface VmInfraSpec {
 
 export type VmInfraYaml = Infrastructure & {
   spec: VmInfraSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM'
 }
 
 export type VmPoolYaml = VmInfraSpec & {
@@ -4751,6 +4862,7 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 export interface DeleteCacheQueryParams {
   accountIdentifier: string
   path?: string
+  cacheType?: string
 }
 
 export type DeleteCacheProps = Omit<
@@ -6151,6 +6263,19 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollbackV2'
     | 'Coverity'
     | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
+    | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
+    | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
+    | 'AwsCdkDiff'
+    | 'AwsCdkDeploy'
+    | 'AwsCdkDestroy'
+    | 'IdpScorecard'
+    | 'IdpCheck'
+    | 'AwsCdkRollback'
+    | 'IACM'
+    | 'SlsaVerification'
   yamlGroup?: string
 }
 

@@ -41,8 +41,8 @@ import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type {
   Infrastructure,
   K8sDirectInfraYaml,
-  K8sHostedInfraYaml,
-  K8sHostedInfraYamlSpec,
+  // K8sHostedInfraYaml,
+  // K8sHostedInfraYamlSpec,
   Platform,
   UseFromStageInfraYaml,
   VmInfraYaml,
@@ -159,7 +159,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       (stageData?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage ||
       ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.poolName ||
       ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.identifier ||
-      ((stageData?.spec?.infrastructure as K8sHostedInfraYaml)?.spec as K8sHostedInfraYamlSpec)?.identifier ||
+      ((stageData?.spec?.infrastructure as any)?.spec as any)?.identifier || // @vardanbansal-harness to fix
       ((stageData?.spec?.platform as Platform)?.os && (stageData?.spec?.platform as Platform)?.arch)
     )
     const execution = !!stageData?.spec?.execution?.steps?.length
@@ -176,7 +176,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     (stageData?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage,
     poolName,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    (stageData?.spec?.infrastructure as K8sHostedInfraYaml)?.spec,
+    (stageData?.spec?.infrastructure as any)?.spec, // @vardanbansal-harness to fix
     stageData?.spec?.execution?.steps?.length,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     (stageData?.spec?.platform as Platform)?.os,
@@ -312,8 +312,9 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
           variation={ButtonVariation.PRIMARY}
           disabled={
             selectedTabId === BuildTabs.INFRASTRUCTURE &&
-            (stageData?.spec?.infrastructure as Infrastructure)?.type === CIBuildInfrastructureType.KubernetesHosted &&
-            !((stageData?.spec?.infrastructure as K8sHostedInfraYaml)?.spec as K8sHostedInfraYamlSpec)?.identifier
+            ((stageData?.spec?.infrastructure as Infrastructure)?.type as any) ===
+              CIBuildInfrastructureType.KubernetesHosted && // @vardanbansal-harness to fix
+            !((stageData?.spec?.infrastructure as any)?.spec as any)?.identifier
           }
         />
       )}
