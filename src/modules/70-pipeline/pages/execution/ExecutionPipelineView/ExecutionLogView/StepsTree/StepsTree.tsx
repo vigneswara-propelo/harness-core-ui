@@ -30,7 +30,7 @@ import {
 import { getInterruptHistoriesFromType, getStepsTreeStatus, Interrupt } from '@pipeline/utils/executionUtils'
 import { useGetRetryStepGroupData } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/useGetRetryStepGroupData'
 import { StatusIcon } from './StatusIcon'
-import { getRetryInterrupts } from './utils'
+import { getRetryInterrupts, getStepDisplayName } from './utils'
 import css from './StepsTree.module.scss'
 import stageCss from '../StageSelection/StageSelection.module.scss'
 
@@ -197,13 +197,14 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                 data: omit(step.item.data, 'interruptHistories') // override data in order to stop infinite loop
               }
             })
+            const name = getStepDisplayName(step.item)
 
             return (
               <li key={step.item.identifier} className={css.item} data-type="retry-item">
                 <div className={css.step} data-status={statusLower}>
                   <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                   <Text lineClamp={1} className={css.name}>
-                    {step.item.name}
+                    {name}
                   </Text>
                 </div>
                 <StepsTree nodes={retryNodes} {...commonProps} />
@@ -214,7 +215,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
           const shouldShowExecutionInputs =
             !!step.item.data?.executionInputConfigured && isExecutionWaitingForInput(step.item.status)
           const key = defaultTo(step.item.retryId, step.item.identifier)
-
+          const name = getStepDisplayName(step.item)
           return (
             <li
               className={cx(css.item, {
@@ -230,7 +231,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
               >
                 <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <Text lineClamp={1} className={css.name}>
-                  {step.item.name}
+                  {name}
                 </Text>
                 {shouldShowExecutionInputs ? (
                   <button
@@ -256,16 +257,16 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
         if (step.group) {
           const status = getStepsTreeStatus({ step, allNodeMap }) || step.group.status
           const statusLower = status.toLowerCase()
-
+          const name = getStepDisplayName(step.group)
           return (
             <li className={css.item} key={step.group.identifier} data-type="group">
               <div className={css.step} data-status={statusLower}>
                 <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <div className={css.nameWrapper}>
                   {isRoot ? null : <div className={css.groupIcon} />}
-                  {step.group.name ? (
+                  {name ? (
                     <Text lineClamp={1} className={css.name}>
-                      {step.group.name}
+                      {name}
                     </Text>
                   ) : (
                     <Template className={css.name} stringID="stepGroup" />
