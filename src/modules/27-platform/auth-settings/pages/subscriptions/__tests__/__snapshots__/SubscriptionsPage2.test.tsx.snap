@@ -2727,7 +2727,7 @@ exports[`Subscriptions Page should render SRM details  with no data service tabl
                            
                         </p>
                         <span>
-                          common.purpose.activeMonitoredService
+                          common.subscriptions.usage.services
                         </span>
                         <p
                           class="StyledProps--font StyledProps--main"

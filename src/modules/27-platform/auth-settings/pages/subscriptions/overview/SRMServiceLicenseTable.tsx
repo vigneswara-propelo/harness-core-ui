@@ -177,7 +177,7 @@ export function SRMServiceLicenseTable({
           <Layout.Vertical className={pageCss.badgesContainer}>
             <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
               <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
-              <String stringID={'common.purpose.activeMonitoredService'} />
+              <String stringID={'common.subscriptions.usage.services'} />
               <Text>(</Text>
               <Text>{getString('common.lastUpdatedAt')} -</Text>
               <Text className={pageCss.badgeText}>{formattedTime}</Text>

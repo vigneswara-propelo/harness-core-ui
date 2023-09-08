@@ -2034,7 +2034,7 @@ exports[`Subscription Details Card should render SRM details by selecting projec
                            
                         </p>
                         <span>
-                          common.purpose.activeMonitoredService
+                          common.subscriptions.usage.services
                         </span>
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -4457,7 +4457,7 @@ exports[`Subscription Details Card should render SRM details: srm module  1`] = 
                            
                         </p>
                         <span>
-                          common.purpose.activeMonitoredService
+                          common.subscriptions.usage.services
                         </span>
                         <p
                           class="StyledProps--font StyledProps--main"
