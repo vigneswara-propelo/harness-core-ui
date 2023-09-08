@@ -437,7 +437,10 @@ function FormContent({
             expressions,
             enableConfigureOptions: true,
             allowableTypes,
-            isExecutionTimeFieldDisabled: false
+            isExecutionTimeFieldDisabled: false,
+            configureOptionsProps: {
+              minVal: '5s'
+            }
           }}
         />
       </div>
@@ -766,7 +769,7 @@ function JenkinsStepBase(
         )
           (formikRef as React.MutableRefObject<FormikProps<JenkinsStepData>>)?.current?.setFieldError(
             'spec.consoleLogPollFrequency',
-            getString('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+            getString('pipeline.jenkinsStep.validations.pollingFrequencyExceedingTimeout')
           )
         onUpdate?.(_values)
       }}

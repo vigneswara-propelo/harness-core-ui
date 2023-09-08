@@ -62,6 +62,7 @@ export interface ConfigureOptionsDialogProps {
     required?: boolean | undefined
   ) => void
   tagsInputSeparator?: string | RegExp | false
+  minVal?: string
 }
 
 export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProps): JSX.Element | null {
@@ -80,7 +81,8 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     allowedValuesValidator,
     getAllowedValuesCustomComponent,
     closeModal,
-    tagsInputSeparator
+    tagsInputSeparator,
+    minVal
   } = props
   const [input, setInput] = React.useState(value)
   const { showError } = useToaster()
@@ -224,6 +226,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                     getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
                     tagsInputSeparator={tagsInputSeparator}
                     variableType={type}
+                    minVal={minVal}
                   />
                 ) : null}
                 {values.validation === Validation.Regex ? (

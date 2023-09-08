@@ -22,6 +22,7 @@ export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps,
   onChange?: (value: string, defaultValue?: string | number, isRequired?: boolean) => void
   className?: string
   style?: CSSProperties
+  minVal?: string
 }
 
 export { ALLOWED_VALUES_TYPE, VALIDATORS }
@@ -43,7 +44,8 @@ export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactEleme
     getAllowedValuesCustomComponent,
     className,
     tagsInputSeparator,
-    isReadonly = false
+    isReadonly = false,
+    minVal
   } = props
   const [input, setInput] = React.useState(value)
   const [isHover, setIsHover] = React.useState<boolean>()
@@ -110,6 +112,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactEleme
           allowedValuesValidator={allowedValuesValidator}
           getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
           tagsInputSeparator={tagsInputSeparator}
+          minVal={minVal}
         />
       </Dialog>
     </React.Fragment>

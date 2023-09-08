@@ -26,10 +26,12 @@ export interface AllowedValuesFieldsProps {
   ) => React.ReactElement
   tagsInputSeparator?: string | RegExp | false
   variableType: string | JSX.Element
+  minVal?: string
 }
 
 interface RenderFieldProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced'> {
   getString(key: StringKeys, vars?: Record<string, any>): string
+  minVal?: string
 }
 
 interface GetTagProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced' | 'isReadonly' | 'variableType'> {
@@ -82,7 +84,8 @@ export const RenderField = ({
   formik,
   getAllowedValuesCustomComponent,
   tagsInputSeparator,
-  variableType
+  variableType,
+  minVal
 }: RenderFieldProps): React.ReactElement => {
   const [inputValue, setInputValue] = React.useState('')
 
@@ -106,7 +109,7 @@ export const RenderField = ({
         formik,
         inputValue,
         setInputValue,
-        allowedValuesValidator: allowedValuesValidator || VALIDATORS[allowedValuesType]({ minimum: '10s' }),
+        allowedValuesValidator: allowedValuesValidator || VALIDATORS[allowedValuesType]({ minimum: minVal || '10s' }),
         fieldKey: 'timeout'
       })
       break
@@ -164,7 +167,8 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
     formik,
     getAllowedValuesCustomComponent,
     tagsInputSeparator,
-    variableType
+    variableType,
+    minVal
   } = props
   const { getString } = useStrings()
   return (
@@ -178,6 +182,7 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
         formik={formik}
         tagsInputSeparator={tagsInputSeparator}
         variableType={variableType}
+        minVal={minVal}
       />
     </div>
   )
