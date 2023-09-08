@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, set, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -33,7 +33,14 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { JiraFieldNG, JiraStatusNG, useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
+import {
+  JiraFieldNG,
+  JiraProjectNG,
+  JiraStatusNG,
+  useGetJiraIssueCreateMetadata,
+  useGetJiraIssueUpdateMetadata,
+  useGetJiraStatuses
+} from 'services/cd-ng'
 import type {
   AccountPathProps,
   GitQueryParams,
@@ -69,12 +76,16 @@ import type {
 import { processFormData } from './helper'
 
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
+import { JiraProjectSelectOption } from '../JiraApproval/types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../JiraCreate/JiraCreate.module.scss'
 
 function FormContent({
   formik,
   refetchStatuses,
+  refetchProjectMetadata,
+  refetchIssueMetadata,
+  issueMetaResponse,
   fetchingStatuses,
   statusFetchError,
   statusResponse,
@@ -85,16 +96,18 @@ function FormContent({
   refetchIssueUpdateMetadata,
   issueUpdateMetadataResponse,
   issueUpdateMetadataFetchError,
-  issueUpdateMetadataLoading
+  issueUpdateMetadataLoading,
+  issueMetadataLoading
 }: JiraUpdateFormContentInterface): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
-
+  const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [statusOptions, setStatusOptions] = useState<SelectOption[]>([])
+
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
   const issueKeyValue = isMultiTypeFixed(getMultiTypeFromValue(formik.values.spec.issueKey))
     ? formik.values.spec.issueKey
@@ -106,6 +119,16 @@ function FormContent({
     repoIdentifier,
     branch
   }
+
+  const projectKeyFixedValue =
+    typeof formik.values.spec.projectKey === 'object'
+      ? (formik.values.spec.projectKey as JiraProjectSelectOption).key
+      : undefined
+  const issueTypeFixedValue =
+    typeof formik.values.spec.issueType === 'object'
+      ? (formik.values.spec.issueType as JiraProjectSelectOption).key
+      : undefined
+
   const jiraType = 'updateMode'
   useEffect(() => {
     if (connectorRefFixedValue) {
@@ -149,9 +172,132 @@ function FormContent({
   }, [connectorRefFixedValue, issueKeyValue])
 
   useEffect(() => {
+    // If project value changes in form, fetch metadata
+    if (connectorRefFixedValue && projectKeyFixedValue) {
+      refetchProjectMetadata({
+        queryParams: {
+          ...commonParams,
+          expand: 'projects.issuetypes',
+          connectorRef: connectorRefFixedValue.toString(),
+          projectKey: projectKeyFixedValue.toString()
+        }
+      })
+    } else if (
+      connectorRefFixedValue !== undefined &&
+      projectKeyFixedValue !== undefined
+      // isRuntimeOrExpressionType(projectValueType)
+    ) {
+      // Undefined check is needed so that form is not set to dirty as soon as we open
+      // This means we've cleared the value or marked runtime/expression
+      // Flush the selected optional and required fields, and move everything to key value fields
+      // formik.setFieldValue('spec.fields', getKVFields(formik.values))
+      formik.setFieldValue('spec.selectedRequiredFields', [])
+      formik.setFieldValue('spec.selectedOptionalFields', [])
+    }
+  }, [projectKeyFixedValue])
+
+  useEffect(() => {
+    if (connectorRefFixedValue && projectKeyFixedValue && issueTypeFixedValue) {
+      refetchIssueMetadata({
+        queryParams: {
+          ...commonParams,
+          expand: 'projects.issuetypes.fields',
+          connectorRef: connectorRefFixedValue.toString(),
+          projectKey: projectKeyFixedValue.toString(),
+          issueType: issueTypeFixedValue.toString()
+        }
+      })
+    } else if (
+      connectorRefFixedValue !== undefined &&
+      projectKeyFixedValue !== undefined &&
+      issueTypeFixedValue !== undefined
+      // isRuntimeOrExpressionType(projectValueType)
+    ) {
+      // Undefined check is needed so that form is not set to dirty as soon as we open
+      formik.setFieldValue('spec.selectedRequiredFields', [])
+      formik.setFieldValue('spec.selectedOptionalFields', [])
+    }
+  }, [issueTypeFixedValue])
+
+  useEffect(() => {
+    // If issuetype changes in form, set status and field list
+    if (issueTypeFixedValue && issueMetadata?.issuetypes[issueTypeFixedValue]?.fields) {
+      const issueTypeData = issueMetadata?.issuetypes[issueTypeFixedValue]
+      const fieldKeys = Object.keys(issueTypeData?.fields || {}).sort()
+      const formikOptionalFields: JiraFieldNGWithValue[] = []
+      const formikRequiredFields: JiraFieldNGWithValue[] = []
+      fieldKeys.forEach(fieldKey => {
+        const field = issueTypeData?.fields[fieldKey]
+        if (field) {
+          const savedValueForThisField = getInitialValueForSelectedField(formik.values.spec.fields, field)
+          const isCurrentFieldASelectedOptionalField = getIsCurrentFieldASelectedOptionalField(
+            formik.values.spec.fields,
+            field
+          )
+          if (isCurrentFieldASelectedOptionalField) {
+            formikOptionalFields.push({ ...field, value: savedValueForThisField })
+          }
+        }
+      })
+      formik.setFieldValue('spec.selectedRequiredFields', formikRequiredFields)
+      formik.setFieldValue('spec.selectedOptionalFields', formikOptionalFields)
+      const toBeUpdatedNonKVFields: JiraCreateFieldType[] = []
+      const nonKVFields = [...formikOptionalFields, ...formikRequiredFields]
+
+      nonKVFields.forEach(field =>
+        toBeUpdatedNonKVFields.push({
+          name: field.name,
+          value: getProcessedValueForNonKVField(field)
+        })
+      )
+
+      const toBeUpdatedKVFields = getKVFieldsToBeAddedInForm(
+        formik.values.spec.fields,
+        [],
+        formikOptionalFields,
+        formikRequiredFields
+      )
+      const allfields = [...toBeUpdatedNonKVFields, ...toBeUpdatedKVFields]
+
+      formik.setFieldValue('spec.fields', allfields)
+    } else if (issueTypeFixedValue !== undefined) {
+      // Undefined check is needed so that form is not set to dirty as soon as we open
+      // This means we've cleared the value or marked runtime/expression
+      // Flush the selected additional fields, and move everything to key value fields
+      // formik.setFieldValue('spec.fields', getKVFields(formik.values))
+      formik.setFieldValue('spec.selectedRequiredFields', [])
+      formik.setFieldValue('spec.selectedOptionalFields', [])
+    }
+  }, [issueTypeFixedValue, issueMetadata])
+
+  useEffect(() => {
+    if (projectKeyFixedValue && issueTypeFixedValue && issueMetaResponse?.data?.projects) {
+      const issuesMD: JiraProjectNG = issueMetaResponse?.data?.projects[projectKeyFixedValue]
+      setIssueMetadata(issuesMD)
+    }
+  }, [issueMetaResponse?.data])
+
+  const isProjectIDAndIssueTypePresent = (): boolean => {
+    if (issueKeyValue) {
+      return true
+    }
+    if (
+      getMultiTypeFromValue(formik.values?.spec?.issueKey) !== MultiTypeInputType.FIXED &&
+      issueTypeFixedValue &&
+      projectKeyFixedValue
+    ) {
+      return true
+    }
+    return false
+  }
+
+  useEffect(() => {
     // The below code utilises issue update metadata to figure out optional fields from Key value fields
     // to ensure they are rendered properly i.e. not as a key value pair field
-    if (issueKeyValue && !isEmpty(issueUpdateMetadataResponse?.data?.fields)) {
+    if (
+      isProjectIDAndIssueTypePresent() &&
+      !isEmpty(issueUpdateMetadataResponse?.data?.fields && formik.values.spec.fields)
+    ) {
       const issueUpdateMetadataFieldsObj = issueUpdateMetadataResponse!.data!.fields
       const fieldKeys = Object.keys(issueUpdateMetadataFieldsObj).sort()
       const formikOptionalFields: JiraFieldNGWithValue[] = []
@@ -204,10 +350,19 @@ function FormContent({
         <JiraDynamicFieldsSelector
           connectorRef={connectorRefFixedValue || ''}
           selectedFields={formik.values.spec.selectedOptionalFields}
+          selectedProjectKey={projectKeyFixedValue || ''}
+          selectedIssueTypeKey={issueTypeFixedValue || ''}
           jiraType={jiraType}
           issueKey={issueKeyValue}
-          addSelectedFields={(fieldsToBeAdded: JiraFieldNG[]) => {
-            formik.setFieldValue(
+          issueKeyType={getMultiTypeFromValue(formik.values.spec.issueKey)}
+          addSelectedFields={(
+            fieldsToBeAdded: JiraFieldNG[],
+            selectedProjectKey: string | undefined,
+            selectedIssueTypeKey: string | undefined
+          ) => {
+            const formikValues = cloneDeep(formik.values)
+            set(
+              formikValues,
               'spec.selectedOptionalFields',
               getSelectedFieldsToBeAddedInForm(
                 fieldsToBeAdded,
@@ -215,6 +370,15 @@ function FormContent({
                 formik.values.spec.fields
               )
             )
+            if (
+              selectedProjectKey &&
+              selectedIssueTypeKey &&
+              getMultiTypeFromValue(formik.values.spec.issueKey) !== MultiTypeInputType.FIXED
+            ) {
+              set(formikValues, 'spec.projectKey', selectedProjectKey)
+              set(formikValues, 'spec.issueType', selectedIssueTypeKey)
+            }
+            formik.setValues(formikValues)
             hideDynamicFieldsModal()
           }}
           provideFieldList={(fields: JiraCreateFieldType[]) => {
@@ -329,6 +493,22 @@ function FormContent({
           name="spec.issueKey"
           multiTextInputProps={{ expressions, allowableTypes }}
           placeholder={getString('pipeline.jiraApprovalStep.issueKeyPlaceholder')}
+          onChange={(value, _valueType, type) => {
+            const formikValues = cloneDeep(formik.values)
+            set(formikValues, 'spec.issueKey', value)
+            if (
+              type === MultiTypeInputType.FIXED &&
+              get(formikValues, 'spec.projectKey') &&
+              get(formikValues, 'spec.issueType')
+            ) {
+              unset(formikValues, 'spec.issueType')
+              unset(formikValues, 'spec.projectKey')
+              unset(formikValues, 'spec.fields')
+              unset(formikValues, 'spec.selectedRequiredFields')
+              unset(formikValues, 'spec.selectedOptionalFields')
+            }
+            formik.setValues(formikValues)
+          }}
           disabled={isApprovalStepFieldDisabled(readonly)}
         />
         {getMultiTypeFromValue(formik.values.spec.issueKey) === MultiTypeInputType.RUNTIME && (
@@ -458,7 +638,7 @@ function FormContent({
                 connectorRef={defaultTo(connectorRefFixedValue, '')}
               />
 
-              {issueUpdateMetadataLoading ? (
+              {issueUpdateMetadataLoading || issueMetadataLoading ? (
                 <PageSpinner message={getString('pipeline.jiraCreateStep.fetchingFields')} className={css.fetching} />
               ) : !isEmpty(formik.values.spec.fields) ? (
                 <JiraKVFieldsRenderer
@@ -540,6 +720,37 @@ function JiraUpdateStepMode(
     }
   })
 
+  const {
+    refetch: refetchProjectMetadata,
+    data: projectMetaResponse,
+    error: projectMetadataFetchError,
+    loading: fetchingProjectMetadata
+  } = useGetJiraIssueCreateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      expand: '',
+      connectorRef: '',
+      projectKey: ''
+    }
+  })
+
+  const {
+    refetch: refetchIssueMetadata,
+    data: issueMetaResponse,
+    error: issueMetadataFetchError,
+    loading: issueMetadataLoading
+  } = useGetJiraIssueCreateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      expand: '',
+      connectorRef: '',
+      projectKey: '',
+      issueType: ''
+    }
+  })
+
   return (
     <Formik<JiraUpdateData>
       onSubmit={values => onUpdate?.(processFormData(values))}
@@ -577,6 +788,14 @@ function JiraUpdateStepMode(
               issueUpdateMetadataResponse={issueUpdateMetadataResponse}
               issueUpdateMetadataFetchError={issueUpdateMetadataFetchError}
               issueUpdateMetadataLoading={issueUpdateMetadataLoading}
+              refetchProjectMetadata={refetchProjectMetadata}
+              refetchIssueMetadata={refetchIssueMetadata}
+              fetchingProjectMetadata={fetchingProjectMetadata}
+              projectMetaResponse={projectMetaResponse}
+              issueMetadataLoading={issueMetadataLoading}
+              issueMetaResponse={issueMetaResponse}
+              issueMetadataFetchError={issueMetadataFetchError}
+              projectMetadataFetchError={projectMetadataFetchError}
               statusResponse={statusResponse}
               statusFetchError={statusFetchError}
               isNewStep={isNewStep}

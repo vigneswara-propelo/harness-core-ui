@@ -11,14 +11,17 @@ import type { AllowedTypes, SelectOption, MultiSelectOption } from '@harness/uic
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   Failure,
+  ResponseJiraIssueCreateMetadataNG,
   ResponseJiraIssueUpdateMetadataNG,
   ResponseListJiraStatusNG,
   StepElementConfig,
+  UseGetJiraIssueCreateMetadataProps,
   UseGetJiraIssueUpdateMetadataProps,
   UseGetJiraStatusesProps
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { JiraFieldNGWithValue } from '../JiraCreate/types'
+import { JiraProjectSelectOption } from '../JiraApproval/types'
 
 export interface JiraUpdateFieldType {
   name: string
@@ -28,6 +31,8 @@ export interface JiraUpdateFieldType {
 export interface JiraUpdateData extends StepElementConfig {
   spec: {
     connectorRef: string | SelectOption
+    projectKey?: string | JiraProjectSelectOption
+    issueType?: string | JiraProjectSelectOption
     issueKey: string
     transitionTo?: {
       status: string | SelectOption
@@ -66,8 +71,16 @@ export interface JiraUpdateFormContentInterface {
   readonly?: boolean
   issueUpdateMetadataResponse?: ResponseJiraIssueUpdateMetadataNG | null
   refetchIssueUpdateMetadata: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
+  refetchProjectMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
+  projectMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
+  fetchingProjectMetadata: boolean
   issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
   issueUpdateMetadataLoading?: boolean
+  issueMetadataLoading?: boolean
 }
 
 export interface JiraUpdateDeploymentModeProps {

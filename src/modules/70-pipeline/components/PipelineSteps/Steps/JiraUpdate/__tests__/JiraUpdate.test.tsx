@@ -25,7 +25,7 @@ import {
 } from './JiraUpdateTestHelper'
 import type { JiraUpdateData } from '../types'
 import { processFormData } from '../helper'
-import { mockProjectMetadataResponse } from '../../JiraCreate/__tests__/JiraCreateTestHelper'
+import { mockProjectMetadataResponse, mockProjectsResponse } from '../../JiraCreate/__tests__/JiraCreateTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -33,6 +33,7 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetJiraIssueUpdateMetadata: () => mockFieldsMetadataResponse,
   useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse,
+  useGetJiraProjects: () => mockProjectsResponse,
   useGetJiraStatuses: jest.fn()
 }))
 

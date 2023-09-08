@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { MultiSelectOption, AllowedTypes, SelectOption } from '@harness/uicore'
+import type { MultiSelectOption, AllowedTypes, SelectOption, MultiTypeInputType } from '@harness/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   Failure,
@@ -102,9 +102,14 @@ export interface JiraDynamicFieldsSelectorInterface {
   provideFieldList: (fields: JiraCreateFieldType[]) => void
   onCancel: () => void
   issueKey?: string
+  issueKeyType?: MultiTypeInputType
 }
 
 export interface JiraDynamicFieldsSelectorContentInterface extends JiraDynamicFieldsSelectorInterface {
+  refetchProjects: (props: UseGetJiraProjectsProps) => Promise<void>
+  fetchingProjects: boolean
+  projectsResponse: ResponseListJiraProjectBasicNG | null
+  projectsFetchError: GetDataError<Failure | Error> | null
   refetchProjectMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
   fetchingProjectMetadata: boolean
   projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
@@ -117,6 +122,7 @@ export interface JiraDynamicFieldsSelectorContentInterface extends JiraDynamicFi
   fetchingIssueUpdateMetadata: boolean
   issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
   issueUpdateMetaResponse: ResponseJiraIssueUpdateMetadataNG | null
+  isSelectFieldEnabled?: boolean
 }
 
 export interface JiraCreateDeploymentModeProps {

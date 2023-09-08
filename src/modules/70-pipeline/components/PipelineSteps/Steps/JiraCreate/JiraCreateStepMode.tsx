@@ -332,7 +332,6 @@ function FormContent({
           selectedProjectKey={projectKeyFixedValue || ''}
           selectedIssueTypeKey={issueTypeFixedValue || ''}
           jiraType={jiraType}
-          projectOptions={projectOptions}
           selectedFields={formik.values.spec.selectedOptionalFields}
           addSelectedFields={(fieldsToBeAdded: JiraFieldNG[]) => {
             addSelectedOptionalFields(fieldsToBeAdded, formik)
@@ -759,15 +758,15 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
               allowableTypes={allowableTypes}
               stepViewType={stepViewType}
               refetchProjects={refetchProjects}
+              fetchingProjects={fetchingProjects}
+              projectsResponse={projectsResponse}
+              projectsFetchError={projectsFetchError}
               refetchProjectMetadata={refetchProjectMetadata}
               refetchIssueMetadata={refetchIssueMetadata}
-              fetchingProjects={fetchingProjects}
               fetchingProjectMetadata={fetchingProjectMetadata}
               projectMetaResponse={projectMetaResponse}
               issueMetaResponse={issueMetaResponse}
               issueMetadataFetchError={issueMetadataFetchError}
-              projectsResponse={projectsResponse}
-              projectsFetchError={projectsFetchError}
               projectMetadataFetchError={projectMetadataFetchError}
               isNewStep={isNewStep}
               readonly={readonly}

@@ -5,6 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { set } from 'lodash-es'
+import { JiraProjectSelectOption } from '../JiraApproval/types'
 import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
 import { getkvFieldValue } from '../StepsHelper'
 import type { JiraUpdateData } from './types'
@@ -30,6 +33,28 @@ export const processFieldsForSubmit = (values: JiraUpdateData): JiraCreateFieldT
 }
 
 export const processFormData = (values: JiraUpdateData): JiraUpdateData => {
+  const issueTypeAndProject: {
+    projectKey?: string | JiraProjectSelectOption
+    issueType?: string | JiraProjectSelectOption
+  } = {}
+  if (values?.spec?.issueType) {
+    set(
+      issueTypeAndProject,
+      'issueType',
+      typeof values.spec.issueType === 'string'
+        ? values.spec.issueType
+        : (values.spec.issueType as JiraProjectSelectOption)?.key?.toString()
+    )
+  }
+  if (values?.spec?.projectKey) {
+    set(
+      issueTypeAndProject,
+      'projectKey',
+      typeof values.spec.projectKey === 'string'
+        ? values.spec.projectKey
+        : (values.spec.projectKey as JiraProjectSelectOption)?.key?.toString()
+    )
+  }
   return {
     ...values,
     spec: {
@@ -43,7 +68,8 @@ export const processFormData = (values: JiraUpdateData): JiraUpdateData => {
             }
           : undefined,
       fields: processFieldsForSubmit(values),
-      delegateSelectors: values.spec.delegateSelectors
+      delegateSelectors: values.spec.delegateSelectors,
+      ...issueTypeAndProject
     }
   }
 }
@@ -55,6 +81,22 @@ export const processInitialValues = (values: JiraUpdateData): JiraUpdateData => 
       delegateSelectors: values.spec.delegateSelectors,
       connectorRef: values.spec.connectorRef,
       issueKey: values.spec.issueKey,
+      projectKey:
+        values.spec.projectKey && getMultiTypeFromValue(values.spec.projectKey) === MultiTypeInputType.FIXED
+          ? {
+              label: values.spec.projectKey.toString(),
+              value: values.spec.projectKey.toString(),
+              key: values.spec.projectKey.toString()
+            }
+          : undefined,
+      issueType:
+        values.spec.issueType && getMultiTypeFromValue(values.spec.issueType) === MultiTypeInputType.FIXED
+          ? {
+              label: values.spec.issueType.toString(),
+              value: values.spec.issueType.toString(),
+              key: values.spec.issueType.toString()
+            }
+          : undefined,
       transitionTo: values.spec.transitionTo
         ? {
             status: values.spec.transitionTo.status,

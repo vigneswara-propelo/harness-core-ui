@@ -15,6 +15,11 @@ import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import type { JiraCreateData, JiraCreateFieldType, JiraFieldNGWithValue } from './types'
 import { getkvFieldValue } from '../StepsHelper'
 
+export enum JIRA_TYPE {
+  CREATE_MODE = 'createMode',
+  UPDATE_MODE = 'updateMode'
+}
+
 export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string): void => {
   if (parent === 'connectorRef') {
     formik.setFieldValue('spec.projectKey', '')
@@ -160,7 +165,7 @@ export const getSelectedFieldsToBeAddedInForm = (
   const toReturn: JiraFieldNGWithValue[] = []
   newFields.forEach(field => {
     const alreadyPresent = existingFields.find(existing => existing.name === field.name)
-    const alreadyPresentKVField = existingKVFields.find(kv => kv.name === field.name)
+    const alreadyPresentKVField = existingKVFields?.find(kv => kv.name === field.name)
     if (!alreadyPresent && !alreadyPresentKVField) {
       toReturn.push({ ...field, value: !isEmpty(field.allowedValues) ? [] : '' })
     } else {
