@@ -1115,7 +1115,7 @@ oAuth:
   connectToGitProviderPlaceholder: Select a Git Provider
   fetchingUserAccessTokens: Fetching user access tokens
   usingUserAccessTokens: Using "{{user}}'s" credentials to make changes to Git.
-  setUpUserAccessTokenMessage: Connect to {{type}} to authorize Harness to use your credentials.
+  usingConnectorCredentails: Using connector credentials to make changes to Git.
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git

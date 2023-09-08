@@ -759,7 +759,7 @@ export interface StringsMap {
   'common.oAuth.fetchingUserAccessTokens': string
   'common.oAuth.inProgress': string
   'common.oAuth.reConfigured': string
-  'common.oAuth.setUpUserAccessTokenMessage': string
+  'common.oAuth.usingConnectorCredentails': string
   'common.oAuth.usingUserAccessTokens': string
   'common.oAuthLabel': string
   'common.occurrence.oneTime': string
