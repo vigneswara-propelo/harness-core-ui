@@ -19,6 +19,10 @@ export function ServicePopoverCard(props: ServicePopoveCardProps): React.ReactEl
   const { service } = props
   const { getString } = useStrings()
 
+  const manifestInfo = service?.manifestInfo
+  const manifestChartName = manifestInfo?.chartName
+  const manifestChartVersion = manifestInfo?.chartVersion
+  const manifestRepoName = manifestInfo?.repoName
   return (
     <div className={css.main}>
       <String tagName="div" className={css.title} stringID="primaryArtifactText" />
@@ -82,6 +86,26 @@ export function ServicePopoverCard(props: ServicePopoveCardProps): React.ReactEl
               )}
             </div>
           ))}
+        </>
+      ) : null}
+      {manifestInfo ? (
+        <>
+          <String tagName="div" className={css.title} stringID="pipeline.manifestType.manifestDetails" />
+          {manifestChartName && (
+            <Text color="grey800" font={'small'}>
+              {getString('pipeline.manifestType.http.chartName')}: {manifestChartName}
+            </Text>
+          )}
+          {manifestChartVersion && (
+            <Text color="grey800" font={'small'}>
+              {getString('pipeline.manifestType.http.chartVersion')}: {manifestChartVersion}
+            </Text>
+          )}
+          {manifestRepoName && service?.artifacts?.primary && (
+            <Text color="grey800" font={'small'}>
+              {getString('cd.serviceDashboard.helmRopoUrl')}: {manifestRepoName}
+            </Text>
+          )}
         </>
       ) : null}
     </div>

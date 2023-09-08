@@ -37,6 +37,8 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
   const serviceScope = getScopeFromValue(stageInfo.serviceInfo?.identifier)
   const infrastructureScope = getScopeFromValue(stageInfo.infraExecutionSummary?.identifier)
 
+  const chartVersion = stageInfo.serviceInfo?.manifestInfo?.chartVersion
+
   return serviceDisplayName || environment ? (
     <Layout.Horizontal spacing="medium" className={css.cdExecutionSummary}>
       {serviceDisplayName ? (
@@ -83,6 +85,17 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
             <span>{environment}</span>
             {infra ? <span>&nbsp;({infra})</span> : null}
           </Link>
+        </Layout.Horizontal>
+      ) : null}
+      {chartVersion ? (
+        <Layout.Horizontal
+          spacing="xsmall"
+          style={{ alignItems: 'center', flexShrink: 'unset' }}
+          className={css.environment}
+        >
+          <Icon name="service-helm" size={12} />
+
+          <span>{chartVersion}</span>
         </Layout.Horizontal>
       ) : null}
     </Layout.Horizontal>
