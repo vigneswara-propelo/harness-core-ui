@@ -40,7 +40,7 @@ export function StepGroupTemplateCommands(props: StepCommandsProps, ref: StepCom
     isProvisionerStep = false
   } = props
   const { getString } = useStrings()
-  const [activeTab, setActiveTab] = React.useState(StepCommandTabs.Advanced)
+  const [activeTab, setActiveTab] = React.useState(StepCommandTabs.StepConfiguration)
 
   const stepRef = React.useRef<FormikProps<unknown> | null>(null)
   const advancedConfRef = React.useRef<FormikProps<unknown> | null>(null)
