@@ -11,6 +11,15 @@
   box-shadow: var(--card-shadow);
   align-items: center;
   justify-content: center;
+
+  .assignedCounts {
+    text-align: center;
+
+    th,
+    td {
+      padding: 0 var(--spacing-small);
+    }
+  }
 }
 
 .name {

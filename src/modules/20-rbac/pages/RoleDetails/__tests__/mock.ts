@@ -21,7 +21,7 @@ export const roleMockData: ResponseRoleResponse = {
       identifier: 'identifier',
       name: 'name',
       permissions: ['core_project_delete', 'core_organization_create', 'core_project_create'],
-      allowedScopeLevels: ['account'],
+      allowedScopeLevels: ['ACCOUNT'],
       description: 'description',
       tags: { ui: '', dev: '' }
     },

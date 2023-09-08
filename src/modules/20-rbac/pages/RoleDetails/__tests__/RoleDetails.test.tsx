@@ -78,7 +78,7 @@ describe('Role Details Page', () => {
           'core_project_create',
           'core_organization_view'
         ],
-        allowedScopeLevels: ['account'],
+        allowedScopeLevels: ['ACCOUNT'],
         description: 'description',
         tags: { ui: '', dev: '' }
       })

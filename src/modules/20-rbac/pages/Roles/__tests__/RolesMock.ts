@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { ResponsePageRoleResponse } from 'services/rbac'
+import type { ResponsePageRoleWithPrincipalCountResponse } from 'services/rbac'
 
-export const rolesMockList: ResponsePageRoleResponse = {
+export const rolesMockList: ResponsePageRoleWithPrincipalCountResponse = {
   status: 'SUCCESS',
   data: {
     totalPages: 1,
@@ -20,7 +20,7 @@ export const rolesMockList: ResponsePageRoleResponse = {
           identifier: 'role1',
           name: 'role 1',
           permissions: [],
-          allowedScopeLevels: ['account'],
+          allowedScopeLevels: ['ACCOUNT'],
           description: '',
           tags: {}
         },
@@ -34,7 +34,7 @@ export const rolesMockList: ResponsePageRoleResponse = {
           identifier: 'role2',
           name: 'role 2',
           permissions: [],
-          allowedScopeLevels: ['account'],
+          allowedScopeLevels: ['ACCOUNT'],
           description: '',
           tags: {}
         },
@@ -48,7 +48,7 @@ export const rolesMockList: ResponsePageRoleResponse = {
           identifier: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
           name: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
           permissions: [],
-          allowedScopeLevels: ['account'],
+          allowedScopeLevels: ['ACCOUNT'],
           description: '',
           tags: {}
         },

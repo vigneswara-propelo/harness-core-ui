@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -312,6 +312,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -339,6 +340,7 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -392,6 +394,19 @@ export interface AccessControlCheckError {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -685,6 +700,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -712,6 +728,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -765,6 +782,19 @@ export interface Error {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1056,6 +1086,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1083,6 +1114,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1136,6 +1168,19 @@ export interface Failure {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1175,8 +1220,8 @@ export interface PageRoleAssignmentResponse {
   totalPages?: number
 }
 
-export interface PageRoleResponse {
-  content?: RoleResponse[]
+export interface PageRoleWithPrincipalCountResponse {
+  content?: RoleWithPrincipalCountResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -1569,6 +1614,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1596,6 +1642,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1649,6 +1696,19 @@ export interface ResponseMessage {
     | 'SCM_API_ERROR'
     | 'INTERNAL_SERVER_ERROR'
     | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
+    | 'PIPELINE_UPDATE_EXCEPTION'
+    | 'SERVICENOW_REFRESH_TOKEN_ERROR'
+    | 'PARAMETER_FIELD_CAST_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1663,6 +1723,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -1682,9 +1743,9 @@ export interface ResponsePageRoleAssignmentResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageRoleResponse {
+export interface ResponsePageRoleWithPrincipalCountResponse {
   correlationId?: string
-  data?: PageRoleResponse
+  data?: PageRoleWithPrincipalCountResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1732,7 +1793,7 @@ export interface ResponseSetString {
 }
 
 export interface Role {
-  allowedScopeLevels?: string[]
+  allowedScopeLevels?: ('ACCOUNT' | 'ORGANIZATION' | 'PROJECT')[]
   description?: string
   identifier: string
   name: string
@@ -1832,6 +1893,17 @@ export interface RoleResponse {
   harnessManaged?: boolean
   lastModifiedAt?: number
   role: Role
+  scope?: Scope
+}
+
+export interface RoleWithPrincipalCountResponse {
+  createdAt?: number
+  harnessManaged?: boolean
+  lastModifiedAt?: number
+  role: Role
+  roleAssignedToServiceAccountCount?: number
+  roleAssignedToUserCount?: number
+  roleAssignedToUserGroupCount?: number
   scope?: Scope
 }
 
@@ -3032,7 +3104,12 @@ export interface GetRoleListQueryParams {
 }
 
 export type GetRoleListProps = Omit<
-  GetProps<ResponsePageRoleResponse, Failure | AccessControlCheckError | Error, GetRoleListQueryParams, void>,
+  GetProps<
+    ResponsePageRoleWithPrincipalCountResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleListQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -3040,7 +3117,12 @@ export type GetRoleListProps = Omit<
  * Get Roles
  */
 export const GetRoleList = (props: GetRoleListProps) => (
-  <Get<ResponsePageRoleResponse, Failure | AccessControlCheckError | Error, GetRoleListQueryParams, void>
+  <Get<
+    ResponsePageRoleWithPrincipalCountResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleListQueryParams,
+    void
+  >
     path={`/roles`}
     base={getConfig('authz/api')}
     {...props}
@@ -3048,7 +3130,12 @@ export const GetRoleList = (props: GetRoleListProps) => (
 )
 
 export type UseGetRoleListProps = Omit<
-  UseGetProps<ResponsePageRoleResponse, Failure | AccessControlCheckError | Error, GetRoleListQueryParams, void>,
+  UseGetProps<
+    ResponsePageRoleWithPrincipalCountResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleListQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -3056,29 +3143,31 @@ export type UseGetRoleListProps = Omit<
  * Get Roles
  */
 export const useGetRoleList = (props: UseGetRoleListProps) =>
-  useGet<ResponsePageRoleResponse, Failure | AccessControlCheckError | Error, GetRoleListQueryParams, void>(`/roles`, {
-    base: getConfig('authz/api'),
-    ...props
-  })
+  useGet<
+    ResponsePageRoleWithPrincipalCountResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleListQueryParams,
+    void
+  >(`/roles`, { base: getConfig('authz/api'), ...props })
 
 /**
  * Get Roles
  */
 export const getRoleListPromise = (
   props: GetUsingFetchProps<
-    ResponsePageRoleResponse,
+    ResponsePageRoleWithPrincipalCountResponse,
     Failure | AccessControlCheckError | Error,
     GetRoleListQueryParams,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePageRoleResponse, Failure | AccessControlCheckError | Error, GetRoleListQueryParams, void>(
-    getConfig('authz/api'),
-    `/roles`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponsePageRoleWithPrincipalCountResponse,
+    Failure | AccessControlCheckError | Error,
+    GetRoleListQueryParams,
+    void
+  >(getConfig('authz/api'), `/roles`, props, signal)
 
 export interface PostRoleQueryParams {
   accountIdentifier?: string

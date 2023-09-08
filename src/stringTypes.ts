@@ -1485,6 +1485,7 @@ export interface StringsMap {
   'rbac.apiKey.form.createSuccess': string
   'rbac.apiKey.form.editSuccess': string
   'rbac.apiKey.successMessage': string
+  'rbac.assignedTo': string
   'rbac.categoryLabels.sharedResources': string
   'rbac.communityErrorMessages.resourceGroup': string
   'rbac.communityErrorMessages.role': string
@@ -1640,6 +1641,7 @@ export interface StringsMap {
   'rbac.scopeItems.specificOrgsAndProjects': string
   'rbac.scopeItems.specificProjects': string
   'rbac.scopeLabel': string
+  'rbac.selectedResources': string
   'rbac.serviceAccounts.confirmDelete': string
   'rbac.serviceAccounts.confirmDeleteTitle': string
   'rbac.serviceAccounts.email': string

@@ -6,7 +6,7 @@
  */
 
 import type { ResponsePageUserMetadataDTO, ResponsePageInvite } from 'services/cd-ng'
-import type { ResponsePageRoleResponse } from 'services/rbac'
+import type { ResponsePageRoleWithPrincipalCountResponse } from 'services/rbac'
 
 export const orgMockData = {
   data: {
@@ -262,7 +262,7 @@ export const invitesMockData: ResponsePageInvite = {
   }
 }
 
-export const roleMockData: ResponsePageRoleResponse = {
+export const roleMockData: ResponsePageRoleWithPrincipalCountResponse = {
   status: 'SUCCESS',
   data: {
     totalPages: 1,
@@ -291,7 +291,7 @@ export const roleMockData: ResponsePageRoleResponse = {
             'core_project_delete',
             'core_connector_delete'
           ],
-          allowedScopeLevels: ['project'],
+          allowedScopeLevels: ['PROJECT'],
           description: 'Administrate an existing project.',
           tags: {}
         },
@@ -305,7 +305,7 @@ export const roleMockData: ResponsePageRoleResponse = {
           identifier: '_project_viewer',
           name: 'Project Viewer',
           permissions: ['core_project_view', 'core_secret_view', 'core_pipeline_view', 'core_connector_view'],
-          allowedScopeLevels: ['project'],
+          allowedScopeLevels: ['PROJECT'],
           description: 'View a project',
           tags: {}
         },
@@ -319,7 +319,7 @@ export const roleMockData: ResponsePageRoleResponse = {
           identifier: '_pipeline_executor',
           name: 'Pipeline Executor',
           permissions: ['core_pipeline_execute', 'core_secret_view', 'core_pipeline_view', 'core_connector_view'],
-          allowedScopeLevels: ['project'],
+          allowedScopeLevels: ['PROJECT'],
           description: 'Execute a pipeline',
           tags: {}
         },

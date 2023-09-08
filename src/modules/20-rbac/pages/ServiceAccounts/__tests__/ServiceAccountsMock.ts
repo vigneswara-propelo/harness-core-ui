@@ -6,7 +6,7 @@
  */
 
 import type { ResponseBoolean, ResponsePageServiceAccountAggregateDTO } from 'services/cd-ng'
-import type { ResponsePageRoleResponse } from 'services/rbac'
+import type { ResponsePageRoleWithPrincipalCountResponse } from 'services/rbac'
 import type { ResponsePageResourceGroupResponse } from 'services/resourcegroups'
 
 export const serviceAccountsAggregate: ResponsePageServiceAccountAggregateDTO = {
@@ -175,7 +175,7 @@ export const mockResponse: ResponseBoolean = {
   correlationId: ''
 }
 
-export const roleMockData: ResponsePageRoleResponse = {
+export const roleMockData: ResponsePageRoleWithPrincipalCountResponse = {
   status: 'SUCCESS',
   data: {
     totalPages: 1,
@@ -194,7 +194,7 @@ export const roleMockData: ResponsePageRoleResponse = {
             'core_secret_view',
             'core_connector_view'
           ],
-          allowedScopeLevels: ['account'],
+          allowedScopeLevels: ['ACCOUNT'],
           description: 'View an account',
           tags: {}
         },
@@ -228,7 +228,7 @@ export const roleMockData: ResponsePageRoleResponse = {
             'core_connector_delete',
             'core_environment_delete'
           ],
-          allowedScopeLevels: ['account'],
+          allowedScopeLevels: ['ACCOUNT'],
           description: 'Administer an account',
           tags: {}
         },
@@ -248,7 +248,7 @@ export const roleMockData: ResponsePageRoleResponse = {
             'core_secret_edit',
             'core_secret_view'
           ],
-          allowedScopeLevels: ['account'],
+          allowedScopeLevels: ['ACCOUNT'],
           description: '',
           tags: {}
         },

@@ -1,3 +1,5 @@
+selectedResources: Selected Resources
+assignedTo: Assigned To
 token:
   createLabel: New Token
   editLabel: Edit Token
