@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo, useRef } from 'react'
 import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { debounce, isEqual, noop } from 'lodash-es'
@@ -30,8 +30,12 @@ export interface FailureStrategyProps {
 export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRef): React.ReactElement {
   const { getString } = useStrings()
   const { selectedStage, onUpdate, isReadonly, tabName } = props
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedUpdate = React.useCallback(debounce(onUpdate, 400), [onUpdate])
+
+  const onUpdateRef = useRef(onUpdate)
+  onUpdateRef.current = onUpdate
+
+  const debouncedUpdate = useMemo(() => debounce(onUpdateRef.current, 400), [])
+
   const formikRef = React.useRef<FormikProps<{ failureStrategies: AllFailureStrategyConfig[] }> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 
