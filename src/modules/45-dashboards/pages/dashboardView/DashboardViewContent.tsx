@@ -18,20 +18,21 @@ import LookerEmbeddedDashboard from '@dashboards/components/LookerEmbeddedDashbo
 import { SHARED_FOLDER_ID } from '@dashboards/constants'
 import { LookerEventType } from '@dashboards/constants/LookerEventType'
 import type { DashboardFiltersChangedEvent, LookerEvent, PageChangedEvent } from '@dashboards/types/LookerTypes.types'
+import { DashboardMode } from '@dashboards/types/DashboardTypes.types'
 import {
   ErrorResponse,
   useCreateSignedUrl,
   useGetDashboardDetail,
-  useGetFolderDetail
+  useDeprecatedGetFolder
 } from 'services/custom-dashboards'
 import css from './DashboardView.module.scss'
 
-const DashboardViewPage: React.FC = () => {
+const DashboardViewContent: React.FC = () => {
   const { getString } = useStrings()
-  const { includeBreadcrumbs } = useDashboardsContext()
+  const { includeBreadcrumbs, aiTileDetails, updateDashboardMode } = useDashboardsContext()
 
   const { accountId, viewId, folderId } = useParams<AccountPathProps & { viewId: string; folderId: string }>()
-  const [embedUrl, setEmbedUrl] = React.useState<string>()
+  const [embedUrl, setEmbedUrl] = React.useState<string | null>()
   const [dashboardFilters, setDashboardFilters] = useQueryParamsState<string | undefined>('filters', undefined)
   const [dashboardLoading, setDashboardLoading] = React.useState<boolean>(false)
   const history = useHistory()
@@ -71,6 +72,13 @@ const DashboardViewPage: React.FC = () => {
     [history]
   )
 
+  const lookerHandleEditToggle = React.useCallback(
+    (newMode: DashboardMode) => {
+      updateDashboardMode(newMode)
+    },
+    [updateDashboardMode]
+  )
+
   const onLookerAction = React.useCallback(
     (lookerEvent: LookerEvent): void => {
       switch (lookerEvent.type) {
@@ -80,30 +88,39 @@ const DashboardViewPage: React.FC = () => {
         case LookerEventType.DASHBOARD_FILTERS_CHANGED:
           lookerDashboardFilterChangedEvent(lookerEvent as DashboardFiltersChangedEvent)
           break
+        case LookerEventType.DASHBOARD_EDIT_START:
+          lookerHandleEditToggle(DashboardMode.EDIT)
+          break
+        case LookerEventType.DASHBOARD_EDIT_CANCEL:
+        case LookerEventType.DASHBOARD_SAVE_COMPLETE:
+          lookerHandleEditToggle(DashboardMode.VIEW)
+          break
         case LookerEventType.DASHBOARD_LOADED:
         case LookerEventType.DASHBOARD_RUN_COMPLETE:
           setDashboardLoading(false)
           break
       }
     },
-    [lookerDashboardFilterChangedEvent, lookerPageChangedEvent]
+    [lookerDashboardFilterChangedEvent, lookerHandleEditToggle, lookerPageChangedEvent]
   )
+  const generateSignedUrl = React.useCallback(async (): Promise<void> => {
+    const { resource } = (await createSignedUrl()) || {}
+    if (resource) {
+      setDashboardLoading(true)
+      setEmbedUrl(resource)
+    }
+  }, [createSignedUrl])
 
   React.useEffect(() => {
-    const generateSignedUrl = async (): Promise<void> => {
-      const { resource } = (await createSignedUrl()) || {}
-      if (resource) {
-        setDashboardLoading(true)
-        setEmbedUrl(resource)
-      }
-    }
-
     generateSignedUrl()
+  }, [generateSignedUrl, viewId])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewId])
+  React.useEffect(() => {
+    setEmbedUrl(null)
+    generateSignedUrl()
+  }, [aiTileDetails, generateSignedUrl])
 
-  const { data: folderDetail, refetch: fetchFolderDetail } = useGetFolderDetail({
+  const { data: folderDetail, refetch: fetchFolderDetail } = useDeprecatedGetFolder({
     lazy: true,
     queryParams: { accountId, folderId }
   })
@@ -145,7 +162,7 @@ const DashboardViewPage: React.FC = () => {
       loadingMessage={loadingMessage}
       error={responseMessages}
       noData={{
-        when: () => embedUrl === undefined,
+        when: () => embedUrl === null,
         icon: 'dashboard',
         message: 'Dashboard not available'
       }}
@@ -157,4 +174,4 @@ const DashboardViewPage: React.FC = () => {
   )
 }
 
-export default DashboardViewPage
+export default DashboardViewContent

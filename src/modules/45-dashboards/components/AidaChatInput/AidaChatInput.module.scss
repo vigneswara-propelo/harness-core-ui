@@ -1,0 +1,37 @@
+.inputContainer {
+  margin-top: var(--spacing-xxxlarge);
+  margin-bottom: 0;
+
+  input {
+    background-color: var(--primary-bg) !important;
+    background: var(--white);
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+    border-radius: 30px !important;
+    padding: var(--spacing-medium) 56px var(--spacing-medium) var(--spacing-xxlarge) !important;
+    border: unset !important;
+    height: 56px !important;
+
+    &::placeholder {
+      color: rgba(0, 0, 0, 0.6) !important;
+      font-size: var(--spacing-medium) !important;
+    }
+
+    &:placeholder-shown {
+      text-overflow: ellipsis;
+    }
+  }
+
+  svg[data-icon='arrow-right'] {
+    fill: #4715d2;
+  }
+
+  :global {
+    .bp3-input-action {
+      position: absolute;
+      right: 24px !important;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+    }
+  }
+}

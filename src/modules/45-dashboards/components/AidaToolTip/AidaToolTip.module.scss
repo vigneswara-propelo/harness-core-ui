@@ -1,0 +1,20 @@
+.closeBtn {
+  color: var(--grey-700) !important;
+  &:hover {
+    cursor: pointer;
+    color: var(--grey-700) !important;
+  }
+}
+
+.label {
+  color: var(--ai-purple-900) !important;
+  line-height: 22px !important;
+}
+
+.tooltipPadding {
+  padding: var(--spacing-small) var(--spacing-small) var(--spacing-medium) var(--spacing-medium) !important;
+}
+
+.tooltipContent {
+  padding: 0 0 var(--spacing-4) var(--spacing-medium) !important;
+}

@@ -35,7 +35,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import ModuleTagsFilter from '@dashboards/components/ModuleTagsFilter/ModuleTagsFilter'
 
-import { ErrorResponse, useDeleteDashboard, useGetFolderDetail, useSearch } from 'services/custom-dashboards'
+import { ErrorResponse, useDeleteDashboard, useDeprecatedGetFolder, useSearch } from 'services/custom-dashboards'
 import routes from '@common/RouteDefinitions'
 
 import { DashboardLayoutViews, DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
@@ -171,7 +171,7 @@ const HomePage: React.FC = () => {
 
   const dashboardList = React.useMemo(() => data?.resource || [], [data])
 
-  const { data: folderDetail, refetch: fetchFolderDetail } = useGetFolderDetail({
+  const { data: folderDetail, refetch: fetchFolderDetail } = useDeprecatedGetFolder({
     lazy: true,
     queryParams: { accountId, folderId }
   })

@@ -51,12 +51,14 @@ describe('FoldersPage', () => {
     jest
       .spyOn(customDashboardServices, 'useSearchFolders')
       .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
-    jest.spyOn(customDashboardServices, 'useCreateFolder').mockImplementation(() => ({ mutate: jest.fn() } as any))
+    jest
+      .spyOn(customDashboardServices, 'useDeprecatedCreateFolder')
+      .mockImplementation(() => ({ mutate: jest.fn() } as any))
     jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: { resource: [] } } as any))
   })
   afterEach(() => {
     jest.spyOn(customDashboardServices, 'useSearchFolders').mockReset()
-    jest.spyOn(customDashboardServices, 'useCreateFolder').mockReset()
+    jest.spyOn(customDashboardServices, 'useDeprecatedCreateFolder').mockReset()
   })
 
   test('it should display "No Folder" content if no folders are returned', async () => {

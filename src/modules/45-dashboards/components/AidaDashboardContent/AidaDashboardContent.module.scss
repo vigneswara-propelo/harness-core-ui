@@ -1,0 +1,15 @@
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-xxxlarge) !important;
+  padding-top: var(--spacing-xlarge) !important;
+}
+
+.layout {
+  height: 100%;
+}
+
+.tooltipContent {
+  padding: 0 0 var(--spacing-4) var(--spacing-medium) !important;
+}

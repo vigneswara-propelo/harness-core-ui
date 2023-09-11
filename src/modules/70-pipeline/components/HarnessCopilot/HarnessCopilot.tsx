@@ -253,7 +253,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
                         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start' }}>
                           <Icon name="harness-copilot" size={25} />
                           <Text className={css.label} font={{ variation: FontVariation.H5 }}>
-                            {getString('pipeline.copilot.introduction')}
+                            {getString('common.csBot.introduction')}
                           </Text>
                         </Layout.Horizontal>
                         <Text className={css.label} font={{ variation: FontVariation.SMALL }}>

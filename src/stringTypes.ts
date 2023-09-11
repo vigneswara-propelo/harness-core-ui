@@ -240,11 +240,13 @@ export interface StringsMap {
   'common.createPipeline': string
   'common.creating': string
   'common.csBot.aida': string
+  'common.csBot.aidaFullText': string
   'common.csBot.askAIDA': string
   'common.csBot.beta': string
   'common.csBot.errorMessage': string
   'common.csBot.eulaNotAccepted': string
   'common.csBot.hdh': string
+  'common.csBot.introduction': string
   'common.csBot.name': string
   'common.csBot.placeholder': string
   'common.csBot.reviewEula': string
@@ -3616,6 +3618,19 @@ export interface StringsMap {
   'gitsync.syncFailed': string
   'gitsync.syncStatus': string
   'gitsync.syncSucessToaster': string
+  'dashboards.aida.assist': string
+  'dashboards.aida.createWidget': string
+  'dashboards.aida.generating': string
+  'dashboards.aida.helpText': string
+  'dashboards.aida.selectExplore': string
+  'dashboards.aida.selectVisualisation': string
+  'dashboards.aida.specify': string
+  'dashboards.aida.visualisationArenaChart': string
+  'dashboards.aida.visualisationBarChart': string
+  'dashboards.aida.visualisationLineChart': string
+  'dashboards.aida.visualisationPieChart': string
+  'dashboards.aida.visualisationSingleValue': string
+  'dashboards.aida.visualisationTable': string
   'dashboards.cloneDashboardModal.submitFail': string
   'dashboards.cloneDashboardModal.success': string
   'dashboards.cloneDashboardModal.title': string
@@ -4178,7 +4193,6 @@ export interface StringsMap {
   'pipeline.copilot.assist': string
   'pipeline.copilot.foundPossibleRemediations': string
   'pipeline.copilot.helpText': string
-  'pipeline.copilot.introduction': string
   'pipeline.copilot.label': string
   'pipeline.copilot.noRemediationFound': string
   'pipeline.copilot.possibleSolutions': string

@@ -15,6 +15,11 @@ export enum DashboardLayoutViews {
   LIST = 'list'
 }
 
+export enum DashboardMode {
+  EDIT,
+  VIEW
+}
+
 export enum DashboardTags {
   HARNESS = 'HARNESS',
   CD = 'CD',

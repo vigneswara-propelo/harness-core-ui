@@ -27,7 +27,9 @@ const renderComponent = (props: CloneDashboardFormProps): RenderResult => {
   )
 }
 
-const mockEmptyGetFolderResponse: customDashboardServices.GetFolderResponse = {
+const mockEmptyGetFolderResponse: customDashboardServices.SearchFoldersResponse = {
+  items: 0,
+  pages: 0,
   resource: []
 }
 

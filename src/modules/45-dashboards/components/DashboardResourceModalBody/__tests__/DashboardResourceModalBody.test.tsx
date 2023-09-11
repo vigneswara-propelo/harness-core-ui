@@ -9,14 +9,14 @@ import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useGetFoldersWithHidden } from 'services/custom-dashboards'
+import { useListFoldersWithHidden } from 'services/custom-dashboards'
 import DashboardResourceModalBody, { DashboardResourceModalBodyProps } from '../DashboardResourceModalBody'
 
 jest.mock('services/custom-dashboards', () => ({
-  useGetFoldersWithHidden: jest.fn(),
+  useListFoldersWithHidden: jest.fn(),
   useGetOotbFolderId: jest.fn()
 }))
-const useGetFoldersWithHiddenMock = useGetFoldersWithHidden as jest.Mock
+const useListFoldersWithHiddenMock = useListFoldersWithHidden as jest.Mock
 
 const renderComponent = (props: Partial<DashboardResourceModalBodyProps> = {}): RenderResult =>
   render(
@@ -33,7 +33,7 @@ const renderComponent = (props: Partial<DashboardResourceModalBodyProps> = {}): 
 describe('DashboardResourceModalBody', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    useGetFoldersWithHiddenMock.mockReturnValue({
+    useListFoldersWithHiddenMock.mockReturnValue({
       data: {
         resource: [
           { id: '12', name: 'you_got_it', Children: [] },
@@ -55,7 +55,7 @@ describe('DashboardResourceModalBody', () => {
   })
 
   test('it should display the no data message when no folders are returned', async () => {
-    useGetFoldersWithHiddenMock.mockReturnValue({ data: { resource: [] } })
+    useListFoldersWithHiddenMock.mockReturnValue({ data: { resource: [] } })
 
     renderComponent()
 

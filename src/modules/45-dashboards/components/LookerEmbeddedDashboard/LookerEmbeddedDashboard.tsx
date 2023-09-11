@@ -7,6 +7,7 @@
 
 import React from 'react'
 import type { LookerEvent } from '@dashboards/types/LookerTypes.types'
+import { LookerEmbeddedFrameId } from '@dashboards/constants/LookerEventType'
 
 export interface LookerEmbeddedDashboardProps {
   embedUrl: string
@@ -16,7 +17,12 @@ export interface LookerEmbeddedDashboardProps {
 const LookerEmbeddedDashboard: React.FC<LookerEmbeddedDashboardProps> = ({ embedUrl, onLookerAction }) => {
   React.useEffect(() => {
     const lookerEventHandler = (event: MessageEvent<string>): void => {
-      onLookerAction(JSON.parse(event.data) as LookerEvent)
+      try {
+        const parsedData = JSON.parse(event.data)
+        onLookerAction(parsedData as LookerEvent)
+      } catch {
+        return
+      }
     }
     window.addEventListener('message', lookerEventHandler)
     return () => window.removeEventListener('message', lookerEventHandler)
@@ -28,7 +34,7 @@ const LookerEmbeddedDashboard: React.FC<LookerEmbeddedDashboardProps> = ({ embed
       height="100%"
       width="100%"
       frameBorder="0"
-      id="looker-dashboard"
+      id={LookerEmbeddedFrameId}
       data-testid="dashboard-iframe"
     />
   )

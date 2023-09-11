@@ -1,0 +1,26 @@
+.chatRenderer {
+  margin-bottom: auto !important;
+  max-height: calc(100vh - 235px);
+  overflow: auto;
+
+  .message {
+    padding: var(--spacing-small) var(--spacing-xlarge);
+    max-width: 550px;
+  }
+
+  .scrollViewCtn {
+    margin-top: 0px !important;
+  }
+
+  .userMsgWrapper {
+    margin-top: var(--spacing-xlarge) !important;
+  }
+
+  .userMsg {
+    @extend .message;
+    background-color: var(--grey-100);
+    margin-left: auto;
+    box-shadow: var(--elevation-2);
+    border-radius: 24px 0px 24px 24px;
+  }
+}

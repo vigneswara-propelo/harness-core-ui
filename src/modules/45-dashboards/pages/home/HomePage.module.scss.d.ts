@@ -31,5 +31,6 @@ declare const styles: {
   readonly stepWizard: string
   readonly table: string
   readonly tags: string
+  readonly tooltip: string
 }
 export default styles

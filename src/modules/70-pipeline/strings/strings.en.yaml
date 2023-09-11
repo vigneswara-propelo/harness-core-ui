@@ -1936,14 +1936,13 @@ copilot:
   analyzeFailure: Unsure how to analyze failure?
   askAIDA: '{{ $.common.csBot.askAIDA }}'
   label: '{{ $.common.csBot.name }}'
-  aidaFullText: Harness AI Development Assistant
+  aidaFullText: '{{ $.common.csBot.aidaFullText }}'
   assist: I can assist you with debugging the issue and suggest solutions.
   analyzing: AIDA is analyzing
   requestTimedOut: Request Timed Out
   noRemediationFound: Sorry, no remediation found.
   foundPossibleRemediations: 'We found few possible remediations'
   possibleSolutions: Possible Solutions
-  introduction: Introducing Harness AIDA
   helpText: Harness AI Development Assistant(AIDA) can help find the root cause of the error and suggest possible solutions.
   remediations: remediations
 license: License

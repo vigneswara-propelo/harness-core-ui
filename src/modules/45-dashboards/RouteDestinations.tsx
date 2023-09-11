@@ -20,9 +20,9 @@ import DashboardResourceRenderer from '@dashboards/components/DashboardResourceR
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import DashboardsPage from './pages/DashboardsPage'
+import DashboardViewPage from './pages/dashboardView/DashboardViewPage'
 import HomePage from './pages/home/HomePage'
 import FoldersPage from './pages/folders/FoldersPage'
-import DashboardViewPage from './pages/dashboardView/DashboardView'
 
 const RedirectToHome = (): React.ReactElement => {
   const params = useParams<AccountPathProps>()
@@ -78,9 +78,7 @@ export const CdbNonMfeRoutes = (
       path={routes.toViewCustomDashboard({ ...accountPathProps, ...viewPathProps })}
       exact
     >
-      <DashboardsPage>
-        <DashboardViewPage />
-      </DashboardsPage>
+      <DashboardViewPage />
     </RouteWithLayout>
   </>
 )

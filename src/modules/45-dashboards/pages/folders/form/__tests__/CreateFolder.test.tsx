@@ -43,10 +43,12 @@ const createUser = function (): Promise<customDashboardServices.CreateFolderResp
 
 describe('CreateFolder', () => {
   beforeEach(() => {
-    jest.spyOn(customDashboardServices, 'useCreateFolder').mockImplementation(() => ({ mutate: createUser } as any))
+    jest
+      .spyOn(customDashboardServices, 'useDeprecatedCreateFolder')
+      .mockImplementation(() => ({ mutate: createUser } as any))
   })
   afterEach(() => {
-    jest.spyOn(customDashboardServices, 'useCreateFolder').mockReset()
+    jest.spyOn(customDashboardServices, 'useDeprecatedCreateFolder').mockReset()
   })
 
   test('it should trigger onFormCompleted callback upon request success', async () => {
@@ -74,7 +76,9 @@ describe('CreateFolder', () => {
         reject()
       })
     }
-    jest.spyOn(customDashboardServices, 'useCreateFolder').mockImplementation(() => ({ mutate: createUserFail } as any))
+    jest
+      .spyOn(customDashboardServices, 'useDeprecatedCreateFolder')
+      .mockImplementation(() => ({ mutate: createUserFail } as any))
 
     const onFormCompletedMock = jest.fn()
     const { container } = renderComponent({ onFormCompleted: onFormCompletedMock })

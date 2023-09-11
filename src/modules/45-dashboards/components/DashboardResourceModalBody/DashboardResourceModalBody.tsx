@@ -15,7 +15,7 @@ import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/Resource
 import { PageSpinner } from '@common/components'
 
 import routes from '@common/RouteDefinitions'
-import { useGetFoldersWithHidden } from 'services/custom-dashboards'
+import { useListFoldersWithHidden } from 'services/custom-dashboards'
 
 import { useStrings } from 'framework/strings'
 
@@ -89,7 +89,7 @@ const DashboardResourceModalBody: React.FC<DashboardResourceModalBodyProps> = ({
   const [page, setPage] = React.useState(0)
   const { getString } = useStrings()
 
-  const { data: folders, loading: fetchingFolders } = useGetFoldersWithHidden({
+  const { data: folders, loading: fetchingFolders } = useListFoldersWithHidden({
     queryParams: { accountId: accountIdentifier, page: page + 1, pageSize: PAGE_SIZE }
   })
 

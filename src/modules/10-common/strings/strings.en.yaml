@@ -1592,6 +1592,7 @@ clickHere: Click Here
 csBot:
   aida: AIDA
   askAIDA: Ask AIDA
+  aidaFullText: Harness AI Development Assistant
   name: Harness AIDA
   title: '{{ $.common.csBot.name }} Chatbot'
   beta: BETA
@@ -1599,6 +1600,7 @@ csBot:
   subtitle: I can help searching anything on
   hdh: Harness Developer Hub
   errorMessage: Something went wrong. Click here to submit a ticket instead.
+  introduction: Introducing Harness AIDA
   ticketOnError: Would you like to create a support ticket?
   turnOn: 'Turn on {{ $.common.csBot.name }}'
   eulaNotAccepted: In order to use Harness AIDA Chatbot, you will need to enable it in the Account Settings

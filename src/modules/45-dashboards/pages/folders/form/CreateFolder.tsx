@@ -11,7 +11,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import FolderForm, { FolderFormikValues } from '@dashboards/components/FolderForm/FolderForm'
 import { useStrings } from 'framework/strings'
-import { useCreateFolder } from 'services/custom-dashboards'
+import { useDeprecatedCreateFolder } from 'services/custom-dashboards'
 
 export interface CreateFolderProps {
   onFormCompleted: () => void
@@ -23,7 +23,7 @@ const CreateFolder: React.FC<CreateFolderProps> = ({ onFormCompleted }) => {
   const { accountId } = useParams<AccountPathProps>()
 
   const [errorMessage, setErrorMessage] = React.useState<string>()
-  const { mutate: createFolder, loading } = useCreateFolder({
+  const { mutate: createFolder, loading } = useDeprecatedCreateFolder({
     queryParams: { accountId }
   })
 

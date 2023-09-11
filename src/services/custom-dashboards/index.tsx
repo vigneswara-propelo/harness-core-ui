@@ -12,6 +12,20 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '1.0.0'
+export interface AiAddTileRequestBody {
+  explore: string
+  model: string
+  query: string
+  visualization_type:
+    | 'pie_chart'
+    | 'table'
+    | 'column_chart'
+    | 'line_chart'
+    | 'single_value'
+    | 'bar_chart'
+    | 'scatterplot'
+}
+
 export interface CloneDashboardRequestBody {
   dashboardId: string
   description?: string
@@ -59,7 +73,7 @@ export interface DashboardFolderModel {
 
 export interface DashboardModel {
   created_at: string
-  data_source: ('CD' | 'CE' | 'CET' | 'CF' | 'CHAOS' | 'CI' | 'SRM' | 'STO')[]
+  data_source: ('CD' | 'CE' | 'CET' | 'CF' | 'CHAOS' | 'CI' | 'HARNESS' | 'SRM' | 'STO')[]
   description: string
   favorite_count: number
   folder: DashboardFolderModel
@@ -118,7 +132,7 @@ export interface FolderModel {
   name: string
   permission?: 'core_dashboards_view' | 'core_dashboards_edit'
   sub_folders: FolderModel[]
-  type: 'ACCOUNT' | 'SHARED'
+  type: 'ACCOUNT' | 'SHARED' | 'OOTB'
 }
 
 export interface GetAllTagsResponse {
@@ -139,10 +153,7 @@ export interface GetDashboardResponse {
 }
 
 export interface GetFolderResponse {
-  items?: number
-  pages?: number
-  resource?: FolderModel[]
-  responseMessages?: string
+  resource: FolderModel
 }
 
 export interface GetModelTagsResponse {
@@ -153,14 +164,15 @@ export interface GetOotbFolderIdResponse {
   resource?: string
 }
 
-export interface ListFoldersResponse {
-  items?: number
+export interface ListFoldersAsTreeResponse {
+  items: number
   resource: FolderModel
 }
 
-export interface PatchFolderRequestBody {
-  folderId: string
-  name: string
+export interface ListFoldersResponse {
+  items: number
+  pages: number
+  resource?: FolderModel[]
 }
 
 export interface PatchFolderResponse {
@@ -373,6 +385,96 @@ export const getDashboardPromise = (
     signal
   )
 
+export interface AiGenerateTileQueryParams {
+  accountId: string
+}
+
+export interface AiGenerateTilePathParams {
+  dashboard_id: string
+}
+
+export type AiGenerateTileProps = Omit<
+  MutateProps<
+    GetDashboardResponse,
+    ErrorResponse,
+    AiGenerateTileQueryParams,
+    AiAddTileRequestBody,
+    AiGenerateTilePathParams
+  >,
+  'path' | 'verb'
+> &
+  AiGenerateTilePathParams
+
+/**
+ * Using AI generate a tile from the natural language prompt and add it to the specified dashboard.
+ */
+export const AiGenerateTile = ({ dashboard_id, ...props }: AiGenerateTileProps) => (
+  <Mutate<
+    GetDashboardResponse,
+    ErrorResponse,
+    AiGenerateTileQueryParams,
+    AiAddTileRequestBody,
+    AiGenerateTilePathParams
+  >
+    verb="POST"
+    path={`/dashboards/${dashboard_id}/ai/tile`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseAiGenerateTileProps = Omit<
+  UseMutateProps<
+    GetDashboardResponse,
+    ErrorResponse,
+    AiGenerateTileQueryParams,
+    AiAddTileRequestBody,
+    AiGenerateTilePathParams
+  >,
+  'path' | 'verb'
+> &
+  AiGenerateTilePathParams
+
+/**
+ * Using AI generate a tile from the natural language prompt and add it to the specified dashboard.
+ */
+export const useAiGenerateTile = ({ dashboard_id, ...props }: UseAiGenerateTileProps) =>
+  useMutate<
+    GetDashboardResponse,
+    ErrorResponse,
+    AiGenerateTileQueryParams,
+    AiAddTileRequestBody,
+    AiGenerateTilePathParams
+  >('POST', (paramsInPath: AiGenerateTilePathParams) => `/dashboards/${paramsInPath.dashboard_id}/ai/tile`, {
+    base: getConfig('dashboard/'),
+    pathParams: { dashboard_id },
+    ...props
+  })
+
+/**
+ * Using AI generate a tile from the natural language prompt and add it to the specified dashboard.
+ */
+export const aiGenerateTilePromise = (
+  {
+    dashboard_id,
+    ...props
+  }: MutateUsingFetchProps<
+    GetDashboardResponse,
+    ErrorResponse,
+    AiGenerateTileQueryParams,
+    AiAddTileRequestBody,
+    AiGenerateTilePathParams
+  > & { dashboard_id: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    GetDashboardResponse,
+    ErrorResponse,
+    AiGenerateTileQueryParams,
+    AiAddTileRequestBody,
+    AiGenerateTilePathParams
+  >('POST', getConfig('dashboard/'), `/dashboards/${dashboard_id}/ai/tile`, props, signal)
+
 export interface GeneratePublicDashboardSignedUrlQueryParams {
   accountId: string
   dashboard: string
@@ -423,32 +525,35 @@ export const generatePublicDashboardSignedUrlPromise = (
     signal
   )
 
-export interface GetFolderQueryParams {
+export interface GetFoldersQueryParams {
   accountId: string
   page?: number
   pageSize?: number
 }
 
-export type GetFolderProps = Omit<GetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>, 'path'>
+export type GetFoldersProps = Omit<GetProps<ListFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>, 'path'>
 
 /**
  * Get all sub-folders in account.
  */
-export const GetFolder = (props: GetFolderProps) => (
-  <Get<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>
+export const GetFolders = (props: GetFoldersProps) => (
+  <Get<ListFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>
     path={`/folder`}
     base={getConfig('dashboard/')}
     {...props}
   />
 )
 
-export type UseGetFolderProps = Omit<UseGetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>, 'path'>
+export type UseGetFoldersProps = Omit<
+  UseGetProps<ListFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>,
+  'path'
+>
 
 /**
  * Get all sub-folders in account.
  */
-export const useGetFolder = (props: UseGetFolderProps) =>
-  useGet<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>(`/folder`, {
+export const useGetFolders = (props: UseGetFoldersProps) =>
+  useGet<ListFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>(`/folder`, {
     base: getConfig('dashboard/'),
     ...props
   })
@@ -456,11 +561,11 @@ export const useGetFolder = (props: UseGetFolderProps) =>
 /**
  * Get all sub-folders in account.
  */
-export const getFolderPromise = (
-  props: GetUsingFetchProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>,
+export const getFoldersPromise = (
+  props: GetUsingFetchProps<ListFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>(
+  getUsingFetch<ListFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>(
     getConfig('dashboard/'),
     `/folder`,
     props,
@@ -472,7 +577,7 @@ export interface PatchFolderQueryParams {
 }
 
 export type PatchFolderProps = Omit<
-  MutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>,
+  MutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>,
   'path' | 'verb'
 >
 
@@ -480,7 +585,7 @@ export type PatchFolderProps = Omit<
  * Update a folder's name.
  */
 export const PatchFolder = (props: PatchFolderProps) => (
-  <Mutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>
+  <Mutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>
     verb="PATCH"
     path={`/folder`}
     base={getConfig('dashboard/')}
@@ -489,7 +594,7 @@ export const PatchFolder = (props: PatchFolderProps) => (
 )
 
 export type UsePatchFolderProps = Omit<
-  UseMutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>,
+  UseMutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>,
   'path' | 'verb'
 >
 
@@ -497,7 +602,7 @@ export type UsePatchFolderProps = Omit<
  * Update a folder's name.
  */
 export const usePatchFolder = (props: UsePatchFolderProps) =>
-  useMutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>(
+  useMutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>(
     'PATCH',
     `/folder`,
     { base: getConfig('dashboard/'), ...props }
@@ -511,12 +616,12 @@ export const patchFolderPromise = (
     PatchFolderResponse,
     FolderErrorResponse,
     PatchFolderQueryParams,
-    PatchFolderRequestBody,
+    CreateDashboardRequest,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>(
+  mutateUsingFetch<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>(
     'PATCH',
     getConfig('dashboard/'),
     `/folder`,
@@ -524,20 +629,20 @@ export const patchFolderPromise = (
     signal
   )
 
-export interface CreateFolderQueryParams {
+export interface DeprecatedCreateFolderQueryParams {
   accountId: string
 }
 
-export type CreateFolderProps = Omit<
-  MutateProps<CreateFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>,
+export type DeprecatedCreateFolderProps = Omit<
+  MutateProps<CreateFolderResponse, ErrorResponse, DeprecatedCreateFolderQueryParams, CreateFolderRequestBody, void>,
   'path' | 'verb'
 >
 
 /**
  * Create a new folder.
  */
-export const CreateFolder = (props: CreateFolderProps) => (
-  <Mutate<CreateFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>
+export const DeprecatedCreateFolder = (props: DeprecatedCreateFolderProps) => (
+  <Mutate<CreateFolderResponse, ErrorResponse, DeprecatedCreateFolderQueryParams, CreateFolderRequestBody, void>
     verb="POST"
     path={`/folder`}
     base={getConfig('dashboard/')}
@@ -545,16 +650,16 @@ export const CreateFolder = (props: CreateFolderProps) => (
   />
 )
 
-export type UseCreateFolderProps = Omit<
-  UseMutateProps<CreateFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>,
+export type UseDeprecatedCreateFolderProps = Omit<
+  UseMutateProps<CreateFolderResponse, ErrorResponse, DeprecatedCreateFolderQueryParams, CreateFolderRequestBody, void>,
   'path' | 'verb'
 >
 
 /**
  * Create a new folder.
  */
-export const useCreateFolder = (props: UseCreateFolderProps) =>
-  useMutate<CreateFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>(
+export const useDeprecatedCreateFolder = (props: UseDeprecatedCreateFolderProps) =>
+  useMutate<CreateFolderResponse, ErrorResponse, DeprecatedCreateFolderQueryParams, CreateFolderRequestBody, void>(
     'POST',
     `/folder`,
     { base: getConfig('dashboard/'), ...props }
@@ -563,23 +668,23 @@ export const useCreateFolder = (props: UseCreateFolderProps) =>
 /**
  * Create a new folder.
  */
-export const createFolderPromise = (
+export const deprecatedCreateFolderPromise = (
   props: MutateUsingFetchProps<
     CreateFolderResponse,
     ErrorResponse,
-    CreateFolderQueryParams,
+    DeprecatedCreateFolderQueryParams,
     CreateFolderRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<CreateFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>(
-    'POST',
-    getConfig('dashboard/'),
-    `/folder`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    CreateFolderResponse,
+    ErrorResponse,
+    DeprecatedCreateFolderQueryParams,
+    CreateFolderRequestBody,
+    void
+  >('POST', getConfig('dashboard/'), `/folder`, props, signal)
 
 export interface GetOotbFolderIdQueryParams {
   accountId: string
@@ -629,37 +734,37 @@ export const getOotbFolderIdPromise = (
     signal
   )
 
-export interface GetFolderDetailQueryParams {
+export interface DeprecatedGetFolderQueryParams {
   accountId: string
   folderId: string
 }
 
-export type GetFolderDetailProps = Omit<
-  GetProps<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>,
+export type DeprecatedGetFolderProps = Omit<
+  GetProps<CreateFolderResponse, ErrorResponse, DeprecatedGetFolderQueryParams, void>,
   'path'
 >
 
 /**
  * Get a folders name.
  */
-export const GetFolderDetail = (props: GetFolderDetailProps) => (
-  <Get<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>
+export const DeprecatedGetFolder = (props: DeprecatedGetFolderProps) => (
+  <Get<CreateFolderResponse, ErrorResponse, DeprecatedGetFolderQueryParams, void>
     path={`/folderDetail`}
     base={getConfig('dashboard/')}
     {...props}
   />
 )
 
-export type UseGetFolderDetailProps = Omit<
-  UseGetProps<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>,
+export type UseDeprecatedGetFolderProps = Omit<
+  UseGetProps<CreateFolderResponse, ErrorResponse, DeprecatedGetFolderQueryParams, void>,
   'path'
 >
 
 /**
  * Get a folders name.
  */
-export const useGetFolderDetail = (props: UseGetFolderDetailProps) =>
-  useGet<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>(`/folderDetail`, {
+export const useDeprecatedGetFolder = (props: UseDeprecatedGetFolderProps) =>
+  useGet<CreateFolderResponse, ErrorResponse, DeprecatedGetFolderQueryParams, void>(`/folderDetail`, {
     base: getConfig('dashboard/'),
     ...props
   })
@@ -667,44 +772,47 @@ export const useGetFolderDetail = (props: UseGetFolderDetailProps) =>
 /**
  * Get a folders name.
  */
-export const getFolderDetailPromise = (
-  props: GetUsingFetchProps<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>,
+export const deprecatedGetFolderPromise = (
+  props: GetUsingFetchProps<CreateFolderResponse, ErrorResponse, DeprecatedGetFolderQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>(
+  getUsingFetch<CreateFolderResponse, ErrorResponse, DeprecatedGetFolderQueryParams, void>(
     getConfig('dashboard/'),
     `/folderDetail`,
     props,
     signal
   )
 
-export interface ListFoldersQueryParams {
+export interface ListFoldersAsTreeQueryParams {
   accountId: string
 }
 
-export type ListFoldersProps = Omit<GetProps<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>, 'path'>
+export type ListFoldersAsTreeProps = Omit<
+  GetProps<ListFoldersAsTreeResponse, ErrorResponse, ListFoldersAsTreeQueryParams, void>,
+  'path'
+>
 
 /**
  * Get all folders, the root node is the shared folder all other branch and leaf node folders are under the 'sub_folders' field.
  */
-export const ListFolders = (props: ListFoldersProps) => (
-  <Get<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>
+export const ListFoldersAsTree = (props: ListFoldersAsTreeProps) => (
+  <Get<ListFoldersAsTreeResponse, ErrorResponse, ListFoldersAsTreeQueryParams, void>
     path={`/folders`}
     base={getConfig('dashboard/')}
     {...props}
   />
 )
 
-export type UseListFoldersProps = Omit<
-  UseGetProps<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>,
+export type UseListFoldersAsTreeProps = Omit<
+  UseGetProps<ListFoldersAsTreeResponse, ErrorResponse, ListFoldersAsTreeQueryParams, void>,
   'path'
 >
 
 /**
  * Get all folders, the root node is the shared folder all other branch and leaf node folders are under the 'sub_folders' field.
  */
-export const useListFolders = (props: UseListFoldersProps) =>
-  useGet<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>(`/folders`, {
+export const useListFoldersAsTree = (props: UseListFoldersAsTreeProps) =>
+  useGet<ListFoldersAsTreeResponse, ErrorResponse, ListFoldersAsTreeQueryParams, void>(`/folders`, {
     base: getConfig('dashboard/'),
     ...props
   })
@@ -712,63 +820,179 @@ export const useListFolders = (props: UseListFoldersProps) =>
 /**
  * Get all folders, the root node is the shared folder all other branch and leaf node folders are under the 'sub_folders' field.
  */
-export const listFoldersPromise = (
-  props: GetUsingFetchProps<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>,
+export const listFoldersAsTreePromise = (
+  props: GetUsingFetchProps<ListFoldersAsTreeResponse, ErrorResponse, ListFoldersAsTreeQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ListFoldersResponse, ErrorResponse, ListFoldersQueryParams, void>(
+  getUsingFetch<ListFoldersAsTreeResponse, ErrorResponse, ListFoldersAsTreeQueryParams, void>(
     getConfig('dashboard/'),
     `/folders`,
     props,
     signal
   )
 
-export interface GetFoldersWithHiddenQueryParams {
+export interface CreateFolderQueryParams {
+  accountId: string
+}
+
+export type CreateFolderProps = Omit<
+  MutateProps<GetFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a new folder.
+ */
+export const CreateFolder = (props: CreateFolderProps) => (
+  <Mutate<GetFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>
+    verb="POST"
+    path={`/folders`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseCreateFolderProps = Omit<
+  UseMutateProps<GetFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a new folder.
+ */
+export const useCreateFolder = (props: UseCreateFolderProps) =>
+  useMutate<GetFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>(
+    'POST',
+    `/folders`,
+    { base: getConfig('dashboard/'), ...props }
+  )
+
+/**
+ * Create a new folder.
+ */
+export const createFolderPromise = (
+  props: MutateUsingFetchProps<
+    GetFolderResponse,
+    ErrorResponse,
+    CreateFolderQueryParams,
+    CreateFolderRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<GetFolderResponse, ErrorResponse, CreateFolderQueryParams, CreateFolderRequestBody, void>(
+    'POST',
+    getConfig('dashboard/'),
+    `/folders`,
+    props,
+    signal
+  )
+
+export interface ListFoldersWithHiddenQueryParams {
   accountId: string
   page?: number
   pageSize?: number
 }
 
-export type GetFoldersWithHiddenProps = Omit<
-  GetProps<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>,
+export type ListFoldersWithHiddenProps = Omit<
+  GetProps<ListFoldersResponse, ErrorResponse, ListFoldersWithHiddenQueryParams, void>,
   'path'
 >
 
 /**
- * Get all folders for account.
+ * Get all folders for an account.
  */
-export const GetFoldersWithHidden = (props: GetFoldersWithHiddenProps) => (
-  <Get<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>
+export const ListFoldersWithHidden = (props: ListFoldersWithHiddenProps) => (
+  <Get<ListFoldersResponse, ErrorResponse, ListFoldersWithHiddenQueryParams, void>
     path={`/folders/with-hidden`}
     base={getConfig('dashboard/')}
     {...props}
   />
 )
 
-export type UseGetFoldersWithHiddenProps = Omit<
-  UseGetProps<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>,
+export type UseListFoldersWithHiddenProps = Omit<
+  UseGetProps<ListFoldersResponse, ErrorResponse, ListFoldersWithHiddenQueryParams, void>,
   'path'
 >
 
 /**
- * Get all folders for account.
+ * Get all folders for an account.
  */
-export const useGetFoldersWithHidden = (props: UseGetFoldersWithHiddenProps) =>
-  useGet<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>(`/folders/with-hidden`, {
+export const useListFoldersWithHidden = (props: UseListFoldersWithHiddenProps) =>
+  useGet<ListFoldersResponse, ErrorResponse, ListFoldersWithHiddenQueryParams, void>(`/folders/with-hidden`, {
     base: getConfig('dashboard/'),
     ...props
   })
 
 /**
- * Get all folders for account.
+ * Get all folders for an account.
  */
-export const getFoldersWithHiddenPromise = (
-  props: GetUsingFetchProps<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>,
+export const listFoldersWithHiddenPromise = (
+  props: GetUsingFetchProps<ListFoldersResponse, ErrorResponse, ListFoldersWithHiddenQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<GetFolderResponse, ErrorResponse, GetFoldersWithHiddenQueryParams, void>(
+  getUsingFetch<ListFoldersResponse, ErrorResponse, ListFoldersWithHiddenQueryParams, void>(
     getConfig('dashboard/'),
     `/folders/with-hidden`,
+    props,
+    signal
+  )
+
+export interface GetFolderQueryParams {
+  accountId: string
+}
+
+export interface GetFolderPathParams {
+  folder_id: string
+}
+
+export type GetFolderProps = Omit<
+  GetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, GetFolderPathParams>,
+  'path'
+> &
+  GetFolderPathParams
+
+/**
+ * Get a folder by ID.
+ */
+export const GetFolder = ({ folder_id, ...props }: GetFolderProps) => (
+  <Get<GetFolderResponse, ErrorResponse, GetFolderQueryParams, GetFolderPathParams>
+    path={`/folders/${folder_id}`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetFolderProps = Omit<
+  UseGetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, GetFolderPathParams>,
+  'path'
+> &
+  GetFolderPathParams
+
+/**
+ * Get a folder by ID.
+ */
+export const useGetFolder = ({ folder_id, ...props }: UseGetFolderProps) =>
+  useGet<GetFolderResponse, ErrorResponse, GetFolderQueryParams, GetFolderPathParams>(
+    (paramsInPath: GetFolderPathParams) => `/folders/${paramsInPath.folder_id}`,
+    { base: getConfig('dashboard/'), pathParams: { folder_id }, ...props }
+  )
+
+/**
+ * Get a folder by ID.
+ */
+export const getFolderPromise = (
+  {
+    folder_id,
+    ...props
+  }: GetUsingFetchProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, GetFolderPathParams> & {
+    folder_id: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetFolderResponse, ErrorResponse, GetFolderQueryParams, GetFolderPathParams>(
+    getConfig('dashboard/'),
+    `/folders/${folder_id}`,
     props,
     signal
   )

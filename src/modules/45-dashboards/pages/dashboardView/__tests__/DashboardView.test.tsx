@@ -13,7 +13,7 @@ import { accountPathProps } from '@common/utils/routeUtils'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import { LookerEventType } from '@dashboards/constants/LookerEventType'
 import * as sharedService from 'services/custom-dashboards'
-import DashboardViewPage from '../DashboardView'
+import DashboardViewContent from '../DashboardViewContent'
 
 const accountId = 'ggre4325'
 const folderId = 'gh544'
@@ -28,7 +28,7 @@ const renderComponent = (folder = folderId, queryParams?: Record<string, unknown
       pathParams={{ accountId: accountId, folderId: folder, viewId: viewId }}
       queryParams={queryParams}
     >
-      <DashboardViewPage />
+      <DashboardViewContent />
     </TestWrapper>
   )
 
@@ -47,7 +47,7 @@ const generateMockSignedUrl = (mockUrl = ''): Promise<sharedService.SignedUrlRes
 describe('DashboardView', () => {
   const useCreateSignedUrlMock = jest.spyOn(sharedService, 'useCreateSignedUrl')
   const useGetDashboardDetailMock = jest.spyOn(sharedService, 'useGetDashboardDetail')
-  const useGetFolderDetailMock = jest.spyOn(sharedService, 'useGetFolderDetail')
+  const useGetFolderDetailMock = jest.spyOn(sharedService, 'useDeprecatedGetFolder')
 
   const includeBreadcrumbs = jest.fn()
   const fetchFolderDetailMock = jest.fn()

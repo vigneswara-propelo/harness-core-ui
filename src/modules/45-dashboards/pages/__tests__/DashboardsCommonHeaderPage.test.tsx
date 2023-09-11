@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as dashboardsContext from '@dashboards/pages/DashboardsContext'
 import DashboardsHeader from '@dashboards/pages/DashboardsCommonHeaderPage'
+import { DashboardMode } from '@dashboards/types/DashboardTypes.types'
 
 const renderComponent = (): RenderResult =>
   render(
@@ -31,7 +32,10 @@ describe('DashboardsHeader', () => {
       breadcrumbs: [
         { label: 'Home', url: 'path/to/link' },
         { label: 'Dashboards', url: 'path/to/link' }
-      ]
+      ],
+      updateAiTileDetails: jest.fn(),
+      mode: DashboardMode.VIEW,
+      updateDashboardMode: jest.fn()
     })
   })
 
@@ -52,7 +56,10 @@ describe('DashboardsHeader', () => {
       editableFolders: [],
       modelTags: [],
       includeBreadcrumbs: jest.fn(),
-      breadcrumbs: []
+      breadcrumbs: [],
+      updateAiTileDetails: jest.fn(),
+      mode: DashboardMode.VIEW,
+      updateDashboardMode: jest.fn()
     })
 
     renderComponent()

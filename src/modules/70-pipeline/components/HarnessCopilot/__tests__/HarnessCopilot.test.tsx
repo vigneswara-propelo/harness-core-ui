@@ -22,7 +22,7 @@ describe('Test HarnessCopilot component', () => {
     expect(getByText('pipeline.copilot.askAIDA')).toBeInTheDocument()
 
     //tooltip and it's content is visible
-    expect(getByText('pipeline.copilot.introduction')).toBeInTheDocument()
+    expect(getByText('common.csBot.introduction')).toBeInTheDocument()
     expect(getByText('pipeline.copilot.helpText')).toBeInTheDocument()
   })
   test('initial render for Stage level error scope', () => {

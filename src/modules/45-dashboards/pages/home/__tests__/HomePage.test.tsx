@@ -31,7 +31,7 @@ describe('HomePage', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest
-      .spyOn(customDashboardServices, 'useGetFolderDetail')
+      .spyOn(customDashboardServices, 'useDeprecatedGetFolder')
       .mockReturnValue({ data: { resource: 'folder_name' }, refetch: jest.fn() } as any)
     jest.spyOn(customDashboardServices, 'useSearch').mockReturnValue({ data: { resource: '' }, loading: false } as any)
     jest

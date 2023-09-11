@@ -10,13 +10,18 @@ import { useParams } from 'react-router-dom'
 import type { Breadcrumb } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { FolderModel, useSearchFolders, useGetModelTags } from 'services/custom-dashboards'
+import { DashboardMode } from '@dashboards/types/DashboardTypes.types'
+import { FolderModel, useSearchFolders, useGetModelTags, AiAddTileRequestBody } from 'services/custom-dashboards'
 
 export interface DashboardsContextProps {
   breadcrumbs: Breadcrumb[]
+  aiTileDetails?: AiAddTileRequestBody
   includeBreadcrumbs: (breadcrumbs: Breadcrumb[]) => void
   editableFolders: FolderModel[]
   modelTags: string[]
+  updateAiTileDetails: (updatedDetails: AiAddTileRequestBody) => void
+  mode: DashboardMode
+  updateDashboardMode: (newMode: DashboardMode) => void
 }
 
 const DashboardsContext = React.createContext<DashboardsContextProps>({} as DashboardsContextProps)
@@ -24,9 +29,19 @@ const DashboardsContext = React.createContext<DashboardsContextProps>({} as Dash
 export function DashboardsContextProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { accountId } = useParams<AccountPathProps>()
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([])
+  const [aiTileDetails, setAiTileDetails] = useState<AiAddTileRequestBody>()
+  const [mode, setMode] = useState<DashboardMode>(DashboardMode.VIEW)
 
   const includeBreadcrumbs = (breadcrumbsToAdd: Breadcrumb[]): void => {
     setBreadcrumbs(breadcrumbsToAdd)
+  }
+
+  const updateDashboardMode = (newMode: DashboardMode): void => {
+    setMode(newMode)
+  }
+
+  const updateAiTileDetails = (updatedDetails: AiAddTileRequestBody): void => {
+    setAiTileDetails(updatedDetails)
   }
 
   const { data: folderResponse } = useSearchFolders({
@@ -41,10 +56,14 @@ export function DashboardsContextProvider(props: React.PropsWithChildren<unknown
   return (
     <DashboardsContext.Provider
       value={{
+        aiTileDetails,
         breadcrumbs,
         includeBreadcrumbs,
         editableFolders,
-        modelTags
+        modelTags,
+        updateAiTileDetails,
+        mode,
+        updateDashboardMode
       }}
     >
       {props.children}

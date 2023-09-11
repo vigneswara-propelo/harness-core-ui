@@ -8,16 +8,16 @@
 import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useGetFoldersWithHidden } from 'services/custom-dashboards'
+import { useListFoldersWithHidden } from 'services/custom-dashboards'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import DashboardResourceRenderer from '../DashboardResourceRenderer'
 
 jest.mock('services/custom-dashboards', () => ({
-  useGetFoldersWithHidden: jest.fn(),
+  useListFoldersWithHidden: jest.fn(),
   useGetOotbFolderId: jest.fn()
 }))
-const useGetFoldersWithHiddenMock = useGetFoldersWithHidden as jest.Mock
+const useListFoldersWithHiddenMock = useListFoldersWithHidden as jest.Mock
 
 const renderComponent = (props: Partial<RbacResourceRendererProps> = {}): RenderResult =>
   render(
@@ -35,7 +35,7 @@ const renderComponent = (props: Partial<RbacResourceRendererProps> = {}): Render
 describe('DashboardResourceRenderer', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    useGetFoldersWithHiddenMock.mockReturnValue({
+    useListFoldersWithHiddenMock.mockReturnValue({
       data: {
         resource: [
           { id: '12', name: 'you_got_it', Children: [] },
@@ -57,7 +57,7 @@ describe('DashboardResourceRenderer', () => {
   })
 
   test('it should display the no data message when no folders are returned', async () => {
-    useGetFoldersWithHiddenMock.mockReturnValue({ data: { resource: [] } })
+    useListFoldersWithHiddenMock.mockReturnValue({ data: { resource: [] } })
 
     renderComponent()
 
@@ -65,7 +65,7 @@ describe('DashboardResourceRenderer', () => {
   })
 
   test('it should display the loading spinner when folders are loading', async () => {
-    useGetFoldersWithHiddenMock.mockReturnValue({ data: { resource: [] }, loading: true })
+    useListFoldersWithHiddenMock.mockReturnValue({ data: { resource: [] }, loading: true })
 
     renderComponent()
 

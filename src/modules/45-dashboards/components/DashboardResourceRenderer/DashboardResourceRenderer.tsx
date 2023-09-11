@@ -14,7 +14,7 @@ import { Color } from '@harness/design-system'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import { PageSpinner } from '@common/components'
 import routes from '@common/RouteDefinitions'
-import { FolderModel, useGetFoldersWithHidden } from 'services/custom-dashboards'
+import { FolderModel, useListFoldersWithHidden } from 'services/custom-dashboards'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import StaticResourceRenderer from '../StaticResourceRenderer/StaticResourceRenderer'
@@ -74,7 +74,7 @@ const DashboardResourceRenderer: React.FC<RbacResourceRendererProps> = ({
 }) => {
   const { accountId } = useParams<AccountPathProps>()
 
-  const { data: foldersListResponse, loading: fethingFolders } = useGetFoldersWithHidden({
+  const { data: foldersListResponse, loading: fethingFolders } = useListFoldersWithHidden({
     queryParams: { accountId: accountId, page: 1, pageSize: 1000 }
   })
 

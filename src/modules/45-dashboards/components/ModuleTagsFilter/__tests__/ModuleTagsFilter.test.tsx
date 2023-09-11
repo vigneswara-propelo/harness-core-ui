@@ -10,7 +10,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
-import { DashboardTags } from '@dashboards/types/DashboardTypes.types'
+import { DashboardMode, DashboardTags } from '@dashboards/types/DashboardTypes.types'
 import type { DashboardsContextProps } from '@dashboards/pages/DashboardsContext'
 import * as dashboardsContext from '@dashboards/pages/DashboardsContext'
 import ModuleTagsFilter, { ModuleTagsFilterProps } from '../ModuleTagsFilter'
@@ -34,7 +34,10 @@ const DEFAULT_CONTEXT: DashboardsContextProps = {
   breadcrumbs: [
     { label: 'Home', url: 'path/to/link' },
     { label: 'Dashboards', url: 'path/to/link' }
-  ]
+  ],
+  updateAiTileDetails: jest.fn(),
+  mode: DashboardMode.VIEW,
+  updateDashboardMode: jest.fn()
 }
 
 const renderComponent = (props: Partial<ModuleTagsFilterProps> = {}): RenderResult =>
