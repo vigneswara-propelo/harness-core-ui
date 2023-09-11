@@ -55,7 +55,6 @@ export const LoadSourceByType = ({
   expressions?: string[]
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-  const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
   const isLokiEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_GRAFANA_LOKI_LOGS)
   const isAzureLogsEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_AZURE_LOGS)
 
@@ -189,9 +188,6 @@ export const LoadSourceByType = ({
     }
     case Connectors.SignalFX:
     case HealthSourceTypes.SplunkSignalFXMetrics: {
-      if (!isSignalFXEnabled) {
-        return null
-      }
       return (
         <CommonHealthSourceContainer
           data={data}

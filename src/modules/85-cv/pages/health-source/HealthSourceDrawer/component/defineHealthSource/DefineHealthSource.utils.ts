@@ -487,19 +487,13 @@ export function shouldShowProductChangeConfirmation(
 }
 
 export function getDisabledConnectorsList({
-  isSignalFXEnabled,
   isLokiEnabled,
   isAzureLogsEnabled
 }: {
-  isSignalFXEnabled: boolean
   isLokiEnabled: boolean
   isAzureLogsEnabled: boolean
 }): HealthSourceTypes[] {
   const disabledConnectorsList = []
-
-  if (!isSignalFXEnabled) {
-    disabledConnectorsList.push(HealthSourceTypes.SignalFX)
-  }
 
   if (!isLokiEnabled) {
     disabledConnectorsList.push(HealthSourceTypes.GrafanaLoki)

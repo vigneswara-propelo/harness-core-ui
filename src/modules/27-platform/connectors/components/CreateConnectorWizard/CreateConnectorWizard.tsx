@@ -115,7 +115,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, SRM_SPLUNK_SIGNALFX, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
+  const { CVNG_ENABLED, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -189,7 +189,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.SUMOLOGIC:
       return <CreateSumoLogicConnector {...commonProps} />
     case Connectors.SignalFX:
-      return SRM_SPLUNK_SIGNALFX ? <CreateSignalFXConnector {...commonProps} /> : null
+      return <CreateSignalFXConnector {...commonProps} />
     case Connectors.CEAWS:
       return <CENGAwsConnector {...commonProps} />
     case Connectors.CE_GCP:

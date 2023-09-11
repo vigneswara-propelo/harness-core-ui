@@ -132,25 +132,14 @@ describe('DefineHealthSource.utils.test', () => {
 describe('getDisabledConnectorsList', () => {
   test('should return an empty array when all connectors are enabled', () => {
     const result = getDisabledConnectorsList({
-      isSignalFXEnabled: true,
       isLokiEnabled: true,
       isAzureLogsEnabled: true
     })
     expect(result).toEqual([])
   })
 
-  test('should return an array with SignalFX when SignalFX is disabled', () => {
-    const result = getDisabledConnectorsList({
-      isSignalFXEnabled: false,
-      isLokiEnabled: true,
-      isAzureLogsEnabled: true
-    })
-    expect(result).toEqual([HealthSourceTypes.SignalFX])
-  })
-
   test('should return an array with GrafanaLoki when GrafanaLoki is disabled', () => {
     const result = getDisabledConnectorsList({
-      isSignalFXEnabled: true,
       isLokiEnabled: false,
       isAzureLogsEnabled: true
     })
@@ -159,19 +148,17 @@ describe('getDisabledConnectorsList', () => {
 
   test('should return an array with Azure when Azure is disabled', () => {
     const result = getDisabledConnectorsList({
-      isSignalFXEnabled: true,
       isLokiEnabled: true,
       isAzureLogsEnabled: false
     })
     expect(result).toEqual([HealthSourceTypes.Azure])
   })
 
-  test('should return an array with SignalFX and GrafanaLoki when both are disabled', () => {
+  test('should return an array with GrafanaLoki when it is disabled', () => {
     const result = getDisabledConnectorsList({
-      isSignalFXEnabled: false,
       isLokiEnabled: false,
       isAzureLogsEnabled: true
     })
-    expect(result).toEqual([HealthSourceTypes.SignalFX, HealthSourceTypes.GrafanaLoki])
+    expect(result).toEqual([HealthSourceTypes.GrafanaLoki])
   })
 })
