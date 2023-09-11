@@ -11,6 +11,7 @@ import { Divider } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import {
@@ -149,10 +150,10 @@ export const SonarqubeStepBase = (
                     optional: formik.values.spec.mode === 'orchestration',
                     hide: formik.values.spec.mode === 'ingestion'
                   },
-                  'spec.tool.include': {
-                    label: 'sto.stepField.toolInclude',
+                  'spec.tool.exclude': {
+                    label: 'sto.stepField.tool.exclude',
                     optional: true,
-                    tooltipId: tooltipIds.toolInclude,
+                    tooltipId: tooltipIds.toolExclude,
                     hide: formik.values.spec.mode !== 'orchestration'
                   },
                   'spec.tool.java.libraries': {
@@ -167,6 +168,12 @@ export const SonarqubeStepBase = (
                     tooltipId: tooltipIds.toolJavaBinaries,
                     hide: formik.values.spec.mode !== 'orchestration'
                   }
+                }}
+                customTooltipFields={{
+                  fields: {
+                    'spec.tool.exclude': true
+                  },
+                  prefix: StepType.Sonarqube
                 }}
               />
               <Divider

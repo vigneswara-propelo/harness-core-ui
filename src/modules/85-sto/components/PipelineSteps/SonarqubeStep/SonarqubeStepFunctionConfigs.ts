@@ -25,7 +25,7 @@ const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
   data.spec.mode === 'orchestration'
     ? [
         {
-          name: 'spec.tool.include',
+          name: 'spec.tool.exclude',
           type: TransformValuesTypes.Text
         },
         {
@@ -46,9 +46,9 @@ const toolFieldsValidationConfig = (
   data.spec.mode === 'orchestration' || stepViewType === StepViewType.InputSet
     ? [
         {
-          name: 'spec.tool.include',
+          name: 'spec.tool.exclude',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.toolInclude'
+          label: 'sto.stepField.tool.exclude'
         },
         {
           name: 'spec.tool.java.libraries',

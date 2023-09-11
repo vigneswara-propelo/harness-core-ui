@@ -1052,12 +1052,12 @@ exports[`Sonarqube Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.toolInclude
+                sto.stepField.tool.exclude
               </p>
                
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="securityStepToolInclude"
+                data-tooltip-id="SonarqubeSecuritysteptoolexclude"
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
@@ -1072,7 +1072,7 @@ exports[`Sonarqube Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.tool.include-12"
+                data-id="spec.tool.exclude-12"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -1088,7 +1088,7 @@ exports[`Sonarqube Step Edit View edit mode works 1`] = `
                       <input
                         autocomplete="off"
                         class="bp3-input"
-                        name="spec.tool.include"
+                        name="spec.tool.exclude"
                         type="text"
                         value=""
                       />
@@ -4591,12 +4591,12 @@ exports[`Sonarqube Step Edit View renders runtime inputs - Orchestration Reposit
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.toolInclude
+                sto.stepField.tool.exclude
               </p>
                
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="securityStepToolInclude"
+                data-tooltip-id="SonarqubeSecuritysteptoolexclude"
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
@@ -4611,7 +4611,7 @@ exports[`Sonarqube Step Edit View renders runtime inputs - Orchestration Reposit
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.tool.include-12"
+                data-id="spec.tool.exclude-12"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4627,7 +4627,7 @@ exports[`Sonarqube Step Edit View renders runtime inputs - Orchestration Reposit
                       <input
                         autocomplete="off"
                         class="bp3-input"
-                        name="spec.tool.include"
+                        name="spec.tool.exclude"
                         type="text"
                         value=""
                       />
@@ -6443,12 +6443,12 @@ exports[`Sonarqube Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.toolInclude
+                sto.stepField.tool.exclude
               </p>
                
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="securityStepToolInclude"
+                data-tooltip-id="SonarqubeSecuritysteptoolexclude"
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
@@ -6463,7 +6463,7 @@ exports[`Sonarqube Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.tool.include-12"
+                data-id="spec.tool.exclude-12"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6479,7 +6479,7 @@ exports[`Sonarqube Step Edit View should render properly 1`] = `
                       <input
                         autocomplete="off"
                         class="bp3-input"
-                        name="spec.tool.include"
+                        name="spec.tool.exclude"
                         type="text"
                         value=""
                       />
