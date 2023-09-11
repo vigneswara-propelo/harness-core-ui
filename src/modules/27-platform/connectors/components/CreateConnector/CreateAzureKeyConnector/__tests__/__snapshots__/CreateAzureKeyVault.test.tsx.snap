@@ -1023,30 +1023,30 @@ exports[`Create Secret Manager Wizard edit connector 2`] = `
                       </div>
                     </div>
                   </div>
+                </div>
+                <div
+                  class="bp3-form-group"
+                >
                   <div
-                    class="bp3-form-group"
+                    class="bp3-form-content"
                   >
-                    <div
-                      class="bp3-form-content"
+                    <label
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
                     >
-                      <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                      <input
+                        name="default"
+                        type="checkbox"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                        data-tooltip-id="azureKeyVaultForm_default"
                       >
-                        <input
-                          name="default"
-                          type="checkbox"
-                        />
-                        <span
-                          class="bp3-control-indicator"
-                        />
-                        <span
-                          class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                          data-tooltip-id="azureKeyVaultForm_default"
-                        >
-                          platform.connectors.hashiCorpVault.defaultVault
-                        </span>
-                      </label>
-                    </div>
+                        platform.connectors.hashiCorpVault.defaultVault
+                      </span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -3701,30 +3701,30 @@ exports[`Create Secret Manager Wizard should be able to render first step form 2
                       </div>
                     </div>
                   </div>
+                </div>
+                <div
+                  class="bp3-form-group"
+                >
                   <div
-                    class="bp3-form-group"
+                    class="bp3-form-content"
                   >
-                    <div
-                      class="bp3-form-content"
+                    <label
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
                     >
-                      <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                      <input
+                        name="default"
+                        type="checkbox"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                        data-tooltip-id="azureKeyVaultForm_default"
                       >
-                        <input
-                          name="default"
-                          type="checkbox"
-                        />
-                        <span
-                          class="bp3-control-indicator"
-                        />
-                        <span
-                          class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                          data-tooltip-id="azureKeyVaultForm_default"
-                        >
-                          platform.connectors.hashiCorpVault.defaultVault
-                        </span>
-                      </label>
-                    </div>
+                        platform.connectors.hashiCorpVault.defaultVault
+                      </span>
+                    </label>
                   </div>
                 </div>
               </div>

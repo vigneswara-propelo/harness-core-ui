@@ -168,13 +168,18 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
                       type="SecretFile"
                       scope={scope}
                     />
+                  </>
+                ) : null}
+                {
+                  // show only when delegateType is selected
+                  formikProps.values.delegateType ? (
                     <FormInput.CheckBox
                       name="default"
                       label={getString('platform.connectors.hashiCorpVault.defaultVault')}
                       padding={{ left: 'xxlarge' }}
                     />
-                  </>
-                ) : null}
+                  ) : null
+                }
               </Container>
               <Layout.Horizontal spacing="medium">
                 <Button

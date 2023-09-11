@@ -14,6 +14,7 @@ import {
   Text,
   Formik,
   FormikForm,
+  FormInput,
   Layout,
   Button,
   ButtonVariation,
@@ -170,6 +171,16 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
                     <AzureKeyVaultFormFieldsForDelegateInCluster formikProps={formikProps} />
                   ) : null}
                 </Container>
+                {
+                  // show only when delegateType is selected
+                  formikProps.values.delegateType ? (
+                    <FormInput.CheckBox
+                      name="default"
+                      label={getString('platform.connectors.hashiCorpVault.defaultVault')}
+                      padding={{ left: 'xxlarge' }}
+                    />
+                  ) : null
+                }
               </Container>
               <Layout.Horizontal spacing="medium">
                 <Button

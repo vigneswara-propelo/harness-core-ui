@@ -19,12 +19,6 @@ const AzureKeyVaultFormFields: React.FC = () => {
       <FormInput.Text name="tenantId" label={getString('platform.connectors.azureKeyVault.labels.tenantId')} />
       <FormInput.Text name="subscription" label={getString('platform.connectors.azureKeyVault.labels.subscription')} />
       <SecretInput name="secretKey" label={getString('keyLabel')} connectorTypeContext={'AzureKeyVault'} />
-
-      <FormInput.CheckBox
-        name="default"
-        label={getString('platform.connectors.hashiCorpVault.defaultVault')}
-        padding={{ left: 'xxlarge' }}
-      />
     </>
   )
 }
