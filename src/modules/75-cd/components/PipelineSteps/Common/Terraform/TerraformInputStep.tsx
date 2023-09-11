@@ -247,7 +247,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
       })}
 
       {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT &&
-        isValueRuntimeInput((inputSetDataSpec as any).encryptOutput?.outputSecretManagerRef) && (
+        isValueRuntimeInput((inputSetDataSpec as any)?.encryptOutput?.outputSecretManagerRef) && (
           <Container flex>
             <FormMultiTypeConnectorField
               accountIdentifier={accountId}
