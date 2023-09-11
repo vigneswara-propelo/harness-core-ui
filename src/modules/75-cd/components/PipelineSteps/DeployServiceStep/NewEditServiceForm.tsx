@@ -15,13 +15,13 @@ import { useStrings } from 'framework/strings'
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import { NameIdDescriptionTags } from '@common/components'
 import { ServiceResponseDTO } from 'services/cd-ng'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { GitSyncForm, GitSyncFormFields } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import css from './DeployServiceStep.module.scss'
 
 interface NewEditServiceFormProps {
   isEdit: boolean
-  formikProps: FormikProps<ServiceResponseDTO & StoreMetadata>
+  formikProps: FormikProps<ServiceResponseDTO & GitSyncFormFields>
   isGitXEnabledForServices: boolean
   closeModal?: () => void
 }

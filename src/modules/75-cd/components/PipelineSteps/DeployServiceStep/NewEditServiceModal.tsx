@@ -26,7 +26,8 @@ import {
   ServiceResponseDTO,
   useUpsertServiceV2,
   useCreateServiceV2,
-  useGetYamlSchema
+  useGetYamlSchema,
+  ResponseServiceResponse
 } from 'services/cd-ng'
 import { queryClient } from 'services/queryClient'
 import { useStrings } from 'framework/strings'
@@ -43,8 +44,8 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { GitSyncFormFields, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { flexStart } from './DeployServiceUtils'
 import type { NewEditServiceModalProps } from './DeployServiceInterface'
@@ -76,7 +77,7 @@ const cleanData = (values: ServiceRequestDTO): ServiceRequestDTO => {
     tags: values.tags,
     yaml: yamlStringify({
       service: {
-        ...values
+        ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath'])
       }
     })
   }
@@ -114,17 +115,20 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
   const { showSuccess, showError, clear } = useToaster()
 
   const { openSaveToGitDialog } = useSaveToGitDialog({
-    onSuccess: async (gitData: SaveToGitFormInterface, _payload?: any): Promise<any> => {
+    onSuccess: async (
+      gitData: SaveToGitFormInterface,
+      payload?: ServiceRequestDTO
+    ): Promise<ResponseServiceResponse> => {
       const isNewBranch = gitData?.isNewBranch
       const selectedBranch = formikRef.current?.values?.branch
       const response = await createService(
-        { ..._payload, orgIdentifier, projectIdentifier },
+        { ...payload, orgIdentifier, projectIdentifier },
         {
           queryParams: {
             accountIdentifier: accountId,
             storeType: StoreType.REMOTE,
             connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value,
-            repoName: formikRef.current?.values?.repoName,
+            repoName: formikRef.current?.values?.repo,
             isNewBranch: gitData?.isNewBranch,
             filePath: formikRef.current?.values?.filePath,
             ...(isNewBranch ? { baseBranch: selectedBranch, branch: gitData?.branch } : { branch: selectedBranch }),
@@ -137,9 +141,9 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
         showSuccess(getString('cd.serviceCreated'))
         // We invalidate the service list call on creating a new service
         queryClient.invalidateQueries(['getServiceAccessList'])
-        onCreateOrUpdate(_payload)
+        payload && onCreateOrUpdate(payload)
       }
-      Promise.resolve(response)
+      return Promise.resolve(response)
     }
   })
 
@@ -166,7 +170,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
                 filePath: formikRef.current?.values?.filePath,
                 fileUrl: undefined,
                 objectId: undefined,
-                repoName: formikRef.current?.values?.repoName,
+                repoName: formikRef.current?.values?.repo,
                 repoUrl: undefined
               },
               storeMetadata: {
@@ -174,7 +178,11 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
                 connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value
               }
             },
-            payload: { ...values, orgIdentifier, projectIdentifier }
+            payload: {
+              ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath']),
+              orgIdentifier,
+              projectIdentifier
+            }
           })
         } else if (isEdit && !isService) {
           const response = await updateService({
@@ -205,7 +213,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
     [onCreateOrUpdate, orgIdentifier, projectIdentifier, isEdit, isService]
   )
 
-  const formikRef = React.useRef<FormikProps<ServiceResponseDTO & StoreMetadata>>()
+  const formikRef = React.useRef<FormikProps<ServiceResponseDTO & GitSyncFormFields>>()
   const id = data.identifier
   const { data: serviceSchema } = useGetYamlSchema({
     queryParams: {
@@ -249,7 +257,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           />
         </Layout.Horizontal>
       </Container>
-      <Formik<Required<ServiceResponseDTO> & StoreMetadata>
+      <Formik<Required<ServiceResponseDTO> & GitSyncFormFields>
         initialValues={data as Required<ServiceResponseDTO>}
         formName="deployService"
         onSubmit={values => {
@@ -268,7 +276,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
               {selectedView === SelectedView.VISUAL ? (
                 <NewEditServiceForm
                   isEdit={isEdit}
-                  formikProps={formikProps as FormikProps<ServiceResponseDTO & StoreMetadata>}
+                  formikProps={formikProps as FormikProps<ServiceResponseDTO & GitSyncFormFields>}
                   isGitXEnabledForServices={isGitXEnabledForServices}
                   closeModal={closeModal}
                 />
