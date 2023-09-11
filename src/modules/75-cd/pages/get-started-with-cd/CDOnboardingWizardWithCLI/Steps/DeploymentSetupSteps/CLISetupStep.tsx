@@ -127,12 +127,6 @@ const CLIDownloadMac = ({ version }: { version: string }): JSX.Element => {
   }
   return (
     <Layout.Vertical>
-      {/* <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.download"
-        />
-      </Text> */}
       <CommandBlock
         darkmode
         allowCopy
@@ -141,32 +135,6 @@ const CLIDownloadMac = ({ version }: { version: string }): JSX.Element => {
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
-      {/* <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.extract"
-        />
-      </Text>
-      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move"
-        />
-      </Text>
-      <CommandBlock
-        darkmode
-        allowCopy
-        ignoreWhiteSpaces={false}
-        commandSnippet={getCommands()}
-        downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
-        copyButtonText={getString('common.copy')}
-      />
-      <Text color={Color.BLACK} padding={{ top: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.restart"
-        />
-      </Text> */}
     </Layout.Vertical>
   )
 }
@@ -182,9 +150,14 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
           : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.amd',
         { version }
       ),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractmac', {
-        version
-      }),
+      getString(
+        selectedValue === SYSTEM_ARCH_TYPES.AMD
+          ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractamd'
+          : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractarm',
+        {
+          version
+        }
+      ),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.exportMac'),
       getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.setPath')
     ])
@@ -214,12 +187,6 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
         />
       </Layout.Horizontal>
 
-      {/* <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.download"
-        />
-      </Text> */}
       <CommandBlock
         darkmode
         allowCopy
@@ -228,32 +195,6 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
-      {/* <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.extract"
-        />
-      </Text>
-      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move"
-        />
-      </Text>
-      <CommandBlock
-        darkmode
-        allowCopy
-        ignoreWhiteSpaces={false}
-        commandSnippet={getCommands()}
-        downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
-        copyButtonText={getString('common.copy')}
-      />
-      <Text color={Color.BLACK} padding={{ top: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.restart"
-        />
-      </Text> */}
     </Layout.Vertical>
   )
 }

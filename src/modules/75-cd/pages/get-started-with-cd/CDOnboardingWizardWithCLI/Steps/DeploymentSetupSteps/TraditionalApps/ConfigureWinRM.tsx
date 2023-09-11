@@ -3,7 +3,8 @@ import { Label, Layout, Text, TextInput } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { useOnboardingStore } from '../../../Store/OnboardingStore'
-import { PipelineSetupState, CDOnboardingSteps } from '../../../types'
+import { PipelineSetupState, CDOnboardingSteps, WhatToDeployType } from '../../../types'
+import AWSInputs from './AWSInputs'
 
 export default function ConfigureWinRM({ onUpdate }: { onUpdate: (data: PipelineSetupState) => void }): JSX.Element {
   const { stepsProgress } = useOnboardingStore()
@@ -12,6 +13,11 @@ export default function ConfigureWinRM({ onUpdate }: { onUpdate: (data: Pipeline
     return stepsProgress[CDOnboardingSteps.DEPLOYMENT_STEPS].stepData as PipelineSetupState
   }, [stepsProgress])
 
+  const isAWS = React.useMemo((): boolean => {
+    return (
+      stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType
+    )?.artifactSubType?.id?.includes('AWS') as boolean
+  }, [stepsProgress])
   const [state, setState] = useState<PipelineSetupState['infraInfo']>(() => {
     const prevState = pipelineState?.infraInfo
     return prevState
@@ -113,6 +119,7 @@ export default function ConfigureWinRM({ onUpdate }: { onUpdate: (data: Pipeline
           }}
         />
       </Layout.Vertical>
+      {isAWS && <AWSInputs state={state} updateState={updateState} />}
     </Layout.Vertical>
   )
 }

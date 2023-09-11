@@ -344,17 +344,6 @@ const getTraditionalAppsCommands = ({
       accId: accountId,
       apiKey: state?.apiKey
     }),
-    getString(
-      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSecret'
-    ),
-    getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createsecret', {
-      gitPat:
-        state?.githubPat ||
-        getString(
-          'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitpatPlaceholder'
-        ),
-      type: directory
-    }),
 
     getString(infraSecret.comment),
     getString(infraSecret.command, {
@@ -380,20 +369,7 @@ const getTraditionalAppsCommands = ({
           )
         ]
       : []),
-    getString(
-      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitIcon'
-    ),
-    getString(
-      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.gcp.createGithubcon',
-      {
-        gitUser:
-          state?.githubUsername ||
-          getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitusernamePlaceholder'
-          ),
-        type: directory
-      }
-    ),
+
     getString(
       isAWS
         ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createAWScon'
@@ -506,7 +482,12 @@ export const getK8sPipelineCommands = ({
   deploymentData: WhatToDeployType
   strategy: DeploymentStrategyTypes
 }): string => {
-  const dirPath = DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData.artifactType?.id as string]
+  const dirPath =
+    DEPLOYMENT_TYPE_TO_DIR_MAP[
+      deploymentData.artifactSubType?.id
+        ? deploymentData.artifactSubType?.id
+        : (deploymentData.artifactType?.id as string)
+    ]
   const pipelineFileName = DEPLOYMENT_TYPE_TO_FILE_MAPS[deploymentData.artifactSubType?.id as string]?.[strategy.id]
   return getString(strategy?.pipelineCommand, {
     type: `${dirPath}/harnesscd-pipeline`,

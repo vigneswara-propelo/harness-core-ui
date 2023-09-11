@@ -6402,6 +6402,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.restart': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.exportMac': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractamd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractarm': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractmac': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.mac': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.mvharness': string

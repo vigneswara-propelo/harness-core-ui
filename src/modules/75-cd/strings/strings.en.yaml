@@ -735,6 +735,8 @@ getStartedWithCD:
           mac: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-darwin-amd64.tar.gz'
           win: 'Invoke-WebRequest -Uri https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-windows-amd64.zip -OutFile ./harness.zip'
           extractmac: 'tar -xvf harness-{{version}}-darwin-amd64.tar.gz'
+          extractarm: 'tar -xvf harness-{{version}}-linux-arm64.tar.gz'
+          extractamd: 'tar -xvf harness-{{version}}-linux-amd64.tar.gz'
           mvharness: 'mv harness /usr/local/bin/'
           exportMac: 'export PATH="$(pwd):$PATH"'
           setPath: echo 'export PATH="'$(pwd)':$PATH"' >> ~/.bash_profile
@@ -832,7 +834,7 @@ getStartedWithCD:
             traditional:
               pdc:
                 createSSHSecret: 'harness secret --file {{{secret}}} apply --secret-type SSHKey --username {{username}} --port {{port}}'
-                createWINRMSecret: 'harness secret --token {{{secret}}} apply --secret-type WinRmCredentials --username {{username}} --port {{port}} --domain {{{domain}}}'
+                createWINRMSecret: 'harness secret --password "{{{secret}}}" apply --secret-type WinRmCredentials --username {{username}} --port {{port}} --domain {{{domain}}}'
                 createGithubcon: 'harness connector --file {{{type}}}/github-connector.yml apply --git-user {{gitUser}} '
                 createArtifactoryCon: 'harness connector --file {{{type}}}/artifactory-connector.yml apply'
                 createPDCCon: 'harness connector --file {{{type}}}/pdc-connector.yml apply --delegate-name {{delegateName}} --host-ip {{hostip}}'
@@ -843,7 +845,7 @@ getStartedWithCD:
               cloud:
                 createinfraAWScmd: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-region {{{region}}} --instance-name {{instanceName}}'
                 createSSHAwsSecret: 'harness secret --token {{{secret}}} apply --secret-type SSHKey  --username {{username}} --port {{port}}'
-                createWINRMAwsSecret: 'harness secret --token {{{secret}}} apply --secret-type WinRmCredentials --username {{username}} --port {{port}} --domain {{{domain}}}'
+                createWINRMAwsSecret: 'harness secret --password "{{{secret}}}" apply --secret-type WinRmCredentials --username {{username}} --port {{port}} --domain {{{domain}}}'
                 createinfracmdaws: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-region {{{region}}} --instance-name {{instanceName}}'
             comments:
               cloneRepo: '# Clone the repository'

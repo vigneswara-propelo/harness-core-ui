@@ -24,7 +24,7 @@ import {
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import ConfigureGCP from './GCP/ConfigureGCP'
 import ConfigureAWS from './AWS/ConfigureAWS'
-import { DEPLOYMENT_TYPE_TO_DIR_MAP } from '../../Constants'
+import { DEPLOYMENT_TYPE_TO_DIR_MAP, SERVICE_TYPES } from '../../Constants'
 import ConfigureServerless from './AWS/ConfigureServerless'
 import ConfigureSSH from './TraditionalApps/ConfigureSSH'
 import ConfigureWinRM from './TraditionalApps/ConfigureWinRM'
@@ -40,7 +40,7 @@ const INFRATYPE_TO_COMPONENT_MAP: {
   SSH: ConfigureSSH,
   WINRM: ConfigureWinRM,
   SSH_AWS: ConfigureSSH,
-  WINRM_AWS: ConfigureSSH
+  WINRM_AWS: ConfigureWinRM
 }
 
 export default function PipelineSetupStep({
@@ -93,31 +93,35 @@ export default function PipelineSetupStep({
               }}
             />
           </Layout.Vertical>
-          <Layout.Vertical width={400}>
-            <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-              <Label>{getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat')}</Label>
-              <Button
-                target="_blank"
-                className={css.alignTitle}
-                variation={ButtonVariation.LINK}
-                size={ButtonSize.SMALL}
-                href="https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
-              >
-                {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whereToFindGitPat')}
-              </Button>
-            </Layout.Horizontal>
+          {deploymentData?.svcType?.id !== SERVICE_TYPES?.TraditionalApp?.id && (
+            <Layout.Vertical width={400}>
+              <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+                <Label>
+                  {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat')}
+                </Label>
+                <Button
+                  target="_blank"
+                  className={css.alignTitle}
+                  variation={ButtonVariation.LINK}
+                  size={ButtonSize.SMALL}
+                  href="https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+                >
+                  {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whereToFindGitPat')}
+                </Button>
+              </Layout.Horizontal>
 
-            <TextInput
-              defaultValue={state.githubPat}
-              id="githubpat"
-              name="githubpat"
-              placeholder={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat')}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const value = e.target.value
-                onUpdate({ ...state, githubPat: value })
-              }}
-            />
-          </Layout.Vertical>
+              <TextInput
+                defaultValue={state.githubPat}
+                id="githubpat"
+                name="githubpat"
+                placeholder={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat')}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const value = e.target.value
+                  onUpdate({ ...state, githubPat: value })
+                }}
+              />
+            </Layout.Vertical>
+          )}
         </Layout.Vertical>
       </Layout.Vertical>
       <InfraDetailsComponent
