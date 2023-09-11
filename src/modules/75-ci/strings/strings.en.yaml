@@ -47,6 +47,7 @@ runTestsStep:
   java: Java
   kotlin: Kotlin
   scala: Scala
+  ruby: Ruby
   dotNetCore: .NET Core
   bazel: Bazel
   maven: Maven
@@ -59,6 +60,7 @@ runTestsStep:
   namespaces: Namespaces
   testReportPaths: Test Report Paths
   pytest: Pytest
+  rspec: Rspec
   unittest: Unittest
   testRoot: Test Root
   testGlobs: Test Globs

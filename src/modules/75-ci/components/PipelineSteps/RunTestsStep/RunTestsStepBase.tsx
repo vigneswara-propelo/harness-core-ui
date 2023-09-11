@@ -88,7 +88,8 @@ const BuildTool = {
   NUNITCONSOLE: 'Nunitconsole',
   SBT: 'SBT',
   PY_TEST: 'Pytest',
-  UNIT_TEST: 'Unittest'
+  UNIT_TEST: 'Unittest',
+  RSPEC: 'Rspec'
 }
 
 const ET_COMMANDS_START = '#ET-SETUP-BEGIN'
@@ -145,6 +146,10 @@ const getPythonBuildToolOptions = (getString: UseStringsReturn['getString']): Se
   { label: getString('ci.runTestsStep.unittest'), value: BuildTool.UNIT_TEST }
 ]
 
+const getRubyBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.rspec'), value: BuildTool.RSPEC }
+]
+
 export const getBuildEnvironmentOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.dotNetCore'), value: 'Core' }
 ]
@@ -169,20 +174,21 @@ const enum Language {
   Csharp = 'Csharp',
   Kotlin = 'Kotlin',
   Scala = 'Scala',
-  Python = 'Python'
+  Python = 'Python',
+  Ruby = 'Ruby'
 }
 
-const getLanguageOptionsIncludingPython = (getString: UseStringsReturn['getString']): SelectOption[] => [
-  ...getLanguageOptions(getString),
-  { label: getString('common.python'), value: Language.Python }
-]
+const getLanguageOptionsPython = (getString: UseStringsReturn['getString']): SelectOption => {
+  return { label: getString('common.python'), value: Language.Python }
+}
 
-const getLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
-  { label: getString('ci.runTestsStep.csharp'), value: Language.Csharp },
-  { label: getString('ci.runTestsStep.java'), value: Language.Java },
-  { label: getString('ci.runTestsStep.kotlin'), value: Language.Kotlin },
-  { label: getString('ci.runTestsStep.scala'), value: Language.Scala }
-]
+const getLanguageOptionsCsharp = (getString: UseStringsReturn['getString']): SelectOption => {
+  return { label: getString('ci.runTestsStep.csharp'), value: Language.Csharp }
+}
+
+const getLanguageOptionsRuby = (getString: UseStringsReturn['getString']): SelectOption => {
+  return { label: getString('ci.runTestsStep.ruby'), value: Language.Ruby }
+}
 
 const getSubsetLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.java'), value: Language.Java },
@@ -202,6 +208,8 @@ const getBuildToolOptions = (
     return getScalaBuildToolOptions(getString)
   } else if (language === Language.Python) {
     return getPythonBuildToolOptions(getString)
+  } else if (language === Language.Ruby) {
+    return getRubyBuildToolOptions(getString)
   }
   return undefined
 }
@@ -259,7 +267,7 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-  const { TI_DOTNET, CI_PYTHON_TI } = useFeatureFlags()
+  const { TI_DOTNET, CI_PYTHON_TI, CI_RUBY_TI } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const isErrorTrackingEnabled = licenseInformation['CET']?.status === 'ACTIVE'
   // temporary enable in QA for docs
@@ -466,11 +474,18 @@ export const RunTestsStepBase = (
   )
 
   const getOptionsForTILanguage = useCallback((): SelectOption[] => {
-    if (CI_PYTHON_TI) {
-      return getLanguageOptionsIncludingPython(getString)
+    const languages = getSubsetLanguageOptions(getString)
+    if (isQAEnvironment || TI_DOTNET) {
+      languages.push(getLanguageOptionsCsharp(getString))
     }
-    return isQAEnvironment || TI_DOTNET ? getLanguageOptions(getString) : getSubsetLanguageOptions(getString)
-  }, [isQAEnvironment, TI_DOTNET, CI_PYTHON_TI])
+    if (CI_PYTHON_TI) {
+      languages.push(getLanguageOptionsPython(getString))
+    }
+    if (isQAEnvironment || CI_RUBY_TI) {
+      languages.push(getLanguageOptionsRuby(getString))
+    }
+    return languages
+  }, [isQAEnvironment, TI_DOTNET, CI_PYTHON_TI, CI_RUBY_TI])
 
   return (
     <Formik
@@ -479,7 +494,7 @@ export const RunTestsStepBase = (
         transformValuesFieldsConfig,
         {
           buildToolOptions,
-          languageOptions: CI_PYTHON_TI ? getOptionsForTILanguage() : getLanguageOptions(getString),
+          languageOptions: getOptionsForTILanguage(),
           imagePullPolicyOptions: getImagePullPolicyOptions(getString),
           shellOptions: getCIRunTestsStepShellOptions(getString),
           buildEnvironmentOptions: getBuildEnvironmentOptions(getString),

@@ -9091,6 +9091,8 @@ export interface StringsMap {
   'ci.runTestsStep.nUnitConsole': string
   'ci.runTestsStep.namespaces': string
   'ci.runTestsStep.pytest': string
+  'ci.runTestsStep.rspec': string
+  'ci.runTestsStep.ruby': string
   'ci.runTestsStep.sbt': string
   'ci.runTestsStep.scala': string
   'ci.runTestsStep.sixPointZero': string

@@ -89,10 +89,10 @@ describe('RunTests Step', () => {
         fireEvent.click(dropdownSelects[1])
         const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
         expect(menuItemLabels?.length).toEqual(4)
-        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.csharp')
-        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.java')
-        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.kotlin')
-        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.scala')
+        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.java')
+        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.kotlin')
+        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.scala')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.csharp')
         expect(findByText('ci.runTestsErrorTrackingSetupText')).not.toBeNull()
       })
 
@@ -128,7 +128,7 @@ describe('RunTests Step', () => {
       const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
       expect(menuItemLabels?.length).toBe(4)
 
-      menuItemLabels ? fireEvent.click(menuItemLabels[1]) : fail('Language menu items are not present')
+      menuItemLabels ? fireEvent.click(menuItemLabels[0]) : fail('Language menu items are not present')
       expect(getByText('ci.runTestsErrorTrackingSetupText')).toBeDefined()
 
       expect(container).toMatchSnapshot()
@@ -633,7 +633,7 @@ describe('RunTests Step', () => {
   })
 
   describe('Add Step', () => {
-    test('should render properly for FF CI_PYTHON_TI', async () => {
+    test('should render properly for FF CI_PYTHON_TI', () => {
       jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
         CI_PYTHON_TI: true
       })
@@ -647,16 +647,15 @@ describe('RunTests Step', () => {
 
       const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')
 
-      await waitFor(() => {
+      waitFor(() => {
         // Language dropdown
         fireEvent.click(dropdownSelects[1])
         const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
-        expect(menuItemLabels?.length).toEqual(5)
-        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.csharp')
-        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.java')
-        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.kotlin')
-        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.scala')
-        expect(menuItemLabels?.[4].innerHTML).toEqual('common.python')
+        expect(menuItemLabels?.length).toEqual(4)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.java')
+        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.kotlin')
+        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.scala')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('common.python')
       })
 
       fillAtForm([
@@ -668,7 +667,7 @@ describe('RunTests Step', () => {
         }
       ])
 
-      await waitFor(() => {
+      waitFor(() => {
         // Build tool dropdown
         fireEvent.click(dropdownSelects[2])
         const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
@@ -679,6 +678,81 @@ describe('RunTests Step', () => {
 
       expect(getByText('ci.runTestsStep.testRoot')).toBeInTheDocument()
       expect(getByText('ci.runTestsStep.testGlobs')).toBeInTheDocument()
+    })
+  })
+
+  describe('Add Step', () => {
+    test('should render properly for FF CI_RUBY_TI', () => {
+      jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+        CI_RUBY_TI: true
+      })
+      const { container, getByText } = render(
+        <TestStepWidget initialValues={{}} type={StepType.RunTests} stepViewType={StepViewType.Edit} />
+      )
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.additionalConfiguration'))
+      })
+
+      const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')
+
+      waitFor(() => {
+        // Language dropdown
+        fireEvent.click(dropdownSelects[1])
+        const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
+        expect(menuItemLabels?.length).toEqual(4)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.java')
+        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.kotlin')
+        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.scala')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.ruby')
+      })
+
+      fillAtForm([
+        {
+          container,
+          type: InputTypes.SELECT,
+          fieldId: 'spec.language',
+          value: 'Ruby'
+        }
+      ])
+
+      waitFor(() => {
+        // Build tool dropdown
+        fireEvent.click(dropdownSelects[2])
+        const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
+        expect(menuItemLabels?.length).toEqual(1)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.rspec')
+      })
+    })
+  })
+
+  describe('Add Step', () => {
+    test('should render properly for FF CI_RUBY_TI and CI_PYTHON_TI', () => {
+      jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+        CI_PYTHON_TI: true,
+        CI_RUBY_TI: true
+      })
+      const { container, getByText } = render(
+        <TestStepWidget initialValues={{}} type={StepType.RunTests} stepViewType={StepViewType.Edit} />
+      )
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.additionalConfiguration'))
+      })
+
+      const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')
+
+      waitFor(() => {
+        // Language dropdown
+        fireEvent.click(dropdownSelects[1])
+        const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
+        expect(menuItemLabels?.length).toEqual(5)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.java')
+        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.kotlin')
+        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.scala')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.python')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.ruby')
+      })
     })
   })
 })

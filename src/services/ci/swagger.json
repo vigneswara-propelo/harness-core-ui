@@ -9565,11 +9565,11 @@
         },
         "value": {
           "type": "string",
-          "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python"]
+          "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python", "Ruby"]
         },
         "defaultValue": {
           "type": "string",
-          "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python"]
+          "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python", "Ruby"]
         },
         "typeString": {
           "type": "boolean"
@@ -10436,11 +10436,11 @@
             },
             "language": {
               "type": "string",
-              "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python"]
+              "enum": ["Java", "Kotlin", "Scala", "Csharp", "Python", "Ruby"]
             },
             "buildTool": {
               "type": "string",
-              "enum": ["Maven", "Bazel", "Gradle", "Dotnet", "Nunitconsole", "SBT", "Pytest", "Unittest"]
+              "enum": ["Maven", "Bazel", "Gradle", "Dotnet", "Nunitconsole", "SBT", "Pytest", "Unittest", "Rspec"]
             },
             "image": {
               "type": "string"
@@ -12022,7 +12022,7 @@
             },
             "uses": {
               "type": "string",
-              "enum": ["maven", "bazel", "gradle", "dotnet", "nunit_console", "sbt", "pytest", "unittest"]
+              "enum": ["maven", "bazel", "gradle", "dotnet", "nunit_console", "sbt", "pytest", "unittest", "rspec"]
             },
             "with": {
               "type": "object",
