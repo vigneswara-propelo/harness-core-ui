@@ -53,8 +53,13 @@ describe('ServiceStudio', () => {
   test('should render ServiceStudio', () => {
     const { container } = render(
       <TestWrapper
-        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/service/:serviceId"
+        pathParams={{
+          accountId: 'dummy',
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy',
+          serviceId: 'testServiceId'
+        }}
       >
         <ServiceStudio />
       </TestWrapper>

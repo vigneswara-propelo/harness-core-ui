@@ -96,6 +96,15 @@ exports[`ServiceDetailsHeader render no data 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="Layout--horizontal StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main textOverflow detailsSection StyledProps--font-variation-body2"
+        >
+          common.ID: undefined
+        </p>
+      </div>
     </div>
   </div>
 </div>
@@ -212,24 +221,28 @@ exports[`ServiceDetailsHeader should render ServiceDetailsHeader 1`] = `
           class="Layout--horizontal StyledProps--main serviceDetails StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main detailsSection"
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
-            <p
-              class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main detailsSection"
             >
-              dmeo
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-            >
-              common.ID: undefined
-            </p>
-            <p
-              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-              style="--text-line-clamp: 1; width: 800px;"
-            >
-              dmeo
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main textOverflow StyledProps--font-variation-body2"
+              >
+                dmeo
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main textOverflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+              >
+                common.ID: undefined
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+                style="--text-line-clamp: 1; width: 800px;"
+              >
+                dmeo
+              </p>
+            </div>
           </div>
           <div
             class="Layout--horizontal StyledProps--main"

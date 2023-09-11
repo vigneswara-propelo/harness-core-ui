@@ -15,15 +15,17 @@ import {
   useConfirmationDialog,
   useToaster,
   Dialog,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  Icon
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, pick } from 'lodash-es'
-import { Classes, Intent, Menu, Popover, Position } from '@blueprintjs/core'
+import { defaultTo, get, isEmpty, pick } from 'lodash-es'
+import { Classes, Intent, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -36,6 +38,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
+import { CodeSourceWrapper } from '@pipeline/components/CommonPipelineStages/PipelineStage/utils'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from './ServicesListColumns.module.scss'
 
@@ -278,6 +281,63 @@ const ServiceName = ({ row }: ServiceRow): React.ReactElement => {
   )
 }
 
+const ServiceCodeSourceCell = ({ row }: ServiceRow): React.ReactElement => {
+  const { entityGitDetails: gitDetails } = row.original
+  const { getString } = useStrings()
+  const data = row.original
+  const isRemote = data.storeType === StoreType.REMOTE
+  const inlineWrapper: CodeSourceWrapper = {
+    textName: getString('inline'),
+    iconName: 'repository',
+    size: 10
+  }
+  const remoteWrapper: CodeSourceWrapper = {
+    textName: getString('repository'),
+    iconName: 'remote-setup',
+    size: 12
+  }
+
+  return (
+    <div className={css.codeSourceColumnContainer}>
+      <Popover
+        disabled={!isRemote}
+        position={Position.TOP}
+        interactionKind={PopoverInteractionKind.HOVER}
+        className={Classes.DARK}
+        content={
+          <Layout.Vertical spacing="small" padding="large" className={css.contentWrapper}>
+            <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+              <Icon name="github" size={14} color={Color.GREY_200} />
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                {get(gitDetails, 'repoName', get(gitDetails, 'repoIdentifier'))}
+              </Text>
+            </Layout.Horizontal>
+            {gitDetails?.filePath && (
+              <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+                <Icon name="remotefile" size={14} color={Color.GREY_200} />
+                <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                  {gitDetails.filePath}
+                </Text>
+              </Layout.Horizontal>
+            )}
+          </Layout.Vertical>
+        }
+      >
+        <div className={css.codeSourceColumn}>
+          <Icon
+            name={isRemote ? remoteWrapper.iconName : inlineWrapper.iconName}
+            size={isRemote ? remoteWrapper.size : inlineWrapper.size}
+            color={Color.GREY_600}
+          />
+          <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
+            {isRemote ? remoteWrapper.textName : inlineWrapper.textName}
+          </Text>
+        </div>
+      </Popover>
+    </div>
+  )
+}
+
 const ServiceDescription = ({ row }: ServiceRow): React.ReactElement => {
   const service = row.original
   return (
@@ -289,4 +349,4 @@ const ServiceDescription = ({ row }: ServiceRow): React.ReactElement => {
   )
 }
 
-export { ServiceName, ServiceDescription, ServiceMenu }
+export { ServiceName, ServiceCodeSourceCell, ServiceDescription, ServiceMenu }

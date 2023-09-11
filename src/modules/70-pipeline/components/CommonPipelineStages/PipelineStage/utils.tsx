@@ -22,7 +22,7 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import css from './PipelineStageMinimalMode.module.scss'
 
-interface CodeSourceWrapper {
+export interface CodeSourceWrapper {
   textName: string
   iconName: IconName
   size: number

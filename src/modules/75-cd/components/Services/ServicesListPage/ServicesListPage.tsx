@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import qs from 'qs'
 import cx from 'classnames'
 import {
   Dialog,
@@ -45,6 +46,7 @@ import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import {
@@ -62,10 +64,7 @@ interface ServicesListPageProps {
 export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isCommunity = useGetCommunity()
-  // const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  // const isCdsV1EOLEnabled = useFeatureFlag(FeatureFlag.CDS_V1_EOL_BANNER)
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled, CDS_V1_EOL_BANNER: isCdsV1EOLEnabled } = useFeatureFlags()
-
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -143,6 +142,18 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
         return
       }
       if (selectedService?.identifier) {
+        let remoteQueryParams = ''
+
+        if (selectedService?.storeType === StoreType.REMOTE) {
+          remoteQueryParams = `&${qs.stringify(
+            {
+              storeType: selectedService?.storeType,
+              connectorRef: selectedService?.connectorRef,
+              repoName: selectedService.entityGitDetails?.repoName
+            },
+            { skipNulls: true }
+          )}`
+        }
         history.push({
           pathname: routes.toServiceStudio({
             accountId,
@@ -152,10 +163,10 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
             module
           }),
           search: isSvcEnvEntityEnabled
-            ? `tab=${ServiceTabs.Configuration}`
+            ? `tab=${ServiceTabs.Configuration}${remoteQueryParams}`
             : projectIdentifier
-            ? `tab=${ServiceTabs.SUMMARY}`
-            : `tab=${ServiceTabs.REFERENCED_BY}`
+            ? `tab=${ServiceTabs.SUMMARY}${remoteQueryParams}`
+            : `tab=${ServiceTabs.REFERENCED_BY}${remoteQueryParams}`
         })
       } else {
         showError(getString('cd.serviceList.noIdentifier'))

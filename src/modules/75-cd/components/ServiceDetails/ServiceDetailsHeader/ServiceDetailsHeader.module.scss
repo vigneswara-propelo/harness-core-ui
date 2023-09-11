@@ -13,7 +13,10 @@
     flex-grow: 1;
     max-width: 100%;
     .detailsSection {
-      max-width: 85%;
+      width: 85%;
+    }
+    .detailsSectionForRemote {
+      width: 250px;
     }
     .textOverflow {
       text-overflow: ellipsis;
@@ -24,6 +27,15 @@
   .cursor {
     cursor: pointer;
   }
+}
+
+.gitRemoteDetailsWrapper {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 12px;
+  border: 1px solid var(--grey-200) !important;
+  border-radius: var(--spacing-2);
+  height: 32px;
 }
 
 .headerWithDescShown {

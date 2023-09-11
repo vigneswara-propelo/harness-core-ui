@@ -22,6 +22,7 @@ export interface ServiceContextValues {
   gitOpsEnabled: boolean
   deploymentMetadata?: DeploymentMetaData
   isDeploymentTypeDisabled: boolean
+  hasRemoteFetchFailed?: boolean
   setIsDeploymentTypeDisabled?(status: boolean): void
   drawerOpen?: boolean
   setDrawerOpen?: (setOpen: boolean) => void

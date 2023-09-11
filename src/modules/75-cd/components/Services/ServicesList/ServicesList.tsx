@@ -62,6 +62,7 @@ import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import { ServiceTabs } from '../utils/ServiceUtils'
+//import { ServiceCodeSourceCell } from '../ServicesListColumns/ServicesListColumns'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
 export enum DeploymentStatus {
@@ -75,6 +76,9 @@ export interface ServiceListItem {
   tags?: {
     [key: string]: string
   }
+  // storeType: ServiceDetailsDTOV2['storeType']
+  // connectorRef: ServiceDetailsDTOV2['connectorRef']
+  // entityGitDetails: ServiceDetailsDTOV2['entityGitDetails']
   deploymentTypeList: string[]
   deploymentIconList: IconDTO[]
   serviceInstances: {
@@ -112,6 +116,9 @@ const transformServiceDetailsData = (data: ServiceDetailsDTOV2[]): ServiceListIt
     identifier: defaultTo(item.serviceIdentifier, ''),
     description: defaultTo(item.description, ''),
     tags: defaultTo(item.tags, {}),
+    // storeType: item.storeType,
+    // connectorRef: item.connectorRef,
+    // entityGitDetails: item.entityGitDetails,
     deploymentTypeList: defaultTo(item.deploymentTypeList, []),
     deploymentIconList: defaultTo(item.deploymentIconList, []),
     serviceInstances: {
@@ -588,6 +595,7 @@ function ServiceListHeaderCustomPrimary(headerProps: { total?: number }): JSX.El
 
 export const ServicesList: React.FC<ServicesListProps> = props => {
   const { loading, data, error, refetch, setSavedSortOption, setSort, sort } = props
+  const isGitXEnabledForServices = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
@@ -615,9 +623,15 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('service').toLocaleUpperCase(),
           id: 'service',
-          width: '20%',
+          width: isGitXEnabledForServices ? '15%' : '20%',
           Cell: RenderServiceName
         },
+        // {
+        //   Header: getString('pipeline.codeSource'),
+        //   accessor: 'storeType',
+        //   width: '10%',
+        //   Cell: ServiceCodeSourceCell
+        // },
         {
           Header: getString('typeLabel').toLocaleUpperCase(),
           id: 'type',
@@ -627,7 +641,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.activeInstanceCount').toLocaleUpperCase(),
           id: 'serviceInstances',
-          width: '14%',
+          width: isGitXEnabledForServices ? '9%' : '14%',
           Cell: RenderServiceInstances
         },
         {

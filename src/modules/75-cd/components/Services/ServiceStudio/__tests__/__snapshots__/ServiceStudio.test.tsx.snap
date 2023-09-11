@@ -99,6 +99,15 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main textOverflow detailsSection StyledProps--font-variation-body2"
+          >
+            common.ID: testServiceId
+          </p>
+        </div>
       </div>
     </div>
     <div

@@ -37,7 +37,7 @@ export enum ErrorPlacement {
 }
 interface NoEntityFoundProps {
   identifier: string
-  entityType: 'pipeline' | 'inputSet' | 'template' | 'overlayInputSet'
+  entityType: 'pipeline' | 'inputSet' | 'template' | 'overlayInputSet' | 'service'
   errorObj?: Error | TemplateError
   gitDetails?: GitRemoteDetailsProps
   entityConnectorRef?: string
@@ -49,7 +49,8 @@ const entityTypeLabelMapping = {
   pipeline: 'pipeline',
   inputSet: 'input set',
   overlayInputSet: 'overlay input set',
-  template: 'template'
+  template: 'template',
+  service: 'service'
 }
 
 export interface IRemoteFetchError extends GetDataError<Failure | Error> {
@@ -142,6 +143,8 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
             location.reload()
           } else if (entityType === 'overlayInputSet') {
             onBranchChange?.(defaultTo(selectedFilter.branch, ''))
+          } else if (entityType === 'service') {
+            updateQueryParams({ branch: selectedFilter.branch })
           } else {
             history.push(
               routes.toTemplateStudio({

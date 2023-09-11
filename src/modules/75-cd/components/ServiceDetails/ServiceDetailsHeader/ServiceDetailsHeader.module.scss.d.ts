@@ -9,6 +9,8 @@
 declare const styles: {
   readonly cursor: string
   readonly detailsSection: string
+  readonly detailsSectionForRemote: string
+  readonly gitRemoteDetailsWrapper: string
   readonly header: string
   readonly headerWithDescShown: string
   readonly notificationPopover: string

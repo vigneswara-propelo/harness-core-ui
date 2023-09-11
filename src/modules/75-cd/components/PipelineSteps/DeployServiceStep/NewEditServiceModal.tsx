@@ -136,12 +136,12 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           }
         }
       )
-      if (response.status === 'SUCCESS') {
+      if (response.status === 'SUCCESS' && response?.data?.service) {
         clear()
         showSuccess(getString('cd.serviceCreated'))
         // We invalidate the service list call on creating a new service
         queryClient.invalidateQueries(['getServiceAccessList'])
-        payload && onCreateOrUpdate(payload)
+        payload && onCreateOrUpdate(response?.data?.service)
       }
       return Promise.resolve(response)
     }

@@ -58,6 +58,7 @@ const NewEditServiceForm: React.FC<NewEditServiceFormProps> = props => {
           </Text>
           <InlineRemoteSelect
             className={css.serviceCardWrapper}
+            entityType={'Service'}
             selected={defaultTo(formikProps?.values?.storeType, StoreType.INLINE)}
             getCardDisabledStatus={(current, selected) => {
               return isEdit ? current !== selected : false

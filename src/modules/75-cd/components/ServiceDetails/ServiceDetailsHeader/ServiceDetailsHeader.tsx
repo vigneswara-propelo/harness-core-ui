@@ -12,22 +12,32 @@ import { Classes, Position } from '@blueprintjs/core'
 import { Button, ButtonSize, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
-import { defaultTo } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetServiceHeaderInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import { useQueryParams } from '@common/hooks'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import type { ModulePathParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type {
+  GitQueryParams,
+  ModulePathParams,
+  ProjectPathProps,
+  ServicePathProps
+} from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ServiceHeaderRefetchRef } from '@cd/components/Services/ServiceStudio/ServiceStudio'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { ServiceTabs } from '@cd/components/Services/utils/ServiceUtils'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
+import {
+  EntityCachedCopy,
+  EntityCachedCopyHandle
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import notificationImg from './notificationImg.svg'
 import css from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader.module.scss'
 
@@ -39,17 +49,32 @@ export const ServiceDetailsHeader = (
     ProjectPathProps & ModulePathParams & ServicePathProps
   >()
   const { getString } = useStrings()
-  const { setDrawerOpen, notificationPopoverVisibility, setNotificationPopoverVisibility } = useServiceContext()
-  const { tab } = useQueryParams<{ tab: string }>()
-  const showNotificationIcon =
-    useFeatureFlag(FeatureFlag.CDC_SERVICE_DASHBOARD_REVAMP_NG) && (!tab || tab === ServiceTabs.SUMMARY)
+  const {
+    serviceResponse,
+    hasRemoteFetchFailed,
+    setDrawerOpen,
+    notificationPopoverVisibility,
+    setNotificationPopoverVisibility
+  } = useServiceContext()
+  const { tab, storeType, connectorRef, repoName, branch = '' } = useQueryParams<{ tab: string } & GitQueryParams>()
+  const { CDC_SERVICE_DASHBOARD_REVAMP_NG, CDS_SERVICE_GITX } = useFeatureFlags()
+  const showNotificationIcon = CDC_SERVICE_DASHBOARD_REVAMP_NG && (!tab || tab === ServiceTabs.SUMMARY)
+  const { updateQueryParams } = useUpdateQueryParams()
+  const gitDetails = serviceResponse?.entityGitDetails
 
   const { loading, error, data, refetch } = useGetServiceHeaderInfo({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      serviceId
+      serviceId,
+      ...(storeType === StoreType.REMOTE
+        ? {
+            connectorRef,
+            repoName,
+            ...(branch ? { branch } : { loadFromFallbackBranch: true })
+          }
+        : {})
     }
   })
 
@@ -62,6 +87,39 @@ export const ServiceDetailsHeader = (
 
   useDocumentTitle([data?.data?.name || getString('services')])
 
+  const serviceCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
+  const isServiceRemote = CDS_SERVICE_GITX && storeType === 'REMOTE'
+
+  const onGitBranchChange = (selectedFilter: { branch: string }): void => {
+    updateQueryParams({ branch: selectedFilter.branch })
+  }
+
+  const renderRemoteDetails = (): JSX.Element | null => {
+    return CDS_SERVICE_GITX && storeType === 'REMOTE' ? (
+      <div className={css.gitRemoteDetailsWrapper}>
+        <GitRemoteDetails
+          connectorRef={connectorRef}
+          repoName={defaultTo(gitDetails?.repoName, repoName)}
+          filePath={defaultTo(gitDetails?.filePath, '')}
+          fileUrl={defaultTo(gitDetails?.fileUrl, '')}
+          branch={defaultTo(gitDetails?.branch, branch)}
+          onBranchChange={onGitBranchChange}
+          flags={{
+            readOnly: false
+          }}
+        />
+        {hasRemoteFetchFailed && (
+          <EntityCachedCopy
+            ref={serviceCachedCopyRef}
+            reloadContent={getString('common.pipeline')}
+            cacheResponse={serviceResponse?.cacheResponseMetadataDTO}
+            reloadFromCache={noop}
+          />
+        )}
+      </div>
+    ) : null
+  }
+
   const TitleComponent =
     data?.data && !loading && !error ? (
       <Layout.Horizontal padding={{ top: 'small', right: 'medium' }} width="100%">
@@ -73,20 +131,25 @@ export const ServiceDetailsHeader = (
           />
         </Layout.Horizontal>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }} className={css.serviceDetails}>
-          <Layout.Vertical className={css.detailsSection} spacing={'small'}>
-            <Text font={{ size: 'medium' }} color={Color.BLACK} className={css.textOverflow}>
-              {data.data.name}
-            </Text>
-            <Text font={{ size: 'small' }} color={Color.GREY_500} className={css.textOverflow}>
-              {`${getString('common.ID')}: ${serviceId}`}
-            </Text>
-            {data.data.description && (
-              <Text font={{ size: 'small' }} color={Color.GREY_500} width={800} lineClamp={1}>
-                {data.data.description}
+          <Layout.Horizontal spacing={'small'}>
+            <Layout.Vertical
+              className={cx(isServiceRemote ? css.detailsSectionForRemote : css.detailsSection)}
+              spacing={'small'}
+            >
+              <Text font={{ variation: FontVariation.BODY2 }} className={css.textOverflow}>
+                {data.data.name}
               </Text>
-            )}
-          </Layout.Vertical>
-
+              <Text font={{ size: 'small' }} color={Color.GREY_500} className={css.textOverflow}>
+                {`${getString('common.ID')}: ${serviceId}`}
+              </Text>
+              {data.data.description && (
+                <Text font={{ size: 'small' }} color={Color.GREY_500} width={800} lineClamp={1}>
+                  {data.data.description}
+                </Text>
+              )}
+            </Layout.Vertical>
+            {renderRemoteDetails()}
+          </Layout.Horizontal>
           <Layout.Horizontal>
             <Layout.Vertical padding={{ right: showNotificationIcon ? 'xxlarge' : '' }}>
               <Layout.Horizontal margin={{ bottom: 'small' }}>
@@ -154,7 +217,15 @@ export const ServiceDetailsHeader = (
         </Layout.Horizontal>
       </Layout.Horizontal>
     ) : (
-      serviceId
+      <Layout.Horizontal>
+        <Text
+          font={{ variation: FontVariation.BODY2 }}
+          className={cx(css.textOverflow, isServiceRemote ? css.detailsSectionForRemote : css.detailsSection)}
+        >
+          {`${getString('common.ID')}: ${serviceId}`}
+        </Text>
+        {renderRemoteDetails()}
+      </Layout.Horizontal>
     )
 
   return (

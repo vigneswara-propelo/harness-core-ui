@@ -12,7 +12,13 @@ import type { ResponsePageServiceResponse, ServiceResponseDTO } from 'services/c
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
-import { ServiceName, ServiceDescription, ServiceMenu } from '../ServicesListColumns/ServicesListColumns'
+import { useStrings } from 'framework/strings'
+import {
+  ServiceName,
+  ServiceDescription,
+  ServiceMenu,
+  ServiceCodeSourceCell
+} from '../ServicesListColumns/ServicesListColumns'
 import { SERVICES_DEFAULT_PAGE_SIZE } from '../utils/ServiceUtils'
 import css from './ServicesListView.module.scss'
 
@@ -25,7 +31,8 @@ interface ServicesListViewProps {
 }
 const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
   const { data, onServiceSelect, loading, isForceDeleteEnabled } = props
-  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const { getString } = useStrings()
+  const { PL_NEW_PAGE_SIZE, CDS_SERVICE_GITX } = useFeatureFlags()
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
     pageSize: data?.data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SERVICES_DEFAULT_PAGE_SIZE),
@@ -50,10 +57,20 @@ const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
               width: '60%',
               Cell: ServiceName
             },
+            ...(CDS_SERVICE_GITX
+              ? [
+                  {
+                    Header: getString('pipeline.codeSource'),
+                    accessor: 'codeSource',
+                    width: '25%',
+                    Cell: ServiceCodeSourceCell
+                  }
+                ]
+              : []),
             {
               Header: 'DESCRIPTION',
               id: 'destination',
-              width: '35%',
+              width: '30%',
               Cell: ServiceDescription
             },
             {

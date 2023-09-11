@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, screen, render, waitFor } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -99,6 +99,11 @@ describe('NewEditServiceForm test', () => {
     expect(inlineStoreTypeCard?.classList.contains('Card--selected')).toBe(true)
     expect(remoteStoreTypeCard?.classList.contains('Card--selected')).toBe(false)
     expect(remoteStoreTypeCard?.classList.contains('Card--interactive')).toBe(true)
+    // Storetype onChange should change storeType while creating
+    act(() => {
+      fireEvent.click(remoteStoreTypeCard!)
+    })
+    expect(remoteStoreTypeCard?.classList.contains('Card--selected')).toBe(true)
   })
 
   test('Inline should be selected and Remote option disabled while editing for Inline service', async () => {
@@ -131,5 +136,10 @@ describe('NewEditServiceForm test', () => {
     expect(remoteStoreTypeCard?.classList.contains('Card--selected')).toBe(false)
     expect(remoteStoreTypeCard?.classList.contains('Card--interactive')).toBe(false)
     expect(remoteStoreTypeCard?.classList.contains('Card--disabled')).toBe(true)
+    // Storetype onChange should not change storeType while editing
+    act(() => {
+      fireEvent.click(remoteStoreTypeCard!)
+    })
+    expect(remoteStoreTypeCard?.classList.contains('Card--selected')).toBe(false)
   })
 })
