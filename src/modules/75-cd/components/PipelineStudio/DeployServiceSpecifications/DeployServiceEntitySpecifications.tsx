@@ -7,12 +7,13 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
+import { useParams } from 'react-router-dom'
 import { AllowedTypes, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import produce from 'immer'
 import { defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { StageElementConfig } from 'services/cd-ng'
+import type { ServicesYaml, ServiceYamlV2, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
@@ -27,7 +28,13 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getTemplatePromise, TemplateResponse } from 'services/template-ng'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { setupMode } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
 import type {
   DeployServiceEntityCustomProps,
   DeployServiceEntityData
@@ -44,6 +51,15 @@ export interface DeployServiceEntitySpecificationsProps {
   customRef?: React.Ref<HTMLDivElement>
 }
 
+type DeployServiceWidgetInitValues = {
+  service?: ServiceYamlV2
+  services?: ServicesYaml
+}
+
+type TemplateStageIdVsServiceConfigMap = {
+  [key: string]: DeployServiceWidgetInitValues
+}
+
 export default function DeployServiceEntitySpecifications({
   setDefaultServiceSchema,
   customRef,
@@ -54,14 +70,15 @@ export default function DeployServiceEntitySpecifications({
       pipeline,
       templateTypes,
       templateServiceData,
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      storeMetadata,
+      gitDetails
     },
     allowableTypes,
     isReadonly,
     scope,
     contextType,
     getStageFromPipeline,
-    setSelection,
     updateStage
   } = usePipelineContext()
   const domRef = React.useRef<HTMLDivElement | null>(null)
@@ -79,53 +96,84 @@ export default function DeployServiceEntitySpecifications({
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
+  const { CDS_MULTI_SERVICE_PROPAGATION: isMultiServicePropagationAllowed } = useFeatureFlags()
+  const params = useParams<ProjectPathProps>()
 
-  const [setupModeType, setSetupMode] = useState(
-    isEmpty(stage?.stage?.spec?.service?.useFromStage) ? setupMode.DIFFERENT : setupMode.PROPAGATE
-  )
+  const useFromStageValue = stage?.stage?.spec?.service?.useFromStage || stage?.stage?.spec?.services?.useFromStage
 
-  const getStagesAllowedforPropogate = useCallback(
-    (stageItem): boolean => {
-      const currentStageType = stage?.stage?.type
-      const currentStageDeploymentType = stage?.stage?.spec?.deploymentType
-      if (stageItem.stage.template) {
-        const stageType = get(templateTypes, stageItem.stage.template.templateRef)
-        const deploymentType = get(templateServiceData, stageItem.stage.template.templateRef)
-        return (
-          !isEmpty(stageItem.stage.template.templateRef) &&
-          currentStageType === stageType &&
-          deploymentType === currentStageDeploymentType
-        )
-      } else {
-        const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
+  const [setupModeType, setSetupMode] = useState(isEmpty(useFromStageValue) ? setupMode.DIFFERENT : setupMode.PROPAGATE)
 
-        /*  Currently BE does not support use from stage with multi services, so commenting this temporarily, to filter out stages with multi service. 
-        Once BE has support for multi service propagate, we need to just add the condition as ( !isSingleSvcEmpty || !isMultiSvcEmpty) */
-        // const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
+  const [deployServiceWidgetInitValues, setDeployServiceWidgetInitValues] =
+    React.useState<DeployServiceWidgetInitValues>(
+      setupModeType === setupMode.DIFFERENT
+        ? {
+            ...pick(stage?.stage?.spec, ['service', 'services']),
+            ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
+              isEmpty(get(stage, 'stage.spec.service.serviceRef')) &&
+              isEmpty(get(stage, 'stage.spec.services.values')) && {
+                service: { serviceRef: RUNTIME_INPUT_VALUE }
+              })
+          }
+        : {}
+    )
 
-        const prevStageItemDeploymentType = (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType
-        const prevStageItemCustomDeploymentConfig = (stageItem.stage as DeploymentStageElementConfig)?.spec
-          ?.customDeploymentRef
-        const currentStageCustomDeploymentConfig = stage?.stage?.spec?.customDeploymentRef
+  const [templateStageIdVsServiceConfigMap, setTemplateStageIdVsServiceConfigMap] =
+    React.useState<TemplateStageIdVsServiceConfigMap>({})
 
-        const areDeploymentDetailsSame =
-          currentStageDeploymentType === ServiceDeploymentType.CustomDeployment
-            ? prevStageItemDeploymentType === currentStageDeploymentType &&
-              isEqual(prevStageItemCustomDeploymentConfig, currentStageCustomDeploymentConfig)
-            : prevStageItemDeploymentType === currentStageDeploymentType
+  const getStagesAllowedforPropogate = (stageItem: StageElementWrapperConfig): boolean => {
+    const currentStageType = stage?.stage?.type
+    const currentStageDeploymentType = stage?.stage?.spec?.deploymentType
+    if (stageItem?.stage?.template) {
+      const templateRef = stageItem.stage.template.templateRef
+      const stageType = get(templateTypes, templateRef)
+      const deploymentType = get(templateServiceData, templateRef)
+      return !isEmpty(templateRef) && currentStageType === stageType && deploymentType === currentStageDeploymentType
+    } else {
+      // Propagate from is support for both Single and Multi Service Stages
+      const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
+      const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
 
-        return !isSingleSvcEmpty && currentStageType === stageItem?.stage?.type && areDeploymentDetailsSame
+      const prevStageItemDeploymentType = (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType
+      const prevStageItemCustomDeploymentConfig = (stageItem.stage as DeploymentStageElementConfig)?.spec
+        ?.customDeploymentRef
+      const currentStageCustomDeploymentConfig = stage?.stage?.spec?.customDeploymentRef
+
+      const areDeploymentDetailsSame =
+        currentStageDeploymentType === ServiceDeploymentType.CustomDeployment
+          ? prevStageItemDeploymentType === currentStageDeploymentType &&
+            isEqual(prevStageItemCustomDeploymentConfig, currentStageCustomDeploymentConfig)
+          : prevStageItemDeploymentType === currentStageDeploymentType
+
+      const isStageTypeSame = currentStageType === stageItem?.stage?.type
+
+      // Criteria for stages to be allowed for propagation:
+      // 1. Service (Single/Multiple) should be non-empty
+      // 2. Stage type should be same (example - Both Should be deploy stages)
+      // 3. Deployment details such as deployment type or custom deployment config should be same
+
+      if (isMultiServicePropagationAllowed) {
+        return (!isSingleSvcEmpty || !isMultiSvcEmpty) && isStageTypeSame && areDeploymentDetailsSame
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+
+      return !isSingleSvcEmpty && isStageTypeSame && areDeploymentDetailsSame
+    }
+  }
+
+  const listOfStagesCurrentStageCanBePropagatedFrom = React.useMemo(
+    () => stages.slice(0, stageIndex).filter(getStagesAllowedforPropogate),
+    [stages, stageIndex, stage]
   )
+
+  const getPropagatedFromStage = (stageIdentifier: string) => {
+    return listOfStagesCurrentStageCanBePropagatedFrom?.find(
+      eachStage => eachStage?.stage?.identifier === stageIdentifier
+    )
+  }
 
   const previousStageList = useMemo(() => {
     if (stages.length && stageIndex > 0) {
       //stage allowed for use from stage should have service V2 services and the deployment type, stage type should be same as current stage
-      const stagewithServiceV2 = stages.slice(0, stageIndex).filter(getStagesAllowedforPropogate)
-      return stagewithServiceV2.map(stageItem => {
+      return listOfStagesCurrentStageCanBePropagatedFrom.map(stageItem => {
         if (stageItem.stage?.template) {
           return {
             label: `Stage [${stageItem.stage?.name}] - Template [${stageItem.stage.template.templateRef}]`,
@@ -133,7 +181,13 @@ export default function DeployServiceEntitySpecifications({
           }
         } else if (!get(stageItem.stage, `spec.serviceConfig.useFromStage`)) {
           const singleServiceRef = (stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef
-          const serviceLabelVal = isEmpty(singleServiceRef) ? getString('services') : `Service [${singleServiceRef}]`
+          const multiServiceConfigurationPresent = !isEmpty(
+            (stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values
+          )
+          const serviceLabelVal =
+            isEmpty(singleServiceRef) && multiServiceConfigurationPresent
+              ? getString('multipleService')
+              : `Service [${singleServiceRef}]`
           return {
             label: `Stage [${stageItem.stage?.name}] - ${serviceLabelVal}`,
             value: stageItem.stage?.identifier
@@ -142,14 +196,19 @@ export default function DeployServiceEntitySpecifications({
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stageIndex])
+  }, [stageIndex, listOfStagesCurrentStageCanBePropagatedFrom])
 
   const [selectedPropagatedState, setSelectedPropagatedState] = useState<SelectOption | string>(
-    previousStageList?.find(v => v?.value === stage?.stage?.spec?.service?.useFromStage?.stage) as SelectOption
+    previousStageList?.find(v => v?.value === useFromStageValue?.stage) as SelectOption
   )
 
   useEffect(() => {
-    if (typeof stage !== 'undefined') {
+    // No need to set default service schema when service propagation
+    if (
+      typeof stage !== 'undefined' &&
+      isEmpty(get(stage, 'stage.spec.service.useFromStage')) &&
+      isEmpty(get(stage, 'stage.spec.services.useFromStage'))
+    ) {
       setDefaultServiceSchema()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,55 +244,197 @@ export default function DeployServiceEntitySpecifications({
     if (setupModeType === setupMode.PROPAGATE) {
       if (!previousStageList?.find(item => item === selectedPropagatedState)) {
         onStageServiceChange(setupMode.DIFFERENT)
-        setSelection({
-          sectionId: null,
-          stageId: null
-        })
       }
     }
   }, [stageIndex])
 
   const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
 
-  const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
-    if (setupModeType === setupMode.DIFFERENT) {
-      return {
+  const getInitValuesFromServiceConfiguration = (singleOrMultiServiceConfiguration: DeployServiceWidgetInitValues) => {
+    const updatedSingleOrMultiServiceConfiguration = produce(singleOrMultiServiceConfiguration, draft => {
+      if (!isEmpty(singleOrMultiServiceConfiguration?.services)) {
+        // Metadata -> parallel field should not be propagated
+        const currentStageMetadataValue = get(stage?.stage?.spec, 'services.metadata')
+        set(draft, 'services.metadata', currentStageMetadataValue)
+      }
+    })
+
+    return {
+      ...updatedSingleOrMultiServiceConfiguration,
+      ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
+        isEmpty(useFromStageValue) && {
+          service: { serviceRef: RUNTIME_INPUT_VALUE }
+        })
+    }
+  }
+
+  const getQueryParamsForTemplateFetch = (templateDetails: TemplateLinkConfig) => {
+    const { templateRef, versionLabel } = templateDetails || {}
+    const templateScope = getScopeFromValue(defaultTo(templateRef, ''))
+
+    return {
+      accountIdentifier: params.accountId,
+      projectIdentifier: templateScope === Scope.PROJECT ? params.projectIdentifier : undefined,
+      orgIdentifier: templateScope === Scope.PROJECT || templateScope === Scope.ORG ? params.orgIdentifier : undefined,
+      versionLabel: versionLabel,
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: {
+          accountId: defaultTo(params.accountId, ''),
+          orgIdentifier: defaultTo(params.orgIdentifier, ''),
+          projectIdentifier: defaultTo(params.projectIdentifier, '')
+        },
+        repoIdentifier: gitDetails.repoIdentifier,
+        branch: defaultTo(templateDetails?.gitBranch, gitDetails.branch),
+        sendParentEntityDetails: !templateDetails?.gitBranch
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (useFromStageValue?.stage) {
+      const propogatedFromStage = getPropagatedFromStage(useFromStageValue?.stage as string)
+      // Current stage propagates from a stage template (needs to be resolved)
+      if (!isEmpty(propogatedFromStage?.stage?.template)) {
+        const templateDetails = propogatedFromStage?.stage?.template || {}
+        const { templateRef } = templateDetails as TemplateLinkConfig
+        const singleOrMultiServiceConfigurationFromCache = get(
+          templateStageIdVsServiceConfigMap,
+          useFromStageValue?.stage
+        ) as DeployServiceWidgetInitValues
+
+        if (isEmpty(singleOrMultiServiceConfigurationFromCache)) {
+          getTemplatePromise({
+            templateIdentifier: getIdentifierFromValue(templateRef || ''),
+            queryParams: getQueryParamsForTemplateFetch(templateDetails as TemplateLinkConfig),
+            requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+          }).then(templateResponse => {
+            const parsedTemplate = get(
+              parse(defaultTo((templateResponse?.data as TemplateResponse)?.yaml, '')),
+              'template'
+            )
+            const singleOrMultiServiceConfiguration = pick(parsedTemplate?.spec?.spec, [
+              'service',
+              'services'
+            ]) as DeployServiceWidgetInitValues
+
+            const updatedStageIdVsServiceConfigMap = produce(templateStageIdVsServiceConfigMap, draft => {
+              set(draft, useFromStageValue.stage, singleOrMultiServiceConfiguration)
+            })
+
+            setTemplateStageIdVsServiceConfigMap(updatedStageIdVsServiceConfigMap)
+            setDeployServiceWidgetInitValues(getInitValuesFromServiceConfiguration(singleOrMultiServiceConfiguration))
+          })
+        } else {
+          setDeployServiceWidgetInitValues(
+            getInitValuesFromServiceConfiguration(singleOrMultiServiceConfigurationFromCache)
+          )
+        }
+      } else {
+        const singleOrMultiServiceConfiguration = pick(propogatedFromStage?.stage?.spec, [
+          'service',
+          'services'
+        ]) as DeployServiceWidgetInitValues
+        setDeployServiceWidgetInitValues(getInitValuesFromServiceConfiguration(singleOrMultiServiceConfiguration))
+      }
+    } else {
+      // This handles the resetting behaviour when setup stage option has been changed to Different or propagate
+      setDeployServiceWidgetInitValues({
         ...pick(stage?.stage?.spec, ['service', 'services']),
         ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
           isEmpty(get(stage, 'stage.spec.service.serviceRef')) &&
           isEmpty(get(stage, 'stage.spec.services.values')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
           })
+      })
+    }
+  }, [setupModeType, useFromStageValue, stage, scope, contextType, templateStageIdVsServiceConfigMap])
+
+  const onPropogatedStageSelect = (value: SelectOption): void => {
+    const propogatedFromStage = getPropagatedFromStage(value.value as string)
+    setSelectedPropagatedState(value)
+
+    if (!isEmpty(propogatedFromStage?.stage?.template)) {
+      const templateDetails = propogatedFromStage?.stage?.template || {}
+      const { templateRef } = templateDetails as TemplateLinkConfig
+      const singleOrMultiServiceConfigurationFromCache = get(
+        templateStageIdVsServiceConfigMap,
+        value.value as string
+      ) as DeployServiceWidgetInitValues
+
+      if (isEmpty(singleOrMultiServiceConfigurationFromCache)) {
+        getTemplatePromise({
+          templateIdentifier: getIdentifierFromValue(templateRef || ''),
+          queryParams: getQueryParamsForTemplateFetch(templateDetails as TemplateLinkConfig),
+          requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+        }).then(templateResponse => {
+          const parsedTemplate = get(
+            parse(defaultTo((templateResponse?.data as TemplateResponse)?.yaml, '')),
+            'template'
+          )
+          const singleOrMultiServiceConfiguration = pick(parsedTemplate?.spec?.spec, [
+            'service',
+            'services'
+          ]) as DeployServiceWidgetInitValues
+
+          const updatedStageIdVsServiceConfigMap = produce(templateStageIdVsServiceConfigMap, draft => {
+            set(draft, value.value, singleOrMultiServiceConfiguration)
+          })
+
+          setTemplateStageIdVsServiceConfigMap(updatedStageIdVsServiceConfigMap)
+          const isMultiSvcTemplate = !isEmpty(singleOrMultiServiceConfiguration?.services)
+
+          const stageData = produce(stage, draft => {
+            if (draft) {
+              if (isMultiSvcTemplate) {
+                // Parent stage has multi service configuration
+                unset(draft, 'stage.spec.service')
+                set(draft, 'stage.spec.services', {
+                  useFromStage: { stage: value.value },
+                  metadata: { parallel: true }
+                })
+              } else {
+                unset(draft, 'stage.spec.services')
+                set(draft, 'stage.spec.service', { useFromStage: { stage: value.value } })
+              }
+            }
+          })
+          updateStageCallback(stageData?.stage)
+        })
+      } else {
+        const isMultiSvcTemplate = !isEmpty(singleOrMultiServiceConfigurationFromCache?.services)
+        const stageData = produce(stage, draft => {
+          if (draft) {
+            if (isMultiSvcTemplate) {
+              // Parent stage has multi service configuration
+              unset(draft, 'stage.spec.service')
+              set(draft, 'stage.spec.services', { useFromStage: { stage: value.value }, metadata: { parallel: true } })
+            } else {
+              unset(draft, 'stage.spec.services')
+              set(draft, 'stage.spec.service', { useFromStage: { stage: value.value } })
+            }
+          }
+        })
+        updateStageCallback(stageData?.stage)
       }
     } else {
-      const stagewithServiceV2 = stages.slice(0, stageIndex).filter(getStagesAllowedforPropogate)
-      const propogatedFromStage = stagewithServiceV2?.find(
-        eachStage => eachStage?.stage?.identifier === stage?.stage?.spec?.service?.useFromStage?.stage
-      )
-      return {
-        ...pick(propogatedFromStage?.stage?.spec, ['service', 'services']),
-        ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
-          isEmpty(get(stage, 'stage.spec.service.useFromStage')) && {
-            service: { serviceRef: RUNTIME_INPUT_VALUE }
-          })
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setupModeType, stage?.stage?.spec?.service?.useFromStage?.stage, selectedPropagatedState])
-
-  const onPropogatedStageSelect = useCallback(
-    (value: SelectOption): void => {
+      // Parent stage is non template, no need to resolve
       const stageData = produce(stage, draft => {
         if (draft) {
-          set(draft, 'stage.spec.service', { useFromStage: { stage: value.value } })
+          if (!isEmpty((propogatedFromStage?.stage as DeploymentStageElementConfig)?.spec?.services?.values)) {
+            // Parent stage has multi service configuration
+            unset(draft, 'stage.spec.service')
+            set(draft, 'stage.spec.services', { useFromStage: { stage: value.value }, metadata: { parallel: true } })
+          } else {
+            unset(draft, 'stage.spec.services')
+            set(draft, 'stage.spec.service', { useFromStage: { stage: value.value } })
+          }
         }
       })
       updateStageCallback(stageData?.stage)
-      setSelectedPropagatedState(value)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stage]
-  )
+    }
+  }
+
   const onStageServiceChange = useCallback(
     (mode: string): void => {
       if (!isReadonly) {
@@ -242,7 +443,11 @@ export default function DeployServiceEntitySpecifications({
         const stageData = produce(stage, draft => {
           if (draft) {
             if (mode === setupMode.DIFFERENT) {
-              unset(draft, 'stage.spec.service.useFromStage')
+              unset(draft, 'stage.spec.services')
+              set(draft, 'stage.spec.service', { serviceRef: '' })
+            } else if (mode === setupMode.PROPAGATE) {
+              unset(draft, 'stage.spec.service')
+              unset(draft, 'stage.spec.services')
             }
           }
         })
@@ -278,7 +483,7 @@ export default function DeployServiceEntitySpecifications({
         <StepWidget<DeployServiceEntityData, DeployServiceEntityCustomProps>
           type={StepType.DeployServiceEntity}
           readonly={isReadonly || setupModeType === setupMode.PROPAGATE}
-          initialValues={getDeployServiceWidgetInitValues()}
+          initialValues={deployServiceWidgetInitValues}
           allowableTypes={
             scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
               ? allowableTypes

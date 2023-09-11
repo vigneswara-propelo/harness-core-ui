@@ -90,12 +90,15 @@ export default function SingleServiceInputSetForm({
         const stageType = get(templateTypes, stageItem.stage.template.templateRef)
         return (
           stageType === StageType.DEPLOY &&
-          !(stageItem?.stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage
+          !(stageItem?.stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage &&
+          !(stageItem?.stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.services?.useFromStage
         )
       } else {
         const stageType = stageItem?.stage?.type
         return (
-          stageType === StageType.DEPLOY && !(stageItem?.stage?.spec as DeploymentStageConfig)?.service?.useFromStage
+          stageType === StageType.DEPLOY &&
+          !(stageItem?.stage?.spec as DeploymentStageConfig)?.service?.useFromStage &&
+          !(stageItem?.stage?.spec as DeploymentStageConfig)?.services?.useFromStage
         )
       }
     },
@@ -117,7 +120,14 @@ export default function SingleServiceInputSetForm({
           }
         } else {
           const singleServiceRef = (stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef
-          const serviceLabelVal = isEmpty(singleServiceRef) ? getString('services') : `Service [${singleServiceRef}]`
+          const isMultiServiceConfigurationPresent = !isEmpty(
+            (stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values
+          )
+          const serviceLabelVal =
+            isEmpty(singleServiceRef) && isMultiServiceConfigurationPresent
+              ? getString('multipleService')
+              : `Service [${singleServiceRef}]`
+
           return {
             label: `Stage [${stageItem.stage?.name}] - ${serviceLabelVal}`,
             value: stageItem.stage?.identifier

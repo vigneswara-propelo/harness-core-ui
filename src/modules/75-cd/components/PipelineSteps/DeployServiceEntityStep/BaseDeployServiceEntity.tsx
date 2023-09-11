@@ -16,6 +16,7 @@ import {
   FormikForm,
   AllowedTypes,
   Toggle,
+  Container,
   useToggleOpen,
   ConfirmationDialog,
   RUNTIME_INPUT_VALUE,
@@ -382,6 +383,7 @@ export default function BaseDeployServiceEntity({
   }
 
   const isMultiSvc = !isNil(values.services)
+  const isPropagatedFromMultiServiceStage = isMultiSvc && setupModeType === setupMode.PROPAGATE
   const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
   let placeHolderForServices =
     Array.isArray(values.services) && !isEmpty(values.services)
@@ -532,6 +534,33 @@ export default function BaseDeployServiceEntity({
               />
             ) : null}
           </>
+        )}
+        {isPropagatedFromMultiServiceStage && (
+          <Layout.Horizontal
+            className={css.propagatedFromMultiServiceStageContainer}
+            flex={{ justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <Container>
+              <FormMultiTypeCheckboxField
+                label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
+                name="parallel"
+                multiTypeTextbox={{
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+                  width: 300
+                }}
+                style={{ width: '300px' }}
+              />
+            </Container>
+            <Container>
+              <Toggle
+                className={css.multiServiceToggle}
+                checked={true}
+                label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
+                tooltipId={'multiServiceToggle'}
+                disabled={true}
+              />
+            </Container>
+          </Layout.Horizontal>
         )}
 
         {isFixed || setupModeType === setupMode.PROPAGATE ? (

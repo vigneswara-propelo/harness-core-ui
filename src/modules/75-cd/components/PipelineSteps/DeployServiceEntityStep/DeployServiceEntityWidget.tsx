@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import produce from 'immer'
 import {
   Formik,
   getMultiTypeFromValue,
@@ -15,9 +16,9 @@ import {
   EXECUTION_TIME_INPUT_VALUE,
   useToaster
 } from '@harness/uicore'
-import { defaultTo, get, isNil, noop, isBoolean } from 'lodash-es'
+import { defaultTo, get, isNil, noop, isBoolean, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import type { ServiceDefinition, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
+import type { ServiceDefinition, ServiceYamlV2, TemplateLinkConfig, ServicesYaml } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -146,10 +147,8 @@ export default function DeployServiceEntityWidget({
   }, [])
 
   useDeepCompareEffect(() => {
-    if (setupModeType === setupMode.PROPAGATE) {
-      setAllServices(getAllFixedServices(initialValues))
-    }
-  }, [initialValues, setupModeType])
+    setAllServices(getAllFixedServices(initialValues))
+  }, [initialValues])
 
   useDeepCompareEffect(() => {
     if (nonExistingServiceIdentifiers.length) {
@@ -165,7 +164,17 @@ export default function DeployServiceEntityWidget({
   const loading = loadingServicesList || loadingServicesData || isFetchingMergeServiceInputs
 
   function handleUpdate(values: FormState): void {
+    // For multi service propagation, only metadata parallel field can be updated in yaml
     if (setupModeType === setupMode.PROPAGATE) {
+      const existingServicesConfiguration = get(stage, 'stage.spec.services') as ServicesYaml
+      if (!isNil(values.services) && !isNil(existingServicesConfiguration)) {
+        const updatedServicesConfiguration = produce(existingServicesConfiguration, draft => {
+          set(draft, 'metadata.parallel', isValueRuntimeInput(values.parallel) ? values.parallel : !!values.parallel)
+        })
+        onUpdate?.({
+          services: updatedServicesConfiguration
+        } as DeployServiceEntityData)
+      }
       return
     }
     /* istanbul ignore else */
@@ -218,6 +227,7 @@ export default function DeployServiceEntityWidget({
         validate={handleUpdate}
         initialValues={getInitialValues(initialValues)}
         validationSchema={setupModeType === setupMode.DIFFERENT && getValidationSchema(getString)}
+        enableReinitialize
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))

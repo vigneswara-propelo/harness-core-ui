@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { flatMap, findIndex, cloneDeep, set, noop, isEmpty, defaultTo, get } from 'lodash-es'
+import { flatMap, findIndex, cloneDeep, set, noop, isEmpty, defaultTo, get, unset } from 'lodash-es'
 import produce from 'immer'
 import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -772,7 +772,10 @@ export const getParentPropagatedStage = (stage?: StageElementConfig): string | u
     // The below conditions are for NG_SVC_ENV_REDESIGN. A specific FF check
     // IS NOT required as the useFromStage combinations are exclusive
     (stage?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage ||
-    (stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage
+    (stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage ||
+    // The below mentioned conditions are for handling multi service propagation - Template/Non template Scenarios
+    (stage?.spec as DeploymentStageConfig)?.services?.useFromStage?.stage ||
+    (stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.services?.useFromStage?.stage
   )
 }
 
@@ -969,6 +972,16 @@ export const resetStageServiceSpec = (stage: StageElementWrapperConfig): StageEl
     }
 
     if (get(draft, 'stage.template.templateInputs.spec.service.useFromStage.stage')) {
+      set(draft, 'stage.template.templateInputs.spec.service', { serviceRef: '' })
+    }
+
+    if (get(draft, 'stage.spec.services.useFromStage.stage')) {
+      unset(draft, 'stage.spec.services')
+      set(draft, 'stage.spec.service', { serviceRef: '' })
+    }
+
+    if (get(draft, 'stage.template.templateInputs.spec.services.useFromStage.stage')) {
+      unset(draft, 'stage.template.templateInputs.spec.services')
       set(draft, 'stage.template.templateInputs.spec.service', { serviceRef: '' })
     }
   })

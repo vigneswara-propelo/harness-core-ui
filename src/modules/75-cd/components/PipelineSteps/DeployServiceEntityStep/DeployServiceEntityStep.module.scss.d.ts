@@ -14,6 +14,8 @@ declare const styles: {
   readonly inputFieldLayout: string
   readonly inputSetSpinner: string
   readonly inputWidth: string
+  readonly multiServiceToggle: string
+  readonly propagatedFromMultiServiceStageContainer: string
   readonly serviceActionWrapper: string
   readonly yamlToggle: string
 }

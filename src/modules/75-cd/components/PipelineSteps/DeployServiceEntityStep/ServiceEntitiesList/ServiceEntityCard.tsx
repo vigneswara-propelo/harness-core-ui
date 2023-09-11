@@ -116,8 +116,8 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   }
 
   const isDragDisabled = useMemo(
-    () => !isNil(formik.values.service) || formik.values.parallel === true,
-    [formik.values.service, formik.values.parallel]
+    () => !isNil(formik.values.service) || formik.values.parallel === true || isPropogateFromStage,
+    [formik.values.service, formik.values.parallel, isPropogateFromStage]
   )
 
   return (

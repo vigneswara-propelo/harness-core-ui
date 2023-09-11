@@ -9,6 +9,14 @@
   width: 391px;
 }
 
+.propagatedFromMultiServiceStageContainer {
+  width: 1000px !important;
+}
+
+.multiServiceToggle {
+  cursor: not-allowed !important;
+}
+
 .formRow {
   max-width: 1000px;
   :global {

@@ -184,6 +184,7 @@ export default function DeployStageSetupShell(): JSX.Element {
             isEmpty(get(draft, 'stage.spec.service.serviceRef')) &&
             isEmpty(get(draft, 'stage.spec.services.values')) &&
             isEmpty(get(draft, 'stage.spec.service.useFromStage')) &&
+            isEmpty(get(draft, 'stage.spec.services.useFromStage')) &&
             // deploy type check - fixes weird issue which updates any other stage / stage template on unmount.
             draft.stage?.type === StageType.DEPLOY
           ) {
