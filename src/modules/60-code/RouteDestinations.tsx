@@ -34,6 +34,7 @@ import {
   Webhooks,
   WebhookNew,
   WebhookDetails,
+  Search,
   Tags
 } from './CodeApp'
 import routes, { CODEPathProps } from './RouteDefinitions'
@@ -175,6 +176,15 @@ export default function CODERouteDestinations(): React.ReactElement {
         exact
       >
         <WebhookNew />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODESearch({ repoPath })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODERepository}
+        exact
+      >
+        <Search />
       </RouteWithLayout>
 
       <RouteWithLayout

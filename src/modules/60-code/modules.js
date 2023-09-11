@@ -21,5 +21,6 @@ module.exports = [
   'code/Webhooks',
   'code/WebhookNew',
   'code/WebhookDetails',
-  'code/NewRepoModalButton'
+  'code/NewRepoModalButton',
+  'code/Search'
 ]

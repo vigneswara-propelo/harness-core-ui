@@ -171,7 +171,7 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
-              data-code-repo-section="branches"
+              data-code-repo-section="webhooks"
               className={cx(css.subNav, css.webhooks)}
               icon="code-webhook"
               textProps={{
@@ -185,6 +185,24 @@ export default function CODESideNav(): React.ReactElement {
               })}
             />
           )}
+
+          {repoName && (
+            <SidebarLink
+              data-code-repo-section="search"
+              className={cx(css.subNav, css.webhooks)}
+              icon="main-search"
+              textProps={{
+                iconProps: {
+                  size: 14
+                }
+              }}
+              label={getString('search')}
+              to={routes.toCODESearch({
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
+              })}
+            />
+          )}
+
           {repoName && (
             <SidebarLink
               data-code-repo-section="settings"

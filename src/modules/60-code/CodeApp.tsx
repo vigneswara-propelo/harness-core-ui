@@ -69,6 +69,9 @@ const RemotePullRequest = lazy(() => import('code/PullRequest'))
 const RemoteCompare = lazy(() => import('code/Compare'))
 
 // eslint-disable-next-line import/no-unresolved
+const RemoteSearch = lazy(() => import('code/Search'))
+
+// eslint-disable-next-line import/no-unresolved
 const RemoteNewRepoModalButton = lazy(() => import('code/NewRepoModalButton'))
 
 const CODERemoteComponentMounter: React.FC<{
@@ -206,6 +209,10 @@ export const WebhookDetails: React.FC<RemoteViewProps> = props => (
 
 export const Settings: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemoteSettings {...props} />} />
+)
+
+export const Search: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteSearch {...props} />} />
 )
 
 interface TypesRepository {

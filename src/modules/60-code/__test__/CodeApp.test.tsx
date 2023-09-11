@@ -20,6 +20,7 @@ import {
   Webhooks,
   WebhookNew,
   WebhookDetails,
+  Search,
   Tags
 } from '../CodeApp'
 
@@ -166,6 +167,14 @@ jest.mock(
   { virtual: true }
 )
 
+jest.mock(
+  'code/Search',
+  () => ({
+    default: () => <div>code/WebhookDetails</div>
+  }),
+  { virtual: true }
+)
+
 describe('CodeApp', () => {
   test('Exports should work properly', async () => {
     const { container } = render(
@@ -184,6 +193,7 @@ describe('CodeApp', () => {
         <Webhooks />
         <WebhookNew />
         <WebhookDetails />
+        <Search />
       </div>
     )
 

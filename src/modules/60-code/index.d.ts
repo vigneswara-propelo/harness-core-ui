@@ -84,3 +84,8 @@ declare module 'code/NewRepoModalButton' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
+
+declare module 'code/Search' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
