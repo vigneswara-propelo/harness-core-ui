@@ -8,6 +8,7 @@
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { StringKeys } from 'framework/strings'
 
 export const transformValuesFieldsConfig = (stepType?: StepType) => [
   {
@@ -177,13 +178,20 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
   }
 ]
 
+type InputSetViewValidateFieldsConfig = Array<{
+  name: string
+  type: ValidationFieldTypes
+  label?: StringKeys
+  isRequired?: boolean
+}>
+
 export const getInputSetViewValidateFieldsConfig =
   (stepType: StepType) =>
   (
     // Called only with required
     /* istanbul ignore next */
     isRequired = true
-  ): Array<{ name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }> => {
+  ): InputSetViewValidateFieldsConfig => {
     return [
       {
         name: 'spec.source.spec.connector',
@@ -202,7 +210,7 @@ export const getInputSetViewValidateFieldsConfig =
         type: ValidationFieldTypes.Text,
         label: 'ssca.publicKey'
       },
-      ...(stepType === StepType.CdSscaEnforcement
+      ...((stepType === StepType.CdSscaEnforcement
         ? [
             {
               name: 'spec.infrastructure.spec.connectorRef',
@@ -240,7 +248,7 @@ export const getInputSetViewValidateFieldsConfig =
               type: ValidationFieldTypes.LimitCPU,
               label: 'pipelineSteps.limitCPULabel'
             }
-          ]),
+          ]) as InputSetViewValidateFieldsConfig),
       {
         name: 'timeout',
         type: ValidationFieldTypes.Timeout,

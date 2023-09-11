@@ -1,0 +1,124 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React from 'react'
+import { render, act, screen } from '@testing-library/react'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { SlsaVerificationStep } from '../SlsaVerificationStep/SlsaVerificationStep'
+
+jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
+const runtimeValues = {
+  identifier: 'SlsaVerification_1',
+  name: 'SLSA Verification',
+  timeout: RUNTIME_INPUT_VALUE,
+  spec: {
+    source: {
+      type: 'Docker',
+      spec: {
+        connector: RUNTIME_INPUT_VALUE,
+        image_path: RUNTIME_INPUT_VALUE,
+        tag: RUNTIME_INPUT_VALUE
+      }
+    },
+    verify_attestation: {
+      type: 'cosign',
+      spec: {
+        public_key: RUNTIME_INPUT_VALUE
+      }
+    }
+  }
+}
+
+const fixedValues = {
+  identifier: 'Ssca_Enforcement_Step',
+  name: 'SSCA Enforcement Step',
+  timeout: '10s',
+  spec: {
+    source: {
+      type: 'Docker',
+      spec: {
+        connector: 'deepgcr',
+        image_path: 'image_path',
+        tag: 'tag'
+      }
+    },
+    verify_attestation: {
+      type: 'cosign',
+      spec: {
+        public_key: 'cosign_pub_key'
+      }
+    }
+  }
+}
+
+describe('SLSA Verification Step', () => {
+  beforeAll(() => {
+    factory.registerStep(new SlsaVerificationStep())
+  })
+
+  test('edit view as new step', () => {
+    render(<TestStepWidget initialValues={{}} type={StepType.SlsaVerification} stepViewType={StepViewType.Edit} />)
+    expect(screen.getByText('pipelineSteps.stepNameLabel')).toBeInTheDocument()
+  })
+
+  test('edit view renders with runtime inputs', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    render(
+      <TestStepWidget
+        initialValues={runtimeValues}
+        template={runtimeValues}
+        type={StepType.SlsaVerification}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    await act(() => ref.current?.submitForm()!)
+    expect(onUpdate).toBeCalledWith(runtimeValues)
+  })
+
+  test('input set view', async () => {
+    render(<TestStepWidget initialValues={{}} type={StepType.SlsaVerification} stepViewType={StepViewType.InputSet} />)
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument()
+  })
+
+  test('input set view validation for timeout', () => {
+    const response = new SlsaVerificationStep().validateInputSet({
+      data: {
+        name: 'SlsaVerification',
+        identifier: 'SlsaVerification',
+        timeout: '1s',
+        type: 'SlsaVerification',
+        spec: {}
+      } as any,
+      template: {
+        timeout: RUNTIME_INPUT_VALUE,
+        spec: {}
+      } as any,
+      getString: jest.fn().mockImplementation(val => val),
+      viewType: StepViewType.TriggerForm
+    })
+    expect(response.timeout).toBe('Value must be greater than or equal to "10s"')
+  })
+
+  test('variable view', async () => {
+    render(
+      <TestStepWidget
+        initialValues={fixedValues}
+        type={StepType.SlsaVerification}
+        stepViewType={StepViewType.InputVariable}
+      />
+    )
+    expect(screen.queryByText('pipelineSteps.stepNameLabel')).not.toBeInTheDocument()
+  })
+})

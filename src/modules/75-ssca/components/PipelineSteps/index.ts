@@ -10,7 +10,9 @@ import { CdSscaOrchestrationStep } from './CdSscaOrchestrationStep/CdSscaOrchest
 import { CiSscaOrchestrationStep } from './CiSscaOrchestrationStep/CiSscaOrchestrationStep'
 import { CiSscaEnforcementStep } from './CiSscaEnforcementStep/CiSscaEnforcementStep'
 import { CdSscaEnforcementStep } from './CdSscaEnforcementStep/CdSscaEnforcementStep'
+import { SlsaVerificationStep } from './SlsaVerificationStep/SlsaVerificationStep'
 
+factory.registerStep(new SlsaVerificationStep())
 factory.registerStep(new CiSscaOrchestrationStep())
 factory.registerStep(new CdSscaOrchestrationStep())
 factory.registerStep(new CiSscaEnforcementStep())
