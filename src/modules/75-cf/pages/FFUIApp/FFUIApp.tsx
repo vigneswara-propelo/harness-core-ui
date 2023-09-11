@@ -24,7 +24,6 @@ import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import { PolicyManagementEvaluationModal } from '@governance/PolicyManagementEvaluationModal'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
-import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import routes from '@common/RouteDefinitions'
@@ -33,7 +32,6 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import * as trackingConstants from '@common/constants/TrackingConstants'
-import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { StepStatus } from '@common/constants/StepStatusTypes'
 import { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
@@ -68,9 +66,7 @@ const FFUIApp: FC = () => (
       FeatureWarningTooltip,
       GitSyncForm,
       MarkdownViewer,
-      MonacoDiffEditor,
       RbacOptionsMenuButton,
-      RBACTooltip,
       ResourceCenter
     }}
     customRoutes={routes}

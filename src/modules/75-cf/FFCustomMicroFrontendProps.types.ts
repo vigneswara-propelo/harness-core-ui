@@ -18,7 +18,6 @@ import type { PreferenceScope, usePreferenceStore } from 'framework/PreferenceSt
 import type { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import type { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
-import type RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import type routes from '@common/RouteDefinitions'
 import type { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -29,7 +28,6 @@ import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext
 import type { getIdentifierFromName } from '@common/utils/StringUtils'
 import type { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type * as trackingConstants from '@common/constants/TrackingConstants'
-import type MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import type { StepStatus } from '@common/constants/StepStatusTypes'
 import type { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
 import type { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
@@ -59,9 +57,7 @@ export interface FFCustomMicroFrontendProps {
     FeatureWarningTooltip: typeof FeatureWarningTooltip
     GitSyncForm: typeof GitSyncForm
     MarkdownViewer: typeof MarkdownViewer
-    MonacoDiffEditor: typeof MonacoDiffEditor
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
-    RBACTooltip: typeof RBACTooltip
     ResourceCenter: typeof ResourceCenter
   }
   customRoutes: typeof routes
