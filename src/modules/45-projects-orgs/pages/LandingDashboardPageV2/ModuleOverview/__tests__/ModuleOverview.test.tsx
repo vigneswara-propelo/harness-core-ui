@@ -109,4 +109,20 @@ describe('module overview grid test', () => {
 
     expect(queryByText('moduleOverviewDataState')).toBeNull()
   })
+
+  test('test SEI module empty state', () => {
+    const { queryByText } = render(
+      <TestWrapper
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            SEI: { edition: 'ENTERPRISE', status: 'ACTIVE', id: 'adcad' }
+          }
+        }}
+      >
+        <ModuleOverview timeRange={DEFAULT_TIME_RANGE} module={ModuleName.SEI} isExpanded={false} />
+      </TestWrapper>
+    )
+
+    expect(queryByText('moduleOverviewDataState')).toBeNull()
+  })
 })

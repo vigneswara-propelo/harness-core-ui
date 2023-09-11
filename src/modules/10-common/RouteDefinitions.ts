@@ -2440,31 +2440,7 @@ const routes = {
   ),
 
   /****************** SEI Module ************************************************************************************/
-  toSEI: withAccountId(() => `/sei`),
-  toSEIMicroFrontend: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}`
-  ),
-  toSEIInsights: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}/insights`
-  ),
-  toSEICollectionsHome: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/collections`
-  ),
-  toSEICollections: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/collections/configuration/organization`
-  ),
-  toSEIAccount: withAccountId(() => '/sei'),
-  toSEIConnectors: withAccountId(() => `/sei/configuration/integrations`),
-  toSEIContributors: withAccountId(() => `/sei/configuration/organization_users`),
-  toSEIWorkflow: withAccountId(() => `/sei/configuration/lead-time-profile`),
-  toSEIInvestment: withAccountId(() => `/sei/configuration/effort-investment`),
-  toSEITrellis: withAccountId(() => `/sei/configuration/trellis_score_profile`),
-  toSEITables: withAccountId(() => `/sei/tables`),
-  toSEIPropels: withAccountId(() => `/sei/propels`)
+  toSEI: withAccountId(() => `/sei`)
 }
 
 export default routes

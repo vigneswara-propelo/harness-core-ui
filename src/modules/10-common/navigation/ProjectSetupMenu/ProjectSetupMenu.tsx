@@ -82,8 +82,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   // Add more modules as they keep on supporting service discovery feature
   const showDiscovery = isCHAOS && PL_DISCOVERY_ENABLE
 
-  const isSEIModule = module === 'sei'
-
   return (
     <NavExpandable
       title={getString('common.projectSetup')}
@@ -91,14 +89,12 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
       defaultExpanded={defaultExpanded}
     >
       <Layout.Vertical spacing="small">
-        {!isSEIModule && <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectors(params)} />}
-        {!isSEIModule && <SidebarLink label={getString('common.secrets')} to={routes.toSecrets(params)} />}
-        {!isSEIModule && <SidebarLink label={getString('common.variables')} to={routes.toVariables(params)} />}
+        <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectors(params)} />
+        <SidebarLink label={getString('common.secrets')} to={routes.toSecrets(params)} />
+        <SidebarLink label={getString('common.variables')} to={routes.toVariables(params)} />
         <SidebarLink to={routes.toAccessControl(params)} label={getString('accessControl')} />
-        {!isSEIModule && <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />}
-        {!isSEIModule && (
-          <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
-        )}
+        <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />
+        <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
 
         {isGitSyncSupported && (
           <SidebarLink
@@ -113,7 +109,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
             to={routes.toTemplates({ ...params, templateType: 'MonitoredService' })}
           />
         )}
-        {!isSEIModule && !isNonPolicyEngineModule && canUsePolicyEngine && (
+        {!isNonPolicyEngineModule && canUsePolicyEngine && (
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
         )}
         {showDeploymentFreeze && (
@@ -144,12 +140,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
           <SidebarLink
             label={getString('common.tickets.externalTickets')}
             to={routes.toProjectTicketSettings({ ...params, module })}
-          />
-        )}
-        {isSEIModule && (
-          <SidebarLink
-            label={getString('common.purpose.sei.collections')}
-            to={routes.toSEICollections({ ...params })}
           />
         )}
       </Layout.Vertical>
