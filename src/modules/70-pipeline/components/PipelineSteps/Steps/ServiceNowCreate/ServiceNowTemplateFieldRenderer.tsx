@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import type { ServiceNowFieldValueNG } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import css from './ServiceNowCreate.module.scss'
@@ -14,6 +15,8 @@ import css from './ServiceNowCreate.module.scss'
 export interface ServiceNowTemplateFieldsRendererProps {
   templateFields?: ServiceNowFieldValueNG[]
   templateName?: string
+  errorData?: string
+  isError?: boolean
 }
 interface ServiceNowTemplateFieldInterface {
   templateField: ServiceNowFieldValueNG
@@ -33,7 +36,7 @@ function GetServiceNowTemplateFieldComponent({ templateField, index }: ServiceNo
 }
 
 export function ServiceNowTemplateFieldsRenderer(props: ServiceNowTemplateFieldsRendererProps) {
-  const { templateFields, templateName } = props
+  const { templateFields, templateName, errorData, isError = false } = props
   const { getString } = useStrings()
   return templateFields && templateFields.length > 0 ? (
     <>
@@ -45,7 +48,9 @@ export function ServiceNowTemplateFieldsRenderer(props: ServiceNowTemplateFields
     </>
   ) : getMultiTypeFromValue(templateName) !== MultiTypeInputType.FIXED ? null : (
     <Layout.Horizontal className={css.alignCenter}>
-      <Text>{getString('pipeline.serviceNowCreateStep.noSuchTemplateFound')}</Text>
+      <Text intent={isError ? Intent.DANGER : Intent.NONE}>
+        {isError ? errorData : getString('pipeline.serviceNowCreateStep.noSuchTemplateFound')}
+      </Text>
     </Layout.Horizontal>
   )
 }

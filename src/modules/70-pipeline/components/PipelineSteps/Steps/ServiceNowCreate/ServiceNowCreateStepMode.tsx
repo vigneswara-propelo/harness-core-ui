@@ -311,6 +311,13 @@ function FormContent({
   )
   const shouldShowTicketTypesError = !ticketTypesLoading && !isEmpty(ticketTypesFetchError)
 
+  const templateErrorString = defaultTo(
+    (serviceNowTemplateMetaDataQuery?.error?.data as Error)?.message,
+    serviceNowTemplateMetaDataQuery?.error?.message
+  )
+
+  const istemplateErrorString = !serviceNowTemplateMetaDataQuery.loading && !isEmpty(templateErrorString)
+
   return (
     <React.Fragment>
       {stepViewType !== StepViewType.Template && (
@@ -623,6 +630,8 @@ function FormContent({
                   )}
                 </div>
                 <ServiceNowTemplateFieldsRenderer
+                  isError={istemplateErrorString}
+                  errorData={templateErrorString}
                   templateFields={formik.values.spec.templateFields}
                   templateName={formik.values.spec.templateName}
                 />
