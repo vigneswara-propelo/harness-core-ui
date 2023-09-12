@@ -37,6 +37,7 @@ import { FormMultiTypeDuration } from '@common/components/MultiTypeDuration/Mult
 import { FormMultiTypeCheckbox } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
+import { PolicyManagementEvaluationModal } from '@governance/PolicyManagementEvaluationModal'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -53,7 +54,8 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ConfigureOptions,
   FormMultiTypeDuration,
   PipelineDetailsTab,
-  InputOutputTab
+  InputOutputTab,
+  PolicyManagementEvaluationModal
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {

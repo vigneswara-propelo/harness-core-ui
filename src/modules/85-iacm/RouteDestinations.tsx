@@ -16,6 +16,7 @@ import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import '@iacm/components/IACMStage'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConnectorRouteDestinations } from '@platform/connectors/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
@@ -27,6 +28,7 @@ import type { ConsoleViewStepDetailProps, StepDetailProps } from '@pipeline/fact
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
+import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
@@ -73,6 +75,8 @@ ExecFactory.registerConsoleViewStepDetails(StepType.IACMApproval, {
 })
 
 function IACMRoutes(): JSX.Element {
+  const { IACM_OPA_WORKSPACE_GOVERNANCE } = useFeatureFlags()
+
   return (
     <>
       <RouteWithLayout sidebarProps={IACMSideNavProps} path={routes.toIACM({ ...accountPathProps })} exact>
@@ -88,6 +92,12 @@ function IACMRoutes(): JSX.Element {
         <VariableRouteDestinations moduleParams={moduleParams} sidebarProps={IACMSideNavProps} />
         <DelegateRouteDestinations moduleParams={moduleParams} sidebarProps={IACMSideNavProps} />
         <DefaultSettingsRouteDestinations moduleParams={moduleParams} sidebarProps={IACMSideNavProps} />
+        {IACM_OPA_WORKSPACE_GOVERNANCE && (
+          <GovernanceRouteDestinations
+            sidebarProps={IACMSideNavProps}
+            pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}
+          />
+        )}
       </Route>
       <Route
         sidebarProps={IACMSideNavProps}

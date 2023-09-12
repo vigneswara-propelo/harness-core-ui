@@ -33,6 +33,7 @@ import type { ConfigureOptions } from '@common/components/ConfigureOptions/Confi
 import type { FormMultiTypeDuration } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
+import type { PolicyManagementEvaluationModal } from '@governance/PolicyManagementEvaluationModal'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -67,5 +68,6 @@ export interface IACMCustomMicroFrontendProps {
     FormMultiTypeDuration: typeof FormMultiTypeDuration
     PipelineDetailsTab: typeof PipelineDetailsTab
     InputOutputTab: typeof InputOutputTab
+    PolicyManagementEvaluationModal: typeof PolicyManagementEvaluationModal
   }
 }

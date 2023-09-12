@@ -40,7 +40,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     SRM_DOWNTIME,
     STO_JIRA_INTEGRATION,
     USE_OLD_GIT_SYNC,
-    PL_DISCOVERY_ENABLE
+    PL_DISCOVERY_ENABLE,
+    IACM_OPA_WORKSPACE_GOVERNANCE
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -65,7 +66,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const isCIorCD = isCI || isCD
   const isCIorCDorSTO = isCI || isCD || isSTO
   // we don't want to show Policies tab for modules that use this file and don't support it
-  const isNonPolicyEngineModule = module === 'iacm' || module === 'ssca' || module === 'chaos'
+  let nonPolicyEngineModules = ['ssca', 'chaos', 'iacm']
+  if (IACM_OPA_WORKSPACE_GOVERNANCE) {
+    nonPolicyEngineModules = nonPolicyEngineModules.filter(_module => _module !== 'iacm')
+  }
+  const isNonPolicyEngineModule = nonPolicyEngineModules.includes(module || '')
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
   const showDeploymentFreeze = isEnterpriseEdition && isCD
