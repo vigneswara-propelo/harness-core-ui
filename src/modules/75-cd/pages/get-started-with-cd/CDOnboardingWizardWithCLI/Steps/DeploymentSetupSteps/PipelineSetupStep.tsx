@@ -104,7 +104,7 @@ export default function PipelineSetupStep({
                   className={css.alignTitle}
                   variation={ButtonVariation.LINK}
                   size={ButtonSize.SMALL}
-                  href="https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+                  href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
                 >
                   {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whereToFindGitPat')}
                 </Button>

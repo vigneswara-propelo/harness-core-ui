@@ -704,7 +704,7 @@ getStartedWithCD:
           delegateInstalled: Installed
         cdGitops:
           title: GitOps Workflow
-          heading: CD Gitops
+          heading: CD GitOps
           subtitle: Connect with a GitOps agent
           description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster.
     deploymentSteps:
@@ -974,8 +974,8 @@ getStartedWithCD:
   registryDetails: Registry details
   repoDetails: Repository details
   gitopsRedirect:
-    title: Deploy with Gitops
-    subtitle: You will be redirected to Gitops section. Are you sure you want to leave this page?
+    title: Deploy with GitOps
+    subtitle: You will be redirected to GitOps section. Are you sure you want to leave this page?
   closeOnboarding:
     title: Leave Onboarding Process?
     subtitle: You are about to leave without having set up a pipeline for deployment. Are you sure you want to leave anyway?
@@ -1094,7 +1094,7 @@ getStartedWithCD:
   artifactInManifest: No, it is hard-coded in my manifest
   giveSample: Give me a Sample
   artifactReferencedInManifest: Fantastic! If your artifact is already referenced in your manifest you are ready to continue to the next step.
-  tryCICTA: '<b>Developer</b>? Check out Harness <a target="_blank" rel="noreferrer nofollow" href="{{ciurl}}">Continuous Integration</a> to build and test your code 4x faster with hosted builds and test intelligence. <a target="_blank" rel="noreferrer nofollow" href="{{docurl}}">CI or CD?</a>'
+  tryCICTA: '<b>Developer</b>? Check out Harness <a target="_blank" href="{{ciurl}}">Continuous Integration</a> to build and test your code 4x faster with hosted builds and test intelligence. <a target="_blank" rel="noreferrer nofollow" href="{{docurl}}">CI or CD?</a>'
   standardization: 'Standardization: Create consistent, standard deployment processes across the organization'
   quality: 'Quality: Reduce the percentage of deployments that cause failures in production'
   restore: 'Time to restore: Quicker triage of failures in production and time to restore services'
