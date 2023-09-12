@@ -245,11 +245,13 @@ export interface StringsMap {
   'common.csBot.beta': string
   'common.csBot.errorMessage': string
   'common.csBot.eulaNotAccepted': string
-  'common.csBot.hdh': string
   'common.csBot.introduction': string
   'common.csBot.name': string
-  'common.csBot.placeholder': string
   'common.csBot.reviewEula': string
+  'common.csBot.sampleQuestion1': string
+  'common.csBot.sampleQuestion2': string
+  'common.csBot.sampleQuestion3': string
+  'common.csBot.sampleQuestion4': string
   'common.csBot.subtitle': string
   'common.csBot.ticketOnError': string
   'common.csBot.title': string

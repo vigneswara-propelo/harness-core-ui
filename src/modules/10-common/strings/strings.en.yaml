@@ -1594,17 +1594,19 @@ csBot:
   askAIDA: Ask AIDA
   aidaFullText: Harness AI Development Assistant
   name: Harness AIDA
-  title: '{{ $.common.csBot.name }} Chatbot'
+  title: '{{ $.common.csBot.name }} Support'
   beta: BETA
-  placeholder: How do I install a delegate?
-  subtitle: I can help searching anything on
-  hdh: Harness Developer Hub
+  subtitle: I can answer any questions about the Harness Software Delivery Platform
   errorMessage: Something went wrong. Click here to submit a ticket instead.
   introduction: Introducing Harness AIDA
   ticketOnError: Would you like to create a support ticket?
   turnOn: 'Turn on {{ $.common.csBot.name }}'
   eulaNotAccepted: In order to use Harness AIDA Chatbot, you will need to enable it in the Account Settings
   reviewEula: Review Account Settings
+  sampleQuestion1: What is the default Deployment limit in Harness?
+  sampleQuestion2: How does K8s rollback work in Harness? Explain in detail.
+  sampleQuestion3: What permissions are required to allow a user to execute a pipeline in UI?
+  sampleQuestion4: How to share variables across different stages in CI pipeline?
 addNewCreditCard: Add a new card
 analyzing: analyzing
 expressionDefaultError: Expression not found in selected execution

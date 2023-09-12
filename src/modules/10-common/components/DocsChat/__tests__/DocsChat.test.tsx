@@ -57,7 +57,7 @@ describe('DocsChat', () => {
         <DocsChat />
       </TestWrapper>
     )
-    const $input = getByPlaceholderText('common.csBot.placeholder')
+    const $input = getByPlaceholderText('Eg. common.csBot.sampleQuestion1')
 
     await user.type($input, 'test')
     expect($input).toHaveValue('test')

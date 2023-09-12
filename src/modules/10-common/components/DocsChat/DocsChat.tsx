@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import { Avatar, Container, Icon, Layout, PageSpinner, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -53,6 +53,13 @@ function DocsChat(): JSX.Element {
   const { isOpen, close: closeSubmitTicketModal, open: openSubmitTicketModal } = useToggleOpen()
   const [chatHistory, setChatHistory] = useLocalStorage<Array<Message>>(CHAT_HISTORY_KEY, [], sessionStorage)
   const [messages, setMessages] = useState<Array<Message>>(chatHistory.length > 0 ? chatHistory : sampleMessages)
+  const [placeholderIndex, setPlaceholderIndex] = useState(0)
+  const placeholders = [
+    getString('common.csBot.sampleQuestion1'),
+    getString('common.csBot.sampleQuestion2'),
+    getString('common.csBot.sampleQuestion3'),
+    getString('common.csBot.sampleQuestion4')
+  ]
   const { data: aidaSettingResponse, loading: isAidaSettingLoading } = useGetSettingValue({
     identifier: SettingType.AIDA,
     queryParams: { accountIdentifier: accountId }
@@ -121,6 +128,16 @@ function DocsChat(): JSX.Element {
     setUserInput('')
   }
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPlaceholderIndex((placeholderIndex + 1) % placeholders.length)
+    }, 5000)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [placeholderIndex, placeholders.length])
+
   useLayoutEffect(() => {
     // scroll to bottom on every message
     messageList.current?.scrollTo?.(0, messageList.current?.scrollHeight)
@@ -160,9 +177,6 @@ function DocsChat(): JSX.Element {
         </Layout.Horizontal>
         <Layout.Horizontal spacing={'xsmall'} style={{ alignItems: 'center' }}>
           <String stringID="common.csBot.subtitle" />
-          <a href="https://developer.harness.io" rel="noreferrer nofollow" target="_blank">
-            <String stringID="common.csBot.hdh" />
-          </a>
           <Icon name="main-share" size={12} />
         </Layout.Horizontal>
       </Layout.Vertical>
@@ -247,7 +261,7 @@ function DocsChat(): JSX.Element {
               onChange={handleUserInput}
               onKeyDown={handleKeyDown}
               autoComplete="off"
-              placeholder={getString('common.csBot.placeholder')}
+              placeholder={'Eg. ' + placeholders[placeholderIndex]}
             />
             <button onClick={handleSubmitClick} className={css.submitButton}>
               <Icon name="pipeline-deploy" size={24} />
