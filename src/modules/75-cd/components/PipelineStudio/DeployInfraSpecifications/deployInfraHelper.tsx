@@ -235,6 +235,7 @@ export const getInfrastructureDefaultValue = (
         awsInstanceFilter,
         serviceType,
         hostConnectionType,
+        allowSimultaneousDeployments,
         provisioner
       }
     }

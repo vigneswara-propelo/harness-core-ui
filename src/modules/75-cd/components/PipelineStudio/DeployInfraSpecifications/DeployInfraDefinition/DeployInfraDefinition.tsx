@@ -637,6 +637,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   region: value.region,
                   awsInstanceFilter: value.awsInstanceFilter,
                   hostConnectionType: value.hostConnectionType,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                   provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.SshWinRmAws

@@ -14,5 +14,6 @@ declare const styles: {
   readonly regionInput: string
   readonly regionWrapper: string
   readonly runtimeWidth: string
+  readonly simultaneousDeployment: string
 }
 export default styles

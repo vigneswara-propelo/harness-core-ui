@@ -104,7 +104,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   initialValues,
   onUpdate,
   allowableTypes,
-  isSingleEnv
+  isSingleEnv,
+  readonly
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -237,6 +238,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
               region: typeof value.region === 'string' ? value.region : get(value, 'region.value', ''),
               awsInstanceFilter: value.awsInstanceFilter,
               hostConnectionType: value.hostConnectionType,
+              allowSimultaneousDeployments: value.allowSimultaneousDeployments,
               provisioner: value?.provisioner
             }
 
@@ -383,6 +385,16 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     />
                   </Layout.Vertical>
                 </Layout.Vertical>
+                <Layout.Vertical className={css.simultaneousDeployment}>
+                  <FormInput.CheckBox
+                    tooltipProps={{
+                      dataTooltipId: 'sshWinRmAwsInfraAllowSimultaneousDeployments'
+                    }}
+                    name={'allowSimultaneousDeployments'}
+                    label={getString('cd.allowSimultaneousDeployments')}
+                    disabled={readonly}
+                  />
+                </Layout.Vertical>
               </FormikForm>
             )
           }}
@@ -423,7 +435,8 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     connectorRef: '',
     credentialsRef: '',
     region: '',
-    hostConnectionType: hostConnectionTypes[0]
+    hostConnectionType: hostConnectionTypes[0],
+    allowSimultaneousDeployments: false
   }
 
   /* istanbul ignore next */
