@@ -2678,7 +2678,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                                 class="bp3-input"
                                 name="expression"
                                 type="text"
-                                value="0 0/15 * 1/1 * ? *"
+                                value="0 0 */1 ? * * *"
                               />
                             </div>
                           </div>
@@ -2724,7 +2724,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                                 <p
                                   class="StyledProps--font StyledProps--main"
                                 >
-                                  0/15
+                                  0
                                 </p>
                               </div>
                             </div>
@@ -2748,7 +2748,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                                 <p
                                   class="StyledProps--font StyledProps--main"
                                 >
-                                  *
+                                  */1
                                 </p>
                               </div>
                             </div>
@@ -2772,7 +2772,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                                 <p
                                   class="StyledProps--font StyledProps--main"
                                 >
-                                  1/1
+                                  ?
                                 </p>
                               </div>
                             </div>
@@ -2820,7 +2820,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                                 <p
                                   class="StyledProps--font StyledProps--main"
                                 >
-                                  ?
+                                  *
                                 </p>
                               </div>
                             </div>
@@ -2851,7 +2851,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                               class="StyledProps--font StyledProps--main"
                               data-testid="cron-expression"
                             >
-                              0 0/15 * 1/1 * ? *
+                              0 0 */1 ? * * *
                             </p>
                           </div>
                         </div>
