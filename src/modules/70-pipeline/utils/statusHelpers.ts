@@ -91,7 +91,12 @@ export function isExecutionAborted(status?: string): boolean {
 }
 
 export function isExecutionQueued(status?: string): boolean {
-  return changeCase(status) === ExecutionStatusEnum.Queued
+  const st = changeCase(status)
+  return (
+    st === ExecutionStatusEnum.Queued ||
+    st === ExecutionStatusEnum.QueuedExecutionConcurrencyReached ||
+    st === ExecutionStatusEnum.QueuedLicenseLimitReached
+  )
 }
 
 export function isExecutionWaiting(status?: string): boolean {
