@@ -50,6 +50,7 @@ import UserGroupsResourceModalBody from '@rbac/components/UserGroupsRenderer/Use
 import UserGroupsResourceRenderer from '@rbac/components/UserGroupsRenderer/UserGroupsResourceRenderer'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import { MinimalLayout } from '@common/layouts'
 import ServiceAccountsResourceModalBody from './components/ServiceAccountsRenderer/ServiceAccountsResourceModalBody'
 import ServiceAccountsResourceRenderer from './components/ServiceAccountsRenderer/ServiceAccountsResourceRenderer'
 
@@ -343,9 +344,11 @@ export const AccessControlRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
   licenseRedirectData?: LicenseRedirectProps
   sidebarProps?: SidebarContext
-}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => (
+  layout?: React.ComponentType
+}> = ({ moduleParams, licenseRedirectData, sidebarProps, layout: Layout = MinimalLayout }) => (
   <>
     <RouteWithLayout
+      layout={Layout}
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
       path={[routes.toAccessControl({ ...projectPathProps, ...moduleParams })]}
@@ -354,6 +357,7 @@ export const AccessControlRouteDestinations: React.FC<{
       <RedirectToModuleAccessControlHome />
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
       path={[routes.toUsers({ ...projectPathProps, ...moduleParams })]}
@@ -365,6 +369,7 @@ export const AccessControlRouteDestinations: React.FC<{
       </AccessControlPage>
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -374,6 +379,7 @@ export const AccessControlRouteDestinations: React.FC<{
       <UserDetails />
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -385,6 +391,7 @@ export const AccessControlRouteDestinations: React.FC<{
       </AccessControlPage>
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -394,6 +401,7 @@ export const AccessControlRouteDestinations: React.FC<{
       <UserGroupDetails />
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -405,6 +413,7 @@ export const AccessControlRouteDestinations: React.FC<{
       </AccessControlPage>
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -414,6 +423,7 @@ export const AccessControlRouteDestinations: React.FC<{
       <ServiceAccountDetails />
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -425,6 +435,7 @@ export const AccessControlRouteDestinations: React.FC<{
       </AccessControlPage>
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -436,6 +447,7 @@ export const AccessControlRouteDestinations: React.FC<{
       </AccessControlPage>
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
@@ -445,6 +457,7 @@ export const AccessControlRouteDestinations: React.FC<{
       <RoleDetails />
     </RouteWithLayout>
     <RouteWithLayout
+      layout={Layout}
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}

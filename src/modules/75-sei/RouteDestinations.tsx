@@ -6,19 +6,16 @@
  */
 
 import React from 'react'
-import { Redirect, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { String as LocaleString } from 'framework/strings'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
-import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { MinimalLayout } from '@common/layouts'
+import { EmptyLayout, MinimalLayout } from '@common/layouts'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import SideNav from '@common/navigation/SideNav'
@@ -26,6 +23,8 @@ import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'
 import { useGetLicensesAndSummary } from 'services/cd-ng'
 import { NameSchema } from '@common/utils/Validation'
+import { SidebarLink } from '@common/navigation/SideNav/SideNav'
+import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { SEICustomMicroFrontendProps } from './SEICustomMicroFrontendProps.types'
 
 // eslint-disable-next-line import/no-unresolved
@@ -33,7 +32,6 @@ const SEIMicroFrontend = React.lazy(() => import('sei/MicroFrontendApp'))
 
 export default function SEIRoutes(): React.ReactElement {
   const isSEIEnabled = useFeatureFlag(FeatureFlag.SEI_ENABLED)
-  const { accountId } = useParams<ProjectPathProps>()
 
   if (isSEIEnabled) {
     RbacFactory.registerResourceTypeHandler(ResourceType.SEI_CONFIGURATION_SETTINGS, {
@@ -86,52 +84,27 @@ export default function SEIRoutes(): React.ReactElement {
       }
     })
   }
-  const RedirectToModuleTrialHome = (): React.ReactElement => {
-    return (
-      <Redirect
-        to={routes.toModuleTrialHome({
-          accountId,
-          module: 'sei'
-        })}
-      />
-    )
-  }
-
-  const RedirectToSubscriptions = (): React.ReactElement => {
-    return (
-      <Redirect
-        to={routes.toSubscriptions({
-          accountId,
-          moduleCard: 'sei'
-        })}
-      />
-    )
-  }
-  const licenseRedirectData: LicenseRedirectProps = {
-    licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
-    startTrialRedirect: RedirectToModuleTrialHome,
-    expiredTrialRedirect: RedirectToSubscriptions
-  }
   return (
-    <RouteWithLayout
-      layout={MinimalLayout}
-      licenseRedirectData={licenseRedirectData}
-      path={routes.toSEI({ ...accountPathProps })}
-    >
-      <ChildAppMounter<SEICustomMicroFrontendProps>
-        ChildApp={SEIMicroFrontend}
-        customComponents={{
-          ProjectSelector,
-          NavExpandable,
-          HarnessSideNav: SideNav,
-          HomePageTemplate
-        }}
-        cdServices={{
-          useGetLicensesAndSummary
-        }}
-        customRoutes={routes}
-        customUtils={{ NameSchema }}
-      />
-    </RouteWithLayout>
+    <>
+      <RouteWithLayout layout={MinimalLayout} path={routes.toSEI({ ...accountPathProps })}>
+        <ChildAppMounter<SEICustomMicroFrontendProps>
+          ChildApp={SEIMicroFrontend}
+          customComponents={{
+            ProjectSelector,
+            NavExpandable,
+            HarnessSideNav: SideNav,
+            HomePageTemplate,
+            SidebarLink,
+            AccessControlRouteDestinations,
+            EmptyLayout
+          }}
+          cdServices={{
+            useGetLicensesAndSummary
+          }}
+          customRoutes={routes}
+          customUtils={{ NameSchema }}
+        />
+      </RouteWithLayout>
+    </>
   )
 }

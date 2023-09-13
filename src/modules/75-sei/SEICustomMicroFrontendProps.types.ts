@@ -12,6 +12,9 @@ import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import SideNav from '@common/navigation/SideNav'
 import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'
 import { useGetLicensesAndSummary } from 'services/cd-ng'
+import { SidebarLink } from '@common/navigation/SideNav/SideNav'
+import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
+import { EmptyLayout } from '@common/layouts'
 
 export interface SEICustomMicroFrontendProps {
   cdServices: {
@@ -22,6 +25,9 @@ export interface SEICustomMicroFrontendProps {
     NavExpandable: typeof NavExpandable
     HarnessSideNav: typeof SideNav
     HomePageTemplate: typeof HomePageTemplate
+    SidebarLink: typeof SidebarLink
+    AccessControlRouteDestinations: typeof AccessControlRouteDestinations
+    EmptyLayout: typeof EmptyLayout
   }
   customRoutes: typeof routes
   customUtils: {

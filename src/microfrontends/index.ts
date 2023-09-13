@@ -52,6 +52,7 @@ import type { IDPCustomMicroFrontendProps } from '@idp/interfaces/IDPCustomMicro
 import type { GovernanceCustomMicroFrontendProps } from '@governance/GovernanceCustomMicroFrontendProps.types'
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import type { SRMCustomMicroFrontendProps } from '@cv/interface/SRMCustomMicroFrontendProps.types'
+import type { SEICustomMicroFrontendProps } from '@sei/SEICustomMicroFrontendProps.types'
 
 export interface Scope {
   accountId?: string
@@ -133,5 +134,6 @@ export {
   IDPCustomMicroFrontendProps,
   GovernanceCustomMicroFrontendProps,
   ETCustomMicroFrontendProps,
-  SRMCustomMicroFrontendProps
+  SRMCustomMicroFrontendProps,
+  SEICustomMicroFrontendProps
 }
