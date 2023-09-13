@@ -18,6 +18,7 @@ import { useStrings } from 'framework/strings'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
 import css from './ArtifactsTable.module.scss'
 
@@ -190,12 +191,40 @@ export const TypeCell: CellType = ({ row }) => {
   )
 }
 
-export const SLSAVerificationCell: CellType = () => {
+export const SLSAVerificationCell: CellType = ({ row }) => {
   const { getString } = useStrings()
+  const data = row.original
+  // Verify attestation -> Evaluate policy
+  type SlsaVerifyAttestationStatusType = 'SUCCESS' | 'FAILURE'
+  const slsaVerifyAttestationStatusMap: Record<SlsaVerifyAttestationStatusType, string> = {
+    SUCCESS: getString('passed'),
+    FAILURE: getString('failed')
+  }
+  const _slsaVerifyAttestationStatus: SlsaVerifyAttestationStatusType = get(
+    data.node,
+    `outcomes.output.outputVariables.SLSA_VERIFY_ATTESTATION_${data.node?.uuid}`,
+    ''
+  )
+  const slsaVerifyAttestationStatus = slsaVerifyAttestationStatusMap[_slsaVerifyAttestationStatus]
 
-  return (
-    <Text font={{ variation: FontVariation.SMALL }} lineClamp={2} className={css.uppercase}>
-      {getString('na')}
-    </Text>
+  const policyEvaluationStatus = get(
+    data.node,
+    `outcomes.policyOutput.status`,
+    getString('pipeline.policyNotConfigured')
+  )
+
+  return data.node?.stepType === StepType.SlsaVerification ? (
+    <Layout.Vertical spacing="small">
+      <Text font={{ variation: FontVariation.SMALL_SEMI }}>
+        {_slsaVerifyAttestationStatus === 'SUCCESS' ? policyEvaluationStatus : getString('failed')}
+      </Text>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
+        {slsaVerifyAttestationStatus
+          ? `${getString('pipeline.attestationVerification')}: ${slsaVerifyAttestationStatus}`
+          : getString('pipeline.executionFailed')}
+      </Text>
+    </Layout.Vertical>
+  ) : (
+    getString('na')
   )
 }

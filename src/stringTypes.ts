@@ -4082,6 +4082,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.versionPlaceholder': string
   'pipeline.artifactsSelection.versionRegex': string
   'pipeline.artifactsSelection.versionRegexPlaceholder': string
+  'pipeline.attestationVerification': string
   'pipeline.azureWebApp.name': string
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
@@ -4400,6 +4401,7 @@ export interface StringsMap {
   'pipeline.execution.stepTitlePrefix': string
   'pipeline.execution.timePrefix': string
   'pipeline.execution.upcomingStagesPrefix': string
+  'pipeline.executionFailed': string
   'pipeline.executionFilters.labels.Aborted': string
   'pipeline.executionFilters.labels.AbortedByFreeze': string
   'pipeline.executionFilters.labels.ApprovalRejected': string
@@ -5017,6 +5019,8 @@ export interface StringsMap {
   'pipeline.policyEvaluations.policySetsApplied': string
   'pipeline.policyEvaluations.title': string
   'pipeline.policyEvaluations.warningHeadingEvaluationDetail': string
+  'pipeline.policyNotConfigured': string
+  'pipeline.policyStatus': string
   'pipeline.policyViolationDetails': string
   'pipeline.poweredByHarness': string
   'pipeline.prTitle': string

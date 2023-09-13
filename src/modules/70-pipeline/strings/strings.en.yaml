@@ -1982,5 +1982,9 @@ executionNotes:
 includeInfrastructureSelectors: Include Infrastructure Selectors
 slsaVerification: SLSA Verification
 slsaProvenance: SLSA Provenance
+policyStatus: Policy status
+attestationVerification: Attestation signature verification
+policyNotConfigured: Policy not configured
+executionFailed: Execution failed
 cacheIntelligence:
   label: Cache Intelligence
