@@ -75,6 +75,7 @@ export interface TemplateBarProps {
   isReadonly?: boolean
   storeMetadata?: StoreMetadata
   supportVersionChange?: boolean
+  setFetchedTemplateDetails?: (templateData: TemplateSummaryResponse) => void
 }
 
 export const getVersionLabelText = (
@@ -97,7 +98,8 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     className = '',
     isReadonly,
     storeMetadata,
-    supportVersionChange = false
+    supportVersionChange = false,
+    setFetchedTemplateDetails
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -213,6 +215,12 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
         : undefined,
     [data?.data]
   )
+
+  React.useEffect(() => {
+    if (!isEmpty(selectedTemplate) && setFetchedTemplateDetails) {
+      setFetchedTemplateDetails(selectedTemplate as TemplateSummaryResponse)
+    }
+  }, [selectedTemplate])
 
   const onChangeTemplate = (): void => {
     if (selectedTemplate || remoteFetchError) {

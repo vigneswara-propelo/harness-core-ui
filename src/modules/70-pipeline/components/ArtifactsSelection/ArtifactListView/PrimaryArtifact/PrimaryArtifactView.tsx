@@ -6,13 +6,15 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Button, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
+import type { PageConnectorResponse, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
+import type { TemplateSummaryResponse, NGTemplateInfoConfig } from 'services/template-ng'
 import type { TemplateStepNode } from 'services/pipeline-ng'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { ArtifactIconByType, ArtifactTitleIdByType, ENABLED_ARTIFACT_TYPES, ModalViewFor } from '../../ArtifactHelper'
@@ -39,6 +41,19 @@ interface ArtifactSourceTemplateViewProps {
 export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProps) {
   const { artifactSourceTemplateData, templateActionBtns } = props
   const { identifier, template } = artifactSourceTemplateData
+  const [fetchedArtifactDetails, setFetchedArtifactDetails] = React.useState<PrimaryArtifact | SidecarArtifact>()
+
+  const handleFetchedTemplateDetails = React.useCallback((templateDetails: TemplateSummaryResponse) => {
+    const artifactDetails = yamlParse<{ template: NGTemplateInfoConfig }>(defaultTo(templateDetails?.yaml, ''))
+      ?.template?.spec as PrimaryArtifact | SidecarArtifact
+
+    setFetchedArtifactDetails(artifactDetails)
+  }, [])
+
+  const artifactLocation = React.useMemo(
+    () => fetchedArtifactDetails && getArtifactLocation(fetchedArtifactDetails),
+    [fetchedArtifactDetails]
+  )
 
   return (
     <section className={cx(css.rowItem, css.artifactSourceTemplateContainer, css.artifactRow)} key={'Dockerhub'}>
@@ -46,13 +61,36 @@ export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProp
         className={css.templateEditWrapper}
         flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
       >
-        {identifier && (
-          <Text padding={{ left: 'small' }} width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
-            {identifier}
-          </Text>
-        )}
-        <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ flexGrow: 1 }}>
-          <TemplateBar className={css.minimalTemplateBar} templateLinkConfig={template} isReadonly={true} />
+        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} width={708}>
+          <Container>
+            {identifier && (
+              <Text padding={{ left: 'small' }} width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
+                {identifier}
+              </Text>
+            )}
+          </Container>
+          <Container>
+            <TemplateBar
+              className={css.minimalTemplateBar}
+              templateLinkConfig={template}
+              isReadonly={true}
+              setFetchedTemplateDetails={handleFetchedTemplateDetails}
+            />
+          </Container>
+        </Layout.Horizontal>
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-end' }} style={{ flexGrow: 1 }}>
+          {fetchedArtifactDetails && (
+            <Container>
+              <Text
+                width={180}
+                lineClamp={1}
+                tooltip={<Text padding={'small'}>{artifactLocation}</Text>}
+                color={Color.GREY_500}
+              >
+                <span>{artifactLocation}</span>
+              </Text>
+            </Container>
+          )}
           {templateActionBtns}
         </Layout.Horizontal>
       </Layout.Horizontal>
