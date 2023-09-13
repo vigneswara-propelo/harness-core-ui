@@ -106,7 +106,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const {
     lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider,
     precursorData,
-    enableImportYAMLOption
+    enableImportYAMLOption,
+    dummyGitnessHarnessConnector
   } = props
   const { preSelectedGitConnector, connectorsEligibleForPreSelection } = precursorData || {}
   const { getString } = useStrings()
@@ -126,7 +127,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const [buttonLabel, setButtonLabel] = useState<string>('')
   const { trackEvent } = useTelemetry()
   const [generatedYAMLAsJSON, setGeneratedYAMLAsJSON] = useState<PipelineConfig>({})
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, CODE_ENABLED } = useFeatureFlags()
   const enableSavePipelinetoRemoteOption =
     configuredGitConnector && SupportedGitProvidersForCIOnboarding.includes(configuredGitConnector.type)
   const yamlVersion = useMemo(
@@ -155,20 +156,24 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     if (
       configuredGitConnector &&
       configurePipelineRef.current?.configuredOption &&
-      selectRepositoryRef.current?.repository &&
+      (selectRepositoryRef.current?.repository || selectRepositoryRef.current?.gitnessRepository?.uid) &&
       StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
         PipelineConfigurationOption.GenerateYAML
     ) {
       setDisableBtn(true)
       setPageLoader({ show: true, message: getString('ci.getStartedWithCI.generatingYAMLFromRepo') })
       try {
-        const connectorRef = getScopedValueFromDTO(configuredGitConnector)
-        const connectorScope = getScopeFromDTO(configuredGitConnector)
-        const repoNameWithNamespace = getFullRepoName(selectRepositoryRef.current.repository)
+        const isGitnessConnectorConfigured =
+          configuredGitConnector?.identifier === dummyGitnessHarnessConnector?.identifier
+        const connectorRef = isGitnessConnectorConfigured ? '' : getScopedValueFromDTO(configuredGitConnector)
+        const connectorScope = isGitnessConnectorConfigured ? Scope.PROJECT : getScopeFromDTO(configuredGitConnector)
+        const repoNameWithNamespace = selectRepositoryRef.current?.repository
+          ? getFullRepoName(selectRepositoryRef.current.repository)
+          : selectRepositoryRef.current?.gitnessRepository?.uid || ''
         generateYamlPromise({
           queryParams: {
             accountIdentifier: accountId,
-            connectorIdentifier: configuredGitConnector?.identifier,
+            connectorIdentifier: isGitnessConnectorConfigured ? '' : configuredGitConnector?.identifier,
             repo: repoNameWithNamespace,
             yamlVersion,
             ...(connectorScope === Scope.ORG
@@ -221,13 +226,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     orgIdentifier,
     configurePipelineRef.current?.configuredOption,
     selectRepositoryRef.current?.repository,
+    selectRepositoryRef.current?.gitnessRepository,
     yamlVersion
   ])
 
   const constructV0PipelinePayloadWithCodebase = React.useCallback(
-    (repository: UserRepoResponse, pipelineName?: string): string => {
-      const { name: repoName, namespace } = repository
-      if (!repoName || !namespace || !configuredGitConnector?.identifier) {
+    (repository?: UserRepoResponse, gitnessRepoName?: string, pipelineName?: string): string => {
+      const repositoryName = gitnessRepoName || repository?.name || ''
+      if (((!repository?.name || !repository?.namespace) && !gitnessRepoName) || !configuredGitConnector?.identifier) {
         return ''
       }
       try {
@@ -242,9 +248,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             configuredGitConnector,
             orgIdentifier,
             projectIdentifier,
-            repository,
+            repositoryName,
             getString,
-            pipelineName: pipelineName ?? ''
+            shouldAddBuildRuntimeInput: !!(CODE_ENABLED && gitnessRepoName),
+            dummyGitnessHarnessConnector,
+            pipelineName: pipelineName?.length ? pipelineName : `${getString('buildText')} ${repositoryName}`
           })
         )
       } catch (e) {
@@ -321,10 +329,15 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             spec: {
               type: eventType,
               spec: {
-                connectorRef: configuredGitConnector ? getScopedValueFromDTO(configuredGitConnector) : '',
+                connectorRef:
+                  configuredGitConnector?.identifier === dummyGitnessHarnessConnector?.identifier
+                    ? ''
+                    : configuredGitConnector
+                    ? getScopedValueFromDTO(configuredGitConnector)
+                    : '',
                 repoName: selectRepositoryRef.current?.repository
                   ? getFullRepoName(selectRepositoryRef.current?.repository)
-                  : '',
+                  : selectRepositoryRef.current?.gitnessRepository?.uid || '',
                 autoAbortPreviousExecutions: false,
                 actions: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
                   ? getPRTriggerActions(connectorType)
@@ -347,6 +360,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       configuredGitConnector,
       selectGitProviderRef?.current?.values?.gitProvider,
       selectRepositoryRef.current?.repository,
+      selectRepositoryRef.current?.gitnessRepository,
       yamlVersion
     ]
   )
@@ -464,8 +478,17 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       } = (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {}
       const shouldSavePipelineToGit = (enableSavePipelinetoRemoteOption && storeInGit) || false
       const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
-      if (selectRepositoryRef.current?.repository && configuredGitConnector) {
-        const fullRepoName = getFullRepoName(selectRepositoryRef.current.repository)
+      if (
+        (selectRepositoryRef.current?.repository || (CODE_ENABLED && selectRepositoryRef.current?.gitnessRepository)) &&
+        configuredGitConnector
+      ) {
+        let fullRepoName = ''
+        if (selectRepositoryRef?.current?.repository) {
+          fullRepoName = getFullRepoName(selectRepositoryRef.current.repository)
+        } else if (CODE_ENABLED) {
+          fullRepoName = selectRepositoryRef.current?.gitnessRepository?.uid || ''
+        }
+
         const commonGitParams: GitQueryParams = {
           storeType: StoreType.REMOTE,
           connectorRef,
@@ -478,7 +501,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
             ? generatedYAMLAsJSON
             : getCIStarterPipelineV1()
-        // First create the pipeline for user
+        // First create the pipeline for users
         return createPipelineV2Promise({
           body: CI_YAML_VERSIONING
             ? yamlStringify(
@@ -487,13 +510,19 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   : addRepositoryInfoToPipeline({
                       currentPipeline: v1YAMLAsJSON,
                       connectorRef,
-                      repoName: getGitConnectorRepoBasedOnRepoUrl(
-                        configuredGitConnector,
-                        selectRepositoryRef.current.repository
-                      )
+                      repoName: selectRepositoryRef?.current?.repository
+                        ? getGitConnectorRepoBasedOnRepoUrl(
+                            configuredGitConnector,
+                            selectRepositoryRef.current.repository
+                          )
+                        : selectRepositoryRef.current?.gitnessRepository?.uid || ''
                     })
               )
-            : constructV0PipelinePayloadWithCodebase(selectRepositoryRef.current.repository, pipelineName),
+            : constructV0PipelinePayloadWithCodebase(
+                selectRepositoryRef?.current?.repository,
+                selectRepositoryRef?.current?.gitnessRepository?.uid,
+                pipelineName
+              ),
           queryParams: getCreatePipelineQueryParams({
             shouldSavePipelineToGit,
             defaultBranch,
@@ -540,7 +569,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                     pipelineId: createPipelineResponse?.data?.identifier,
                     eventType:
                       configuredGitConnector?.type &&
-                      [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector?.type)
+                      [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.Harness].includes(
+                        configuredGitConnector?.type
+                      )
                         ? eventTypes.PULL_REQUEST
                         : eventTypes.MERGE_REQUEST,
                     shouldSavePipelineToGit,
@@ -614,6 +645,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     },
     [
       selectRepositoryRef.current?.repository,
+      selectRepositoryRef.current?.gitnessRepository,
       configuredGitConnector,
       accountId,
       projectIdentifier,
@@ -639,7 +671,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   }, [])
 
   const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
-    if (selectRepositoryRef.current?.repository) {
+    if (selectRepositoryRef.current?.repository || selectRepositoryRef.current?.gitnessRepository) {
       try {
         let setupPipelineAndTriggerPromise = getPipelineAndTriggerSetupPromise()
         if (setupPipelineAndTriggerPromise) {
@@ -679,6 +711,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [
     selectRepositoryRef.current?.repository,
+    selectRepositoryRef.current?.gitnessRepository,
     configuredGitConnector,
     generatedYAMLAsJSON,
     enableSavePipelinetoRemoteOption
@@ -758,6 +791,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             enableNextBtn={() => setDisableBtn(false)}
             selectedHosting={Hosting.SaaS}
             updateFooterLabel={setButtonLabel}
+            dummyGitnessHarnessConnector={dummyGitnessHarnessConnector}
           />
         ),
         onClickNext: () => {
@@ -767,12 +801,19 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setFieldTouched?.('gitProvider', true)
             return
           }
-          if (!gitAuthenticationMethod && gitProvider?.type !== NonGitOption.OTHER) {
+          if (!gitAuthenticationMethod && ![NonGitOption.OTHER, Connectors.Harness].includes(gitProvider?.type)) {
             setFieldTouched?.('gitAuthenticationMethod', true)
             return
           }
+
+          if (CODE_ENABLED && gitProvider?.type === Connectors.Harness) {
+            setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
+            setShowError(false)
+            updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
+            updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+          }
           // For non-OAuth auth mechanism, auth fields in the form should validate to proceed here, for OAuth no form validation is needed
-          if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
+          else if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
             setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
             setShowError(false)
             updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
@@ -802,6 +843,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
             updateFooterLabel={setButtonLabel}
+            dummyGitnessHarnessConnector={dummyGitnessHarnessConnector}
           />
         ),
         onClickBack: () => {
@@ -812,8 +854,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         onClickNext: () => {
           try {
             trackEvent(CIOnboardingActions.ConfigurePipelineClicked, {})
-            const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
-            if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
+            const { repository, enableCloneCodebase, gitnessRepository } = selectRepositoryRef.current || {}
+            if (enableCloneCodebase && (repository || gitnessRepository) && configuredGitConnector?.spec) {
               updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
               setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
               setShowError(false)
@@ -839,7 +881,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             ref={configurePipelineRef}
             configuredGitConnector={configuredGitConnector}
             repoName={
-              selectRepositoryRef.current?.repository ? getFullRepoName(selectRepositoryRef.current.repository) : ''
+              selectRepositoryRef.current?.repository
+                ? getFullRepoName(selectRepositoryRef.current.repository)
+                : CODE_ENABLED && selectRepositoryRef.current?.gitnessRepository?.uid
+                ? selectRepositoryRef.current.gitnessRepository.uid
+                : ''
             }
             showError={showError}
             disableNextBtn={() => setDisableBtn(true)}

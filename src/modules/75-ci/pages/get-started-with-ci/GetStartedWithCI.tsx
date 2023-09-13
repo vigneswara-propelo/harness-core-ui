@@ -54,7 +54,7 @@ export default function GetStartedWithCI(): React.ReactElement {
   const { trackEvent } = useTelemetry()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-  const { CIE_HOSTED_VMS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CODE_ENABLED } = useFeatureFlags()
   const [showWizard, setShowWizard] = useState<boolean>(false)
   const [showProvisioningCarousel, setShowProvisioningCarousel] = useState<boolean>(false)
   const { initiateProvisioning, delegateProvisioningStatus, fetchingDelegateDetails } =
@@ -74,6 +74,17 @@ export default function GetStartedWithCI(): React.ReactElement {
   const [isFetchingSecret, setIsFetchingSecret] = useState<boolean>()
   const scrollRef = useRef<Element>()
 
+  const dummyGitnessHarnessConnector: ConnectorInfoDTO = {
+    accountIdentifier: accountId,
+    description: '',
+    identifier: 'Gitness-Harness',
+    name: getString('harness'),
+    orgIdentifier: orgIdentifier,
+    projectIdentifier: projectIdentifier,
+    spec: {},
+    type: Connectors.Harness
+  }
+
   useEffect(() => {
     if (showWizard) {
       fetchGitConnectors({
@@ -84,9 +95,13 @@ export default function GetStartedWithCI(): React.ReactElement {
         const { status, data } = response
         if (status === Status.SUCCESS && Array.isArray(data?.content) && data?.content && data.content.length > 0) {
           const connectors = data.content
-          setConnectorsEligibleForPreSelection(
-            connectors.map((item: ConnectorResponse) => item.connector) as ConnectorInfoDTO[]
-          )
+          const connectorsListForSelection = connectors.map(
+            (item: ConnectorResponse) => item.connector
+          ) as ConnectorInfoDTO[]
+          if (CODE_ENABLED) {
+            connectorsListForSelection.unshift(dummyGitnessHarnessConnector)
+          }
+          setConnectorsEligibleForPreSelection(connectorsListForSelection)
           const sortedConnectors = sortConnectorsByLastConnectedAtTsDescOrder(connectors)
           const selectedConnector =
             sortedConnectors.find(
@@ -122,6 +137,8 @@ export default function GetStartedWithCI(): React.ReactElement {
               }
             }
           }
+        } else if (CODE_ENABLED) {
+          setConnectorsEligibleForPreSelection([dummyGitnessHarnessConnector])
         }
       })
     }
@@ -231,6 +248,7 @@ export default function GetStartedWithCI(): React.ReactElement {
               ? InfraProvisiongWizardStepId.SelectRepository
               : InfraProvisiongWizardStepId.SelectGitProvider
           }
+          dummyGitnessHarnessConnector={dummyGitnessHarnessConnector}
         />
       ) : (
         <>

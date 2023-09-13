@@ -6,6 +6,7 @@
  */
 
 import type { IconName } from '@harness/icons'
+import { SelectOption } from '@harness/uicore'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import type {
   NodeRunInfo,
@@ -67,6 +68,7 @@ export interface InputSetDTO extends Omit<InputSetResponse, 'identifier' | 'pipe
   identifier?: string
   repo?: string
   branch?: string
+  provider?: SelectOption
 }
 
 export interface SaveInputSetDTO {

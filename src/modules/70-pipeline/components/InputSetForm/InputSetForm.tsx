@@ -72,6 +72,7 @@ import useDiffDialog from '@common/hooks/useDiffDialog'
 import { usePermission } from '@rbac/hooks/usePermission'
 
 import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { GitProviderOptions } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
 import GitPopover from '../GitPopover/GitPopover'
 import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -496,6 +497,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
         try {
           const inputSetYamlVisual = parse<InputSet>(yaml).inputSet
+          const connectorRefFromInputSetYaml = inputSetYamlVisual.pipeline?.properties?.ci?.codebase?.connectorRef
           if (inputSetYamlVisual) {
             inputSet.name = inputSetYamlVisual.name
             inputSet.identifier = inputSetYamlVisual.identifier
@@ -509,7 +511,14 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
               connectorRef: defaultTo(connectorRef, ''),
               repoName: defaultTo(repoName, ''),
               storeType: defaultTo(storeType, StoreType.INLINE),
-              filePath: getFilePath(inputSetYamlVisual)
+              filePath: getFilePath(inputSetYamlVisual),
+              provider:
+                connectorRef || connectorRefFromInputSetYaml
+                  ? {
+                      label: getString('stepPalette.others'),
+                      value: getString('stepPalette.others')
+                    }
+                  : GitProviderOptions(getString)[0]
             })
             setFilePath(getFilePath(inputSetYamlVisual))
           }

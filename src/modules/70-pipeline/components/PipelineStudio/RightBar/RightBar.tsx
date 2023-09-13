@@ -54,7 +54,9 @@ import { getOptionalSubLabel } from '@pipeline/components/Volumes/Volumes'
 import { ConnectionType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import type { PipelineType, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@platform/connectors/constants'
+import { GitProviderOptions } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
 import { useQueryParams } from '@common/hooks'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
@@ -77,6 +79,7 @@ interface CodebaseValues {
   prCloneStrategy?: MultiTypeSelectOption
   memoryLimit?: string
   cpuLimit?: string
+  provider?: SelectOption | string
 }
 
 enum CodebaseStatuses {
@@ -121,6 +124,7 @@ export function RightBar(): JSX.Element {
   const codebase = pipeline?.properties?.ci?.codebase
   const [codebaseStatus, setCodebaseStatus] = React.useState<CodebaseStatuses>(CodebaseStatuses.ZeroState)
   const { getString } = useStrings()
+  const { CODE_ENABLED } = useFeatureFlags()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
@@ -149,7 +153,12 @@ export function RightBar(): JSX.Element {
       getMultiTypeFromValue(codebase?.prCloneStrategy) === MultiTypeInputType.FIXED
         ? prCloneStrategyOptions.find(option => option.value === codebase?.prCloneStrategy)
         : codebase?.prCloneStrategy,
-    cpuLimit: codebase?.resources?.limits?.cpu
+    cpuLimit: codebase?.resources?.limits?.cpu,
+    provider: codebase?.connectorRef
+      ? codebase?.connectorRef === RUNTIME_INPUT_VALUE
+        ? RUNTIME_INPUT_VALUE
+        : { label: getString('stepPalette.others'), value: getString('stepPalette.others') }
+      : GitProviderOptions(getString)[0]
   }
 
   const isYaml = view === SelectedView.YAML
@@ -599,7 +608,8 @@ export function RightBar(): JSX.Element {
                         MultiTypeInputType.EXPRESSION,
                         MultiTypeInputType.RUNTIME
                       ],
-                      configureOptionsProps: { hideExecutionTimeField: true }
+                      configureOptionsProps: { hideExecutionTimeField: true },
+                      isCodeEnabled: CODE_ENABLED
                     })}
                     <Accordion>
                       <Accordion.Panel

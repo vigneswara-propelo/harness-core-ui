@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { get, omit, set } from 'lodash-es'
+import { get, omit, set, unset } from 'lodash-es'
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
@@ -136,7 +136,8 @@ export const addDetailsToPipeline = ({
   orgIdentifier,
   connectorRef,
   repoName,
-  yamlVersion = YAMLVersion.V0
+  yamlVersion = YAMLVersion.V0,
+  shouldAddBuildRuntimeInput = false
 }: {
   originalPipeline: PipelineConfig
   name: string
@@ -146,6 +147,7 @@ export const addDetailsToPipeline = ({
   connectorRef?: string
   repoName?: string
   yamlVersion?: YAMLVersion
+  shouldAddBuildRuntimeInput?: boolean
 }): PipelineConfig => {
   let updatedPipeline = { ...originalPipeline }
   if (yamlVersion === YAMLVersion.V1) {
@@ -155,9 +157,18 @@ export const addDetailsToPipeline = ({
   updatedPipeline = set(updatedPipeline, 'pipeline.identifier', identifier)
   updatedPipeline = set(updatedPipeline, 'pipeline.projectIdentifier', projectIdentifier)
   updatedPipeline = set(updatedPipeline, 'pipeline.orgIdentifier', orgIdentifier)
-  if (connectorRef && repoName) {
+  if (connectorRef) {
     updatedPipeline = set(updatedPipeline, 'pipeline.properties.ci.codebase.connectorRef', connectorRef)
-    updatedPipeline = set(updatedPipeline, 'pipeline.properties.ci.codebase.repoName', repoName)
+  } else {
+    unset(updatedPipeline, 'pipeline.properties.ci.codebase.connectorRef')
+  }
+  if (repoName) updatedPipeline = set(updatedPipeline, 'pipeline.properties.ci.codebase.repoName', repoName)
+  if (shouldAddBuildRuntimeInput) {
+    updatedPipeline = set(
+      updatedPipeline,
+      'pipeline.properties.ci.codebase.build',
+      CodebaseProperties.ci.codebase.build
+    )
   }
   return updatedPipeline
 }
@@ -181,27 +192,35 @@ export const getPayloadForPipelineCreation = ({
   getString,
   projectIdentifier,
   orgIdentifier,
-  repository,
+  repositoryName,
   configuredGitConnector,
+  shouldAddBuildRuntimeInput,
+  dummyGitnessHarnessConnector,
   pipelineName
 }: {
   pipelineYaml: string
   getString: UseStringsReturn['getString']
   projectIdentifier: string
   orgIdentifier: string
-  repository: UserRepoResponse
+  repositoryName: string
   configuredGitConnector: ConnectorInfoDTO
+  shouldAddBuildRuntimeInput?: boolean
+  dummyGitnessHarnessConnector?: ConnectorInfoDTO
   pipelineName?: string
 }): PipelineConfig => {
   const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
   return addDetailsToPipeline({
     originalPipeline: parse(pipelineYaml),
-    name: pipelineName ?? `${getString('buildText')} ${repository.name}`,
-    identifier: `${getString('buildText')}_${repository.name?.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`,
+    name: pipelineName?.length ? pipelineName : `${getString('buildText')} ${repositoryName}`,
+    identifier: `${getString('buildText')}_${repositoryName?.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`,
     projectIdentifier,
     orgIdentifier,
-    connectorRef: getScopedValueFromDTO(configuredGitConnector),
-    repoName: getFullRepoName(repository)
+    connectorRef:
+      configuredGitConnector.identifier === dummyGitnessHarnessConnector?.identifier
+        ? ''
+        : getScopedValueFromDTO(configuredGitConnector),
+    repoName: repositoryName,
+    shouldAddBuildRuntimeInput
   })
 }
 

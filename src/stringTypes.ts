@@ -516,6 +516,7 @@ export interface StringsMap {
   'common.gitDetailsTitle': string
   'common.gitHubActions': string
   'common.gitOps': string
+  'common.gitProvider': string
   'common.gitSync.allRepositories': string
   'common.gitSync.branchFetchFailed': string
   'common.gitSync.branchSyncNotAllowed': string
@@ -1087,6 +1088,7 @@ export interface StringsMap {
   'common.selectModules': string
   'common.selectName': string
   'common.selectNameManually': string
+  'common.selectOtherGitProviders': string
   'common.selectProject': string
   'common.selectRepository': string
   'common.selectService': string

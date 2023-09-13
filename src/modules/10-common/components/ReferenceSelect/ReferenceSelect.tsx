@@ -81,6 +81,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   onMultiSelectChange?: (records: ScopeAndIdentifier[]) => void
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
+  useGitProviderComponent?: boolean
 }
 
 export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProps): JSX.Element => {
@@ -154,8 +155,10 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     placeholderClass,
     isRecordDisabled,
     renderRecordDisabledWarning,
+    useGitProviderComponent = false,
     ...referenceProps
   } = props
+  const { getString } = useStrings()
   const [isOpen, setOpen] = useState(false)
   React.useEffect(() => {
     isOpen && setOpen(!hideModal) //this will hide modal if hideModal changes to true in open state
@@ -251,9 +254,25 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     )
   }
 
+  const getGitProviderPlaceholderElement = (): ReactNode => {
+    return (
+      <li
+        onClick={e => {
+          if (disabled) {
+            e.preventDefault()
+          } else {
+            setOpen(true)
+          }
+        }}
+      >
+        {getString('common.selectOtherGitProviders')}
+      </li>
+    )
+  }
+
   return (
     <>
-      {getPlaceholderElement()}
+      {useGitProviderComponent ? getGitProviderPlaceholderElement() : getPlaceholderElement()}
       <Dialog
         isOpen={isOpen}
         enforceFocus={false}
@@ -303,6 +322,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
 export interface MultiTypeReferenceInputProps<T extends MinimalObject>
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
   referenceSelectProps: Omit<ReferenceSelectProps<T>, 'onChange'>
+  useGitProviderComponent?: boolean
 }
 function MultiTypeReferenceInputFixedTypeComponent<T extends MinimalObject>(
   props: FixedTypeComponentProps & MultiTypeReferenceInputProps<T>['referenceSelectProps']
@@ -320,12 +340,13 @@ function MultiTypeReferenceInputFixedTypeComponent<T extends MinimalObject>(
   )
 }
 export function MultiTypeReferenceInput<T extends MinimalObject>(props: MultiTypeReferenceInputProps<T>): JSX.Element {
-  const { referenceSelectProps, ...rest } = props
+  const { referenceSelectProps, useGitProviderComponent, ...rest } = props
   if (referenceSelectProps.isOnlyFixedtype) {
     const { selected, width = 300, ...restProps } = referenceSelectProps
     return (
       <ReferenceSelect
         {...restProps}
+        useGitProviderComponent={useGitProviderComponent}
         selected={selected}
         width={width}
         onChange={(record, scope) => {

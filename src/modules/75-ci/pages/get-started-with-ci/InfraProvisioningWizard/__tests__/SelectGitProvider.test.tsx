@@ -7,8 +7,10 @@
 
 import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SelectGitProvider } from '../SelectGitProvider'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
@@ -57,6 +59,9 @@ jest.mock('services/cd-ng', () => ({
 
 describe('Test SelectGitProvider component', () => {
   test('Initial render', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
@@ -76,6 +81,9 @@ describe('Test SelectGitProvider component', () => {
   })
 
   test('User clicks on Github Provider card', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container, getByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
@@ -94,9 +102,7 @@ describe('Test SelectGitProvider component', () => {
 
     // Clicking on Github Git Provider card should select it
     expect(gitProviderCards[0].classList.contains('Card--selected')).not.toBe(true)
-    await act(async () => {
-      fireEvent.click(gitProviderCards[0])
-    })
+    await userEvent.click(gitProviderCards[0])
     // should send an event on git provider select
     expect(trackEventMock).toBeCalled()
     expect(gitProviderCards[0].classList.contains('Card--selected')).toBe(true)
@@ -105,9 +111,38 @@ describe('Test SelectGitProvider component', () => {
     expect(getByText('common.getStarted.accessTokenLabel')).toBeInTheDocument()
   })
 
+  test('User selects Harness provider and Access Token authentication method', async () => {
+    window.open = jest.fn()
+    global.fetch = jest.fn()
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: true
+    })
+    const { container } = render(
+      <TestWrapper
+        path={routes.toGetStartedWithCI({
+          ...pathParams,
+          module: 'ci'
+        })}
+        pathParams={{
+          ...pathParams,
+          module: 'ci'
+        }}
+      >
+        <SelectGitProvider enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} selectedHosting={Hosting.SaaS} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[0])
+    })
+    expect(container).toMatchSnapshot()
+  })
+
   test('User selects Github provider and Access Token authentication method', async () => {
     window.open = jest.fn()
     global.fetch = jest.fn()
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container, getByText, getAllByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
@@ -186,6 +221,9 @@ describe('Test SelectGitProvider component', () => {
   })
 
   test('User selects Github provider and OAuth authentication method', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     window.open = jest.fn()
     window.addEventListener = jest.fn()
     global.fetch = jest.fn().mockImplementation(() =>
@@ -220,6 +258,9 @@ describe('Test SelectGitProvider component', () => {
   test('Error callout should be visible for failed OAuth', async () => {
     window.open = jest.fn()
     window.addEventListener = jest.fn()
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         text: () => Promise.reject('User not authorized')
@@ -257,6 +298,9 @@ describe('Test SelectGitProvider component', () => {
         text: () => Promise.resolve('https://gitlab.com/auth/login')
       })
     )
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container, getByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
@@ -283,6 +327,9 @@ describe('Test SelectGitProvider component', () => {
 
   test('User selects Gitlab provider and Access Key authentication method', async () => {
     window.open = jest.fn()
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container, getByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
@@ -354,6 +401,9 @@ describe('Test SelectGitProvider component', () => {
 
   test('User selects Bitbucket provider and Username & Application Password method', async () => {
     window.open = jest.fn()
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container, getByText, getAllByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
@@ -443,6 +493,9 @@ describe('Test SelectGitProvider component', () => {
   })
 
   test('Render SelectGitProvider inside InfraProvisioningWizard', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectGitProvider} />
@@ -486,6 +539,9 @@ describe('Test SelectGitProvider component', () => {
 
   // eslint-disable-next-line jest/no-disabled-tests
   test.skip('User selects "Other" option', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CODE_ENABLED: false
+    })
     const { container, getByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({

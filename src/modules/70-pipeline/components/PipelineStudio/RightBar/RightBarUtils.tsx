@@ -7,12 +7,19 @@
 import React, { SetStateAction, Dispatch } from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { TextInput, Text, MultiTypeInputType, Container, getMultiTypeFromValue, AllowedTypes } from '@harness/uicore'
+import {
+  TextInput,
+  Text,
+  MultiTypeInputType,
+  Container,
+  getMultiTypeFromValue,
+  AllowedTypes,
+  MultiTypeInputValue
+} from '@harness/uicore'
 import { get, set } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
-import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { ConnectorRefWidth } from '@pipeline/utils/constants'
 import {
@@ -27,6 +34,8 @@ import {
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@platform/connectors/constants'
 import { getCompleteConnectorUrl } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import { FormMultiTypeGitProviderAndConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
+import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './RightBar.module.scss'
@@ -83,7 +92,8 @@ export const renderConnectorAndRepoName = ({
   setConnectorType,
   connectorType,
   fixRepoNameWidth,
-  configureOptionsProps
+  configureOptionsProps,
+  isCodeEnabled
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -113,6 +123,7 @@ export const renderConnectorAndRepoName = ({
   connectorType?: string // required for getCompleteConnectorUrl on initial Add CI Stage
   fixRepoNameWidth?: boolean
   configureOptionsProps?: Partial<ConfigureOptionsProps>
+  isCodeEnabled?: boolean
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
@@ -123,54 +134,63 @@ export const renderConnectorAndRepoName = ({
       ? connectorWidth + runtimeInputGearWidth
       : connectorWidth
 
+  const renderConnectorField = (): JSX.Element => {
+    const commonArgs = {
+      name: connectorFieldName,
+      width: getConnectorWidth({ connectorWidth, connectorRef: values.connectorRef }),
+      error: errors?.connectorRef,
+      type: [
+        Connectors.GIT,
+        Connectors.GITHUB,
+        Connectors.GITLAB,
+        Connectors.BITBUCKET,
+        Connectors.AWS_CODECOMMIT,
+        Connectors.AZURE_REPO
+      ],
+      placeholder: loading ? getString('loading') : getString('common.entityPlaceholderText'),
+      accountIdentifier: accountId,
+      projectIdentifier: projectIdentifier,
+      orgIdentifier: orgIdentifier,
+      gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true },
+      multiTypeProps: {
+        expressions,
+        disabled: isReadonly,
+        allowableTypes
+      },
+      configureOptionsProps: configureOptionsProps,
+      onChange: (value: any, _valueType: MultiTypeInputValue, connectorRefType: MultiTypeInputType) => {
+        handleCIConnectorRefOnChange({
+          value: value as ConnectorRefInterface,
+          connectorRefType,
+          setConnectionType,
+          setConnectorUrl,
+          setConnectorType,
+          setFieldValue,
+          codeBaseInputFieldFormName,
+          onConnectorChange
+        })
+        setCodebaseRuntimeInputs({
+          ...codebaseRuntimeInputs,
+          connectorRef: isRuntimeInput(value),
+          repoName: isMultiTypeRuntime(connectorRefType)
+        })
+      }
+    }
+    return isCodeEnabled ? (
+      <FormMultiTypeGitProviderAndConnectorField label={getString('common.gitProvider')} {...commonArgs} />
+    ) : (
+      <FormMultiTypeConnectorField
+        label={getString('connector')}
+        setRefValue
+        tooltipProps={{ dataTooltipId: 'rightBarForm_connectorRef' }}
+        {...commonArgs}
+      />
+    )
+  }
+
   return (
     <>
-      <Container className={cx(css.bottomMargin3)}>
-        <FormMultiTypeConnectorField
-          name={connectorFieldName}
-          type={[
-            Connectors.GIT,
-            Connectors.GITHUB,
-            Connectors.GITLAB,
-            Connectors.BITBUCKET,
-            Connectors.AWS_CODECOMMIT,
-            Connectors.AZURE_REPO
-          ]}
-          label={getString('connector')}
-          width={getConnectorWidth({ connectorWidth, connectorRef: values.connectorRef })}
-          error={errors?.connectorRef}
-          placeholder={loading ? getString('loading') : getString('common.entityPlaceholderText')}
-          accountIdentifier={accountId}
-          projectIdentifier={projectIdentifier}
-          orgIdentifier={orgIdentifier}
-          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          multiTypeProps={{
-            expressions,
-            disabled: isReadonly,
-            allowableTypes
-          }}
-          tooltipProps={{ dataTooltipId: 'rightBarForm_connectorRef' }}
-          setRefValue
-          onChange={(value, _valueType, connectorRefType) => {
-            handleCIConnectorRefOnChange({
-              value: value as ConnectorRefInterface,
-              connectorRefType,
-              setConnectionType,
-              setConnectorUrl,
-              setConnectorType,
-              setFieldValue,
-              codeBaseInputFieldFormName,
-              onConnectorChange
-            })
-            setCodebaseRuntimeInputs({
-              ...codebaseRuntimeInputs,
-              connectorRef: isRuntimeInput(value),
-              repoName: isMultiTypeRuntime(connectorRefType)
-            })
-          }}
-          configureOptionsProps={configureOptionsProps}
-        />
-      </Container>
+      <Container className={cx(css.bottomMargin3)}>{renderConnectorField()}</Container>
 
       {!isRuntimeInput(connectorValue) && connectionType === ConnectionType.Repo ? (
         <Container width={repoNameWidth}>

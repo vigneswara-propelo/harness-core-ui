@@ -6,7 +6,7 @@
  */
 import { get, set } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
 import { Connectors } from '@platform/connectors/constants'
 import { YAMLVersion } from '@pipeline/utils/CIUtils'
@@ -242,7 +242,7 @@ describe('Test HostedBuildsUtils methods', () => {
       getString: UseStringsReturn['getString']
       projectIdentifier: string
       orgIdentifier: string
-      repository: UserRepoResponse
+      repositoryName: string
       configuredGitConnector: ConnectorInfoDTO
     } = {
       pipelineYaml:
@@ -255,7 +255,7 @@ describe('Test HostedBuildsUtils methods', () => {
       orgIdentifier: 'orgId',
       projectIdentifier: 'projectId',
       pipelineName: 'Build Dot Net',
-      repository: { name: 'test-repo', namespace: 'harness' },
+      repositoryName: 'test-repo',
       configuredGitConnector: { identifier: 'testconnector', name: 'test connector', type: 'Github', spec: {} }
     }
     let createdPipelinePayload = getPayloadForPipelineCreation(args)

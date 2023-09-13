@@ -14,7 +14,7 @@ import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
 import { InfraProvisiongWizardStepId } from '../Constants'
-import { repos } from '../mocks/repositories'
+import { repos, gitnessRepos } from '../mocks/repositories'
 
 const createInputSetForPipelinePromiseMock = jest.fn(() =>
   Promise.resolve({
@@ -39,6 +39,17 @@ jest.mock('services/pipeline-ng', () => ({
   ),
   createInputSetForPipelinePromise: jest.fn().mockImplementation(() => {
     return createInputSetForPipelinePromiseMock()
+  })
+}))
+jest.mock('services/code', () => ({
+  useListRepos: jest.fn().mockImplementation(() => {
+    return {
+      data: gitnessRepos,
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
   })
 }))
 
@@ -115,6 +126,9 @@ const routesToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
 describe('Render and test InfraProvisioningWizard', () => {
   test('Test Wizard Navigation end-to-end', async () => {
     global.fetch = jest.fn()
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CODE_ENABLED: false })
+    })
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <InfraProvisioningWizard />
@@ -184,6 +198,34 @@ describe('Render and test InfraProvisioningWizard', () => {
     expect(routesToPipelineStudio).toHaveBeenCalled()
   })
 
+  test('Test Wizard Navigation end-to-end for CODE_ENABLED', async () => {
+    global.fetch = jest.fn()
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CODE_ENABLED: true })
+    })
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[0])
+    })
+
+    expect(getByText('next: common.selectRepository')).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(getByText('next: common.selectRepository'))
+    })
+
+    expect(getByText('learning')).toBeInTheDocument()
+
+    await act(async () => {
+      fireEvent.click(getByText('learning'))
+    })
+
+    expect(getByText('next: ci.getStartedWithCI.configurePipeline')).toBeInTheDocument()
+  })
+
   const setupGitRepo = async ({
     container,
     getByText
@@ -243,6 +285,9 @@ describe('Render and test InfraProvisioningWizard', () => {
   }
 
   test('Test pipeline creation using existing YAML', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CODE_ENABLED: false })
+    })
     global.fetch = jest.fn()
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
@@ -268,6 +313,9 @@ describe('Render and test InfraProvisioningWizard', () => {
 
   test('Ensure errors are shown for test pipeline creation using existing YAML', async () => {
     global.fetch = jest.fn()
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CODE_ENABLED: false })
+    })
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <InfraProvisioningWizard
@@ -291,6 +339,9 @@ describe('Render and test InfraProvisioningWizard', () => {
 
   // eslint-disable-next-line jest/no-disabled-tests
   test.skip('Test "Option" flow end-to-end', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CODE_ENABLED: false })
+    })
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <InfraProvisioningWizard />
@@ -316,7 +367,7 @@ describe('Render and test InfraProvisioningWizard', () => {
 
   test('Test generate YAML flow with FF on/off', async () => {
     mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true, CODE_ENABLED: false })
     })
     global.fetch = jest.fn()
     const { container, getByText } = render(

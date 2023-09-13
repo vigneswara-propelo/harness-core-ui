@@ -21,7 +21,8 @@ import {
   WebhookNew,
   WebhookDetails,
   Search,
-  Tags
+  Tags,
+  NewRepoModalButton
 } from '../CodeApp'
 
 // eslint-disable-next-line jest-no-mock
@@ -168,15 +169,25 @@ jest.mock(
 )
 
 jest.mock(
+  'code/NewRepoModalButton',
+  () => ({
+    default: () => <div>code/NewRepoModalButton</div>
+  }),
+  { virtual: true }
+)
+
+jest.mock(
   'code/Search',
   () => ({
-    default: () => <div>code/WebhookDetails</div>
+    default: () => <div>code/Search</div>
   }),
   { virtual: true }
 )
 
 describe('CodeApp', () => {
   test('Exports should work properly', async () => {
+    const space = 'test/space'
+    const modalTitle = 'new repository'
     const { container } = render(
       <div>
         <Repository />
@@ -193,6 +204,7 @@ describe('CodeApp', () => {
         <Webhooks />
         <WebhookNew />
         <WebhookDetails />
+        <NewRepoModalButton space={space} modalTitle={modalTitle} onSubmit={jest.fn()} />
         <Search />
       </div>
     )

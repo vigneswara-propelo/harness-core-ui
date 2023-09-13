@@ -109,6 +109,9 @@ jest.spyOn(hostedBuilds, 'useProvisionDelegateForHostedBuilds').mockReturnValue(
   delegateProvisioningStatus: ProvisioningStatus.SUCCESS,
   fetchingDelegateDetails: false
 })
+jest.mock('services/code', () => ({
+  useListRepos: jest.fn().mockImplementation(() => Promise.resolve([]))
+}))
 
 describe('Test Get Started With CI', () => {
   test('initial render', async () => {

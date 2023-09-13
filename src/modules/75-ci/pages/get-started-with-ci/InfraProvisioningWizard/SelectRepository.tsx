@@ -23,7 +23,8 @@ import {
   IconProps,
   IconName,
   Toggle,
-  Label
+  Label,
+  ButtonVariation
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { ConnectorInfoDTO, useGetListOfAllReposByRefConnector, UserRepoResponse, Error } from 'services/cd-ng'
@@ -32,13 +33,16 @@ import { Connectors } from '@platform/connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import { NewRepoModalButton } from '@code/CodeApp'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { TypesRepository, useListRepos } from 'services/code'
 import { getFullRepoName } from '../../../utils/HostedBuildsUtils'
-
 import css from './InfraProvisioningWizard.module.scss'
 
 export interface SelectRepositoryRef {
   repository?: UserRepoResponse
   enableCloneCodebase: boolean
+  gitnessRepository?: TypesRepository
 }
 
 export type SelectRepositoryForwardRef =
@@ -54,6 +58,7 @@ interface SelectRepositoryProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
   updateFooterLabel?: React.Dispatch<React.SetStateAction<string>>
+  dummyGitnessHarnessConnector?: ConnectorInfoDTO
 }
 
 const SelectRepositoryRef = (
@@ -67,12 +72,17 @@ const SelectRepositoryRef = (
     enableNextBtn,
     connectorsEligibleForPreSelection,
     onConnectorSelect,
-    updateFooterLabel
+    updateFooterLabel,
+    dummyGitnessHarnessConnector
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const space = `${accountId}/${orgIdentifier}/${projectIdentifier}`
+  const { CODE_ENABLED } = useFeatureFlags()
   const [repository, setRepository] = useState<UserRepoResponse | undefined>()
+  const [gitnessRepository, setGitnessRepository] = useState<TypesRepository | undefined>()
   const [repositories, setRepositories] = useState<UserRepoResponse[]>()
+  const [gitnessRepositories, setGitnessRepositories] = useState<TypesRepository[]>()
   const [selectedConnectorOption, setSelectedConnectorOption] = useState<SelectOption>()
   const [query, setQuery] = useState<string>()
   const {
@@ -90,6 +100,13 @@ const SelectRepositoryRef = (
     },
     lazy: true
   })
+
+  const {
+    data: gitnessRepositoriesData,
+    loading: fetchingGitnessRepos,
+    error: errorFetchingGitnessRepos,
+    refetch: fetchGitnessRepos
+  } = useListRepos({ space_ref: `${accountId}/${orgIdentifier}/${projectIdentifier}/+` })
   const [enableCloneCodebase, setEnableCloneCodebase] = useState(true)
 
   const getIcon = useCallback((type: ConnectorInfoDTO['type']): IconName | undefined => {
@@ -100,6 +117,8 @@ const SelectRepositoryRef = (
         return 'gitlab'
       case Connectors.BITBUCKET:
         return 'bitbucket-blue'
+      case Connectors.Harness:
+        return 'service-github'
       default:
         return
     }
@@ -113,6 +132,14 @@ const SelectRepositoryRef = (
       Array.isArray(connectorsEligibleForPreSelection) && connectorsEligibleForPreSelection?.length > 0
         ? connectorsEligibleForPreSelection
         : [validatedPreSelectedConnector]
+
+    // if only harnessConnector is present for selection and new non harness connector is added
+    if (validatedPreSelectedConnector && connectorsEligibleForPreSelection?.length && CODE_ENABLED) {
+      const isValidatedConnectorPresentForSelection = connectorsEligibleForPreSelection.find(
+        connector => connector.identifier === validatedPreSelectedConnector.identifier
+      )
+      if (!isValidatedConnectorPresentForSelection) items.unshift(validatedPreSelectedConnector)
+    }
     return items?.map((item: ConnectorInfoDTO) => {
       const { type, name } = item
       return {
@@ -133,16 +160,24 @@ const SelectRepositoryRef = (
     }
   }, [ConnectorSelectionItems, validatedPreSelectedConnector])
 
+  const harnessGitnessConnector = connectorsEligibleForPreSelection?.find(
+    item => item.identifier === dummyGitnessHarnessConnector?.identifier
+  )
+
   const getRepositories = useCallback((connectorRef: string): void => {
     cancelRepositoriesFetch()
-    fetchRepositories({
-      queryParams: {
-        accountIdentifier: accountId,
-        projectIdentifier,
-        orgIdentifier,
-        connectorRef
-      }
-    })
+    if (CODE_ENABLED && connectorRef === harnessGitnessConnector?.identifier) {
+      fetchGitnessRepos()
+    } else {
+      fetchRepositories({
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          connectorRef
+        }
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -167,6 +202,7 @@ const SelectRepositoryRef = (
         onConnectorSelect?.(matchingConnector)
       }
       setRepository(undefined)
+      setGitnessRepository(undefined)
     }
   }, [selectedConnectorOption, connectorsEligibleForPreSelection])
 
@@ -174,15 +210,29 @@ const SelectRepositoryRef = (
     if (!fetchingRepositories && !errorWhileFetchingRepositories) {
       setRepositories(repoData?.data)
     }
-  }, [fetchingRepositories, errorWhileFetchingRepositories, repoData?.data])
+    if (
+      CODE_ENABLED &&
+      !fetchingGitnessRepos &&
+      !errorFetchingGitnessRepos &&
+      selectedConnectorOption?.value === harnessGitnessConnector?.identifier
+    ) {
+      setGitnessRepositories(gitnessRepositoriesData || [])
+    }
+  }, [
+    fetchingRepositories,
+    errorWhileFetchingRepositories,
+    errorFetchingGitnessRepos,
+    repoData?.data,
+    gitnessRepositoriesData
+  ])
 
   useEffect(() => {
-    if (fetchingRepositories && enableCloneCodebase) {
+    if ((fetchingRepositories || fetchingGitnessRepos) && enableCloneCodebase) {
       disableNextBtn()
     } else {
       enableNextBtn()
     }
-  }, [fetchingRepositories, enableCloneCodebase])
+  }, [fetchingRepositories, enableCloneCodebase, fetchingGitnessRepos])
 
   useEffect(() => {
     if (!forwardRef) {
@@ -195,9 +245,10 @@ const SelectRepositoryRef = (
 
     forwardRef.current = {
       repository,
-      enableCloneCodebase
+      enableCloneCodebase,
+      gitnessRepository
     }
-  }, [repository, enableCloneCodebase])
+  }, [repository, enableCloneCodebase, gitnessRepository])
 
   useEffect(() => {
     if (enableCloneCodebase) {
@@ -209,16 +260,23 @@ const SelectRepositoryRef = (
 
   const debouncedRepositorySearch = debounce((queryText: string): void => {
     if (queryText) {
-      setRepositories(
-        (repoData?.data || []).filter(item => getFullRepoName(item).toLowerCase().includes(queryText.toLowerCase()))
-      )
+      if (CODE_ENABLED && selectedConnectorOption?.value === dummyGitnessHarnessConnector?.identifier) {
+        setGitnessRepositories(
+          (gitnessRepositoriesData || []).filter(item => item?.uid?.toLowerCase().includes(queryText.toLowerCase()))
+        )
+      } else {
+        setRepositories(
+          (repoData?.data || []).filter(item => getFullRepoName(item).toLowerCase().includes(queryText.toLowerCase()))
+        )
+      }
     } else {
       setRepositories(repoData?.data)
+      setGitnessRepositories(gitnessRepositoriesData || [])
     }
   }, 500)
 
   const renderRepositories = useCallback((): JSX.Element => {
-    if (fetchingRepositories) {
+    if (fetchingRepositories || (CODE_ENABLED && fetchingGitnessRepos)) {
       return (
         <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" padding={{ top: 'xsmall' }}>
           <Icon name="steps-spinner" color="primary7" size={25} />
@@ -226,8 +284,9 @@ const SelectRepositoryRef = (
         </Layout.Horizontal>
       )
     } else {
-      if (errorWhileFetchingRepositories) {
-        const { status: fetchRepoStatus, data: fetchRepoError } = errorWhileFetchingRepositories || {}
+      if (errorWhileFetchingRepositories || (CODE_ENABLED && errorFetchingGitnessRepos)) {
+        const { status: fetchRepoStatus, data: fetchRepoError } =
+          errorWhileFetchingRepositories || (CODE_ENABLED && errorFetchingGitnessRepos) || {}
         const errorMessages =
           (fetchRepoError as Error)?.responseMessages || [
             {
@@ -244,22 +303,67 @@ const SelectRepositoryRef = (
             </Container>
           )
         }
-      } else if (repositories && Array.isArray(repositories)) {
-        return repositories.length > 0 ? (
+      } else if (
+        Array.isArray(repositories) &&
+        selectedConnectorOption?.value !== harnessGitnessConnector?.identifier
+      ) {
+        return repositories && repositories?.length > 0 ? (
           <RepositorySelectionTable repositories={repositories} onRowClick={setRepository} />
         ) : (
           <Text flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
             {getString('noSearchResultsFoundPeriod')}
           </Text>
         )
+      } else if (
+        CODE_ENABLED &&
+        Array.isArray(gitnessRepositories) &&
+        selectedConnectorOption?.value === harnessGitnessConnector?.identifier
+      ) {
+        return gitnessRepositories && gitnessRepositories?.length > 0 ? (
+          <GitnessRepositorySelectionTable repositories={gitnessRepositories} onRowClick={setGitnessRepository} />
+        ) : (
+          <>
+            <Icon size={280} name="gitness-no-repositories" flex={{ justifyContent: 'center' }} />
+            <Text
+              flex={{ justifyContent: 'center' }}
+              padding={{ top: 'medium', bottom: 'medium' }}
+              font={{ variation: FontVariation.H6 }}
+            >
+              {getString('pipeline.dashboards.noRepositories')}
+            </Text>
+            <Container flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
+              <NewRepoModalButton
+                space={space}
+                modalTitle={'New Repository'}
+                text={'Create Repository'}
+                variation={ButtonVariation.PRIMARY}
+                icon="plus"
+                onSubmit={() => {
+                  fetchGitnessRepos()
+                }}
+              />
+            </Container>
+          </>
+        )
       }
       return <></>
     }
-  }, [fetchingRepositories, repositories, selectedConnectorOption, errorWhileFetchingRepositories])
+  }, [
+    fetchingRepositories,
+    repositories,
+    selectedConnectorOption,
+    errorWhileFetchingRepositories,
+    errorFetchingGitnessRepos,
+    fetchingGitnessRepos,
+    gitnessRepositories
+  ])
 
   const showValidationErrorForRepositoryNotSelected = useMemo((): boolean => {
-    return (!fetchingRepositories && showError && !repository?.name) || false
-  }, [showError, repository?.name, fetchingRepositories])
+    return (
+      (!fetchingRepositories && !fetchingGitnessRepos && showError && (!repository?.name || !gitnessRepository?.uid)) ||
+      false
+    )
+  }, [showError, repository?.name, fetchingRepositories, fetchingGitnessRepos])
 
   return (
     <Layout.Vertical spacing="small">
@@ -293,7 +397,7 @@ const SelectRepositoryRef = (
                   setQuery(repoSearched)
                   debouncedRepositorySearch(repoSearched)
                 }}
-                disabled={fetchingRepositories}
+                disabled={fetchingRepositories || fetchingGitnessRepos}
                 value={query}
               />
               <Select
@@ -362,6 +466,63 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
 
   return (
     <TableV2<UserRepoResponse>
+      columns={columns}
+      data={repositories || []}
+      hideHeaders={true}
+      minimal={true}
+      resizable={false}
+      sortable={false}
+      className={css.repositoryTable}
+      onRowClick={data => {
+        setSelectedRow(data)
+        onRowClick(data)
+      }}
+    />
+  )
+}
+
+interface GitnessRepositorySelectionTableProps {
+  repositories: TypesRepository[]
+  onRowClick: (repo: TypesRepository) => void
+}
+
+function GitnessRepositorySelectionTable({
+  repositories,
+  onRowClick
+}: GitnessRepositorySelectionTableProps): React.ReactElement {
+  const [selectedRow, setSelectedRow] = useState<TypesRepository | undefined>(undefined)
+
+  const columns: Column<TypesRepository>[] = [
+    {
+      accessor: 'uid',
+      width: '100%',
+      Cell: ({ row }: CellProps<TypesRepository>) => {
+        const { uid: repositoryName } = row.original
+        const isRowSelected = selectedRow && repositoryName === selectedRow?.uid
+        return (
+          <Layout.Horizontal
+            data-testid={repositoryName}
+            className={css.repositoryRow}
+            flex={{ justifyContent: 'flex-start' }}
+            spacing="small"
+          >
+            <RadioButton checked={isRowSelected} />
+            <Text
+              lineClamp={1}
+              font={{ variation: FontVariation.BODY2 }}
+              color={isRowSelected ? Color.PRIMARY_7 : Color.GREY_900}
+            >
+              {repositoryName}
+            </Text>
+          </Layout.Horizontal>
+        )
+      },
+      disableSortBy: true
+    }
+  ]
+
+  return (
+    <TableV2<TypesRepository>
       columns={columns}
       data={repositories || []}
       hideHeaders={true}

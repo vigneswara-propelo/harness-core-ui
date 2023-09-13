@@ -324,7 +324,16 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   React.useEffect(() => {
     const initialValues = getPipelineData()
-    formikRef.current?.setValues({ ...initialValues, ...storeMetadata })
+    const connectorFromPipelineData = get(initialValues, 'pipeline.properties.ci.codebase.connectorRef', null)
+    formikRef.current?.setValues({
+      ...initialValues,
+      ...storeMetadata,
+      provider: connectorFromPipelineData
+        ? { label: getString('stepPalette.others'), value: getString('stepPalette.others') }
+        : get(initialValues, 'name', null) && get(initialValues, 'pipeline.properties.ci.codebase.repoName', null)
+        ? { label: getString('harness'), value: getString('harness') }
+        : undefined
+    })
   }, [inputSet, isEdit, resolvedPipeline])
 
   return (

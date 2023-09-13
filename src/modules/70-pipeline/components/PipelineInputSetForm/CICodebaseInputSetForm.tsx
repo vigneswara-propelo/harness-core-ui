@@ -21,7 +21,8 @@ import {
   RUNTIME_INPUT_VALUE,
   SelectOption,
   AllowedTypesWithRunTime,
-  MultiSelectOption
+  MultiSelectOption,
+  MultiTypeInputValue
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
@@ -48,10 +49,12 @@ import {
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ConnectorRefWidthKeys, getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeGitProviderAndConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   CodebaseTypes,
   getCodebaseRepoNameFromConnector,
@@ -325,6 +328,7 @@ function CICodebaseInputSetFormInternal({
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
   const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
+  const { CODE_ENABLED } = useFeatureFlags()
 
   const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
@@ -671,6 +675,53 @@ function CICodebaseInputSetFormInternal({
     return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)
   }, [readonly, codeBaseType, isFetchingBranches])
 
+  const renderConnectorField = (): JSX.Element => {
+    const commonArgs = {
+      name: codeBaseInputFieldFormName.connectorRef,
+      width: connectorWidth,
+      error: formik?.errors?.connectorRef,
+      type: [
+        Connectors.GIT,
+        Connectors.GITHUB,
+        Connectors.GITLAB,
+        Connectors.BITBUCKET,
+        Connectors.AWS_CODECOMMIT,
+        Connectors.AZURE_REPO
+      ],
+      label: <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>,
+      placeholder: loadingConnectorDetails ? getString('loading') : getString('common.entityPlaceholderText'),
+      accountIdentifier: accountId,
+      projectIdentifier: projectIdentifier,
+      orgIdentifier: orgIdentifier,
+      gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true },
+      multiTypeProps: {
+        expressions,
+        disabled: readonly,
+        allowableTypes: AllowableTypesForCodebaseProperties
+      },
+      onChange: (
+        value: AcceptableValue | undefined,
+        _valueType: MultiTypeInputValue,
+        connectorRefType: MultiTypeInputType
+      ) =>
+        handleCIConnectorRefOnChange({
+          value: value as ConnectorRefInterface,
+          connectorRefType,
+          setConnectionType,
+          setConnectorUrl,
+          setFieldValue: formik?.setFieldValue as (field: string, value: any) => void,
+          codeBaseInputFieldFormName,
+          setGitAuthProtocol,
+          setIsConnectorExpression
+        })
+    }
+    return CODE_ENABLED ? (
+      <FormMultiTypeGitProviderAndConnectorField {...commonArgs} />
+    ) : (
+      <FormMultiTypeConnectorField {...commonArgs} setRefValue />
+    )
+  }
+
   return pipelineHasCodebaseSection ? (
     <>
       <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
@@ -711,49 +762,7 @@ function CICodebaseInputSetFormInternal({
                 </Container>
               ) : (
                 <>
-                  {isConnectorRuntimeInput && (
-                    <Container width={containerWidth}>
-                      <FormMultiTypeConnectorField
-                        name={codeBaseInputFieldFormName.connectorRef}
-                        width={connectorWidth}
-                        error={formik?.errors?.connectorRef}
-                        type={[
-                          Connectors.GIT,
-                          Connectors.GITHUB,
-                          Connectors.GITLAB,
-                          Connectors.BITBUCKET,
-                          Connectors.AWS_CODECOMMIT,
-                          Connectors.AZURE_REPO
-                        ]}
-                        label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>}
-                        placeholder={
-                          loadingConnectorDetails ? getString('loading') : getString('common.entityPlaceholderText')
-                        }
-                        accountIdentifier={accountId}
-                        projectIdentifier={projectIdentifier}
-                        orgIdentifier={orgIdentifier}
-                        gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                        setRefValue={true}
-                        multiTypeProps={{
-                          expressions,
-                          disabled: readonly,
-                          allowableTypes: AllowableTypesForCodebaseProperties
-                        }}
-                        onChange={(value, _valueType, connectorRefType) =>
-                          handleCIConnectorRefOnChange({
-                            value: value as ConnectorRefInterface,
-                            connectorRefType,
-                            setConnectionType,
-                            setConnectorUrl,
-                            setFieldValue: formik?.setFieldValue as (field: string, value: any) => void,
-                            codeBaseInputFieldFormName,
-                            setGitAuthProtocol,
-                            setIsConnectorExpression
-                          })
-                        }
-                      />
-                    </Container>
-                  )}
+                  {isConnectorRuntimeInput && <Container width={containerWidth}>{renderConnectorField()}</Container>}
                   {isRepoNameRuntimeInput &&
                     (!isRuntimeInput(formik?.values.connectorRef) && connectionType === ConnectionType.Repo ? (
                       <Container width={containerWidth}>

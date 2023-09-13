@@ -49,6 +49,7 @@ import { Status } from '@common/utils/Constants'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@platform/connectors/constants'
 import {
   getBackendServerUrl,
@@ -72,7 +73,8 @@ import {
   GitProviderIcons,
   OtherProviderOptions,
   NonGitOption,
-  OAUTH2_USER_NAME
+  OAUTH2_USER_NAME,
+  HarnessGitProvider
 } from './Constants'
 import { getOAuthConnectorPayload } from '../../../utils/HostedBuildsUtils'
 
@@ -97,6 +99,7 @@ interface SelectGitProviderProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
   updateFooterLabel?: React.Dispatch<React.SetStateAction<string>>
+  dummyGitnessHarnessConnector?: ConnectorInfoDTO
 }
 
 export interface SelectGitProviderInterface {
@@ -115,7 +118,7 @@ const SelectGitProviderRef = (
   props: SelectGitProviderProps,
   forwardRef: SelectGitProviderForwardRef
 ): React.ReactElement => {
-  const { selectedHosting, disableNextBtn, enableNextBtn, updateFooterLabel } = props
+  const { selectedHosting, disableNextBtn, enableNextBtn, updateFooterLabel, dummyGitnessHarnessConnector } = props
   const { getString } = useStrings()
   const [gitProvider, setGitProvider] = useState<GitProvider | undefined>()
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
@@ -134,6 +137,8 @@ const SelectGitProviderRef = (
   const { mutate: createConnector } = useCreateConnector({
     queryParams: { accountIdentifier: accountId }
   })
+  const { CODE_ENABLED } = useFeatureFlags()
+
   let timerId: NodeJS.Timeout
   const { trackEvent } = useTelemetry()
 
@@ -272,7 +277,7 @@ const SelectGitProviderRef = (
   }, [gitProvider, authMethod, selectedHosting])
 
   useEffect(() => {
-    if (gitProvider?.type === NonGitOption.OTHER) {
+    if (gitProvider?.type && [NonGitOption.OTHER, Connectors.Harness].includes(gitProvider?.type)) {
       enableNextBtn()
     } else if (
       authMethod &&
@@ -716,7 +721,7 @@ const SelectGitProviderRef = (
 
   const shouldRenderAuthFormFields = React.useCallback((): boolean => {
     if (gitProvider?.type) {
-      if (selectedHosting === Hosting.SaaS) {
+      if (selectedHosting === Hosting.SaaS && gitProvider?.type !== Connectors.Harness) {
         return (
           (gitProvider.type === Connectors.GITHUB && authMethod === GitAuthenticationMethod.AccessToken) ||
           (gitProvider.type === Connectors.GITLAB && authMethod === GitAuthenticationMethod.AccessKey) ||
@@ -834,6 +839,9 @@ const SelectGitProviderRef = (
       resetFormFields()
       setAuthMethod(undefined)
       setOAuthStatus(Status.TO_DO)
+      if (CODE_ENABLED && item.type === Connectors.Harness) {
+        setConnector(dummyGitnessHarnessConnector)
+      }
     },
     [formikRef, trackEvent]
   )
@@ -863,11 +871,14 @@ const SelectGitProviderRef = (
             <Form>
               <Container
                 padding={{ top: 'xxlarge', bottom: 'xxxlarge' }}
-                className={cx({ [css.borderBottom]: gitProvider && gitProvider.type !== NonGitOption.OTHER })}
+                className={cx({
+                  [css.borderBottom]:
+                    gitProvider && ![NonGitOption.OTHER, Connectors.Harness].includes(gitProvider.type)
+                })}
               >
                 <Layout.Horizontal spacing="large">
                   <CardSelect
-                    data={AllSaaSGitProviders}
+                    data={CODE_ENABLED ? [HarnessGitProvider, ...AllSaaSGitProviders] : AllSaaSGitProviders}
                     selected={gitProvider}
                     cornerSelected={true}
                     className={css.icons}
@@ -931,7 +942,7 @@ const SelectGitProviderRef = (
                   </Container>
                 ) : null}
               </Container>
-              {gitProvider && gitProvider.type !== NonGitOption.OTHER ? (
+              {gitProvider && ![NonGitOption.OTHER, Connectors.Harness].includes(gitProvider.type) ? (
                 <Layout.Vertical>
                   <Container
                     className={cx({

@@ -92,6 +92,8 @@ dataSubmitSuccess: 'Data has been submitted successfully'
 entityType: Entity Type
 cantDeleteEntity: Can't delete {{entity}}
 entityPlaceholderText: '- Select -' #used at placeholder places to select Svc, Infra, Env, Connector
+gitProvider: Select Git Provider
+selectOtherGitProviders: Select Connector (for other git providers)
 approve: Approve
 reject: Reject
 disable: Disable

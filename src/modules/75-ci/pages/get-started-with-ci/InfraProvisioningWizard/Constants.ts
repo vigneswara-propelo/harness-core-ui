@@ -20,6 +20,7 @@ export interface InfraProvisioningWizardProps {
   }
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
   enableImportYAMLOption?: boolean
+  dummyGitnessHarnessConnector?: ConnectorInfoDTO
 }
 
 export const enum Hosting {
@@ -162,6 +163,12 @@ export const AllSaaSGitProviders: GitProvider[] = [
     type: Connectors.BITBUCKET
   }
 ]
+
+export const HarnessGitProvider: GitProvider = {
+  icon: GitProviderIcons.get(Connectors.GIT) as IconName,
+  label: 'harness',
+  type: Connectors.Harness
+}
 
 export const AllOnPremGitProviders: GitProvider[] = [
   ...AllSaaSGitProviders,

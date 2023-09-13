@@ -129,8 +129,8 @@
 
 .repositorySearch {
   [class*='bp3-input'] {
-    height: 42px;
-    width: 675px;
+    height: 42px !important;
+    width: 675px !important;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
     border-top-right-radius: 0px;

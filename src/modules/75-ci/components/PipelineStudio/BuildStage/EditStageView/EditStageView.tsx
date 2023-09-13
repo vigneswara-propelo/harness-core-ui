@@ -37,6 +37,7 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { IdentifierSchemaWithoutHook, NameSchemaWithoutHook } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -93,6 +94,7 @@ export const EditStageView: React.FC<EditStageView> = ({
   const repositoryNameLabel = getString('common.repositoryName')
 
   const icon: IconName = moduleIcon ? moduleIcon : 'ci-main'
+  const { CODE_ENABLED } = useFeatureFlags()
 
   const {
     state: { pipeline, gitDetails },
@@ -359,7 +361,8 @@ export const EditStageView: React.FC<EditStageView> = ({
                       MultiTypeInputType.EXPRESSION,
                       MultiTypeInputType.RUNTIME
                     ],
-                    configureOptionsProps: { hideExecutionTimeField: true }
+                    configureOptionsProps: { hideExecutionTimeField: true },
+                    isCodeEnabled: CODE_ENABLED
                   })}
                 </div>
               )}
