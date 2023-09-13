@@ -67,6 +67,7 @@ import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInp
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import IACMInputSetForm from './IACMInputSetForm'
 import type { ChildPipelineMetadataType } from './ChainedPipelineInputSetUtils'
+import { isRuntimeInput } from '../../utils/CIUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -568,7 +569,6 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
-
       <ServicesInputSetForm
         deploymentStage={deploymentStage}
         deploymentStageTemplate={deploymentStageTemplate}
@@ -586,7 +586,6 @@ export function StageInputSetFormInternal({
         childPipelineMetadata={childPipelineMetadata}
         viewTypeMetadata={viewTypeMetadata}
       />
-
       <EnvironmentsInputSetForm
         deploymentStage={deploymentStage}
         deploymentStageTemplate={deploymentStageTemplate}
@@ -602,7 +601,6 @@ export function StageInputSetFormInternal({
         readonly={readonly}
         stageIdentifier={stageIdentifier}
       />
-
       {IACM_ENABLED && iacmRequired && (
         <IACMInputSetForm
           formik={formik}
@@ -621,7 +619,6 @@ export function StageInputSetFormInternal({
           stageIdentifier={stageIdentifier}
         />
       )}
-
       {!iacmRequired && (deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
         <div id={`Stage.${stageIdentifier}.Infrastructure`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('infrastructureText')}</div>
@@ -1090,7 +1087,6 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
-
       {deploymentStageTemplate.infrastructure?.infrastructureDefinition?.provisioner && (
         /* istanbul ignore next */ <div
           id={`Stage.${stageIdentifier}.infrastructure.infrastructureDefinition?.provisioner`}
@@ -1156,15 +1152,64 @@ export function StageInputSetFormInternal({
               }}
               multiTypeFieldSelectorProps={{
                 label: (
-                  <div className={css.inputheader} style={{ padding: 0 }}>
+                  <Text font={{ variation: FontVariation.FORM_SUB_SECTION }}>
                     {getString('pipelineSteps.build.stageSpecifications.sharedPaths')}
-                  </div>
+                  </Text>
                 ),
                 allowedTypes: [MultiTypeInputType.FIXED]
               }}
               disabled={readonly}
             />
           </div>
+        </div>
+      )}
+
+      {(isRuntimeInput(get(deploymentStageTemplate, 'caching.paths')) ||
+        isRuntimeInput(get(deploymentStageTemplate, 'caching.key'))) && (
+        <div id={`Stage.${stageIdentifier}.cacheIntelligence`} className={cx(css.accordionSummary)}>
+          <Container padding={{ bottom: 'medium' }}>
+            <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} id="cacheIntelligence">
+              {getString('pipeline.cacheIntelligence.label')}
+            </Text>
+          </Container>
+          <Layout.Vertical className={css.nestedAccordions} style={{ width: '50%' }} spacing="small">
+            {(deploymentStageTemplate as any).caching.paths ? (
+              <MultiTypeListInputSet
+                name={`${namePath}caching.paths`}
+                multiTextInputProps={{
+                  allowableTypes: allowableTypes,
+                  expressions
+                }}
+                multiTypeFieldSelectorProps={{
+                  label: <div style={{ padding: 0 }}>{getString('pipelineSteps.paths')}</div>,
+                  allowedTypes: [MultiTypeInputType.FIXED],
+                  tooltipProps: { dataTooltipId: 'cacheIntelligencePaths' }
+                }}
+                disabled={readonly}
+              />
+            ) : (
+              <></>
+            )}
+            {(deploymentStageTemplate as any).caching.key ? (
+              <Container className={stepCss.bottomMargin4}>
+                {renderMultiTypeTextField({
+                  name: `${namePath}caching.key`,
+                  tooltipId: 'cacheIntelligenceKey',
+                  labelKey: 'keyLabel',
+                  inputProps: {
+                    multiTextInputProps: {
+                      expressions,
+                      allowableTypes: allowableTypes
+                    },
+                    disabled: readonly
+                  },
+                  fieldPath: `${namePath}caching.key`
+                })}
+              </Container>
+            ) : (
+              <></>
+            )}
+          </Layout.Vertical>
         </div>
       )}
       {(deploymentStageTemplate as ServiceSpec).variables && (

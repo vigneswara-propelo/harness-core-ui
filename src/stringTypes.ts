@@ -4134,6 +4134,7 @@ export interface StringsMap {
   'pipeline.buildInfra.volumes': string
   'pipeline.buildRegex': string
   'pipeline.buildRepo': string
+  'pipeline.cacheIntelligence.label': string
   'pipeline.cannotAddInputSetInvalidPipeline': string
   'pipeline.cannotAddTriggerInvalidPipeline': string
   'pipeline.cannotEditTriggerInvalidPipeline': string
@@ -8967,7 +8968,6 @@ export interface StringsMap {
   'ci.buildInfra.vmLabel': string
   'ci.cacheIntelligence.enable': string
   'ci.cacheIntelligence.keyNamePlaceholder': string
-  'ci.cacheIntelligence.label': string
   'ci.ciTrialHomePage.startTrial.description': string
   'ci.ciTrialHomePage.startTrial.startBtn.description': string
   'ci.clipboardCopyFail': string

@@ -376,7 +376,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                 </Card>
 
                 <div className={css.tabHeading} id="cacheIntelligence">
-                  {getString('ci.cacheIntelligence.label')}
+                  {getString('pipeline.cacheIntelligence.label')}
                 </div>
                 <Card disabled={isReadonly} className={cx(css.sectionCard)}>
                   <FormikForm className={cx(css.fields, css.contentCard)}>
@@ -438,7 +438,11 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                             multiTextInputProps={{
                               disabled: isReadonly,
                               multiTextInputProps: {
-                                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                                allowableTypes: [
+                                  MultiTypeInputType.FIXED,
+                                  MultiTypeInputType.EXPRESSION,
+                                  MultiTypeInputType.RUNTIME
+                                ]
                               },
                               placeholder: getString('ci.cacheIntelligence.keyNamePlaceholder')
                             }}

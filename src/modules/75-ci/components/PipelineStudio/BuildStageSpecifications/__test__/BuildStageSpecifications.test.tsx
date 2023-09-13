@@ -66,7 +66,7 @@ describe('BuildStageSpecifications tests', () => {
       </TestWrapper>
     )
 
-    expect(getByText('ci.cacheIntelligence.label')).toBeInTheDocument()
+    expect(getByText('pipeline.cacheIntelligence.label')).toBeInTheDocument()
     expect(getByText('ci.cacheIntelligence.enable')).toBeInTheDocument()
 
     const switches = container.querySelectorAll('input[type="checkbox"]')
@@ -91,7 +91,7 @@ describe('BuildStageSpecifications tests', () => {
       </TestWrapper>
     )
 
-    expect(getByText('ci.cacheIntelligence.label')).toBeInTheDocument()
+    expect(getByText('pipeline.cacheIntelligence.label')).toBeInTheDocument()
     expect(getByText('ci.cacheIntelligence.enable')).toBeInTheDocument()
 
     const switches = container.querySelectorAll('input[type="checkbox"]')

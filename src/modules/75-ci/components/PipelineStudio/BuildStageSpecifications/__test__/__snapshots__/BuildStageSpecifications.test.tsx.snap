@@ -309,7 +309,7 @@ exports[`BuildStageSpecifications tests renders correctly 1`] = `
           class="tabHeading"
           id="cacheIntelligence"
         >
-          ci.cacheIntelligence.label
+          pipeline.cacheIntelligence.label
         </div>
         <div
           class="bp3-card bp3-elevation-0 Card--card sectionCard"

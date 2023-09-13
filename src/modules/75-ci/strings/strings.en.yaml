@@ -236,8 +236,7 @@ getStartedWithCI:
       usePlugins: Use Plugins to perform predefined tasks like building and publishing artifacts, sending events and metrics, and more.
       seamlessIntegration: Harness CI seamlessly integrates with other Harness modules like Continuous Delivery, Cloud Cost Management, and Feature Flags.
 cacheIntelligence:
-  label: Cache Intelligence
-  enable: Enable {{ $.ci.cacheIntelligence.label }}
+  enable: Enable {{ $.pipeline.cacheIntelligence.label }}
   keyNamePlaceholder: Enter key
 slsaProvenance:
   generate: Generate SLSA Provenance
