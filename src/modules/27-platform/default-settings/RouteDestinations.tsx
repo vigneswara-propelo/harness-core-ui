@@ -499,7 +499,7 @@ export default function DefaultSettingsRoutes(): React.ReactElement {
   if (PL_EULA_ENABLED) {
     DefaultSettingsFactory.registerCategory('EULA', {
       icon: 'cog',
-      label: 'platform.defaultSettings.harnessAida',
+      label: 'common.csBot.aidaFullText',
       modulesWhereCategoryWillBeDisplayed: [
         'ci',
         'cd',

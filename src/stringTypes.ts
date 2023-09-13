@@ -3070,7 +3070,6 @@ export interface StringsMap {
   'platform.defaultSettings.fetchingDefaultConnector': string
   'platform.defaultSettings.gcpIncludeDiscounts': string
   'platform.defaultSettings.gcpIncludeTaxes': string
-  'platform.defaultSettings.harnessAida': string
   'platform.defaultSettings.harnessDefault': string
   'platform.defaultSettings.inheritedFrom': string
   'platform.defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string

@@ -66,12 +66,11 @@ defaultSettings:
   notifications:
     msTeam: MS Teams
     pagerDuty: Pager Duty
-  harnessAida: Harness AI Developer Assistant
   aida:
     aidaEULAText: |
-      **Harness AI Developer Assistant (AIDA) Terms**
+      **Harness AI Development Assistant (AIDA) Terms**
 
-      These Harness AI Developer Assistant Terms ("AIDA Terms") is a legal agreement between you (referred to as "User" or "you") and Harness Inc. (referred to as "Harness" or "we"), that governs your use of AIDA. By accessing or using AIDA, you agree to be bound by the AIDA Terms, along with the Underlying Terms and Privacy Policy (collectively, the "Agreement"). By clicking "{{ $.platform.defaultSettings.aida.accept }}" below, or by enabling, accessing or using AIDA, you agree to the terms of this Agreement. If you are entering into this Agreement on behalf of your organization or entity, you represent that you have the authority to bind such organization or entity, and the terms "Customer", "you" and "your'' will refer to such organization or entity. If you do not agree to the terns of this Agreement, or if you are not authorized to accept this Agreement on behalf of your organization or entity, do not enable, access or use AIDA.
+      These Harness AI Development Assistant Terms ("AIDA Terms") is a legal agreement between you (referred to as "User" or "you") and Harness Inc. (referred to as "Harness" or "we"), that governs your use of AIDA. By accessing or using AIDA, you agree to be bound by the AIDA Terms, along with the Underlying Terms and Privacy Policy (collectively, the "Agreement"). By clicking "{{ $.platform.defaultSettings.aida.accept }}" below, or by enabling, accessing or using AIDA, you agree to the terms of this Agreement. If you are entering into this Agreement on behalf of your organization or entity, you represent that you have the authority to bind such organization or entity, and the terms "Customer", "you" and "your'' will refer to such organization or entity. If you do not agree to the terns of this Agreement, or if you are not authorized to accept this Agreement on behalf of your organization or entity, do not enable, access or use AIDA.
 
       Capitalized terms not defined here have their respective meanings given in the Underlying Terms.
 
@@ -106,14 +105,14 @@ defaultSettings:
       2. "Content" means text, data, software, images, and any other materials that are displayed or otherwise made available through the Software.
       3. "Privacy Policy" means the policy located at [https://www.harness.io/legal/privacy](https://www.harness.io/legal/privacy).
       4. "Prohibited Data" means: (a) special categories of data enumerated in European Union Regulation 2016/679, Article 9(1) or any successor legislation; (b) patient, medical, or other protected health information regulated by the Health Insurance Portability and Accountability Act (as amended and supplemented) ("HIPAA"); (c) credit, debit, or other payment card data or financial account information, including bank account numbers or other personally identifiable financial information; (d) social security numbers, driver's license numbers, or other government identification numbers; (e) other information subject to regulation or protection under specific laws such as the Children's Online Privacy Protection Act or Gramm-Leach-Bliley Act ("GLBA") (or related rules or regulations); or (f) any data similar to the above protected under foreign or domestic laws.
-      5. "AIDA" refers to the Harness AI Developer Assistant that contains generative artificial intelligence functionality provided by Harness as part of the Software, which enables the generation of information, Content, data, or other Outputs.
+      5. "AIDA" refers to the Harness AI Development Assistant that contains generative artificial intelligence functionality provided by Harness as part of the Software, which enables the generation of information, Content, data, or other Outputs.
       6. "Software" refers to the Software-as-a-Service platform provided by the Provider, including any associated software, services, applications, or APIs.
       7. "Submission" refers to the inputs, prompts, requests, or queries made by the User to AIDA in order to generate Output.
       8. "Underlying Terms" means the Harness Subscription Terms located at [https://www.harness.io/legal/subscription-terms](https://www.harness.io/legal/subscription-terms), or other agreement for the Software entered into by you and Harness.
       9. "Output" means the information, data, functions, code and other details returned to you by AIDA in response to a Submission.
 
       Updated June 2023
-    aida: Harness AI Developer Assistant (AIDA)
+    aida: Harness AI Development Assistant (AIDA)
     terms: 'End User License Agreement for {{ $.platform.defaultSettings.aida.aida }}'
     ifTermsAccepted: Once the AIDA terms are accepted, AIDA will be turned on for all users under this account
     reject: Decline
