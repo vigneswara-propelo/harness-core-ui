@@ -196,7 +196,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         templateData?.data?.content?.map(currTemplateData => {
           return {
             label: currTemplateData.stableTemplate
-              ? getString('templatesLibrary.stableVersion', { entity: currTemplateData.versionLabel })
+              ? getString('pipeline.templatesLibrary.stableVersion', { entity: currTemplateData.versionLabel })
               : currTemplateData.versionLabel || '',
             value: currTemplateData.versionLabel || '',
             checked: false,

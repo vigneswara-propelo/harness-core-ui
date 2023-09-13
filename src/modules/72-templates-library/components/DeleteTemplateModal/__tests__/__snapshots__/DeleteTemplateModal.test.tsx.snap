@@ -300,7 +300,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main"
                         >
-                          templatesLibrary.stableVersion
+                          pipeline.templatesLibrary.stableVersion
                         </p>
                       </label>
                     </div>
@@ -690,7 +690,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                         <p
                           class="StyledProps--font StyledProps--main selected"
                         >
-                          templatesLibrary.stableVersion
+                          pipeline.templatesLibrary.stableVersion
                         </p>
                       </label>
                     </div>
@@ -1179,7 +1179,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when multiple versi
                               class="StyledProps--font StyledProps--main"
                               tabindex="0"
                             >
-                              templatesLibrary.stableVersion
+                              pipeline.templatesLibrary.stableVersion
                             </p>
                           </span>
                         </span>
@@ -1204,7 +1204,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when multiple versi
                               class="StyledProps--font StyledProps--main"
                               tabindex="0"
                             >
-                              templatesLibrary.stableVersion
+                              pipeline.templatesLibrary.stableVersion
                             </p>
                           </span>
                         </span>
@@ -1596,7 +1596,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                         <p
                           class="StyledProps--font StyledProps--main selected"
                         >
-                          templatesLibrary.stableVersion
+                          pipeline.templatesLibrary.stableVersion
                         </p>
                       </label>
                     </div>

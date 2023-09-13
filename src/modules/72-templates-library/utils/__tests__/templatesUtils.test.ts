@@ -7,8 +7,9 @@
 
 import { unset } from 'lodash-es'
 import type { StringKeys } from 'framework/strings'
+import { getVersionLabelText } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { stageTemplateMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
-import { getAllowedTemplateTypes, getVersionLabelText, TemplateType } from '@templates-library/utils/templatesUtils'
+import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
@@ -32,10 +33,12 @@ describe('templatesUtils tests', () => {
   test('Test getVersionLabelText method', () => {
     expect(getVersionLabelText(stageTemplateMock, getString)).toEqual('v1')
     expect(getVersionLabelText({ ...stageTemplateMock, stableTemplate: true }, getString)).toEqual(
-      'templatesLibrary.stableVersion'
+      'pipeline.templatesLibrary.stableVersion'
     )
     unset(stageTemplateMock, 'versionLabel')
-    expect(getVersionLabelText(stageTemplateMock, getString)).toEqual('templatesLibrary.alwaysUseStableVersion')
+    expect(getVersionLabelText(stageTemplateMock, getString)).toEqual(
+      'pipeline.templatesLibrary.alwaysUseStableVersion'
+    )
   })
 
   test('Test getAllowedTemplateTypes method', () => {

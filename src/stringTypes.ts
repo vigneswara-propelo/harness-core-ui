@@ -5382,6 +5382,11 @@ export interface StringsMap {
   'pipeline.templateReconcileWarning': string
   'pipeline.templateSaved': string
   'pipeline.templateStageUpdatedWarning': string
+  'pipeline.templatesLibrary.alwaysUseStableVersion': string
+  'pipeline.templatesLibrary.getVersionsError': string
+  'pipeline.templatesLibrary.stableVersion': string
+  'pipeline.templatesLibrary.versionSelectError': string
+  'pipeline.templatesLibrary.versionSelectSuccess': string
   'pipeline.terraformStep.discardPendingRuns': string
   'pipeline.terraformStep.messageLabel': string
   'pipeline.terraformStep.messagePlaceholder': string
@@ -5645,7 +5650,6 @@ export interface StringsMap {
   'freezeWindows.recurrenceConfig.nMonthsValidationMoreThan': string
   'freezeWindows.recurrenceConfig.recurrence': string
   'templatesLibrary.addNewTemplate': string
-  'templatesLibrary.alwaysUseStableVersion': string
   'templatesLibrary.changeGitBranch': string
   'templatesLibrary.changeTemplate': string
   'templatesLibrary.chooseTemplateSetupHeader': string
@@ -5686,7 +5690,6 @@ export interface StringsMap {
   'templatesLibrary.selectTemplateToPreview': string
   'templatesLibrary.setAsStableText': string
   'templatesLibrary.setAsStableTitle': string
-  'templatesLibrary.stableVersion': string
   'templatesLibrary.stableVersionDeleteError': string
   'templatesLibrary.templateDoesNotExist': string
   'templatesLibrary.templateDoesNotExistInBranch': string

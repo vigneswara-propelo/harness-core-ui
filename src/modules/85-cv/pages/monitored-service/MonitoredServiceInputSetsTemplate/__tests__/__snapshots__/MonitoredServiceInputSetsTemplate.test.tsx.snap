@@ -2538,7 +2538,7 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main inlineText StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
               style="--text-line-clamp: 1;"
             >
               Using Template: gco logs runtime (1)

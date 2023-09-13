@@ -6,8 +6,7 @@
  */
 
 import { defaultTo, isEmpty, omitBy, isArray } from 'lodash-es'
-import type { UseStringsReturn } from 'framework/strings'
-import type { TemplateSummaryResponse, NGTag, TemplateFilterProperties } from 'services/template-ng'
+import type { NGTag, TemplateFilterProperties } from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
@@ -50,17 +49,6 @@ export const getAllowedTemplateTypes = (
     }
   })
   return allowedTemplateTypes
-}
-
-export const getVersionLabelText = (
-  template: TemplateSummaryResponse,
-  getString: UseStringsReturn['getString']
-): string | undefined => {
-  return isEmpty(template.versionLabel)
-    ? getString('templatesLibrary.alwaysUseStableVersion')
-    : template.stableTemplate
-    ? getString('templatesLibrary.stableVersion', { entity: template.versionLabel })
-    : template.versionLabel
 }
 
 export const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>

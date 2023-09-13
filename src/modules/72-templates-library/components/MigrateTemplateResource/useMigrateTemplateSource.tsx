@@ -25,10 +25,9 @@ import {
   useGetTemplateMetadataList,
   TemplateMetadataSummaryResponse
 } from 'services/template-ng'
+import { getVersionLabelText } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { DefaultStableVersionValue } from '@pipeline/components/VersionsDropDown/VersionsDropDown'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
-import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
-
 import MoveTemplateResource from './MoveTemplateResource'
 
 interface UseMigrateResourceReturnType {

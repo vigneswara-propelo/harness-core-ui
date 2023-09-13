@@ -60,6 +60,8 @@ export function StepCommands(
     onUpdate,
     onUseTemplate,
     onRemoveTemplate,
+    switchTemplateVersion,
+    supportVersionChange,
     isStepGroup,
     isReadonly,
     stepsFactory,
@@ -281,6 +283,8 @@ export function StepCommands(
             templateLinkConfig={(step as TemplateStepNode).template}
             onOpenTemplateSelector={onUseTemplate}
             onRemoveTemplate={onRemoveTemplate}
+            supportVersionChange={supportVersionChange}
+            switchTemplateVersion={switchTemplateVersion}
             isReadonly={isReadonly}
             storeMetadata={storeMetadata}
           />

@@ -86,7 +86,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const { getString } = useStrings()
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
 
-  const { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated } = useStageTemplateActions()
+  const { addOrUpdateTemplate, removeTemplate, switchTemplateVersion, isTemplateUpdated, setIsTemplateUpdated } =
+    useStageTemplateActions()
   const { checkStageTemplateChange, requiredAction, disableForm } = useCheckStageTemplateChange()
 
   const onChange = React.useCallback(
@@ -299,9 +300,11 @@ export const TemplateStageSpecifications = (): JSX.Element => {
             templateLinkConfig={stage?.stage.template}
             onRemoveTemplate={removeTemplate}
             onOpenTemplateSelector={addOrUpdateTemplate}
+            switchTemplateVersion={switchTemplateVersion}
             className={css.templateBar}
             isReadonly={isReadonly}
             storeMetadata={storeMetadata}
+            supportVersionChange={true}
           />
         )}
         <Formik<StageElementConfig>

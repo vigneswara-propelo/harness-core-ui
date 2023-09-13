@@ -12,11 +12,19 @@ import { parse } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import type { TemplateSummaryResponse } from 'services/template-ng'
-import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getTemplatePromise, TemplateResponse, TemplateSummaryResponse } from 'services/template-ng'
+import {
+  PreSelectedTemplate,
+  useTemplateSelector
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { StoreType } from '@common/constants/GitSyncTypes'
 
 interface TemplateActionsReturnType {
   addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
+  switchTemplateVersion: (
+    selectedVersion: string,
+    selectedTemplate?: PreSelectedTemplate
+  ) => Promise<TemplateResponse | void | unknown>
   removeTemplate: () => Promise<void>
   isTemplateUpdated: boolean
   setIsTemplateUpdated(isTemplateUpdated: boolean): void
@@ -69,6 +77,48 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
     [getTemplate, gitDetails, storeMetadata, pipeline, copyPipelineMetaData, updatePipeline]
   )
 
+  const switchTemplateVersion = useCallback(
+    async (selectedversion: string, selectedTemplate?: PreSelectedTemplate) => {
+      return new Promise((resolve, reject) => {
+        getTemplatePromise({
+          templateIdentifier: selectedTemplate?.identifier || '',
+          queryParams: {
+            versionLabel: selectedversion,
+            projectIdentifier: selectedTemplate?.projectIdentifier,
+            orgIdentifier: selectedTemplate?.orgIdentifier,
+            accountIdentifier: selectedTemplate?.accountId || '',
+            ...(selectedTemplate?.storeType === StoreType.REMOTE
+              ? { branch: selectedTemplate?.gitDetails?.branch }
+              : {})
+          },
+          requestOptions: {
+            headers:
+              selectedTemplate?.storeType === StoreType.REMOTE
+                ? {
+                    'Load-From-Cache': 'true'
+                  }
+                : {}
+          }
+        })
+          .then(async response => {
+            if (response?.status === 'SUCCESS' && response?.data) {
+              const processNode = createTemplate(pipeline, response?.data, gitDetails?.branch, gitDetails?.repoName)
+              copyPipelineMetaData(processNode)
+              await updatePipeline(processNode)
+              setIsTemplateUpdated(true)
+              resolve(response?.data)
+            } else {
+              reject()
+            }
+          })
+          .catch(() => {
+            reject()
+          })
+      })
+    },
+    [getTemplate, gitDetails, storeMetadata, pipeline, copyPipelineMetaData, updatePipeline]
+  )
+
   const removeTemplate = useCallback(async () => {
     const node = pipeline
     const processNode = produce({} as PipelineInfoConfig, draft => {
@@ -79,5 +129,5 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
     await updatePipeline(processNode)
   }, [pipeline, updatePipeline])
 
-  return { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated }
+  return { addOrUpdateTemplate, removeTemplate, switchTemplateVersion, isTemplateUpdated, setIsTemplateUpdated }
 }

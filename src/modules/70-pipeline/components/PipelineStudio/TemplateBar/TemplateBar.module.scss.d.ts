@@ -13,7 +13,6 @@ declare const styles: {
   readonly disabled: string
   readonly gitRemoteDetails: string
   readonly gitRemoteDetailsWrapper: string
-  readonly inlineText: string
   readonly main: string
   readonly menuItem: string
   readonly popover: string

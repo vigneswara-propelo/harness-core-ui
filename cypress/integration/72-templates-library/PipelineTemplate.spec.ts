@@ -127,7 +127,7 @@ describe('Pipeline Template creation and assertion', () => {
 
     cy.contains('div', 'Pipeline Studio').should('be.visible')
     cy.contains('a', 'Pipeline Studio').should('be.visible')
-    cy.contains('p', /^Using Template:/).should('have.text', 'Using Template: testPipelineTemplate (v1.0)')
+    cy.contains('p', /^Using Template:/).should('have.text', 'Using Template: testPipelineTemplate')
     cy.contains('p', pipelineMadeFromTemplate).should('be.visible')
     cy.contains('div', 'Unsaved changes').should('be.visible')
     cy.contains('span', 'Run').should('be.visible')

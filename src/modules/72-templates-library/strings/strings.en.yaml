@@ -9,8 +9,6 @@ templateSettings: Template Settings
 referencedBy: Referenced By
 selectTemplateToPreview: Select a template to preview
 templateTitle: '{{ entity }} Template'
-stableVersion: '{{ entity }} (Stable)'
-alwaysUseStableVersion: Always use the stable version
 inputsCount: 'Total Inputs: {{count}}'
 templateUpdatedError: The Template was updated by another user. If you update the Template their changes will overwrite your changes. Would you like to update the Template?
 openInTemplateStudio: Open in Template Studio

@@ -8,18 +8,38 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Icon, IconName, Layout, Popover, Text, useConfirmationDialog } from '@harness/uicore'
+import {
+  Container,
+  Icon,
+  IconName,
+  Layout,
+  Popover,
+  SelectOption,
+  Text,
+  useConfirmationDialog,
+  useToaster
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, Intent, Menu, Position } from '@blueprintjs/core'
 import cx from 'classnames'
+import type { UseStringsReturn } from 'framework/strings'
+import { VersionsDropDown } from '@pipeline/components/VersionsDropDown/VersionsDropDown'
 import { String, useStrings } from 'framework/strings'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { TemplateSummaryResponse, useGetTemplate, Error, GitErrorMetadataDTO } from 'services/template-ng'
+import {
+  TemplateSummaryResponse,
+  useGetTemplate,
+  Error,
+  GitErrorMetadataDTO,
+  useGetTemplateMetadataList,
+  useGetTemplateList,
+  TemplateResponse
+} from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
@@ -27,12 +47,13 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/TemplateYaml'
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
-import { useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { PreSelectedTemplate } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -45,27 +66,53 @@ interface TemplateMenuItem {
 export interface TemplateBarProps {
   templateLinkConfig: TemplateLinkConfig
   onOpenTemplateSelector?: (selectedTemplate: PreSelectedTemplate) => void
+  switchTemplateVersion?: (
+    selectedVersion: string,
+    selectedTemplate?: PreSelectedTemplate
+  ) => Promise<TemplateResponse | void | unknown>
   onRemoveTemplate?: () => Promise<void>
   className?: string
   isReadonly?: boolean
   storeMetadata?: StoreMetadata
+  supportVersionChange?: boolean
+}
+
+export const getVersionLabelText = (
+  template: TemplateSummaryResponse,
+  getString: UseStringsReturn['getString']
+): string | undefined => {
+  return isEmpty(template.versionLabel)
+    ? getString('pipeline.templatesLibrary.alwaysUseStableVersion')
+    : template.stableTemplate
+    ? getString('pipeline.templatesLibrary.stableVersion', { entity: template.versionLabel })
+    : template.versionLabel
 }
 
 export function TemplateBar(props: TemplateBarProps): JSX.Element {
   const {
     templateLinkConfig,
     onOpenTemplateSelector,
+    switchTemplateVersion,
     onRemoveTemplate,
     className = '',
     isReadonly,
-    storeMetadata
+    storeMetadata,
+    supportVersionChange = false
   } = props
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const { showSuccess, showError } = useToaster()
   const { getString } = useStrings()
   const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const scope = getScopeFromValue(templateLinkConfig.templateRef)
   const templateGitBranch = defaultTo(templateLinkConfig?.gitBranch, branch)
+  const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
   const { enabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -90,6 +137,62 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)
   })
+
+  const {
+    data: templateMetadata,
+    loading: loadingMetadata,
+    error: templatesError
+  } = useMutateAsGet(supportingTemplatesGitx ? useGetTemplateMetadataList : useGetTemplateList, {
+    body: {
+      filterType: 'Template',
+      templateIdentifiers: [getIdentifierFromValue(templateLinkConfig.templateRef)]
+    },
+    queryParams: {
+      ...getScopeBasedProjectPathParams(params, scope),
+      module,
+      templateListType: 'All',
+      size: 100,
+      ...(isGitSyncEnabled ? { repoIdentifier, branch: templateGitBranch } : {})
+    },
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
+  })
+
+  const stableVersion = React.useMemo(() => {
+    return (templateMetadata?.data?.content as TemplateSummaryResponse[])?.find(
+      item => item.stableTemplate && !isEmpty(item.versionLabel)
+    )?.versionLabel
+  }, [templateMetadata?.data?.content])
+
+  React.useEffect(() => {
+    if (!loadingMetadata) {
+      if (templateMetadata?.status === 'SUCCESS' && templateMetadata?.data?.content?.length) {
+        const newVersionOptions: SelectOption[] = templateMetadata.data.content.map(item => {
+          return {
+            label: getVersionLabelText(item, getString),
+            value: defaultTo(item.versionLabel, '')
+          } as SelectOption
+        })
+        setVersionOptions(newVersionOptions)
+      } else if (templatesError) {
+        showError(getString('pipeline.templatesLibrary.getVersionsError'))
+      }
+    }
+  }, [loadingMetadata, templateMetadata, templatesError])
+
+  const onTemplateVersionChangeClick = React.useCallback(
+    version => {
+      if (templateLinkConfig.versionLabel !== version.value) {
+        switchTemplateVersion?.(version?.value, data?.data as PreSelectedTemplate)
+          .then(() => {
+            showSuccess(getString('pipeline.templatesLibrary.versionSelectSuccess', { version: version?.value || '' }))
+          })
+          .catch(() => {
+            showError(getString('pipeline.templatesLibrary.versionSelectError', { version: version?.value || '' }))
+          })
+      }
+    },
+    [templateLinkConfig.versionLabel, data?.data]
+  )
 
   const errorMetaData = (error?.data as Error)?.metadata as GitErrorMetadataDTO
   const remoteFetchError = React.useMemo(() => {
@@ -261,14 +364,23 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
           </Text>
         )}
         {!loading && (!isEmpty(selectedTemplate) || remoteFetchError) && (
-          <Text
-            font={{ size: 'small' }}
-            color={Color.WHITE}
-            lineClamp={1}
-            className={selectedTemplate?.storeType === StoreType.INLINE ? css.inlineText : ''}
-          >
-            {`Using Template: ${getTemplateNameWithLabel(selectedTemplateDataWithRemoteFetchFailHandled)}`}
+          <Text font={{ size: 'small' }} color={Color.WHITE} lineClamp={1}>
+            {`Using Template: ${
+              supportVersionChange
+                ? selectedTemplateDataWithRemoteFetchFailHandled?.name || ''
+                : getTemplateNameWithLabel(selectedTemplateDataWithRemoteFetchFailHandled)
+            }`}
           </Text>
+        )}
+
+        {!loading && supportVersionChange && (!isEmpty(selectedTemplate) || remoteFetchError) && (
+          <VersionsDropDown
+            items={versionOptions}
+            value={templateLinkConfig?.versionLabel}
+            onChange={onTemplateVersionChangeClick}
+            width={120}
+            stableVersion={stableVersion}
+          />
         )}
         {(selectedTemplate?.storeType === StoreType.REMOTE || remoteFetchError) && (
           <div className={css.gitRemoteDetailsWrapper}>

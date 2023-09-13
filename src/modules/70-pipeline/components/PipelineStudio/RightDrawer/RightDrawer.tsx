@@ -36,7 +36,7 @@ import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import { getTemplatePromise, TemplateResponse, TemplateSummaryResponse } from 'services/template-ng'
 import {
   PreSelectedTemplate,
   useTemplateSelector
@@ -44,6 +44,7 @@ import {
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { usePrevious } from '@common/hooks/usePrevious'
 import type { K8sDirectInfraStepGroupElementConfig } from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupUtil'
 import { NodeStateMetadata, useNodeMetadata } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
@@ -1007,6 +1008,45 @@ export function RightDrawer(): React.ReactElement {
     }
   }
 
+  const switchTemplateVersion = (
+    selectedversion: string,
+    selectedTemplate?: PreSelectedTemplate
+  ): Promise<TemplateResponse | void | unknown> => {
+    return new Promise((resolve, reject) => {
+      getTemplatePromise({
+        templateIdentifier: selectedTemplate?.identifier || '',
+        queryParams: {
+          versionLabel: selectedversion,
+          projectIdentifier: selectedTemplate?.projectIdentifier,
+          orgIdentifier: selectedTemplate?.orgIdentifier,
+          accountIdentifier: selectedTemplate?.accountId || '',
+          ...(selectedTemplate?.storeType === StoreType.REMOTE ? { branch: selectedTemplate?.gitDetails?.branch } : {})
+        },
+        requestOptions: {
+          headers:
+            selectedTemplate?.storeType === StoreType.REMOTE
+              ? {
+                  'Load-From-Cache': 'true'
+                }
+              : {}
+        }
+      })
+        .then(async response => {
+          if (response?.status === 'SUCCESS' && response?.data) {
+            const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
+            const processNode = createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, response.data)
+            await updateNode(processNode, DrawerTypes.StepConfig)
+            resolve(response?.data)
+          } else {
+            reject()
+          }
+        })
+        .catch(() => {
+          reject()
+        })
+    })
+  }
+
   const removeTemplate = async (drawerType: DrawerTypes): Promise<void> => {
     const node = drawerData.data?.stepConfig?.node as TemplateStepNode
     const processNode = produce({} as StepElementConfig, draft => {
@@ -1114,6 +1154,8 @@ export function RightDrawer(): React.ReactElement {
           allowableTypes={allowableTypes}
           onUseTemplate={(selectedTemplate: PreSelectedTemplate) => addOrUpdateTemplate(selectedTemplate, type)}
           onRemoveTemplate={() => removeTemplate(type)}
+          switchTemplateVersion={switchTemplateVersion}
+          supportVersionChange={true}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           selectedStage={selectedStage}

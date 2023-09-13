@@ -40,7 +40,8 @@ export function TemplatePipelineBuilder(): React.ReactElement {
     ? { display: 'flow-root list-item' }
     : { display: 'inline-table' }
 
-  const { addOrUpdateTemplate, removeTemplate, isTemplateUpdated, setIsTemplateUpdated } = usePipelineTemplateActions()
+  const { addOrUpdateTemplate, switchTemplateVersion, removeTemplate, isTemplateUpdated, setIsTemplateUpdated } =
+    usePipelineTemplateActions()
 
   return (
     <Container className={css.mainContainer}>
@@ -50,9 +51,11 @@ export function TemplatePipelineBuilder(): React.ReactElement {
             templateLinkConfig={pipeline.template}
             onRemoveTemplate={removeTemplate}
             onOpenTemplateSelector={addOrUpdateTemplate}
+            switchTemplateVersion={switchTemplateVersion}
             className={css.templateBar}
             isReadonly={isReadonly}
             storeMetadata={storeMetadata}
+            supportVersionChange={true}
           />
         )}
         <Container className={cx(css.canvasContainer)}>

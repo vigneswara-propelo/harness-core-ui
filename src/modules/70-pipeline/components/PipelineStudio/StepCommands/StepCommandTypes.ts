@@ -19,6 +19,7 @@ import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails, PolicyConf
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { PreSelectedTemplate } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { TemplateResponse } from 'services/template-ng'
 import type { SaveTemplateButtonProps } from '../SaveTemplateButton/SaveTemplateButton'
 
 export enum AdvancedPanels {
@@ -44,6 +45,11 @@ export interface StepCommandsProps {
   onUpdate: (step: Partial<Values>) => void
   onUseTemplate?: (selectedTemplate: PreSelectedTemplate) => void
   onRemoveTemplate?: () => Promise<void>
+  supportVersionChange?: boolean
+  switchTemplateVersion?: (
+    selectedVersion: string,
+    selectedTemplate?: PreSelectedTemplate
+  ) => Promise<TemplateResponse | void | unknown>
   stepsFactory: AbstractStepFactory
   isStepGroup: boolean
   isReadonly: boolean
