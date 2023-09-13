@@ -65,6 +65,7 @@ const existingInitialValues: AwsCDKDiffStepInitialValues = {
     privileged: true,
     imagePullPolicy: 'Never',
     runAsUser: '5000',
+    appPath: '/app/test',
     resources: {
       limits: {
         memory: '4Gi',
@@ -90,6 +91,7 @@ const awsCdkDiffRuntimeTemplate: AwsCDKDiffStepInitialValues = {
     imagePullPolicy: RUNTIME_INPUT_VALUE,
     runAsUser: RUNTIME_INPUT_VALUE,
     stackNames: RUNTIME_INPUT_VALUE,
+    appPath: RUNTIME_INPUT_VALUE,
     resources: {
       limits: {
         memory: RUNTIME_INPUT_VALUE,
@@ -205,6 +207,12 @@ describe('AwsCdkDiffStep tests', () => {
     fireEvent.change(runAsUserInput, { target: { value: '6000' } })
     expect(runAsUserInput.value).toBe('6000')
 
+    const appPathInput = queryByNameAttribute('spec.appPath', container) as HTMLInputElement
+    expect(appPathInput).toBeInTheDocument()
+    expect(appPathInput.value).toBe('/app/test')
+    fireEvent.change(appPathInput, { target: { value: '/test/app1' } })
+    expect(appPathInput.value).toBe('/test/app1')
+
     const memoryInput = queryByNameAttribute('spec.resources.limits.memory', container) as HTMLInputElement
     expect(memoryInput).toBeInTheDocument()
     expect(memoryInput.value).toBe('4Gi')
@@ -248,6 +256,7 @@ describe('AwsCdkDiffStep tests', () => {
           privileged: false,
           imagePullPolicy: 'IfNotPresent',
           runAsUser: '6000',
+          appPath: '/test/app1',
           resources: {
             limits: {
               memory: '5Gi',
@@ -314,6 +323,7 @@ describe('AwsCdkDiffStep tests', () => {
           imagePullPolicy: RUNTIME_INPUT_VALUE,
           runAsUser: RUNTIME_INPUT_VALUE,
           stackNames: RUNTIME_INPUT_VALUE,
+          appPath: RUNTIME_INPUT_VALUE,
           resources: {
             limits: {
               memory: RUNTIME_INPUT_VALUE,

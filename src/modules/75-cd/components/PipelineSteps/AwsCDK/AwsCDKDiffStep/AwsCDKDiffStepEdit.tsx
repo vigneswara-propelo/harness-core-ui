@@ -235,6 +235,33 @@ const AwsCDKDiffStepEdit = (
                         commandOptionsFieldLabel={getString('cd.steps.awsCdkStep.awsCdkDiffCommandOptions')}
                         stepType={StepType.AwsCdkDiff}
                       />
+                      <Container className={stepCss.formGroup}>
+                        <FormInput.MultiTextInput
+                          name="spec.appPath"
+                          label={getString('pipeline.stepCommonFields.appPath')}
+                          placeholder={getString('pipeline.stepCommonFields.appPath')}
+                          disabled={readonly}
+                          multiTextInputProps={{
+                            expressions,
+                            disabled: readonly,
+                            allowableTypes
+                          }}
+                        />
+                        {getMultiTypeFromValue(formik.values.spec?.appPath) === MultiTypeInputType.RUNTIME &&
+                          !readonly && (
+                            <ConfigureOptions
+                              value={formik.values.spec?.appPath as string}
+                              type="String"
+                              variableName="spec.appPath"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => {
+                                formik.setFieldValue('spec.appPath', value)
+                              }}
+                              isReadonly={readonly}
+                            />
+                          )}
+                      </Container>
                     </Container>
                   }
                 />

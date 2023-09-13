@@ -125,6 +125,23 @@ function AwsCDKDiffStepInputSet(props: AwsCDKDiffStepInputSetProps): React.React
         </div>
       )}
 
+      {isValueRuntimeInput(get(template, `spec.appPath`)) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <TextFieldInputSetView
+            name={`${prefix}spec.appPath`}
+            label={getString('optionalField', { name: getString('pipeline.stepCommonFields.appPath') })}
+            placeholder={getString('optionalField', { name: getString('pipeline.stepCommonFields.appPath') })}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            fieldPath={`spec.appPath`}
+            template={template}
+          />
+        </div>
+      )}
+
       <AwsCdkStepCommonOptionalFieldsInputSet
         commandOptionsLabel="cd.steps.awsCdkStep.awsCdkDiffCommandOptions"
         {...props}
