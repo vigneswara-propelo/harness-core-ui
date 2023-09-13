@@ -12,7 +12,8 @@ export enum ProvisionerTypes {
   CloudFormation = 'CloudFormation',
   ARM = 'ARM',
   Blueprint = 'Blueprint',
-  Script = 'Script'
+  Script = 'Script',
+  AwsCdk = 'AwsCdk'
 }
 
 export const payloadValueforProvisionerTypes = (provisionerTypes: ProvisionerTypes) => {
@@ -31,5 +32,7 @@ export const payloadValueforProvisionerTypes = (provisionerTypes: ProvisionerTyp
       return 'AZURE_BLUEPRINT'
     case ProvisionerTypes.Script:
       return 'SHELL_SCRIPT_PROVISIONER'
+    case ProvisionerTypes.AwsCdk:
+      return 'AWS_CDK'
   }
 }

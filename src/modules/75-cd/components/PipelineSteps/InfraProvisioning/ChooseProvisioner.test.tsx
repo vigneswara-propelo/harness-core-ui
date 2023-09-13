@@ -57,5 +57,6 @@ describe('Choose Provisioner tests', () => {
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.ARM)).toBe('AZURE_ARM')
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.Blueprint)).toBe('AZURE_BLUEPRINT')
     expect(payloadValueforProvisionerTypes(ProvisionerTypes.Script)).toBe('SHELL_SCRIPT_PROVISIONER')
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.AwsCdk)).toBe('AWS_CDK')
   })
 })
