@@ -105,45 +105,103 @@ DefaultSettingsFactory.registerCategory('NOTIFICATIONS', {
   ]
 })
 
-DefaultSettingsFactory.registerGroupHandler(SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP, {
-  groupName: 'platform.defaultSettings.toggleNotificationChannel',
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.SLACK_NOTIFICATION_SETTINGS_GROUP, {
+  groupName: 'common.slack',
+  settingCategory: 'NOTIFICATIONS',
+  settingsDisplayOrder: [SettingType.ENABLE_SLACK_NOTIFICATION, SettingType.SLACK_NOTIFICATION_ENDPOINTS_ALLOWLIST]
+})
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.MSTEAM_NOTIFICATION_SETTINGS_GROUP, {
+  groupName: 'platform.defaultSettings.notifications.msTeam',
+  settingCategory: 'NOTIFICATIONS',
+  settingsDisplayOrder: [SettingType.ENABLE_MSTEAMS_NOTIFICATION, SettingType.MSTEAMS_NOTIFICATION_ENDPOINTS_ALLOWLIST]
+})
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.PAGERDUTY_NOTIFICATION_SETTINGS_GROUP, {
+  groupName: 'platform.defaultSettings.notifications.pagerDuty',
   settingCategory: 'NOTIFICATIONS',
   settingsDisplayOrder: [
-    SettingType.ENABLE_SLACK_NOTIFICATION,
-    SettingType.ENABLE_MSTEAMS_NOTIFICATION,
     SettingType.ENABLE_PAGERDUTY_NOTIFICATION,
-    SettingType.ENABLE_WEBHOOK_NOTIFICATION
+    SettingType.PAGERDUTY_NOTIFICATION_ENDPOINTS_ALLOWLIST
   ]
 })
-DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_WEBHOOK_NOTIFICATION, {
-  label: 'execution.triggerType.WEBHOOK',
-  settingRenderer: props => <DefaultSettingsToggle {...props} />,
-  yupValidation: Yup.boolean(),
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.WEBHOOK_NOTIFICATION_SETTINGS_GROUP, {
+  groupName: 'execution.triggerType.WEBHOOK',
   settingCategory: 'NOTIFICATIONS',
-  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
-})
-DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_SLACK_NOTIFICATION, {
-  label: 'common.slack',
-  settingRenderer: props => <DefaultSettingsToggle {...props} />,
-  yupValidation: Yup.boolean(),
-  settingCategory: 'NOTIFICATIONS',
-  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
-})
-DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MSTEAMS_NOTIFICATION, {
-  label: 'platform.defaultSettings.notifications.msTeam',
-  settingRenderer: props => <DefaultSettingsToggle {...props} />,
-  yupValidation: Yup.boolean(),
-  settingCategory: 'NOTIFICATIONS',
-  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
-})
-DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_PAGERDUTY_NOTIFICATION, {
-  label: 'platform.defaultSettings.notifications.pagerDuty',
-  settingRenderer: props => <DefaultSettingsToggle {...props} />,
-  yupValidation: Yup.boolean(),
-  settingCategory: 'NOTIFICATIONS',
-  groupId: SettingGroups.ENABLED_NOTIFICATION_CHANNELS_GROUP
+  settingsDisplayOrder: [SettingType.ENABLE_WEBHOOK_NOTIFICATION, SettingType.WEBHOOK_NOTIFICATION_ENDPOINTS_ALLOWLIST]
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.EMAIL_NOTIFICATION_DOMAIN_ALLOWLIST, {
+  label: 'platform.defaultSettings.addEmailNotificationFilterValues',
+  settingRenderer: props => {
+    return <DefaultSettingsTagInput {...props} placeholder={'platform.defaultSettings.emailPlaceholder'} />
+  },
+  yupValidation: Yup.string().nullable().optional(),
+  settingCategory: 'NOTIFICATIONS'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_SLACK_NOTIFICATION, {
+  label: 'platform.defaultSettings.enableSlack',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.SLACK_NOTIFICATION_SETTINGS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.SLACK_NOTIFICATION_ENDPOINTS_ALLOWLIST, {
+  label: 'platform.defaultSettings.addSlackNotificationFilterValues',
+  settingRenderer: props => {
+    return <DefaultSettingsTagInput {...props} placeholder={'platform.defaultSettings.slackPlaceholder'} />
+  },
+  yupValidation: Yup.string().nullable().optional(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.SLACK_NOTIFICATION_SETTINGS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_WEBHOOK_NOTIFICATION, {
+  label: 'platform.defaultSettings.enableWebhook',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.WEBHOOK_NOTIFICATION_SETTINGS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_NOTIFICATION_ENDPOINTS_ALLOWLIST, {
+  label: 'platform.defaultSettings.addWebhookNotificationFilterValues',
+  settingRenderer: props => {
+    return <DefaultSettingsTagInput {...props} placeholder={'platform.defaultSettings.webhooksPlaceholder'} />
+  },
+  yupValidation: Yup.string().nullable().optional(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.WEBHOOK_NOTIFICATION_SETTINGS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_MSTEAMS_NOTIFICATION, {
+  label: 'platform.defaultSettings.enableMsteams',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.MSTEAM_NOTIFICATION_SETTINGS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.MSTEAMS_NOTIFICATION_ENDPOINTS_ALLOWLIST, {
+  label: 'platform.defaultSettings.addMsTeamsNotificationFilterValues',
+  settingRenderer: props => {
+    return <DefaultSettingsTagInput {...props} placeholder={'platform.defaultSettings.msteamsPlaceholder'} />
+  },
+  yupValidation: Yup.string().nullable().optional(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.MSTEAM_NOTIFICATION_SETTINGS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_PAGERDUTY_NOTIFICATION, {
+  label: 'platform.defaultSettings.enablePagerduty',
+  settingRenderer: props => <DefaultSettingsToggle {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.PAGERDUTY_NOTIFICATION_SETTINGS_GROUP
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.PAGERDUTY_NOTIFICATION_ENDPOINTS_ALLOWLIST, {
+  label: 'platform.defaultSettings.addPagerdutyNotificationFilterValues',
+  settingRenderer: props => {
+    return <DefaultSettingsTagInput {...props} placeholder={'platform.defaultSettings.pagerdutyPlaceholder'} />
+  },
+  yupValidation: Yup.string().nullable().optional(),
+  settingCategory: 'NOTIFICATIONS',
+  groupId: SettingGroups.PAGERDUTY_NOTIFICATION_SETTINGS_GROUP
+})
 DefaultSettingsFactory.registerGroupHandler(SettingGroups.TICKETING_PREFERENCES, {
   groupName: 'platform.defaultSettings.ticketingPreferences',
   settingCategory: 'CE',
@@ -361,22 +419,8 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_REPO_FOR_GIT_E
 DefaultSettingsFactory.registerSettingHandler(SettingType.GIT_EXPERIENCE_REPO_ALLOWLIST, {
   label: 'platform.defaultSettings.allowedRepositories',
   settingRenderer: props => {
-    const separator = ','
-    const { onSettingSelectionChange, settingValue, getString } = props
-
     return (
-      <DefaultSettingsTagInput
-        {...props}
-        tagInputProps={{
-          tagsProps: {
-            separator,
-            onChange: values => onSettingSelectionChange(values.filter(Boolean).join(',')),
-            values: settingValue?.value?.split(separator) ?? [],
-            placeholder: getString('platform.defaultSettings.allowedRepositoriesPlaceholder'),
-            disabled: !settingValue?.isSettingEditable
-          }
-        }}
-      />
+      <DefaultSettingsTagInput {...props} placeholder={'platform.defaultSettings.allowedRepositoriesPlaceholder'} />
     )
   },
   yupValidation: Yup.string().nullable().optional(),

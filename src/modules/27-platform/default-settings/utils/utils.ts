@@ -10,6 +10,7 @@ import { SettingType } from '@common/constants/Utils'
 import { ResponseListSettingResponseDTO } from 'services/cd-ng'
 
 export const AidaAgreementType = 'AIDA'
+export const defaultSettingsTagInputSeparator = ','
 
 export const getSettingValue = (
   settingsData: ResponseListSettingResponseDTO | null,

@@ -221,8 +221,24 @@ export const DefaultSettingsToggle: React.FC<SettingRendererProps> = ({
 
 export interface DefaultSettingsTagInputProps extends SettingRendererProps {
   tagInputProps?: Omit<KVTagInputProps, 'name'>
+  placeholder: keyof StringsMap
 }
 
-export const DefaultSettingsTagInput = ({ identifier, tagInputProps }: DefaultSettingsTagInputProps): JSX.Element => {
-  return <FormInput.KVTagInput className={css.defaultSettingRenderer} name={identifier} {...tagInputProps} />
+export const DefaultSettingsTagInput = ({
+  identifier,
+  onSettingSelectionChange,
+  settingValue,
+  getString,
+  placeholder
+}: DefaultSettingsTagInputProps): JSX.Element => {
+  const separator = ','
+
+  const tagInputProps = {
+    separator,
+    onChange: (values: any) => onSettingSelectionChange(values.filter(Boolean).join(',')),
+    values: settingValue?.value?.split(separator) ?? [],
+    placeholder: getString(placeholder),
+    disabled: !settingValue?.isSettingEditable
+  }
+  return <FormInput.KVTagInput className={css.defaultSettingRenderer} name={identifier} tagsProps={tagInputProps} />
 }

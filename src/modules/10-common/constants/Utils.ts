@@ -113,10 +113,15 @@ export enum SettingType {
   TICKETING_TOOL = 'ticketing_tool',
   TICKETING_TOOL_CONNECTOR = 'ticketing_tool_connector',
   AIDA = 'aida',
+  EMAIL_NOTIFICATION_DOMAIN_ALLOWLIST = 'email_notification_domain_allowlist',
   ENABLE_PAGERDUTY_NOTIFICATION = 'enable_pagerduty_notification',
+  PAGERDUTY_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'pagerduty_notification_integration_keys_allowlist',
   ENABLE_WEBHOOK_NOTIFICATION = 'enable_webhook_notification',
+  WEBHOOK_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'webhook_notification_endpoints_allowlist',
   ENABLE_MSTEAMS_NOTIFICATION = 'enable_msTeams_notification',
-  ENABLE_SLACK_NOTIFICATION = 'enable_slack_notification'
+  MSTEAMS_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'msTeam_notification_endpoints_allowlist',
+  ENABLE_SLACK_NOTIFICATION = 'enable_slack_notification',
+  SLACK_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'slack_notification_endpoints_allowlist'
 }
 
 export const isValidYAMLFilePath = (filePath: string): boolean => {

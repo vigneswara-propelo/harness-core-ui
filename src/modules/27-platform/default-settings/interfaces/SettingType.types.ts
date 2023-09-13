@@ -13,7 +13,10 @@ export enum SettingGroups {
   test_group_2 = 'test_group_2',
   PERSPECTIVES_PREFERENCES = 'perspectives_preferences',
   TICKETING_PREFERENCES = 'ticketing_preferences',
-  ENABLED_NOTIFICATION_CHANNELS_GROUP = 'enabled_notification_channels'
+  SLACK_NOTIFICATION_SETTINGS_GROUP = 'slack_notification_settings',
+  MSTEAM_NOTIFICATION_SETTINGS_GROUP = 'msTeam_notification_settings',
+  WEBHOOK_NOTIFICATION_SETTINGS_GROUP = 'webhook_notification_settings',
+  PAGERDUTY_NOTIFICATION_SETTINGS_GROUP = 'pagerduty_notification_settings'
 }
 export type YupValidation =
   | Yup.BooleanSchema

@@ -3024,6 +3024,11 @@ export interface StringsMap {
   'platform.connectors.validation.tokenUrl': string
   'platform.connectors.validationPath': string
   'platform.connectors.verifyConnection': string
+  'platform.defaultSettings.addEmailNotificationFilterValues': string
+  'platform.defaultSettings.addMsTeamsNotificationFilterValues': string
+  'platform.defaultSettings.addPagerdutyNotificationFilterValues': string
+  'platform.defaultSettings.addSlackNotificationFilterValues': string
+  'platform.defaultSettings.addWebhookNotificationFilterValues': string
   'platform.defaultSettings.aida.accept': string
   'platform.defaultSettings.aida.aida': string
   'platform.defaultSettings.aida.aidaEULAText': string
@@ -3046,14 +3051,19 @@ export interface StringsMap {
   'platform.defaultSettings.defaultGitExperienceRepoPlaceholder': string
   'platform.defaultSettings.defaultImagePullPolicyForAddOnContainer': string
   'platform.defaultSettings.defaultStoreType': string
+  'platform.defaultSettings.emailPlaceholder': string
   'platform.defaultSettings.emailToNonHarnessUsers': string
   'platform.defaultSettings.enableBiDirectionalSync': string
   'platform.defaultSettings.enableExpressionsJsonSupport': string
   'platform.defaultSettings.enableForceDelete': string
   'platform.defaultSettings.enableGitCommands': string
   'platform.defaultSettings.enableMatrixFieldNames': string
+  'platform.defaultSettings.enableMsteams': string
+  'platform.defaultSettings.enablePagerduty': string
   'platform.defaultSettings.enablePipelineExecutionAuditEvents': string
   'platform.defaultSettings.enableServiceOverrideV2': string
+  'platform.defaultSettings.enableSlack': string
+  'platform.defaultSettings.enableWebhook': string
   'platform.defaultSettings.enforceGitExperience': string
   'platform.defaultSettings.executeTriggersWithAllCollectedArtifactsOrManifests': string
   'platform.defaultSettings.exportServiceVariablesAsEnvVariables': string
@@ -3065,9 +3075,11 @@ export interface StringsMap {
   'platform.defaultSettings.inheritedFrom': string
   'platform.defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
   'platform.defaultSettings.mandateWebhookSecretsGithubTriggers': string
+  'platform.defaultSettings.msteamsPlaceholder': string
   'platform.defaultSettings.noSettingToDisplay': string
   'platform.defaultSettings.notifications.msTeam': string
   'platform.defaultSettings.notifications.pagerDuty': string
+  'platform.defaultSettings.pagerdutyPlaceholder': string
   'platform.defaultSettings.perspectivePreferences': string
   'platform.defaultSettings.pipelineTimeout': string
   'platform.defaultSettings.projectScopedResourceConstraintQueue': string
@@ -3078,12 +3090,13 @@ export interface StringsMap {
   'platform.defaultSettings.showGcpCostAs': string
   'platform.defaultSettings.showOthers': string
   'platform.defaultSettings.showUnallocatedClusterCost': string
+  'platform.defaultSettings.slackPlaceholder': string
   'platform.defaultSettings.stageTimeout': string
   'platform.defaultSettings.stepTimeout': string
   'platform.defaultSettings.ticketingPreferences': string
   'platform.defaultSettings.ticketingToolConnectorLabel': string
   'platform.defaultSettings.ticketingToolLabel': string
-  'platform.defaultSettings.toggleNotificationChannel': string
+  'platform.defaultSettings.webhooksPlaceholder': string
   'platform.delegates.GBRam': string
   'platform.delegates.autoUpgrade': string
   'platform.delegates.commandLineCreation.clickDoneAndCheckLater': string
