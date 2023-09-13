@@ -48,7 +48,8 @@ export const iconMap: stepTileIconMap = {
   'Approval Step': 'command-approval',
   HTTP: 'command-http',
   Plugin: 'git-clone-step',
-  ResourceConstraint: 'traffic-lights'
+  ResourceConstraint: 'traffic-lights',
+  Provenance: 'slsa-generation'
   // << end
 }
 

@@ -51,7 +51,8 @@ export const iconMap: iconMapOptions = {
   'Approval Step': 'command-approval',
   HTTP: 'command-http',
   Plugin: 'git-clone-step',
-  ResourceConstraint: 'traffic-lights'
+  ResourceConstraint: 'traffic-lights',
+  Provenance: 'slsa-generation'
   // << end
 }
 
