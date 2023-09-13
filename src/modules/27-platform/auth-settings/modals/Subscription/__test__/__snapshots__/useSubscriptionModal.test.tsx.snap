@@ -333,11 +333,11 @@ exports[`useSubscriptionModal render 1`] = `
                         />
                         <div
                           class="bp3-slider-progress bp3-intent-primary"
-                          style="left: 0.00%; right: 98.00%; top: 0px;"
+                          style="left: 0.00%; right: 50.00%; top: 0px;"
                         />
                         <div
                           class="bp3-slider-progress"
-                          style="left: 2.00%; right: 0.00%; top: 0px;"
+                          style="left: 50.00%; right: 0.00%; top: 0px;"
                         />
                       </div>
                       <div
@@ -382,13 +382,13 @@ exports[`useSubscriptionModal render 1`] = `
                       </div>
                       <span
                         class="bp3-slider-handle"
-                        style="left: calc(2.00% - 0px);"
+                        style="left: calc(50.00% - 0px);"
                         tabindex="0"
                       >
                         <span
                           class="bp3-slider-label"
                         >
-                          1
+                          25
                         </span>
                       </span>
                     </div>
@@ -402,7 +402,7 @@ exports[`useSubscriptionModal render 1`] = `
                           class="bp3-input"
                           data-testid="slider-input"
                           type="text"
-                          value="1"
+                          value="25"
                         />
                       </div>
                     </div>
@@ -794,7 +794,7 @@ exports[`useSubscriptionModal render 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  1  common.subscriptions.usage.developer/month
+                  25  common.subscriptions.usage.developers/month
                 </p>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"

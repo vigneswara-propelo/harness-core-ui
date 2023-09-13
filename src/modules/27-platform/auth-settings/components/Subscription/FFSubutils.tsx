@@ -60,9 +60,10 @@ const FFSubutils: React.FC<FFSubutilsProps> = ({
         usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
         toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
         setNumberOfDevelopers={(value: number) => {
-          if (subscriptionDetails.edition === 'ENTERPRISE' && value === 25) {
-            value = 0
+          if (subscriptionDetails.edition === 'ENTERPRISE' && value < 25) {
+            value = 25
           }
+
           if (value > 0) {
             updateQuantities({
               devs: value
@@ -98,6 +99,10 @@ const FFSubutils: React.FC<FFSubutilsProps> = ({
           if (value > 0) {
             updateQuantities({
               maus: value
+            })
+          } else if (value === 0) {
+            updateQuantities({
+              maus: sampleData.minValue
             })
           } else {
             updateQuantities({

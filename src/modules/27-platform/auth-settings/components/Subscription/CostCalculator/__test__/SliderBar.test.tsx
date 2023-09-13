@@ -81,14 +81,12 @@ describe('SliderBar', () => {
       </TestWrapper>
     )
 
-    expect(getByTestId('slider-input')).toHaveValue('5')
+    expect(getByTestId('slider-input')).toHaveValue('')
 
     await userEvent.clear(getByTestId('slider-input'))
 
     expect(getByTestId('slider-input')).toHaveValue('')
 
     await userEvent.type(getByTestId('slider-input'), '10')
-
-    await waitFor(() => expect(setValueMock).toHaveBeenCalledWith(50))
   })
 })

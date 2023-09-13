@@ -68,11 +68,11 @@ const SliderBar: React.FC<SliderBarProps> = ({
   unit,
   labelRenderer
 }) => {
-  const [localValue, setLocalValue] = useState<boolean>(false)
-  let passedValue = ''
-  if (!localValue) {
-    passedValue = defaultTo(inputValue, value).toString()
+  const [passedNumberValue, setPassedValue] = useState<string>('')
+  const passedValue = (val: number) => {
+    setPassedValue(val.toString())
   }
+
   const dropdownList = React.useMemo(() => {
     return (
       list?.reduce((accumulator: SelectOption[], current) => {
@@ -121,14 +121,10 @@ const SliderBar: React.FC<SliderBarProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const val = Math.abs(Number(e.target.value))
             const maxValue = Math.abs(Number(max))
-            if (val === 0) {
-              setLocalValue(true)
-            } else {
-              setLocalValue(false)
-            }
+            passedValue(val)
             return setValue(val > maxValue ? maxValue : val)
           }}
-          value={passedValue}
+          value={passedNumberValue || inputValue?.toString()}
           className={css.textInput}
         />
       )}

@@ -149,8 +149,8 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
       setValue(0)
     } else {
       setLicensesRange({
-        min: 0,
-        max: 25,
+        min: 25,
+        max: 50,
         stepSize: 1,
         labelStepSize: 25
       })
@@ -162,12 +162,18 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
     if (newPlan === Editions.TEAM) {
       return generateRangeArray(0, 50, 1)
     } else {
-      return generateRangeArray(25, 50, 1)
+      return generateRangeArray(0, 50, 1)
     }
   }, [newPlan])
   const selectedNumberOfDevelopers = rangeArray.findIndex((num: number) => num === numberOfDevelopers)
   const setValue = (newValue: number): void => {
-    const valueFromRange = rangeArray[newValue]
+    if (newValue > 50) {
+      newValue = 50
+    }
+    let valueFromRange = rangeArray[newValue]
+    if (valueFromRange < 25) {
+      valueFromRange = 25
+    }
     setNumberOfDevelopers(valueFromRange)
   }
   return (

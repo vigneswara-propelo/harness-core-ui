@@ -275,7 +275,7 @@ exports[`SliderBar input 1`] = `
           class="bp3-input"
           data-testid="slider-input"
           type="text"
-          value="5"
+          value=""
         />
       </div>
     </div>
