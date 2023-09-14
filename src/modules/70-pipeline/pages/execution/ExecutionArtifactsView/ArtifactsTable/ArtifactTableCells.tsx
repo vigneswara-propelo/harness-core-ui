@@ -122,7 +122,8 @@ export const TypeCell: CellType = ({ row }) => {
       }
     },
     {
-      onSuccess: _data => downloadBlob(get(_data.content.sbom, ''), `${artifact.sbomName}_${artifact.tag}_sbom.json`),
+      onSuccess: _data =>
+        downloadBlob(defaultTo(_data.content.sbom, ''), `${artifact.sbomName}_${artifact.tag}_sbom.json`),
       enabled: false,
       retry: false
     }
@@ -137,7 +138,8 @@ export const TypeCell: CellType = ({ row }) => {
     {
       enabled: false,
       retry: false,
-      onSuccess: _data => downloadBlob(get(_data.content.sbom, ''), `${artifact.sbomName}_${artifact.tag}_sbom.json`)
+      onSuccess: _data =>
+        downloadBlob(defaultTo(_data.content.sbom, ''), `${artifact.sbomName}_${artifact.tag}_sbom.json`)
     }
   )
 
